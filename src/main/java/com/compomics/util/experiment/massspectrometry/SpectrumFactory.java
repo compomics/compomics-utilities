@@ -995,8 +995,8 @@ public class SpectrumFactory {
     /**
      * Returns the fixed mgf title.
      *
-     * @param spectrumTitle
-     * @param fileName
+     * @param spectrumTitle the spectrum title
+     * @param fileName the spectrum file name
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {

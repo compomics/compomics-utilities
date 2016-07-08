@@ -35,6 +35,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
  * Simple IdfileReader for Pepxml files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PepxmlIdfileReader implements IdfileReader {
 
@@ -463,7 +464,7 @@ public class PepxmlIdfileReader implements IdfileReader {
      */
     private SpectrumMatch parseSpectrumQuery(XmlPullParser parser) throws XmlPullParserException, IOException {
 
-        Integer scanNumber = null;
+        Integer index = null;
         String spectrumId = null;
         String spectrumNativeID = null;
 
@@ -471,20 +472,20 @@ public class PepxmlIdfileReader implements IdfileReader {
             String name = parser.getAttributeName(i);
             if (name.equals("spectrum")) {
                 spectrumId = parser.getAttributeValue(i);
-            } else if (name.equals("start_scan")) {
+            } else if (name.equals("index")) {
                 String value = parser.getAttributeValue(i);
                 try {
-                    scanNumber = new Integer(value.trim());
+                    index = new Integer(value.trim());
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("An error occurred while parsing start_scan " + value + ". Integer expected.");
+                    throw new IllegalArgumentException("An error occurred while parsing index " + value + ". Integer expected.");
                 }
             } else if (name.equals("spectrumNativeID")) {
                 spectrumNativeID = parser.getAttributeValue(i);
             }
         }
 
-        if (scanNumber == null) {
-            throw new IllegalArgumentException("No start scan found for spectrum " + spectrumId + ".");
+        if (index == null) {
+            throw new IllegalArgumentException("No index found for spectrum " + spectrumId + ".");
         }
 
         String spectrumTitle;
@@ -492,15 +493,15 @@ public class PepxmlIdfileReader implements IdfileReader {
         if (spectrumNativeID != null) {
             spectrumTitle = spectrumNativeID;
         } else {
-            spectrumTitle = scanNumber + "";
+            spectrumTitle = index + "";
             if (spectrumFactory.fileLoaded(inputFileName)) {
-                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
+                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, index);
             }
         }
 
         String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
-        spectrumMatch.setSpectrumNumber(scanNumber);
+        spectrumMatch.setSpectrumNumber(index);
 
         return spectrumMatch;
     }

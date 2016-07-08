@@ -55,7 +55,12 @@ public class MgfReader {
 
         while ((line = br.readLine()) != null) {
 
-            if (line.equals("BEGIN IONS")) {
+            // fix for lines ending with \r
+            if (line.endsWith("\r")) {
+                line = line.replace("\r", "");
+            }
+            
+            if (line.startsWith("BEGIN IONS")) {
                 // reset the spectrum details
                 insideSpectrum = true;
             } else if (line.startsWith("TITLE")) {
@@ -119,7 +124,7 @@ public class MgfReader {
                 // sequence tag not implemented
             } else if (line.startsWith("RAWSCANS")) {
                 // raw scans not implemented
-            } else if (line.equals("END IONS")) {
+            } else if (line.startsWith("END IONS")) {
                 insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
@@ -229,6 +234,11 @@ public class MgfReader {
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
+            // fix for lines ending with \r
+            if (line.endsWith("\r")) {
+                line = line.replace("\r", "");
+            }
+            
             if (line.equals("BEGIN IONS")) {
                 insideSpectrum = true;
                 chargeTagFound = false;
@@ -242,7 +252,9 @@ public class MgfReader {
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
+                
                 title = line.substring(line.indexOf('=') + 1);
+
                 try {
                     title = URLDecoder.decode(title, "utf-8");
                 } catch (UnsupportedEncodingException e) {
@@ -331,7 +343,7 @@ public class MgfReader {
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse retention time: " + rtInput);
                 }
-            } else if (line.equals("END IONS")) {
+            } else if (line.startsWith("END IONS")) {
                 insideSpectrum = false;
                 if (title != null) {
                     if (peakCount > maxPeakCount) {
@@ -418,7 +430,7 @@ public class MgfReader {
 
                     while ((line = br.readLine()) != null) {
 
-                        if (line.equals("BEGIN IONS")) {
+                        if (line.startsWith("BEGIN IONS")) {
                             currentSpectrum = line + lineBreak;
 
                             if (waitingHandler != null) {
@@ -447,7 +459,7 @@ public class MgfReader {
                                 includeSpectrum = false;
                             }
 
-                        } else if (line.equals("END IONS")) {
+                        } else if (line.startsWith("END IONS")) {
                             currentSpectrum += line + lineBreak;
                             if (includeSpectrum) {
                                 bw.write(currentSpectrum);
@@ -530,7 +542,7 @@ public class MgfReader {
 
                     while ((line = br.readLine()) != null) {
 
-                        if (line.equals("BEGIN IONS")) {
+                        if (line.startsWith("BEGIN IONS")) {
                             spectrumCounter++;
 
                             if (waitingHandler != null) {
@@ -553,7 +565,7 @@ public class MgfReader {
                             }
 
                             spectrumTitles.add(title);
-                        } else if (line.equals("END IONS")) {
+                        } else if (line.startsWith("END IONS")) {
 
                             bw.write("BEGIN IONS" + lineBreak);
 
@@ -646,7 +658,7 @@ public class MgfReader {
 
                     while ((line = br.readLine()) != null) {
 
-                        if (line.equals("BEGIN IONS")) {
+                        if (line.startsWith("BEGIN IONS")) {
 
                             insideSpectrum = true;
                             chargeFound = false;
@@ -657,7 +669,7 @@ public class MgfReader {
                                 }
                                 waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
                             }
-                        } else if (line.equals("END IONS")) {
+                        } else if (line.startsWith("END IONS")) {
                             insideSpectrum = false;
                         } else if (line.startsWith("CHARGE")) {
                             chargeFound = true;
@@ -759,7 +771,7 @@ public class MgfReader {
 
                     while ((line = br.readLine()) != null) {
 
-                        if (line.equals("BEGIN IONS")) {
+                        if (line.startsWith("BEGIN IONS")) {
                             spectrum = true;
 
                             if (waitingHandler != null) {
@@ -769,7 +781,7 @@ public class MgfReader {
                                 waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
                             }
 
-                        } else if (line.equals("END IONS")) {
+                        } else if (line.startsWith("END IONS")) {
                             spectrum = false;
                         }
 
@@ -959,7 +971,7 @@ public class MgfReader {
 
             while ((line = readBufferedRandomAccessFile.getNextLine()) != null) {
 
-                if (line.equals("BEGIN IONS")) {
+                if (line.startsWith("BEGIN IONS")) {
 
                     spectrumCounter++;
 
@@ -1043,7 +1055,12 @@ public class MgfReader {
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
-            if (line.equals("BEGIN IONS")) {
+            // fix for lines ending with \r
+            if (line.endsWith("\r")) {
+                line = line.replace("\r", "");
+            }
+            
+            if (line.startsWith("BEGIN IONS")) {
                 insideSpectrum = true;
                 spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
@@ -1106,7 +1123,7 @@ public class MgfReader {
                 }
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
-            } else if (line.equals("END IONS")) {
+            } else if (line.startsWith("END IONS")) {
                 insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
@@ -1205,6 +1222,12 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
+            
+            // fix for lines ending with \r
+            if (line.endsWith("\r")) {
+                line = line.replace("\r", "");
+            }
+            
             if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1);
                 try {
@@ -1243,7 +1266,7 @@ public class MgfReader {
                     e.printStackTrace(); // ignore exception, RT will not be parsed
                 }
             } else if (!line.isEmpty()) {
-                if (line.equals("END IONS") || (!line.contains("#") && !line.contains("="))) {
+                if (line.startsWith("END IONS") || (!line.contains("#") && !line.contains("="))) {
                     if (rt1 != -1 && rt2 != -1) {
                         return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                     }

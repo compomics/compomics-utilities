@@ -21,7 +21,7 @@ public class VariantMatch extends ExperimentObject {
     /**
      * Enumeration naming all variants
      */
-    public enum Variant {deletion, insertion, substitution};
+    static public enum Variant {deletion, insertion, substitution};
     
     /**
      * What type is the variant of?

@@ -15,6 +15,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.gui.AaMass;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
@@ -252,7 +253,7 @@ public class FMIndex implements PeptideMapper {
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) {
         
         // load all variant preferences
-        //maxNumberVariants = peptideVariantsPreferences.getnAaSubstitutions();
+        maxNumberVariants = peptideVariantsPreferences.getnAaSubstitutions();
         maxNumberInsertions = peptideVariantsPreferences.getnAaInsertions();
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
@@ -1214,7 +1215,6 @@ public class FMIndex implements PeptideMapper {
                             matches.put(accession, new ArrayList<Integer>());
                         }
                         matches.get(accession).add(pos - boundaries[index]);
-System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPeptide);
                     }
 
                     allMatches.put(currentPeptide, matches);
@@ -1516,7 +1516,6 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     final int numX = content.numX;
                     
                     
-//System.out.println(k + " " + j + " | " + leftIndexOld + " " + rightIndexOld + " | " + (char)content.character + " " + content.mass);
                     if (combination.isMass) {
                         final double combinationMass = combination.mass;
                         final double oldMass = content.mass;
@@ -1589,7 +1588,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                             if (leftIndex <= rightIndex) row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
 
                             // variants
-                            if (false && numVariants < maxNumberVariants && c == 0){
+                            if (numVariants < maxNumberVariants && c == 0){
                                 // deletion
                                 if (numVariants < maxNumberVariants) matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
 
@@ -1618,7 +1617,6 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                 }
             }
         }
-//System.out.println("count: " + cnt);
     }
     
     double pepMass(String peptide){
@@ -1645,8 +1643,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
         final int lenCombinations = combinations.length;
         for (int k = 0; k < lenCombinations; ++k){
-        TagElement combination = combinations[k];
-        LinkedList<MatrixContent> content = matrix[k];
+            TagElement combination = combinations[k];
+            LinkedList<MatrixContent> content = matrix[k];
             
             while (!content.isEmpty()) {
 
@@ -1674,7 +1672,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
                                 //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
-                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, 0, borders[3]);
+                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, cell.numX, borders[3]);
 
                                 ModificationMatch modificationMatchEnd = null;
                                 ModificationMatch modificationMatchEndEnd = null;
@@ -1713,15 +1711,15 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                         if (Math.abs(massDiffDiff) < massTolerance) {
                                             endOfPeptide = true;
-                                            modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
+                                            modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
                                         }
 
                                         if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                     endOfPeptide = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
+                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length + 1);
                                                 }
                                             }
                                         }
@@ -1730,8 +1728,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                             for (int j = 0; j < vmodp.size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                     endOfPeptide = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length);
+                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length + 1);
                                                 }
                                             }
                                         }
@@ -1746,15 +1744,15 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         double massDiffDiff = massDiff - fmodpMass.get(i);
                                         if (Math.abs(massDiff - fmodpMass.get(i)) < massTolerance) {
                                             endOfPeptide = true;
-                                            modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
+                                            modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
                                         }
 
                                         if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                     endOfPeptide = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
+                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length + 1);
                                                 }
                                             }
                                         }
@@ -1763,8 +1761,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                             for (int j = 0; j < vmodp.size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                     endOfPeptide = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length);
+                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length + 1);
                                                 }
                                             }
                                         }
@@ -1783,7 +1781,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         for (int i = 0; i < vmodpaaMass[lastAcid].size(); ++i) {
                                             if (Math.abs(massDiff - vmodpaaMass[lastAcid].get(i)) < massTolerance) {
                                                 endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(vmodpaa[lastAcid].get(i), true, length);
+                                                modificationMatchEnd = new ModificationMatch(vmodpaa[lastAcid].get(i), true, length + 1);
                                             }
                                         }
                                     }
@@ -1792,7 +1790,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         for (int i = 0; i < vmodp.size(); ++i) {
                                             if (Math.abs(massDiff - vmodpMass.get(i)) < massTolerance) {
                                                 endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(vmodp.get(i), false, length);
+                                                modificationMatchEnd = new ModificationMatch(vmodp.get(i), false, length + 1);
                                             }
                                         }
                                     }
@@ -1803,11 +1801,11 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         content.add(newCell);
                                     }
                                 } else if (modificationMatchEnd != null) {
-                                    MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, length, 0, modificationMatchEnd, null, -1);
+                                    MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, length + 1, 0, modificationMatchEnd, null, -1);
                                     if (modificationMatchEndEnd == null) {
                                         matrix[k + 1].add(newEndCell);
                                     } else {
-                                        MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, length, 0, modificationMatchEndEnd, null, -1);
+                                        MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, length + 1, 0, modificationMatchEndEnd, null, -1);
                                         matrix[k + 1].add(newEndEndCell);
                                     }
                                 } else {
@@ -1863,15 +1861,15 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                     for (int i = 0; i < fmodaaMass[lastAcid].size(); ++i) {
                                         Double massDiffDiff = massDiff - fmodaaMass[lastAcid].get(i);
                                         if (Math.abs(massDiffDiff) < massTolerance) {
-                                            modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                            modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                         }
 
                                         // variable aa defined protein terminal modification
                                         if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length);
                                                 }
                                             }
                                         }
@@ -1879,8 +1877,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         if (vmod != null && modificationMatchEnd == null) {
                                             for (int j = 0; j < vmod.size(); ++j) {
                                                 if (Math.abs(massDiffDiff - vmodMass.get(j)) < massTolerance) {
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1892,8 +1890,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                 if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                     hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1902,8 +1900,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                             for (int j = 0; j < fmodp.size(); ++j) {
                                                 if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
                                                     hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1914,8 +1912,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                     if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                     }
                                                 }
                                             }
@@ -1924,8 +1922,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                 for (int j = 0; j < vmodp.size(); ++j) {
                                                     if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                     }
                                                 }
                                             }
@@ -1941,15 +1939,15 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                     for (int i = 0; i < fmod.size(); ++i) {
                                         Double massDiffDiff = massDiff - fmodMass.get(i);
                                         if (Math.abs(massDiffDiff) < massTolerance) {
-                                            modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                            modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                         }
 
                                         // variable aa defined protein terminal modification
                                         if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
                                                 if (Math.abs(massDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length);
                                                 }
                                             }
                                         }
@@ -1957,8 +1955,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         if (vmod != null && modificationMatchEnd == null) {
                                             for (int j = 0; j < vmod.size(); ++j) {
                                                 if (Math.abs(massDiff - vmodMass.get(j)) < massTolerance) {
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1970,8 +1968,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                 if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                     hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1980,8 +1978,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                             for (int j = 0; j < fmodp.size(); ++j) {
                                                 if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
                                                     hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                 }
                                             }
                                         }
@@ -1992,8 +1990,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                     if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                     }
                                                 }
                                             }
@@ -2002,8 +2000,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                 for (int j = 0; j < vmodp.size(); ++j) {
                                                     if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                     }
                                                 }
                                             }
@@ -2017,7 +2015,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         for (int i = 0; i < vmodaaMass[lastAcid].size(); ++i) {
                                             double massDiffDiff = massDiff - vmodaaMass[lastAcid].get(i);
                                             if (Math.abs(massDiffDiff) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                                modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                             }
 
                                             // second ptm at peptide terminus
@@ -2027,8 +2025,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                     if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                     }
                                                 }
                                             }
@@ -2037,8 +2035,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                 for (int j = 0; j < fmodp.size(); ++j) {
                                                     if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                     }
                                                 }
                                             }
@@ -2049,8 +2047,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                         if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                             hasFixedPep = true;
-                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
-                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                         }
                                                     }
                                                 }
@@ -2059,8 +2057,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                     for (int j = 0; j < vmodp.size(); ++j) {
                                                         if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                             hasFixedPep = true;
-                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
-                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                         }
                                                     }
                                                 }
@@ -2072,7 +2070,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                         for (int i = 0; i < vmod.size(); ++i) {
                                             double massDiffDiff = massDiff - vmodMass.get(i);
                                             if (Math.abs(massDiffDiff) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                                modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                             }
 
                                             // second ptm at peptide terminus
@@ -2081,8 +2079,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                 for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
                                                     if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                     }
                                                 }
                                             }
@@ -2091,8 +2089,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                 for (int j = 0; j < fmodp.size(); ++j) {
                                                     if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
                                                         hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                     }
                                                 }
                                             }
@@ -2103,8 +2101,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                                         if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
                                                             hasFixedPep = true;
-                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
-                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                         }
                                                     }
                                                 }
@@ -2113,8 +2111,8 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                                     for (int j = 0; j < vmodp.size(); ++j) {
                                                         if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
                                                             hasFixedPep = true;
-                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
-                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                         }
                                                     }
                                                 }
@@ -2312,7 +2310,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
                             if (modifictationFlags[currentContent.modificationPos]) {
-                                modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
+                                modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length));
                             }
                         } else {
                             modifications.add(currentContent.modification);
@@ -2353,25 +2351,21 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                     if (currentContent.modificationPos >= 0) {
                         if (modifictationFlags[currentContent.modificationPos]) {
-                            modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
+                            modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                         }
                     } else {
-                        modifications.add(currentContent.modification);
+                        modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.isVariable(), content.length - currentContent.modification.getModificationSite() + 1));
                     }
                 }
 
                 currentContent = currentContent.previousContent;
-            }
-            for (ModificationMatch modificationMatch : modifications) {
-                modificationMatch.setModificationSite(currentContent.peptideSequence.length() + currentPeptide.length() - modificationMatch.getModificationSite() + 1);
             }
 
             int leftIndex = content.left;
             int rightIndex = content.right;
 
             for (ModificationMatch modificationMatch : currentContent.modifications) {
-                modificationMatch.setModificationSite(modificationMatch.getModificationSite() + currentPeptide.length());
-                modifications.add(modificationMatch);
+                modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
             }
 
             String peptide = currentPeptide + currentContent.peptideSequence;
@@ -2558,7 +2552,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     while (currentContent.previousContent != null) {
                         int aminoAcidPep = currentContent.character;
                         int aminoAcidProt = currentContent.character;
-                        int edit = currentContent.variant;
+                        int edit = currentContent.variant; 
                         errors += (edit == '-') ? 0 : 1;
                         boolean update = true;
                         
@@ -2582,16 +2576,15 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                             if (currentContent.modificationPos >= 0) {
                                 if (modifictationFlags[currentContent.modificationPos]) {
-                                    modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
-                                }
+                                    modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length));
+                               }
                             } else {
                                 modifications.add(currentContent.modification);
                             }
                         }
                         currentContent = currentContent.previousContent;
                     }
- 
-//System.out.println(currentPeptide + " " + allVariants);                   
+                
                     String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
                     allVariants = (new StringBuilder(allVariants).reverse()).toString();
                     cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1, errors, '\0', allVariants));
@@ -2604,6 +2597,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
             }
             cacheIt(refTagContent, cachePrimary);
         }
+        
         
         if (firstHits){
             mappingSequenceAndMassesWithVariants(combinations, matrix, lessPrimary, occurrencePrimary, massTolerance);
@@ -2622,35 +2616,33 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         currentPeptide += (char)aminoAcid;
                         allVariants += (char)currentContent.variant;
                     }
-
-
+                  
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
                             if (modifictationFlags[currentContent.modificationPos]) {
-                                modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
+                                modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                             }
                         } else {
-                            modifications.add(currentContent.modification);
+                            modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.isVariable(), currentContent.modification.getModificationSite() + content.length - currentContent.length + 1));
                         }
                     }
 
                     currentContent = currentContent.previousContent;
-                }
-                for (ModificationMatch modificationMatch : modifications) {
-                    modificationMatch.setModificationSite(currentContent.peptideSequence.length() + currentPeptide.length() - modificationMatch.getModificationSite() + 1);
                 }
 
                 int leftIndex = content.left;
                 int rightIndex = content.right;
 
                 for (ModificationMatch modificationMatch : currentContent.modifications) {
-                    modificationMatch.setModificationSite(modificationMatch.getModificationSite() + currentPeptide.length());
-                    modifications.add(modificationMatch);
+                    modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
                 }
 
                 String peptide = currentPeptide + currentContent.peptideSequence;
                 allVariants += currentContent.allVariants;
-
+                ArrayList<VariantMatch> variants = new ArrayList<VariantMatch>();
+                
+                
+                
                 if (turned) {
                     leftIndex = 0;
                     rightIndex = indexStringLength - 1;
@@ -2680,7 +2672,26 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     allVariants = (new StringBuilder(allVariants).reverse()).toString();
                     peptide = (new StringBuilder(peptide).reverse()).toString();
                 }
-//System.out.println(peptide + " | " + allVariants);
+                
+                // adding variants and adjusting modification sites
+                for (int i = 0, length = 0, j = 0; i < allVariants.length(); ++i){
+                    int edit = allVariants.charAt(i);
+                            ++length;
+                    if (edit != '-'){
+                        if (edit == '*'){ // deletion
+                            variants.add(new VariantMatch(length, VariantMatch.Variant.deletion));
+                        }
+                        else if ('A' <= edit && edit <= 'Z'){ // substitution
+                            variants.add(new VariantMatch(length, VariantMatch.Variant.substitution, (char)edit));
+                        }
+                        else if ('a' <= edit && edit <= 'z'){ // insertion
+                            variants.add(new VariantMatch(length, VariantMatch.Variant.insertion, (char)(edit - 32)));
+                            --length;
+                        }
+                    }
+                }
+                
+                String cleanPeptide = peptide.replace("*", "");
                 for (int j = leftIndex; j <= rightIndex; ++j) {
                     int pos = getTextPosition(j);
                     int index = binarySearch(boundaries, pos);
@@ -2693,7 +2704,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     // check if match is already in the result list
                     for (Peptide pep : allMatches.keySet()){
                         
-                        if (pep.getSequence().compareTo(peptide) == 0){
+                        if (pep.getSequence().compareTo(cleanPeptide) == 0){
                             newPeptide = false;
                             
                             boolean newAccession = true;
@@ -2729,7 +2740,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         al.add(startPosition);
                         HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
                         matches.put(accession, al);
-                        allMatches.put(new Peptide(peptide, modifications), matches);
+                        allMatches.put(new Peptide(peptide, modifications, variants), matches);
                     }
                 
                 }

@@ -97,7 +97,7 @@ public class MatrixContent {
         this.previousContent = null;
         this.mass = 0;
         this.peptideSequence = null;
-        this.length = 1;
+        this.length = 0;
         this.numX = 0;
         this.modification = null;
         this.modifications = null;
@@ -126,7 +126,7 @@ public class MatrixContent {
         this.previousContent = previousContent;
         this.mass = 0;
         this.peptideSequence = null;
-        this.length = 1;
+        this.length = 0;
         this.numX = numX;
         this.modification = null;
         this.modifications = null;

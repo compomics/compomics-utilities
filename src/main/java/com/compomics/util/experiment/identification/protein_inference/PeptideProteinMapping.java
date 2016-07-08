@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -127,10 +128,12 @@ public class PeptideProteinMapping {
     }
 
     /**
-     * Returns a map made from the given mappings containing the indexes of the peptides in the protein sequences indexed by peptide sequence and protein accession.
-     * 
+     * Returns a map made from the given mappings containing the indexes of the
+     * peptides in the protein sequences indexed by peptide sequence and protein
+     * accession.
+     *
      * @param peptideProteinMappings a list of peptide to protein mappings
-     * 
+     *
      * @return a map of the mapping
      */
     public static HashMap<String, HashMap<String, ArrayList<Integer>>> getPeptideProteinIndexesMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
@@ -152,12 +155,13 @@ public class PeptideProteinMapping {
         }
         return result;
     }
-    
+
     /**
-     * Returns a map made from the given mappings containing protein accessions for every peptide sequence.
-     * 
+     * Returns a map made from the given mappings containing protein accessions
+     * for every peptide sequence.
+     *
      * @param peptideProteinMappings a list of peptide to protein mappings
-     * 
+     *
      * @return a map of the mapping
      */
     public static HashMap<String, HashSet<String>> getPeptideProteinMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
@@ -174,16 +178,17 @@ public class PeptideProteinMapping {
         }
         return result;
     }
-    
+
     /**
      * Aggregates the given mapping into a list of peptides.
-     * 
+     *
      * @param peptideProteinMappings a list of peptides to protein mappings
-     * 
+     *
      * @return a list of peptides
      */
     public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
         HashMap<String, Peptide> peptidesMap = new HashMap<String, Peptide>(peptideProteinMappings.size());
+        HashMap<String, HashSet<String>> proteinsMap = new HashMap<String, HashSet<String>>(peptideProteinMappings.size());
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             Peptide tempPeptide = new Peptide(peptideProteinMapping.getPeptideSequence(), peptideProteinMapping.getModificationMatches());
             String peptideKey = tempPeptide.getKey();
@@ -191,11 +196,22 @@ public class PeptideProteinMapping {
             if (peptide == null) {
                 tempPeptide.addVariantMatches(peptideProteinMapping.getVariantMatches());
                 peptidesMap.put(peptideKey, tempPeptide);
+                HashSet<String> proteins = new HashSet<String>(1);
+                proteins.add(peptideProteinMapping.getProteinAccession());
+                proteinsMap.put(peptideKey, proteins);
             } else {
                 peptide.addVariantMatches(peptideProteinMapping.getVariantMatches());
+                HashSet<String> proteins = proteinsMap.get(peptideKey);
+                proteins.add(peptideProteinMapping.getProteinAccession());
             }
+        }
+        for (String peptideKey : peptidesMap.keySet()) {
+            HashSet<String> proteins = proteinsMap.get(peptideKey);
+            ArrayList<String> sortedProteinList = new ArrayList<String>(proteins);
+            Collections.sort(sortedProteinList);
+            Peptide peptide = peptidesMap.get(peptideKey);
+            peptide.setParentProteins(sortedProteinList);
         }
         return peptidesMap.values();
     }
-
 }

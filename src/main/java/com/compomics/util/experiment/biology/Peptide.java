@@ -1,13 +1,14 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ import java.util.*;
  * This class models a peptide.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class Peptide extends ExperimentObject {
 
@@ -47,9 +49,13 @@ public class Peptide extends ExperimentObject {
      */
     private ArrayList<ModificationMatch> modifications = null;
     /**
-     * The variants carried by the peptide.
+     * The variants observed when mapping this peptide to the database.
      */
     private ArrayList<VariantMatch> variants = null;
+    /**
+     * The variants in a map indexed by protein .
+     */
+    private HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap = null;
     /**
      * Separator preceding confident localization of the confident localization
      * of a modification.
@@ -87,7 +93,6 @@ public class Peptide extends ExperimentObject {
                 }
             }
             this.modifications = new ArrayList<ModificationMatch>(modifications);
-            this.variants = new ArrayList<VariantMatch>();
         }
     }
 
@@ -96,6 +101,8 @@ public class Peptide extends ExperimentObject {
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param modifications the PTM of this peptide
+     * @param variants the variants compared to the database
+     *
      * @throws IllegalArgumentException if the peptide sequence contains unknown
      * amino acids
      */
@@ -167,9 +174,9 @@ public class Peptide extends ExperimentObject {
         modifications.add(modificationMatch);
         mass = null;
     }
-    
+
     /**
-     * Getter for the variants carried by this peptide.
+     * Getter for the variants carried by this peptide. Null if not set.
      *
      * @return the variants matches as found by the search engine
      */
@@ -178,7 +185,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Sets new modification matches for the peptide.
+     * Sets new variants for the peptide.
      *
      * @param variants the new variant matches
      */
@@ -190,11 +197,14 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
-        variants.clear();
+        if (variants != null) {
+            variants.clear();
+        variantsMap = null;
+        }
     }
 
     /**
-     * Adds a modification match.
+     * Adds a variant match.
      *
      * @param variantMatch the variant match to add
      */
@@ -203,14 +213,55 @@ public class Peptide extends ExperimentObject {
             variants = new ArrayList<VariantMatch>(1);
         }
         variants.add(variantMatch);
+        variantsMap = null;
+    }
+
+    /**
+     * Adds variant matches.
+     *
+     * @param variantMatch the variant match to add
+     */
+    public void addVariantMatches(Collection<VariantMatch> variantMatch) {
+        if (variants == null) {
+            variants = new ArrayList<VariantMatch>(variantMatch.size());
+        }
+        variants.addAll(variantMatch);
+        variantsMap = null;
     }
     
+    /**
+     * Returns the variants in a map indexed by protein accession and index. The map is computed from the list of variants and saved in cache.
+     * 
+     * @return the variants in a map 
+     */
+    public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
+        if (variantsMap == null) {
+            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(variants.size());
+            for (VariantMatch variantMatch : variants) {
+                String proteinAccession = variantMatch.getProteinAccession();
+                HashMap<Integer, ArrayList<Variant>> proteinVariants = variantsMap.get(proteinAccession);
+                if (proteinVariants == null) {
+                    proteinVariants = new HashMap<Integer, ArrayList<Variant>>(2);
+                    variantsMap.put(proteinAccession, proteinVariants);
+                }
+                int site = variantMatch.getSite();
+                ArrayList<Variant> variantsAtSite = proteinVariants.get(site);
+                if (variantsAtSite == null) {
+                    variantsAtSite = new ArrayList<Variant>(1);
+                    proteinVariants.put(site, variantsAtSite);
+                }
+                variantsAtSite.add(variantMatch.getVariant());
+            }
+        }
+        return variantsMap;
+    }
     
-    
-    
-    
-    
-    
+    /**
+     * Clears the map saved in cache.
+     */
+    public void clearVariantsMap() {
+        variantsMap = null;
+    }
 
     /**
      * Getter for the sequence.
@@ -378,30 +429,11 @@ public class Peptide extends ExperimentObject {
     public synchronized void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
         if (parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
+            ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
-
-            PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
-            switch (peptideMapperType) {
-                case fm_index:
-                    for (String peptideSequence : proteinMapping.keySet()) {
-                        HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                        accessionsFound.addAll(subMapping.keySet());
-                    }
-                    break;
-                case tree:
-                    for (String peptideSequence : proteinMapping.keySet()) {
-                        double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length(); //@TODO: should be done in the tree
-                        if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                            HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                            accessionsFound.addAll(subMapping.keySet());
-                        }
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Peptide mapper type " + peptideMapperType + " not supported.");
+            for (PeptideProteinMapping peptideProteinMapping : proteinMapping) {
+                accessionsFound.add(peptideProteinMapping.getProteinAccession());
             }
-
             parentProteins = new ArrayList<String>(accessionsFound);
             Collections.sort(parentProteins);
         }

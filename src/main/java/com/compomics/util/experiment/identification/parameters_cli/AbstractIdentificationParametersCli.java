@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.parameters_cli;
 
+import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -81,7 +82,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 }
 
                 // check if the parameters are valid
-                if (!IdentificationParametersInputBean.isValidStartup(line, true)) {
+                if (!CommandParameter.isValidStartup(line, true)) {
                     System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
                     System.exit(0);
                 }

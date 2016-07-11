@@ -16,6 +16,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
@@ -95,7 +96,7 @@ public class ProteinTree implements PeptideMapper {
     /**
      * Cache of the last queried peptides.
      */
-    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache;
+    private HashMap<String, ArrayList<PeptideProteinMapping>> lastQueriedPeptidesCache;
     /**
      * Peptide sequences in cache.
      */
@@ -107,7 +108,7 @@ public class ProteinTree implements PeptideMapper {
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache;
+    private HashMap<String, ArrayList<PeptideProteinMapping>> lastSlowQueriedPeptidesCache;
     /**
      * Peptide sequences in slow cache.
      */
@@ -147,8 +148,8 @@ public class ProteinTree implements PeptideMapper {
 
         this.memoryAllocation = memoryAllocation;
         this.cacheSize = cacheSize;
-        lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
-        lastQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
+        lastSlowQueriedPeptidesCache = new HashMap<String, ArrayList<PeptideProteinMapping>>(cacheSize);
+        lastQueriedPeptidesCache = new HashMap<String, ArrayList<PeptideProteinMapping>>(cacheSize);
 
         if (debugSpeed) {
             try {
@@ -947,7 +948,7 @@ public class ProteinTree implements PeptideMapper {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
+    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         long time0 = 0;
@@ -955,7 +956,7 @@ public class ProteinTree implements PeptideMapper {
             time0 = System.currentTimeMillis();
         }
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, proteinInferencePreferences, false);
+        ArrayList<PeptideProteinMapping> result = getProteinMapping(peptideSequence, proteinInferencePreferences, false);
 
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();
@@ -990,14 +991,14 @@ public class ProteinTree implements PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    private ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (useCache && this.cacheSequenceMatchingPreferences != null && !this.cacheSequenceMatchingPreferences.isSameAs(sequenceMatchingPreferences)) {
             emptyCache();
             this.cacheSequenceMatchingPreferences = sequenceMatchingPreferences;
         }
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = null;
+        ArrayList<PeptideProteinMapping> result = null;
         if (useCache) {
             result = lastQueriedPeptidesCache.get(peptideSequence);
         }
@@ -1014,7 +1015,7 @@ public class ProteinTree implements PeptideMapper {
                         result = lastSlowQueriedPeptidesCache.get(reversedSequence);
                     }
                     if (result != null) {
-                        return getReversedResults(result);
+                        return getReversedResults(result, reversedSequence);
                     }
                 }
 
@@ -1025,7 +1026,7 @@ public class ProteinTree implements PeptideMapper {
                     throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
                 }
 
-                result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+                result = new ArrayList<PeptideProteinMapping>(2);
 
                 AminoAcidSequence peptideAminoAcidSequence = new AminoAcidSequence(peptideSequence);
                 Double limitX = null;
@@ -1037,49 +1038,21 @@ public class ProteinTree implements PeptideMapper {
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
                     if (node != null) {
-                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideAminoAcidSequence, tag, sequenceMatchingPreferences);
-                        for (String tagSequence : tagResults.keySet()) {
-                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence);
-                            HashMap<String, ArrayList<Integer>> tagMapping = tagResults.get(tagSequence);
-                            if (mapping == null && !tagMapping.isEmpty()) {
-                                result.put(tagSequence, tagMapping);
-                            } else {
-                                for (String tagAccession : tagMapping.keySet()) {
-                                    ArrayList<Integer> indexes = mapping.get(tagAccession);
-                                    ArrayList<Integer> tagIndexes = tagMapping.get(tagAccession);
-                                    if (indexes == null) {
-                                        mapping.put(tagAccession, tagIndexes);
-                                    } else {
-                                        for (int newIndex : tagIndexes) {
-                                            if (!indexes.contains(newIndex)) {
-                                                indexes.add(newIndex);
-                                            }
-                                        }
-                                        Collections.sort(indexes);
-                                    }
-                                }
-                            }
-                        }
+                        ArrayList<PeptideProteinMapping> tagResults = node.getProteinMapping(peptideAminoAcidSequence, tag, sequenceMatchingPreferences);
+                        result.addAll(tagResults);
                     }
                 }
 
                 if (sequenceFactory.isDefaultReversed() && !reversed) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-                    HashMap<String, HashMap<String, ArrayList<Integer>>> reversedResult;
+                    ArrayList<PeptideProteinMapping> reversedResult;
                     if (!reversedSequence.equals(peptideSequence)) {
                         reversedResult = getProteinMapping(reversedSequence, sequenceMatchingPreferences, true);
-                        reversedResult = getReversedResults(reversedResult);
+                        reversedResult = getReversedResults(reversedResult, reversedSequence);
                     } else {
-                        reversedResult = getReversedResults(result);
+                        reversedResult = getReversedResults(result, reversedSequence);
                     }
-                    for (String tempReversedSequence : reversedResult.keySet()) {
-                        HashMap<String, ArrayList<Integer>> mapping = result.get(tempReversedSequence);
-                        if (mapping != null) {
-                            mapping.putAll(reversedResult.get(tempReversedSequence));
-                        } else {
-                            result.put(tempReversedSequence, reversedResult.get(tempReversedSequence));
-                        }
-                    }
+                    result.addAll(reversedResult);
                 }
 
                 if (!reversed && useCache) {
@@ -1100,7 +1073,7 @@ public class ProteinTree implements PeptideMapper {
      * @param mapping the protein mapping
      * @param queryTime the mapping time
      */
-    private synchronized void addToCache(String peptideSequence, HashMap<String, HashMap<String, ArrayList<Integer>>> mapping, long queryTime) {
+    private synchronized void addToCache(String peptideSequence, ArrayList<PeptideProteinMapping> mapping, long queryTime) {
 
         if (queryTime <= queryTimeThreshold) {
             lastQueriedPeptidesCache.put(peptideSequence, mapping);
@@ -1119,30 +1092,8 @@ public class ProteinTree implements PeptideMapper {
         }
     }
 
-    /**
-     * Returns the protein mappings for the given peptide sequence. Peptide
-     * sequence &gt; Protein accession &gt; Index in the protein. An empty map
-     * if not found.
-     *
-     * @param tag the tag to look for in the tree. Must contain a consecutive
-     * amino acid sequence of longer or equal size than the initialTagSize of
-     * the tree.
-     * @param tagMatcher the tag matcher to use
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the MS2 m/z tolerance
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
-    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    @Override
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = null;
@@ -1169,57 +1120,27 @@ public class ProteinTree implements PeptideMapper {
         if (componentIndex == -1) {
             throw new IllegalArgumentException("No amino acid sequence longer than " + initialTagSize + " was found for tag " + tag + ".");
         }
-        HashMap<String, HashMap<String, ArrayList<Integer>>> seeds = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+        ArrayList<PeptideProteinMapping> seeds = new ArrayList<PeptideProteinMapping>();
         if (longestAminoAcidPattern != null) {
             for (String peptideSequence : longestAminoAcidPattern.getAllPossibleSequences()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / peptideSequence.length();
                 if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                    seeds.putAll(getProteinMapping(peptideSequence, sequenceMatchingPreferences));
+                    seeds.addAll(getProteinMapping(peptideSequence, sequenceMatchingPreferences));
                 }
             }
         } else {
-            seeds.putAll(getProteinMapping(longestAminoAcidSequence.getSequence(), sequenceMatchingPreferences));
+            seeds.addAll(getProteinMapping(longestAminoAcidSequence.getSequence(), sequenceMatchingPreferences));
         }
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> results = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
-        for (String tagSeed : seeds.keySet()) {
-            double xShare = ((double) Util.getOccurrence(tagSeed, 'X')) / tagSeed.length();
-            if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                for (String accession : seeds.get(tagSeed).keySet()) {
-                    String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
-                    for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = tagMatcher.getPeptideMatches(tag, accession, proteinSequence, seedIndex,
-                                componentIndex, massTolerance);
-                        for (int aa : matches.keySet()) {
-                            for (Peptide peptide : matches.get(aa)) {
-                                HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
-                                if (proteinToIndexMap == null) {
-                                    proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
-                                    results.put(peptide, proteinToIndexMap);
-                                }
-                                ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
-                                if (peptideIndexes == null) {
-                                    peptideIndexes = new ArrayList<Integer>();
-                                    proteinToIndexMap.put(accession, peptideIndexes);
-                                }
-                                peptideIndexes.add(aa);
-                            }
-                        }
-                    }
-                }
-            }
+        ArrayList<PeptideProteinMapping> results = new ArrayList<PeptideProteinMapping>(seeds.size());
+        for (PeptideProteinMapping peptideProteinMapping : seeds) {
+            String accession = peptideProteinMapping.getProteinAccession();
+            String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
+            int seedIndex = peptideProteinMapping.getIndex();
+            ArrayList<PeptideProteinMapping> tagMapping = tagMatcher.getPeptideMatches(tag, accession, proteinSequence, seedIndex,
+                    componentIndex, massTolerance);
+            results.addAll(tagMapping);
         }
         
-        
-        if (tag.getContent().size() == 3){
-            ArrayList<TagComponent> tc = tag.getContent();
-            for (Peptide pep : results.keySet()){
-                for (String acc : results.get(pep).keySet()){
-                    for (int pos : results.get(pep).get(acc)){
-                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
-                    }
-                }
-            }
-        }
         return results;
     }
 
@@ -1317,7 +1238,7 @@ public class ProteinTree implements PeptideMapper {
      * Reverts the indexes and the protein accessions of the given mapping.
      *
      * @param forwardResults the given mapping
-     * @param peptideSequence the sequence of interest
+     * @param sequence the sequence of interest
      *
      * @return the reversed indexes
      *
@@ -1330,50 +1251,42 @@ public class ProteinTree implements PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
+    private ArrayList<PeptideProteinMapping> getReversedResults(ArrayList<PeptideProteinMapping> forwardResults, String sequence) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
+        ArrayList<PeptideProteinMapping> results = new ArrayList<PeptideProteinMapping>(forwardResults.size());
 
-        for (String sequence : forwardResults.keySet()) {
+        for (PeptideProteinMapping peptideProteinMapping : forwardResults) {
 
             int peptideLength = sequence.length();
             String reversedSequence = SequenceFactory.reverseSequence(sequence);
-            HashMap<String, ArrayList<Integer>> mapping = new HashMap<String, ArrayList<Integer>>(forwardResults.get(sequence).size());
 
-            for (String accession : forwardResults.get(sequence).keySet()) {
+            String accession = peptideProteinMapping.getProteinAccession();
 
-                String newAccession;
-                Integer proteinLength;
+            String reversedAccession;
+            Integer proteinLength;
 
-                if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
-                    newAccession = SequenceFactory.getDefaultTargetAccession(accession);
-                    proteinLength = getProteinLength(newAccession);
-                    if (proteinLength == null) {
-                        throw new IllegalArgumentException("Length of protein " + newAccession + " not found.");
-                    }
-                } else {
-                    newAccession = SequenceFactory.getDefaultDecoyAccession(accession);
-                    proteinLength = getProteinLength(accession);
-                    if (proteinLength == null) {
-                        throw new IllegalArgumentException("Length of protein " + accession + " not found.");
-                    }
+            if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
+                reversedAccession = SequenceFactory.getDefaultTargetAccession(accession);
+                proteinLength = getProteinLength(reversedAccession);
+                if (proteinLength == null) {
+                    throw new IllegalArgumentException("Length of protein " + reversedAccession + " not found.");
                 }
-
-                ArrayList<Integer> forwardIndexes = forwardResults.get(sequence).get(accession);
-                ArrayList<Integer> reversedIndexes = new ArrayList<Integer>(forwardIndexes.size());
-
-                for (int index : forwardIndexes) {
-                    int reversedIndex = proteinLength - index - peptideLength;
-                    if (reversedIndex < 0 || reversedIndex >= proteinLength) {
-                        throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + newAccession + ": " + reversedIndex + ".");
-                    }
-                    reversedIndexes.add(reversedIndex);
+            } else {
+                reversedAccession = SequenceFactory.getDefaultDecoyAccession(accession);
+                proteinLength = getProteinLength(accession);
+                if (proteinLength == null) {
+                    throw new IllegalArgumentException("Length of protein " + accession + " not found.");
                 }
-
-                mapping.put(newAccession, reversedIndexes);
             }
 
-            results.put(reversedSequence, mapping);
+            int forwardIndex = peptideProteinMapping.getIndex();
+            int reversedIndex = proteinLength - forwardIndex - peptideLength;
+            if (reversedIndex < 0 || reversedIndex >= proteinLength) {
+                throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + reversedAccession + ": " + reversedIndex + ".");
+            }
+
+            PeptideProteinMapping reversedMapping = new PeptideProteinMapping(reversedAccession, reversedSequence, reversedIndex);
+            results.add(reversedMapping);
         }
 
         return results;
@@ -1449,7 +1362,7 @@ public class ProteinTree implements PeptideMapper {
 
         return result;
     }
-    
+
     @Override
     public void close() throws IOException, SQLException {
         if (debugSpeed) {
@@ -1534,42 +1447,6 @@ public class ProteinTree implements PeptideMapper {
      */
     public int getNodesInCache() {
         return tree.size();
-    }
-
-    /**
-     * Returns a list of peptides matched using the given peptide sequence in
-     * the given protein according the provided matching settings.
-     *
-     * @param peptideSequence the original peptide sequence
-     * @param proteinAccession the accession of the protein of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a list of peptides matched and their indexes in the protein
-     * sequence
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
-    public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-
-        HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, sequenceMatchingPreferences);
-        HashMap<String, ArrayList<Integer>> tempMapping, result = new HashMap<String, ArrayList<Integer>>();
-
-        for (String peptide : mapping.keySet()) {
-            tempMapping = mapping.get(peptide);
-            if (tempMapping.containsKey(proteinAccession)) {
-                result.put(peptide, tempMapping.get(proteinAccession));
-            }
-        }
-
-        return result;
     }
 
     /**

@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
@@ -84,13 +85,22 @@ public class Node implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidSequence query, String currentSequence,
+    public ArrayList<PeptideProteinMapping> getProteinMapping(AminoAcidSequence query, String currentSequence,
             SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException {
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>(1);
+        ArrayList<PeptideProteinMapping> result = new ArrayList<PeptideProteinMapping>(1);
 
         if (depth == query.length()) {
-            result.put(currentSequence, getAllMappings());
+            HashMap<String, ArrayList<Integer>> mapping = getAllMappings();
+            for (String accession : mapping.keySet()) {
+                for (Integer site : mapping.get(accession)) {
+                    double xShare = ((double) Util.getOccurrence(currentSequence, 'X')) / currentSequence.length();
+                    if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentSequence, site);
+                        result.add(peptideProteinMapping);
+                    }
+                }
+            }
         } else if (accessions != null) {
 
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -104,12 +114,13 @@ public class Node implements Serializable {
             for (String accession : indexes.keySet()) {
                 HashMap<String, ArrayList<Integer>> accessionIndexes = indexes.get(accession);
                 for (String tempSequence : accessionIndexes.keySet()) {
-                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
-                    if (mapping == null) {
-                        mapping = new HashMap<String, ArrayList<Integer>>(1);
-                        result.put(tempSequence, mapping);
+                    for (Integer index : accessionIndexes.get(tempSequence)) {
+                        double xShare = ((double) Util.getOccurrence(tempSequence, 'X')) / tempSequence.length();
+                        if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, tempSequence, index);
+                            result.add(peptideProteinMapping);
+                        }
                     }
-                    mapping.put(accession, accessionIndexes.get(tempSequence));
                 }
             }
         } else {
@@ -119,7 +130,7 @@ public class Node implements Serializable {
                     String newSequence = currentSequence + aa;
                     double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / newSequence.length();
                     if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                        result.putAll(node.getProteinMapping(query, newSequence, sequenceMatchingPreferences));
+                        result.addAll(node.getProteinMapping(query, newSequence, sequenceMatchingPreferences));
                     }
                 }
             }

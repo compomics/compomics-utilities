@@ -1,5 +1,6 @@
 package com.compomics.software;
 
+import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.software.autoupdater.MavenJarFile;
 import com.compomics.software.autoupdater.WebDAO;

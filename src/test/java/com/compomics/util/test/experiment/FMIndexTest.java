@@ -41,9 +41,9 @@ import org.xmlpull.v1.XmlPullParserException;
 public class FMIndexTest extends TestCase {
     
     
-    boolean testSequenceMatching = false;
-    boolean testTagMatching = false;
-    boolean testVariantMatching = false;
+    boolean testSequenceMatching = true;
+    boolean testTagMatching = true;
+    boolean testVariantMatching = true;
     boolean testVariantPTMMatching = true;
 
     /**

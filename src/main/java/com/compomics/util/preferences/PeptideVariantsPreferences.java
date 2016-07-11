@@ -75,6 +75,7 @@ public class PeptideVariantsPreferences implements Serializable {
      * @param nAaInsertions the number of amino acid insertions allowed
      */
     public void setnAaInsertions(Integer nAaInsertions) {
+System.out.println("set insertions: " + nAaInsertions);
         this.nAaInsertions = nAaInsertions;
     }
 
@@ -183,6 +184,7 @@ public class PeptideVariantsPreferences implements Serializable {
      * @return the preferences corresponding to no variants allowed
      */
     public static PeptideVariantsPreferences getNoVariantPreferences() {
+System.out.println("reset");
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setnAaDeletions(0);
         peptideVariantsPreferences.setnAaInsertions(0);

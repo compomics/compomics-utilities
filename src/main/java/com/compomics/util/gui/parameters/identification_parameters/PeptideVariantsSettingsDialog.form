@@ -117,19 +117,13 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="deletionsLbl" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="deletionsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="deletionsLbl1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="15" pref="15" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="deletionsLbl2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="deletionsLbl3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="36" pref="36" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="deletionsLbl3" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -258,6 +252,9 @@
                 </Property>
                 <Property name="selectedIndex" type="int" value="1"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="specificVariantsComboBoxActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -306,7 +303,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="substitutionMatrixComboBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="substitutionMatrixTableJScrollPane" pref="123" max="32767" attributes="0"/>
+                      <Component id="substitutionMatrixTableJScrollPane" pref="231" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

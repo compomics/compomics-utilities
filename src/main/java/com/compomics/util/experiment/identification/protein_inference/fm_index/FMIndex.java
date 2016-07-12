@@ -173,7 +173,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * Either search with one maximal number of variants or use an upper limit for every variant (insertion / deletion / substitution)
      */
-    boolean genericVariantMatching = true;
+    boolean genericVariantMatching = false;
     
     /**
      * number of allowed variant operations
@@ -198,7 +198,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * allowed substitutions
      */
-    int[][] substiturionMatrix = null;
+    boolean[][] substiturionMatrix = null;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -264,19 +264,17 @@ public class FMIndex implements PeptideMapper {
 System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberInsertions + " " + maxNumberSubstitutions);
         
         
-        substiturionMatrix = new int[128][];
-        for (int i = 0; i < 128; ++i) substiturionMatrix[i] = null;
+        substiturionMatrix = new boolean[128][128];
+        for (int i = 0; i < 128; ++i) for (int j = 0; j < 128; ++j) substiturionMatrix[i][j] = false;
         AaSubstitutionMatrix aaSubstitutionMatrix = peptideVariantsPreferences.getAaSubstitutionMatrix();
         for (int aa = 'A'; aa <= 'Z'; ++aa){
             if (!aaSubstitutionMatrix.getOriginalAminoAcids().contains((char)aa)) continue;
             HashSet<Character> substitutions = aaSubstitutionMatrix.getSubstitutionAminoAcids((char)aa);
             if (substitutions.isEmpty()) continue;
-            substiturionMatrix[aa] = new int[substitutions.size()];
             Iterator<Character> substitutionAAIterator = substitutions.iterator();
-            int i = 0;
             while (substitutionAAIterator.hasNext()){
-                substiturionMatrix[aa][i] = (int)substitutionAAIterator.next();
-                ++i;
+                int subAA = substitutionAAIterator.next();
+                substiturionMatrix[aa][subAA] = true;
             }
         }
         
@@ -1211,26 +1209,24 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
 
                     int leftIndex = content.left;
                     int rightIndex = content.right;
+                    String cleanPeptide = currentPeptide.replace("*", "");
 
                     for (int j = leftIndex; j <= rightIndex; ++j) {
                         int pos = getTextPosition(j);
                         int index = binarySearch(boundaries, pos);
                         String accession = accessions[index];
-                    
-                        // TODO: discard repeating results
                         
                         int startPosition = pos - boundaries[index];
                         boolean newPeptide = true;
 
                         for (PeptideProteinMapping ppm : allMatches){
-                            if (ppm.getProteinAccession().compareTo(accession) == 0 && ppm.getPeptideSequence().compareTo(peptide) == 0 && Math.abs(ppm.getIndex() - startPosition) <= numErrors){
+                            if (ppm.getProteinAccession().equals(accession) && ppm.getPeptideSequence().equals(cleanPeptide) && Math.abs(ppm.getIndex() - startPosition) <= numErrors){
                                 newPeptide = false;
                                 break;
                             }
                         }
 
                         if (newPeptide){
-                            String cleanPeptide = peptide.replace("*", "");
                             
                             ArrayList<VariantMatch> variants = new ArrayList<VariantMatch>();
                             // adding variants and adjusting modification sites
@@ -1245,7 +1241,7 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
                                         variants.add(new VariantMatch(new Substitution((char)edit, peptide.charAt(length - 1)), "-",  length));
                                     }
                                     else if ('a' <= edit && edit <= 'z'){ // deletion
-                                        variants.add(new VariantMatch(new Insertion((char)(edit - 32)), "-",  length));
+                                        variants.add(new VariantMatch(new Deletion((char)(edit - 32)), "-",  length));
                                         --length;
                                     }
                                 }
@@ -1676,14 +1672,14 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
      */
     private void mappingSequenceAndMassesWithVariantsSpecific(TagElement[] combinations, LinkedList<MatrixContent>[][] matrix, int[] less, WaveletTree occurrence, double massTolerance) {
         final int lenCombinations = combinations.length;
+        int maxNumberSpecificVariants = maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions;
         
-        for (int k = 0; k <= maxNumberVariants; ++k){
+        for (int k = 0; k <= maxNumberSpecificVariants; ++k){
             LinkedList<MatrixContent>[] row = matrix[k];
             
             for (int j = 0; j < lenCombinations; ++j){
                 TagElement combination = combinations[j];
-                LinkedList<MatrixContent> cell = row[j];
-                
+                LinkedList<MatrixContent> cell = row[j];             
                 while (!cell.isEmpty()) {
                     //++cnt;
                     MatrixContent content = cell.removeFirst();
@@ -1724,9 +1720,13 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
                                 // substitution
                             if (numSubstitutions < maxNumberSubstitutions){ // TODO: obey substitution list
                                 for (int index : aaMassIndexes){
+                                    int amino = index & 127;
+                                    
+                                    // check allowed substitutions
+                                    if (!substiturionMatrix[aminoAcid][amino]) continue;
+                                    
                                     double aminoMass = oldMass + aaMasses[index];
                                     int offsetSub = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
-                                    int amino = index & 127;
                                 
                                     if (amino != aminoAcid && aminoMass < combinationMass + massTolerance){
                                         matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char)aminoAcid, null));
@@ -1788,8 +1788,8 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
                                         // deletion
                                         if (numDeletions < maxNumberDeletions) matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, new int[]{numDeletions + 1, numInsertions, numSubstitutions}, Character.toChars(errorAminoAcid + 32)[0]));
 
-                                        // substitution   TODO: obey substitution list
-                                        if (numSubstitutions < maxNumberSubstitutions && aminoAcid != errorAminoAcid) matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, new int[]{numDeletions, numInsertions, numSubstitutions + 1},  (char)errorAminoAcid));
+                                        // substitution
+                                        if (numSubstitutions < maxNumberSubstitutions && aminoAcid != errorAminoAcid && substiturionMatrix[aminoAcid][errorAminoAcid]) matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, new int[]{numDeletions, numInsertions, numSubstitutions + 1},  (char)errorAminoAcid));
                                     }
                                 }
                             }
@@ -2386,11 +2386,11 @@ System.out.println("variant numbers: " + maxNumberDeletions + " " + maxNumberIns
 
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        if (maxNumberVariants == 0){
-            return getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+        if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0){
+            return getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
         }
         else {
-            return getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+            return getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
         }
     }
     

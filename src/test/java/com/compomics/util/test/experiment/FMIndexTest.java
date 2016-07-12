@@ -42,9 +42,10 @@ import org.xmlpull.v1.XmlPullParserException;
 public class FMIndexTest extends TestCase {
 
     boolean testSequenceMatching = false;
-    // TODO: testSequenceVa
+    boolean testSequenceMatchingWithVariants = false;
     boolean testTagMatching = false;
-    boolean testVariantMatching = true;
+    boolean testVariantMatchingGeneric = false;
+    boolean testVariantMatchingSpecific = true;
     boolean testVariantPTMMatching = false;
 
     /**
@@ -111,6 +112,171 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(indexes.get(2) == index);
 
     }
+    
+    
+    /**
+     * Tests the import and the mapping of a few peptide sequences.
+     *
+     * @throws FileNotFoundException thrown whenever a file is not found
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     * @throws ClassNotFoundException thrown whenever an error occurs while
+     * deserializing an object
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the tree
+     * @throws SQLException if an SQLException thrown whenever a problem
+     * occurred while interacting with the tree database
+     */
+    public void testPeptideToProteinMappingWithVariants() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+        if (!testSequenceMatchingWithVariants) {
+            return;
+        }
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
+        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
+        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+
+        FMIndex fmIndex;
+        ArrayList<PeptideProteinMapping> peptideProteinMappings;
+        int correctVariants = 0;
+        boolean isPresent;
+
+        // ECTQDRGKTAFTEAVLLP
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
+        
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTAFTEAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 0);
+        
+        
+        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTAFTEVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 14 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'A') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        
+        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTMAFTEAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTMAFTEAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'M') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        
+        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDKGKTAFTEAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDKXKTAFTEAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 6 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'R' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'K') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        
+        
+        peptideVariantsPreferences.setnAaSubstitutions(2);
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
+        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDKGKTAFTEALLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDKXKTAFTEALLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 6 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'R' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'K') ++correctVariants;
+                    if (v.getSite() == 15 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'V') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 2);
+        
+        
+        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTDRGKTAFTEAVLTLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKTAFTEAVLTLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 16 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                    if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'Q') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 2);
+        
+    }
+    
+    
 
     /**
      * Tests the mapping of de novo sequence tags to the database.
@@ -645,8 +811,8 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testTagToProteinMappingWithVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        if (!testVariantMatching) return;
+    public void testTagToProteinMappingWithVariantsGeneric() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        if (!testVariantMatchingGeneric) return;
 
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
@@ -692,7 +858,7 @@ public class FMIndexTest extends TestCase {
         }
         Assert.assertTrue(isPresent);
 
-        // TESTMRITESTCKTESTKMELTSESTES with insertion in sequence
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in sequence
         aminoAcidPattern = new AminoAcidSequence("TST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
@@ -765,7 +931,7 @@ public class FMIndexTest extends TestCase {
         
         
 
-        // TESTMRITESTCKTESTKMELTSESTES with insertion in left mass
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -775,14 +941,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMITESTCKT")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'R') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
+        
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
@@ -793,15 +965,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("SCMRITESTCKTE")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 2 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'C') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in left mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
@@ -811,15 +988,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCKTE")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with insertion in right mass
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
@@ -829,13 +1011,18 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("TMRITESTCTE")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'K') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -847,15 +1034,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCCTE")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 11 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'K' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'C') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass();
@@ -865,15 +1057,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTACKT")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'A') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with insertion in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
@@ -883,13 +1080,18 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMITESTCKTES")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'R') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -901,15 +1103,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("SCMRITESTCKTEST")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 2 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'C') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in left mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + 2 * AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -919,15 +1126,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCKTESTK")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with insertion in right mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -937,15 +1149,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("TMRITESTCTEST")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'K') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -955,15 +1172,20 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCCTEST")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 11 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'K' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'C') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
 
-        // TESTMRITESTCKTESTKMELTSESTES with deletion in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
@@ -973,13 +1195,18 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
+        correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTACKTES")) {
                 isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'A') ++correctVariants;
+                }
                 break;
             }
         }
         Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
     }
 
     /**
@@ -1073,7 +1300,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 4);
 
-        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = 15.99 - 18.01 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = 57.02 - 2 * 18.01 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -1103,7 +1330,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 5);
 
-        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass();
@@ -1132,7 +1359,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 4);
 
-        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in right mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass() + 15.99 + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = 57.02 + AminoAcid.C.getMonoisotopicMass() + 15.99 + AminoAcid.M.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() - 18.01 + AminoAcid.T.getMonoisotopicMass();
@@ -1163,6 +1390,276 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 6);
     }
+    
+    
+    
+    
+    
+    /**
+     * Tests the mapping of de novo sequence tags to the database.
+     *
+     * @throws FileNotFoundException thrown whenever a file is not found
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     * @throws ClassNotFoundException thrown whenever an error occurs while
+     * deserializing an object
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the tree
+     * @throws SQLException if an SQLException thrown whenever a problem
+     * occurred while interacting with the tree database
+     * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
+     * occurred while interacting with the tree database
+     */
+    public void testTagToProteinMappingWithVariantsSpecific() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        if (!testVariantMatchingSpecific) return;
+
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+
+        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ptmFactory.clearFactory();
+        ptmFactory = PTMFactory.getInstance();
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
+        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
+
+        AminoAcidSequence aminoAcidPattern;
+        double nTermGap;
+        double cTermGap;
+        Tag tag;
+        ArrayList<PeptideProteinMapping> peptideProteinMappings;
+        PtmSettings ptmSettings;
+        FMIndex fmIndex;
+        boolean isPresent;
+        int correctVariants;
+        
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with no variants
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCKTE")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in sequence
+        aminoAcidPattern = new AminoAcidSequence("TST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in sequence
+        aminoAcidPattern = new AminoAcidSequence("TST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in sequence
+        aminoAcidPattern = new AminoAcidSequence("TST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        correctVariants = 0;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITSTCKTE")) {
+                isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 7 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'E') ++correctVariants;
+                }
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        
+        
+        
+        
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in sequence
+        aminoAcidPattern = new AminoAcidSequence("TGST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in sequence
+        aminoAcidPattern = new AminoAcidSequence("TGEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        correctVariants = 0;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITGESTCKTE")) {
+                isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 7 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'G') ++correctVariants;
+                }
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        
+
+        
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass but with empty substitution matrix
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+
+        
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in left non-empty substitution matrix
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        correctVariants = 0;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STKRITESTCKTE")) {
+                isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 3 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'M' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'K') ++correctVariants;
+                }
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+        
+        if (true) return;
+        
+
+        // TESTMRITESTCKTESTKMELTSESTES with insertion in left mass
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        correctVariants = 0;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCKTE")) {
+                isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                }
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+
+        // TESTMRITESTCKTESTKMELTSESTES with deletion in right mass
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        correctVariants = 0;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TMRITESTCTE")) {
+                isPresent = true;
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 10 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'K') ++correctVariants;
+                }
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 1);
+    }
+    
+    
+    
+    
+    
+    
+    
 
     public void testExperiment() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         if (true) return;
@@ -1227,3 +1724,7 @@ public class FMIndexTest extends TestCase {
 
     }
 }
+
+
+
+

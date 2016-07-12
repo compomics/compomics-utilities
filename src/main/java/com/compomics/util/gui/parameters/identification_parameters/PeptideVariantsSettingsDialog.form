@@ -91,7 +91,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Maximal numeber of variants per perptide"/>
+                <TitledBorder title="Number of Variants Allowed per Peptide"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -104,24 +104,34 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="deletionsLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="deletionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="totalVariantsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="specificVariantsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="549" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="specificVariantsComboBox" max="32767" attributes="0"/>
+                                  <Component id="totalVariantsSpinner" pref="150" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="deletionsLbl1" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="deletionsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="deletionsLbl1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="15" pref="15" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="deletionsLbl2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="deletionsLbl3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="insertionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="deletionsLbl2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="subsitutionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="deletionsLbl3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="swapSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="swapSpinner" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="subsitutionsSpinner" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="deletionsSpinner" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="insertionsSpinner" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -130,8 +140,18 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="totalVariantsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="totalVariantsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="specificVariantsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="specificVariantsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="deletionsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deletionsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -151,7 +171,7 @@
                           <Component id="deletionsLbl2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="subsitutionsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -205,6 +225,37 @@
                 </Property>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="totalVariantsLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Total"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="totalVariantsSpinner">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="specificVariantsLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Use specific variants"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="specificVariantsComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="specificVariantsComboBoxActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JButton" name="cancelButton">
@@ -252,7 +303,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="substitutionMatrixComboBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="substitutionMatrixTableJScrollPane" pref="268" max="32767" attributes="0"/>
+                      <Component id="substitutionMatrixTableJScrollPane" pref="231" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

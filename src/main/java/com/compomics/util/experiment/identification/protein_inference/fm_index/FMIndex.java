@@ -243,13 +243,11 @@ public class FMIndex implements PeptideMapper {
         
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
-        maxNumberVariants = 1;
-        /*
         genericVariantMatching = !peptideVariantsPreferences.getUseSpecificCount();
         maxNumberInsertions = peptideVariantsPreferences.getnAaInsertions();
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
-        */
+        
         
         System.out.println("generic: " + genericVariantMatching);
         System.out.println("variant numbers: " + maxNumberVariants + " " + maxNumberDeletions + " " + maxNumberInsertions + " " + maxNumberSubstitutions);

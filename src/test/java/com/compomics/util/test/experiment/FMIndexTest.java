@@ -45,8 +45,8 @@ public class FMIndexTest extends TestCase {
     boolean testSequenceMatchingWithVariants = false;
     boolean testTagMatching = false;
     boolean testVariantMatchingGeneric = false;
-    boolean testVariantMatchingSpecific = true;
     boolean testVariantPTMMatching = false;
+    boolean testVariantMatchingSpecific = true;
 
     /**
      * Tests the import and the mapping of a few peptide sequences.
@@ -818,7 +818,8 @@ public class FMIndexTest extends TestCase {
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
-        peptideVariantsPreferences.setnAaSubstitutions(1);
+        peptideVariantsPreferences.setnVariants(1);
+        peptideVariantsPreferences.setUseSpecificCount(false);
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
@@ -1231,8 +1232,10 @@ public class FMIndexTest extends TestCase {
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.singleBaseSubstitution);
-        peptideVariantsPreferences.setnAaSubstitutions(1);
+        peptideVariantsPreferences.setnVariants(1);
+        peptideVariantsPreferences.setUseSpecificCount(false);
 
+        
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = PTMFactory.getInstance();
@@ -1564,7 +1567,7 @@ public class FMIndexTest extends TestCase {
 
         
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass but with empty substitution matrix
-        aminoAcidPattern = new AminoAcidSequence("TEST");
+        aminoAcidPattern = new AminoAcidSequence("TAST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
@@ -1572,6 +1575,7 @@ public class FMIndexTest extends TestCase {
         peptideVariantsPreferences.setnAaDeletions(0);
         peptideVariantsPreferences.setnAaInsertions(0);
         peptideVariantsPreferences.setnAaSubstitutions(1);
+        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
         fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(peptideProteinMappings.isEmpty());

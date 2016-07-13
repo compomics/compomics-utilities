@@ -41,11 +41,12 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class FMIndexTest extends TestCase {
 
-    boolean testSequenceMatching = false;
-    boolean testSequenceMatchingWithVariants = false;
-    boolean testTagMatching = false;
-    boolean testVariantMatchingGeneric = false;
-    boolean testVariantPTMMatching = false;
+    boolean testSequenceMatching = true;
+    boolean testSequenceMatchingWithVariants = true;
+    boolean testSequenceMatchingWithVariantsSpecific = true;
+    boolean testTagMatching = true;
+    boolean testVariantMatchingGeneric = true;
+    boolean testVariantPTMMatching = true;
     boolean testVariantMatchingSpecific = true;
 
     /**
@@ -138,7 +139,8 @@ public class FMIndexTest extends TestCase {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
         PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
-        peptideVariantsPreferences.setnAaSubstitutions(1);
+        peptideVariantsPreferences.setnVariants(1);
+        peptideVariantsPreferences.setUseSpecificCount(false);
 
         FMIndex fmIndex;
         ArrayList<PeptideProteinMapping> peptideProteinMappings;
@@ -231,7 +233,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        peptideVariantsPreferences.setnAaSubstitutions(2);
+        peptideVariantsPreferences.setnVariants(2);
         fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
         
         peptideProteinMappings = fmIndex.getProteinMapping("ECTQDKGKTAFTEALLP", sequenceMatchingPreferences);
@@ -273,6 +275,177 @@ public class FMIndexTest extends TestCase {
         }
         Assert.assertTrue(isPresent);
         Assert.assertTrue(correctVariants == 2);
+        
+    }
+    
+    
+    /**
+     * Tests the import and the mapping of a few peptide sequences.
+     *
+     * @throws FileNotFoundException thrown whenever a file is not found
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     * @throws ClassNotFoundException thrown whenever an error occurs while
+     * deserializing an object
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the tree
+     * @throws SQLException if an SQLException thrown whenever a problem
+     * occurred while interacting with the tree database
+     */
+    public void testPeptideToProteinMappingWithVariantsSpecific() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+        if (!testSequenceMatchingWithVariantsSpecific) {
+            return;
+        }
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
+        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
+        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        peptideVariantsPreferences.setUseSpecificCount(true);
+        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
+
+        FMIndex fmIndex;
+        ArrayList<PeptideProteinMapping> peptideProteinMappings;
+        int correctVariants = 0;
+        boolean isPresent;
+        
+        // ECTQDRGKTAFTEAVLLP no variant
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);        
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTAFTEAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 0);
+        
+        
+        
+        
+        
+        // ECTQDRGKTAFTEAVLLP two substitutions
+        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.allSubstitutions);
+        peptideVariantsPreferences.setnAaSubstitutions(2);
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping("ECPQDRGKTRFTEAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECPQDRXKTRFTEAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 3 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'P') ++correctVariants;
+                    if (v.getSite() == 10 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'A' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'R') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 2);
+        
+        
+        
+        
+        
+        
+        // ECTQDRGKTAFTEAVLLP one insertion, one deletion
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTDRGKTAFTEAVLTLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKTAFTEAVLTLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                       
+                    if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'Q') ++correctVariants;
+                    if (v.getSite() == 16 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 2);
+        
+        
+        
+        // ECTQDRGKTAFTEAVLLP two insertions, one deletion
+        peptideVariantsPreferences.setnAaInsertions(2);
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTQTTDRGKTAFTAVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTQTTDRXKTAFTAVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 5 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                    if (v.getSite() == 6 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'T') ++correctVariants;
+                    if (v.getSite() == 15 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'E') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 3);
+        
+        
+        
+        // ECTQDRGKTAFTEAVLLP one insertion, one deletion, one substitution
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping("ECTDRGKPAFTEAKVLLP", sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        correctVariants = 0;
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings){
+            if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKPAFTEAKVLLP")){
+                Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                
+                for (VariantMatch v : peptideProteinMapping.getVariantMatches()){
+                    if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion)v.getVariant()).getDeletedAminoAcid() == 'Q') ++correctVariants;
+                    if (v.getSite() == 8 && v.getVariant() instanceof Substitution && ((Substitution)v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution)v.getVariant()).getSubstitutedAminoAcid() == 'P') ++correctVariants;
+                    if (v.getSite() == 14 && v.getVariant() instanceof Insertion && ((Insertion)v.getVariant()).getInsertedAminoAcid() == 'K') ++correctVariants;
+                }
+                isPresent = true;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        Assert.assertTrue(correctVariants == 3);
         
     }
     

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1087,7 +1086,6 @@ public class FMIndex implements PeptideMapper {
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
         int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
         
-        int numErrors = 1 + ((genericVariantMatching) ? maxNumberVariants : maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions);
         ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
 
         for (int k = 0; k <= maxNumberVariants; ++k){
@@ -1102,7 +1100,7 @@ public class FMIndex implements PeptideMapper {
         
         
         if (countX <= xNumLimit) {
-            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1));
             
             for (int k = 0; k <= maxNumberVariants; ++k){
                 ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
@@ -1195,7 +1193,7 @@ public class FMIndex implements PeptideMapper {
                         boolean newPeptide = true;
 
                         for (PeptideProteinMapping ppm : allMatches){
-                            if (ppm.getProteinAccession().equals(accession) && ppm.getPeptideSequence().equals(cleanPeptide) && Math.abs(ppm.getIndex() - startPosition) <= numErrors){
+                            if (ppm.getProteinAccession().equals(accession) && ppm.getPeptideSequence().equals(cleanPeptide) && Math.abs(ppm.getIndex() - startPosition) <= maxNumberVariants){
                                 newPeptide = false;
                                 break;
                             }
@@ -1257,12 +1255,12 @@ public class FMIndex implements PeptideMapper {
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
         int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
         
-        int numErrors = 1 + ((genericVariantMatching) ? maxNumberVariants : maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions);
-        ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
+        int numErrors = maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions;
+        LinkedList<MatrixContent>[][] backwardMatrix = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors + 1][lenPeptide + 1];
 
-        for (int k = 0; k <= maxNumberVariants; ++k){
+        for (int k = 0; k <= numErrors; ++k){
             for (int j = 0; j <= lenPeptide; ++j) {
-                backwardMatrix[k][j] = new ArrayList<MatrixContent>(10);
+                backwardMatrix[k][j] = new LinkedList<MatrixContent>();
             }
         }
         int countX = 0;
@@ -1272,18 +1270,17 @@ public class FMIndex implements PeptideMapper {
         
         
         if (countX <= xNumLimit) {
-            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1));
             
-            for (int k = 0; k <= maxNumberVariants; ++k){
-                ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
+            for (int k = 0; k <= numErrors; ++k){
+                LinkedList<MatrixContent>[] backwardList = backwardMatrix[k];
                 for (int j = 0; j < lenPeptide; ++j) {
                     String combinationSequence = combinations.get(j);
-                    ArrayList<MatrixContent> cell = backwardList[j];
+                    LinkedList<MatrixContent> cell = backwardList[j];
 
 
-
-                    for (int i = 0; i < cell.size(); ++i) {
-                        MatrixContent content = cell.get(i);
+                    while (!cell.isEmpty()){
+                        MatrixContent content = cell.pop();
                         int leftIndexOld = content.left;
                         int rightIndexOld = content.right;
                         int numX = content.numX;
@@ -1342,7 +1339,7 @@ public class FMIndex implements PeptideMapper {
             }
 
             // traceback
-            for (ArrayList<MatrixContent>[] backwardList : backwardMatrix){
+            for (LinkedList<MatrixContent>[] backwardList : backwardMatrix){
                 for (MatrixContent content : backwardList[lenPeptide]) {
                     MatrixContent currentContent = content;
                     String currentPeptide = "";
@@ -1406,7 +1403,7 @@ public class FMIndex implements PeptideMapper {
         
         
         for (PeptideProteinMapping ppm : allMatches){
-            System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex());
+            System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex() + " " + ppm.getVariantMatches().size() + "e");
         }
         return allMatches;
     }

@@ -419,6 +419,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         identificationParameters.setIdFilter(peptideAssumptionFilter);
         identificationParameters.setPsmScoringPreferences(psmScoringPreferences);
         identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
+        identificationParameters.setPeptideVariantsPreferences(peptideVariantsPreferences);
         identificationParameters.setProteinInferencePreferences(proteinInferencePreferences);
         identificationParameters.setIdValidationPreferences(idValidationPreferences);
         identificationParameters.setFractionSettings(fractionSettings);

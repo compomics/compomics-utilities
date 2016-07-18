@@ -24,6 +24,7 @@ import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -198,6 +199,11 @@ public class FMIndex implements PeptideMapper {
      * allowed substitutions
      */
     boolean[][] substitutionMatrix = null;
+    
+    double lookupMultiplier = 10000;
+    double lookupTolerance = 0.02;
+    double lookupMaxMass = 800;
+    long[] lookupMasses = null;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -810,9 +816,30 @@ public class FMIndex implements PeptideMapper {
         T = null;
         bwt = null;
         
-        
-        
+        lookupMasses = new long[(((int)((lookupMaxMass + lookupTolerance) * lookupMultiplier)) >>> 6) + 1];
+        for (int i = 0; i < lookupMasses.length; ++i) lookupMasses[i] = ~(0L);
+        recursiveMassFilling(lookupMasses, lookupMultiplier, lookupTolerance, lookupMaxMass, 0., 0);
     }
+    
+    
+    void recursiveMassFilling(long[] lookupMasses, double lookupMultiplier, double lookupTolerance, double lookupMaxMass, double mass, int pos){
+        if (mass >= lookupMaxMass) return;
+        if (mass > lookupTolerance){
+            int startMass = (int)((mass - lookupTolerance) * lookupMultiplier);
+            int endMass = (int)((mass + lookupTolerance) * lookupMultiplier);
+            
+            lookupMasses[startMass >>> 6] |= (~(0L)) << (startMass & 63);
+            for (int p = (startMass >>> 6) + 1; p < (endMass >>> 6); ++p) lookupMasses[p] = ~(0L);
+            lookupMasses[endMass >>> 6] |= (~(0L)) >>> (64 - (endMass & 63));
+        }
+        
+        for (int i = pos; i < aaMassIndexes.length; ++i){
+            recursiveMassFilling(lookupMasses, lookupMultiplier, lookupTolerance, lookupMaxMass, mass + aaMasses[aaMassIndexes[i]], i);
+        }
+    }
+    
+    
+    
 
     /**
      * Returns a list of all possible amino acids per position in the peptide
@@ -1566,7 +1593,10 @@ public class FMIndex implements PeptideMapper {
                             int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
                             
                             if (newMass - massTolerance <= combinationMass) {
-                                row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
+                                boolean add = true;
+                                int intMass = (int)(newMass * lookupMultiplier);
+                                if (newMass < lookupMaxMass && (((lookupMasses[intMass] >>> (intMass & 63)) & 1L) == 0)) add = false;
+                                if (add) row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
                             }
                             // variants
                             if (numVariants < maxNumberVariants){
@@ -1581,7 +1611,10 @@ public class FMIndex implements PeptideMapper {
                                     int amino = index & 127;
                                 
                                     if (amino != aminoAcid && aminoMass < combinationMass + massTolerance){
-                                        matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char)aminoAcid, null));
+                                        boolean add = true;
+                                        int intMass = (int)(aminoMass * lookupMultiplier);
+                                        if (aminoMass < lookupMaxMass && (((lookupMasses[intMass] >>> (intMass & 63)) & 1L) == 0)) add = false;
+                                        if (add) matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char)aminoAcid, null));
                                     }
                                 }
                             }
@@ -1595,7 +1628,10 @@ public class FMIndex implements PeptideMapper {
                                 int amino = index & 127;
                                 
                                 if (aminoMass < combinationMass + massTolerance){
-                                    matrix[k + 1][j + offsetDel].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
+                                    boolean add = true;
+                                    int intMass = (int)(aminoMass * lookupMultiplier);
+                                    if (aminoMass < lookupMaxMass && (((lookupMasses[intMass] >>> (intMass & 63)) & 1L) == 0)) add = false;
+                                    if (add) matrix[k + 1][j + offsetDel].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
                                 }
                             }
                         }

@@ -223,9 +223,9 @@ public class Peptide extends ExperimentObject {
      */
     public void addVariantMatches(Collection<VariantMatch> variantMatch) {
         if (variants == null) {
-            variants = new ArrayList<VariantMatch>(variantMatch.size());
+            variants = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
-        variants.addAll(variantMatch);
+        if (variantMatch != null) variants.addAll(variantMatch);
         variantsMap = null;
     }
     

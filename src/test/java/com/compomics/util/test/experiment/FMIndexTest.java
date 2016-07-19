@@ -1969,11 +1969,12 @@ public class FMIndexTest extends TestCase {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
-        //File sequences = new File("../../Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
-        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
+        File sequences = new File("../../Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
+        //File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
+        /*
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
@@ -1990,16 +1991,16 @@ public class FMIndexTest extends TestCase {
             }
         }
         Assert.assertTrue(isPresent);
-
-        /* 
-        aminoAcidPattern = new AminoAcidSequence("SFAS");
-        nTermGap = 402.186;
-        cTermGap = 1651.92;
+        */
+        
+        aminoAcidPattern = new AminoAcidSequence("VEQY");
+        nTermGap = 708.284;
+        cTermGap = 256.188;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
         long start = System.nanoTime();
         fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         System.out.println("time: " + (System.nanoTime() - start));
-         */
+        
     }
 }

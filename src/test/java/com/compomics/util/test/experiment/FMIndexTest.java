@@ -41,13 +41,13 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class FMIndexTest extends TestCase {
 
-    boolean testSequenceMatching = false;
-    boolean testSequenceMatchingWithVariants = false;
-    boolean testSequenceMatchingWithVariantsSpecific = false;
-    boolean testTagMatching = false;
-    boolean testVariantMatchingGeneric = false;
-    boolean testVariantPTMMatching = false;
-    boolean testVariantMatchingSpecific = false;
+    boolean testSequenceMatching = true;
+    boolean testSequenceMatchingWithVariants = true;
+    boolean testSequenceMatchingWithVariantsSpecific = true;
+    boolean testTagMatching = true;
+    boolean testVariantMatchingGeneric = true;
+    boolean testVariantPTMMatching = true;
+    boolean testVariantMatchingSpecific = true;
 
     /**
      * Tests the import and the mapping of a few peptide sequences.
@@ -1941,6 +1941,8 @@ public class FMIndexTest extends TestCase {
     }
 
     public void testExperiment() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        
+        if (true) return;
         
         AminoAcidSequence aminoAcidPattern;
         double nTermGap;

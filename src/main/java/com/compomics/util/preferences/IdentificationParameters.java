@@ -288,7 +288,6 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the peptide variant preferences
      */
     public PeptideVariantsPreferences getPeptideVariantsPreferences() {
-System.out.println("get " + (peptideVariantsPreferences == null));
         if (peptideVariantsPreferences == null) { // Backward compatibility
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
         }

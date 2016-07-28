@@ -273,10 +273,6 @@ public class FMIndex implements PeptideMapper {
         
         
         
-        System.out.println("generic: " + genericVariantMatching);
-        System.out.println("variant numbers: " + maxNumberVariants + " " + maxNumberDeletions + " " + maxNumberInsertions + " " + maxNumberSubstitutions);
-        
-        
         substitutionMatrix = new boolean[128][128];
         for (int i = 0; i < 128; ++i) for (int j = 0; j < 128; ++j) substitutionMatrix[i][j] = false;
         AaSubstitutionMatrix aaSubstitutionMatrix = peptideVariantsPreferences.getAaSubstitutionMatrix();
@@ -693,8 +689,6 @@ public class FMIndex implements PeptideMapper {
         indexStringLength += 2; // last delimiter + sentinal
         
         
-        
-        System.out.println("p_len: " + indexStringLength);
         
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {

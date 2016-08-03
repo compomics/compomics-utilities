@@ -1,7 +1,11 @@
 package com.compomics.software.cli;
 
+import com.compomics.util.Util;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -233,6 +237,58 @@ public class CommandParameter {
             valid = false;
         }
         return valid;
+    }
+
+    /**
+     * Returns true if the argument can be parsed as a file and the file exists.
+     *
+     * @param argType the name of the argument
+     * @param arg the content of the argument
+     *
+     * @return true if the argument can be parsed as a file and the file exists
+     */
+    public static boolean fileExists(String argType, String arg) {
+        return fileExists(argType, arg, null);
+    }
+
+    /**
+     * Returns true if the argument can be parsed as a file, the file exists and
+     * is in the specified format. The format is case sensitive.
+     *
+     * @param argType the name of the argument
+     * @param arg the content of the argument
+     * @param formats The formats allowed as a list, ignored if null
+     *
+     * @return true if the argument can be parsed as a file, the file exists and
+     * is in the specified format
+     */
+    public static boolean fileExists(String argType, String arg, HashSet<String> formats) {
+        if (arg == null || arg.length() == 0) {
+            System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Null or empty path found." + System.getProperty("line.separator"));
+            return false;
+        }
+        File input = new File(arg);
+        if (!input.exists()) {
+            System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option:" + input.getName() + "\' not found." + System.getProperty("line.separator"));
+            return false;
+        }
+        if (formats != null) {
+            String extension = Util.getExtension(input);
+            if (!formats.contains(extension)) {
+                ArrayList<String> sortedFormats = new ArrayList<String>(formats);
+                Collections.sort(sortedFormats);
+                StringBuilder supportedExtensions = new StringBuilder();
+                for (String format : sortedFormats) {
+                    if (supportedExtensions.length() > 0) {
+                        supportedExtensions.append(", ");
+                    }
+                    supportedExtensions.append(format);
+                }
+                System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Format \'" + extension + "\' not supported. Supported formats are: " + supportedExtensions + " (case sensitive)." + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        return true;
     }
 
 }

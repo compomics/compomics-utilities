@@ -29,6 +29,10 @@ public class PsmScoringPreferences implements Serializable {
      * The scores to use by default.
      */
     private HashSet<Integer> defaultScores;
+    /**
+     * The minimal number of decoys to include in a bin to set the bin size of the score histogram.
+     */
+    private Integer minDecoysInBin = 10;
 
     /**
      * Constructor.
@@ -281,4 +285,27 @@ public class PsmScoringPreferences implements Serializable {
             spectrumMatchingScores.put(Advocate.pNovo.getIndex(), new HashSet<Integer>(scores));
         }
     }
+
+    /**
+     * Returns the minimal number of decoys to include in a bin to set the bin size of the score histogram.
+     * 
+     * @return the minimal number of decoys to include in a bin to set the bin size of the score histogram
+     */
+    public Integer getDecoysInFirstBin() {
+        if (minDecoysInBin == null) {
+            minDecoysInBin = 10;
+        }
+        return minDecoysInBin;
+    }
+
+    /**
+     * Sets the minimal number of decoys to include in a bin to set the bin size of the score histogram.
+     * 
+     * @param decoysInFirstBin the minimal number of decoys to include in a bin to set the bin size of the score histogram
+     */
+    public void setDecoysInFirstBin(Integer decoysInFirstBin) {
+        this.minDecoysInBin = decoysInFirstBin;
+    }
+    
+    
 }

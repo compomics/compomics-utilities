@@ -433,11 +433,14 @@ public class PepxmlIdfileReader implements IdfileReader {
                             value = parser.getAttributeValue(i);
                         }
                     }
-                    if (name != null && name.equals("expect") && value != null) {
-                        try {
-                            score = new Double(value);
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("Impossible to parse expectation value " + value + ". Number expected.");
+                    
+                    if (name != null && value != null) {
+                        if (name.equals("expect") || name.equals("Morpheus Score")) {
+                            try {
+                                score = new Double(value);
+                            } catch (Exception e) {
+                                throw new IllegalArgumentException("Impossible to parse expectation value " + value + ". Number expected.");
+                            }
                         }
                     }
                 } else if (type == XmlPullParser.END_TAG && tagName.equals("search_hit")) {

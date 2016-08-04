@@ -1342,6 +1342,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
+     * @param singleThread boolean indicating whether multiple thread can
+     * provide assumptions for the same spectrum at a time
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -1352,14 +1354,22 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
+    public void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean singleThread)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getRawAssumptions(spectrumKey, false);
-        if (currentAssumptions == null) {
-            synchronized (this) {
-                currentAssumptions = getRawAssumptions(spectrumKey, true);
-                if (currentAssumptions == null) {
-                    identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions;
+        if (singleThread) {
+            currentAssumptions = getRawAssumptions(spectrumKey, true);
+            if (currentAssumptions == null) {
+                identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
+            }
+        } else {
+            currentAssumptions = getRawAssumptions(spectrumKey, false);
+            if (currentAssumptions == null) {
+                synchronized (this) {
+                    currentAssumptions = getRawAssumptions(spectrumKey, true);
+                    if (currentAssumptions == null) {
+                        identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
+                    }
                 }
             }
         }
@@ -1369,10 +1379,14 @@ public abstract class Identification extends ExperimentObject {
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
                 if (newAdvocateMap != null) {
                     if (currentAdvocateMap == null) {
-                        synchronized (this) {
-                            currentAdvocateMap = currentAssumptions.get(advocateId);
-                            if (currentAdvocateMap == null) {
-                                currentAssumptions.put(advocateId, newAdvocateMap);
+                        if (singleThread) {
+                            currentAssumptions.put(advocateId, newAdvocateMap);
+                        } else {
+                            synchronized (this) {
+                                currentAdvocateMap = currentAssumptions.get(advocateId);
+                                if (currentAdvocateMap == null) {
+                                    currentAssumptions.put(advocateId, newAdvocateMap);
+                                }
                             }
                         }
                     }
@@ -1381,10 +1395,14 @@ public abstract class Identification extends ExperimentObject {
                             ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
                             ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
                             if (currentAssumptionList == null) {
-                                synchronized (this) {
-                                    currentAssumptionList = currentAdvocateMap.get(score);
-                                    if (currentAssumptionList == null) {
-                                        currentAdvocateMap.put(score, newAssumptionList);
+                                if (singleThread) {
+                                    currentAdvocateMap.put(score, newAssumptionList);
+                                } else {
+                                    synchronized (this) {
+                                        currentAssumptionList = currentAdvocateMap.get(score);
+                                        if (currentAssumptionList == null) {
+                                            currentAdvocateMap.put(score, newAssumptionList);
+                                        }
                                     }
                                 }
                             }

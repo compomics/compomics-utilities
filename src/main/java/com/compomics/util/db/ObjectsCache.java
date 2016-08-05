@@ -55,6 +55,10 @@ public class ObjectsCache {
      * Indicates whether the cache is read only.
      */
     private boolean readOnly = false;
+    /**
+     * Indicates whether the cache is being updated.
+     */
+    private boolean updating = false;
 
     /**
      * Constructor.
@@ -164,7 +168,7 @@ public class ObjectsCache {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      */
-    public synchronized void removeObject(String dbName, String tableName, String objectKey) {
+    public void removeObject(String dbName, String tableName, String objectKey) {
         if (!readOnly) {
             String cacheKey = getCacheKey(dbName, tableName, objectKey);
             loadedObjectsKeys.remove(cacheKey);
@@ -281,13 +285,23 @@ public class ObjectsCache {
             loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
             HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
             if (dbCache == null) {
-                dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
-                loadedObjectsMap.put(dbName, dbCache);
+                synchronized (this) {
+                    dbCache = loadedObjectsMap.get(dbName);
+                    if (dbCache == null) {
+                        dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
+                        loadedObjectsMap.put(dbName, dbCache);
+                    }
+                }
             }
             HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
             if (tableCache == null) {
-                tableCache = new HashMap<String, CacheEntry>(512);
-                dbCache.put(tableName, tableCache);
+                synchronized (this) {
+                    tableCache = dbCache.get(tableName);
+                    if (tableCache == null) {
+                        tableCache = new HashMap<String, CacheEntry>(512);
+                        dbCache.put(tableName, tableCache);
+                    }
+                }
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
             updateCache();
@@ -508,22 +522,25 @@ public class ObjectsCache {
      * writing the object
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public synchronized void updateCache() throws IOException, SQLException, InterruptedException {
-        if (!readOnly) {
-
-            while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
-                    || (automatedMemoryManagement && !memoryCheck())) {
-                int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
-                if (toRemove <= 1) {
-                    saveObject(loadedObjectsKeys.take());
-                } else {
-                    ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
-                    loadedObjectsKeys.drainTo(keysToRemove, toRemove);
-                    saveObjects(keysToRemove);
+    public void updateCache() throws IOException, SQLException, InterruptedException {
+        if (!readOnly && !updating) {
+            synchronized (this) {
+                updating = true;
+                while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
+                        || (automatedMemoryManagement && !memoryCheck())) {
+                    int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
+                    if (toRemove <= 1) {
+                        saveObject(loadedObjectsKeys.take());
+                    } else {
+                        ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                        loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+                        saveObjects(keysToRemove);
+                    }
+                    if (loadedObjectsKeys.isEmpty()) {
+                        break;
+                    }
                 }
-                if (loadedObjectsKeys.isEmpty()) {
-                    break;
-                }
+                updating = false;
             }
         }
     }
@@ -535,6 +552,7 @@ public class ObjectsCache {
      * be saved
      * @param waitingHandler a waiting handler on which the progress will be
      * displayed as secondary progress. can be null
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -555,7 +573,7 @@ public class ObjectsCache {
      * @param objectKey the object key
      * @return a boolean indicating whether an object is loaded in the cache
      */
-    public synchronized boolean inCache(String dbName, String tableName, String objectKey) {
+    public boolean inCache(String dbName, String tableName, String objectKey) {
         return loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName) && loadedObjectsMap.get(dbName).get(tableName).containsKey(objectKey);
     }
 
@@ -565,6 +583,7 @@ public class ObjectsCache {
      * @param waitingHandler a waiting handler on which the progress will be
      * @param emptyCache boolean indicating whether the cache content shall be
      * cleared while saving displayed as secondary progress. can be null
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -645,7 +664,7 @@ public class ObjectsCache {
      *
      * @return a boolean indicating whether the cache is empty
      */
-    public synchronized boolean isEmpty() {
+    public boolean isEmpty() {
         return loadedObjectsKeys.isEmpty();
     }
 

@@ -1261,6 +1261,8 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Adds the assumptions corresponding to a spectrum to the database.
+     * Warning: only one thread per spectrum supported. Maps and lists are
+     * reused and not cloned.
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
@@ -1277,46 +1279,42 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean overwriteExisting, boolean newSpectrum)
+    public void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean overwriteExisting, boolean newSpectrum)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        boolean createAssumptions = false;
         HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = null;
         if (!newSpectrum && !overwriteExisting) {
             currentAssumptions = getAssumptions(spectrumKey, true);
         }
         if (currentAssumptions == null) {
-            currentAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newAssumptions.size());
-            createAssumptions = true;
-        }
-        for (Integer advocateId : newAssumptions.keySet()) {
-            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap = newAssumptions.get(advocateId);
-            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
-            if (newAdvocateMap != null) {
-                if (currentAdvocateMap == null) {
-                    currentAdvocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(newAdvocateMap.size());
-                    currentAssumptions.put(advocateId, currentAdvocateMap);
-                }
-                for (double score : newAdvocateMap.keySet()) {
-                    ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
-                    ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
-                    if (currentAssumptionList == null) {
-                        currentAssumptionList = new ArrayList<SpectrumIdentificationAssumption>(newAssumptionList);
-                        currentAdvocateMap.put(score, currentAssumptionList);
-                    } else {
-                        currentAssumptionList.addAll(newAssumptionList);
+            identificationDB.addAssumptions(spectrumKey, newAssumptions);
+        } else {
+            for (Integer advocateId : newAssumptions.keySet()) {
+                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap = newAssumptions.get(advocateId);
+                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
+                if (newAdvocateMap != null) {
+                    if (currentAdvocateMap == null) {
+                        currentAdvocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(newAdvocateMap.size());
+                        currentAssumptions.put(advocateId, currentAdvocateMap);
+                    }
+                    for (double score : newAdvocateMap.keySet()) {
+                        ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
+                        ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
+                        if (currentAssumptionList == null) {
+                            currentAssumptionList = new ArrayList<SpectrumIdentificationAssumption>(newAssumptionList);
+                            currentAdvocateMap.put(score, currentAssumptionList);
+                        } else {
+                            currentAssumptionList.addAll(newAssumptionList);
+                        }
                     }
                 }
             }
-        }
-        if (createAssumptions) {
-            identificationDB.addAssumptions(spectrumKey, currentAssumptions);
-        } else {
             updateAssumptions(spectrumKey, currentAssumptions);
         }
     }
 
     /**
-     * Adds the assumptions corresponding to a spectrum.
+     * Adds the assumptions corresponding to a spectrum. Warning: only one
+     * thread per spectrum supported. Maps and lists are reused and not cloned.
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
@@ -1431,7 +1429,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public synchronized void addSpectrumMatch(SpectrumMatch newMatch)
+    public void addSpectrumMatch(SpectrumMatch newMatch)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         String spectrumKey = newMatch.getKey();
@@ -1439,8 +1437,13 @@ public abstract class Identification extends ExperimentObject {
         HashSet<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
 
         if (spectrumKeys == null) {
-            spectrumKeys = new HashSet<String>(1000);
-            spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
+            synchronized (this) {
+                spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
+                if (spectrumKeys == null) {
+                    spectrumKeys = new HashSet<String>(1000);
+                    spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
+                }
+            }
         }
 
         // check if the spectrum has been seen before

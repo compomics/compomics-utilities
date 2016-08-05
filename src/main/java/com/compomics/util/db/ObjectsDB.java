@@ -55,6 +55,16 @@ public class ObjectsDB implements Serializable {
      */
     private HashMap<String, ArrayList<String>> longKeysMap = new HashMap<String, ArrayList<String>>();
     /**
+     * Tables that have already been used. Will be null for projects older than 4.7.0.
+     */
+    private HashSet<String> usedTables = new HashSet<String>();
+    /**
+     * The table where to save the long keys.
+     *
+     * Note: needs to keep the same value for backward compatibility
+     */
+    public static final String DB_ATTRIBUTES = "long_key_table";
+    /**
      * Suffix used for long keys.
      */
     public static final String LONG_KEY_PREFIX = "long_key_";
@@ -65,7 +75,7 @@ public class ObjectsDB implements Serializable {
     /**
      * The table where to save the long keys.
      */
-    public static final String LONG_KEY_TABLE = "long_key_table";
+    public static final String USED_TABLES_TABLE = "used_tables_table";
     /**
      * The name of the table to use to log connections.
      */
@@ -280,7 +290,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public synchronized void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 
@@ -290,21 +300,27 @@ public class ObjectsDB implements Serializable {
             if (debugInteractions) {
                 System.out.println("Inserting single object, table: " + tableName + ", key: " + objectKey);
             }
-            PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-            ps.setString(1, correctedKey);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                try {
-                    oos.writeObject(object);
-                } finally {
-                    oos.close();
+            synchronized (this) {
+                if (usedTables != null && !usedTables.contains(tableName)) {
+                    usedTables.add(tableName);
                 }
-            } finally {
-                bos.close();
+                PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
+                ps.setString(1, correctedKey);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                try {
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
+                    try {
+                        oos.writeObject(object);
+                    } finally {
+                        oos.close();
+                    }
+                } finally {
+                    bos.close();
+                }
+                ps.setBytes(2, bos.toByteArray());
+                ps.executeUpdate();
+                ps.close();
             }
-            ps.setBytes(2, bos.toByteArray());
-            ps.executeUpdate();
         }
     }
 
@@ -343,6 +359,9 @@ public class ObjectsDB implements Serializable {
     public synchronized void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean allNewObjects) throws SQLException, IOException {
         if (debugInteractions) {
             System.out.println("Preparing table insertion: " + tableName);
+        }
+        if (usedTables != null && !usedTables.contains(tableName)) {
+            usedTables.add(tableName);
         }
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
@@ -457,99 +476,102 @@ public class ObjectsDB implements Serializable {
      */
     public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        if (!busy && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
+        if (usedTables == null || usedTables.contains(tableName)) {
+            if (!busy && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
 
-            if (debugInteractions) {
-                System.out.println("getting table objects, table: " + tableName);
-            }
-            ResultSet results;
-            if (waitingHandler != null && displayProgress) {
-                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                if (debugInteractions) {
+                    System.out.println("getting table objects, table: " + tableName);
+                }
+                ResultSet results;
+                if (waitingHandler != null && displayProgress) {
+                    waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
-                // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar.
-                Statement rowCountStatement = dbConnection.createStatement();
-                results = rowCountStatement.executeQuery("select count(*) from " + tableName);
-                results.next();
-                Integer numberOfRows = results.getInt(1);
+                    // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar.
+                    Statement rowCountStatement = dbConnection.createStatement();
+                    results = rowCountStatement.executeQuery("select count(*) from " + tableName);
+                    results.next();
+                    Integer numberOfRows = results.getInt(1);
+                    rowCountStatement.close();
 
-                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                waitingHandler.setSecondaryProgressCounter(0);
-                waitingHandler.setMaxSecondaryProgressCounter(numberOfRows);
-            }
-
-            busy = true;
-
-            try {
-                Statement stmt = dbConnection.createStatement();
-                try {
-                    results = stmt.executeQuery("select * from " + tableName);
-
-                    try {
-                        while (results.next()) {
-
-                            if (waitingHandler != null) {
-                                if (waitingHandler.isRunCanceled()) {
-                                    break;
-                                }
-                                if (displayProgress) {
-                                    waitingHandler.increaseSecondaryProgressCounter();
-                                }
-                            }
-
-                            String key = results.getString(1);
-
-                            if (!objectsCache.inCache(dbName, tableName, key)) {
-
-                                Blob tempBlob;
-
-                                if (useSQLite) {
-                                    byte[] bytes = results.getBytes(2);
-                                    tempBlob = new SerialBlob(bytes);
-                                } else {
-                                    tempBlob = results.getBlob(2);
-                                }
-
-                                Object object = null;
-                                BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-                                try {
-                                    ObjectInputStream in = new ObjectInputStream(bis);
-                                    try {
-                                        object = in.readObject();
-                                    } finally {
-                                        in.close();
-                                    }
-                                } finally {
-                                    bis.close();
-                                }
-
-                                objectsCache.addObject(dbName, tableName, key, object, false);
-                            }
-                        }
-
-                        tableQueue.remove(tableName);
-
-                    } finally {
-                        results.close();
-                    }
-                } finally {
-                    stmt.close();
+                    waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                    waitingHandler.setSecondaryProgressCounter(0);
+                    waitingHandler.setMaxSecondaryProgressCounter(numberOfRows);
                 }
 
-            } finally {
-                busy = false;
+                busy = true;
+
+                try {
+                    Statement stmt = dbConnection.createStatement();
+                    try {
+                        results = stmt.executeQuery("select * from " + tableName);
+
+                        try {
+                            while (results.next()) {
+
+                                if (waitingHandler != null) {
+                                    if (waitingHandler.isRunCanceled()) {
+                                        break;
+                                    }
+                                    if (displayProgress) {
+                                        waitingHandler.increaseSecondaryProgressCounter();
+                                    }
+                                }
+
+                                String key = results.getString(1);
+
+                                if (!objectsCache.inCache(dbName, tableName, key)) {
+
+                                    Blob tempBlob;
+
+                                    if (useSQLite) {
+                                        byte[] bytes = results.getBytes(2);
+                                        tempBlob = new SerialBlob(bytes);
+                                    } else {
+                                        tempBlob = results.getBlob(2);
+                                    }
+
+                                    Object object = null;
+                                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+                                    try {
+                                        ObjectInputStream in = new ObjectInputStream(bis);
+                                        try {
+                                            object = in.readObject();
+                                        } finally {
+                                            in.close();
+                                        }
+                                    } finally {
+                                        bis.close();
+                                    }
+
+                                    objectsCache.addObject(dbName, tableName, key, object, false);
+                                }
+                            }
+
+                            tableQueue.remove(tableName);
+
+                        } finally {
+                            results.close();
+                        }
+                    } finally {
+                        stmt.close();
+                    }
+
+                } finally {
+                    busy = false;
+                }
+
+            } else {
+
+                if (!tableQueue.contains(tableName)) {
+                    tableQueue.add(tableName);
+                }
+
+                while (busy) {
+                    wait(11);
+                }
+
+                loadObjects(tableName, waitingHandler, displayProgress);
             }
-
-        } else {
-
-            if (!tableQueue.contains(tableName)) {
-                tableQueue.add(tableName);
-            }
-
-            while (busy) {
-                wait(11);
-            }
-
-            loadObjects(tableName, waitingHandler, displayProgress);
         }
     }
 
@@ -574,117 +596,119 @@ public class ObjectsDB implements Serializable {
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
+        if (usedTables == null || usedTables.contains(tableName)) {
+            if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
 
-            if (debugInteractions) {
-                System.out.println("getting " + keys.size() + " objects, table: " + tableName);
-            }
+                if (debugInteractions) {
+                    System.out.println("getting " + keys.size() + " objects, table: " + tableName);
+                }
 
-            boolean concurrentAccess = tableQueueUpdating.equals(tableName);
-            ArrayList<String> queue = new ArrayList<String>();
+                boolean concurrentAccess = tableQueueUpdating.equals(tableName);
+                ArrayList<String> queue = new ArrayList<String>();
 
-            if (!concurrentAccess && contentQueue.get(tableName) != null) {
-                queue = contentQueue.get(tableName);
-                contentTableQueue.remove(tableName);
-                contentQueue.remove(tableName);
-            }
+                if (!concurrentAccess && contentQueue.get(tableName) != null) {
+                    queue = contentQueue.get(tableName);
+                    contentTableQueue.remove(tableName);
+                    contentQueue.remove(tableName);
+                }
 
-            if (!keys.equals(queue)) {
-                for (String key : keys) {
-                    if (!queue.contains(key)) {
-                        queue.add(key);
+                if (!keys.equals(queue)) {
+                    for (String key : keys) {
+                        if (!queue.contains(key)) {
+                            queue.add(key);
+                        }
                     }
                 }
-            }
 
-            ArrayList<String> toLoad = new ArrayList<String>(queue.size());
+                ArrayList<String> toLoad = new ArrayList<String>(queue.size());
 
-            for (String key : queue) {
-                String correctedKey = correctKey(tableName, key);
-                if (objectsCache != null && !objectsCache.inCache(dbName, tableName, correctedKey)) {
-                    toLoad.add(correctedKey);
+                for (String key : queue) {
+                    String correctedKey = correctKey(tableName, key);
+                    if (objectsCache != null && !objectsCache.inCache(dbName, tableName, correctedKey)) {
+                        toLoad.add(correctedKey);
+                    }
                 }
-            }
 
-            if (!toLoad.isEmpty()) {
+                if (!toLoad.isEmpty()) {
 
-                busy = true;
-
-                try {
-                    Statement stmt = dbConnection.createStatement();
-                    //Statement stmt = dbConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); // @TODO: test if this is faster
-                    //stmt.setFetchSize(toLoad.size()); // @TODO: test if this is faster
+                    busy = true;
 
                     try {
-                        ResultSet results = stmt.executeQuery("select * from " + tableName);
+                        Statement stmt = dbConnection.createStatement();
+                        //Statement stmt = dbConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); // @TODO: test if this is faster
+                        //stmt.setFetchSize(toLoad.size()); // @TODO: test if this is faster
 
                         try {
-                            int found = 0;
+                            ResultSet results = stmt.executeQuery("select * from " + tableName);
 
-                            while (results.next() && found < toLoad.size()) {
-                                String key = results.getString(1);
-                                if (toLoad.contains(key)) {
-                                    found++;
-                                    Blob tempBlob;
+                            try {
+                                int found = 0;
 
-                                    if (useSQLite) {
-                                        byte[] bytes = results.getBytes(2);
-                                        tempBlob = new SerialBlob(bytes);
-                                    } else {
-                                        tempBlob = results.getBlob(2);
-                                    }
+                                while (results.next() && found < toLoad.size()) {
+                                    String key = results.getString(1);
+                                    if (toLoad.contains(key)) {
+                                        found++;
+                                        Blob tempBlob;
 
-                                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-                                    try {
-                                    ObjectInputStream in = new ObjectInputStream(bis);
-                                    try {
-                                        Object object = in.readObject();
-                                        objectsCache.addObject(dbName, tableName, key, object, false);
-                                    } finally {
-                                        in.close();
+                                        if (useSQLite) {
+                                            byte[] bytes = results.getBytes(2);
+                                            tempBlob = new SerialBlob(bytes);
+                                        } else {
+                                            tempBlob = results.getBlob(2);
+                                        }
+
+                                        BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+                                        try {
+                                            ObjectInputStream in = new ObjectInputStream(bis);
+                                            try {
+                                                Object object = in.readObject();
+                                                objectsCache.addObject(dbName, tableName, key, object, false);
+                                            } finally {
+                                                in.close();
+                                            }
+                                        } finally {
+                                            bis.close();
+                                        }
+                                        if (waitingHandler != null && displayProgress) {
+                                            waitingHandler.increaseSecondaryProgressCounter();
+                                        }
                                     }
-                                    } finally {
-                                        bis.close();
-                                    }
-                                    if (waitingHandler != null && displayProgress) {
-                                        waitingHandler.increaseSecondaryProgressCounter();
+                                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                        break;
                                     }
                                 }
-                                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                    break;
-                                }
+                            } finally {
+                                results.close();
                             }
                         } finally {
-                            results.close();
+                            stmt.close();
                         }
+
                     } finally {
-                        stmt.close();
+                        busy = false;
                     }
-
-                } finally {
-                    busy = false;
                 }
-            }
-        } else {
-
-            tableQueueUpdating = tableName;
-            if (!contentTableQueue.contains(tableName)) {
-                contentTableQueue.add(tableName);
-                contentQueue.put(tableName, keys);
-            } else if (keys.equals(contentQueue.get(tableName))) {
-                while (busy) {
-                    wait(7);
-                }
-                loadObjects(tableName, keys, waitingHandler, displayProgress);
             } else {
-                ArrayList<String> queue = contentQueue.get(tableName);
-                for (String newItem : keys) {
-                    if (!queue.contains(newItem)) {
-                        queue.add(newItem);
+
+                tableQueueUpdating = tableName;
+                if (!contentTableQueue.contains(tableName)) {
+                    contentTableQueue.add(tableName);
+                    contentQueue.put(tableName, keys);
+                } else if (keys.equals(contentQueue.get(tableName))) {
+                    while (busy) {
+                        wait(7);
+                    }
+                    loadObjects(tableName, keys, waitingHandler, displayProgress);
+                } else {
+                    ArrayList<String> queue = contentQueue.get(tableName);
+                    for (String newItem : keys) {
+                        if (!queue.contains(newItem)) {
+                            queue.add(newItem);
+                        }
                     }
                 }
+                tableQueueUpdating = "";
             }
-            tableQueueUpdating = "";
         }
     }
 
@@ -746,8 +770,10 @@ public class ObjectsDB implements Serializable {
 
         if (!useDB || object != null) {
             return object;
-        } else {
+        } else if (usedTables == null || usedTables.contains(tableName)) {
             return retrieveObjectSynchronized(tableName, objectKey, correctedKey, useDB, useCache);
+        } else {
+            return null;
         }
     }
 
@@ -789,7 +815,7 @@ public class ObjectsDB implements Serializable {
             System.out.println("Retrieving object, table: " + tableName + ", key: " + objectKey);
         }
 
-        if (dbConnection == null) {
+        if (dbConnection == null || usedTables != null && !usedTables.contains(tableName)) {
             return object;
         }
 
@@ -896,6 +922,10 @@ public class ObjectsDB implements Serializable {
             }
         }
 
+        if (usedTables != null && !usedTables.contains(tableName)) {
+            return false;
+        }
+
         return savedInDB(tableName, objectKey, correctedKey, cache);
     }
 
@@ -919,6 +949,9 @@ public class ObjectsDB implements Serializable {
             if (objectsCache.inCache(dbName, tableName, correctedKey)) {
                 return true;
             }
+        }
+        if (usedTables != null && !usedTables.contains(tableName)) {
+            return false;
         }
         if (debugInteractions) {
             System.out.println("checking db content, table: " + tableName + ", key: " + objectKey);
@@ -1039,14 +1072,16 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("Removing object, table: " + tableName + ", key: " + objectKey);
         }
-        Statement stmt = dbConnection.createStatement();
-        try {
-            stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'"); // @TODO: what if the accession contains (') ..? - a single quotation mark is the escape character for a single quotation mark
-        } catch (SQLSyntaxErrorException e) {
-            System.out.println("SQL Exception. SQL call: " + "delete from " + tableName + " where NAME='" + correctedKey + "'");
-            throw e;
-        } finally {
-            stmt.close();
+        if (usedTables == null || usedTables.contains(tableName)) {
+            Statement stmt = dbConnection.createStatement();
+            try {
+                stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'"); // @TODO: what if the accession contains (') ..? - a single quotation mark is the escape character for a single quotation mark
+            } catch (SQLSyntaxErrorException e) {
+                System.out.println("SQL Exception. SQL call: " + "delete from " + tableName + " where NAME='" + correctedKey + "'");
+                throw e;
+            } finally {
+                stmt.close();
+            }
         }
     }
 
@@ -1091,7 +1126,7 @@ public class ObjectsDB implements Serializable {
             cacheUpdated = objectsCache.updateObject(dbName, tableName, correctedKey, object);
         }
 
-        if (!cacheUpdated) {
+        if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
             updateObjectInDb(tableName, objectKey, correctedKey, object, cache);
         }
     }
@@ -1119,7 +1154,7 @@ public class ObjectsDB implements Serializable {
             cacheUpdated = objectsCache.updateObject(dbName, tableName, correctedKey, object);
         }
 
-        if (!cacheUpdated) {
+        if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
             if (debugInteractions) {
                 System.out.println("Updating object, table: " + tableName + ", key: " + objectKey);
             }
@@ -1137,6 +1172,7 @@ public class ObjectsDB implements Serializable {
             }
             ps.setBytes(1, bos.toByteArray());
             ps.executeUpdate();
+            ps.close();
         }
     }
 
@@ -1161,7 +1197,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Loads the long key names from the database in the cache.
+     * Loads the attributes from the database.
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database.
@@ -1172,37 +1208,51 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database.
      */
-    private void loadLongKeys() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (hasTable(LONG_KEY_TABLE)) {
-            longTableNames = (ArrayList<String>) retrieveObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, true, false);
-            longKeysMap = (HashMap<String, ArrayList<String>>) retrieveObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, true, false);
+    private void loadAttributes() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (hasTable(DB_ATTRIBUTES)) {
+            longTableNames = (ArrayList<String>) retrieveObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, true, false);
+            longKeysMap = (HashMap<String, ArrayList<String>>) retrieveObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, true, false);
+            usedTables = (HashSet<String>) retrieveObject(DB_ATTRIBUTES, USED_TABLES_TABLE, true, false);
         }
     }
 
     /**
-     * Saves the long keys in the database.
+     * Saves the attributes in the database.
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database.
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database.
      */
-    private void saveLongKeys() throws SQLException, IOException, InterruptedException {
-        if (!hasTable(LONG_KEY_TABLE)) {
-            addTable(LONG_KEY_TABLE);
+    private void saveAttributes() throws SQLException, IOException, InterruptedException {
+
+        if (!hasTable(DB_ATTRIBUTES)) {
+            addTable(DB_ATTRIBUTES);
         }
 
-        // check if it's in the db already
-        if (inDB(LONG_KEY_TABLE, LONG_TABLE_NAMES, false)) {
-            updateObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
+        // Long table names
+        if (inDB(DB_ATTRIBUTES, LONG_TABLE_NAMES, false)) {
+            updateObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, longTableNames, false);
         } else {
-            insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
+            insertObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, longTableNames, false);
         }
 
-        // check if it's in the db already
-        if (inDB(LONG_KEY_TABLE, LONG_KEY_PREFIX, false)) {
-            updateObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+        // Long keys
+        if (inDB(DB_ATTRIBUTES, LONG_KEY_PREFIX, false)) {
+            updateObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, longKeysMap, false);
         } else {
-            insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+            insertObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, longKeysMap, false);
+        }
+
+        // used tables
+        if (usedTables != null) {
+            if (inDB(DB_ATTRIBUTES, USED_TABLES_TABLE, false)) {
+                updateObject(DB_ATTRIBUTES, USED_TABLES_TABLE, usedTables, false);
+            } else {
+                insertObject(DB_ATTRIBUTES, USED_TABLES_TABLE, usedTables, false);
+            }
         }
     }
 
@@ -1226,7 +1276,7 @@ public class ObjectsDB implements Serializable {
         if (dbConnection != null) {
             // try to save the long key indexes
             try {
-                saveLongKeys();
+                saveAttributes();
             } catch (Exception e) {
                 if (dbConnection != null) {
                     e.printStackTrace();
@@ -1367,8 +1417,8 @@ public class ObjectsDB implements Serializable {
         // test the connection by logging the connection in the database
         logConnection();
 
-        // try to load the long keys indexes
-        loadLongKeys();
+        // try to load the attributes
+        loadAttributes();
     }
 
     /**
@@ -1406,7 +1456,6 @@ public class ObjectsDB implements Serializable {
 
         // @TODO: escape special characters:
         //String correctedKey = key.replaceAll("[^\\dA-Za-z ]", "");
-        
         String correctedKey = key;
         if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
             if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
@@ -1449,7 +1498,7 @@ public class ObjectsDB implements Serializable {
 
     /**
      * Returns the path to the database.
-     * 
+     *
      * @return the path to the database
      */
     public String getPath() {

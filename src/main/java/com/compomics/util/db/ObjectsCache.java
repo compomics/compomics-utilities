@@ -645,7 +645,9 @@ public class ObjectsCache {
      * table name and object key
      */
     private String getCacheKey(String dbName, String tableName, String objectKey) {
-        return dbName + cacheSeparator + tableName + cacheSeparator + objectKey;
+        StringBuilder stringBuilder = new StringBuilder(2 * cacheSeparator.length() + dbName.length() + tableName.length() + objectKey.length());
+        stringBuilder.append(dbName).append(cacheSeparator).append(tableName).append(cacheSeparator).append(objectKey);
+        return stringBuilder.toString();
     }
 
     /**

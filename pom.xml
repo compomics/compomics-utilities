@@ -88,6 +88,15 @@
                 <role>Java Developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Dominik Kopczynski</name>
+            <id>dominik</id>
+            <email>dominik.kopczynski AT isas.de</email>
+            <organization>ISAS e.V.</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
     </developers>
 
 

@@ -110,7 +110,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * List of all amino acid masses.
      */
-    private boolean[] modifictationFlags = null;
+    private boolean[] modificationFlags = null;
     /**
      * If true, variable modifications are included.
      */
@@ -251,7 +251,9 @@ public class FMIndex implements PeptideMapper {
         return mid;
     }
     
-    
+    public long getAllocatedBytes(){
+        return occurrenceTablePrimary.getAllocatedBytes() + occurrenceTableReversed.getAllocatedBytes() + indexStringLength;
+    }
     
 
     /**
@@ -455,11 +457,11 @@ public class FMIndex implements PeptideMapper {
             // create masses for all amino acids including modifications
             aaMasses = new double[128 * (1 + hasVariableModification)];
             modifictationLabels = new String[128 * (1 + hasVariableModification)];
-            modifictationFlags = new boolean[128 * (1 + hasVariableModification)];
+            modificationFlags = new boolean[128 * (1 + hasVariableModification)];
             for (int i = 0; i < aaMasses.length; ++i) {
                 aaMasses[i] = -1;
                 modifictationLabels[i] = null;
-                modifictationFlags[i] = false;
+                modificationFlags[i] = false;
             }
             char[] aminoAcids = AminoAcid.getAminoAcids();
             for (int i = 0; i < aminoAcids.length; ++i) {
@@ -479,7 +481,7 @@ public class FMIndex implements PeptideMapper {
                         aaMasses[targets.get(0)] += ptm.getMass();
                         negativePTMMass = Math.min(negativePTMMass, ptm.getMass());
                         modifictationLabels[targets.get(0)] = modification;
-                        modifictationFlags[targets.get(0)] = true;
+                        modificationFlags[targets.get(0)] = true;
                         break;
 
                     case PTM.MODC:
@@ -631,7 +633,7 @@ public class FMIndex implements PeptideMapper {
                     ArrayList<Character> targets = ptm.getPattern().getAminoAcidsAtTarget();
                     aaMasses[128 * (1 + modificationCounts[targets.get(0)]) + targets.get(0)] = aaMasses[targets.get(0)] + ptm.getMass();
                     modifictationLabels[128 * (1 + modificationCounts[targets.get(0)]) + targets.get(0)] = modification;
-                    modifictationFlags[128 * (1 + modificationCounts[targets.get(0)]) + targets.get(0)] = true;
+                    modificationFlags[128 * (1 + modificationCounts[targets.get(0)]) + targets.get(0)] = true;
                     modificationCounts[targets.get(0)]++;
                 }
             }
@@ -2619,7 +2621,7 @@ public class FMIndex implements PeptideMapper {
                     }
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
-                            if (modifictationFlags[currentContent.modificationPos]) {
+                            if (modificationFlags[currentContent.modificationPos]) {
                                 modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length));
                             }
                         } else {
@@ -2660,7 +2662,7 @@ public class FMIndex implements PeptideMapper {
 
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                     if (currentContent.modificationPos >= 0) {
-                        if (modifictationFlags[currentContent.modificationPos]) {
+                        if (modificationFlags[currentContent.modificationPos]) {
                             modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                         }
                     } else {
@@ -2887,7 +2889,7 @@ public class FMIndex implements PeptideMapper {
 
                         if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                             if (currentContent.modificationPos >= 0) {
-                                if (modifictationFlags[currentContent.modificationPos]) {
+                                if (modificationFlags[currentContent.modificationPos]) {
                                     modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length));
                                }
                             } else {
@@ -2933,7 +2935,7 @@ public class FMIndex implements PeptideMapper {
                   
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
-                            if (modifictationFlags[currentContent.modificationPos]) {
+                            if (modificationFlags[currentContent.modificationPos]) {
                                 modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                             }
                         } else {

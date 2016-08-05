@@ -59,11 +59,20 @@ public class IonFactory {
      */
     public static ArrayList<NeutralLoss> getDefaultNeutralLosses() {
         if (defaultNeutralLosses == null) {
+            setDefaultNeutralLosses();
+        }
+        return defaultNeutralLosses;
+    }
+    
+    /**
+     * Sets the default neutral losses.
+     */
+    private static synchronized void setDefaultNeutralLosses() {
+        if (defaultNeutralLosses == null) {
             defaultNeutralLosses = new ArrayList<NeutralLoss>(2);
             defaultNeutralLosses.add(NeutralLoss.H2O);
             defaultNeutralLosses.add(NeutralLoss.NH3);
         }
-        return defaultNeutralLosses;
     }
 
     /**

@@ -251,7 +251,9 @@ public class FMIndex implements PeptideMapper {
         return mid;
     }
     
-    
+    public long getAllocatedBytes(){
+        return occurrenceTablePrimary.getAllocatedBytes() + occurrenceTableReversed.getAllocatedBytes() + indexStringLength;
+    }
     
 
     /**

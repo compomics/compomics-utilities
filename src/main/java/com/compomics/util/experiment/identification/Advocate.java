@@ -60,7 +60,7 @@ public class Advocate {
      * The Byonic search engine integrated in the Byonic protein metrics
      * interface.
      */
-    public static final Advocate byonic = new Advocate(9, "Byonic", AdvocateType.search_engine);
+    public static final Advocate byonic = new Advocate(9, "Byonic", AdvocateType.search_engine); // @TODO: add color
     /**
      * The Comet search engine, free version of Sequest.
      */
@@ -141,6 +141,10 @@ public class Advocate {
      * The Novor de novo sequencing algorithm.
      */
     public static final Advocate novor = new Advocate(29, "Novor", AdvocateType.sequencing_algorithm, new Color(135, 206, 235));
+    /**
+     * The Morpheus search engine.
+     */
+    public static final Advocate morpheus = new Advocate(30, "Morpheus", AdvocateType.search_engine, new Color(253, 192, 134)); // @TODO: select color!
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -264,7 +268,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[31 + userAdvocates.size()];
+        Advocate[] result = new Advocate[32 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -296,6 +300,7 @@ public class Advocate {
         result[++i] = percolator;
         result[++i] = pNovo;
         result[++i] = novor;
+        result[++i] = morpheus;
         result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {

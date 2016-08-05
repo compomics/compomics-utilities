@@ -82,6 +82,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private HashMap<String, PeptideCustom> tempPeptideMap;
     /**
+     * A temporary peptide evidence id to peptide ref map used by the custom
+     * parser only. Key: peptide evidence id, element: the peptide ref.
+     */
+    private HashMap<String, String> tempPeptideEvidenceMap;
+    /**
      * A map of the spectrum file names. Key: spectrum id/ref, element: spectrum
      * file name.
      */
@@ -557,6 +562,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             int type = parser.next();
 
             tempPeptideMap = new HashMap<String, PeptideCustom>();
+            tempPeptideEvidenceMap = new HashMap<String, String>();
             spectrumFileNameMap = new HashMap<String, String>();
             fixedModificationsCustomParser = new ArrayList<SearchModificationCustom>();
 
@@ -570,6 +576,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     parseSoftware(parser);
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("Peptide")) {
                     parsePeptide(parser);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("PeptideEvidence")) {
+                    parsePeptideEvidence(parser);
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectraData")) {
                     parseSpectraData(parser, spectrumFileNameMap);
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("ModificationParams")) {
@@ -592,6 +600,31 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         return result;
+    }
+
+    /**
+     * Parse a peptide evidence object.
+     *
+     * @param parser the XML parser
+     * @throws Exception thrown if an exception occurs
+     */
+    private void parsePeptideEvidence(XmlPullParser parser) throws Exception {
+
+        String peptideEvidenceId = null;
+        String peptideRef = null;
+
+        for (int i = 0; i < parser.getAttributeCount(); i++) {
+            String attributeName = parser.getAttributeName(i);
+            if (attributeName.equalsIgnoreCase("id")) {
+                peptideEvidenceId = parser.getAttributeValue(i);
+            } else if (attributeName.equalsIgnoreCase("peptide_ref")) {
+                peptideRef = parser.getAttributeValue(i);
+            }
+        }
+
+        if (peptideEvidenceId != null && peptideRef != null) {
+            tempPeptideEvidenceMap.put(peptideEvidenceId, peptideRef);
+        }
     }
 
     /**
@@ -709,7 +742,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         if (softwareName != null && softwareVersion != null) {
-            
+
             // only keep known software
             if (Advocate.getAdvocate(softwareName) != null) {
 
@@ -752,7 +785,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             // compare accession numbers (excluding  MS:1001460 - unknown modification) and if not equal then compare the delta masses
             if ((modification.getAccession().equals(fixedModification.getAccession()) && !modification.getAccession().equals("MS:1001460"))
                     || massDifference < 0.00001) { // @TODO: is there a better way of doing this..?
-                
+
                 boolean allRules = true;
                 ArrayList<String> specificityRuleCvTerms = fixedModification.getModRuleCvTerms();
                 if (specificityRuleCvTerms != null && !specificityRuleCvTerms.isEmpty()) {
@@ -781,7 +814,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     }
                 } else {
                     // no specificity rules, so the modification cannot be terminal (but can still be on the first or last residue)
-                    if (peptidePtmLocation == 0 || peptidePtmLocation == peptideSequence.length() + 1) {
+                 if (peptidePtmLocation == 0 || peptidePtmLocation == peptideSequence.length() + 1) {
                         allRules = false;
                     }
                 }
@@ -981,7 +1014,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // see if we can find the spectrum index
         Integer spectrumIndex = null;
-        if (spectrumId != null && spectrumId.startsWith("index=")) {
+        if (spectrumId != null && spectrumId.startsWith("index=")) { // @TODO: support more index types
             spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
         }
 
@@ -1000,8 +1033,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         parser.next();
         int type = parser.next();
 
-        while (type != XmlPullParser.END_TAG || !parser.getName().equals("cvParam")) {
-
+        while (type != XmlPullParser.END_TAG && !parser.getName().equals("cvParam")) {
+            
             Integer rank = null;
             String peptideRef = null;
             Integer chargeState = null;
@@ -1020,17 +1053,44 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 }
             }
 
-            if (rank == null || peptideRef == null || chargeState == null || spectrumIdItemId == null | !tempPeptideMap.containsKey(peptideRef)) {
+            if (rank == null || chargeState == null || spectrumIdItemId == null) {
                 System.out.println("spectrumIdItemId: " + spectrumIdItemId);
                 throw new IllegalArgumentException("Error parsing SpectrumIdentificationItem!");
             }
 
             type = parser.next();
+            
+            // read until we get to the peptide evidence references
+            while (parser.getName() == null || (parser.getName() != null && !parser.getName().equals("PeptideEvidenceRef"))) {
+                type = parser.next();
+            }
+            
+            // see if we need to get the peptide reference from the peptide evidence element
+            String peptideEvidenceRef = null;
+            if (peptideRef == null) {
+                if (parser.getName() != null && parser.getName().equals("PeptideEvidenceRef")) {
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        String attributeName = parser.getAttributeName(i);
+                        if (attributeName.equalsIgnoreCase("peptideEvidence_ref")) {
+                            peptideEvidenceRef = parser.getAttributeValue(0);
+                            break;
+                        }
+                    }
+                    type = parser.next();
+                }
+            }
+            
+            if (peptideRef == null && peptideEvidenceRef == null) {
+                System.out.println("spectrumIdItemId: " + spectrumIdItemId);
+                throw new IllegalArgumentException("Error parsing SpectrumIdentificationItem!");
+            }
 
+            // skip the (rest of) the peptide evidence references
             while (parser.getName() == null || (parser.getName() != null && parser.getName().equals("PeptideEvidenceRef"))) {
                 type = parser.next();
             }
 
+            // skip the fragmentation
             if (parser.getName().equals("Fragmentation")) {
                 parser.next();
                 while (parser.getName() == null || (parser.getName() != null && !parser.getName().equals("Fragmentation"))) {
@@ -1089,9 +1149,19 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             Double eValue = tempEValue.getEValue();
             Double rawScore = tempEValue.getRawScore();
 
+            // get the peptide reference
+            if (peptideRef == null) {
+                peptideRef = tempPeptideEvidenceMap.get(peptideEvidenceRef);
+            }
+            
+            if (!tempPeptideMap.containsKey(peptideRef)) {
+                System.out.println("spectrumIdItemId: " + spectrumIdItemId);
+                throw new IllegalArgumentException("Error parsing SpectrumIdentificationItem!");
+            }
+
             // get the peptide
             PeptideCustom tempPeptide = tempPeptideMap.get(peptideRef);
-            
+
             // create a new peptide
             ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
             for (SearchModificationCustom tempMod : tempPeptide.getModifications()) {
@@ -1424,7 +1494,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             softwareVersions.put(name, versions);
                                                                         }
                                                                     } else {
-                                                                        
+
                                                                         // ms-gf+
                                                                         eValue = scoreMap.get("MS:1002053");
                                                                         if (eValue != null) {
@@ -1916,10 +1986,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                 } else {
 
-                                                                                                                                                                                                                    // Generic e-value
-                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002353");
+                                                                                                                                                                                                                    // Morpheus
+                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002662");
                                                                                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                                                                                        advocate = getAdvocate();
+                                                                                                                                                                                                                        rawScore = eValue;
+                                                                                                                                                                                                                        eValue = Math.pow(10, eValue); // @TODO: verify that this is correct!
+                                                                                                                                                                                                                        advocate = Advocate.morpheus;
                                                                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1930,8 +2002,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                     } else {
 
-                                                                                                                                                                                                                        // Generic q-value
-                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1002354");
+                                                                                                                                                                                                                        // Generic e-value
+                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1002353");
                                                                                                                                                                                                                         if (eValue != null) {
                                                                                                                                                                                                                             advocate = getAdvocate();
                                                                                                                                                                                                                             String name = advocate.getName();
@@ -1944,11 +2016,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                         } else {
 
-                                                                                                                                                                                                                            // Generic probability/confidence
-                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1002357");
+                                                                                                                                                                                                                            // Generic q-value
+                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1002354");
                                                                                                                                                                                                                             if (eValue != null) {
-                                                                                                                                                                                                                                rawScore = eValue;
-                                                                                                                                                                                                                                eValue = 1 - eValue;
                                                                                                                                                                                                                                 advocate = getAdvocate();
                                                                                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
@@ -1961,7 +2031,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                             } else {
 
                                                                                                                                                                                                                                 // Generic probability/confidence
-                                                                                                                                                                                                                                eValue = scoreMap.get("MS:1002352");
+                                                                                                                                                                                                                                eValue = scoreMap.get("MS:1002357");
                                                                                                                                                                                                                                 if (eValue != null) {
                                                                                                                                                                                                                                     rawScore = eValue;
                                                                                                                                                                                                                                     eValue = 1 - eValue;
@@ -1973,6 +2043,23 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                             versions = new ArrayList<String>();
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                         softwareVersions.put(name, versions);
+                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                } else {
+
+                                                                                                                                                                                                                                    // Generic probability/confidence
+                                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002352");
+                                                                                                                                                                                                                                    if (eValue != null) {
+                                                                                                                                                                                                                                        rawScore = eValue;
+                                                                                                                                                                                                                                        eValue = 1 - eValue;
+                                                                                                                                                                                                                                        advocate = getAdvocate();
+                                                                                                                                                                                                                                        String name = advocate.getName();
+                                                                                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
+                                                                                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
+                                                                                                                                                                                                                                            if (versions == null) {
+                                                                                                                                                                                                                                                versions = new ArrayList<String>();
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            softwareVersions.put(name, versions);
+                                                                                                                                                                                                                                        }
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                             }

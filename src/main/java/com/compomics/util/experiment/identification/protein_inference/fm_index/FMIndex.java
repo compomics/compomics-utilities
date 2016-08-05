@@ -251,7 +251,9 @@ public class FMIndex implements PeptideMapper {
         return mid;
     }
     
-    
+    public long getAllocatedBytes(){
+        return occurrenceTablePrimary.getAllocatedBytes() + occurrenceTableReversed.getAllocatedBytes() + indexStringLength;
+    }
     
 
     /**
@@ -271,10 +273,6 @@ public class FMIndex implements PeptideMapper {
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         
-        
-        
-        System.out.println("generic: " + genericVariantMatching);
-        System.out.println("variant numbers: " + maxNumberVariants + " " + maxNumberDeletions + " " + maxNumberInsertions + " " + maxNumberSubstitutions);
         
         
         substitutionMatrix = new boolean[128][128];
@@ -693,8 +691,6 @@ public class FMIndex implements PeptideMapper {
         indexStringLength += 2; // last delimiter + sentinal
         
         
-        
-        System.out.println("p_len: " + indexStringLength);
         
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {

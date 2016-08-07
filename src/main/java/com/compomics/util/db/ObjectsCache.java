@@ -546,25 +546,36 @@ public class ObjectsCache {
      */
     public void updateCache() throws IOException, SQLException, InterruptedException {
         if (!readOnly && !updating) {
-            synchronized (this) {
-                updating = true;
-                while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
-                        || (automatedMemoryManagement && !memoryCheck())) {
-                    int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
-                    if (toRemove <= 1) {
-                        saveObject(loadedObjectsKeys.take());
-                    } else {
-                        ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
-                        loadedObjectsKeys.drainTo(keysToRemove, toRemove);
-                        saveObjects(keysToRemove);
-                    }
-                    if (loadedObjectsKeys.isEmpty()) {
-                        break;
-                    }
-                }
-                updating = false;
+            updateCacheSynchronized();
+        }
+    }
+
+    /**
+     * Updates the cache according to the memory settings.
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     * @throws InterruptedException if an InterruptedException occurs
+     */
+    public synchronized void updateCacheSynchronized() throws IOException, SQLException, InterruptedException {
+        updating = true;
+        while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
+                || (automatedMemoryManagement && !memoryCheck())) {
+            int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
+            if (toRemove <= 1) {
+                saveObject(loadedObjectsKeys.take());
+            } else {
+                ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+                saveObjects(keysToRemove);
+            }
+            if (loadedObjectsKeys.isEmpty()) {
+                break;
             }
         }
+        updating = false;
     }
 
     /**
@@ -700,6 +711,7 @@ public class ObjectsCache {
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+
     }
 
     /**

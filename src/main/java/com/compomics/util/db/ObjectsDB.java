@@ -55,7 +55,8 @@ public class ObjectsDB implements Serializable {
      */
     private HashMap<String, ArrayList<String>> longKeysMap = new HashMap<String, ArrayList<String>>();
     /**
-     * Tables that have already been used. Will be null for projects older than 4.7.0.
+     * Tables that have already been used. Will be null for projects older than
+     * 4.7.0.
      */
     private HashSet<String> usedTables = new HashSet<String>();
     /**
@@ -297,31 +298,52 @@ public class ObjectsDB implements Serializable {
         if (inCache) {
             objectsCache.addObject(dbName, tableName, correctedKey, object, true);
         } else {
-            if (debugInteractions) {
-                System.out.println("Inserting single object, table: " + tableName + ", key: " + objectKey);
-            }
-            synchronized (this) {
-                if (usedTables != null && !usedTables.contains(tableName)) {
-                    usedTables.add(tableName);
-                }
-                PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-                ps.setString(1, correctedKey);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                try {
-                    ObjectOutputStream oos = new ObjectOutputStream(bos);
-                    try {
-                        oos.writeObject(object);
-                    } finally {
-                        oos.close();
-                    }
-                } finally {
-                    bos.close();
-                }
-                ps.setBytes(2, bos.toByteArray());
-                ps.executeUpdate();
-                ps.close();
-            }
+            insertObjectSynchronized(tableName, objectKey, correctedKey, object, inCache);
         }
+    }
+
+    /**
+     * Stores an object in the desired table. When multiple objects are to be
+     * inserted, use insertObjects instead.
+     *
+     * @param tableName the name of the table
+     * @param objectKey the key of the object
+     * @param correctedKey the corrected key
+     * @param object the object to store
+     * @param inCache boolean indicating whether the method shall try to put the
+     * object in cache or not
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * storing the object
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     * @throws InterruptedException exception thrown whenever a threading error
+     * occurred while interacting with the database
+     */
+    public synchronized void insertObjectSynchronized(String tableName, String objectKey, String correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+
+        if (debugInteractions) {
+            System.out.println("Inserting single object, table: " + tableName + ", key: " + objectKey);
+        }
+        if (usedTables != null && !usedTables.contains(tableName)) {
+            usedTables.add(tableName);
+        }
+        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
+        ps.setString(1, correctedKey);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            try {
+                oos.writeObject(object);
+            } finally {
+                oos.close();
+            }
+        } finally {
+            bos.close();
+        }
+        ps.setBytes(2, bos.toByteArray());
+        ps.executeUpdate();
+        ps.close();
     }
 
     /**

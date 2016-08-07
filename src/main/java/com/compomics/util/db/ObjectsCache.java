@@ -269,11 +269,12 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      * @param modifiedOrNew true if the object is modified or new
+     *
      * @throws IOException if an IOException occurs
      * @throws SQLException if an SQLException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public synchronized void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
+    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             if (dbName.contains(cacheSeparator)) {
                 throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
@@ -285,27 +286,48 @@ public class ObjectsCache {
             loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
             HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
             if (dbCache == null) {
-                synchronized (this) {
-                    dbCache = loadedObjectsMap.get(dbName);
-                    if (dbCache == null) {
-                        dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
-                        loadedObjectsMap.put(dbName, dbCache);
-                    }
-                }
+                dbCache = getDbCache(dbName);
             }
             HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
             if (tableCache == null) {
-                synchronized (this) {
-                    tableCache = dbCache.get(tableName);
-                    if (tableCache == null) {
-                        tableCache = new HashMap<String, CacheEntry>(512);
-                        dbCache.put(tableName, tableCache);
-                    }
-                }
+                tableCache = getTableCache(dbCache, tableName);
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
             updateCache();
         }
+    }
+
+    /**
+     * Returns the cache corresponding to a database.
+     *
+     * @param dbName the name of the database
+     *
+     * @return the cache corresponding to this database
+     */
+    private synchronized HashMap<String, HashMap<String, CacheEntry>> getDbCache(String dbName) {
+        HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
+        if (dbCache == null) {
+            dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
+            loadedObjectsMap.put(dbName, dbCache);
+        }
+        return dbCache;
+    }
+
+    /**
+     * Returns the cache corresponding to a table.
+     *
+     * @param dbCache the database cache
+     * @param tableName the table name
+     *
+     * @return the cache corresponding to the table
+     */
+    private synchronized HashMap<String, CacheEntry> getTableCache(HashMap<String, HashMap<String, CacheEntry>> dbCache, String tableName) {
+        HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
+        if (tableCache == null) {
+            tableCache = new HashMap<String, CacheEntry>(512);
+            dbCache.put(tableName, tableCache);
+        }
+        return tableCache;
     }
 
     /**
@@ -552,7 +574,7 @@ public class ObjectsCache {
      * be saved
      * @param waitingHandler a waiting handler on which the progress will be
      * displayed as secondary progress. can be null
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -583,7 +605,7 @@ public class ObjectsCache {
      * @param waitingHandler a waiting handler on which the progress will be
      * @param emptyCache boolean indicating whether the cache content shall be
      * cleared while saving displayed as secondary progress. can be null
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while

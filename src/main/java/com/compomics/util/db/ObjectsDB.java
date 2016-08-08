@@ -99,6 +99,7 @@ public class ObjectsDB implements Serializable {
     private File debugFolder;
     /**
      * A boolean indicating whether the database is being queried.
+     * //@TODO: use a semaphore to manage the queries
      */
     private boolean busy = false;
     /**

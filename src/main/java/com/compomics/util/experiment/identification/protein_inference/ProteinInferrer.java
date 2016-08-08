@@ -51,6 +51,33 @@ public class ProteinInferrer {
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
         
+        double tolerance = 0.02;
+        PtmSettings ptmSettings = null;
+        PeptideVariantsPreferences peptideVariantsPreferences = null;
+        SequenceMatchingPreferences sequenceMatchingPreferences = null;
+        if (args.length >= 5){
+            File parameterFile = new File(args[4]);
+            IdentificationParameters identificationParameters = null;
+            try {
+                identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
+            } catch (Exception e){
+                System.out.println("Cound not open / parse parameter file");
+                System.exit(-1);
+            }
+
+            tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
+            
+            ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
+            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+
+        }
+            else {
+            ptmSettings = new PtmSettings();
+            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+            sequenceMatchingPreferences = new SequenceMatchingPreferences();
+            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+            sequenceMatchingPreferences.setLimitX(0.25);
 
         long startTime = System.nanoTime();
         FMIndex fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);

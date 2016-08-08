@@ -292,7 +292,7 @@ public class ObjectsCache {
             if (tableCache == null) {
                 tableCache = getTableCache(dbCache, tableName);
             }
-            tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
+            addToTableCacheSynchronized(tableCache, objectKey, new CacheEntry(object, modifiedOrNew));
             updateCache();
         }
     }
@@ -328,6 +328,17 @@ public class ObjectsCache {
             dbCache.put(tableName, tableCache);
         }
         return tableCache;
+    }
+    
+    /**
+     * Adds a cache entry to a table cache.
+     * 
+     * @param tableCache the table cache
+     * @param objectKey the object key
+     * @param cacheEntry the cache entry
+     */
+    private synchronized void addToTableCacheSynchronized(HashMap<String, CacheEntry> tableCache, String objectKey, CacheEntry cacheEntry) {
+        tableCache.put(objectKey, cacheEntry);
     }
 
     /**

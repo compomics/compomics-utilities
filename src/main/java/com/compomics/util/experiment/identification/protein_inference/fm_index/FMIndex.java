@@ -3126,14 +3126,9 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
 
-        ListIterator<CacheElement> listIterator = cache.listIterator();
-        while (listIterator.hasNext()) {
-            CacheElement cacheElement = listIterator.next();
+        for (CacheElement cacheElement : cache) {
             if (cacheElement.sequence.equals(tagComponents[1].sequence) && Math.abs(cacheElement.massSecond - tagComponents[2].mass) < 1e-5) {
-                cached = new ArrayList<MatrixContent>();
-                for (MatrixContent matrixContent : cacheElement.cachedPrimary) {
-                    cached.add(new MatrixContent(matrixContent));
-                }
+                cached = new ArrayList<MatrixContent>(cacheElement.cachedPrimary);
                 break;
             }
         }

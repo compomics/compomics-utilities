@@ -56,7 +56,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
                 speciesFactory.initiate(getJarFilePath());
             } catch (Exception e) {
-                System.out.println("An error occurred while loading the enzymes.");
+                System.out.println("An error occurred while loading the species.");
                 e.printStackTrace();
             }
 
@@ -84,11 +84,11 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 // check if the parameters are valid
                 if (!IdentificationParametersInputBean.isValidStartup(line, true)) {
                     System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
-                    System.exit(0);
+                    System.exit(1);
                 }
                 if (!IdentificationParametersInputBean.isValidModifications(line)) {
                     printModifications();
-                    System.exit(0);
+                    System.exit(1);
                 } else {
                     input = new IdentificationParametersInputBean(line);
                     call();
@@ -96,10 +96,11 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             } catch (UnrecognizedOptionException e) {
                 System.out.println(System.getProperty("line.separator") + "Unrecognized option " + e.getOption() + ".");
                 System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
-                System.exit(0);
+                System.exit(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -117,9 +118,10 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return 1;
         }
 
-        return null;
+        return 0;
     }
 
     /**

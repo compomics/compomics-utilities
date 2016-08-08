@@ -89,7 +89,7 @@ public class PsmIterator {
             } else {
                 this.spectrumKeys = new ArrayList<String>(identification.getSpectrumIdentificationSize());
                 for (String tempSpectrumFile : identification.getOrderedSpectrumFileNames()) {
-                    spectrumKeys.addAll(identification.getSpectrumIdentification(tempSpectrumFile));
+                    this.spectrumKeys.addAll(identification.getSpectrumIdentification(tempSpectrumFile));
                 }
             }
         } else {

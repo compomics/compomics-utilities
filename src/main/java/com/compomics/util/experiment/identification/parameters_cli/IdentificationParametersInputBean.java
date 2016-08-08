@@ -23,8 +23,6 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters.AndromedaDecoyMode;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters.CometOutputFormat;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
@@ -37,7 +35,6 @@ import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

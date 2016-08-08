@@ -73,6 +73,8 @@ public class Duration {
 
         long processingTimeMilliseconds = end - start;
         double processingTimeSeconds = ((double) processingTimeMilliseconds) / 1000;
+        int nSeconds = (int) processingTimeSeconds;
+        double restMilliseconds = processingTimeMilliseconds - (1000 * nSeconds);
         double processingTimeMinutes = processingTimeSeconds / 60;
         int nMinutes = (int) processingTimeMinutes;
         double restSeconds = processingTimeSeconds - (60 * nMinutes);
@@ -113,9 +115,8 @@ public class Duration {
         }
 
         if (restSeconds < 1) {
-            result.append(processingTimeMilliseconds).append(" milliseconds");
+            result.append(restMilliseconds).append(" milliseconds");
         } else if (restMinutes > 1) {
-            int nSeconds = (int) restSeconds;
             result.append(nSeconds).append(" seconds");
         } else {
             result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");

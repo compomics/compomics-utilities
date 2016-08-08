@@ -69,7 +69,7 @@ public class ProteinInferrer {
             tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
             
             ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
-            peptideVariantsPreferences = identificationParameters.getPeptideVariantsPreferences();
+            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
 
         }

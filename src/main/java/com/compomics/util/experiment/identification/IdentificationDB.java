@@ -508,6 +508,7 @@ public class IdentificationDB implements Serializable {
      * Adds a spectrum match to the database.
      *
      * @param spectrumMatch the spectrum match to be added
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while

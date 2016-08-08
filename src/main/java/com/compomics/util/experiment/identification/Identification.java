@@ -1499,9 +1499,19 @@ public abstract class Identification extends ExperimentObject {
         }
 
         if (newSpectrum) {
-            spectrumKeys.add(spectrumKey);
+            addKeyToSetSynchronized(spectrumKeys, spectrumKey);
             identificationDB.addSpectrumMatch(newMatch);
         }
+    }
+    
+    /**
+     * Adds a key to a set.
+     * 
+     * @param spectrumKeys the set
+     * @param spectrumKey the key
+     */
+    public synchronized void addKeyToSetSynchronized(HashSet<String> spectrumKeys, String spectrumKey) {
+            spectrumKeys.add(spectrumKey);
     }
 
     /**

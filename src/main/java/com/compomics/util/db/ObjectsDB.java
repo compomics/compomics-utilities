@@ -626,17 +626,19 @@ public class ObjectsDB implements Serializable {
                 }
 
                 boolean concurrentAccess = tableQueueUpdating.equals(tableName);
-                ArrayList<String> queue = new ArrayList<String>();
+                ArrayList<String> queue = null;
 
                 if (!concurrentAccess && contentQueue.get(tableName) != null) {
                     queue = contentQueue.get(tableName);
                     contentTableQueue.remove(tableName);
                     contentQueue.remove(tableName);
                 }
-
-                if (!keys.equals(queue)) {
+                if (queue == null) {
+                    queue = keys;
+                } else if (keys != queue) {
+                    HashSet<String> queueAsSet = new HashSet<String>(queue);
                     for (String key : keys) {
-                        if (!queue.contains(key)) {
+                        if (!queueAsSet.contains(key)) {
                             queue.add(key);
                         }
                     }
@@ -713,18 +715,19 @@ public class ObjectsDB implements Serializable {
             } else {
 
                 tableQueueUpdating = tableName;
-                if (!contentTableQueue.contains(tableName)) {
+                ArrayList<String> queue = contentQueue.get(tableName);
+                if (queue == null) {
                     contentTableQueue.add(tableName);
                     contentQueue.put(tableName, keys);
-                } else if (keys.equals(contentQueue.get(tableName))) {
+                } else if (keys == queue) {
                     while (busy) {
                         wait(7);
                     }
                     loadObjects(tableName, keys, waitingHandler, displayProgress);
                 } else {
-                    ArrayList<String> queue = contentQueue.get(tableName);
+                    HashSet<String> queueAsSet = new HashSet<String>(queue);
                     for (String newItem : keys) {
-                        if (!queue.contains(newItem)) {
+                        if (!queueAsSet.contains(newItem)) {
                             queue.add(newItem);
                         }
                     }

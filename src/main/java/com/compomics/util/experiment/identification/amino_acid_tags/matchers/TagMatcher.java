@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -368,7 +369,7 @@ public class TagMatcher {
      * @return the possible peptides which can be created on this sequence
      * indexed by their start index
      */
-    public HashMap<Integer, ArrayList<Peptide>> getPeptideMatches(Tag tag, String accession, String sequence, Integer tagIndex,
+    public ArrayList<PeptideProteinMapping> getPeptideMatches(Tag tag, String accession, String sequence, Integer tagIndex,
             Integer componentIndex, double massTolerance) {
 
         ArrayList<TagComponent> content = tag.getContent();
@@ -407,7 +408,7 @@ public class TagMatcher {
             nTermPossibleSequences = mapTagComponent(accession, sequence, tagComponent, nTermPossibleSequences, massTolerance, useCache && i == componentIndex - 1, true, i == 0);
 
             if (nTermPossibleSequences.isEmpty()) {
-                return new HashMap<Integer, ArrayList<Peptide>>(0);
+                return new ArrayList<PeptideProteinMapping>(0);
             }
         }
 
@@ -422,13 +423,13 @@ public class TagMatcher {
             cTermPossibleSequences = mapTagComponent(accession, sequence, tagComponent, cTermPossibleSequences, massTolerance, useCache && i == componentIndex + 1, false, i == content.size() - 1);
 
             if (cTermPossibleSequences.isEmpty()) {
-                return new HashMap<Integer, ArrayList<Peptide>>(0);
+                return new ArrayList<PeptideProteinMapping>(0);
             }
 
         }
 
         // create all possible peptide sequences by adding all possible N and C term to the seed sequence
-        HashMap<Integer, ArrayList<Peptide>> result = buildPeptides(sequence, nTermPossibleSequences, seedSequence, cTermPossibleSequences, modificationsAtIndex, 0);
+        ArrayList<PeptideProteinMapping> result = buildPeptides(accession, sequence, nTermPossibleSequences, seedSequence, cTermPossibleSequences, modificationsAtIndex, 0);
 
         return result;
     }
@@ -438,6 +439,7 @@ public class TagMatcher {
      * seed sequence.
      *
      * @param sequence the protein sequence
+     * @param accession the protein accession
      * @param nTermPossibleSequences the N-terminal possible segments
      * @param seedSequence the seed sequence
      * @param cTermPossibleSequences the C-terminal possible segments
@@ -447,9 +449,9 @@ public class TagMatcher {
      * @return the possible peptides in a map: index on protein &gt; list of
      * peptides
      */
-    public HashMap<Integer, ArrayList<Peptide>> buildPeptides(String sequence, ArrayList<SequenceSegment> nTermPossibleSequences, String seedSequence, ArrayList<SequenceSegment> cTermPossibleSequences, HashMap<Integer, ArrayList<ModificationMatch>> modificationsAtIndex, int mutationsAtIndex) {
+    public ArrayList<PeptideProteinMapping> buildPeptides(String accession, String sequence, ArrayList<SequenceSegment> nTermPossibleSequences, String seedSequence, ArrayList<SequenceSegment> cTermPossibleSequences, HashMap<Integer, ArrayList<ModificationMatch>> modificationsAtIndex, int mutationsAtIndex) {
 
-        HashMap<Integer, ArrayList<Peptide>> result = new HashMap<Integer, ArrayList<Peptide>>(nTermPossibleSequences.size() * cTermPossibleSequences.size());
+        ArrayList<PeptideProteinMapping> result = new ArrayList<PeptideProteinMapping>(nTermPossibleSequences.size() * cTermPossibleSequences.size());
 
         for (SequenceSegment nTermSegment : nTermPossibleSequences) {
 
@@ -491,15 +493,9 @@ public class TagMatcher {
                     }
                 }
 
-                Peptide peptide = new Peptide(peptideSequence.toString(), modificationMatches);
                 Integer nTermIndex = nTermSegment.getTerminalIndex() + 1;
-                ArrayList<Peptide> peptides = result.get(nTermIndex);
-
-                if (peptides == null) {
-                    peptides = new ArrayList<Peptide>(1);
-                    result.put(nTermIndex, peptides);
-                }
-                peptides.add(peptide);
+                PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptideSequence.toString(), nTermIndex, modificationMatches);
+                result.add(peptideProteinMapping);
             }
         }
         return result;

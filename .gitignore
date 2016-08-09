@@ -3,3 +3,4 @@ derby.log
 /.idea/
 *.iml
 /src/main/java/com/compomics/scripts_marc/
+/src/test/resources/

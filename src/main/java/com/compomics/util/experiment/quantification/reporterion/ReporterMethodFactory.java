@@ -72,23 +72,23 @@ public class ReporterMethodFactory extends ExperimentObject {
     public ArrayList<String> getMethodsNames() {
         return methodsNames;
     }
-    
+
     /**
      * Returns the methods names as array.
-     * 
+     *
      * @return the methods names
      */
     public String[] getMethodsNamesAsArray() {
-        
+
         String[] array = methodsNames.toArray(new String[methodsNames.size()]);
         return array;
     }
-    
+
     /**
      * Returns the reporter methods corresponding to the given name.
-     * 
+     *
      * @param methodName the name of the method
-     * 
+     *
      * @return the reporter methods
      */
     public ReporterMethod getReporterMethod(String methodName) {
@@ -181,25 +181,29 @@ public class ReporterMethodFactory extends ExperimentObject {
         // create a reader for the input file
         BufferedReader br = new BufferedReader(new FileReader(aFile));
 
-        // set the XML Pull Parser to read from this reader
-        parser.setInput(br);
+        try {
 
-        // start the parsing
-        int type = parser.next();
+            // set the XML Pull Parser to read from this reader
+            parser.setInput(br);
 
-        // go through the whole document
-        while (type != XmlPullParser.END_DOCUMENT) {
-            // if we find a 'reporterMethod' start tag, we should parse the mod
-            if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-                ReporterMethod reporterMethod = parseMethod(parser);
-                String methodName = reporterMethod.getName();
-                methodsNames.add(methodName);
-                methods.put(methodName, reporterMethod);
+            // start the parsing
+            int type = parser.next();
+
+            // go through the whole document
+            while (type != XmlPullParser.END_DOCUMENT) {
+                // if we find a 'reporterMethod' start tag, we should parse the mod
+                if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
+                    ReporterMethod reporterMethod = parseMethod(parser);
+                    String methodName = reporterMethod.getName();
+                    methodsNames.add(methodName);
+                    methods.put(methodName, reporterMethod);
+                }
+                type = parser.next();
             }
-            type = parser.next();
-        }
 
-        br.close();
+        } finally {
+            br.close();
+        }
     }
 
     /**

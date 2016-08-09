@@ -71,7 +71,13 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      * Sets up the GUI.
      */
     private void setUpGui() {
-        maxVariantsSpinner.setEnabled(editable);
+        totalVariantsSpinner.setEnabled(editable);
+        specificVariantsComboBox.setEnabled(editable);
+        specificVariantsComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        deletionsSpinner.setEnabled(editable);
+        insertionsSpinner.setEnabled(editable);
+        subsitutionsSpinner.setEnabled(editable);
+        swapSpinner.setEnabled(editable);
         substitutionMatrixComboBox.setEnabled(editable);
         substitutionMatrixComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         setTableProperties();
@@ -84,7 +90,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         TableColumnModel tableColumnModel = substitutionMatrixTable.getColumnModel();
         tableColumnModel.getColumn(0).setMaxWidth(50);
         substitutionMatrixTableJScrollPane.getViewport().setOpaque(false);
-        for (int i = 0; i < AminoAcid.getAminoAcids().length; i++) {
+        for (int i = 0; i < AminoAcid.getUniqueAminoAcids().length; i++) {
             tableColumnModel.getColumn(i + 1).setCellRenderer(new TrueFalseIconRenderer(
                     new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                     null,
@@ -99,7 +105,24 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      */
     private void populateGUI(PeptideVariantsPreferences peptideVariantPreferences) {
 
-        maxVariantsSpinner.setValue(peptideVariantPreferences.getnEdits());
+        totalVariantsSpinner.setValue(peptideVariantPreferences.getnVariants());
+        boolean useSpecific = peptideVariantPreferences.getUseSpecificCount();
+        if (useSpecific) {
+            specificVariantsComboBox.setSelectedIndex(0);
+        } else {
+            specificVariantsComboBox.setSelectedIndex(1);
+        }
+        if (editable) {
+            deletionsSpinner.setEnabled(useSpecific);
+            insertionsSpinner.setEnabled(useSpecific);
+            subsitutionsSpinner.setEnabled(useSpecific);
+            swapSpinner.setEnabled(useSpecific);
+        }
+
+        deletionsSpinner.setValue(peptideVariantPreferences.getnAaDeletions());
+        insertionsSpinner.setValue(peptideVariantPreferences.getnAaInsertions());
+        subsitutionsSpinner.setValue(peptideVariantPreferences.getnAaSubstitutions());
+        swapSpinner.setValue(peptideVariantPreferences.getnAaSwap());
 
         AaSubstitutionMatrix aaSubstitutionMatrix = peptideVariantPreferences.getAaSubstitutionMatrix();
         substitutionMatrixComboBox.setSelectedItem(aaSubstitutionMatrix);
@@ -123,7 +146,12 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      */
     public PeptideVariantsPreferences getPeptideVariantsPreferences() {
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
-        peptideVariantsPreferences.setnEdits((Integer) maxVariantsSpinner.getValue());
+        peptideVariantsPreferences.setnVariants((Integer) totalVariantsSpinner.getValue());
+        peptideVariantsPreferences.setUseSpecificCount(specificVariantsComboBox.getSelectedIndex() == 0);
+        peptideVariantsPreferences.setnAaDeletions((Integer) deletionsSpinner.getValue());
+        peptideVariantsPreferences.setnAaInsertions((Integer) insertionsSpinner.getValue());
+        peptideVariantsPreferences.setnAaSubstitutions((Integer) subsitutionsSpinner.getValue());
+        peptideVariantsPreferences.setnAaSwap((Integer) swapSpinner.getValue());
         peptideVariantsPreferences.setAaSubstitutionMatrix((AaSubstitutionMatrix) substitutionMatrixComboBox.getSelectedItem());
         return peptideVariantsPreferences;
     }
@@ -157,8 +185,18 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
 
         backgrounPanel = new javax.swing.JPanel();
         maxVariantsJPanel = new javax.swing.JPanel();
-        maxVariantsLbl = new javax.swing.JLabel();
-        maxVariantsSpinner = new javax.swing.JSpinner();
+        deletionsSpinner = new javax.swing.JSpinner();
+        deletionsLbl = new javax.swing.JLabel();
+        deletionsLbl1 = new javax.swing.JLabel();
+        insertionsSpinner = new javax.swing.JSpinner();
+        deletionsLbl2 = new javax.swing.JLabel();
+        subsitutionsSpinner = new javax.swing.JSpinner();
+        deletionsLbl3 = new javax.swing.JLabel();
+        swapSpinner = new javax.swing.JSpinner();
+        totalVariantsLbl = new javax.swing.JLabel();
+        totalVariantsSpinner = new javax.swing.JSpinner();
+        specificVariantsLbl = new javax.swing.JLabel();
+        specificVariantsComboBox = new javax.swing.JComboBox();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         aaSubstitutionsTableJPanel = new javax.swing.JPanel();
@@ -176,13 +214,38 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
 
         backgrounPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        maxVariantsJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Variants"));
+        maxVariantsJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Number of Variants Allowed per Peptide"));
         maxVariantsJPanel.setOpaque(false);
 
-        maxVariantsLbl.setText("Maximal number of edits per peptide");
-        maxVariantsLbl.setToolTipText("<html>\nThe minium protein confidence required to be included in the<br>\naverage molecular weight analysis in the Fractions tab.\n</html>");
+        deletionsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        maxVariantsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        deletionsLbl.setText("Amino acid deletions");
+
+        deletionsLbl1.setText("Amino acid insertions");
+
+        insertionsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
+        deletionsLbl2.setText("Amino acid substitutions");
+
+        subsitutionsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
+        deletionsLbl3.setText("Amino acid swap");
+
+        swapSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
+        totalVariantsLbl.setText("Total");
+
+        totalVariantsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
+        specificVariantsLbl.setText("Use specific variants");
+
+        specificVariantsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        specificVariantsComboBox.setSelectedIndex(1);
+        specificVariantsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                specificVariantsComboBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout maxVariantsJPanelLayout = new javax.swing.GroupLayout(maxVariantsJPanel);
         maxVariantsJPanel.setLayout(maxVariantsJPanelLayout);
@@ -190,19 +253,60 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
             maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maxVariantsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maxVariantsLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(maxVariantsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(maxVariantsJPanelLayout.createSequentialGroup()
+                        .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(totalVariantsLbl)
+                            .addComponent(specificVariantsLbl))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(specificVariantsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(totalVariantsSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
+                    .addGroup(maxVariantsJPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(deletionsLbl)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxVariantsJPanelLayout.createSequentialGroup()
+                                .addComponent(deletionsLbl1)
+                                .addGap(15, 15, 15))
+                            .addComponent(deletionsLbl2)
+                            .addComponent(deletionsLbl3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(swapSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(subsitutionsSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deletionsSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(insertionsSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         maxVariantsJPanelLayout.setVerticalGroup(
             maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(maxVariantsJPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxVariantsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxVariantsLbl)
-                    .addComponent(maxVariantsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addComponent(totalVariantsLbl)
+                    .addComponent(totalVariantsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(specificVariantsLbl)
+                    .addComponent(specificVariantsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deletionsLbl)
+                    .addComponent(deletionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deletionsLbl1)
+                    .addComponent(insertionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deletionsLbl3)
+                    .addComponent(swapSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maxVariantsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deletionsLbl2)
+                    .addComponent(subsitutionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         cancelButton.setText("Cancel");
@@ -219,7 +323,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        aaSubstitutionsTableJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Amino Acid Substitutions"));
+        aaSubstitutionsTableJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Allowed Amino Acid Substitutions"));
         aaSubstitutionsTableJPanel.setOpaque(false);
 
         substitutionMatrixComboBox.setModel(new DefaultComboBoxModel(AaSubstitutionMatrix.defaultMutationMatrices));
@@ -249,7 +353,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(substitutionMatrixComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(substitutionMatrixTableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addComponent(substitutionMatrixTableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -334,17 +438,37 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         updateTableContent(aaSubstitutionMatrix);
     }//GEN-LAST:event_substitutionMatrixComboBoxActionPerformed
 
+    private void specificVariantsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specificVariantsComboBoxActionPerformed
+        if (editable) {
+            boolean useSpecific = specificVariantsComboBox.getSelectedIndex() == 0;
+            deletionsSpinner.setEnabled(useSpecific);
+            insertionsSpinner.setEnabled(useSpecific);
+            subsitutionsSpinner.setEnabled(useSpecific);
+            swapSpinner.setEnabled(useSpecific);
+        }
+    }//GEN-LAST:event_specificVariantsComboBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aaSubstitutionsTableJPanel;
     private javax.swing.JPanel backgrounPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel deletionsLbl;
+    private javax.swing.JLabel deletionsLbl1;
+    private javax.swing.JLabel deletionsLbl2;
+    private javax.swing.JLabel deletionsLbl3;
+    private javax.swing.JSpinner deletionsSpinner;
+    private javax.swing.JSpinner insertionsSpinner;
     private javax.swing.JPanel maxVariantsJPanel;
-    private javax.swing.JLabel maxVariantsLbl;
-    private javax.swing.JSpinner maxVariantsSpinner;
     private javax.swing.JButton okButton;
+    private javax.swing.JComboBox specificVariantsComboBox;
+    private javax.swing.JLabel specificVariantsLbl;
+    private javax.swing.JSpinner subsitutionsSpinner;
     private javax.swing.JComboBox substitutionMatrixComboBox;
     private javax.swing.JTable substitutionMatrixTable;
     private javax.swing.JScrollPane substitutionMatrixTableJScrollPane;
+    private javax.swing.JSpinner swapSpinner;
+    private javax.swing.JLabel totalVariantsLbl;
+    private javax.swing.JSpinner totalVariantsSpinner;
     // End of variables declaration//GEN-END:variables
 
 }

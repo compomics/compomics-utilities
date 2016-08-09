@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.gui.parameters.identification_parameters.AnnotationSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.FractionSettingsDialog;
@@ -316,6 +317,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton.setEnabled(true);
         fractionsButton.setEnabled(true);
         qualityControlButton.setEnabled(true);
+//        peptideVariantsButton.setEnabled(sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.fm_index);
+        peptideVariantsButton.setEnabled(false);
 
         validateInput();
     }
@@ -419,6 +422,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         identificationParameters.setIdFilter(peptideAssumptionFilter);
         identificationParameters.setPsmScoringPreferences(psmScoringPreferences);
         identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
+        identificationParameters.setPeptideVariantsPreferences(peptideVariantsPreferences);
         identificationParameters.setProteinInferencePreferences(proteinInferencePreferences);
         identificationParameters.setIdValidationPreferences(idValidationPreferences);
         identificationParameters.setFractionSettings(fractionSettings);

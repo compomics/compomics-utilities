@@ -60,9 +60,8 @@ public class ObjectsDB implements Serializable {
      */
     private HashSet<String> usedTables = new HashSet<String>();
     /**
-     * The table where to save the long keys.
-     *
-     * Note: needs to keep the same value for backward compatibility
+     * The table where to save the long keys. Note: needs to keep the same value
+     * for backward compatibility
      */
     public static final String DB_ATTRIBUTES = "long_key_table";
     /**
@@ -98,8 +97,8 @@ public class ObjectsDB implements Serializable {
      */
     private File debugFolder;
     /**
-     * A boolean indicating whether the database is being queried.
-     * //@TODO: use a semaphore to manage the queries
+     * A boolean indicating whether the database is being queried. //@TODO: use
+     * a semaphore to manage the queries
      */
     private boolean busy = false;
     /**

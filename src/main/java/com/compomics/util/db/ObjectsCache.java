@@ -722,7 +722,6 @@ public class ObjectsCache {
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
-
     }
 
     /**

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.compomics.util.experiment.identification.protein_inference;
+package com.compomics.util.experiment.identification.protein_inference.executable;
 
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
@@ -12,6 +12,7 @@ import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -29,18 +30,25 @@ import java.util.regex.Pattern;
  *
  * @author dominik.kopczynski
  */
-public class ProteinInferrer {
+public class PeptideMapping {
     public static void main(String[] args){
         if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))){
-            System.out.println("usage: ProteinInferrer -[p|t] input-fasta input-peptide/tag-csv output-csv");
-            System.out.println();
-            System.out.println("options are:");
-            System.out.println("\t-p\tpeptide mapping");
-            System.out.println("\t-t\tsequence tag mapping");
-            System.out.println("\t-h\tprint this info");
+            System.err.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
+            System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-filewwwwwwaeaaeaeanrt]");
+            System.err.println();
+            System.err.println("Options are:");
+            System.err.println("\t-p\tpeptide mapping");
+            System.err.println("\t-t\tsequence tag mapping");
+            System.err.println("\t-h\tprint this info");
+            System.err.println();
+            System.err.println("Default parameters:");
+            System.err.println("\tindexing method:\t\tfm-index");
+            System.err.println("\tframentation tolerance [Da]:\t0.02");
+            
             System.exit(-1);
         }
         
+        System.err.println("Start reading fasta file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File sequences = new File(args[1]);
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -48,7 +56,7 @@ public class ProteinInferrer {
             sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
         }
         catch (Exception e){
-            System.out.println("Cound not open fasta file");
+            System.err.println("Error: cound not open fasta file");
             System.exit(-1);
         }
         
@@ -62,7 +70,7 @@ public class ProteinInferrer {
             try {
                 identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
             } catch (Exception e){
-                System.out.println("Cound not open / parse parameter file");
+                System.err.println("Error: cound not open / parse parameter file");
                 System.exit(-1);
             }
 
@@ -83,41 +91,45 @@ public class ProteinInferrer {
         }
         
         
+        System.err.println("Start indexing proteome");
         long startTime = System.nanoTime();
-        FMIndex fmIndex = new FMIndex(null, false, ptmSettings, peptideVariantsPreferences);
-        System.out.println("Indexing took " + (((float)(System.nanoTime() - startTime)) / 1e9) + " seconds and consumes " + (((float)fmIndex.getAllocatedBytes()) / 1e6) + " MB");
+        FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences);
+        double diffTime = System.nanoTime() - startTime;
+        System.err.println();
+        System.err.println("Indexing took " + (diffTime / 1e9) + " seconds and consumes " + (((float)fmIndex.getAllocatedBytes()) / 1e6) + " MB");
         
         if (args[0].equals("-p")){
             ArrayList<String> peptides = new ArrayList<String>();
             try {
                 for (String line : Files.readAllLines(Paths.get(args[2]))) {
                     if (!Pattern.matches("[a-zA-Z]+", line)){
-                        System.out.println("Error: invalid character in line '" + line + "'");
+                        System.err.println("Error: invalid character in line '" + line + "'");
                         System.exit(-1);
                     }
                     peptides.add(line.toUpperCase());
                 }
             }
             catch(Exception e){
-                System.out.println("Cound open input list");
+                System.err.println("Error: cound not open input list");
                 System.exit(-1);
             }
+            waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(peptides.size());
+            waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
+            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
 
             // starting the mapping
             startTime = System.nanoTime();
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
-            int percent = 10;
+            
             for (int i = 0; i < peptides.size(); ++i){
                 String peptide = peptides.get(i);
-                if (100. * ((double)i) / (1. + (double)peptides.size()) >= percent){
-                    System.out.print(percent + "% ");
-                    percent += 10;
-                }
+                waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                 ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping(peptide, sequenceMatchingPreferences);
                 allPeptideProteinMappings.addAll(peptideProteinMappings);
             }
-            System.out.println("100%");
-            System.out.println("Mapping " + peptides.size() + " peptides took " + (((float)(System.nanoTime() - startTime)) / 1e6) + " milliseconds");
+            diffTime = System.nanoTime() - startTime;
+            System.err.println();
+            System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTime / 1e6) + " milliseconds");
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
@@ -130,7 +142,7 @@ public class ProteinInferrer {
                 writer.close();
             }
             catch(Exception e){
-                System.out.println("Error: could not write into file '" + args[3] + "'");
+                System.err.println("Error: could not write into file '" + args[3] + "'");
                 System.exit(-1);
             }
         }
@@ -150,7 +162,7 @@ public class ProteinInferrer {
                                 double mass = Double.parseDouble(part);
                                 tag.addMassGap(mass);
                             } catch (NumberFormatException e) {
-                                System.out.println("Error: line contains no valid tag: '" + line + "'");
+                                System.err.println("Error: line contains no valid tag: '" + line + "'");
                                 System.exit(-1);
                             }
                         }
@@ -159,31 +171,32 @@ public class ProteinInferrer {
                 }
             }
             catch(Exception e){
-                System.out.println("Cound open input list");
+                System.err.println("Error: cound not open input list");
                 System.exit(-1);
             }
+            
+            waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(tags.size());
+            waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
+            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
 
             // starting the mapping
             startTime = System.nanoTime();
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
             try {
-                int percent = 10;
                 for (int i = 0; i < tags.size(); ++i){
-                    if (100. * ((double)i) / (1. + (double)tags.size()) >= percent){
-                        System.out.print(percent + "% ");
-                        percent += 10;
-                    }
+                    waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping(tags.get(i), null, sequenceMatchingPreferences, tolerance);
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                     for(int j = 0; j < peptideProteinMappings.size(); ++j) tagIndexes.add(i);
                 }
-                System.out.println("100%");
             } catch (Exception e){
                 e.printStackTrace();
-                System.out.println("An unexpected error happened.");
+                System.err.println("Error: an unexpected error happened.");
                 System.exit(-1);
             }
-            System.out.println("Mapping " + tags.size() + " tags took " + (((float)(System.nanoTime() - startTime)) / 1e6) + " milliseconds");
+            diffTime = System.nanoTime() - startTime;
+            System.err.println();
+            System.err.println("Mapping " + tags.size() + " tags took " + (diffTime / 1e6) + " milliseconds");
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
@@ -206,7 +219,7 @@ public class ProteinInferrer {
                 writer.close();
             }
             catch(Exception e){
-                System.out.println("error: could not write into file '" + args[3] + "'");
+                System.err.println("Error: could not write into file '" + args[3] + "'");
                 System.exit(-1);
             }
         }

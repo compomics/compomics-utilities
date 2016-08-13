@@ -53,7 +53,7 @@ public class Peptide extends ExperimentObject {
      */
     private ArrayList<VariantMatch> variants = null;
     /**
-     * The variants in a map indexed by protein .
+     * The variants in a map indexed by protein.
      */
     private HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap = null;
     /**
@@ -199,7 +199,7 @@ public class Peptide extends ExperimentObject {
     public void clearVariantMatches() {
         if (variants != null) {
             variants.clear();
-        variantsMap = null;
+            variantsMap = null;
         }
     }
 
@@ -225,14 +225,17 @@ public class Peptide extends ExperimentObject {
         if (variants == null) {
             variants = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
-        if (variantMatch != null) variants.addAll(variantMatch);
+        if (variantMatch != null) {
+            variants.addAll(variantMatch);
+        }
         variantsMap = null;
     }
-    
+
     /**
-     * Returns the variants in a map indexed by protein accession and index. The map is computed from the list of variants and saved in cache.
-     * 
-     * @return the variants in a map 
+     * Returns the variants in a map indexed by protein accession and index. The
+     * map is computed from the list of variants and saved in cache.
+     *
+     * @return the variants in a map
      */
     public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
         if (variantsMap == null) {
@@ -255,7 +258,7 @@ public class Peptide extends ExperimentObject {
         }
         return variantsMap;
     }
-    
+
     /**
      * Clears the map saved in cache.
      */

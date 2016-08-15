@@ -456,4 +456,41 @@ public class BasicMathFunctions {
             throw new IllegalArgumentException("Probability >100%.");
         }
     }
+
+    /**
+     * Returns an integer randomly chosen between min and max included.
+     *
+     * @param min the lower limit
+     * @param max the higher limit
+     *
+     * @return a random integer
+     */
+    public static int getRandomInteger(int min, int max) {
+        double randomDouble = min + (Math.random() * (max - min));
+        if (randomDouble > max) {
+            return max;
+        }
+        if (randomDouble < min) {
+            return min;
+        }
+        return (int) Math.round(randomDouble);
+    }
+
+    /**
+     * Returns a list of n random indexes between min and max included. The list
+     * is not sorted.
+     *
+     * @param n the number of indexes to return
+     * @param min the lower limit
+     * @param max the higher limit
+     *
+     * @return a list of n random indexes between min and max included
+     */
+    public static ArrayList<Integer> getRandomIndexes(int n, int min, int max) {
+        ArrayList<Integer> result = new ArrayList<Integer>(n);
+        for (int i = 0; i < n; i++) {
+            result.add(getRandomInteger(min, max));
+        }
+        return result;
+    }
 }

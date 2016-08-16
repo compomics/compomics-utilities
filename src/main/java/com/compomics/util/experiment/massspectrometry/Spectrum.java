@@ -99,8 +99,8 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * Convenience method returning the key for a spectrum.
      *
-     * @param spectrumFile The spectrum file
-     * @param spectrumTitle The spectrum title
+     * @param spectrumFile the spectrum file
+     * @param spectrumTitle the spectrum title
      *
      * @return the corresponding spectrum key
      */

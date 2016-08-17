@@ -738,8 +738,11 @@ public abstract class SpectrumAnnotator {
      * @param massTolerance the mass tolerance to use
      *
      * @return a list of all the ion matches
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
+    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) throws InterruptedException {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>(1);
         double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {

@@ -134,8 +134,11 @@ public enum PsmScore {
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
         PsmScore psmScore = getScore(scoreIndex);
         double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
         if (psmScore.increasing) {
@@ -159,8 +162,11 @@ public enum PsmScore {
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
         PsmScore psmScore = getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
@@ -180,8 +186,11 @@ public enum PsmScore {
      * @param psmScore the score to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) throws InterruptedException {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");

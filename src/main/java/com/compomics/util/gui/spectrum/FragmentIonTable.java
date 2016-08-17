@@ -127,6 +127,9 @@ public class FragmentIonTable extends JTable {
      * types
      * @param singleCharge if true, singly charge ions are included in the table
      * @param twoCharges if true, doubly charged ions are included in the table
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public FragmentIonTable(
             Peptide currentPeptide,
@@ -134,7 +137,7 @@ public class FragmentIonTable extends JTable {
             ArrayList<MSnSpectrum> allSpectra,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
-            boolean singleCharge, boolean twoCharges) {
+            boolean singleCharge, boolean twoCharges) throws InterruptedException {
         super();
 
         this.currentPeptide = currentPeptide;
@@ -632,8 +635,11 @@ public class FragmentIonTable extends JTable {
 
     /**
      * Insert bar charts into the table.
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    private void insertBarCharts() {
+    private void insertBarCharts() throws InterruptedException {
 
         HashMap<String, ArrayList<Double>> values = new HashMap<String, ArrayList<Double>>();
 

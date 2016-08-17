@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 /**
  * This class models a spectrum.
@@ -95,6 +96,10 @@ public abstract class Spectrum extends ExperimentObject {
      * The minimal m/z.
      */
     private Double minMz;
+    /**
+     * Mutex for the setting of the attributes in cache.
+     */
+    private Semaphore mutex = new Semaphore(1);
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -144,7 +149,11 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the key of the spectrum
      */
     public String getSpectrumKey() {
-        return fileName + SPECTRUM_KEY_SPLITTER + spectrumTitle;
+        StringBuilder stringBuilder = new StringBuilder(fileName.length() + SPECTRUM_KEY_SPLITTER.length() + spectrumTitle.length());
+        stringBuilder.append(fileName);
+        stringBuilder.append(SPECTRUM_KEY_SPLITTER);
+        stringBuilder.append(spectrumTitle);
+        return stringBuilder.toString();
     }
 
     /**
@@ -160,25 +169,32 @@ public abstract class Spectrum extends ExperimentObject {
      * Format the peaks so they can be plot in JFreeChart.
      *
      * @return a table containing the peaks
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[][] getJFreePeakList() {
+    public double[][] getJFreePeakList() throws InterruptedException {
         if (jFreePeakList == null) {
-            double[] mz = new double[peakList.size()];
-            double[] intensity = new double[peakList.size()];
-            int cpt = 0;
-            for (Peak currentPeak : peakList.values()) {
-                mz[cpt] = currentPeak.mz;
-                intensity[cpt] = currentPeak.intensity;
-                cpt++;
-            }
+            mutex.acquire();
+            if (jFreePeakList == null) {
+                double[] mz = new double[peakList.size()];
+                double[] intensity = new double[peakList.size()];
+                int cpt = 0;
+                for (Peak currentPeak : peakList.values()) {
+                    mz[cpt] = currentPeak.mz;
+                    intensity[cpt] = currentPeak.intensity;
+                    cpt++;
+                }
 
-            jFreePeakList = new double[6][mz.length];
-            jFreePeakList[0] = mz;
-            jFreePeakList[1] = mz;
-            jFreePeakList[2] = mz;
-            jFreePeakList[3] = intensity;
-            jFreePeakList[4] = intensity;
-            jFreePeakList[5] = intensity;
+                jFreePeakList = new double[6][mz.length];
+                jFreePeakList[0] = mz;
+                jFreePeakList[1] = mz;
+                jFreePeakList[2] = mz;
+                jFreePeakList[3] = intensity;
+                jFreePeakList[4] = intensity;
+                jFreePeakList[5] = intensity;
+            }
+            mutex.release();
         }
         return jFreePeakList;
     }
@@ -197,7 +213,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param aPeak the peak to add
      */
-    public void addPeak(Peak aPeak) {
+    public synchronized void addPeak(Peak aPeak) {
         if (peakList == null) {
             peakList = new HashMap<Double, Peak>();
         }
@@ -209,7 +225,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param peaks the peaks to set
      */
-    public void setPeaks(ArrayList<Peak> peaks) {
+    public synchronized void setPeaks(ArrayList<Peak> peaks) {
 
         if (peakList != null) {
             this.peakList.clear();
@@ -237,7 +253,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param scanNumber or range
      */
-    public void setScanNumber(String scanNumber) {
+    public synchronized void setScanNumber(String scanNumber) {
         this.scanNumber = scanNumber;
     }
 
@@ -273,7 +289,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param peakList HashSet of peaks containing the peaks of the spectrum
      */
-    public void setPeakList(HashMap<Double, Peak> peakList) {
+    public synchronized void setPeakList(HashMap<Double, Peak> peakList) {
         this.peakList = peakList;
     }
 
@@ -291,7 +307,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param scanStartTime the time point when the spectrum was recorded
      */
-    public void setScanStartTime(double scanStartTime) {
+    public synchronized void setScanStartTime(double scanStartTime) {
         this.scanStartTime = scanStartTime;
     }
 
@@ -299,7 +315,7 @@ public abstract class Spectrum extends ExperimentObject {
      * This method will remove the peak list in order to reduce memory
      * consumption of the model.
      */
-    public void removePeakList() {
+    public synchronized void removePeakList() {
         if (peakList != null) {
             peakList.clear();
         }
@@ -310,18 +326,25 @@ public abstract class Spectrum extends ExperimentObject {
      * ordered.
      *
      * @return the mz values as an array
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[] getMzValuesAsArray() {
+    public double[] getMzValuesAsArray() throws InterruptedException {
 
         if (mzValuesAsArray == null) {
-            mzValuesAsArray = new double[peakList.size()];
+            mutex.acquire();
+            if (mzValuesAsArray == null) {
+                mzValuesAsArray = new double[peakList.size()];
 
-            int counter = 0;
+                int counter = 0;
 
-            for (double currentMz : peakList.keySet()) {
-                mzValuesAsArray[counter] = currentMz;
-                counter++;
+                for (double currentMz : peakList.keySet()) {
+                    mzValuesAsArray[counter] = currentMz;
+                    counter++;
+                }
             }
+            mutex.release();
         }
 
         return mzValuesAsArray;
@@ -331,12 +354,21 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns a list of the m/z values sorted in ascending order.
      *
      * @return a list of the m/z values sorted in ascending order
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[] getOrderedMzValues() {
+    public double[] getOrderedMzValues() throws InterruptedException {
         if (mzOrdered == null || !mzOrdered) {
             getMzValuesAsArray();
-            Arrays.sort(mzValuesAsArray);
-            mzOrdered = true;
+            if (!mzOrdered) {
+                mutex.acquire();
+                if (!mzOrdered) {
+                    Arrays.sort(mzValuesAsArray);
+                    mzOrdered = true;
+                }
+                mutex.release();
+            }
         }
         return mzValuesAsArray;
     }
@@ -347,7 +379,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzOrdered whether the mzValuesAsArray is sorted
      */
-    public void setMzOrdered(boolean mzOrdered) {
+    public synchronized void setMzOrdered(boolean mzOrdered) {
         this.mzOrdered = mzOrdered;
     }
 
@@ -356,7 +388,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param intensityValuesAsArray the intensity values array
      */
-    public void setIntensityValuesAsArray(double[] intensityValuesAsArray) {
+    public synchronized void setIntensityValuesAsArray(double[] intensityValuesAsArray) {
         this.intensityValuesAsArray = intensityValuesAsArray;
     }
 
@@ -364,18 +396,25 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the intensity values as an array.
      *
      * @return the intensity values as an array
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[] getIntensityValuesAsArray() {
+    public double[] getIntensityValuesAsArray() throws InterruptedException {
 
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakList.size())) {
-            intensityValuesAsArray = new double[peakList.size()];
+            mutex.acquire();
+            if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakList.size())) {
+                intensityValuesAsArray = new double[peakList.size()];
 
-            int counter = 0;
+                int counter = 0;
 
-            for (Peak currentPeak : peakList.values()) {
-                intensityValuesAsArray[counter] = currentPeak.intensity;
-                counter++;
+                for (Peak currentPeak : peakList.values()) {
+                    intensityValuesAsArray[counter] = currentPeak.intensity;
+                    counter++;
+                }
             }
+            mutex.release();
         }
 
         return intensityValuesAsArray;
@@ -386,29 +425,38 @@ public abstract class Spectrum extends ExperimentObject {
      * peak.
      *
      * @return the normalized intensity values as an array
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[] getIntensityValuesNormalizedAsArray() {
+    public double[] getIntensityValuesNormalizedAsArray() throws InterruptedException {
 
         if (intensityValuesNormaizedAsArray == null) {
 
-            intensityValuesNormaizedAsArray = new double[peakList.size()];
+            mutex.acquire();
 
-            double highestIntensity = 0.0;
-            int counter = 0;
+            if (intensityValuesNormaizedAsArray == null) {
 
-            for (Peak currentPeak : peakList.values()) {
-                intensityValuesNormaizedAsArray[counter++] = currentPeak.intensity;
+                intensityValuesNormaizedAsArray = new double[peakList.size()];
 
-                if (currentPeak.intensity > highestIntensity) {
-                    highestIntensity = currentPeak.intensity;
+                double highestIntensity = 0.0;
+                int counter = 0;
+
+                for (Peak currentPeak : peakList.values()) {
+                    intensityValuesNormaizedAsArray[counter++] = currentPeak.intensity;
+
+                    if (currentPeak.intensity > highestIntensity) {
+                        highestIntensity = currentPeak.intensity;
+                    }
+                }
+
+                if (highestIntensity > 0) {
+                    for (int i = 0; i < intensityValuesNormaizedAsArray.length; i++) {
+                        intensityValuesNormaizedAsArray[i] = intensityValuesNormaizedAsArray[i] / highestIntensity * 100;
+                    }
                 }
             }
-
-            if (highestIntensity > 0) {
-                for (int i = 0; i < intensityValuesNormaizedAsArray.length; i++) {
-                    intensityValuesNormaizedAsArray[i] = intensityValuesNormaizedAsArray[i] / highestIntensity * 100;
-                }
-            }
+            mutex.release();
         }
 
         return intensityValuesNormaizedAsArray;
@@ -419,18 +467,28 @@ public abstract class Spectrum extends ExperimentObject {
      * sorted on m/z value.
      *
      * @return the m/z and intensity values as an array
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double[][] getMzAndIntensityAsArray() {
+    public double[][] getMzAndIntensityAsArray() throws InterruptedException {
 
         if (mzAndIntensityAsArray == null) {
-            mzAndIntensityAsArray = new double[2][peakList.size()];
-            int i = 0;
-            for (double mz : getOrderedMzValues()) {
-                Peak currentPeak = peakList.get(mz);
-                mzAndIntensityAsArray[0][i] = currentPeak.mz;
-                mzAndIntensityAsArray[1][i] = currentPeak.intensity;
-                i++;
+
+            double[] orderedMzValues = getOrderedMzValues();
+            mutex.acquire();
+            if (mzAndIntensityAsArray == null) {
+
+                mzAndIntensityAsArray = new double[2][peakList.size()];
+                int i = 0;
+                for (double mz : orderedMzValues) {
+                    Peak currentPeak = peakList.get(mz);
+                    mzAndIntensityAsArray[0][i] = currentPeak.mz;
+                    mzAndIntensityAsArray[1][i] = currentPeak.intensity;
+                    i++;
+                }
             }
+            mutex.release();
         }
         return mzAndIntensityAsArray;
     }
@@ -439,15 +497,23 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the total intensity of the spectrum.
      *
      * @return the total intensity. 0 if no peak.
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double getTotalIntensity() {
+    public double getTotalIntensity() throws InterruptedException {
 
         if (totalIntensity == null) {
-            totalIntensity = 0.0;
+            mutex.acquire();
+            if (totalIntensity == null) {
 
-            for (Peak currentPeak : peakList.values()) {
-                totalIntensity += currentPeak.intensity;
+                totalIntensity = 0.0;
+
+                for (Peak currentPeak : peakList.values()) {
+                    totalIntensity += currentPeak.intensity;
+                }
             }
+            mutex.release();
         }
 
         return totalIntensity;
@@ -457,17 +523,25 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the max intensity value.
      *
      * @return the max intensity value. 0 if no peak.
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double getMaxIntensity() {
+    public double getMaxIntensity() throws InterruptedException {
 
         if (maxIntensity == null) {
-            maxIntensity = 0.0;
 
-            for (Peak currentPeak : peakList.values()) {
-                if (currentPeak.intensity > maxIntensity) {
-                    maxIntensity = currentPeak.intensity;
+            mutex.acquire();
+            if (maxIntensity == null) {
+                maxIntensity = 0.0;
+
+                for (Peak currentPeak : peakList.values()) {
+                    if (currentPeak.intensity > maxIntensity) {
+                        maxIntensity = currentPeak.intensity;
+                    }
                 }
             }
+            mutex.release();
         }
 
         return maxIntensity;
@@ -477,15 +551,22 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the max mz value.
      *
      * @return the max mz value
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double getMaxMz() {
+    public double getMaxMz() throws InterruptedException {
 
         if (maxMz == null) {
-            if (peakList.keySet().isEmpty()) {
-                maxMz = 0.0;
-            } else {
-                maxMz = Collections.max(peakList.keySet());
+            mutex.acquire();
+            if (maxMz == null) {
+                if (peakList.keySet().isEmpty()) {
+                    maxMz = 0.0;
+                } else {
+                    maxMz = Collections.max(peakList.keySet());
+                }
             }
+            mutex.release();
         }
 
         return maxMz;
@@ -495,25 +576,33 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the min mz value.
      *
      * @return the min mz value
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public double getMinMz() {
+    public double getMinMz() throws InterruptedException {
 
         if (minMz == null) {
-            if (peakList.keySet().isEmpty()) {
-                minMz = 0.0;
-            } else {
-                minMz = Collections.min(peakList.keySet());
+            mutex.acquire();
+            if (minMz == null) {
+                if (peakList.keySet().isEmpty()) {
+                    minMz = 0.0;
+                } else {
+                    minMz = Collections.min(peakList.keySet());
+                }
             }
+            mutex.release();
         }
 
         return minMz;
     }
 
     /**
-     * Returns an array containing the intensity of all peaks above the provided
-     * threshold.
+     * Returns an array containing the intensity of all peaks strictly above the
+     * provided threshold.
      *
      * @param threshold the lower threshold
+     *
      * @return an array containing the intensity of all peak above the provided
      * threshold
      */
@@ -561,10 +650,10 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns a recalibrated peak list.
      *
      * @param mzCorrections the m/z corrections to apply
+     *
      * @return the recalibrated list of peaks indexed by m/z
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
+    public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) {
 
         HashMap<Double, Peak> result = new HashMap<Double, Peak>(peakList.size());
         ArrayList<Double> keys = new ArrayList<Double>(mzCorrections.keySet());
@@ -625,10 +714,14 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzMin the minimum m/z value
      * @param mzMax the maximum m/z value
+     *
      * @return the part of the spectrum contained between mzMin (inclusive) and
      * mzMax (exclusive)
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) {
+    public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) throws InterruptedException {
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();
         for (double mz : getOrderedMzValues()) {
             if (mz >= mzMin && mz < mzMax) {
@@ -645,19 +738,26 @@ public abstract class Spectrum extends ExperimentObject {
      * intensity.
      *
      * @return the peak list in a map where peaks are indexed by their intensity
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public HashMap<Double, ArrayList<Peak>> getIntensityMap() {
+    public HashMap<Double, ArrayList<Peak>> getIntensityMap() throws InterruptedException {
         if (intensityPeakMap == null) {
-            intensityPeakMap = new HashMap<Double, ArrayList<Peak>>(peakList.size());
-            for (Peak peak : peakList.values()) {
-                double intensity = peak.intensity;
-                ArrayList<Peak> peaksAtIntensity = intensityPeakMap.get(intensity);
-                if (peaksAtIntensity == null) {
-                    peaksAtIntensity = new ArrayList<Peak>();
-                    intensityPeakMap.put(intensity, peaksAtIntensity);
+            mutex.acquire();
+            if (intensityPeakMap == null) {
+                intensityPeakMap = new HashMap<Double, ArrayList<Peak>>(peakList.size());
+                for (Peak peak : peakList.values()) {
+                    double intensity = peak.intensity;
+                    ArrayList<Peak> peaksAtIntensity = intensityPeakMap.get(intensity);
+                    if (peaksAtIntensity == null) {
+                        peaksAtIntensity = new ArrayList<Peak>();
+                        intensityPeakMap.put(intensity, peaksAtIntensity);
+                    }
+                    peaksAtIntensity.add(peak);
                 }
-                peaksAtIntensity.add(peak);
             }
+            mutex.release();
         }
         return intensityPeakMap;
     }

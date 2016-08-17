@@ -432,10 +432,12 @@ public class CompomicsWrapper {
                 path = URLDecoder.decode(path, "UTF-8");
             }
             if (!new File(path).exists()) {
-                JOptionPane.showMessageDialog(null, path + " not found!", "File Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(path + " not found!");
+                FileNotFoundException ex = new FileNotFoundException(path + " not found!");
+                ex.printStackTrace();
             }
         } catch (UnsupportedEncodingException ex) {
-            JOptionPane.showMessageDialog(null, "Error reading file " + path + ".", "File Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error reading file " + path + "!");
             ex.printStackTrace();
         }
 

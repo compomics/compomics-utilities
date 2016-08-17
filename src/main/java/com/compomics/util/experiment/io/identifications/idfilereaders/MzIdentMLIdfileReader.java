@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -968,21 +969,31 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private void parseSpectraData(XmlPullParser parser, HashMap<String, String> spectrumFileNameMap) throws Exception {
 
-        String fileName = null;
+        String location = null;
         String id = null;
 
         for (int i = 0; i < parser.getAttributeCount(); i++) {
 
             String attributeName = parser.getAttributeName(i);
 
-            if (attributeName.equalsIgnoreCase("name")) {
-                fileName = parser.getAttributeValue(i);
+            if (attributeName.equalsIgnoreCase("location")) {
+                location = parser.getAttributeValue(i);
             } else if (attributeName.equalsIgnoreCase("id")) {
                 id = parser.getAttributeValue(i);
             }
         }
 
-        if (fileName != null && id != null) {
+        if (location != null && id != null) {
+            
+            String fileName = location;
+            
+            if (location.lastIndexOf("/") != -1) {
+                fileName = location.substring(location.lastIndexOf("/") + 1);
+            } else if (location.lastIndexOf("\\") != -1) {
+                fileName = location.substring(location.lastIndexOf("\\") + 1);
+            }
+            
+            //String fileName = new File(new URI(location)).getName(); // @TODO: check if this work cross platform... (if it does the above code could be replaced)
             spectrumFileNameMap.put(id, fileName);
         }
     }

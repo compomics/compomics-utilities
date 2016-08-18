@@ -41,8 +41,10 @@ public class AplExporter {
      * reading or writing a file
      * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown
      * whenever an error occurred while reading an mzML file
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static void mgfToApl(File mgfFile, File destinationFile, FragmentationMethod fragmentationMethod, int minCharge, int maxCharge) throws IOException, MzMLUnmarshallerException {
+    public static void mgfToApl(File mgfFile, File destinationFile, FragmentationMethod fragmentationMethod, int minCharge, int maxCharge) throws IOException, MzMLUnmarshallerException, InterruptedException {
 
         String fileName = mgfFile.getName();
         SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
@@ -107,8 +109,10 @@ public class AplExporter {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, FragmentationMethod fragmentationMethod, int charge) throws IOException {
+    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, FragmentationMethod fragmentationMethod, int charge) throws IOException, InterruptedException {
 
         bw.write("peaklist start");
         bw.newLine();

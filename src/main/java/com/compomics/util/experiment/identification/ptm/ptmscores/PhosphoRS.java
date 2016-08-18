@@ -794,8 +794,11 @@ public class PhosphoRS {
      * @param scoringAnnotationSetttings the annotation settings
      *
      * @return the filtered spectrum
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, SpecificAnnotationSettings scoringAnnotationSetttings) throws InterruptedException {
 
         Double window;
         Integer maxPeaks;

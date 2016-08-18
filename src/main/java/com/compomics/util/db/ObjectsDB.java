@@ -1085,8 +1085,9 @@ public class ObjectsDB implements Serializable {
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
      * interrogating the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public synchronized void deleteObject(String tableName, String objectKey) throws SQLException, IOException {
+    public synchronized void deleteObject(String tableName, String objectKey) throws SQLException, IOException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 
@@ -1121,8 +1122,9 @@ public class ObjectsDB implements Serializable {
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
+    public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException, InterruptedException {
         updateObject(tableName, objectKey, object, true);
     }
 
@@ -1140,8 +1142,9 @@ public class ObjectsDB implements Serializable {
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
+    public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 
@@ -1170,8 +1173,9 @@ public class ObjectsDB implements Serializable {
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    private synchronized void updateObjectInDb(String tableName, String objectKey, String correctedKey, Object object, boolean cache) throws SQLException, IOException {
+    private synchronized void updateObjectInDb(String tableName, String objectKey, String correctedKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
 
         boolean cacheUpdated = false;
 

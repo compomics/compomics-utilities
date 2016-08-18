@@ -85,7 +85,7 @@ public class MapMutex<K> {
      * @throws InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public void aquire(K key) throws InterruptedException {
+    public void acquire(K key) throws InterruptedException {
         // Block if the map is being edited
         if (writing) {
             mutex.acquire();

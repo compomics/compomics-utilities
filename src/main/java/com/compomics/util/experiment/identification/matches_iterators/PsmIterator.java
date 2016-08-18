@@ -7,6 +7,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 /**
  * An iterator for spectrum matches.
@@ -56,6 +57,10 @@ public class PsmIterator {
      * Boolean indicating whether a thread is buffering.
      */
     private boolean buffering = false;
+    /**
+     * Mutex for the buffering.
+     */
+    private Semaphore bufferingMutex = new Semaphore(1);
     /**
      * The default margin to use to start batch loading before the loading index
      * is reached.
@@ -262,45 +267,57 @@ public class PsmIterator {
 
             if (index >= trigger) {
 
-                int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
-                ArrayList<String> keysInBatch = new ArrayList<String>(spectrumKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                identification.loadSpectrumMatches(keysInBatch, waitingHandler, false);
+                bufferingMutex.acquire();
 
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                    return;
-                }
+                trigger = loadingIndex - ((int) (margin * batchSize));
 
-                if (psmParameters != null) {
-                    for (UrParameter urParameter : psmParameters) {
-                        if (urParameter == null) {
-                            throw new IllegalArgumentException("Parameter to batch load is null.");
+                if (index >= trigger) {
+
+                    buffering = true;
+
+                    int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
+                    ArrayList<String> keysInBatch = new ArrayList<String>(spectrumKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
+                    identification.loadSpectrumMatches(keysInBatch, waitingHandler, false);
+
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+
+                    if (psmParameters != null) {
+                        for (UrParameter urParameter : psmParameters) {
+                            if (urParameter == null) {
+                                throw new IllegalArgumentException("Parameter to batch load is null.");
+                            }
+                            identification.loadSpectrumMatchParameters(keysInBatch, urParameter, waitingHandler, false);
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                return;
+                            }
                         }
-                        identification.loadSpectrumMatchParameters(keysInBatch, urParameter, waitingHandler, false);
+                    }
+                    if (loadAssumptions) {
+                        identification.loadAssumptions(keysInBatch, waitingHandler, false);
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             return;
                         }
                     }
-                }
-                if (loadAssumptions) {
-                    identification.loadAssumptions(keysInBatch, waitingHandler, false);
-                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                        return;
+
+                    loadingIndex = newLoadingIndex;
+                    trigger += (int) (margin * batchSize / 2);
+                    trigger = Math.max(0, trigger);
+
+                    if (index < trigger) {
+                        if (batchSize > defaultBatchSize) {
+                            batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
+                        } else if (margin > defaultMargin) {
+                            margin = Math.max(defaultMargin, 0.9 * margin);
+                        }
                     }
-                }
 
-                loadingIndex = newLoadingIndex;
-                trigger += (int) (margin * batchSize / 2);
-                trigger = Math.max(0, trigger);
-
-                if (index < trigger) {
-                    if (batchSize > defaultBatchSize) {
-                        batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
-                    } else if (margin > defaultMargin) {
-                        margin = Math.max(defaultMargin, 0.9 * margin);
+                    if (!bufferingMutex.hasQueuedThreads()) {
+                        buffering = false;
                     }
+                    bufferingMutex.release();
                 }
-
-                buffering = false;
             }
         } else if (index == loadingIndex) {
             margin *= 1.1;

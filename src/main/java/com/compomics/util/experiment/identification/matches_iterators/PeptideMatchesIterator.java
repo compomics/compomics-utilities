@@ -263,12 +263,12 @@ public class PeptideMatchesIterator {
                             margin = Math.max(defaultMargin, 0.9 * margin);
                         }
                     }
-
-                    if (!bufferingMutex.hasQueuedThreads()) {
-                        buffering = false;
-                    }
-                    bufferingMutex.release();
                 }
+
+                if (!bufferingMutex.hasQueuedThreads()) {
+                    buffering = false;
+                }
+                bufferingMutex.release();
             }
         } else if (index == loadingIndex) {
             margin *= 1.1;

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.Semaphore;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -43,7 +42,7 @@ public class ObjectsCache {
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>(1);
     /**
-     * Mutex for the db maps
+     * Mutex for the database maps.
      */
     private HashMap<String, MapMutex<String>> dbCacheMutexMap = new HashMap<String, MapMutex<String>>(1);
     /**
@@ -373,6 +372,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
@@ -783,7 +783,6 @@ public class ObjectsCache {
             dbMutexMap = addMapMutex(dbName);
         }
         return dbMutexMap;
-
     }
 
     /**

@@ -17,60 +17,58 @@ public class MapMutex<K> {
      * The maximal number of keys to keep in the map.
      */
     private Integer cacheLimitSize = null;
-
     /**
      * The number of permits per key.
      */
     public final int permits;
-
     /**
      * Map of semaphores used to control the threads.
      */
     private final HashMap<K, Semaphore> semaphoreMap;
-
     /**
-     * Mutex for teh edition of the semaphore map.
+     * Mutex for the edition of the semaphore map.
      */
     private Semaphore mutex = new Semaphore(1, true);
-
     /**
      * Boolean indicating whether the map is being edited.
      */
     private boolean writing = false;
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param permits the number of permits per key, 1 if null
-     * @param cacheLimitSize the size limit where semaphores will be removed upon release of all permits, ignored if null
-     * @param initialSize the initial size of the map, the default HashMap size if null
+     * @param cacheLimitSize the size limit where semaphores will be removed
+     * upon release of all permits, ignored if null
+     * @param initialSize the initial size of the map, the default HashMap size
+     * if null
      */
     public MapMutex(Integer permits, Integer cacheLimitSize, Integer initialSize) {
         if (permits != null) {
-        this.permits = permits;
-        }else {
+            this.permits = permits;
+        } else {
             this.permits = 1;
         }
         if (cacheLimitSize != null) {
-        this.cacheLimitSize = cacheLimitSize;
+            this.cacheLimitSize = cacheLimitSize;
         }
         if (initialSize != null) {
-        this.semaphoreMap = new HashMap<K, Semaphore>(initialSize);
+            this.semaphoreMap = new HashMap<K, Semaphore>(initialSize);
         } else {
             this.semaphoreMap = new HashMap<K, Semaphore>();
         }
     }
-    
+
     /**
      * Constructor with one permit per key and not cache limit size.
      */
     public MapMutex() {
         this(null, null, null);
     }
-    
+
     /**
      * Constructor with no cache limit size.
-     * 
+     *
      * @param permits the number of permits per key
      */
     public MapMutex(int permits) {
@@ -144,5 +142,4 @@ public class MapMutex<K> {
         // Release
         semaphore.release();
     }
-
 }

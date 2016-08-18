@@ -32,12 +32,15 @@ public class IntensityHistogram extends JPanel {
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
-     * @param intensityLevel annotation intensity level in percent, e.g., 0.75
+     * @param intensityLevel annotation intensity level, e.g., 0.75 for 75%
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
             MSnSpectrum currentSpectrum,
-            double intensityLevel) {
+            double intensityLevel) throws InterruptedException {
         super();
 
         setOpaque(false);

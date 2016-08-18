@@ -30,7 +30,8 @@ public class PsmScoringPreferences implements Serializable {
      */
     private HashSet<Integer> defaultScores;
     /**
-     * The minimal number of decoys to include in a bin to set the bin size of the score histogram.
+     * The minimal number of decoys to include in a bin to set the bin size of
+     * the score histogram.
      */
     private Integer minDecoysInBin = 10;
 
@@ -58,10 +59,10 @@ public class PsmScoringPreferences implements Serializable {
         }
         algorithmScores.add(scoreId);
     }
-    
+
     /**
      * Clears the score for the given algorithm.
-     * 
+     *
      * @param advocateId the score for the given algorithm
      */
     public void clearScores(Integer advocateId) {
@@ -69,7 +70,7 @@ public class PsmScoringPreferences implements Serializable {
             spectrumMatchingScores.remove(advocateId);
         }
     }
-    
+
     /**
      * Clears all scores.
      */
@@ -287,9 +288,11 @@ public class PsmScoringPreferences implements Serializable {
     }
 
     /**
-     * Returns the minimal number of decoys to include in a bin to set the bin size of the score histogram.
-     * 
-     * @return the minimal number of decoys to include in a bin to set the bin size of the score histogram
+     * Returns the minimal number of decoys to include in a bin to set the bin
+     * size of the score histogram.
+     *
+     * @return the minimal number of decoys to include in a bin to set the bin
+     * size of the score histogram
      */
     public Integer getDecoysInFirstBin() {
         if (minDecoysInBin == null) {
@@ -299,13 +302,13 @@ public class PsmScoringPreferences implements Serializable {
     }
 
     /**
-     * Sets the minimal number of decoys to include in a bin to set the bin size of the score histogram.
-     * 
-     * @param decoysInFirstBin the minimal number of decoys to include in a bin to set the bin size of the score histogram
+     * Sets the minimal number of decoys to include in a bin to set the bin size
+     * of the score histogram.
+     *
+     * @param decoysInFirstBin the minimal number of decoys to include in a bin
+     * to set the bin size of the score histogram
      */
     public void setDecoysInFirstBin(Integer decoysInFirstBin) {
         this.minDecoysInBin = decoysInFirstBin;
     }
-    
-    
 }

@@ -1,11 +1,14 @@
 package com.compomics.util.db;
 
+import com.compomics.util.maps.MapMutex;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -40,6 +43,10 @@ public class ObjectsCache {
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>(1);
     /**
+     * Mutex for the db maps
+     */
+    private HashMap<String, MapMutex<String>> dbCacheMutexMap = new HashMap<String, MapMutex<String>>(1);
+    /**
      * List of the loaded objects with the most used matches in the end.
      */
     private LinkedBlockingDeque<String> loadedObjectsKeys = new LinkedBlockingDeque<String>();
@@ -59,6 +66,10 @@ public class ObjectsCache {
      * Indicates whether the cache is being updated.
      */
     private boolean updating = false;
+    /**
+     * Boolean indicating whether the cache is being saved to reduce the memory consumption.
+     */
+    private boolean reducingMemoryConsumption = false;
 
     /**
      * Constructor.
@@ -151,14 +162,16 @@ public class ObjectsCache {
      *
      * @param objectsDB the objects database
      */
-    public void addDb(ObjectsDB objectsDB) {
-        if (!readOnly) {
-            String dbName = objectsDB.getName();
-            if (dbName.contains(cacheSeparator)) {
-                throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
-            }
-            databases.put(dbName, objectsDB);
+    public synchronized void addDb(ObjectsDB objectsDB) {
+        if (readOnly) {
+            throw new IllegalArgumentException("Cannot add db, cache read only.");
         }
+        String dbName = objectsDB.getName();
+        if (dbName.contains(cacheSeparator)) {
+            throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
+        }
+        databases.put(dbName, objectsDB);
+        loadedObjectsMap.put(dbName, new HashMap<String, HashMap<String, CacheEntry>>());
     }
 
     /**
@@ -167,27 +180,35 @@ public class ObjectsCache {
      * @param dbName the name of the database
      * @param tableName the name of the table
      * @param objectKey the key of the object
+     *
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeObject(String dbName, String tableName, String objectKey) {
+    public void removeObject(String dbName, String tableName, String objectKey) throws InterruptedException {
         if (!readOnly) {
             String cacheKey = getCacheKey(dbName, tableName, objectKey);
             loadedObjectsKeys.remove(cacheKey);
             HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
             if (dbObjects != null) {
+                MapMutex<String> dbMutexMap = getMapMutex(dbName);
+                dbMutexMap.acquire(tableName);
                 HashMap<String, CacheEntry> tableObjects = dbObjects.get(tableName);
                 if (tableObjects != null) {
                     tableObjects.remove(objectKey);
                 }
+                dbMutexMap.release(tableName);
             }
         }
     }
 
     /**
-     * Returns the entry if present in the cache. Null if not.
+     * Returns the entry if present in the cache. Null if not. Warning: this
+     * method returns the object as it is and does not wait for cache edition
+     * operations to finish.
      *
      * @param dbName the name of the database
      * @param tableName the name of the table
      * @param objectKey the key of the object
+     *
      * @return the entry of interest, null if not present in the cache
      */
     private CacheEntry getEntry(String dbName, String tableName, String objectKey) {
@@ -202,7 +223,9 @@ public class ObjectsCache {
     }
 
     /**
-     * Returns the objects if present in the cache. Null if not.
+     * Returns the objects if present in the cache. Null if not. Warning: this
+     * method returns the object as it is and does not wait for cache edition
+     * operations to finish.
      *
      * @param dbName the name of the database
      * @param tableName the name of the table
@@ -229,12 +252,24 @@ public class ObjectsCache {
      *
      * @return returns a boolean indicating that the entry was in cache and has
      * been updated. False otherwise.
+     *
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
+    public boolean updateObject(String dbName, String tableName, String objectKey, Object object) throws InterruptedException {
         if (!readOnly) {
             CacheEntry entry = getEntry(dbName, tableName, objectKey);
             if (entry != null) {
-                return updateObjectSynchronized(entry, object);
+                MapMutex<String> dbMutexMap = getMapMutex(dbName);
+                dbMutexMap.acquire(tableName);
+                entry = getEntry(dbName, tableName, objectKey);
+                boolean result = false;
+                if (entry != null && !readOnly) {
+                    entry.setModified(true);
+                    entry.setObject(object);
+                    result = true;
+                }
+                dbMutexMap.release(tableName);
+                return result;
             }
             return false;
         }
@@ -242,27 +277,9 @@ public class ObjectsCache {
     }
 
     /**
-     * Sets that a match has been modified and returns true in case of success.
-     *
-     * @param entry the entry to update
-     * @param object the object updated
-     *
-     * @return returns a boolean indicating that the entry was in cache and has
-     * been updated. False otherwise.
-     */
-    private synchronized boolean updateObjectSynchronized(CacheEntry entry, Object object) {
-        if (!readOnly) {
-            entry.setModified(true);
-            entry.setObject(object);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Adds an object to the cache. The object must not necessarily be in the
      * database. If an object is already present with the same identifiers, it
-     * will be silently erased.
+     * will be silently overwritten.
      *
      * @param dbName the name of the database
      * @param tableName the name of the table
@@ -272,73 +289,32 @@ public class ObjectsCache {
      *
      * @throws IOException if an IOException occurs
      * @throws SQLException if an SQLException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
-            if (dbName.contains(cacheSeparator)) {
-                throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
-            } else if (tableName.contains(cacheSeparator)) {
-                throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator);
-            } else if (objectKey.contains(cacheSeparator)) {
+            if (objectKey.contains(cacheSeparator)) {
                 throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator);
             }
-            loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
             HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
-            if (dbCache == null) {
-                dbCache = getDbCache(dbName);
-            }
             HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
+            MapMutex<String> dbMutexMap = getMapMutex(dbName);
+            dbMutexMap.acquire(tableName);
             if (tableCache == null) {
-                tableCache = getTableCache(dbCache, tableName);
+                tableCache = dbCache.get(tableName);
+                if (tableCache == null) {
+                    if (tableName.contains(cacheSeparator)) {
+                        throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator);
+                    }
+                    tableCache = new HashMap<String, CacheEntry>(512);
+                    dbCache.put(tableName, tableCache);
+                }
             }
-            addToTableCacheSynchronized(tableCache, objectKey, new CacheEntry(object, modifiedOrNew));
+            tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
+            dbMutexMap.release(tableName);
+            loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
             updateCache();
         }
-    }
-
-    /**
-     * Returns the cache corresponding to a database.
-     *
-     * @param dbName the name of the database
-     *
-     * @return the cache corresponding to this database
-     */
-    private synchronized HashMap<String, HashMap<String, CacheEntry>> getDbCache(String dbName) {
-        HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
-        if (dbCache == null) {
-            dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
-            loadedObjectsMap.put(dbName, dbCache);
-        }
-        return dbCache;
-    }
-
-    /**
-     * Returns the cache corresponding to a table.
-     *
-     * @param dbCache the database cache
-     * @param tableName the table name
-     *
-     * @return the cache corresponding to the table
-     */
-    private synchronized HashMap<String, CacheEntry> getTableCache(HashMap<String, HashMap<String, CacheEntry>> dbCache, String tableName) {
-        HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
-        if (tableCache == null) {
-            tableCache = new HashMap<String, CacheEntry>(512);
-            dbCache.put(tableName, tableCache);
-        }
-        return tableCache;
-    }
-    
-    /**
-     * Adds a cache entry to a table cache.
-     * 
-     * @param tableCache the table cache
-     * @param objectKey the object key
-     * @param cacheEntry the cache entry
-     */
-    private synchronized void addToTableCacheSynchronized(HashMap<String, CacheEntry> tableCache, String objectKey, CacheEntry cacheEntry) {
-        tableCache.put(objectKey, cacheEntry);
     }
 
     /**
@@ -356,12 +332,14 @@ public class ObjectsCache {
      * Saves an entry in the database if modified and clears it from the cache.
      *
      * @param entryKeys the keys of the entries
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
+    public void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException, InterruptedException {
         saveObjects(entryKeys, null, true);
     }
 
@@ -371,12 +349,14 @@ public class ObjectsCache {
      * @param entryKeys the keys of the entries
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
+    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException, InterruptedException {
         saveObjects(entryKeys, waitingHandler, true);
     }
 
@@ -394,7 +374,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
+    public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
@@ -405,12 +385,23 @@ public class ObjectsCache {
                 }
             }
             // temporary map for batch saving
-            HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+            HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>(1);
+            HashMap<String, HashSet<String>> blockedTablesMap = new HashMap<String, HashSet<String>>(1);
             for (String entryKey : entryKeys) {
                 String[] splittedKey = getKeyComponents(entryKey);
                 String dbName = splittedKey[0];
                 String tableName = splittedKey[1];
                 String objectKey = splittedKey[2];
+                HashSet<String> blockedTables = blockedTablesMap.get(dbName);
+                if (blockedTables == null) {
+                    blockedTables = new HashSet<String>();
+                    blockedTablesMap.put(dbName, blockedTables);
+                }
+                if (!blockedTables.contains(tableName)) {
+                    MapMutex<String> mapMutex = getMapMutex(dbName);
+                    mapMutex.acquire(tableName);
+                    blockedTables.add(tableName);
+                }
                 CacheEntry entry = getEntry(dbName, tableName, objectKey);
 
                 if (entry == null) {
@@ -474,6 +465,13 @@ public class ObjectsCache {
                     }
                 }
             }
+            for (String dbName : blockedTablesMap.keySet()) {
+                HashSet<String> blockedTables = blockedTablesMap.get(dbName);
+                MapMutex<String> mapMutex = getMapMutex(dbName);
+                for (String blockedTable : blockedTables) {
+                    mapMutex.release(blockedTable);
+                }
+            }
         }
     }
 
@@ -483,11 +481,12 @@ public class ObjectsCache {
      * interactions with the database. See method saveObjects
      *
      * @param entryKey the key of the entry
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public synchronized void saveObject(String entryKey) throws IOException, SQLException, InterruptedException {
         saveObject(entryKey, true);
@@ -501,11 +500,12 @@ public class ObjectsCache {
      * @param entryKey the key of the entry
      * @param clearEntry a boolean indicating whether the entry shall be cleared
      * from the cache
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public synchronized void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
@@ -513,6 +513,8 @@ public class ObjectsCache {
             String dbName = splittedKey[0];
             String tableName = splittedKey[1];
             String objectKey = splittedKey[2];
+            MapMutex<String> mapMutex = getMapMutex(dbName);
+            mapMutex.acquire(tableName);
             CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
             if (entry.isModified()) {
                 try {
@@ -535,14 +537,14 @@ public class ObjectsCache {
             }
             if (clearEntry) {
                 loadedObjectsKeys.remove(entryKey);
-                loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
-                if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
-                    loadedObjectsMap.get(dbName).remove(tableName);
-                }
-                if (loadedObjectsMap.get(dbName).isEmpty()) {
-                    loadedObjectsMap.remove(dbName);
+                HashMap<String, HashMap<String, ObjectsCache.CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
+                HashMap<String, ObjectsCache.CacheEntry> tableCache = dbCache.get(tableName);
+                tableCache.remove(objectKey);
+                if (tableCache.isEmpty()) {
+                    dbCache.remove(tableName);
                 }
             }
+            mapMutex.release(tableName);
         }
     }
 
@@ -553,7 +555,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateCache() throws IOException, SQLException, InterruptedException {
         if (!readOnly && !updating) {
@@ -568,7 +570,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public synchronized void updateCacheSynchronized() throws IOException, SQLException, InterruptedException {
         updating = true;
@@ -590,7 +592,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Reduces the memory consumption by saving the given share of hits.
+     * Reduces the memory consumption by saving the given share of cache content.
      *
      * @param share the share to be saved, 0.25 means that 25% of the hits will
      * be saved
@@ -601,12 +603,35 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public synchronized void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
+    public void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException, InterruptedException {
+        if (!reducingMemoryConsumption) {
+            reduceMemoryConsumptionSynchronized(share, waitingHandler);
+        }
+    }
+
+    /**
+     * Reduces the memory consumption by saving the given share of cache content.
+     *
+     * @param share the share to be saved, 0.25 means that 25% of the hits will
+     * be saved
+     * @param waitingHandler a waiting handler on which the progress will be
+     * displayed as secondary progress. can be null
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
+     */
+    private synchronized void reduceMemoryConsumptionSynchronized(double share, WaitingHandler waitingHandler) throws IOException, SQLException, InterruptedException {
+        reducingMemoryConsumption = true;
         int toRemove = (int) (share * loadedObjectsKeys.size());
         ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
         loadedObjectsKeys.drainTo(keysToRemove, toRemove);
         saveObjects(keysToRemove, waitingHandler);
+        reducingMemoryConsumption = false;
     }
 
     /**
@@ -632,8 +657,9 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public synchronized void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
+    public synchronized void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException, InterruptedException {
 
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter((loadedObjectsKeys.size() * 2) + 1);
@@ -650,6 +676,8 @@ public class ObjectsCache {
                 throw new IllegalStateException("Database " + dbName + " not loaded in cache");
             }
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
+            MapMutex<String> mapMutex = getMapMutex(dbName);
+            mapMutex.acquire(tableName);
 
                 HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
                 HashMap<String, Object> objectsToStore = new HashMap<String, Object>(data.size());
@@ -669,6 +697,8 @@ public class ObjectsCache {
                 }
 
                 objectsDB.insertObjects(tableName, objectsToStore, waitingHandler);
+                
+                mapMutex.release(tableName);
             }
         }
 
@@ -722,6 +752,37 @@ public class ObjectsCache {
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    /**
+     * Adds a map mutex to the dbCacheMutexMap.
+     *
+     * @param dbName the name of the database
+     *
+     * @return the map mutex corresponding to the database
+     */
+    private synchronized MapMutex<String> addMapMutex(String dbName) {
+        MapMutex<String> mapMutex = dbCacheMutexMap.get(dbName);
+        if (mapMutex == null) {
+            mapMutex = new MapMutex<String>();
+            dbCacheMutexMap.put(dbName, mapMutex);
+        }
+        return mapMutex;
+    }
+
+    /**
+     * Returns the map mutex for the given database.
+     *
+     * @param dbName the name of the database
+     *
+     * @return the map mutex
+     */
+    private MapMutex<String> getMapMutex(String dbName) {
+        MapMutex<String> dbMutexMap = dbCacheMutexMap.get(dbName);
+        if (dbMutexMap == null) {
+            dbMutexMap = addMapMutex(dbName);
+        }
+        return dbMutexMap;
 
     }
 

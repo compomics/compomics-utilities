@@ -664,8 +664,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updateSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         identificationDB.updateSpectrumParameter(key, urParameter);
     }
 
@@ -679,8 +680,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updatePeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updatePeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         identificationDB.updatePeptideParameter(key, urParameter);
     }
 
@@ -694,8 +696,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updateProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         identificationDB.updateProteinParameter(key, urParameter);
     }
 
@@ -709,8 +712,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException {
+    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
         identificationDB.updateAssumptions(spectrumKey, assumptions);
     }
 
@@ -724,8 +728,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException {
+    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
         identificationDB.updateRawAssumptions(spectrumKey, assumptions);
     }
 
@@ -737,8 +742,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
+    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
         identificationDB.updateSpectrumMatch(spectrumMatch);
     }
 
@@ -750,8 +756,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
+    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException {
         identificationDB.updatePeptideMatch(peptideMatch);
     }
 
@@ -817,8 +824,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
+    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
         identificationDB.updateProteinMatch(proteinMatch);
     }
 
@@ -840,8 +848,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      * @throws IOException exception thrown whenever an IO issue occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeAssumptions(String matchKey) throws SQLException, IOException {
+    public void removeAssumptions(String matchKey) throws SQLException, IOException, InterruptedException {
         identificationDB.removeAssumptions(matchKey);
     }
 
@@ -854,8 +863,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      * @throws IOException exception thrown whenever an IO issue occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeRawAssumptions(String matchKey) throws SQLException, IOException {
+    public void removeRawAssumptions(String matchKey) throws SQLException, IOException, InterruptedException {
         identificationDB.removeRawAssumptions(matchKey);
     }
 
@@ -868,8 +878,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      * @throws IOException exception thrown whenever an IO issue occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeSpectrumMatch(String matchKey) throws SQLException, IOException {
+    public void removeSpectrumMatch(String matchKey) throws SQLException, IOException, InterruptedException {
 
         String fileName = Spectrum.getSpectrumFile(matchKey);
         HashSet<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
@@ -888,8 +899,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      * @throws IOException exception thrown whenever an IO issue occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removePeptideMatch(String matchKey) throws SQLException, IOException {
+    public void removePeptideMatch(String matchKey) throws SQLException, IOException, InterruptedException {
 
         peptideIdentification.remove(matchKey);
         identificationDB.removePeptideMatch(matchKey);
@@ -904,8 +916,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      * @throws IOException exception thrown whenever an IO issue occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeProteinMatch(String matchKey) throws SQLException, IOException {
+    public void removeProteinMatch(String matchKey) throws SQLException, IOException, InterruptedException {
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
                 if (proteinMap.get(protein) == null) {

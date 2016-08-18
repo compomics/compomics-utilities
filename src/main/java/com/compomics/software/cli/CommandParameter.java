@@ -290,5 +290,4 @@ public class CommandParameter {
         }
         return true;
     }
-
 }

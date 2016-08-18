@@ -42,8 +42,11 @@ public class AAIntensityRankScore {
      * @param specificAnnotationPreferences the annotation preferences specific to this psm
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws InterruptedException {
         return getScore(peptide, spectrum, annotationPreferences, specificAnnotationPreferences, null);
     }
 
@@ -61,8 +64,11 @@ public class AAIntensityRankScore {
      * internal will be used)
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException {
 
         if (peptideSpectrumAnnotator == null) {
             peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();

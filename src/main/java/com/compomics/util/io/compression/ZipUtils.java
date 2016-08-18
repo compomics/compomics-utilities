@@ -32,6 +32,18 @@ public class ZipUtils {
      *
      * @param originFile the file to zip, can be a folder
      * @param destinationFile the destination file
+     *
+     * @throws IOException if an IOException occurs
+     */
+    public static void zip(File originFile, File destinationFile) throws IOException {
+        zip(originFile, destinationFile, null, 0);
+    }
+
+    /**
+     * Zips a file.
+     *
+     * @param originFile the file to zip, can be a folder
+     * @param destinationFile the destination file
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      * @param totalUncompressedFileSize the total uncompressed size, a value
@@ -61,7 +73,21 @@ public class ZipUtils {
 
     /**
      * Adds a new file to the zip stream. If the file is a folder it will be
-     * added as well
+     * added with its content.
+     *
+     * @param file the file to add to the zip
+     * @param out the zip stream
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     */
+    public static void addToZip(File file, ZipOutputStream out) throws IOException {
+        addToZip(file, out, null, 0);
+    }
+
+    /**
+     * Adds a new file to the zip stream. If the file is a folder it will be
+     * added with its content.
      *
      * @param file the file to add to the zip
      * @param out the zip stream
@@ -79,7 +105,23 @@ public class ZipUtils {
 
     /**
      * Adds a new file to the zip stream. If the file is a folder it will be
-     * added as well.
+     * added with its content.
+     *
+     * @param subDirectory the subdirectory relative to the zip file location
+     * (e.g. "data", note that there is no tailing "/")
+     * @param file the file to add to the zip
+     * @param out the zip stream
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     */
+    public static void addToZip(File file, String subDirectory, ZipOutputStream out) throws IOException {
+        addToZip(file, subDirectory, out, null, 0);
+    }
+
+    /**
+     * Adds a new file to the zip stream. If the file is a folder it will be
+     * added with its content.
      *
      * @param subDirectory the subdirectory relative to the zip file location
      * (e.g. "data", note that there is no tailing "/")

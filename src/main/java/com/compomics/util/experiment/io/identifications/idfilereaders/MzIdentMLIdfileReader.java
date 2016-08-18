@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,6 +51,14 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
  * @author Harald Barsnes
  */
 public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileReader {
+
+    /**
+     * Enum for the raw value to e-value conversion.
+     */
+    public enum RawValueConversionType {
+
+        noConversion, baseTwoPowerMinusValue, baseTenPowerMinusValue, baseTenPowerPlusValue, baseNaturalLogPowerMinusValue, oneMinusValue;
+    }
 
     /**
      * List of software used to create this file according to the file.
@@ -813,11 +820,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             break;
                         }
                     }
-                } else {
+                } else if (peptidePtmLocation == 0 || peptidePtmLocation == peptideSequence.length() + 1) {
                     // no specificity rules, so the modification cannot be terminal (but can still be on the first or last residue)
-                 if (peptidePtmLocation == 0 || peptidePtmLocation == peptideSequence.length() + 1) {
-                        allRules = false;
-                    }
+                    allRules = false;
                 }
 
                 if (allRules) {
@@ -984,15 +989,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         if (location != null && id != null) {
-            
+
             String fileName = location;
-            
+
             if (location.lastIndexOf("/") != -1) {
                 fileName = location.substring(location.lastIndexOf("/") + 1);
             } else if (location.lastIndexOf("\\") != -1) {
                 fileName = location.substring(location.lastIndexOf("\\") + 1);
             }
-            
+
             //String fileName = new File(new URI(location)).getName(); // @TODO: check if this work cross platform... (if it does the above code could be replaced)
             spectrumFileNameMap.put(id, fileName);
         }
@@ -1045,7 +1050,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         int type = parser.next();
 
         while (type != XmlPullParser.END_TAG && !parser.getName().equals("cvParam")) {
-            
+
             Integer rank = null;
             String peptideRef = null;
             Integer chargeState = null;
@@ -1070,12 +1075,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
 
             type = parser.next();
-            
+
             // read until we get to the peptide evidence references
             while (parser.getName() == null || (parser.getName() != null && !parser.getName().equals("PeptideEvidenceRef"))) {
                 type = parser.next();
             }
-            
+
             // see if we need to get the peptide reference from the peptide evidence element
             String peptideEvidenceRef = null;
             if (peptideRef == null) {
@@ -1090,7 +1095,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     type = parser.next();
                 }
             }
-            
+
             if (peptideRef == null && peptideEvidenceRef == null) {
                 System.out.println("spectrumIdItemId: " + spectrumIdItemId);
                 throw new IllegalArgumentException("Error parsing SpectrumIdentificationItem!");
@@ -1164,7 +1169,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             if (peptideRef == null) {
                 peptideRef = tempPeptideEvidenceMap.get(peptideEvidenceRef);
             }
-            
+
             if (!tempPeptideMap.containsKey(peptideRef)) {
                 System.out.println("spectrumIdItemId: " + spectrumIdItemId);
                 throw new IllegalArgumentException("Error parsing SpectrumIdentificationItem!");
@@ -1265,6 +1270,61 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
+     * Returns the e-value object for the given CV term, null if not found.
+     *
+     * @param scoreMap the score map
+     * @param advocate the advocate
+     * @param cvTerm the CV term to look for
+     * @param rawValueConversionType the raw value conversion type
+     * @return the e-value object for the given CV term, null if not found
+     */
+    private EValueObject getEValueObject(HashMap<String, Double> scoreMap, Advocate advocate, String cvTerm, RawValueConversionType rawValueConversionType) {
+
+        EValueObject eValueObject = null;
+        Double eValue = scoreMap.get(cvTerm), rawScore = null;
+
+        if (eValue != null) {
+
+            // convert score to e-value if needed
+            switch (rawValueConversionType) {
+                case noConversion:
+                    // do nothing
+                    break;
+                case baseTwoPowerMinusValue:
+                    eValue = Math.pow(2, -eValue);
+                    break;
+                case baseTenPowerMinusValue:
+                    eValue = Math.pow(10, -eValue);
+                    break;
+                case baseTenPowerPlusValue:
+                    eValue = Math.pow(10, eValue);
+                    break;
+                case baseNaturalLogPowerMinusValue:
+                    eValue = Math.pow(Math.E, -eValue);
+                    break;
+                case oneMinusValue:
+                    eValue = 1 - eValue;
+                    break;
+            }
+
+            // get the software version
+            String name = advocate.getName();
+            if (!softwareVersions.containsKey(name)) {
+                ArrayList<String> versions = tempSoftwareVersions.get(name);
+                if (versions == null) {
+                    versions = new ArrayList<String>();
+                }
+                softwareVersions.put(name, versions);
+            }
+
+            // create the e-value object
+            eValueObject = new EValueObject(eValue, rawScore, advocate);
+        }
+
+        return eValueObject;
+    }
+
+    /**
      * Returns the extracted e-value details.
      *
      * @param scoreMap the map of the possible e-values
@@ -1274,865 +1334,301 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private EValueObject getEValue(HashMap<String, Double> scoreMap, String spectrumIdItemId) {
 
-        //TODO: select the "best" algorithm or include all?
-        // Any way of doing that more elegantly?
-        //
+        String cvTerm; //TODO: select the "best" algorithm or include all?
+
+        // MyriMatch
+        cvTerm = "MS:1001589";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.myriMatch, cvTerm, RawValueConversionType.baseNaturalLogPowerMinusValue);
+        }
+        cvTerm = "MS:1001590";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.myriMatch, cvTerm, RawValueConversionType.baseNaturalLogPowerMinusValue);
+        }
+
+        // ms-gf+
+        cvTerm = "MS:1002052";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002053";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002056";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002055";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002054";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002049";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
+        }
+        
+        // PEAKS
+        cvTerm = "MS:1002448";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.peaks, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001950";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.peaks, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        
+        // X!Tandem
+        cvTerm = "MS:1001330";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.xtandem, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001331";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.xtandem, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // OMSSA
+        cvTerm = "MS:1001328";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.omssa, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001329";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.omssa, cvTerm, RawValueConversionType.noConversion);
+        }
+
+        // MS Amanda
+        cvTerm = "MS:1002319";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msAmanda, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
+        }
+
+        // Andromeda
+        cvTerm = "MS:1002338";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.andromeda, cvTerm, RawValueConversionType.noConversion);
+        }
+
+        // Comet
+        cvTerm = "MS:1002255";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.comet, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002252";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.comet, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
+        }
+
+        // Mascot
+        cvTerm = "MS:1001172";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.mascot, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001171";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.mascot, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // PeptideShaker
+        cvTerm = "MS:1002466";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.peptideShaker, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1002467";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.peptideShaker, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        
+        // Byonic
+        cvTerm = "MS:1002262";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1002311";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1002265";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002309";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1002266";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
+        }
+        
+        // MS Fit
+        cvTerm = "MS:1001501";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.msFit, cvTerm, RawValueConversionType.noConversion);
+        }
+
+        // Phenyx
+        cvTerm = "MS:1001396";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.phenyx, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001395";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.phenyx, cvTerm, RawValueConversionType.baseTwoPowerMinusValue);
+        }
+
+        // Profound
+        cvTerm = "MS:1001499";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proFound, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1001498";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proFound, cvTerm, RawValueConversionType.baseTwoPowerMinusValue);
+        }
+
+        // ProteinLynx
+        cvTerm = "MS:1001570";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinLynx, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
+        }
+        cvTerm = "MS:1001569";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinLynx, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // ProteinProspector
+        cvTerm = "MS:1002045";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinProspector, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002044";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinProspector, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // ProteinScape
+        cvTerm = "MS:1001503";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinScape, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001504";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinScape, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // Sequest
+        cvTerm = "MS:1001154";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sequest, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001155";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sequest, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1001215";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sequest, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1002248";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sequest, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // SQID
+        cvTerm = "MS:1001887";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sqid, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // Sonar
+        cvTerm = "MS:1001502";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.sonar, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // SpectraST
+        cvTerm = "MS:1001417";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.spectraST, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // SpectrumMill
+        cvTerm = "MS:1001572";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.spectrumMill, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // ZCore
+        cvTerm = "MS:1001952";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.zCore, cvTerm, RawValueConversionType.noConversion);
+        }
+
+        // Percolator
+        cvTerm = "MS:1001491";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.percolator, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001493";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.percolator, cvTerm, RawValueConversionType.noConversion);
+        }
+        cvTerm = "MS:1001492";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.percolator, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // Morpheus
+        cvTerm = "MS:1002662";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.morpheus, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1002354";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.morpheus, cvTerm, RawValueConversionType.noConversion);
+        }
+
+        // Protein Pilot
+        cvTerm = "MS:1001166";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinPilot, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+        cvTerm = "MS:1001167";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.proteinPilot, cvTerm, RawValueConversionType.noConversion);
+        }
+        
         // Scaffold
-        Advocate advocate = null;
-        Double eValue = scoreMap.get("MS:1001568"), rawScore = null;
-        if (eValue != null) {
-            advocate = Advocate.scaffold;
-            String name = advocate.getName();
-            if (!softwareVersions.containsKey(name)) {
-                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                if (versions == null) {
-                    versions = new ArrayList<String>();
-                }
-                softwareVersions.put(name, versions);
-            }
-        } else {
-
-            // PeptideShaker
-            eValue = scoreMap.get("MS:1002466");
-            if (eValue != null) {
-                rawScore = eValue;
-                eValue = Math.pow(10, -eValue);
-                advocate = Advocate.peptideShaker;
-                String name = advocate.getName();
-                if (!softwareVersions.containsKey(name)) {
-                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                    if (versions == null) {
-                        versions = new ArrayList<String>();
-                    }
-                    softwareVersions.put(name, versions);
-                }
-            } else {
-                eValue = scoreMap.get("MS:1002467");
-                if (eValue != null) {
-                    rawScore = eValue;
-                    eValue = Math.pow(10, -eValue);
-                    advocate = Advocate.peptideShaker;
-                    String name = advocate.getName();
-                    if (!softwareVersions.containsKey(name)) {
-                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                        if (versions == null) {
-                            versions = new ArrayList<String>();
-                        }
-                        softwareVersions.put(name, versions);
-                    }
-                } else {
-
-                    // X!Tandem
-                    eValue = scoreMap.get("MS:1001330");
-                    if (eValue != null) {
-                        advocate = Advocate.xtandem;
-                        String name = advocate.getName();
-                        if (!softwareVersions.containsKey(name)) {
-                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                            if (versions == null) {
-                                versions = new ArrayList<String>();
-                            }
-                            softwareVersions.put(name, versions);
-                        }
-                    } else {
-                        eValue = scoreMap.get("MS:1001331");
-                        if (eValue != null) {
-                            rawScore = eValue;
-                            eValue = Math.pow(10, -eValue);
-                            advocate = Advocate.xtandem;
-                            String name = advocate.getName();
-                            if (!softwareVersions.containsKey(name)) {
-                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                if (versions == null) {
-                                    versions = new ArrayList<String>();
-                                }
-                                softwareVersions.put(name, versions);
-                            }
-                        } else {
-
-                            // OMSSA
-                            eValue = scoreMap.get("MS:1001328");
-                            if (eValue != null) {
-                                advocate = Advocate.omssa;
-                                String name = advocate.getName();
-                                if (!softwareVersions.containsKey(name)) {
-                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                    if (versions == null) {
-                                        versions = new ArrayList<String>();
-                                    }
-                                    softwareVersions.put(name, versions);
-                                }
-                            } else {
-
-                                // ms-gf+
-                                eValue = scoreMap.get("MS:1002052");
-                                if (eValue != null) {
-                                    advocate = Advocate.msgf;
-                                    String name = advocate.getName();
-                                    if (!softwareVersions.containsKey(name)) {
-                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                        if (versions == null) {
-                                            versions = new ArrayList<String>();
-                                        }
-                                        softwareVersions.put(name, versions);
-                                    }
-                                } else {
-
-                                    // MS Amanda
-                                    eValue = scoreMap.get("MS:1002319");
-                                    if (eValue != null) {
-                                        rawScore = eValue;
-                                        eValue = Math.pow(10, eValue);
-                                        advocate = Advocate.msAmanda;
-                                        String name = advocate.getName();
-                                        if (!softwareVersions.containsKey(name)) {
-                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                            if (versions == null) {
-                                                versions = new ArrayList<String>();
-                                            }
-                                            softwareVersions.put(name, versions);
-                                        }
-                                    } else {
-
-                                        // Andromeda
-                                        eValue = scoreMap.get("MS:1002338");
-                                        if (eValue != null) {
-                                            advocate = Advocate.andromeda;
-                                            String name = advocate.getName();
-                                            if (!softwareVersions.containsKey(name)) {
-                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                if (versions == null) {
-                                                    versions = new ArrayList<String>();
-                                                }
-                                                softwareVersions.put(name, versions);
-                                            }
-                                        } else {
-
-                                            // Byonic
-                                            eValue = scoreMap.get("MS:1002262");
-                                            if (eValue != null) {
-                                                rawScore = eValue;
-                                                eValue = Math.pow(10, -eValue);
-                                                advocate = Advocate.byonic;
-                                                String name = advocate.getName();
-                                                if (!softwareVersions.containsKey(name)) {
-                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                    if (versions == null) {
-                                                        versions = new ArrayList<String>();
-                                                    }
-                                                    softwareVersions.put(name, versions);
-                                                }
-                                            } else {
-                                                eValue = scoreMap.get("MS:1002311");
-                                                if (eValue != null) {
-                                                    rawScore = eValue;
-                                                    eValue = Math.pow(10, -eValue);
-                                                    advocate = Advocate.byonic;
-                                                    String name = advocate.getName();
-                                                    if (!softwareVersions.containsKey(name)) {
-                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                        if (versions == null) {
-                                                            versions = new ArrayList<String>();
-                                                        }
-                                                        softwareVersions.put(name, versions);
-                                                    }
-                                                } else {
-                                                    eValue = scoreMap.get("MS:1002265");
-                                                    if (eValue != null) {
-                                                        advocate = Advocate.byonic;
-                                                        String name = advocate.getName();
-                                                        if (!softwareVersions.containsKey(name)) {
-                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                            if (versions == null) {
-                                                                versions = new ArrayList<String>();
-                                                            }
-                                                            softwareVersions.put(name, versions);
-                                                        }
-                                                    } else {
-                                                        eValue = scoreMap.get("MS:1002309");
-                                                        if (eValue != null) {
-                                                            rawScore = eValue;
-                                                            eValue = Math.pow(10, -eValue);
-                                                            advocate = Advocate.byonic;
-                                                            String name = advocate.getName();
-                                                            if (!softwareVersions.containsKey(name)) {
-                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                if (versions == null) {
-                                                                    versions = new ArrayList<String>();
-                                                                }
-                                                                softwareVersions.put(name, versions);
-                                                            }
-                                                        } else {
-                                                            eValue = scoreMap.get("MS:1002266");
-                                                            if (eValue != null) {
-                                                                rawScore = eValue;
-                                                                eValue = Math.pow(10, eValue);
-                                                                advocate = Advocate.byonic;
-                                                                String name = advocate.getName();
-                                                                if (!softwareVersions.containsKey(name)) {
-                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                    if (versions == null) {
-                                                                        versions = new ArrayList<String>();
-                                                                    }
-                                                                    softwareVersions.put(name, versions);
-                                                                }
-                                                            } else {
-
-                                                                // Comet
-                                                                eValue = scoreMap.get("MS:1002255"); // @TODO: no e-value?
-                                                                if (eValue != null) {
-                                                                    advocate = Advocate.comet;
-                                                                    String name = advocate.getName();
-                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                        if (versions == null) {
-                                                                            versions = new ArrayList<String>();
-                                                                        }
-                                                                        softwareVersions.put(name, versions);
-                                                                    }
-                                                                } else {
-                                                                    eValue = scoreMap.get("MS:1002252");
-                                                                    if (eValue != null) {
-                                                                        rawScore = eValue;
-                                                                        eValue = Math.pow(10, -eValue);
-                                                                        advocate = Advocate.comet;
-                                                                        String name = advocate.getName();
-                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                            if (versions == null) {
-                                                                                versions = new ArrayList<String>();
-                                                                            }
-                                                                            softwareVersions.put(name, versions);
-                                                                        }
-                                                                    } else {
-
-                                                                        // ms-gf+
-                                                                        eValue = scoreMap.get("MS:1002053");
-                                                                        if (eValue != null) {
-                                                                            advocate = Advocate.msgf;
-                                                                            String name = advocate.getName();
-                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                if (versions == null) {
-                                                                                    versions = new ArrayList<String>();
-                                                                                }
-                                                                                softwareVersions.put(name, versions);
-                                                                            }
-                                                                        } else {
-                                                                            eValue = scoreMap.get("MS:1002056");
-                                                                            if (eValue != null) {
-                                                                                advocate = Advocate.msgf;
-                                                                                String name = advocate.getName();
-                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                    if (versions == null) {
-                                                                                        versions = new ArrayList<String>();
-                                                                                    }
-                                                                                    softwareVersions.put(name, versions);
-                                                                                }
-                                                                            } else {
-                                                                                eValue = scoreMap.get("MS:1002055");
-                                                                                if (eValue != null) {
-                                                                                    advocate = Advocate.msgf;
-                                                                                    String name = advocate.getName();
-                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                        if (versions == null) {
-                                                                                            versions = new ArrayList<String>();
-                                                                                        }
-                                                                                        softwareVersions.put(name, versions);
-                                                                                    }
-                                                                                } else {
-                                                                                    eValue = scoreMap.get("MS:1002054");
-                                                                                    if (eValue != null) {
-                                                                                        advocate = Advocate.msgf;
-                                                                                        String name = advocate.getName();
-                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                            if (versions == null) {
-                                                                                                versions = new ArrayList<String>();
-                                                                                            }
-                                                                                            softwareVersions.put(name, versions);
-                                                                                        }
-                                                                                    } else {
-                                                                                        eValue = scoreMap.get("MS:1002049");
-                                                                                        if (eValue != null) {
-                                                                                            advocate = Advocate.msgf;
-                                                                                            String name = advocate.getName();
-                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                if (versions == null) {
-                                                                                                    versions = new ArrayList<String>();
-                                                                                                }
-                                                                                                softwareVersions.put(name, versions);
-                                                                                            }
-                                                                                        } else {
-
-                                                                                            // MS Fit
-                                                                                            eValue = scoreMap.get("MS:1001501");
-                                                                                            if (eValue != null) {
-                                                                                                advocate = Advocate.msFit;
-                                                                                                String name = advocate.getName();
-                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                    if (versions == null) {
-                                                                                                        versions = new ArrayList<String>();
-                                                                                                    }
-                                                                                                    softwareVersions.put(name, versions);
-                                                                                                }
-                                                                                            } else {
-
-                                                                                                // Mascot
-                                                                                                eValue = scoreMap.get("MS:1001172");
-                                                                                                if (eValue != null) {
-                                                                                                    advocate = Advocate.mascot;
-                                                                                                    String name = advocate.getName();
-                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                        if (versions == null) {
-                                                                                                            versions = new ArrayList<String>();
-                                                                                                        }
-                                                                                                        softwareVersions.put(name, versions);
-                                                                                                    }
-                                                                                                } else {
-                                                                                                    eValue = scoreMap.get("MS:1001171");
-                                                                                                    if (eValue != null) {
-                                                                                                        rawScore = eValue;
-                                                                                                        eValue = Math.pow(10, -eValue);
-                                                                                                        advocate = Advocate.mascot;
-                                                                                                        String name = advocate.getName();
-                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                            if (versions == null) {
-                                                                                                                versions = new ArrayList<String>();
-                                                                                                            }
-                                                                                                            softwareVersions.put(name, versions);
-                                                                                                        }
-                                                                                                    } else {
-
-                                                                                                        // MyriMatch
-                                                                                                        eValue = scoreMap.get("MS:1001589");
-                                                                                                        if (eValue != null) {
-                                                                                                            rawScore = eValue;
-                                                                                                            eValue = Math.pow(Math.E, -eValue);
-                                                                                                            advocate = Advocate.myriMatch;
-                                                                                                            String name = advocate.getName();
-                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                if (versions == null) {
-                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                }
-                                                                                                                softwareVersions.put(name, versions);
-                                                                                                            }
-                                                                                                        } else {
-                                                                                                            eValue = scoreMap.get("MS:1001590");
-                                                                                                            if (eValue != null) {
-                                                                                                                rawScore = eValue;
-                                                                                                                eValue = Math.pow(Math.E, -eValue);
-                                                                                                                advocate = Advocate.myriMatch;
-                                                                                                                String name = advocate.getName();
-                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                    if (versions == null) {
-                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                    }
-                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                }
-                                                                                                            } else {
-
-                                                                                                                // OMSSA
-                                                                                                                eValue = scoreMap.get("MS:1001329");
-                                                                                                                if (eValue != null) {
-                                                                                                                    advocate = Advocate.omssa;
-                                                                                                                    String name = advocate.getName();
-                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                        if (versions == null) {
-                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                        }
-                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                    }
-                                                                                                                } else {
-
-                                                                                                                    // PEAKS
-                                                                                                                    eValue = scoreMap.get("MS:1002448");
-                                                                                                                    if (eValue != null) {
-                                                                                                                        advocate = Advocate.peaks;
-                                                                                                                        String name = advocate.getName();
-                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                            if (versions == null) {
-                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                            }
-                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                        }
-                                                                                                                    } else {
-                                                                                                                        eValue = scoreMap.get("MS:1001950");
-                                                                                                                        if (eValue != null) {
-                                                                                                                            rawScore = eValue;
-                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                            advocate = Advocate.peaks;
-                                                                                                                            String name = advocate.getName();
-                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                if (versions == null) {
-                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                }
-                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                            }
-                                                                                                                        } else {
-
-                                                                                                                            // Phenyx
-                                                                                                                            eValue = scoreMap.get("MS:1001396");
-                                                                                                                            if (eValue != null) {
-                                                                                                                                advocate = Advocate.phenyx;
-                                                                                                                                String name = advocate.getName();
-                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                    if (versions == null) {
-                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                    }
-                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                }
-                                                                                                                            } else {
-                                                                                                                                eValue = scoreMap.get("MS:1001395");
-                                                                                                                                if (eValue != null) {
-                                                                                                                                    rawScore = eValue;
-                                                                                                                                    eValue = Math.pow(2, -eValue);
-                                                                                                                                    advocate = Advocate.phenyx;
-                                                                                                                                    String name = advocate.getName();
-                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                        if (versions == null) {
-                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                        }
-                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                    }
-                                                                                                                                } else {
-
-                                                                                                                                    // Profound
-                                                                                                                                    eValue = scoreMap.get("MS:1001499");
-                                                                                                                                    if (eValue != null) {
-                                                                                                                                        rawScore = eValue;
-                                                                                                                                        eValue = Math.pow(10, -eValue);
-                                                                                                                                        advocate = Advocate.proFound;
-                                                                                                                                        String name = advocate.getName();
-                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                            if (versions == null) {
-                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                            }
-                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                        }
-                                                                                                                                    } else {
-                                                                                                                                        eValue = scoreMap.get("MS:1001498");
-                                                                                                                                        if (eValue != null) {
-                                                                                                                                            rawScore = eValue;
-                                                                                                                                            eValue = Math.pow(2, -eValue);
-                                                                                                                                            advocate = Advocate.proFound;
-                                                                                                                                            String name = advocate.getName();
-                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                if (versions == null) {
-                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                }
-                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                            }
-                                                                                                                                        } else {
-
-                                                                                                                                            // ProteinLynx
-                                                                                                                                            eValue = scoreMap.get("MS:1001570");
-                                                                                                                                            if (eValue != null) {
-                                                                                                                                                rawScore = eValue;
-                                                                                                                                                eValue = Math.pow(10, eValue);
-                                                                                                                                                advocate = Advocate.proteinLynx;
-                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                    if (versions == null) {
-                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                    }
-                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                }
-                                                                                                                                            } else {
-                                                                                                                                                eValue = scoreMap.get("MS:1001569");
-                                                                                                                                                if (eValue != null) {
-                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                    advocate = Advocate.proteinLynx;
-                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                        if (versions == null) {
-                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                        }
-                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                    }
-                                                                                                                                                } else {
-
-                                                                                                                                                    // ProteinProspector
-                                                                                                                                                    eValue = scoreMap.get("MS:1002045");
-                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                        advocate = Advocate.proteinProspector;
-                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                            }
-                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                        }
-                                                                                                                                                    } else {
-                                                                                                                                                        eValue = scoreMap.get("MS:1002044");
-                                                                                                                                                        if (eValue != null) {
-                                                                                                                                                            rawScore = eValue;
-                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                            advocate = Advocate.proteinProspector;
-                                                                                                                                                            String name = advocate.getName();
-                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                if (versions == null) {
-                                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                                }
-                                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                                            }
-                                                                                                                                                        } else {
-
-                                                                                                                                                            // ProteinScape
-                                                                                                                                                            eValue = scoreMap.get("MS:1001503");
-                                                                                                                                                            if (eValue != null) {
-                                                                                                                                                                advocate = Advocate.proteinScape;
-                                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                    if (versions == null) {
-                                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                                    }
-                                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                                }
-                                                                                                                                                            } else {
-                                                                                                                                                                eValue = scoreMap.get("MS:1001504");
-                                                                                                                                                                if (eValue != null) {
-                                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                    advocate = Advocate.proteinScape;
-                                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                        if (versions == null) {
-                                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                                        }
-                                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                                    }
-                                                                                                                                                                } else {
-                                                                                                                                                                    // Sequest
-                                                                                                                                                                    eValue = scoreMap.get("MS:1001154");
-                                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                                        advocate = Advocate.sequest;
-                                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                                            }
-                                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                                        }
-                                                                                                                                                                    } else {
-                                                                                                                                                                        eValue = scoreMap.get("MS:1001155");
-                                                                                                                                                                        if (eValue != null) {
-                                                                                                                                                                            rawScore = eValue;
-                                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                                            advocate = Advocate.sequest;
-                                                                                                                                                                            String name = advocate.getName();
-                                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                if (versions == null) {
-                                                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                                                }
-                                                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                                                            }
-                                                                                                                                                                        } else {
-                                                                                                                                                                            eValue = scoreMap.get("MS:1001215");
-                                                                                                                                                                            if (eValue != null) {
-                                                                                                                                                                                advocate = Advocate.sequest;
-                                                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                    if (versions == null) {
-                                                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                                                    }
-                                                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                                                }
-                                                                                                                                                                            } else {
-                                                                                                                                                                                eValue = scoreMap.get("MS:1002248");
-                                                                                                                                                                                if (eValue != null) {
-                                                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                    advocate = Advocate.sequest;
-                                                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                        if (versions == null) {
-                                                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                                                        }
-                                                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                                                    }
-                                                                                                                                                                                } else {
-
-                                                                                                                                                                                    // SQID
-                                                                                                                                                                                    eValue = scoreMap.get("MS:1001887");
-                                                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                                                        rawScore = eValue;
-                                                                                                                                                                                        eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                        advocate = Advocate.sqid;
-                                                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                                                            }
-                                                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                                                        }
-                                                                                                                                                                                    } else {
-
-                                                                                                                                                                                        // Sonar
-                                                                                                                                                                                        eValue = scoreMap.get("MS:1001502");
-                                                                                                                                                                                        if (eValue != null) {
-                                                                                                                                                                                            rawScore = eValue;
-                                                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                            advocate = Advocate.sonar;
-                                                                                                                                                                                            String name = advocate.getName();
-                                                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                if (versions == null) {
-                                                                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                                                                }
-                                                                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                                                                            }
-                                                                                                                                                                                        } else {
-
-                                                                                                                                                                                            // SpectraST
-                                                                                                                                                                                            eValue = scoreMap.get("MS:1001417");
-                                                                                                                                                                                            if (eValue != null) {
-                                                                                                                                                                                                rawScore = eValue;
-                                                                                                                                                                                                eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                                advocate = Advocate.spectraST;
-                                                                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                    if (versions == null) {
-                                                                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                                                                }
-                                                                                                                                                                                            } else {
-
-                                                                                                                                                                                                // SpectrumMill
-                                                                                                                                                                                                eValue = scoreMap.get("MS:1001572");
-                                                                                                                                                                                                if (eValue != null) {
-                                                                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                                    advocate = Advocate.spectrumMill;
-                                                                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                        if (versions == null) {
-                                                                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                } else {
-
-                                                                                                                                                                                                    // ZCore
-                                                                                                                                                                                                    eValue = scoreMap.get("MS:1001952");
-                                                                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                                                                        advocate = Advocate.zCore;
-                                                                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    } else {
-
-                                                                                                                                                                                                        // Percolator
-                                                                                                                                                                                                        eValue = scoreMap.get("MS:1001491");
-                                                                                                                                                                                                        if (eValue != null) {
-                                                                                                                                                                                                            advocate = Advocate.percolator;
-                                                                                                                                                                                                            String name = advocate.getName();
-                                                                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                if (versions == null) {
-                                                                                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                            eValue = scoreMap.get("MS:1001493");
-                                                                                                                                                                                                            if (eValue != null) {
-                                                                                                                                                                                                                advocate = Advocate.percolator;
-                                                                                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                    if (versions == null) {
-                                                                                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                eValue = scoreMap.get("MS:1001492");
-                                                                                                                                                                                                                if (eValue != null) {
-                                                                                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                                                    advocate = Advocate.percolator;
-                                                                                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                        if (versions == null) {
-                                                                                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                } else {
-
-                                                                                                                                                                                                                    // Morpheus
-                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002662");
-                                                                                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                                                                                        rawScore = eValue;
-                                                                                                                                                                                                                        eValue = Math.pow(10, eValue); // @TODO: verify that this is correct!
-                                                                                                                                                                                                                        advocate = Advocate.morpheus;
-                                                                                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    } else {
-
-                                                                                                                                                                                                                        // Generic e-value
-                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1002353");
-                                                                                                                                                                                                                        if (eValue != null) {
-                                                                                                                                                                                                                            advocate = getAdvocate();
-                                                                                                                                                                                                                            String name = advocate.getName();
-                                                                                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                                if (versions == null) {
-                                                                                                                                                                                                                                    versions = new ArrayList<String>();
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                softwareVersions.put(name, versions);
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                        } else {
-
-                                                                                                                                                                                                                            // Generic q-value
-                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1002354");
-                                                                                                                                                                                                                            if (eValue != null) {
-                                                                                                                                                                                                                                advocate = getAdvocate();
-                                                                                                                                                                                                                                String name = advocate.getName();
-                                                                                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                                    if (versions == null) {
-                                                                                                                                                                                                                                        versions = new ArrayList<String>();
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                    softwareVersions.put(name, versions);
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                            } else {
-
-                                                                                                                                                                                                                                // Generic probability/confidence
-                                                                                                                                                                                                                                eValue = scoreMap.get("MS:1002357");
-                                                                                                                                                                                                                                if (eValue != null) {
-                                                                                                                                                                                                                                    rawScore = eValue;
-                                                                                                                                                                                                                                    eValue = 1 - eValue;
-                                                                                                                                                                                                                                    advocate = getAdvocate();
-                                                                                                                                                                                                                                    String name = advocate.getName();
-                                                                                                                                                                                                                                    if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                                        ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                                        if (versions == null) {
-                                                                                                                                                                                                                                            versions = new ArrayList<String>();
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                        softwareVersions.put(name, versions);
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                } else {
-
-                                                                                                                                                                                                                                    // Generic probability/confidence
-                                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002352");
-                                                                                                                                                                                                                                    if (eValue != null) {
-                                                                                                                                                                                                                                        rawScore = eValue;
-                                                                                                                                                                                                                                        eValue = 1 - eValue;
-                                                                                                                                                                                                                                        advocate = getAdvocate();
-                                                                                                                                                                                                                                        String name = advocate.getName();
-                                                                                                                                                                                                                                        if (!softwareVersions.containsKey(name)) {
-                                                                                                                                                                                                                                            ArrayList<String> versions = tempSoftwareVersions.get(name);
-                                                                                                                                                                                                                                            if (versions == null) {
-                                                                                                                                                                                                                                                versions = new ArrayList<String>();
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                            softwareVersions.put(name, versions);
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                }
-                                                                                                                                                                                            }
-                                                                                                                                                                                        }
-                                                                                                                                                                                    }
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                        }
-                                                                                                                                                                    }
-                                                                                                                                                                }
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                    }
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        cvTerm = "MS:1001568";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.scaffold, cvTerm, RawValueConversionType.noConversion);
         }
 
-        if (eValue == null) {
-            throw new IllegalArgumentException("No e-value found for SpectrumIdentificationItem with ID " + spectrumIdItemId + " in file " + mzIdentMLFileName + ".");
+        // Generic q-value
+        cvTerm = "MS:1002354";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, getAdvocate(), cvTerm, RawValueConversionType.noConversion);
         }
 
-        return new EValueObject(eValue, rawScore, advocate);
+        // Generic probability/confidence
+        cvTerm = "MS:1002357";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, getAdvocate(), cvTerm, RawValueConversionType.oneMinusValue);
+        }
+
+        // Generic probability/confidence
+        cvTerm = "MS:1002352";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, getAdvocate(), cvTerm, RawValueConversionType.oneMinusValue);
+        }
+
+        throw new IllegalArgumentException("No e-value found for SpectrumIdentificationItem with ID " + spectrumIdItemId + " in file " + mzIdentMLFileName + ".");
     }
 
     /**

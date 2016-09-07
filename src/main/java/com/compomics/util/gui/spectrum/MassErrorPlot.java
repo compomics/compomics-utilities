@@ -37,11 +37,14 @@ public class MassErrorPlot extends JPanel {
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
      * @param massTolerance the mass error tolerance
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
             MSnSpectrum currentSpectrum,
-            double massTolerance) {
+            double massTolerance) throws InterruptedException {
         this(annotations, currentSpectrum, massTolerance, false);
     }
 
@@ -53,12 +56,15 @@ public class MassErrorPlot extends JPanel {
      * @param massTolerance the mass error tolerance
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
             MSnSpectrum currentSpectrum,
             double massTolerance,
-            boolean useRelativeError) {
+            boolean useRelativeError) throws InterruptedException {
         super();
 
         setOpaque(false);
@@ -82,7 +88,6 @@ public class MassErrorPlot extends JPanel {
                 }
             }
 
-            double totalIntensity = currentSpectrum.getTotalIntensity();
             double maxError = 0.0;
 
             for (IonMatch annotation : annotations) {

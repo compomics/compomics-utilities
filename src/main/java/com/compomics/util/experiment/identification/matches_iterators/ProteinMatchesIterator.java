@@ -8,6 +8,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 /**
  * An iterator of protein matches.
@@ -71,6 +72,10 @@ public class ProteinMatchesIterator {
      * Boolean indicating whether a thread is buffering.
      */
     private boolean buffering = false;
+    /**
+     * Mutex for the buffering.
+     */
+    private Semaphore bufferingMutex = new Semaphore(1);
     /**
      * The default margin to use to start batch loading before the loading index
      * is reached.
@@ -201,86 +206,99 @@ public class ProteinMatchesIterator {
             int trigger = loadingIndex - ((int) (margin * batchSize));
 
             if (index >= trigger) {
-                int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
-                ArrayList<String> keysInBatch = new ArrayList<String>(proteinKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                identification.loadProteinMatches(keysInBatch, waitingHandler, false);
 
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                    return;
-                }
+                bufferingMutex.acquire();
 
-                if (proteinParameters != null) {
-                    for (UrParameter urParameter : proteinParameters) {
-                        if (urParameter == null) {
-                            throw new IllegalArgumentException("Parameter to batch load is null.");
-                        }
-                        identification.loadProteinMatchParameters(keysInBatch, urParameter, waitingHandler, false);
+                trigger = loadingIndex - ((int) (margin * batchSize));
 
-                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                            return;
+                if (index >= trigger) {
+
+                    buffering = true;
+
+                    int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
+                    ArrayList<String> keysInBatch = new ArrayList<String>(proteinKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
+                    identification.loadProteinMatches(keysInBatch, waitingHandler, false);
+
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+
+                    if (proteinParameters != null) {
+                        for (UrParameter urParameter : proteinParameters) {
+                            if (urParameter == null) {
+                                throw new IllegalArgumentException("Parameter to batch load is null.");
+                            }
+                            identification.loadProteinMatchParameters(keysInBatch, urParameter, waitingHandler, false);
+
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                return;
+                            }
                         }
                     }
-                }
-                ArrayList<String> peptideKeys = null;
-                if (loadPeptides || peptidesParameters != null) {
-                    peptideKeys = new ArrayList<String>(batchSize);
-                    for (String proteinKey : keysInBatch) {
-                        ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
-                        peptideKeys.addAll(proteinMatch.getPeptideMatchesKeys());
-                    }
-                }
-                if (loadPeptides) {
-                    identification.loadPeptideMatches(peptideKeys, waitingHandler, false);
-
-                    if (loadPsms) {
-                        ArrayList<String> psmKeys = new ArrayList<String>(peptideKeys.size());
-                        for (String peptideKey : peptideKeys) {
-                            PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
-                            psmKeys.addAll(peptideMatch.getSpectrumMatchesKeys());
+                    ArrayList<String> peptideKeys = null;
+                    if (loadPeptides || peptidesParameters != null) {
+                        peptideKeys = new ArrayList<String>(batchSize);
+                        for (String proteinKey : keysInBatch) {
+                            ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
+                            peptideKeys.addAll(proteinMatch.getPeptideMatchesKeys());
                         }
-                        identification.loadSpectrumMatches(psmKeys, waitingHandler, false);
-                        if (psmParameters != null) {
-                            for (UrParameter urParameter : psmParameters) {
-                                if (urParameter == null) {
-                                    throw new IllegalArgumentException("Parameter to batch load is null.");
-                                }
+                    }
+                    if (loadPeptides) {
+                        identification.loadPeptideMatches(peptideKeys, waitingHandler, false);
 
-                                identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler, false);
+                        if (loadPsms) {
+                            ArrayList<String> psmKeys = new ArrayList<String>(peptideKeys.size());
+                            for (String peptideKey : peptideKeys) {
+                                PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
+                                psmKeys.addAll(peptideMatch.getSpectrumMatchesKeys());
+                            }
+                            identification.loadSpectrumMatches(psmKeys, waitingHandler, false);
+                            if (psmParameters != null) {
+                                for (UrParameter urParameter : psmParameters) {
+                                    if (urParameter == null) {
+                                        throw new IllegalArgumentException("Parameter to batch load is null.");
+                                    }
 
-                                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                    return;
+                                    identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler, false);
+
+                                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                        return;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                if (peptidesParameters != null) {
-                    for (UrParameter urParameter : peptidesParameters) {
-                        if (urParameter == null) {
-                            throw new IllegalArgumentException("Parameter to batch load is null.");
+                    if (peptidesParameters != null) {
+                        for (UrParameter urParameter : peptidesParameters) {
+                            if (urParameter == null) {
+                                throw new IllegalArgumentException("Parameter to batch load is null.");
+                            }
+                            identification.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler, false);
+
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                return;
+                            }
                         }
-                        identification.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler, false);
+                    }
 
-                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                            return;
+                    loadingIndex = newLoadingIndex;
+                    trigger += (int) (margin * batchSize / 2);
+                    trigger = Math.max(0, trigger);
+
+                    if (index < trigger) {
+                        if (batchSize > defaultBatchSize) {
+                            batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
+                        } else if (margin > defaultMargin) {
+                            margin = Math.max(defaultMargin, 0.9 * margin);
                         }
                     }
                 }
 
-                loadingIndex = newLoadingIndex;
-                trigger += (int) (margin * batchSize / 2);
-                trigger = Math.max(0, trigger);
-
-                if (index < trigger) {
-                    if (batchSize > defaultBatchSize) {
-                        batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
-                    } else if (margin > defaultMargin) {
-                        margin = Math.max(defaultMargin, 0.9 * margin);
-                    }
+                if (!bufferingMutex.hasQueuedThreads()) {
+                    buffering = false;
                 }
-
-                buffering = false;
+                bufferingMutex.release();
             }
         } else if (index == loadingIndex) {
             margin *= 1.1;

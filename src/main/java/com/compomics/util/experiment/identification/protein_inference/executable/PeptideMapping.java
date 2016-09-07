@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.executable;
 
-import com.compomics.util.exceptions.ExceptionHandler;
-import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
@@ -27,12 +20,19 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
- *
- * @author dominik.kopczynski
+ * Command line peptide mapping.
+ * 
+ * @author Dominik Kopczynski
  */
 public class PeptideMapping {
-    public static void main(String[] args){
-        if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))){
+
+    /**
+     * Main class.
+     * 
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))) {
             System.err.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
             System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
             System.err.println();
@@ -44,45 +44,42 @@ public class PeptideMapping {
             System.err.println("Default parameters:");
             System.err.println("\tindexing method:\t\tfm-index");
             System.err.println("\tframentation tolerance [Da]:\t0.02");
-            
+
             System.exit(-1);
         }
         
-        //System.err.println("Start reading fasta file");
+        System.err.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File sequences = new File(args[1]);
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         try {
             sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
-        }
-        catch (Exception e){
-            System.err.println("Error: cound not open fasta file");
+        } catch (Exception e) {
+            System.err.println("Error: cound not open FASTA file");
             System.exit(-1);
         }
-        
+
         double tolerance = 0.02;
         PtmSettings ptmSettings = null;
         PeptideVariantsPreferences peptideVariantsPreferences = null;
         SequenceMatchingPreferences sequenceMatchingPreferences = null;
-        if (args.length >= 5){
+        if (args.length >= 5) {
             File parameterFile = new File(args[4]);
             IdentificationParameters identificationParameters = null;
             try {
                 identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: cound not open / parse parameter file");
                 System.exit(-1);
             }
 
             tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
             System.err.println("New fragment m/z tolerance: " + tolerance + "Da");
-            
             ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
 
-        }
-            else {
+        } else {
             ptmSettings = new PtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = new SequenceMatchingPreferences();
@@ -91,26 +88,24 @@ public class PeptideMapping {
 
         }
         
-        
-        //System.err.println("Start indexing proteome");
+        System.err.println("Start indexing proteome");
         long startTime = System.nanoTime();
         FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences);
         double diffTime = System.nanoTime() - startTime;
         System.err.println();
-        System.err.println("Indexing took " + (diffTime / 1e9) + " seconds and consumes " + (((float)fmIndex.getAllocatedBytes()) / 1e6) + " MB");
-        
-        if (args[0].equals("-p")){
+        System.err.println("Indexing took " + (diffTime / 1e9) + " seconds and consumes " + (((float) fmIndex.getAllocatedBytes()) / 1e6) + " MB");
+
+        if (args[0].equals("-p")) {
             ArrayList<String> peptides = new ArrayList<String>();
             try {
                 for (String line : Files.readAllLines(Paths.get(args[2]))) {
-                    if (!Pattern.matches("[a-zA-Z]+", line)){
+                    if (!Pattern.matches("[a-zA-Z]+", line)) {
                         System.err.println("Error: invalid character in line '" + line + "'");
                         System.exit(-1);
                     }
                     peptides.add(line.toUpperCase());
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: cound not open input list");
                 System.exit(-1);
             }
@@ -121,8 +116,8 @@ public class PeptideMapping {
 
             // starting the mapping
             startTime = System.nanoTime();
-            
-            for (int i = 0; i < peptides.size(); ++i){
+
+            for (int i = 0; i < peptides.size(); ++i) {
                 String peptide = peptides.get(i);
                 waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                 ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping(peptide, sequenceMatchingPreferences);
@@ -134,31 +129,28 @@ public class PeptideMapping {
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
-                for (PeptideProteinMapping peptideProteinMapping : allPeptideProteinMappings){
+                for (PeptideProteinMapping peptideProteinMapping : allPeptideProteinMappings) {
                     String peptide = peptideProteinMapping.getPeptideSequence();
                     String accession = peptideProteinMapping.getProteinAccession();
                     int startIndex = peptideProteinMapping.getIndex();
                     writer.println(peptide + "," + accession + "," + startIndex);
                 }
                 writer.close();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
                 System.exit(-1);
             }
-        }
-        else {
+        } else {
             ArrayList<Tag> tags = new ArrayList<Tag>();
             ArrayList<Integer> tagIndexes = new ArrayList<Integer>();
             try {
                 for (String line : Files.readAllLines(Paths.get(args[2]))) {
                     Tag tag = new Tag();
                     for (String part : line.split(",")) {
-                    
-                        if (Pattern.matches("[a-zA-Z]+", part)){
+
+                        if (Pattern.matches("[a-zA-Z]+", part)) {
                             tag.addAminoAcidSequence(new AminoAcidSequence(part));
-                        }
-                        else {
+                        } else {
                             try {
                                 double mass = Double.parseDouble(part);
                                 tag.addMassGap(mass);
@@ -170,12 +162,11 @@ public class PeptideMapping {
                     }
                     tags.add(tag);
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: cound not open input list");
                 System.exit(-1);
             }
-            
+
             waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
             waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(tags.size());
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
@@ -184,13 +175,15 @@ public class PeptideMapping {
             // starting the mapping
             startTime = System.nanoTime();
             try {
-                for (int i = 0; i < tags.size(); ++i){
+                for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping(tags.get(i), null, sequenceMatchingPreferences, tolerance);
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
-                    for(int j = 0; j < peptideProteinMappings.size(); ++j) tagIndexes.add(i);
+                    for (int j = 0; j < peptideProteinMappings.size(); ++j) {
+                        tagIndexes.add(i);
+                    }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Error: an unexpected error happened.");
                 System.exit(-1);
@@ -201,16 +194,16 @@ public class PeptideMapping {
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
-                for (int i = 0; i < allPeptideProteinMappings.size(); ++i){
+                for (int i = 0; i < allPeptideProteinMappings.size(); ++i) {
                     PeptideProteinMapping peptideProteinMapping = allPeptideProteinMappings.get(i);
                     String peptide = peptideProteinMapping.getPeptideSequence();
                     String accession = peptideProteinMapping.getProteinAccession();
                     int startIndex = peptideProteinMapping.getIndex();
-                    for (TagComponent tagComponent : tags.get(tagIndexes.get(i)).getContent()){
-                        if (tagComponent instanceof MassGap){
+                    for (TagComponent tagComponent : tags.get(tagIndexes.get(i)).getContent()) {
+                        if (tagComponent instanceof MassGap) {
                             writer.print(tagComponent.getMass());
                         }
-                        if (tagComponent instanceof AminoAcidSequence){
+                        if (tagComponent instanceof AminoAcidSequence) {
                             writer.print(tagComponent.asSequence());
                         }
                         writer.print(",");
@@ -218,8 +211,7 @@ public class PeptideMapping {
                     writer.println(peptide + "," + accession + "," + startIndex);
                 }
                 writer.close();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
                 System.exit(-1);
             }

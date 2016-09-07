@@ -1,13 +1,11 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Interface for a class mapping peptides to a protein.

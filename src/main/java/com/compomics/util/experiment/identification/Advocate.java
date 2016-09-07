@@ -29,7 +29,7 @@ public class Advocate {
      */
     public static final Advocate omssa = new Advocate(1, "OMSSA", AdvocateType.search_engine, new java.awt.Color(153, 153, 255));
     /**
-     * The X!Tandem search engine.
+     * The X! Tandem search engine.
      */
     public static final Advocate xtandem = new Advocate(2, "X!Tandem", AdvocateType.search_engine, new java.awt.Color(153, 255, 255));
     /**
@@ -80,25 +80,25 @@ public class Advocate {
     /**
      * The PEAKS sequencing algorithm.
      */
-    public static final Advocate peaks = new Advocate(14, "PEAKS", AdvocateType.sequencing_algorithm);
+    public static final Advocate peaks = new Advocate(14, "PEAKS Studio", AdvocateType.sequencing_algorithm, new Color(173, 255, 47));
     /**
-     * The phenyx search engine.
+     * The Phenyx search engine.
      */
     public static final Advocate phenyx = new Advocate(15, "Phenyx", AdvocateType.search_engine);
     /**
-     * The profound search engine.
+     * The Profound search engine.
      */
     public static final Advocate proFound = new Advocate(16, "ProFound", AdvocateType.search_engine);
     /**
-     * The search engine results of protein prospector.
+     * The search engine results of Protein Prospector.
      */
     public static final Advocate proteinProspector = new Advocate(17, "ProteinProspector", AdvocateType.search_engine);
     /**
-     * The search engine integrated in protein scape, Bruker instruments.
+     * The search engine integrated in Protein Scape, Bruker instruments.
      */
     public static final Advocate proteinScape = new Advocate(18, "ProteinScape", AdvocateType.search_engine);
     /**
-     * The sequest search engine.
+     * The Sequest search engine.
      */
     public static final Advocate sequest = new Advocate(19, "SEQUEST", AdvocateType.search_engine);
     /**
@@ -106,13 +106,13 @@ public class Advocate {
      */
     public static final Advocate sqid = new Advocate(20, "SQID", AdvocateType.search_engine);
     /**
-     * The scaffold multiple search engine data interpretation software.
+     * The Scaffold multiple search engine data interpretation software.
      */
     public static final Advocate scaffold = new Advocate(21, "Scaffold", AdvocateType.multiple_algorithm_software);
     /**
-     * The sonar search engine, integrated in radars.
+     * The Sonar search engine, integrated in radars.
      */
-    public static final Advocate sonar = new Advocate(22, "sonar", AdvocateType.search_engine);
+    public static final Advocate sonar = new Advocate(22, "Sonar", AdvocateType.search_engine);
     /**
      * The SpectraST spectral library search engine (TPP).
      */
@@ -126,7 +126,7 @@ public class Advocate {
      */
     public static final Advocate zCore = new Advocate(25, "ZCore", AdvocateType.search_engine);
     /**
-     * The percolator rescoring algorithm.
+     * The Percolator rescoring algorithm.
      */
     public static final Advocate percolator = new Advocate(26, "Percolator", AdvocateType.rescoring_algorithm);
     /**
@@ -144,7 +144,11 @@ public class Advocate {
     /**
      * The Morpheus search engine.
      */
-    public static final Advocate morpheus = new Advocate(30, "Morpheus", AdvocateType.search_engine, new Color(253, 192, 134)); // @TODO: select color!
+    public static final Advocate morpheus = new Advocate(30, "Morpheus", AdvocateType.search_engine, new Color(255, 248, 220));
+    /**
+     * The ProteinPilot search engine.
+     */
+    public static final Advocate proteinPilot = new Advocate(31, "ProteinPilot Software", AdvocateType.search_engine, new Color(75, 0, 130));
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -268,7 +272,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[32 + userAdvocates.size()];
+        Advocate[] result = new Advocate[33 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -301,6 +305,7 @@ public class Advocate {
         result[++i] = pNovo;
         result[++i] = novor;
         result[++i] = morpheus;
+        result[++i] = proteinPilot;
         result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {
@@ -482,6 +487,8 @@ public class Advocate {
      * @param idFileName the name of the identification file
      *
      * @return the advocate likely to have been used to create the given file
+     * 
+     * @deprecated no longer used
      */
     public static Advocate getAdvocateFromFile(String idFileName) {
         if (idFileName.toLowerCase().endsWith("dat")) {

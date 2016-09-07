@@ -82,6 +82,9 @@ public class MassErrorBubblePlot extends JPanel {
      * data series key, otherwise the psm index is used
      * @param addMarkers if true interval markers for the fragment ions will be
      * shown
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
@@ -89,7 +92,7 @@ public class MassErrorBubblePlot extends JPanel {
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
-            boolean addMarkers) {
+            boolean addMarkers) throws InterruptedException {
         this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, false);
     }
 
@@ -106,6 +109,9 @@ public class MassErrorBubblePlot extends JPanel {
      * shown
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
@@ -114,7 +120,7 @@ public class MassErrorBubblePlot extends JPanel {
             double massTolerance,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) {
+            boolean useRelativeError) throws InterruptedException {
         this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, useRelativeError);
     }
 
@@ -132,6 +138,9 @@ public class MassErrorBubblePlot extends JPanel {
      * shown
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
+     *
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
@@ -141,7 +150,7 @@ public class MassErrorBubblePlot extends JPanel {
             double bubbleScale,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) {
+            boolean useRelativeError) throws InterruptedException {
         super();
 
         setOpaque(false);

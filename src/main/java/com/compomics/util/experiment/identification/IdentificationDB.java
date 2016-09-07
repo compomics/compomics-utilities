@@ -170,8 +170,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
+    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
         objectsDB.updateObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
     }
 
@@ -184,8 +185,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
+    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException {
         objectsDB.updateObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
     }
 
@@ -198,8 +200,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
+    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         objectsDB.updateObject(tableName, key, spectrumMatch);
@@ -215,8 +218,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap) throws SQLException, IOException {
+    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap) throws SQLException, IOException, InterruptedException {
         String tableName = getAssumptionTable(spectrumKey);
         objectsDB.updateObject(tableName, spectrumKey, assumptionsMap);
     }
@@ -231,8 +235,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptionsMap) throws SQLException, IOException {
+    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptionsMap) throws SQLException, IOException, InterruptedException {
         String tableName = getRawAssumptionTable(spectrumKey);
         objectsDB.updateObject(tableName, spectrumKey, rawAssumptionsMap);
     }
@@ -245,8 +250,9 @@ public class IdentificationDB implements Serializable {
      * updating a match in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateMatch(IdentificationMatch match) throws SQLException, IOException {
+    public void updateMatch(IdentificationMatch match) throws SQLException, IOException, InterruptedException {
         switch (match.getType()) {
             case Spectrum:
                 updateSpectrumMatch((SpectrumMatch) match);
@@ -268,8 +274,9 @@ public class IdentificationDB implements Serializable {
      * updating the parameter in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateProteinParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updateProteinParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         objectsDB.updateObject(tableName, key, urParameter);
     }
@@ -283,8 +290,9 @@ public class IdentificationDB implements Serializable {
      * updating the parameter in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updatePeptideParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updatePeptideParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         objectsDB.updateObject(tableName, key, urParameter);
     }
@@ -298,8 +306,9 @@ public class IdentificationDB implements Serializable {
      * updating the parameter in the table
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void updateSpectrumParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void updateSpectrumParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         objectsDB.updateObject(tableName, key, urParameter);
     }
@@ -312,8 +321,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeProteinMatch(String key) throws SQLException, IOException {
+    public void removeProteinMatch(String key) throws SQLException, IOException, InterruptedException {
         objectsDB.deleteObject(proteinTableName, key);
         for (String proteinParameterTable : proteinParametersTables) {
             objectsDB.deleteObject(proteinParameterTable, key);
@@ -328,8 +338,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removePeptideMatch(String key) throws SQLException, IOException {
+    public void removePeptideMatch(String key) throws SQLException, IOException, InterruptedException {
         objectsDB.deleteObject(peptideTableName, key);
         for (String peptideParameterTable : peptideParametersTables) {
             objectsDB.deleteObject(peptideParameterTable, key);
@@ -344,8 +355,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeSpectrumMatch(String key) throws SQLException, IOException {
+    public void removeSpectrumMatch(String key) throws SQLException, IOException, InterruptedException {
         for (String psmTable : psmTables) {
             objectsDB.deleteObject(psmTable, key);
         }
@@ -363,8 +375,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeAssumptions(String key) throws SQLException, IOException {
+    public void removeAssumptions(String key) throws SQLException, IOException, InterruptedException {
         for (String table : assumptionsTables) {
             objectsDB.deleteObject(table, key);
         }
@@ -379,8 +392,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeRawAssumptions(String key) throws SQLException, IOException {
+    public void removeRawAssumptions(String key) throws SQLException, IOException, InterruptedException {
         for (String table : rawAssumptionsTables) {
             objectsDB.deleteObject(table, key);
         }

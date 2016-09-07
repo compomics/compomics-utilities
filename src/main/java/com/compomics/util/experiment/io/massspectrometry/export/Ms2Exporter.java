@@ -32,8 +32,10 @@ public class Ms2Exporter {
      * 2, etc. Required in order to map back to the mgf.
      *
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static void mgfToMs2(File mgfFile, File destinationFile, boolean resetScanNumbers) throws IOException {
+    public static void mgfToMs2(File mgfFile, File destinationFile, boolean resetScanNumbers) throws IOException, InterruptedException {
 
         FileWriter fileWriter = new FileWriter(destinationFile);
 
@@ -90,8 +92,10 @@ public class Ms2Exporter {
      * the file (needed when converting mgf to ms2)
      *
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
-    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, Integer defaultScanNumber) throws IOException {
+    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, Integer defaultScanNumber) throws IOException, InterruptedException {
 
         String scanNumber = spectrum.getScanNumber(); //@TODO: parse scan ranges?
 

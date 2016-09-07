@@ -34,7 +34,7 @@ public class PeptideMapping {
     public static void main(String[] args){
         if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))){
             System.err.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-            System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-filewwwwwwaeaaeaeanrt]");
+            System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
             System.err.println();
             System.err.println("Options are:");
             System.err.println("\t-p\tpeptide mapping");
@@ -48,7 +48,7 @@ public class PeptideMapping {
             System.exit(-1);
         }
         
-        System.err.println("Start reading fasta file");
+        //System.err.println("Start reading fasta file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File sequences = new File(args[1]);
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -75,6 +75,7 @@ public class PeptideMapping {
             }
 
             tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
+            System.err.println("New fragment m/z tolerance: " + tolerance + "Da");
             
             ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
@@ -91,7 +92,7 @@ public class PeptideMapping {
         }
         
         
-        System.err.println("Start indexing proteome");
+        //System.err.println("Start indexing proteome");
         long startTime = System.nanoTime();
         FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences);
         double diffTime = System.nanoTime() - startTime;
@@ -129,7 +130,7 @@ public class PeptideMapping {
             }
             diffTime = System.nanoTime() - startTime;
             System.err.println();
-            System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTime / 1e6) + " milliseconds");
+            System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTime / 1e9) + " seconds");
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
@@ -196,7 +197,7 @@ public class PeptideMapping {
             }
             diffTime = System.nanoTime() - startTime;
             System.err.println();
-            System.err.println("Mapping " + tags.size() + " tags took " + (diffTime / 1e6) + " milliseconds");
+            System.err.println("Mapping " + tags.size() + " tags took " + (diffTime / 1e9) + " seconds");
 
             try {
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");

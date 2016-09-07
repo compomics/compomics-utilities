@@ -29,9 +29,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Random;
+import java.io.*;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
+
 
 
 /**
@@ -40,9 +41,7 @@ import java.util.concurrent.Semaphore;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements PeptideMapper {
-    int cnt = 0;
-    
+public class FMIndex implements PeptideMapper {  
     /**
      * Semaphore for caching.
      */
@@ -700,6 +699,9 @@ public class FMIndex implements PeptideMapper {
         T[0] = '/';                     // adding delimiter at beginning
         T[indexStringLength - 2] = '/'; // adding delimiter at ending
         T[indexStringLength - 1] = '$'; // adding the sentinal
+        
+        System.out.println("Num Proteins: " + numProteins);
+        System.out.println("Num AA: " + (indexStringLength - numProteins - 2));
 
         boundaries = new int[numProteins + 1];
         accessions = new String[numProteins];

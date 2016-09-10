@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.preferences.IdentificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
@@ -19,7 +18,7 @@ public class PrecursorMap {
      */
     double precursorTolerance;
     /**
-     * Boolean indicating wheter the precursor mass tolerance is in ppm.
+     * Boolean indicating whether the precursor mass tolerance is in ppm.
      */
     boolean ppm;
     /**
@@ -35,7 +34,7 @@ public class PrecursorMap {
      */
     private HashMap<Integer, HashMap<Double, ArrayList<PrecursorMatch>>> precursorsMap = new HashMap<Integer, HashMap<Double, ArrayList<PrecursorMatch>>>();
     /**
-     * A mass anchor to determine the bins in ppm
+     * A mass anchor to determine the bins in ppm.
      */
     private double massAnchor = 1000;
     /**
@@ -43,7 +42,7 @@ public class PrecursorMap {
      */
     private double massAnchorLog;
     /**
-     * The scaling factor used for the bins in ppm
+     * The scaling factor used for the bins in ppm.
      */
     private double scalingFactor;
     /**
@@ -57,7 +56,7 @@ public class PrecursorMap {
 
     /**
      * Builds a precursor map.
-     * 
+     *
      * @param precursors map of the precursors indexed by spectrum title
      * @param precursorTolerance the precursor mass tolerance to use
      * @param ppm boolean indicating whether the tolerance is in ppm
@@ -102,10 +101,10 @@ public class PrecursorMap {
 
     /**
      * Returns the bin corresponding to the given m/z and charge.
-     * 
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBin(double mz, int chargeValue) {
@@ -117,11 +116,12 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given m/z and charge with absolute tolerance in Da.
-     * 
+     * Returns the bin corresponding to the given m/z and charge with absolute
+     * tolerance in Da.
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBinAbsolute(double mz, int chargeValue) {
@@ -130,11 +130,12 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given m/z and charge with relative tolerance in ppm.
-     * 
+     * Returns the bin corresponding to the given m/z and charge with relative
+     * tolerance in ppm.
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBinPpm(double mz, int chargeValue) {
@@ -144,10 +145,10 @@ public class PrecursorMap {
 
     /**
      * Returns the bin corresponding to the given mass.
-     * 
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBin(double mass) {
@@ -159,11 +160,12 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given mass with absolute tolerance in Da.
-     * 
+     * Returns the bin corresponding to the given mass with absolute tolerance
+     * in Da.
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBinAbsolute(double mass) {
@@ -172,11 +174,12 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given mass with relative tolerance in ppm.
-     * 
+     * Returns the bin corresponding to the given mass with relative tolerance
+     * in ppm.
+     *
      * @param mz the m/z
      * @param chargeValue the charge
-     * 
+     *
      * @return the bin
      */
     private Integer getBinPpm(double mass) {
@@ -186,9 +189,9 @@ public class PrecursorMap {
 
     /**
      * Returns a list containing the precursors matching the given mass.
-     * 
+     *
      * @param referenceMass a mass to query
-     * 
+     *
      * @return a list containing the precursors matching the given mass
      */
     public ArrayList<PrecursorMatch> getMatchingSpectra(double referenceMass) {
@@ -246,18 +249,19 @@ public class PrecursorMap {
 
     /**
      * Returns the bins in the map.
-     * 
+     *
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
         return new ArrayList<Integer>(precursorsMap.keySet());
     }
-    
+
     /**
-     * Returns the precursors at the given bin indexed by mass. Null if none found.
-     * 
+     * Returns the precursors at the given bin indexed by mass. Null if none
+     * found.
+     *
      * @param bin the bin number
-     * 
+     *
      * @return the precursors at the given bin
      */
     public HashMap<Double, ArrayList<PrecursorMatch>> getPrecursorsInBin(int bin) {
@@ -266,9 +270,9 @@ public class PrecursorMap {
 
     /**
      * Returns the mass associated with the given bin, the middle of the bin.
-     * 
+     *
      * @param bin the bin number
-     * 
+     *
      * @return the mass associated with the given bin
      */
     public Double getMass(int bin) {
@@ -280,26 +284,27 @@ public class PrecursorMap {
     }
 
     /**
-     * Convenience class storing the precursor, corresponding spectrum title, and inferred charge.
+     * Convenience class storing the precursor, corresponding spectrum title,
+     * and inferred charge.
      */
     public class PrecursorMatch {
 
         /**
-         * The precursor
+         * The precursor.
          */
         public final Precursor precursor;
         /**
-         * The spectrum title
+         * The spectrum title.
          */
         public final String spectrumTitle;
         /**
-         * The inferred charge
+         * The inferred charge.
          */
         public final int charge;
 
         /**
          * Constructor.
-         * 
+         *
          * @param precursor the precursor
          * @param spectrumTitle the spectrum title
          * @param charge the inferred charge
@@ -310,5 +315,4 @@ public class PrecursorMap {
             this.charge = charge;
         }
     }
-
 }

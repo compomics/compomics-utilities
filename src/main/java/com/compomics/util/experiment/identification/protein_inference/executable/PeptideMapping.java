@@ -74,7 +74,7 @@ public class PeptideMapping {
             }
 
             tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
-            System.err.println("New fragment m/z tolerance: " + tolerance + "Da");
+            System.err.println("New fragment m/z tolerance: " + tolerance + " Da");
             ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
@@ -85,7 +85,6 @@ public class PeptideMapping {
             sequenceMatchingPreferences = new SequenceMatchingPreferences();
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
-
         }
         
         System.err.println("Start indexing proteome");

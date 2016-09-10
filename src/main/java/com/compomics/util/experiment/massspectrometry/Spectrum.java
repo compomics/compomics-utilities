@@ -64,6 +64,11 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double[] mzValuesAsArray = null;
     /**
+     * The peak list as an array list formatted as text, e.g. [[303.17334
+     * 3181.14],[318.14542 37971.93], ... ].
+     */
+    private String peakListAsString = null;
+    /**
      * Boolean indicating whether the mzValuesAsArray is sorted.
      */
     private Boolean mzOrdered = false;
@@ -75,7 +80,7 @@ public abstract class Spectrum extends ExperimentObject {
      * The intensity values as array normalized against the most intense peak.
      * Null until set by the getter.
      */
-    private double[] intensityValuesNormaizedAsArray = null;
+    private double[] intensityValuesNormaizedAsArray = null; // @TODO: correct typo
     /**
      * The mz and intensity values as array. Null until set by the getter.
      */
@@ -218,6 +223,7 @@ public abstract class Spectrum extends ExperimentObject {
             peakList = new HashMap<Double, Peak>();
         }
         this.peakList.put(aPeak.mz, aPeak);
+        resetSavedData();
     }
 
     /**
@@ -237,6 +243,8 @@ public abstract class Spectrum extends ExperimentObject {
             double mz = p.mz;
             peakList.put(mz, p);
         }
+        
+        resetSavedData();
     }
 
     /**
@@ -291,6 +299,50 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public synchronized void setPeakList(HashMap<Double, Peak> peakList) {
         this.peakList = peakList;
+        resetSavedData();
+    }
+
+    /**
+     * Returns the peak list as an array list formatted as text, e.g.
+     * [[303.17334 3181.14],[318.14542 37971.93], ... ].
+     *
+     * @return the peak list as an array list formatted as text
+     *
+     * @throws java.lang.InterruptedException thrown if the thread is
+     * interrupted
+     */
+    public String getPeakListAsString() throws InterruptedException {
+
+        if (peakListAsString == null) {
+
+            double[] mzValues = getOrderedMzValues();
+            mutex.acquire();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+
+            for (double mzValue : mzValues) {
+
+                if (sb.length() > 1) {
+                    sb.append(",");
+                }
+
+                Peak currentPeak = peakList.get(mzValue);
+
+                sb.append("[");
+                sb.append(currentPeak.mz);
+                sb.append(",");
+                sb.append(currentPeak.intensity);
+                sb.append("]");
+            }
+
+            sb.append("]");
+
+            peakListAsString = sb.toString();
+            mutex.release();
+        }
+
+        return peakListAsString;
     }
 
     /**
@@ -355,7 +407,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @return a list of the m/z values sorted in ascending order
      *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * @throws java.lang.InterruptedException thrown if the thread is
      * interrupted
      */
     public double[] getOrderedMzValues() throws InterruptedException {
@@ -390,6 +442,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public synchronized void setIntensityValuesAsArray(double[] intensityValuesAsArray) {
         this.intensityValuesAsArray = intensityValuesAsArray;
+        removePeakList();
     }
 
     /**
@@ -690,6 +743,7 @@ public abstract class Spectrum extends ExperimentObject {
 
             result.put(peak.mz - correction, new Peak(peak.mz - correction, peak.intensity));
         }
+
         return result;
     }
 
@@ -781,5 +835,24 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public boolean isEmpty() {
         return getNPeaks() == 0;
+    }
+    
+    /**
+     * Resets all the saved values to null. Used after altering the peak data.
+     */
+    private void resetSavedData() {
+        jFreePeakList = null;
+        peakListAsString = null;
+        mzValuesAsArray = null;
+        mzOrdered = null;
+        intensityValuesAsArray = null;
+        intensityValuesNormaizedAsArray = null;
+        mzAndIntensityAsArray = null;
+        totalIntensity = null;
+        maxIntensity = null;
+        maxMz = null;
+        minMz = null;
+        intensityPeakMap = null;
+        mzOrdered = false;
     }
 }

@@ -40,7 +40,8 @@ public class PrecursorMap {
     /**
      * The log of the m/z anchor.
      */
-    private static final double mzAnchorLog = FastMath.log(mzAnchor);;
+    private static final double mzAnchorLog = FastMath.log(mzAnchor);
+    ;
     /**
      * The scaling factor used for the bins in ppm
      */
@@ -56,7 +57,8 @@ public class PrecursorMap {
 
     /**
      * Builds a precursor map.
-     * 
+     * TODO: check only one/two bins when possible
+     *
      * @param precursors map of the precursors indexed by spectrum title
      * @param precursorTolerance the precursor mass tolerance to use
      * @param ppm boolean indicating whether the tolerance is in ppm
@@ -69,34 +71,34 @@ public class PrecursorMap {
         }
         for (String spectrumTitle : precursors.keySet()) {
             Precursor precursor = precursors.get(spectrumTitle);
-                PrecursorWithTitle spectrumTitleWithCharge = new PrecursorWithTitle(precursor, spectrumTitle);
-                double mz = precursor.getMz();
-                if (minMz == null || mz < minMz) {
-                    minMz = mz;
-                }
-                if (maxMz == null || mz > maxMz) {
-                    maxMz = mz;
-                }
-                Integer bin = getBin(mz);
-                HashMap<Double, ArrayList<PrecursorWithTitle>> precursorsInBin = precursorsMap.get(bin);
-                if (precursorsInBin == null) {
-                    precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>();
-                    precursorsMap.put(bin, precursorsInBin);
-                }
-                ArrayList<PrecursorWithTitle> precursorsAtMz = precursorsInBin.get(mz);
-                if (precursorsAtMz == null) {
-                    precursorsAtMz = new ArrayList<PrecursorWithTitle>(1);
-                    precursorsInBin.put(mz, precursorsAtMz);
-                }
-                precursorsAtMz.add(spectrumTitleWithCharge);
+            PrecursorWithTitle spectrumTitleWithCharge = new PrecursorWithTitle(precursor, spectrumTitle);
+            double mz = precursor.getMz();
+            if (minMz == null || mz < minMz) {
+                minMz = mz;
             }
+            if (maxMz == null || mz > maxMz) {
+                maxMz = mz;
+            }
+            Integer bin = getBin(mz);
+            HashMap<Double, ArrayList<PrecursorWithTitle>> precursorsInBin = precursorsMap.get(bin);
+            if (precursorsInBin == null) {
+                precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>();
+                precursorsMap.put(bin, precursorsInBin);
+            }
+            ArrayList<PrecursorWithTitle> precursorsAtMz = precursorsInBin.get(mz);
+            if (precursorsAtMz == null) {
+                precursorsAtMz = new ArrayList<PrecursorWithTitle>(1);
+                precursorsInBin.put(mz, precursorsAtMz);
+            }
+            precursorsAtMz.add(spectrumTitleWithCharge);
+        }
     }
 
     /**
      * Returns the bin corresponding to the given m/z.
-     * 
+     *
      * @param mz the m/z
-     * 
+     *
      * @return the bin
      */
     private Integer getBin(double mz) {
@@ -108,10 +110,11 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given m/z with absolute tolerance in Th.
-     * 
+     * Returns the bin corresponding to the given m/z with absolute tolerance in
+     * Th.
+     *
      * @param mz the m/z
-     * 
+     *
      * @return the bin
      */
     private Integer getBinAbsolute(double mz) {
@@ -120,10 +123,11 @@ public class PrecursorMap {
     }
 
     /**
-     * Returns the bin corresponding to the given mz with relative tolerance in ppm.
-     * 
+     * Returns the bin corresponding to the given mz with relative tolerance in
+     * ppm.
+     *
      * @param mz the m/z
-     * 
+     *
      * @return the bin
      */
     private Integer getBinPpm(double mz) {
@@ -133,9 +137,9 @@ public class PrecursorMap {
 
     /**
      * Returns a list containing the precursors matching the given m/z.
-     * 
+     *
      * @param referenceMz a mz to query
-     * 
+     *
      * @return a list containing the precursors matching the given m/z
      */
     public ArrayList<PrecursorWithTitle> getMatchingSpectra(double referenceMz) {
@@ -193,18 +197,19 @@ public class PrecursorMap {
 
     /**
      * Returns the bins in the map.
-     * 
+     *
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
         return new ArrayList<Integer>(precursorsMap.keySet());
     }
-    
+
     /**
-     * Returns the precursors at the given bin indexed by mass. Null if none found.
-     * 
+     * Returns the precursors at the given bin indexed by mass. Null if none
+     * found.
+     *
      * @param bin the bin number
-     * 
+     *
      * @return the precursors at the given bin
      */
     public HashMap<Double, ArrayList<PrecursorWithTitle>> getPrecursorsInBin(int bin) {
@@ -213,9 +218,9 @@ public class PrecursorMap {
 
     /**
      * Returns the mass associated with the given bin, the middle of the bin.
-     * 
+     *
      * @param bin the bin number
-     * 
+     *
      * @return the mass associated with the given bin
      */
     public Double getMass(int bin) {
@@ -242,7 +247,7 @@ public class PrecursorMap {
 
         /**
          * Constructor.
-         * 
+         *
          * @param precursor the precursor
          * @param spectrumTitle the spectrum title
          */

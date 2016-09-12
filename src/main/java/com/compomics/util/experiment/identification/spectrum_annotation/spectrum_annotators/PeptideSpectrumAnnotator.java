@@ -72,6 +72,12 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 || !this.peptide.getKey().equals(peptide.getKey())
                 || !this.peptide.sameModificationsAs(peptide)
                 || this.precursorCharge != precursorCharge) {
+            
+            // Clear cache
+            spectrumAnnotation.clear();
+            unmatchedIons.clear();
+            
+            // Set new values
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
             if (possibleFragmentIons == null) {
@@ -82,8 +88,6 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 updateMassShifts();
             }
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
         }
     }
 
@@ -141,12 +145,11 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
+        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
         if (spectrum != null) {
             setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
-
         setPeptide(peptide, possiblePeptideFragments, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
-        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 

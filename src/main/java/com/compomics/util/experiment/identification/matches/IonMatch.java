@@ -76,13 +76,9 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        if (charge != null && charge.value != 0) {
-            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
-            double measuredMz = peak.mz;
-            return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
-        } else {
-            return Double.MAX_VALUE;
-        }
+        double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+        double measuredMz = peak.mz;
+        return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
 
     /**
@@ -94,14 +90,10 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError(int minIsotope, int maxIsotope) {
-        if (charge != null && charge.value != 0) {
-            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
-            double measuredMz = peak.mz;
-            measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
-            return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
-        } else {
-            return Double.MAX_VALUE;
-        }
+        double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+        double measuredMz = peak.mz;
+        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
+        return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
 
     /**
@@ -176,7 +168,8 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the key for the ion match uniquely representing a peak annotation.
+     * Returns the key for the ion match uniquely representing a peak
+     * annotation.
      *
      * @param ion the ion matched
      * @param charge the charge
@@ -188,8 +181,9 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the key for the ion match uniquely representing a peak annotation.
-     * If a cache is given it will be used to store keys, ignored if null.
+     * Returns the key for the ion match uniquely representing a peak
+     * annotation. If a cache is given it will be used to store keys, ignored if
+     * null.
      *
      * @param ion the ion matched
      * @param charge the charge
@@ -221,13 +215,13 @@ public class IonMatch extends ExperimentObject {
 
     /**
      * Returns the key based on the different attributes of a match.
-     * 
+     *
      * @param ionTypeIndex the index of the ion type
      * @param ionSubType the index of the ion subtype
      * @param fragmentIonNumber the number of the ion, 0 if none
      * @param neutralLossesAsString the neutral losses as a string
      * @param charge the charge
-     * 
+     *
      * @return the key for the ion match
      */
     public static String getMatchKey(int ionTypeIndex, int ionSubType, int fragmentIonNumber, String neutralLossesAsString, int charge) {

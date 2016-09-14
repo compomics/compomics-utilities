@@ -73,10 +73,6 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 || !this.peptide.sameModificationsAs(peptide)
                 || this.precursorCharge != precursorCharge) {
             
-            // Clear cache
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
-            
             // Set new values
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
@@ -180,14 +176,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
                                 for (int charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
-                                        String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
-                                        boolean matchFound = false;
-                                        boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                                        if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                            matchFound = matchInSpectrum(ion, charge);
-                                        }
-                                        if (alreadyAnnotated || matchFound) {
-                                            result.add(spectrumAnnotation.get(key));
+                                        IonMatch ionMatch = matchInSpectrum(ion, charge);
+                                        if (ionMatch != null) {
+                                            result.add(ionMatch);
                                         }
                                     }
                                 }

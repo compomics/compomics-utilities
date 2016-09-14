@@ -53,11 +53,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      */
     public void setTag(Tag newTag, int precursorCharge) {
         if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingPreferences.defaultStringMatching) || this.precursorCharge != precursorCharge) {
-            
-            // Clear caches
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
-            
+
             // Set new values
             this.tag = newTag;
             this.precursorCharge = precursorCharge;
@@ -262,14 +258,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
                                     for (int charge : tempCharges) {
                                         if (chargeValidated(ion, charge, precursorCharge)) {
-                                            String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
-                                            boolean matchFound = false;
-                                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                                matchFound = matchInSpectrum(ion, charge);
-                                            }
-                                            if (alreadyAnnotated || matchFound) {
-                                                result.add(spectrumAnnotation.get(key));
+                                            IonMatch ionMatch = matchInSpectrum(ion, charge);
+                                            if (ionMatch != null) {
+                                                result.add(ionMatch);
                                             }
                                         }
                                     }

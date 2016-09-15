@@ -94,15 +94,16 @@ public class MapMutex<K> {
         // Add semaphore to map if none is present and acquire
         if (semaphore == null) {
             mutex.acquire();
+            semaphore = semaphoreMap.get(key);
             if (semaphore == null) {
+                writing = true;
                 semaphore = new Semaphore(permits);
                 semaphoreMap.put(key, semaphore);
+                writing = false;
             }
-            semaphore.acquire();
             mutex.release();
-        } else {
-            semaphore.acquire();
         }
+            semaphore.acquire();
     }
 
     /**

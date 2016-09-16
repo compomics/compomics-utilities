@@ -466,10 +466,6 @@ public class Peptide extends ExperimentObject {
                 }
             }
 
-            if (parentProteins.isEmpty()) {
-                int debug = 1;
-            }
-
             Collections.sort(parentProteins);
         }
 

@@ -374,6 +374,7 @@ public class Enzyme extends ExperimentObject {
      * Returns the number of missed cleavages in an amino acid sequence.
      *
      * @param sequence the amino acid sequence as a string.
+     * 
      * @return the number of missed cleavages
      */
     public int getNmissedCleavages(String sequence) {
@@ -395,6 +396,7 @@ public class Enzyme extends ExperimentObject {
      * @param nMissedCleavages the maximum number of missed cleavages
      * @param nMin the minimal size for a peptide
      * @param nMax the maximal size for a peptide
+     * 
      * @return a list of expected peptide sequences
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {

@@ -1004,7 +1004,7 @@ public class Header implements Cloneable, Serializable {
     /**
      * Returns the ID.
      * 
-     * @return 
+     * @return the ID
      */
     public String getID() {
         return this.iID;
@@ -1372,7 +1372,12 @@ public class Header implements Cloneable, Serializable {
         return result.toString();
     }
 
-    @Override
+    /**
+     * This method reports on the entire processed(!) header. To get the raw
+     * header use getRawHeader instead.
+     *
+     * @return String with the full header.
+     */
     public String toString() {
         return toString("");
     }

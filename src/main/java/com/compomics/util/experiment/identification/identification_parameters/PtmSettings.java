@@ -55,15 +55,15 @@ public class PtmSettings implements Serializable {
     /**
      * Constructor creating a new Modification profile based on the given one.
      * 
-     * @param modificationProfile the modification profile
+     * @param ptmSettings the modification profile
      */
-    public PtmSettings(PtmSettings modificationProfile) {
-        fixedModifications = modificationProfile.getFixedModifications();
-        variableModifications = modificationProfile.getVariableModifications();
-        refinementFixedModifications = modificationProfile.getRefinementFixedModifications();
-        refinementVariableModifications = modificationProfile.getRefinementVariableModifications();
-        colors = modificationProfile.getColors();
-        backUp = modificationProfile.getBackedUpPtmsMap();
+    public PtmSettings(PtmSettings ptmSettings) {
+        fixedModifications = ptmSettings.getFixedModifications();
+        variableModifications = ptmSettings.getVariableModifications();
+        refinementFixedModifications = ptmSettings.getRefinementFixedModifications();
+        refinementVariableModifications = ptmSettings.getRefinementVariableModifications();
+        colors = ptmSettings.getColors();
+        backUp = ptmSettings.getBackedUpPtmsMap();
     }
 
     /**

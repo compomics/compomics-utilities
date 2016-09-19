@@ -1,9 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
@@ -18,10 +16,6 @@ import javax.swing.SwingConstants;
 public class PNovoSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The search parameters.
-     */
-    private SearchParameters searchParameters;
-    /**
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
@@ -34,16 +28,15 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
      * Creates a new PNovoSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
-     * @param searchParameters the search parameters
+     * @param pNovoParameters the pnovo parameters
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public PNovoSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public PNovoSettingsDialog(java.awt.Frame parent, PNovoParameters pNovoParameters, boolean editable) {
         super(parent, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(pNovoParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
@@ -53,16 +46,15 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
      *
      * @param owner the dialog owner
      * @param parent the parent frame
-     * @param searchParameters the search parameters
+     * @param pNovoParameters the pnovo parameters
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public PNovoSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public PNovoSettingsDialog(Dialog owner, java.awt.Frame parent, PNovoParameters pNovoParameters, boolean editable) {
         super(owner, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(pNovoParameters);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
@@ -85,11 +77,9 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
     /**
      * Populates the GUI using the given settings.
      * 
-     * @param searchParameters the parameters to display
+     * @param pNovoParameters the parameters to display
      */
-    private void populateGUI(SearchParameters searchParameters) {
-
-        PNovoParameters pNovoParameters = (PNovoParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex());
+    private void populateGUI(PNovoParameters pNovoParameters) {
 
         minPrecursorMassTextField.setText(String.valueOf(pNovoParameters.getLowerPrecursorMass()));
         maxPrecursorMassTextField.setText(String.valueOf(pNovoParameters.getUpperPrecursorMass()));
@@ -382,28 +372,6 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
 
         okButton.setEnabled(valid);
         return valid;
-    }
-
-    /**
-     * Returns the search parameters as set in the GUI.
-     *
-     * @return the search parameters as set in the GUI
-     */
-    public SearchParameters getSearchParametersFromGUI() {
-
-        SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
-        tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
-        tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
-        tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());
-        tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
-        tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
-
-        PNovoParameters pNovoParameters = getPNovoParameters();
-
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
-
-        return tempSearchParameters;
     }
 
     /**

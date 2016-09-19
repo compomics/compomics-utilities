@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.identification_parameters.t
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
+import com.compomics.util.preferences.DigestionPreferences;
 
 /**
  * The MyriMatch specific parameters.
@@ -102,15 +103,15 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     private String outputFormat = "mzIdentML";
 
     /**
-     * @TODO: parameters not currently supported: 
-     * 
-     * AvgPrecursorMzTolerance: "1.5mz", EstimateSearchTimeOnly: "0", KeepUnadjustedPrecursorMz: "0",
-     * MaxFragmentChargeState: "0", MaxPeptideVariants: "1000000",
-     * MinMatchedFragments: "5", MinResultScore: "9.9999999999999995e-008",
-     * NumMzFidelityClasses: "3", PreferIntenseComplements: "1",
-     * ProteinSamplingTime: "15", ResultsPerBatch: "200000"
+     * @TODO: parameters not currently supported:
+     *
+     * AvgPrecursorMzTolerance: "1.5mz", EstimateSearchTimeOnly: "0",
+     * KeepUnadjustedPrecursorMz: "0", MaxFragmentChargeState: "0",
+     * MaxPeptideVariants: "1000000", MinMatchedFragments: "5", MinResultScore:
+     * "9.9999999999999995e-008", NumMzFidelityClasses: "3",
+     * PreferIntenseComplements: "1", ProteinSamplingTime: "15",
+     * ResultsPerBatch: "200000"
      */
-
     /**
      * Constructor.
      */
@@ -559,59 +560,62 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Tries to map the utilities enzyme to the enzymes supported by MyriMatch.
+     * Tries to map the utilities enzyme in the digestion preferences to the
+     * enzymes supported by MyriMatch.
      *
-     * @param enzyme the utilities enzyme
+     * @param digestionPreferences the digestion preferences
+     *
      * @return the MyriMatch enzyme as a string, or null of no mapping is found
      */
-    public static String enzymeMapping(Enzyme enzyme) {
+    public static String enzymeMapping(DigestionPreferences digestionPreferences) {
 
-        String myriMatchEnzymeAsString;
-
-        String enzymeName = enzyme.getName();
-        if (enzyme.isUnspecific()) { // "No Enzyme"  or "Unspecific"
-            myriMatchEnzymeAsString = "unspecific cleavage";
-        } else if (enzymeName.equalsIgnoreCase("Trypsin")
-                || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
-            myriMatchEnzymeAsString = "Trypsin";
-        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")
-                || enzymeName.equalsIgnoreCase("Chymotrypsin, no P rule (FYWL)") // not strictly correct, but better than no support...
-                || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
-            myriMatchEnzymeAsString = "Chymotrypsin";
-        } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
-            myriMatchEnzymeAsString = "Lys-C/P";
-        } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
-                || enzymeName.equalsIgnoreCase("Semi-Glu-C (DE)")
-                || enzymeName.equalsIgnoreCase("Glu-C") // again not strictly, but really the same enzyme...
-                || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
-            myriMatchEnzymeAsString = "glutamyl endopeptidase";
-        } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
-            myriMatchEnzymeAsString = "Arg-C";
-        } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
-            myriMatchEnzymeAsString = "Asp-N";
-        } else if (enzymeName.equalsIgnoreCase("Top-Down")
-                || enzymeName.equalsIgnoreCase("Whole Protein")) {
-            myriMatchEnzymeAsString = "no cleavage";
-        } else if (enzymeName.equalsIgnoreCase("CNBr")) {
-            myriMatchEnzymeAsString = "CNBr";
-        } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
-            myriMatchEnzymeAsString = "Formic_acid";
-        } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
-            myriMatchEnzymeAsString = "Lys-C";
-        } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
-            myriMatchEnzymeAsString = "Pepsin A";
-        } else if (enzymeName.equalsIgnoreCase("Trypsin + Chymotrypsin (FYWLKR)")) {
-            myriMatchEnzymeAsString = "TrypChymo";
-        } else if (enzymeName.equalsIgnoreCase("Trypsin, no P rule")) {
-            myriMatchEnzymeAsString = "Trypsin/P";
-        } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
-            myriMatchEnzymeAsString = "Asp-N";
-        } else {
-            // use custum cleavage format
-            myriMatchEnzymeAsString = enzyme.getMyriMatchFormat();
+        // Try to map to one of the default enzymes
+        if (digestionPreferences.getEnzymes().size() == 1) {
+            Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
+            String enzymeName = enzyme.getName();
+            DigestionPreferences.Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+            if (specificity == DigestionPreferences.Specificity.notSpecific) {
+                return "unspecific cleavage";
+            }
+            if (enzymeName.equalsIgnoreCase("Trypsin")
+                    || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
+                return "Trypsin";
+            } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")
+                    || enzymeName.equalsIgnoreCase("Chymotrypsin, no P rule (FYWL)") // not strictly correct, but better than no support...
+                    || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
+                return "Chymotrypsin";
+            } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
+                return "Lys-C/P";
+            } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
+                    || enzymeName.equalsIgnoreCase("Semi-Glu-C (DE)")
+                    || enzymeName.equalsIgnoreCase("Glu-C") // again not strictly, but really the same enzyme...
+                    || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
+                return "glutamyl endopeptidase";
+            } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
+                return "Arg-C";
+            } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
+                return "Asp-N";
+            } else if (enzymeName.equalsIgnoreCase("Top-Down")
+                    || enzymeName.equalsIgnoreCase("Whole Protein")) {
+                return "no cleavage";
+            } else if (enzymeName.equalsIgnoreCase("CNBr")) {
+                return "CNBr";
+            } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
+                return "Formic_acid";
+            } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
+                return "Lys-C";
+            } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
+                return "Pepsin A";
+            } else if (enzymeName.equalsIgnoreCase("Trypsin + Chymotrypsin (FYWLKR)")) {
+                return "TrypChymo";
+            } else if (enzymeName.equalsIgnoreCase("Trypsin, no P rule")) {
+                return "Trypsin/P";
+            } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
+                return "Asp-N";
+            }
         }
 
-        // enzymes not supported: Asp-N + Glu-C
-        return myriMatchEnzymeAsString;
+        // Make a custom cleavage
+        return digestionPreferences.getMyriMatchFormat();
     }
 }

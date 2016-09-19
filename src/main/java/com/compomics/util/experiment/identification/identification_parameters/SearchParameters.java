@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
@@ -18,11 +19,13 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.DummyParameters;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.MarshallableParameter;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,6 +68,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
     };
     /**
+     * Convenience array for forward ion type selection.
+     */
+    public static final String[] implementedForwardIons = {"a", "b", "c"};
+    /**
+     * Convenience array for rewind ion type selection.
+     */
+    public static final String[] implementedRewindIons = {"x", "y", "z"};
+    /**
      * The precursor accuracy type. Default is ppm.
      */
     private MassAccuracyType precursorAccuracyType = MassAccuracyType.PPM;
@@ -91,12 +102,20 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     private PtmSettings ptmSettings = new PtmSettings();
     /**
      * The enzyme used for digestion.
+     *
+     * @deprecated use the Digestion preferences instead.
      */
     private Enzyme enzyme;
     /**
      * The allowed number of missed cleavages.
+     *
+     * @deprecated use the Digestion preferences instead.
      */
     private Integer nMissedCleavages = 2;
+    /**
+     * The digestion preferences.
+     */
+    private DigestionPreferences digestionPreferences;
     /**
      * The sequence database file used for identification.
      */
@@ -110,16 +129,30 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The list of fraction molecular weights. The key is the fraction file
      * path.
+     *
+     * @deprecated moved to the FractionSettings
      */
     private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<String, XYDataPoint>();
     /**
-     * The first kind of ions searched for (typically a, b or c).
+     * The forward ions to consider (a, b or c).
+     *
+     * @deprecated use the list allowing multiple ions instead.
      */
     private Integer forwardIon = PeptideFragmentIon.B_ION;
     /**
-     * The second kind of ions searched for (typically x, y or z).
+     * The forward ions to consider (a, b or c).
+     */
+    private ArrayList<Integer> forwardIons;
+    /**
+     * The rewind ions to consider (x, y or z).
+     *
+     * @deprecated use the list allowing multiple ions instead.
      */
     private Integer rewindIon = PeptideFragmentIon.Y_ION;
+    /**
+     * The rewind ions to consider (x, y or z).
+     */
+    private ArrayList<Integer> rewindIons;
     /**
      * The minimal charge searched (in absolute value).
      */
@@ -128,14 +161,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * The minimal charge searched (in absolute value).
      */
     private Charge maxChargeSearched = new Charge(Charge.PLUS, 4);
-    /**
-     * Convenience array for forward ion type selection.
-     */
-    private static String[] forwardIons = {"a", "b", "c"};
-    /**
-     * Convenience array for rewind ion type selection.
-     */
-    private static String[] rewindIons = {"x", "y", "z"};
     /**
      * The minimal isotope correction.
      */
@@ -153,6 +178,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * Constructor.
      */
     public SearchParameters() {
+
+        // Set ions to be searched
+        forwardIons = new ArrayList<Integer>(1);
+        forwardIons.add(PeptideFragmentIon.B_ION);
+        rewindIons = new ArrayList<Integer>(1);
+        rewindIons.add(PeptideFragmentIon.Y_ION);
+
+        // Set advanced parameters
         setDefaultAdvancedSettings();
     }
 
@@ -163,6 +196,24 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * parameters on.
      */
     public SearchParameters(SearchParameters searchParameters) {
+
+        // Set values from the given parameters
+        this.precursorAccuracyType = searchParameters.getPrecursorAccuracyType();
+        this.fragmentAccuracyType = searchParameters.getFragmentAccuracyType();
+        this.precursorTolerance = searchParameters.getPrecursorAccuracy();
+        this.precursorToleranceDalton = searchParameters.getPrecursorAccuracyDalton();
+        this.fragmentIonMZTolerance = searchParameters.getFragmentIonAccuracy();
+        this.ptmSettings = new PtmSettings(searchParameters.getPtmSettings());
+        this.digestionPreferences = searchParameters.getDigestionPreferences();
+        this.fastaFile = searchParameters.getFastaFile();
+        this.forwardIons = new ArrayList<Integer>(searchParameters.getForwardIons());
+        this.rewindIons = new ArrayList<Integer>(searchParameters.getRewindIons());
+        this.minChargeSearched = searchParameters.getMinChargeSearched();
+        this.maxChargeSearched = searchParameters.getMaxChargeSearched();
+        this.minIsotopicCorrection = searchParameters.getMinIsotopicCorrection();
+        this.maxIsotopicCorrection = searchParameters.getMaxIsotopicCorrection();
+
+        // Set advanced parameters
         setDefaultAdvancedSettings(searchParameters);
     }
 
@@ -315,18 +366,43 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * Returns the enzyme used for digestion.
      *
      * @return the enzyme used for digestion
+     *
+     * @deprecated use the PTM Digestion preferences instead.
      */
     public Enzyme getEnzyme() {
         return enzyme;
     }
 
     /**
-     * Sets the enzyme used for digestion.
+     * Returns the digestion preferences.
      *
-     * @param enzyme the enzyme used for digestion
+     * @return the digestion preferences
      */
-    public void setEnzyme(Enzyme enzyme) {
-        this.enzyme = enzyme;
+    public DigestionPreferences getDigestionPreferences() {
+        if (digestionPreferences == null && enzyme != null) { // Backward compatibility check
+            digestionPreferences = new DigestionPreferences();
+            if (!enzyme.isWholeProtein()) {
+                digestionPreferences.addEnzyme(enzyme);
+                if (enzyme.isSemiSpecific()) {
+                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.semiSpecific);
+                } else if (enzyme.isUnspecific()) {
+                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.notSpecific);
+                } else {
+                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.specific);
+                }
+                digestionPreferences.setnMissedCleavages(enzyme.getName(), nMissedCleavages);
+            }
+        }
+        return digestionPreferences;
+    }
+
+    /**
+     * Sets the digestion preferences.
+     *
+     * @param digestionPreferences the digestion preferences
+     */
+    public void setDigestionPreferences(DigestionPreferences digestionPreferences) {
+        this.digestionPreferences = digestionPreferences;
     }
 
     /**
@@ -350,6 +426,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * Returns the allowed number of missed cleavages.
      *
+     * @deprecated use the Digestion preferences instead.
+     *
      * @return the allowed number of missed cleavages
      */
     public Integer getnMissedCleavages() {
@@ -357,76 +435,43 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Sets the allowed number of missed cleavages.
+     * Returns the forward ions searched as list of integers as indexed in the
+     * FragmentIon class.
      *
-     * @param nMissedCleavages the allowed number of missed cleavages
+     * @return the forward ions searched
      */
-    public void setnMissedCleavages(Integer nMissedCleavages) {
-        this.nMissedCleavages = nMissedCleavages;
+    public ArrayList<Integer> getForwardIons() {
+        return forwardIons;
     }
 
     /**
-     * Getter for the first kind of ion searched.
+     * Sets the forward ions searched as list of integers as indexed in the
+     * FragmentIon class.
      *
-     * @return the first kind of ion searched as an integer (see static fields
-     * of the PeptideFragmentIon class)
+     * @param forwardIons the forward ions searched
      */
-    public Integer getIonSearched1() {
-        return forwardIon;
+    public void setForwardIons(ArrayList<Integer> forwardIons) {
+        this.forwardIons = forwardIons;
     }
 
     /**
-     * Setter for the first kind of ion searched, indexed by its single letter
-     * code, for example "a".
+     * Returns the rewind ions searched as list of integers as indexed in the
+     * FragmentIon class.
      *
-     * @param ionSearched1 the first kind of ion searched
+     * @return the rewind ions searched
      */
-    public void setIonSearched1(String ionSearched1) {
-        if (ionSearched1.equals("a")) {
-            this.forwardIon = PeptideFragmentIon.A_ION;
-        } else if (ionSearched1.equals("b")) {
-            this.forwardIon = PeptideFragmentIon.B_ION;
-        } else if (ionSearched1.equals("c")) {
-            this.forwardIon = PeptideFragmentIon.C_ION;
-        } else if (ionSearched1.equals("x")) {
-            this.forwardIon = PeptideFragmentIon.X_ION;
-        } else if (ionSearched1.equals("y")) {
-            this.forwardIon = PeptideFragmentIon.Y_ION;
-        } else if (ionSearched1.equals("z")) {
-            this.forwardIon = PeptideFragmentIon.Z_ION;
-        }
+    public ArrayList<Integer> getRewindIons() {
+        return rewindIons;
     }
 
     /**
-     * Getter for the second kind of ion searched.
+     * Sets the rewind ions searched as list of integers as indexed in the
+     * FragmentIon class.
      *
-     * @return the second kind of ion searched as an integer (see static fields
-     * of the PeptideFragmentIon class)
+     * @param rewindIons the rewind ions searched
      */
-    public Integer getIonSearched2() {
-        return rewindIon;
-    }
-
-    /**
-     * Setter for the second kind of ion searched, indexed by its single letter
-     * code, for example "a".
-     *
-     * @param ionSearched2 the second kind of ion searched
-     */
-    public void setIonSearched2(String ionSearched2) {
-        if (ionSearched2.equals("a")) {
-            this.rewindIon = PeptideFragmentIon.A_ION;
-        } else if (ionSearched2.equals("b")) {
-            this.rewindIon = PeptideFragmentIon.B_ION;
-        } else if (ionSearched2.equals("c")) {
-            this.rewindIon = PeptideFragmentIon.C_ION;
-        } else if (ionSearched2.equals("x")) {
-            this.rewindIon = PeptideFragmentIon.X_ION;
-        } else if (ionSearched2.equals("y")) {
-            this.rewindIon = PeptideFragmentIon.Y_ION;
-        } else if (ionSearched2.equals("z")) {
-            this.rewindIon = PeptideFragmentIon.Z_ION;
-        }
+    public void setRewindIons(ArrayList<Integer> rewindIons) {
+        this.rewindIons = rewindIons;
     }
 
     /**
@@ -435,32 +480,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the list of ion symbols used
      */
     public static String[] getIons() {
-        String[] ions = new String[forwardIons.length + rewindIons.length];
-        for (String forwardIon1 : forwardIons) {
+        String[] ions = new String[implementedForwardIons.length + implementedRewindIons.length];
+        for (String forwardIon1 : implementedForwardIons) {
             ions[ions.length] = forwardIon1;
         }
-        for (String rewindIon1 : rewindIons) {
+        for (String rewindIon1 : implementedRewindIons) {
             ions[ions.length] = rewindIon1;
         }
         return ions;
-    }
-
-    /**
-     * Returns the list of forward ions.
-     *
-     * @return the forwardIons
-     */
-    public static String[] getForwardIons() {
-        return forwardIons;
-    }
-
-    /**
-     * Returns the list of rewind ions.
-     *
-     * @return the rewindIons
-     */
-    public static String[] getRewindIons() {
-        return rewindIons;
     }
 
     /**
@@ -542,27 +569,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Boolean isPrecursorAccuracyTypePpm() {
         return getPrecursorAccuracyType() == MassAccuracyType.PPM;
-    }
-
-    /**
-     * Returns the user provided molecular weight ranges for the fractions. The
-     * key is the fraction file path.
-     *
-     * @return the user provided molecular weight ranges of the fractions
-     */
-    public HashMap<String, XYDataPoint> getFractionMolecularWeightRanges() {
-        return fractionMolecularWeightRanges;
-    }
-
-    /**
-     * Set the user provided molecular weight ranges for the fractions. The key
-     * is the fraction file path.
-     *
-     * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to
-     * set
-     */
-    public void setFractionMolecularWeightRanges(HashMap<String, XYDataPoint> fractionMolecularWeightRanges) {
-        this.fractionMolecularWeightRanges = fractionMolecularWeightRanges;
     }
 
     /**
@@ -805,11 +811,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
 
-        if (enzyme != null) {
-            String name = enzyme.getName();
-            if (!name.equals("Trypsin")) {
-                output.append("Enzyme: ").append(name).append(".").append(newLine);
-            }
+        if (digestionPreferences != null && !defaultParameters.getDigestionPreferences().equals(digestionPreferences)) {
+            output.append(digestionPreferences.getShortDescription());
         }
 
         if (ptmSettings != null) {
@@ -860,11 +863,25 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" ").append(fragmentAccuracyType).append(".").append(newLine);
         }
 
-        if (!forwardIon.equals(defaultParameters.getIonSearched1())
-                || !rewindIon.equals(defaultParameters.getIonSearched2())) {
-            String ion1 = PeptideFragmentIon.getSubTypeAsString(forwardIon);
-            String ion2 = PeptideFragmentIon.getSubTypeAsString(rewindIon);
-            output.append("Ion Types: ").append(ion1).append(" and ").append(ion2).append(".").append(newLine);
+        if (!Util.sameLists(forwardIons, defaultParameters.getForwardIons())
+                || !Util.sameLists(rewindIons, defaultParameters.getRewindIons())) {
+            StringBuilder ions1 = new StringBuilder();
+            Collections.sort(forwardIons);
+            for (Integer ion : forwardIons) {
+                if (ions1.length() > 0) {
+                    ions1.append(", ");
+                }
+                ions1.append(PeptideFragmentIon.getSubTypeAsString(ion));
+            }
+            StringBuilder ions2 = new StringBuilder();
+            Collections.sort(rewindIons);
+            for (Integer ion : rewindIons) {
+                if (ions2.length() > 0) {
+                    ions2.append(", ");
+                }
+                ions2.append(PeptideFragmentIon.getSubTypeAsString(ion));
+            }
+            output.append("Ion Types: ").append(ions1).append(" and ").append(ions2).append(".").append(newLine);
         }
 
         if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
@@ -919,11 +936,18 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         output.append(newLine);
 
-        output.append("ENZYME=");
-        if (enzyme != null) {
-            output.append(enzyme.getName());
+        ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+        for (int i = 0; i < enzymes.size(); i++) {
+            Enzyme enzyme = enzymes.get(i);
+            String enzymeName = enzyme.getName();
+            output.append("ENZYME").append(i).append("=");
+            output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
+            Integer nmc = digestionPreferences.getnMissedCleavages(enzymeName);
+            if (nmc != null) {
+                output.append(", ").append(nmc).append(" missed cleavages");
+            }
+            output.append(newLine);
         }
-        output.append(newLine);
 
         output.append("FIXED_MODIFICATIONS=");
         if (ptmSettings != null) {
@@ -1005,36 +1029,28 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(fragmentIonMZTolerance);
         output.append(newLine);
 
-        output.append("FRAGMENT_ION_TYPE_1=");
-        if (forwardIon == PeptideFragmentIon.A_ION) { // @TODO: what about tag ions?
-            output.append("a");
-        } else if (forwardIon == PeptideFragmentIon.B_ION) {
-            output.append("b");
-        } else if (forwardIon == PeptideFragmentIon.C_ION) {
-            output.append("c");
-        } else if (forwardIon == PeptideFragmentIon.X_ION) {
-            output.append("x");
-        } else if (forwardIon == PeptideFragmentIon.Y_ION) {
-            output.append("y");
-        } else if (forwardIon == PeptideFragmentIon.Z_ION) {
-            output.append("z");
+        output.append("FORWARD_FRAGMENT_ION_TYPE=");
+        StringBuilder ions1 = new StringBuilder();
+        Collections.sort(forwardIons);
+        for (Integer ion : forwardIons) {
+            if (ions1.length() > 0) {
+                ions1.append(", ");
+            }
+            ions1.append(PeptideFragmentIon.getSubTypeAsString(ion));
         }
+        output.append(ions1);
         output.append(newLine);
 
         output.append("FRAGMENT_ION_TYPE_2=");
-        if (rewindIon == PeptideFragmentIon.A_ION) { // @TODO: what about tag ions?
-            output.append("a");
-        } else if (rewindIon == PeptideFragmentIon.B_ION) {
-            output.append("b");
-        } else if (rewindIon == PeptideFragmentIon.C_ION) {
-            output.append("c");
-        } else if (rewindIon == PeptideFragmentIon.X_ION) {
-            output.append("x");
-        } else if (rewindIon == PeptideFragmentIon.Y_ION) {
-            output.append("y");
-        } else if (rewindIon == PeptideFragmentIon.Z_ION) {
-            output.append("z");
+        StringBuilder ions2 = new StringBuilder();
+        Collections.sort(rewindIons);
+        for (Integer ion : rewindIons) {
+            if (ions2.length() > 0) {
+                ions2.append(", ");
+            }
+            ions2.append(PeptideFragmentIon.getSubTypeAsString(ion));
         }
+        output.append(ions2);
         output.append(newLine);
 
         output.append("PRECURSOR_CHARGE_LOWER_BOUND=");
@@ -1086,9 +1102,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (!this.getFragmentIonAccuracy().equals(otherSearchParameters.getFragmentIonAccuracy())) {
             return false;
         }
-        if (!this.getnMissedCleavages().equals(otherSearchParameters.getnMissedCleavages())) {
-            return false;
-        }
         if ((this.getFastaFile() == null && otherSearchParameters.getFastaFile() != null)
                 || (this.getFastaFile() != null && otherSearchParameters.getFastaFile() == null)) {
             return false;
@@ -1098,10 +1111,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 return false;
             }
         }
-        if (!this.getIonSearched1().equals(otherSearchParameters.getIonSearched1())) {
+        if (!this.getDigestionPreferences().isSameAs(otherSearchParameters.getDigestionPreferences())) {
             return false;
         }
-        if (!this.getIonSearched2().equals(otherSearchParameters.getIonSearched2())) {
+        if (!Util.sameLists(forwardIons, otherSearchParameters.getForwardIons())) {
+            return false;
+        }
+        if (!Util.sameLists(rewindIons, otherSearchParameters.getRewindIons())) {
             return false;
         }
         if (!this.getMinChargeSearched().equals(otherSearchParameters.getMinChargeSearched())) {
@@ -1116,24 +1132,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (!this.getMaxIsotopicCorrection().equals(otherSearchParameters.getMaxIsotopicCorrection())) {
             return false;
         }
-        if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() != null)
-                && (!this.getEnzyme().equals(otherSearchParameters.getEnzyme()))) {
-            return false;
-        }
-        if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() == null)
-                || (this.getEnzyme() == null && otherSearchParameters.getEnzyme() != null)) {
-            return false;
-        }
         if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {
-            return false;
-        }
-        if (this.getFractionMolecularWeightRanges() != null && otherSearchParameters.getFractionMolecularWeightRanges() != null) {
-            if (!this.getFractionMolecularWeightRanges().equals(otherSearchParameters.getFractionMolecularWeightRanges())) {
-                return false;
-            }
-        }
-        if ((this.getFractionMolecularWeightRanges() != null && otherSearchParameters.getFractionMolecularWeightRanges() == null)
-                || (this.getFractionMolecularWeightRanges() == null && otherSearchParameters.getFractionMolecularWeightRanges() != null)) {
             return false;
         }
 

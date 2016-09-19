@@ -173,10 +173,14 @@ public class AnnotationSettings implements Serializable {
      */
     public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
         clearIonTypes();
-        addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
-        addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
-        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched1());
-        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched2());
+        for (Integer ion : searchParameters.getForwardIons()) {
+            addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
+            addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
+        }
+        for (Integer ion : searchParameters.getRewindIons()) {
+            addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
+            addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
+        }
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);

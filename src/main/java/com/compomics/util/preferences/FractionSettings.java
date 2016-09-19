@@ -1,6 +1,8 @@
 package com.compomics.util.preferences;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import no.uib.jsparklines.data.XYDataPoint;
 
 /**
  * Settings for the handling of fractions.
@@ -20,6 +22,11 @@ public class FractionSettings implements Serializable {
      * PeptideShaker.
      */
     private Double proteinConfidenceMwPlots = 95.0;
+    /**
+     * The list of fraction molecular weights. The key is the fraction file
+     * path.
+     */
+    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<String, XYDataPoint>();
 
     /**
      * Constructor.
@@ -60,7 +67,37 @@ public class FractionSettings implements Serializable {
         if (!proteinConfidenceMwPlots.equals(fractionSettings.getProteinConfidenceMwPlots())) {
             return false;
         }
+        if (this.getFractionMolecularWeightRanges() != null && fractionSettings.getFractionMolecularWeightRanges() != null) {
+            if (!this.getFractionMolecularWeightRanges().equals(fractionSettings.getFractionMolecularWeightRanges())) {
+                return false;
+            }
+        }
+        if ((this.getFractionMolecularWeightRanges() != null && fractionSettings.getFractionMolecularWeightRanges() == null)
+                || (this.getFractionMolecularWeightRanges() == null && fractionSettings.getFractionMolecularWeightRanges() != null)) {
+            return false;
+        }
         return true;
+    }
+
+    /**
+     * Returns the user provided molecular weight ranges for the fractions. The
+     * key is the fraction file path.
+     *
+     * @return the user provided molecular weight ranges of the fractions
+     */
+    public HashMap<String, XYDataPoint> getFractionMolecularWeightRanges() {
+        return fractionMolecularWeightRanges;
+    }
+
+    /**
+     * Set the user provided molecular weight ranges for the fractions. The key
+     * is the fraction file path.
+     *
+     * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to
+     * set
+     */
+    public void setFractionMolecularWeightRanges(HashMap<String, XYDataPoint> fractionMolecularWeightRanges) {
+        this.fractionMolecularWeightRanges = fractionMolecularWeightRanges;
     }
     
     /**

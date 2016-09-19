@@ -45,11 +45,15 @@ public class Enzyme extends ExperimentObject {
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
+     * 
+     * @deprecated use the digestion preferences instead
      */
     private Boolean isSemiSpecific = false;
     /**
      * If true, the enzyme does not cleave, i.e., the whole protein sequence is
      * used.
+     * 
+     * @deprecated use the digestion preferences instead
      */
     private Boolean isWholeProtein = false;
 
@@ -68,32 +72,8 @@ public class Enzyme extends ExperimentObject {
      * the cleavage
      */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
-        this(id, name, aminoAcidBefore, restrictionBefore, aminoAcidAfter, restrictionAfter, false, false);
-    }
-
-    /**
-     * Constructor for an Enzyme.
-     *
-     * @param id the enzyme id which should be OMSSA compatible.
-     * @param name the name of the enzyme
-     * @param aminoAcidBefore the amino acids which can be found before the
-     * cleavage
-     * @param restrictionBefore the amino acids which should not be found before
-     * the cleavage
-     * @param aminoAcidAfter the amino acids which should be found after the
-     * cleavage
-     * @param restrictionAfter the amino acids which should not be found after
-     * the cleavage
-     * @param isSemiSpecific if true, the enzyme is considered as semi-specific,
-     * meaning that only one end of the resulting peptide has to be enzymatic
-     * @param isWholeProtein if true, the enzyme does not cleave, i.e., the
-     * whole protein sequence is used.
-     */
-    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter, Boolean isSemiSpecific, Boolean isWholeProtein) {
         this.id = id;
         this.name = name;
-        this.isSemiSpecific = isSemiSpecific;
-        this.isWholeProtein = isWholeProtein;
         for (char aa : aminoAcidBefore.toCharArray()) {
             this.aminoAcidBefore.add(aa);
         }
@@ -106,15 +86,6 @@ public class Enzyme extends ExperimentObject {
         for (char aa : restrictionAfter.toCharArray()) {
             this.restrictionAfter.add(aa);
         }
-    }
-
-    /**
-     * Returns true if the enzyme is unspecific, i.e., cleaves at every residue.
-     *
-     * @return true if the enzyme is unspecific
-     */
-    public boolean isUnspecific() {
-        return id == 17;
     }
 
     /**
@@ -133,129 +104,6 @@ public class Enzyme extends ExperimentObject {
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * Get the X!Tandem enzyme format.
-     *
-     * @return the enzyme X!Tandem format as String
-     */
-    public String getXTandemFormat() {
-        String result = "";
-
-        if (name.equals("Asp-N + Glu-C")) { //  special case as this enzyme has two cleavage sites
-            result = "[E]|[X],[X]|[D]"; // @TODO: should be made generic if we stop using omssa enzymes...
-        } else if (isUnspecific()) { // unspecific cleavage
-            result = "[X]|[X]";
-        } else {
-            if (aminoAcidBefore.size() > 0) {
-                result += "[";
-                for (Character aa : aminoAcidBefore) {
-                    result += aa;
-                }
-                result += "]";
-            }
-
-            if (restrictionBefore.size() > 0) {
-                result += "{";
-                for (Character aa : restrictionBefore) {
-                    result += aa;
-                }
-                result += "}";
-            }
-
-            if (aminoAcidBefore.isEmpty() && restrictionBefore.isEmpty()) {
-                result += "[X]";
-            }
-
-            result += "|";
-
-            if (aminoAcidAfter.size() > 0) {
-                result += "[";
-                for (Character aa : aminoAcidAfter) {
-                    result += aa;
-                }
-                result += "]";
-            }
-
-            if (restrictionAfter.size() > 0) {
-                result += "{";
-                for (Character aa : restrictionAfter) {
-                    result += aa;
-                }
-                result += "}";
-            }
-
-            if (aminoAcidAfter.isEmpty() && restrictionAfter.isEmpty()) {
-                result += "[X]";
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Get the MyriMatch enzyme format.
-     *
-     * @return the enzyme MyriMatch format as String
-     */
-    public String getMyriMatchFormat() {
-
-        // example: trypsin corresponds to "[|R|K . . ]"
-        // details: http://www.mc.vanderbilt.edu/root/vumc.php?site=msrc/bioinformatics&doc=27121
-        String result = "[";
-
-        if (aminoAcidBefore.size() > 0) {
-            for (Character aa : aminoAcidBefore) {
-                result += "|" + aa;
-            }
-            result += " ";
-        } else {
-            result += " ";
-        }
-
-        if (restrictionAfter.size() > 0) {
-            String temp = "";
-            for (Character aa : AminoAcid.getUniqueAminoAcids()) {
-                if (!restrictionAfter.contains(aa)) {
-                    if (!temp.isEmpty()) {
-                        temp += "|";
-                    }
-                    temp += aa;
-                }
-            }
-            result += temp + " ";
-        } else {
-            result += ". ";
-        }
-
-        if (restrictionBefore.size() > 0) {
-            String temp = "";
-            for (Character aa : AminoAcid.getUniqueAminoAcids()) {
-                if (!restrictionBefore.contains(aa)) {
-                    if (!temp.isEmpty()) {
-                        temp += "|";
-                    }
-                    temp += aa;
-                }
-            }
-            result += temp + " ";
-        } else {
-            result += ". ";
-        }
-
-        if (aminoAcidAfter.size() > 0) {
-            String temp = "";
-            for (Character aa : aminoAcidAfter) {
-                if (!temp.isEmpty()) {
-                    temp += "|";
-                }
-                temp += aa;
-            }
-            result += temp + "|";
-        }
-
-        return result + "]";
     }
 
     /**
@@ -578,58 +426,8 @@ public class Enzyme extends ExperimentObject {
         if (!this.getRestrictionAfter().equals(otherEnzyme.getRestrictionAfter())) {
             return false;
         }
-        if (this.isSemiSpecific() != otherEnzyme.isSemiSpecific()) {
-            return false;
-        }
-        if (this.isWholeProtein() != otherEnzyme.isWholeProtein()) {
-            return false;
-        }
 
         return true;
-    }
-
-    /**
-     * Set if the enzyme is semi-specific.
-     *
-     * @param isSemiSpecific if the enzyme is semi-specific
-     */
-    public void setSemiSpecific(boolean isSemiSpecific) {
-        this.isSemiSpecific = isSemiSpecific;
-    }
-
-    /**
-     * Returns true if the enzyme is semi-specific.
-     *
-     * @return true if the enzyme is semi-specific
-     */
-    public boolean isSemiSpecific() {
-        if (isSemiSpecific == null) {
-            isSemiSpecific = false;
-        }
-        return isSemiSpecific;
-    }
-
-    /**
-     * Set if the enzyme does not cleave at all, i.e., the whole protein is
-     * used.
-     *
-     * @param isWholeProtein if the enzyme does not cleave at all
-     */
-    public void setWholeProtein(boolean isWholeProtein) {
-        this.isWholeProtein = isWholeProtein;
-    }
-
-    /**
-     * Returns true if the enzyme does not cleave at all, i.e., the whole
-     * protein is used.
-     *
-     * @return true if the enzyme does not cleave at all
-     */
-    public boolean isWholeProtein() {
-        if (isWholeProtein == null) {
-            isWholeProtein = name.equalsIgnoreCase("Whole Protein") || name.equalsIgnoreCase("Top-Down");
-        }
-        return isWholeProtein;
     }
 
     /**
@@ -671,5 +469,45 @@ public class Enzyme extends ExperimentObject {
             }
         }
         return description;
+    }
+
+    /**
+     * Returns true if the enzyme is unspecific, i.e., cleaves at every residue.
+     * 
+     * @deprecated use the digestion preferences instead
+     *
+     * @return true if the enzyme is unspecific
+     */
+    public boolean isUnspecific() {
+        return id == 17;
+    }
+
+    /**
+     * Returns true if the enzyme is semi-specific.
+     * 
+     * @deprecated use the digestion preferences instead
+     *
+     * @return true if the enzyme is semi-specific
+     */
+    public boolean isSemiSpecific() {
+        if (isSemiSpecific == null) {
+            isSemiSpecific = false;
+        }
+        return isSemiSpecific;
+    }
+
+    /**
+     * Returns true if the enzyme does not cleave at all, i.e., the whole
+     * protein is used.
+     * 
+     * @deprecated use the digestion preferences instead
+     *
+     * @return true if the enzyme does not cleave at all
+     */
+    public boolean isWholeProtein() {
+        if (isWholeProtein == null) {
+            isWholeProtein = name.equalsIgnoreCase("Whole Protein") || name.equalsIgnoreCase("Top-Down");
+        }
+        return isWholeProtein;
     }
 }

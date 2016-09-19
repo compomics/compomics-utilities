@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
  *
  * @author Lennart Martens
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class Header implements Cloneable, Serializable {
 
@@ -1000,26 +1001,56 @@ public class Header implements Cloneable, Serializable {
         return result;
     }
 
+    /**
+     * Returns the ID.
+     * 
+     * @return 
+     */
     public String getID() {
         return this.iID;
     }
 
+    /**
+     * Sets the ID. Null if not set.
+     * 
+     * @param aID the ID
+     */
     public void setID(String aID) {
         iID = aID;
     }
 
+    /**
+     * Returns the foreign ID. Null if not set.
+     * 
+     * @return the foreign ID
+     */
     public String getForeignID() {
         return iForeignID;
     }
 
+    /**
+     * Sets the foreign ID.
+     * 
+     * @param aForeignID the foreign ID
+     */
     public void setForeignID(String aForeignID) {
         iForeignID = aForeignID;
     }
 
+    /**
+     * Returns the accession. Null if not set.
+     * 
+     * @return the accession
+     */
     public String getAccession() {
         return iAccession;
     }
 
+    /**
+     * Sets the accession.
+     * 
+     * @param aAccession the accession
+     */
     public void setAccession(String aAccession) {
         iAccession = aAccession;
     }
@@ -1038,90 +1069,200 @@ public class Header implements Cloneable, Serializable {
         }
     }
 
+    /**
+     * Returns the database type as inferred from the header structure.
+     * 
+     * @return the database type
+     */
     public DatabaseType getDatabaseType() {
         return databaseType;
     }
 
+    /**
+     * Sets the database type.
+     * 
+     * @param aDatabaseType the database type
+     */
     public void setDatabaseType(DatabaseType aDatabaseType) {
         databaseType = aDatabaseType;
     }
 
+    /**
+     * Returns the foreign accession. Null if not set.
+     * 
+     * @return the foreign accession
+     */
     public String getForeignAccession() {
         return iForeignAccession;
     }
 
+    /**
+     * Sets the foreign accession.
+     * 
+     * @param aForeignAccession the foreign accession
+     */
     public void setForeignAccession(String aForeignAccession) {
         iForeignAccession = aForeignAccession;
     }
 
+    /**
+     * Returns the description. Null if not set.
+     * 
+     * @return the description
+     */
     public String getDescription() {
         return iDescription;
     }
 
+    /**
+     * Sets the description.
+     * 
+     * @param aDescription the description
+     */
     public void setDescription(String aDescription) {
         iDescription = aDescription;
     }
 
+    /**
+     * Returns the short description. Null if not set.
+     * 
+     * @return the short description
+     */
     public String getDescriptionShort() {
         return iDescriptionShort;
     }
 
+    /**
+     * Sets the short description.
+     * 
+     * @param aDescriptionShort the short description
+     */
     public void setDescriptionShort(String aDescriptionShort) {
         iDescriptionShort = aDescriptionShort;
     }
 
+    /**
+     * Returns the protein name as inferred from the description.
+     * 
+     * @return the protein name
+     */
     public String getDescriptionProteinName() {
         return iDescriptionProteinName;
     }
 
+    /**
+     * Sets the protein name.
+     * 
+     * @param aDescriptionProteinName the protein name
+     */
     public void setDescriptionProteinName(String aDescriptionProteinName) {
         iDescriptionProteinName = aDescriptionProteinName;
     }
 
+    /**
+     * Returns the gene name.
+     * 
+     * @return the gene name
+     */
     public String getGeneName() {
         return iGeneName;
     }
 
+    /**
+     * Set the gene name.
+     * 
+     * @param aGeneName the gene name
+     */
     public void setGeneName(String aGeneName) {
         iGeneName = aGeneName;
     }
 
+    /**
+     * Returns the protein evidence level.
+     * 
+     * @return the protein evidence level
+     */
     public String getProteinEvidence() {
         return iProteinEvidence;
     }
 
+    /**
+     * Sets the protein evidence level.
+     * 
+     * @param aProteinEvidence the protein evidence level
+     */
     public void setProteinEvidence(String aProteinEvidence) {
         iProteinEvidence = aProteinEvidence;
     }
 
+    /**
+     * Returns the taxonomy.
+     * 
+     * @return the taxonomy
+     */
     public String getTaxonomy() {
         return iTaxonomy;
     }
 
+    /**
+     * Sets the taxonomy.
+     * 
+     * @param aTaxonomy the taxonomy
+     */
     public void setTaxonomy(String aTaxonomy) {
         iTaxonomy = aTaxonomy;
     }
 
+    /**
+     * Returns the foreign description.
+     * 
+     * @return the foreign description
+     */
     public String getForeignDescription() {
         return iForeignDescription;
     }
 
+    /**
+     * Sets the foreign description.
+     * 
+     * @param aForeignDescription the foreign description
+     */
     public void setForeignDescription(String aForeignDescription) {
         iForeignDescription = aForeignDescription;
     }
 
+    /**
+     * Returns the rest of the header.
+     * 
+     * @return the rest of the header
+     */
     public String getRest() {
         return iRest;
     }
 
+    /**
+     * Sets the rest of the header.
+     * 
+     * @param aRest the rest of the header
+     */
     public void setRest(String aRest) {
         iRest = aRest;
     }
 
+    /**
+     * Returns the entire header.
+     * 
+     * @return the entire header
+     */
     public String getRawHeader() {
         return iRawHeader;
     }
 
+    /**
+     * Sets the entire header.
+     * 
+     * @param aRawHeader the entire header
+     */
     public void setRawHeader(String aRawHeader) {
         iRawHeader = aRawHeader;
     }
@@ -1231,12 +1372,7 @@ public class Header implements Cloneable, Serializable {
         return result.toString();
     }
 
-    /**
-     * This method reports on the entire processed(!) header. To get the raw
-     * header use getRawHeader instead.
-     *
-     * @return String with the full header.
-     */
+    @Override
     public String toString() {
         return toString("");
     }
@@ -1623,6 +1759,7 @@ public class Header implements Cloneable, Serializable {
      * Return the Uniprot protein evidence type as text.
      *
      * @param type the type of evidence
+     * 
      * @return the protein evidence type as text
      */
     public static String getProteinEvidencAsString(Integer type) {

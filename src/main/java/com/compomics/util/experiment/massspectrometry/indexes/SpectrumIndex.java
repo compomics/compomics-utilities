@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
@@ -19,7 +17,7 @@ public class SpectrumIndex {
      */
     double precursorTolerance;
     /**
-     * Boolean indicating wheter the precursor mass tolerance is in ppm.
+     * Boolean indicating whether the precursor mass tolerance is in ppm.
      */
     boolean ppm;
     /**
@@ -34,9 +32,8 @@ public class SpectrumIndex {
      * The log of the m/z anchor.
      */
     private static final double mzAnchorLog = FastMath.log(mzAnchor);
-    ;
     /**
-     * The scaling factor used for the bins in ppm
+     * The scaling factor used for the bins in ppm.
      */
     private double scalingFactor;
 
@@ -110,8 +107,8 @@ public class SpectrumIndex {
     }
 
     /**
-     * Returns the peaks matching the given m/z.
-     * TODO: check only one/two bins when possible
+     * Returns the peaks matching the given m/z. TODO: check only one/two bins
+     * when possible.
      *
      * @param mz a m/z to query
      *
@@ -204,5 +201,4 @@ public class SpectrumIndex {
             return precursorTolerance * (0.5 + bin);
         }
     }
-
 }

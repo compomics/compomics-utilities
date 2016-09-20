@@ -569,14 +569,16 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      */
     public static String enzymeMapping(DigestionPreferences digestionPreferences) {
 
-        // Try to map to one of the default enzymes
+        // Try to map to one of the default Myrimatch enzymes
+        if (digestionPreferences.isNoEnzymeSpecificity()) {
+            return "unspecific cleavage";
+        }
+        if (digestionPreferences.isWholeProtein()) {
+            return "no cleavage";
+        }
         if (digestionPreferences.getEnzymes().size() == 1) {
             Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
             String enzymeName = enzyme.getName();
-            DigestionPreferences.Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
-            if (specificity == DigestionPreferences.Specificity.notSpecific) {
-                return "unspecific cleavage";
-            }
             if (enzymeName.equalsIgnoreCase("Trypsin")
                     || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
                 return "Trypsin";
@@ -595,9 +597,6 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
                 return "Arg-C";
             } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
                 return "Asp-N";
-            } else if (enzymeName.equalsIgnoreCase("Top-Down")
-                    || enzymeName.equalsIgnoreCase("Whole Protein")) {
-                return "no cleavage";
             } else if (enzymeName.equalsIgnoreCase("CNBr")) {
                 return "CNBr";
             } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {

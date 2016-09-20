@@ -15,15 +15,6 @@ import java.util.HashMap;
 public class DigestionPreferences {
 
     /**
-     * List of enzyme used.
-     */
-    private ArrayList<Enzyme> enzymes;
-    /**
-     * Number of allowed missed cleavages.
-     */
-    private HashMap<String, Integer> nMissedCleavages;
-
-    /**
      * Enum for the different types of enzyme specificity.
      */
     public enum Specificity {
@@ -43,11 +34,7 @@ public class DigestionPreferences {
         /**
          * Specific at the C-terminus only.
          */
-        specificCTermOnly,
-        /**
-         * Not specific.
-         */
-        notSpecific;
+        specificCTermOnly;
 
         @Override
         public String toString() {
@@ -60,20 +47,35 @@ public class DigestionPreferences {
                     return "N-term specific";
                 case specificCTermOnly:
                     return "C-term specific";
-                case notSpecific:
-                    return "Not specific";
                 default:
                     throw new UnsupportedOperationException("Specificity " + this.name() + "Not implemented.");
             }
         }
     }
     /**
+     * Boolean indicating whether the sample was not digested.
+     */
+    private boolean wholeProtein = false;
+    /**
+     * Boolean indicating whether there is no enzymatic specificity.
+     */
+    private boolean noEnzymeSpecificity = false;
+    /**
+     * List of enzyme used.
+     */
+    private ArrayList<Enzyme> enzymes;
+    /**
+     * Number of allowed missed cleavages.
+     */
+    private HashMap<String, Integer> nMissedCleavages;
+    /**
      * The specificity of the enzyme.
      */
     private HashMap<String, Specificity> specificity;
 
     /**
-     * Constructor.
+     * Constructor for default preferences. Trypsin, specific, two missed
+     * cleavages. Use clear() to clear.
      */
     public DigestionPreferences() {
         String enzymeName = "Tryspsin";
@@ -88,6 +90,8 @@ public class DigestionPreferences {
      * @param digestionPreferences the preferences to reuse
      */
     public DigestionPreferences(DigestionPreferences digestionPreferences) {
+        wholeProtein = digestionPreferences.isWholeProtein();
+        noEnzymeSpecificity = digestionPreferences.isNoEnzymeSpecificity();
         for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
             addEnzyme(enzyme);
             String enzymeName = enzyme.getName();
@@ -130,10 +134,12 @@ public class DigestionPreferences {
     }
 
     /**
-     * Clears the enzymes used.
+     * Clears the parameters.
      */
-    public void clearEnzymes() {
+    public void clear() {
         enzymes = null;
+        nMissedCleavages = null;
+        specificity = null;
     }
 
     /**
@@ -193,6 +199,44 @@ public class DigestionPreferences {
     }
 
     /**
+     * Returns a boolean indicating whether no digestion was performed.
+     *
+     * @return a boolean indicating whether no digestion was performed
+     */
+    public boolean isWholeProtein() {
+        return wholeProtein;
+    }
+
+    /**
+     * Sets whether no digestion was performed.
+     *
+     * @param wholeProtein a boolean indicating whether no digestion was
+     * performed
+     */
+    public void setWholeProtein(boolean wholeProtein) {
+        this.wholeProtein = wholeProtein;
+    }
+
+    /**
+     * Indicates whether no enzyme specificity should be used.
+     *
+     * @return a boolean indicating whether no enzyme specificity should be used
+     */
+    public boolean isNoEnzymeSpecificity() {
+        return noEnzymeSpecificity;
+    }
+
+    /**
+     * Sets whether no enzyme specificity should be used.
+     *
+     * @param noEnzymeSpecificity a boolean indicating whether no enzyme
+     * specificity should be used
+     */
+    public void setNoEnzymeSpecificity(boolean noEnzymeSpecificity) {
+        this.noEnzymeSpecificity = noEnzymeSpecificity;
+    }
+
+    /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
@@ -202,16 +246,22 @@ public class DigestionPreferences {
         StringBuilder stringBuilder = new StringBuilder();
         if (!defaultPreferences.isSameAs(this)) {
             String newLine = System.getProperty("line.separator");
-            for (int i = 0; i < enzymes.size(); i++) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(newLine);
-                }
-                Enzyme enzyme = enzymes.get(i);
-                String enzymeName = enzyme.getName();
-                stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
-                Integer nmc = getnMissedCleavages(enzymeName);
-                if (nmc != null) {
-                    stringBuilder.append(" ").append(nmc).append(" missed cleavages");
+            if (wholeProtein) {
+                stringBuilder.append("Whole Protein").append(newLine);
+            } else if (noEnzymeSpecificity) {
+                stringBuilder.append("No Enzyme Specificity").append(newLine);
+            } else {
+                for (int i = 0; i < enzymes.size(); i++) {
+                    if (stringBuilder.length() > 0) {
+                        stringBuilder.append(newLine);
+                    }
+                    Enzyme enzyme = enzymes.get(i);
+                    String enzymeName = enzyme.getName();
+                    stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
+                    Integer nmc = getnMissedCleavages(enzymeName);
+                    if (nmc != null) {
+                        stringBuilder.append(" ").append(nmc).append(" missed cleavages");
+                    }
                 }
             }
         }
@@ -228,6 +278,10 @@ public class DigestionPreferences {
      * same as the given other preferences
      */
     public boolean isSameAs(DigestionPreferences otherDigestionPreferences) {
+        if (otherDigestionPreferences.isNoEnzymeSpecificity() != noEnzymeSpecificity
+                || otherDigestionPreferences.isWholeProtein() != wholeProtein) {
+            return false;
+        }
         ArrayList<Enzyme> otherEnzymes = otherDigestionPreferences.getEnzymes();
         if (enzymes.size() != otherEnzymes.size()) {
             return false;
@@ -261,14 +315,14 @@ public class DigestionPreferences {
 
         StringBuilder result = new StringBuilder();
 
-        for (Enzyme enzyme : enzymes) {
-            if (result.length() > 0) {
-                result.append(",");
-            }
-            Specificity specificity = getSpecificity(enzyme.getName());
-            if (specificity == Specificity.notSpecific) {
-                result.append("[X]|[X]");
-            } else {
+        if (noEnzymeSpecificity) {
+            result.append("[X]|[X]");
+        } else if (!wholeProtein) {
+            for (Enzyme enzyme : enzymes) {
+                if (result.length() > 0) {
+                    result.append(",");
+                }
+                Specificity specificity = getSpecificity(enzyme.getName());
                 if (enzyme.getAminoAcidBefore().size() > 0) {
                     result.append("[");
                     for (Character aa : enzyme.getAminoAcidBefore()) {

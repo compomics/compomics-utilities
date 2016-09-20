@@ -3,10 +3,12 @@ package com.compomics.util.experiment.io.identifications;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.Enzyme;
@@ -134,45 +136,54 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             parametersReport += searchParameters.getPrecursorAccuracy() + " ppm (default)"; // @TODO: what about accuracy in Dalton
         }
 
-        // get the enzym
-        String enzyme = null;
-        Integer maxMissedCleavages = null;
-        List<Enzyme> enzymes = spectrumIdentificationProtocol.getEnzymes().getEnzyme();
-        if (!enzymes.isEmpty()) {
-            ParamList paramList = enzymes.get(0).getEnzymeName();
-
-            if (!paramList.getParamGroup().isEmpty()) {
-                enzyme = paramList.getParamGroup().get(0).getName();
-            }
-
-            if (enzymes.get(0).getMissedCleavages() != null) {
-                maxMissedCleavages = enzymes.get(0).getMissedCleavages();
-            }
-        }
-
-        parametersReport += "<br><br><b>Enzyme:</b> ";
-
-        if (enzyme != null) {
-            com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzyme); // @TODO: replace by use of cv terms
-            if (utilitiesEnzyme != null) {
-                searchParameters.setEnzyme(utilitiesEnzyme);
-                parametersReport += utilitiesEnzyme.getName() + "<br>";
-            } else {
-                searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("Trypsin"));
-                parametersReport += "Trypsin (assumed)<br>";
+        // get the enzyme(s)
+        parametersReport += "<br><br><b>Digestion:</b> ";
+        List<Enzyme> mzIdEnzymes = spectrumIdentificationProtocol.getEnzymes().getEnzyme();
+        DigestionPreferences digestionPreferences = new DigestionPreferences();
+        if (!mzIdEnzymes.isEmpty()) {
+            digestionPreferences.clear();
+            for (Enzyme mzIdEnzyme : mzIdEnzymes) {
+                ParamList paramList = mzIdEnzyme.getEnzymeName();
+                Integer nMissedCleavages = mzIdEnzyme.getMissedCleavages();
+                Boolean semiSpecific = mzIdEnzyme.isSemiSpecific();
+                if (!paramList.getParamGroup().isEmpty()) {
+                    String enzymeId = paramList.getParamGroup().get(0).getName();
+                    com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzymeId); // @TODO: replace by use of cv terms
+                    String enzymeName;
+                    if (utilitiesEnzyme != null) {
+                        enzymeName = utilitiesEnzyme.getName();
+                        parametersReport += utilitiesEnzyme.getName();
+                    } else {
+                        enzymeName = "Trypsin";
+                        utilitiesEnzyme = EnzymeFactory.getInstance().getEnzyme(enzymeName);
+                        parametersReport += utilitiesEnzyme.getName() + " (assumed)";
+                    }
+                    parametersReport += ", ";
+                    if (nMissedCleavages != null) {
+                        parametersReport += nMissedCleavages;
+                    } else {
+                        nMissedCleavages = 2;
+                        parametersReport += nMissedCleavages + " (assumed)";
+                    }
+                    parametersReport += ", ";
+                    DigestionPreferences.Specificity specificity = DigestionPreferences.Specificity.specific;
+                    if (semiSpecific != null) {
+                        if (semiSpecific) {
+                            specificity = DigestionPreferences.Specificity.semiSpecific;
+                        }
+                        parametersReport += specificity;
+                    } else {
+                        parametersReport += specificity + " (assumed)";
+                    }
+                    digestionPreferences.addEnzyme(utilitiesEnzyme);
+                    digestionPreferences.setSpecificity(enzymeName, specificity);
+                    digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
+                }
             }
         } else {
-            searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("Trypsin"));
-            parametersReport += "Trypsin (assumed)<br>";
+            parametersReport += "Trypsin (assumed), 2 allowed missed cleavages (assumed), specific (assumed)";
         }
-
-        parametersReport += "<b>Maximum Missed Cleavages:</b> ";
-        if (maxMissedCleavages != null) {
-            searchParameters.setnMissedCleavages(maxMissedCleavages);
-            parametersReport += maxMissedCleavages;
-        } else {
-            parametersReport += searchParameters.getnMissedCleavages() + " (default)";
-        }
+        searchParameters.setDigestionPreferences(digestionPreferences);
 
         // set the min/max precursor charge
         parametersReport += "<br><br><b>Min Precusor Charge:</b> ";

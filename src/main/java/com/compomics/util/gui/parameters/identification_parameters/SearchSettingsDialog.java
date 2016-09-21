@@ -18,6 +18,7 @@ import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Color;
 import java.awt.Dialog;
@@ -238,7 +239,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     error,
                     "PTM Definition Changed", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         try {
             loadModificationUse(configurationFile);
         } catch (Exception e) {
@@ -1945,28 +1946,38 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             updateModificationList();
         }
 
-        Enzyme enzyme = searchParameters.getEnzyme();
-        if (enzyme != null) {
-            String enzymeName = enzyme.getName();
-
-            if (!enzymeFactory.enzymeLoaded(enzymeName)) {
-                enzymeFactory.addEnzyme(searchParameters.getEnzyme());
-            }
-            enzymesCmb.setSelectedItem(enzymeName);
+        DigestionPreferences digestionPreferences = searchParameters.getDigestionPreferences();
+        if (digestionPreferences.isNoEnzymeSpecificity()) {
+            // @TODO: Set not specific
+        } else if (digestionPreferences.isWholeProtein()) {
+            // @TODO: Set whole protein
         } else {
-            enzymesCmb.setSelectedIndex(0);
+            if (digestionPreferences.getEnzymes() != null && !digestionPreferences.getEnzymes().isEmpty()) {
+                // @TODO: Allow the selection of multiple enzymes?
+                Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
+                String enzymeName = enzyme.getName();
+                enzymesCmb.setSelectedItem(enzymeName);
+                Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+                if (nMissedCleavages != null) {
+                    maxMissedCleavagesTxt.setText(nMissedCleavages + "");
+                } else {
+                    maxMissedCleavagesTxt.setText("Not set");
+                }
+                // @TODO: Set specificity
+            } else {
+                // @TODO: Set nothing selected
+                enzymesCmb.setSelectedIndex(0);
+            }
         }
 
-        if (searchParameters.getIonSearched1() != null) {
-            fragmentIon1Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(searchParameters.getIonSearched1()));
+        if (searchParameters.getForwardIons() != null && !searchParameters.getForwardIons().isEmpty()) {
+            Integer ionSearched = searchParameters.getForwardIons().get(0);
+            fragmentIon1Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
         }
 
-        if (searchParameters.getIonSearched2() != null) {
-            fragmentIon2Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(searchParameters.getIonSearched2()));
-        }
-
-        if (searchParameters.getnMissedCleavages() != null) {
-            maxMissedCleavagesTxt.setText(searchParameters.getnMissedCleavages() + "");
+        if (searchParameters.getRewindIons() != null && !searchParameters.getRewindIons().isEmpty()) {
+            Integer ionSearched = searchParameters.getForwardIons().get(0);
+            fragmentIon2Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
         }
 
         if (searchParameters.getPrecursorAccuracy() != null) {
@@ -2112,13 +2123,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorIonLbl, precursorIonAccuracyTxt, "precursor mass tolerance", "Precursor Mass Tolerance Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, fragmentIonLbl, fragmentIonAccuracyTxt, "fragment mass tolerance", "Fragment Mass Tolerance Error", true, showMessage, valid);
-        
+
         boolean lowerChargeValid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
         if (!lowerChargeValid) {
             GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
         }
-        
+
         boolean lowerBoundValid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
         if (!lowerBoundValid) {
@@ -2193,8 +2204,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             tempSearchParameters.setFastaFile(fastaFile);
         }
 
+        DigestionPreferences digestionPreferences = new DigestionPreferences();
         Enzyme enzyme = enzymeFactory.getEnzyme(enzymesCmb.getSelectedItem().toString());
-        tempSearchParameters.setEnzyme(enzyme);
+        digestionPreferences.addEnzyme(enzyme);
+        String enzymeName = enzyme.getName();
+        digestionPreferences.setnMissedCleavages(enzymeName, new Integer(maxMissedCleavagesTxt.getText().trim()));
+        // @TODO: set specificity
 
         double fragmentAccuracy = new Double(fragmentIonAccuracyTxt.getText().trim());
 
@@ -2223,7 +2238,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         tempSearchParameters.setPtmSettings(modificationProfile);
 
-        tempSearchParameters.setnMissedCleavages(new Integer(maxMissedCleavagesTxt.getText().trim()));
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
@@ -2236,9 +2250,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         } else {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
-        tempSearchParameters.setIonSearched1(fragmentIon1Cmb.getSelectedItem().toString().trim());
+        ArrayList<Integer> selectedForwardIons = new ArrayList<Integer>(1);
+        Integer ionType = getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
+        selectedForwardIons.add(ionType);
+        tempSearchParameters.setForwardIons(selectedForwardIons);
+        ArrayList<Integer> selectedRewindIons = new ArrayList<Integer>(1);
+        ionType = getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
+        selectedRewindIons.add(ionType);
+        tempSearchParameters.setRewindIons(selectedRewindIons);
         tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
-        tempSearchParameters.setIonSearched2(fragmentIon2Cmb.getSelectedItem().toString().trim());
         int charge = new Integer(minPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMinChargeSearched(new Charge(Charge.PLUS, charge));
         charge = new Integer(maxPrecursorChargeTxt.getText().trim());
@@ -2512,7 +2532,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     public boolean isCanceled() {
         return canceled;
     }
-    
+
     /**
      * Verifies that the modifications backed-up in the search parameters are
      * loaded and returns an error message if one was already loaded, null
@@ -2539,5 +2559,31 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             error += ".\nPlease verify the definition of the PTM(s) in the modifications editor.";
         }
         return error;
+    }
+
+    /**
+     * Returns the ion index corresponding to the given symbol in the drop down
+     * menu.
+     *
+     * @param ionSymbol the ion symbol
+     *
+     * @return the ion index corresponding to the given symbol in the drop down
+     * menu
+     */
+    public static Integer getIonType(String ionSymbol) {
+        if (ionSymbol.equals("a")) {
+            return PeptideFragmentIon.A_ION;
+        } else if (ionSymbol.equals("b")) {
+            return PeptideFragmentIon.B_ION;
+        } else if (ionSymbol.equals("c")) {
+            return PeptideFragmentIon.C_ION;
+        } else if (ionSymbol.equals("x")) {
+            return PeptideFragmentIon.X_ION;
+        } else if (ionSymbol.equals("y")) {
+            return PeptideFragmentIon.Y_ION;
+        } else if (ionSymbol.equals("z")) {
+            return PeptideFragmentIon.Z_ION;
+        }
+        throw new UnsupportedOperationException("Ion of type " + ionSymbol + " not supported.");
     }
 }

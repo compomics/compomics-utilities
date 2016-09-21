@@ -74,30 +74,43 @@ public class DigestionPreferences {
     private HashMap<String, Specificity> specificity;
 
     /**
-     * Constructor for default preferences. Trypsin, specific, two missed
-     * cleavages. Use clear() to clear.
+     * Constructor for empty preferences.
      */
     public DigestionPreferences() {
-        String enzymeName = "Tryspsin";
-        Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
-        addEnzyme(trypsin);
-        setnMissedCleavages(enzymeName, 2);
     }
 
     /**
-     * Constructor based on other preferences.
-     *
-     * @param digestionPreferences the preferences to reuse
+     * Clones the given preferences.
+     * 
+     * @param digestionPreferences the preferences to clone
+     * 
+     * @return a new object containing the same preferences
      */
-    public DigestionPreferences(DigestionPreferences digestionPreferences) {
-        wholeProtein = digestionPreferences.isWholeProtein();
-        noEnzymeSpecificity = digestionPreferences.isNoEnzymeSpecificity();
+    public static DigestionPreferences clone(DigestionPreferences digestionPreferences) {
+        DigestionPreferences clone = new DigestionPreferences();
+        clone.setWholeProtein(digestionPreferences.isWholeProtein());
+        clone.setNoEnzymeSpecificity(digestionPreferences.isNoEnzymeSpecificity());
         for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
-            addEnzyme(enzyme);
+            clone.addEnzyme(enzyme);
             String enzymeName = enzyme.getName();
-            setSpecificity(enzymeName, digestionPreferences.getSpecificity(enzymeName));
-            setnMissedCleavages(enzymeName, digestionPreferences.getnMissedCleavages(enzymeName));
+            clone.setSpecificity(enzymeName, digestionPreferences.getSpecificity(enzymeName));
+            clone.setnMissedCleavages(enzymeName, digestionPreferences.getnMissedCleavages(enzymeName));
         }
+        return clone;
+    }
+    
+    /**
+     * Returns default digestion preferences. Trypsin specific with two missed cleavages.
+     * 
+     * @return default digestion preferences
+     */
+    public static DigestionPreferences getDefaultPreferences() {
+        String enzymeName = "Tryspsin";
+        Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
+        DigestionPreferences digestionPreferences = new DigestionPreferences();
+        digestionPreferences.addEnzyme(trypsin);
+        digestionPreferences.setnMissedCleavages(enzymeName, 2);
+        return digestionPreferences;
     }
 
     /**
@@ -242,7 +255,7 @@ public class DigestionPreferences {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        DigestionPreferences defaultPreferences = new DigestionPreferences();
+        DigestionPreferences defaultPreferences = DigestionPreferences.getDefaultPreferences();
         StringBuilder stringBuilder = new StringBuilder();
         if (!defaultPreferences.isSameAs(this)) {
             String newLine = System.getProperty("line.separator");

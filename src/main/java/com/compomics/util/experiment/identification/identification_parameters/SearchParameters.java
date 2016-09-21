@@ -138,7 +138,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @deprecated use the list allowing multiple ions instead.
      */
-    private Integer forwardIon = PeptideFragmentIon.B_ION;
+    private Integer forwardIon;
     /**
      * The forward ions to consider (a, b or c).
      */
@@ -148,7 +148,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @deprecated use the list allowing multiple ions instead.
      */
-    private Integer rewindIon = PeptideFragmentIon.Y_ION;
+    private Integer rewindIon;
     /**
      * The rewind ions to consider (x, y or z).
      */
@@ -179,7 +179,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public SearchParameters() {
 
-        // Set ions to be searched
+        // Set ions to be searched by default
         forwardIons = new ArrayList<Integer>(1);
         forwardIons.add(PeptideFragmentIon.B_ION);
         rewindIons = new ArrayList<Integer>(1);
@@ -381,17 +381,21 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     public DigestionPreferences getDigestionPreferences() {
         if (digestionPreferences == null && enzyme != null) { // Backward compatibility check
             digestionPreferences = new DigestionPreferences();
-            if (!enzyme.isWholeProtein()) {
+            if (enzyme.isWholeProtein()) {
+                digestionPreferences.setWholeProtein(true);
+            } else if (enzyme.isUnspecific()) {
+                digestionPreferences.setNoEnzymeSpecificity(true);
+            } else {
                 digestionPreferences.addEnzyme(enzyme);
                 if (enzyme.isSemiSpecific()) {
                     digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.semiSpecific);
-                } else if (enzyme.isUnspecific()) {
-                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.notSpecific);
                 } else {
                     digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.specific);
                 }
                 digestionPreferences.setnMissedCleavages(enzyme.getName(), nMissedCleavages);
             }
+            enzyme = null;
+            nMissedCleavages = null;
         }
         return digestionPreferences;
     }

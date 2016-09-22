@@ -25,7 +25,6 @@ import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
@@ -131,7 +130,8 @@ public abstract class SpectrumAnnotator {
     }
 
     /**
-     * Matches a theoretic ion in the spectrum. Returns an IonMatch containing the ion and the peak. Null if not found.
+     * Matches a theoretic ion in the spectrum. Returns an IonMatch containing
+     * the ion and the peak. Null if not found.
      *
      * @param theoreticIon the theoretic ion
      * @param inspectedCharge the expected charge
@@ -161,17 +161,15 @@ public abstract class SpectrumAnnotator {
                         bestPeak = peak;
                     }
                 }
-            } else {
-                if (bestPeak == null || peak.intensity > bestPeak.intensity) {
+            } else if (bestPeak == null || peak.intensity > bestPeak.intensity) {
+                bestPeak = peak;
+            } else if (peak.intensity == bestPeak.intensity) {
+                ionMatch.peak = bestPeak;
+                double bestPeakError = Math.abs(ionMatch.getError(isPpm));
+                ionMatch.peak = peak;
+                double peakError = Math.abs(ionMatch.getError(isPpm));
+                if (peakError < bestPeakError) {
                     bestPeak = peak;
-                } else if (peak.intensity == bestPeak.intensity) {
-                    ionMatch.peak = bestPeak;
-                    double bestPeakError = Math.abs(ionMatch.getError(isPpm));
-                    ionMatch.peak = peak;
-                    double peakError = Math.abs(ionMatch.getError(isPpm));
-                    if (peakError < bestPeakError) {
-                        bestPeak = peak;
-                    }
                 }
             }
         }
@@ -192,7 +190,7 @@ public abstract class SpectrumAnnotator {
      */
     protected void setSpectrum(MSnSpectrum spectrum, double intensityLimit) {
         if (spectrumIndex == null || !spectrumKey.equals(spectrum.getSpectrumKey()) || this.intensityLimit != intensityLimit) {
-            
+
             // Save spectrum number and intensity limit
             spectrumKey = spectrum.getSpectrumKey();
             this.intensityLimit = intensityLimit;
@@ -215,10 +213,10 @@ public abstract class SpectrumAnnotator {
      */
     protected void setMassTolerance(double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
         if (mzTolerance != this.mzTolerance || pickMostAccuratePeak != this.pickMostAccuratePeak) {
-            
+
             // Clear previous index
             spectrumIndex = null;
-            
+
             // Save new values
             this.mzTolerance = mzTolerance;
             this.isPpm = isPpm;

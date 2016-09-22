@@ -72,6 +72,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 || !this.peptide.getKey().equals(peptide.getKey())
                 || !this.peptide.sameModificationsAs(peptide)
                 || this.precursorCharge != precursorCharge) {
+            
+            // Set new values
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
             if (possibleFragmentIons == null) {
@@ -82,8 +84,6 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 updateMassShifts();
             }
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
         }
     }
 
@@ -141,12 +141,11 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
+        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
         if (spectrum != null) {
             setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
-
         setPeptide(peptide, possiblePeptideFragments, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
-        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -177,14 +176,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
                                 for (int charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
-                                        String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
-                                        boolean matchFound = false;
-                                        boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                                        if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                            matchFound = matchInSpectrum(ion, charge);
-                                        }
-                                        if (alreadyAnnotated || matchFound) {
-                                            result.add(spectrumAnnotation.get(key));
+                                        IonMatch ionMatch = matchInSpectrum(ion, charge);
+                                        if (ionMatch != null) {
+                                            result.add(ionMatch);
                                         }
                                     }
                                 }

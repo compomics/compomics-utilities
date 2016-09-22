@@ -80,7 +80,7 @@ public class Advocate {
     /**
      * The PEAKS sequencing algorithm.
      */
-    public static final Advocate peaks = new Advocate(14, "PEAKS", AdvocateType.sequencing_algorithm, new Color(173, 255, 47));
+    public static final Advocate peaks = new Advocate(14, "PEAKS Studio", AdvocateType.sequencing_algorithm, new Color(173, 255, 47));
     /**
      * The Phenyx search engine.
      */
@@ -112,7 +112,7 @@ public class Advocate {
     /**
      * The Sonar search engine, integrated in radars.
      */
-    public static final Advocate sonar = new Advocate(22, "sonar", AdvocateType.search_engine);
+    public static final Advocate sonar = new Advocate(22, "Sonar", AdvocateType.search_engine);
     /**
      * The SpectraST spectral library search engine (TPP).
      */
@@ -145,6 +145,10 @@ public class Advocate {
      * The Morpheus search engine.
      */
     public static final Advocate morpheus = new Advocate(30, "Morpheus", AdvocateType.search_engine, new Color(255, 248, 220));
+    /**
+     * The ProteinPilot search engine.
+     */
+    public static final Advocate proteinPilot = new Advocate(31, "ProteinPilot Software", AdvocateType.search_engine, new Color(75, 0, 130));
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -268,7 +272,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[32 + userAdvocates.size()];
+        Advocate[] result = new Advocate[33 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -301,6 +305,7 @@ public class Advocate {
         result[++i] = pNovo;
         result[++i] = novor;
         result[++i] = morpheus;
+        result[++i] = proteinPilot;
         result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {
@@ -482,6 +487,8 @@ public class Advocate {
      * @param idFileName the name of the identification file
      *
      * @return the advocate likely to have been used to create the given file
+     * 
+     * @deprecated no longer used
      */
     public static Advocate getAdvocateFromFile(String idFileName) {
         if (idFileName.toLowerCase().endsWith("dat")) {

@@ -53,14 +53,14 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      */
     public void setTag(Tag newTag, int precursorCharge) {
         if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingPreferences.defaultStringMatching) || this.precursorCharge != precursorCharge) {
+
+            // Set new values
             this.tag = newTag;
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(newTag);
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 updateMassShifts();
             }
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
         }
     }
 
@@ -222,12 +222,11 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
+        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
         if (spectrum != null) {
             setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
-
         setTag(tag, specificAnnotationSettings.getPrecursorCharge());
-        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -259,14 +258,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
                                     for (int charge : tempCharges) {
                                         if (chargeValidated(ion, charge, precursorCharge)) {
-                                            String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
-                                            boolean matchFound = false;
-                                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                                matchFound = matchInSpectrum(ion, charge);
-                                            }
-                                            if (alreadyAnnotated || matchFound) {
-                                                result.add(spectrumAnnotation.get(key));
+                                            IonMatch ionMatch = matchInSpectrum(ion, charge);
+                                            if (ionMatch != null) {
+                                                result.add(ionMatch);
                                             }
                                         }
                                     }

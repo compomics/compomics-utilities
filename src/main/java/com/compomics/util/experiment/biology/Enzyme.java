@@ -4,6 +4,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class models an enzyme.
@@ -162,7 +163,7 @@ public class Enzyme extends ExperimentObject {
                 }
                 result += "}";
             }
-            
+
             if (aminoAcidBefore.isEmpty() && restrictionBefore.isEmpty()) {
                 result += "[X]";
             }
@@ -184,7 +185,7 @@ public class Enzyme extends ExperimentObject {
                 }
                 result += "}";
             }
-            
+
             if (aminoAcidAfter.isEmpty() && restrictionAfter.isEmpty()) {
                 result += "[X]";
             }
@@ -374,6 +375,7 @@ public class Enzyme extends ExperimentObject {
      * Returns the number of missed cleavages in an amino acid sequence.
      *
      * @param sequence the amino acid sequence as a string.
+     *
      * @return the number of missed cleavages
      */
     public int getNmissedCleavages(String sequence) {
@@ -393,20 +395,21 @@ public class Enzyme extends ExperimentObject {
      *
      * @param sequence the protein sequence
      * @param nMissedCleavages the maximum number of missed cleavages
-     * @param nMin the minimal size for a peptide
-     * @param nMax the maximal size for a peptide
+     * @param nMin the minimal size for a peptide (inclusive, ignored if null)
+     * @param nMax the maximal size for a peptide (inclusive, ignored if null)
+     *
      * @return a list of expected peptide sequences
      */
-    public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
+    public HashSet<String> digest(String sequence, int nMissedCleavages, Integer nMin, Integer nMax) {
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
         String currentPeptide = aaAfter + "";
-        ArrayList<String> results = new ArrayList<String>();
+        HashSet<String> results = new HashSet<String>();
 
         HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
         for (int i = 1; i <= nMissedCleavages; i++) {
-            mc.put(i, new ArrayList<String>());
+            mc.put(i, new ArrayList<String>(nMissedCleavages));
         }
 
         for (int i = 1; i < sequence.length(); i++) {
@@ -417,7 +420,7 @@ public class Enzyme extends ExperimentObject {
 
             if (isCleavageSite(aaBefore, aaAfter) && !currentPeptide.equals("")) {
 
-                if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
+                if ((nMin == null || currentPeptide.length() >= nMin) && (nMax == null || currentPeptide.length() <= nMax)) {
                     results.add(currentPeptide);
                 }
 
@@ -430,7 +433,7 @@ public class Enzyme extends ExperimentObject {
                     for (String subPeptide : mc.get(nMc)) {
                         mcSequence += subPeptide;
                     }
-                    if (mcSequence.length() >= nMin && mcSequence.length() <= nMax && !results.contains(mcSequence)) {
+                    if ((nMin == null || mcSequence.length() >= nMin) && (nMax == null || mcSequence.length() <= nMax)) {
                         results.add(mcSequence);
                     }
                 }
@@ -441,7 +444,7 @@ public class Enzyme extends ExperimentObject {
             currentPeptide += aa;
         }
 
-        if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
+        if ((nMin == null || currentPeptide.length() >= nMin) && (nMax == null || currentPeptide.length() <= nMax)) {
             results.add(currentPeptide);
         }
 
@@ -454,7 +457,91 @@ public class Enzyme extends ExperimentObject {
             for (String subPeptide : mc.get(nMc)) {
                 mcSequence += subPeptide;
             }
-            if (mcSequence.length() >= nMin && mcSequence.length() <= nMax && !results.contains(mcSequence)) {
+            if ((nMin == null || mcSequence.length() >= nMin) && (nMax == null || mcSequence.length() <= nMax)) {
+                results.add(mcSequence);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Digests a protein sequence in a list of expected peptide sequences.
+     *
+     * @param sequence the protein sequence
+     * @param nMissedCleavages the maximum number of missed cleavages
+     * @param massMin the minimal mass for a peptide (inclusive)
+     * @param massMax the maximal mass for a peptide (inclusive)
+     *
+     * @return a list of expected peptide sequences
+     */
+    public HashSet<String> digest(String sequence, int nMissedCleavages, Double massMin, Double massMax) {
+
+        char aa, aaBefore;
+        char aaAfter = sequence.charAt(0);
+        String currentPeptide = aaAfter + "";
+        Double currentMass = AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
+        HashSet<String> results = new HashSet<String>();
+
+        HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
+        for (int i = 1; i <= nMissedCleavages; i++) {
+            mc.put(i, new ArrayList<String>(nMissedCleavages));
+        }
+        HashMap<String, Double> peptideMasses = new HashMap<String, Double>();
+
+        for (int i = 1; i < sequence.length(); i++) {
+
+            aa = sequence.charAt(i);
+            aaBefore = aaAfter;
+            aaAfter = aa;
+
+            if (isCleavageSite(aaBefore, aaAfter) && !currentPeptide.equals("")) {
+
+                if ((massMin == null || currentMass >= massMin) && (massMax == null || currentMass <= massMax)) {
+                    results.add(currentPeptide);
+                }
+
+                for (int nMc : mc.keySet()) {
+                    mc.get(nMc).add(currentPeptide);
+                    peptideMasses.put(currentPeptide, currentMass);
+                    while (mc.get(nMc).size() > nMc + 1) {
+                        mc.get(nMc).remove(0);
+                    }
+                    String mcSequence = "";
+                    Double mcMass = 0.0;
+                    for (String subPeptide : mc.get(nMc)) {
+                        mcSequence += subPeptide;
+                        mcMass += peptideMasses.get(subPeptide);
+                    }
+                    if ((massMin == null || mcMass >= massMin) && (massMax == null || mcMass <= massMax)) {
+                        results.add(mcSequence);
+                    }
+                }
+
+                currentPeptide = "";
+            }
+
+            currentPeptide += aa;
+            currentMass += AminoAcid.getAminoAcid(aa).getMonoisotopicMass();
+        }
+
+        if ((massMin == null || currentMass >= massMin) && (massMax == null || currentMass <= massMax)) {
+            results.add(currentPeptide);
+        }
+
+        for (int nMc : mc.keySet()) {
+            mc.get(nMc).add(currentPeptide);
+            peptideMasses.put(currentPeptide, currentMass);
+            while (mc.get(nMc).size() > nMc + 1) {
+                mc.get(nMc).remove(0);
+            }
+            String mcSequence = "";
+            Double mcMass = 0.0;
+            for (String subPeptide : mc.get(nMc)) {
+                mcSequence += subPeptide;
+                mcMass += peptideMasses.get(subPeptide);
+            }
+            if ((massMin == null || mcMass >= massMin) && (massMax == null || mcMass <= massMax)) {
                 results.add(mcSequence);
             }
         }

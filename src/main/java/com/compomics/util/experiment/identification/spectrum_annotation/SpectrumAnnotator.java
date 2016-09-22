@@ -17,6 +17,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
@@ -24,7 +25,6 @@ import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
@@ -58,21 +58,9 @@ public abstract class SpectrumAnnotator {
      */
     protected double intensityLimit = 0;
     /**
-     * A list of the mz of the peak in the loaded spectrum.
+     * Index for the spectrum.
      */
-    private ArrayList<Double> mz;
-    /**
-     * A map of all peaks mz &gt; peak.
-     */
-    private HashMap<Double, Peak> peakMap;
-    /**
-     * The spectrum annotation as a map: theoretic fragment key &gt; ionmatch.
-     */
-    protected HashMap<String, IonMatch> spectrumAnnotation = new HashMap<String, IonMatch>();
-    /**
-     * List of unmatched ions.
-     */
-    protected HashSet<String> unmatchedIons = new HashSet<String>();
+    private SpectrumIndex spectrumIndex;
     /**
      * The m/z tolerance for peak matching.
      */
@@ -142,127 +130,56 @@ public abstract class SpectrumAnnotator {
     }
 
     /**
-     * Matches a theoretic ion in the spectrum.
+     * Matches a theoretic ion in the spectrum. Returns an IonMatch containing
+     * the ion and the peak. Null if not found.
      *
      * @param theoreticIon the theoretic ion
      * @param inspectedCharge the expected charge
-     * @return true if a match was found, false if the ion was added to the
-     * unmatched ions list
+     *
+     * @return the IonMatch between the ion and the peak
      */
-    protected boolean matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
+    protected IonMatch matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
 
-        Charge charge = new Charge(Charge.PLUS, inspectedCharge);
-        IonMatch bestMatch = null;
-        double bestAccuracy = Double.MAX_VALUE;
         double fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
 
-        double deltaMz;
+        // Get the peaks matching the desired m/z
+        ArrayList<Peak> matchedPeaks = spectrumIndex.getMatchingPeaks(fragmentMz);
 
-        if (isPpm) {
-            deltaMz = (mzTolerance / 1000000) * fragmentMz;
-        } else {
-            deltaMz = mzTolerance;
-        }
-
-        if (!mz.isEmpty()
-                && (fragmentMz >= mz.get(0) - deltaMz)
-                && (fragmentMz <= mz.get(mz.size() - 1) + deltaMz)) {
-
-            Peak tempPeak = new Peak(0, 0);
-            IonMatch tempMatch = new IonMatch(tempPeak, theoreticIon, charge);
-
-            // iterate all the peaks and find the best matching peak, if any
-            for (int i = 0; i < mz.size(); i++) {
-
-                tempPeak.setMz(mz.get(i));
-                tempMatch.peak = tempPeak;
-
-                if (Math.abs(tempMatch.getError(isPpm, minIsotopicCorrection, maxIsotopicCorrection)) <= mzTolerance) {
-
-                    Peak currentPeak = peakMap.get(mz.get(i));
-
-                    if (pickMostAccuratePeak) {
-                        double tempAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
-                        if (bestMatch == null || tempAccuracy < bestAccuracy) {
-                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-                            bestAccuracy = tempAccuracy;
-                        }
-                    } else if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+        // Select the most accurate or most intense according to the annotation settings
+        IonMatch ionMatch = new IonMatch(null, theoreticIon, new Charge(Charge.PLUS, inspectedCharge));
+        Peak bestPeak = null;
+        for (Peak peak : matchedPeaks) {
+            if (pickMostAccuratePeak) {
+                if (bestPeak == null) {
+                    bestPeak = peak;
+                } else {
+                    ionMatch.peak = bestPeak;
+                    double bestPeakError = Math.abs(ionMatch.getError(isPpm));
+                    ionMatch.peak = peak;
+                    double peakError = Math.abs(ionMatch.getError(isPpm));
+                    if (peakError < bestPeakError) {
+                        bestPeak = peak;
                     }
                 }
+            } else if (bestPeak == null || peak.intensity > bestPeak.intensity) {
+                bestPeak = peak;
+            } else if (peak.intensity == bestPeak.intensity) {
+                ionMatch.peak = bestPeak;
+                double bestPeakError = Math.abs(ionMatch.getError(isPpm));
+                ionMatch.peak = peak;
+                double peakError = Math.abs(ionMatch.getError(isPpm));
+                if (peakError < bestPeakError) {
+                    bestPeak = peak;
+                }
             }
-
-            // below is the original unstable code that depends on the number of peaks // @TODO: can this code be resuced?
-//            
-//            int indexMin = 0;
-//            int indexMax = mz.size() - 1;
-//
-//            IonMatch tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
-//
-//            if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
-//                Peak currentPeak = peakMap.get(mz.get(indexMax));
-//                bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-//                bestAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
-//            }
-//
-//            tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
-//
-//            if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
-//
-//                Peak currentPeak = peakMap.get(mz.get(indexMin));
-//
-//                if (pickMostAccuratePeak) {
-//                    double tempAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
-//                    if (bestMatch == null || tempAccuracy < bestAccuracy) {
-//                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-//                        bestAccuracy = tempAccuracy;
-//                    }
-//                } else {
-//                    if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-//                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-//                    }
-//                }
-//            }
-//
-//            while (indexMax - indexMin > 1) {
-//
-//                int index = (indexMax - indexMin) / 2 + indexMin; // @TODO: this depends on the number of peaks and uses floating values, hence is unstable!!
-//                double currentMz = mz.get(index);
-//                tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
-//
-//                if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
-//
-//                    Peak currentPeak = peakMap.get(mz.get(index));
-//
-//                    if (pickMostAccuratePeak) {
-//                        double tempAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
-//                        if (bestMatch == null || tempAccuracy < bestAccuracy) {
-//                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-//                            bestAccuracy = tempAccuracy;
-//                        }
-//                    } else {
-//                        if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-//                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-//                        }
-//                    }
-//                }
-//
-//                if (currentMz < fragmentMz) {
-//                    indexMin = index;
-//                } else {
-//                    indexMax = index;
-//                }
-//            }
         }
 
-        if (bestMatch != null) {
-            spectrumAnnotation.put(IonMatch.getMatchKey(theoreticIon, charge.value, ionMatchKeysCache), bestMatch);
-        } else {
-            unmatchedIons.add(IonMatch.getMatchKey(theoreticIon, charge.value, ionMatchKeysCache));
+        if (bestPeak != null) {
+            ionMatch.peak = bestPeak;
+            return ionMatch;
         }
 
-        return bestMatch != null;
+        return null;
     }
 
     /**
@@ -272,28 +189,14 @@ public abstract class SpectrumAnnotator {
      * @param intensityLimit the minimal intensity to account for
      */
     protected void setSpectrum(MSnSpectrum spectrum, double intensityLimit) {
-        if (!spectrumKey.equals(spectrum.getSpectrumKey()) || this.intensityLimit != intensityLimit) {
+        if (spectrumIndex == null || !spectrumKey.equals(spectrum.getSpectrumKey()) || this.intensityLimit != intensityLimit) {
+
+            // Save spectrum number and intensity limit
             spectrumKey = spectrum.getSpectrumKey();
             this.intensityLimit = intensityLimit;
 
-            ArrayList<Double> tempMz;
-            if (intensityLimit == 0) {
-                peakMap = spectrum.getPeakMap();
-                tempMz = new ArrayList<Double>(peakMap.keySet());
-            } else {
-                peakMap = new HashMap<Double, Peak>();
-                tempMz = new ArrayList<Double>();
-                for (Peak peak : spectrum.getPeakList()) {
-                    if (peak.intensity > intensityLimit) {
-                        peakMap.put(peak.mz, peak);
-                        tempMz.add(peak.mz);
-                    }
-                }
-            }
-            Collections.sort(tempMz);
-            mz = tempMz;
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
+            // Create new index
+            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
         }
     }
 
@@ -310,8 +213,11 @@ public abstract class SpectrumAnnotator {
      */
     protected void setMassTolerance(double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
         if (mzTolerance != this.mzTolerance || pickMostAccuratePeak != this.pickMostAccuratePeak) {
-            spectrumAnnotation.clear();
-            unmatchedIons.clear();
+
+            // Clear previous index
+            spectrumIndex = null;
+
+            // Save new values
             this.mzTolerance = mzTolerance;
             this.isPpm = isPpm;
             this.pickMostAccuratePeak = pickMostAccuratePeak;
@@ -523,8 +429,6 @@ public abstract class SpectrumAnnotator {
      * Updates the mass shifts.
      */
     protected void updateMassShifts() {
-        spectrumAnnotation.clear();
-        unmatchedIons.clear();
         if (theoreticalFragmentIons != null) {
             HashMap<Integer, ArrayList<Ion>> peptideFragmentIons = theoreticalFragmentIons.get(IonType.PEPTIDE_FRAGMENT_ION.index);
             ArrayList<Ion> ions = peptideFragmentIons.get(PeptideFragmentIon.A_ION);

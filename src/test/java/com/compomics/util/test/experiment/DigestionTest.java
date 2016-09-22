@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
@@ -24,7 +25,7 @@ public class DigestionTest extends TestCase {
         File enzymeFile = new File("src/test/resources/experiment/enzymes.xml");
         enzymeFactory.importEnzymes(enzymeFile);
         Enzyme enzyme = enzymeFactory.getEnzyme("Trypsin");
-        ArrayList<String> peptides = enzyme.digest(testSequence, 2, 4, 8);
+        HashSet<String> peptides = enzyme.digest(testSequence, 2, 4, 8);
 
         Assert.assertTrue(peptides.size() == 6);
         Assert.assertTrue(peptides.contains("MKMMK"));

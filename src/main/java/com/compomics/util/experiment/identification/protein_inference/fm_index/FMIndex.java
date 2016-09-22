@@ -692,6 +692,9 @@ public class FMIndex implements PeptideMapper {
         T[indexStringLength - 2] = '/'; // adding delimiter at ending
         T[indexStringLength - 1] = '$'; // adding the sentinal
 
+        //System.out.println("Num Proteins: " + numProteins);
+        //System.out.println("Num AA: " + (indexStringLength - numProteins - 2));
+
         boundaries = new int[numProteins + 1];
         accessions = new String[numProteins];
         boundaries[0] = 1;

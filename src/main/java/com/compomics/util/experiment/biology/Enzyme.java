@@ -20,6 +20,8 @@ public class Enzyme extends ExperimentObject {
     static final long serialVersionUID = -1852087173903613377L;
     /*
      * The enzyme id.
+    
+     * @deprecated use the name as identifier.
      */
     private int id;
     /*
@@ -29,19 +31,19 @@ public class Enzyme extends ExperimentObject {
     /*
      * The amino acids before cleavage.
      */
-    private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>();
+    private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>(0);
     /*
      * The amino acids after cleavage.
      */
-    private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>();
+    private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>(0);
     /*
      * The restriction amino acids before cleavage.
      */
-    private ArrayList<Character> restrictionBefore = new ArrayList<Character>();
+    private ArrayList<Character> restrictionBefore = new ArrayList<Character>(0);
     /*
      * The restriction amino acids after cleavage.
      */
-    private ArrayList<Character> restrictionAfter = new ArrayList<Character>();
+    private ArrayList<Character> restrictionAfter = new ArrayList<Character>(0);
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
@@ -60,32 +62,10 @@ public class Enzyme extends ExperimentObject {
     /**
      * Constructor for an Enzyme.
      *
-     * @param id the enzyme id which should be OMSSA compatible.
      * @param name the name of the enzyme
-     * @param aminoAcidBefore the amino acids which can be found before the
-     * cleavage
-     * @param restrictionBefore the amino acids which should not be found before
-     * the cleavage
-     * @param aminoAcidAfter the amino acids which should be found after the
-     * cleavage
-     * @param restrictionAfter the amino acids which should not be found after
-     * the cleavage
      */
-    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
-        this.id = id;
+    public Enzyme(String name) {
         this.name = name;
-        for (char aa : aminoAcidBefore.toCharArray()) {
-            this.aminoAcidBefore.add(aa);
-        }
-        for (char aa : restrictionBefore.toCharArray()) {
-            this.restrictionBefore.add(aa);
-        }
-        for (char aa : aminoAcidAfter.toCharArray()) {
-            this.aminoAcidAfter.add(aa);
-        }
-        for (char aa : restrictionAfter.toCharArray()) {
-            this.restrictionAfter.add(aa);
-        }
     }
 
     /**
@@ -105,36 +85,72 @@ public class Enzyme extends ExperimentObject {
     public int getId() {
         return id;
     }
+    
+    /**
+     * Adds an amino acid to the list of allowed amino acids after the cleavage site.
+     * 
+     * @param aminoAcid an amino acid represented by its single amino acid code.
+     */
+    public void addAminoAcidAfter(Character aminoAcid) {
+        aminoAcidAfter.add(aminoAcid);
+    }
 
     /**
-     * Getter for the amino acids potentially following the cleavage.
+     * Getter for the amino acids potentially following the cleavage. Null if none.
      *
      * @return the amino acids potentially following the cleavage
      */
     public ArrayList<Character> getAminoAcidAfter() {
         return aminoAcidAfter;
     }
+    
+    /**
+     * Adds an amino acid to the list of allowed amino acids before the cleavage site.
+     * 
+     * @param aminoAcid an amino acid represented by its single amino acid code.
+     */
+    public void addAminoAcidBefore(Character aminoAcid) {
+        aminoAcidBefore.add(aminoAcid);
+    }
 
     /**
-     * Getter for the amino acids potentially preceding the cleavage.
+     * Getter for the amino acids potentially preceding the cleavage. Null if none.
      *
      * @return the amino acids potentially preceding the cleavage
      */
     public ArrayList<Character> getAminoAcidBefore() {
         return aminoAcidBefore;
     }
+    
+    /**
+     * Adds an amino acid to the list of forbidden amino acids after the cleavage site.
+     * 
+     * @param aminoAcid an amino acid represented by its single amino acid code.
+     */
+    public void addRestrictionAfter(Character aminoAcid) {
+        restrictionAfter.add(aminoAcid);
+    }
 
     /**
-     * Getter for the amino acids restricting when following the cleavage.
+     * Getter for the amino acids restricting when following the cleavage. Null if none.
      *
      * @return the amino acids restricting when following the cleavage
      */
     public ArrayList<Character> getRestrictionAfter() {
         return restrictionAfter;
     }
+    
+    /**
+     * Adds an amino acid to the list of forbidden amino acids before the cleavage site.
+     * 
+     * @param aminoAcid an amino acid represented by its single amino acid code.
+     */
+    public void addRestrictionBefore(Character aminoAcid) {
+        restrictionBefore.add(aminoAcid);
+    }
 
     /**
-     * Getter for the amino acids restricting when preceding the cleavage.
+     * Getter for the amino acids restricting when preceding the cleavage. Null if none.
      *
      * @return the amino acids restricting when preceding the cleavage
      */

@@ -420,4 +420,12 @@ public class EnzymeFactory {
         // supply a *child* term of MS:1001045
         return cvTerm;
     }
+    
+    private static ArrayList<Enzyme> getDefaultEnzymes() {
+        ArrayList<Enzyme> enzymes = new ArrayList<Enzyme>();
+        
+        // Enzyme enzyme = new Enzyme
+        
+        return enzymes;
+    }
 }

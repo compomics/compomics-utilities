@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.pride.CvTerm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,10 @@ public class Enzyme extends ExperimentObject {
      * @deprecated use the digestion preferences instead
      */
     private Boolean isWholeProtein = false;
+    /**
+     * The CV term associated to this enzyme.
+     */
+    private CvTerm cvTerm;
 
     /**
      * Constructor for an Enzyme.
@@ -485,6 +490,24 @@ public class Enzyme extends ExperimentObject {
             }
         }
         return description;
+    }
+
+    /**
+     * Returns the CV term associated with this enzyme.
+     * 
+     * @return the CV term associated with this enzyme
+     */
+    public CvTerm getCvTerm() {
+        return cvTerm;
+    }
+
+    /**
+     * Sets the CV term associated with this enzyme.
+     * 
+     * @param cvTerm the CV term associated with this enzyme
+     */
+    public void setCvTerm(CvTerm cvTerm) {
+        this.cvTerm = cvTerm;
     }
 
     /**

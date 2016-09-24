@@ -147,8 +147,8 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
                 Integer nMissedCleavages = mzIdEnzyme.getMissedCleavages();
                 Boolean semiSpecific = mzIdEnzyme.isSemiSpecific();
                 if (!paramList.getParamGroup().isEmpty()) {
-                    String enzymeId = paramList.getParamGroup().get(0).getName();
-                    com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzymeId); // @TODO: replace by use of cv terms
+                    String enzymeId = paramList.getParamGroup().get(0).getValue(); //@TODO: not sure about this one.
+                    com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getInstance().getUtilitiesEnzyme(enzymeId);
                     String enzymeName;
                     if (utilitiesEnzyme != null) {
                         enzymeName = utilitiesEnzyme.getName();

@@ -5,8 +5,8 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.10.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.8.0.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -93,13 +93,41 @@ public class PTMFactory implements Serializable {
         if (instance == null) {
             try {
                 File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
-                instance = (PTMFactory) SerializationUtils.readObject(savedFile);
+                instance = loadFromFile(savedFile);
                 instance.checkUserModifications();
             } catch (Exception e) {
                 instance = new PTMFactory();
             }
         }
         return instance;
+    }
+
+    /**
+     * Loads an enzyme factory from a file. The file must be an export of the factory in the json format.
+     * 
+     * @param file the file to load
+     * 
+     * @return the enzyme factory saved in file
+     * 
+     * @throws IOException exception thrown whenever an error occurred while loading the file
+     */
+    public static PTMFactory loadFromFile(File file) throws IOException {
+        JsonMarshaller jsonMarshaller = new JsonMarshaller();
+        PTMFactory result = (PTMFactory) jsonMarshaller.fromJson(PTMFactory.class, file);
+        return result;
+    }
+    
+    /**
+     * Saves a PTM factory to a file.
+     * 
+     * @param ptmFactory the PTM factory to save
+     * @param file the file where to save
+     * 
+     * @throws IOException exception thrown whenever an error occurred while saving the file
+     */
+    public static void saveToFile(PTMFactory ptmFactory, File file) throws IOException {
+        JsonMarshaller jsonMarshaller = new JsonMarshaller();
+        jsonMarshaller.saveObjectToJson(ptmFactory, file);
     }
     
     /**
@@ -152,7 +180,7 @@ public class PTMFactory implements Serializable {
         if (!factoryFile.getParentFile().exists()) {
             factoryFile.getParentFile().mkdir();
         }
-        SerializationUtils.writeObject(instance, factoryFile);
+        saveToFile(instance, factoryFile);
     }
 
     /**

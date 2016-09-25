@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.pride.CvTerm;
 
 import java.util.ArrayList;
@@ -25,11 +26,23 @@ public class EnzymeFactory {
      * The instance of the factory.
      */
     private static EnzymeFactory instance = null;
+    /**
+     * The folder containing the enzyme factory.
+     */
+    private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
+    /**
+     * The name of the enzyme factory back-up file. The version number follows
+     * the one of utilities.
+     */
+    private static String SERIALIZATION_FILE_NAME = "enzymeFactory-4.8.0.json";
 
     /**
      * The factory constructor.
      */
     private EnzymeFactory() {
+        for (Enzyme enzyme : getDefaultEnzymes()) {
+            instance.addEnzyme(enzyme);
+        }
     }
 
     /**
@@ -39,12 +52,46 @@ public class EnzymeFactory {
      */
     public static EnzymeFactory getInstance() {
         if (instance == null) {
-            instance = new EnzymeFactory();
-            for (Enzyme enzyme : getDefaultEnzymes()) {
-                instance.addEnzyme(enzyme);
+            try {
+                File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
+                if (savedFile.exists()) {
+                    instance = loadFromFile(savedFile);
+                } else {
+                    instance = new EnzymeFactory();
+                }
+            } catch (Exception e) {
+                instance = new EnzymeFactory();
             }
         }
         return instance;
+    }
+
+    /**
+     * Loads an enzyme factory from a file. The file must be an export of the factory in the json format.
+     * 
+     * @param file the file to load
+     * 
+     * @return the enzyme factory saved in file
+     * 
+     * @throws IOException exception thrown whenever an error occurred while loading the file
+     */
+    public static EnzymeFactory loadFromFile(File file) throws IOException {
+        JsonMarshaller jsonMarshaller = new JsonMarshaller();
+        EnzymeFactory result = (EnzymeFactory) jsonMarshaller.fromJson(EnzymeFactory.class, file);
+        return result;
+    }
+    
+    /**
+     * Saves en enzyme factory to a file.
+     * 
+     * @param enzymeFactory the enzyme factory to save
+     * @param file the file where to save
+     * 
+     * @throws IOException exception thrown whenever an error occurred while saving the file
+     */
+    public static void saveToFile(EnzymeFactory enzymeFactory, File file) throws IOException {
+        JsonMarshaller jsonMarshaller = new JsonMarshaller();
+        jsonMarshaller.saveObjectToJson(enzymeFactory, file);
     }
 
     /**

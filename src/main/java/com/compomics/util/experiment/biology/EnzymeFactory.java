@@ -95,6 +95,24 @@ public class EnzymeFactory {
     }
 
     /**
+     * Returns the folder where the factory is saved.
+     *
+     * @return the folder where the factory is saved
+     */
+    public static String getSerializationFolder() {
+        return SERIALIZATION_FILE_FOLDER;
+    }
+
+    /**
+     * Sets the folder where the factory is saved.
+     *
+     * @param serializationFolder the folder where the factory is saved
+     */
+    public static void setSerializationFolder(String serializationFolder) {
+        EnzymeFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
+    }
+
+    /**
      * Get the imported enzymes.
      *
      * @return The enzymes as ArrayList

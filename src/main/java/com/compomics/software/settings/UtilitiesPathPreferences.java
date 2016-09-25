@@ -1,5 +1,6 @@
 package com.compomics.software.settings;
 
+import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
@@ -47,7 +48,11 @@ public class UtilitiesPathPreferences {
         /**
          * Folder containing the PTM user preferences file.
          */
-        ptmFactoryKey("ptm_configuration", "Folder containing the PTM user preferences file.", "", true),
+        ptmFactoryKey("ptm_configuration", "Folder containing the supported PTMs.", "", true),
+        /**
+         * Folder containing the enzymes user preferences file.
+         */
+        enzymeFactoryKey("enzyme_configuration", "Folder containing the supported enzymes.", "", true),
         /**
          * Folder containing the indexes of the protein sequences databases.
          */
@@ -195,6 +200,9 @@ public class UtilitiesPathPreferences {
             case ptmFactoryKey:
                 PTMFactory.setSerializationFolder(path);
                 return;
+            case enzymeFactoryKey:
+                EnzymeFactory.setSerializationFolder(path);
+                return;
             case utilitiesPreferencesKey:
                 UtilitiesUserPreferences.setUserPreferencesFolder(path);
                 return;
@@ -223,6 +231,8 @@ public class UtilitiesPathPreferences {
                 return PrideObjectsFactory.getPrideFolder();
             case ptmFactoryKey:
                 return PTMFactory.getSerializationFolder();
+            case enzymeFactoryKey:
+                return EnzymeFactory.getSerializationFolder();
             case utilitiesPreferencesKey:
                 return UtilitiesUserPreferences.getUserPreferencesFolder();
             case identificationParametersKey:
@@ -349,6 +359,13 @@ public class UtilitiesPathPreferences {
                 break;
             case ptmFactoryKey:
                 toWrite = PTMFactory.getSerializationFolder();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
+                break;
+            case enzymeFactoryKey:
+                toWrite = EnzymeFactory.getSerializationFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }

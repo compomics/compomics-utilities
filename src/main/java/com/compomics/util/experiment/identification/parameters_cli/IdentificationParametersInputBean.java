@@ -1660,10 +1660,10 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
-            Enzyme option = enzymeFactory.getEnzyme(arg);
+            Enzyme option = enzymeFactory.getEnzyme(arg); // @TODO: can result in a null pointer if the enzyme list is not filled...
             searchParameters.setEnzyme(option);
         } else if (searchParameters.getEnzyme() == null) {
-            Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
+            Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin // @TODO: can result in a null pointer if the enzyme list is not filled...
             searchParameters.setEnzyme(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
@@ -3375,5 +3375,4 @@ public class IdentificationParametersInputBean {
         }
         return !error;
     }
-
 }

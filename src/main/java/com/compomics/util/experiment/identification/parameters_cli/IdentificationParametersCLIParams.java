@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.parameters_cli;
 
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 /**
@@ -35,16 +36,17 @@ public enum IdentificationParametersCLIParams {
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
-    PREC_TOL_DA("prec_tol", "Precursor ion mass tolerance in Dalton, default is 0.5 Da.", false, true), // For tools which do not have the ppm option
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance, default is '0.5'.", false, true),
-    ENZYME("enzyme", "Enzyme, default is 'Trypsin'. Available enzymes are listed in the GUI. (Note: case sensitive.)", false, true), // @TODO: list supported enzymes per search engine on a web page!
+    DIGESTION("digestion", "The type of digestion to consider: " + DigestionPreferences.CleavagePreference.getCommandLineDescription() + ". Default is 0.", false, true),
+    ENZYME("enzyme", "Enzyme used, default is 'Trypsin'. If more than one enzyme was used, please provide them as comma separated list with quotes, e.g. \"Trypsin, Glu-C\". See EnzymesCLI to list and edit the enzymes.", false, true),
+    MC("mc", "Number of allowed missed cleavages, default is '2'. If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"2, 1\".", false, true),
+    SPECIFICITY("specificity", "Specificity of the enzyme." + DigestionPreferences.Specificity.getCommandLineDescription() + ". If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"0, 1\".", false, true),
     FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false, true),
-    VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false, true),
+    VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\". See ModificationsCLI to list and edit the enzymes", false, true),
     MIN_CHARGE("min_charge", "Minimal charge to search for, default is '2'.", false, true),
     MAX_CHARGE("max_charge", "Maximal charge to search for, default is '4'.", false, true),
-    MC("mc", "Number of allowed missed cleavages, default is '2'.", false, true),
-    FI("fi", "Type of forward ion searched, default is 'b'.", false, true),
-    RI("ri", "Type of rewind ion searched, default is 'y'.", false, true),    
+    FI("fi", "Type of forward ion searched, default is 'b'. If more than one ion should be used, please provide them as comma separated list with quotes, e.g. \"a, b\".", false, true),
+    RI("ri", "Type of rewind ion searched, default is 'y'. If more than one ion should be used, please provide them as comma separated list with quotes, e.g. \"y, z\".", false, true),    
     MIN_ISOTOPE("min_isotope", "Minimal precursor isotope, default is '0'.", false, true),
     MAX_ISOTOPE("max_isotope", "Maximal precursor isotope, default is '1'.", false, true),
 

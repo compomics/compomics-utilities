@@ -570,10 +570,10 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     public static String enzymeMapping(DigestionPreferences digestionPreferences) {
 
         // Try to map to one of the default Myrimatch enzymes
-        if (digestionPreferences.isNoEnzymeSpecificity()) {
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.unSpecific) {
             return "unspecific cleavage";
         }
-        if (digestionPreferences.isWholeProtein()) {
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.wholeProtein) {
             return "no cleavage";
         }
         if (digestionPreferences.getEnzymes().size() == 1) {

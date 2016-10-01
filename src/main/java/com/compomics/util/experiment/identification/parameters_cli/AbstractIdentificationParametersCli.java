@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.parameters_cli;
 
-import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -45,12 +44,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public void initiate(String[] args) {
 
         try {
-            try {
-                enzymeFactory.importEnzymes(getEnzymeFile());
-            } catch (Exception e) {
-                System.out.println("An error occurred while loading the enzymes.");
-                e.printStackTrace();
-            }
 
             try {
                 SpeciesFactory speciesFactory = SpeciesFactory.getInstance();

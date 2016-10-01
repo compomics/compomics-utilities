@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
@@ -28,6 +29,8 @@ import com.compomics.util.experiment.identification.protein_inference.PeptideMap
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.preferences.DigestionPreferences.Specificity;
 import com.compomics.util.preferences.FractionSettings;
 import com.compomics.util.preferences.GenePreferences;
 import com.compomics.util.preferences.IdMatchValidationPreferences;
@@ -94,11 +97,63 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
+            ArrayList<String> possibleValues = new ArrayList<String>(3);
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.A_ION));
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.B_ION));
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.C_ION));
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.FI.id, arg, possibleValues)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
+            ArrayList<String> possibleValues = new ArrayList<String>(3);
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.X_ION));
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Y_ION));
+            possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Z_ION));
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.RI.id, arg, possibleValues)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
+            ArrayList<String> possibleValues = new ArrayList<String>(Specificity.values().length);
+            for (DigestionPreferences.CleavagePreference cleavagePreference : DigestionPreferences.CleavagePreference.values()) {
+                possibleValues.add(cleavagePreference.index + "");
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.DIGESTION.id, arg, possibleValues)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
-            Enzyme option = EnzymeFactory.getInstance().getEnzyme(arg);
-            if (option == null) {
-                System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not recognized." + System.getProperty("line.separator"));
+            ArrayList<String> enzymes = CommandLineUtils.splitInput(arg);
+            for (String enzymeName : enzymes) {
+                Enzyme enzyme = EnzymeFactory.getInstance().getEnzyme(enzymeName);
+                if (enzyme == null) {
+                    System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not recognized. Please add enzyme using the EnzymeCLI command." + System.getProperty("line.separator"));
+                    return false;
+                }
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
+            ArrayList<String> mcsAsString = CommandLineUtils.splitInput(arg);
+            for (String mcAsString : mcsAsString) {
+                if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MC.id, mcAsString, true)) {
+                    return false;
+                }
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SPECIFICITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SPECIFICITY.id);
+            ArrayList<String> possibleValues = new ArrayList<String>(Specificity.values().length);
+            for (Specificity specificity : Specificity.values()) {
+                possibleValues.add(specificity.index + "");
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SPECIFICITY.id, arg, possibleValues)) {
                 return false;
             }
         }
@@ -131,12 +186,6 @@ public class IdentificationParametersInputBean {
             File fastaFile = new File(arg);
             if (!fastaFile.exists()) {
                 System.out.println(System.getProperty("line.separator") + "Database not found." + System.getProperty("line.separator"));
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MC.id, arg, true)) {
                 return false;
             }
         }
@@ -1658,13 +1707,68 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             searchParameters.setFragmentIonAccuracy(option);
         }
+        DigestionPreferences digestionPreferences = searchParameters.getDigestionPreferences();
+        if (digestionPreferences == null) {
+            digestionPreferences = new DigestionPreferences();
+            searchParameters.setDigestionPreferences(digestionPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
+            Integer option = new Integer(arg);
+            DigestionPreferences.CleavagePreference cleavagePreference = DigestionPreferences.CleavagePreference.getCleavagePreferences(option);
+            if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() != cleavagePreference) {
+                digestionPreferences.clear();
+            }
+            digestionPreferences.setCleavagePreference(cleavagePreference);
+        }
+
         if (commandLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
+            if (digestionPreferences.hasEnzymes()) {
+                digestionPreferences.clearEnzymes();
+            }
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
-            Enzyme option = enzymeFactory.getEnzyme(arg);
-            searchParameters.setEnzyme(option);
-        } else if (searchParameters.getEnzyme() == null) {
-            Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
-            searchParameters.setEnzyme(option);
+            ArrayList<String> enzymes = CommandLineUtils.splitInput(arg);
+            ArrayList<Integer> mcs = null;
+            ArrayList<Specificity> specificities = null;
+            if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
+                ArrayList<String> args = CommandLineUtils.splitInput(arg);
+                mcs = new ArrayList<Integer>(args.size());
+                for (String stringValue : args) {
+                    mcs.add(new Integer(stringValue));
+                }
+            }
+            if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIFICITY.id)) {
+                ArrayList<String> args = CommandLineUtils.splitInput(arg);
+                specificities = new ArrayList<Specificity>(args.size());
+                for (String stringValue : args) {
+                    specificities.add(Specificity.getSpecificity(new Integer(stringValue)));
+                }
+            }
+            for (int i = 0; i < enzymes.size(); i++) {
+                String enzymeName = enzymes.get(i);
+                Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
+                digestionPreferences.addEnzyme(enzyme);
+                Integer mc;
+                if (mcs != null) {
+                    mc = mcs.get(i);
+                } else {
+                    mc = 2;
+                }
+                digestionPreferences.setnMissedCleavages(enzymeName, mc);
+                Specificity specificity;
+                if (specificities != null) {
+                    specificity = specificities.get(i);
+                } else {
+                    specificity = Specificity.specific;
+                }
+                digestionPreferences.setSpecificity(enzymeName, specificity);
+            }
+        } else if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme && !digestionPreferences.hasEnzymes()) {
+            String enzymeName = "Trypsin";
+            Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
+            digestionPreferences.addEnzyme(enzyme);
+            digestionPreferences.setnMissedCleavages(enzymeName, 2);
+            digestionPreferences.setSpecificity(enzymeName, Specificity.specific);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
@@ -1677,18 +1781,23 @@ public class IdentificationParametersInputBean {
                 proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
             }
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
-            Integer option = new Integer(arg);
-            searchParameters.setnMissedCleavages(option);
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
-            searchParameters.setIonSearched1(arg);
+            ArrayList<String> args = CommandLineUtils.splitInput(arg);
+            ArrayList<Integer> ions = new ArrayList<Integer>(args.size());
+            for (String ionName : args) {
+                ions.add(PeptideFragmentIon.getIonType(ionName));
+            }
+            searchParameters.setForwardIons(ions);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
-            searchParameters.setIonSearched2(arg);
+            ArrayList<String> args = CommandLineUtils.splitInput(arg);
+            ArrayList<Integer> ions = new ArrayList<Integer>(args.size());
+            for (String ionName : args) {
+                ions.add(PeptideFragmentIon.getIonType(ionName));
+            }
+            searchParameters.setRewindIons(ions);
         }
 
         if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_CHARGE.id)) {

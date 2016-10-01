@@ -22,6 +22,7 @@ public class CommandLineUtils {
      * Returns the list of file as argument for the command line.
      *
      * @param files the files
+     * 
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(ArrayList<File> files) {
@@ -40,6 +41,7 @@ public class CommandLineUtils {
      * line.
      *
      * @param args the arguments
+     * 
      * @return a comma separated string
      */
     public static String concatenate(ArrayList<String> args) {
@@ -72,6 +74,7 @@ public class CommandLineUtils {
      * line. Adds quotes where they seem to be needed.
      *
      * @param args the arguments
+     * 
      * @return a comma separated string
      */
     public static String concatenate(String[] args) {
@@ -119,6 +122,7 @@ public class CommandLineUtils {
      * Returns the file as argument for the command line.
      *
      * @param file the file
+     * 
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(File file) {
@@ -130,6 +134,7 @@ public class CommandLineUtils {
      * results as an arraylist.
      *
      * @param cliInput the CLI input
+     * 
      * @return an arraylist containing the results, empty list if empty string
      */
     public static ArrayList<String> splitInput(String cliInput) {
@@ -151,7 +156,9 @@ public class CommandLineUtils {
      *
      * @param optionInput the command line option
      * @param fileExtentions the file extensions to be considered
+     * 
      * @return a list of file candidates
+     * 
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      */
@@ -210,6 +217,7 @@ public class CommandLineUtils {
      *
      * @param aString the command line option
      * @param separator the separator used to separate the string
+     * 
      * @return the list if integers
      */
     public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
@@ -230,6 +238,7 @@ public class CommandLineUtils {
      *
      * @param aString the command line option
      * @param separator the separator used to separate the string
+     * 
      * @return the list if doubles
      */
     public static ArrayList<Double> getDoubleListFromString(String aString, String separator) {

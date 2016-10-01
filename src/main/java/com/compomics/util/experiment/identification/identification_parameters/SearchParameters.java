@@ -382,17 +382,19 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (digestionPreferences == null && enzyme != null) { // Backward compatibility check
             digestionPreferences = new DigestionPreferences();
             if (enzyme.isWholeProtein()) {
-                digestionPreferences.setWholeProtein(true);
+                digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.wholeProtein);
             } else if (enzyme.isUnspecific()) {
-                digestionPreferences.setNoEnzymeSpecificity(true);
+                digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.unSpecific);
             } else {
+                digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.enzyme);
                 digestionPreferences.addEnzyme(enzyme);
+                String enzymeName = enzyme.getName();
                 if (enzyme.isSemiSpecific()) {
-                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.semiSpecific);
+                    digestionPreferences.setSpecificity(enzymeName, DigestionPreferences.Specificity.semiSpecific);
                 } else {
-                    digestionPreferences.setSpecificity(enzyme.getName(), DigestionPreferences.Specificity.specific);
+                    digestionPreferences.setSpecificity(enzymeName, DigestionPreferences.Specificity.specific);
                 }
-                digestionPreferences.setnMissedCleavages(enzyme.getName(), nMissedCleavages);
+                digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
             }
             enzyme = null;
             nMissedCleavages = null;

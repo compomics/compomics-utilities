@@ -22,44 +22,157 @@ public class DigestionPreferences {
         /**
          * Specific at both termini.
          */
-        specific,
+        specific(0, "Specific"),
         /**
          * Specific at only one of the termini.
          */
-        semiSpecific,
+        semiSpecific(1, "Semi-Specific"),
         /**
          * Specific at the N-terminus only.
          */
-        specificNTermOnly,
+        specificNTermOnly(2, "N-term Specific"),
         /**
          * Specific at the C-terminus only.
          */
-        specificCTermOnly;
+        specificCTermOnly(3, "C-term Specific");
+
+        /**
+         * The index.
+         */
+        public final int index;
+        /**
+         * The name.
+         */
+        public final String name;
+
+        /**
+         * Constructor.
+         *
+         * @param index the index as integer
+         * @param name the name
+         */
+        private Specificity(int index, String name) {
+            this.index = index;
+            this.name = name;
+        }
+
+        /**
+         * Returns the specificity of the given index.
+         *
+         * @param index the index of the specificity
+         *
+         * @return the corresponding specificity
+         */
+        public static Specificity getSpecificity(int index) {
+            for (Specificity specificity : values()) {
+                if (specificity.index == index) {
+                    return specificity;
+                }
+            }
+            throw new IllegalArgumentException("No specificity found for index " + index + ".");
+        }
+
+        /**
+         * Returns the different options as command line description.
+         *
+         * @return the different options as command line description
+         */
+        public static String getCommandLineDescription() {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Specificity specificity : values()) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(", ");
+                }
+                stringBuilder.append(specificity.index).append(": ").append(specificity.name);
+            }
+            return stringBuilder.toString();
+        }
 
         @Override
         public String toString() {
-            switch (this) {
-                case specific:
-                    return "Specific";
-                case semiSpecific:
-                    return "Semi-specific";
-                case specificNTermOnly:
-                    return "N-term specific";
-                case specificCTermOnly:
-                    return "C-term specific";
-                default:
-                    throw new UnsupportedOperationException("Specificity " + this.name() + "Not implemented.");
+            return name;
+        }
+    }
+
+    /**
+     * Enum for the different types of digestion.
+     */
+    public enum CleavagePreference {
+
+        /**
+         * Digestion with an enzyme.
+         */
+        enzyme(0, "Enzyme"),
+        /**
+         * Unspecific digestion.
+         */
+        unSpecific(1, "Unspecific"),
+        /**
+         * Whole protein, no digestion.
+         */
+        wholeProtein(2, "Whole Protein");
+
+        /**
+         * The index.
+         */
+        public final int index;
+        /**
+         * The name.
+         */
+        public final String name;
+
+        /**
+         * Constructor.
+         *
+         * @param index the index as integer
+         * @param name the name
+         */
+        private CleavagePreference(int index, String name) {
+            this.index = index;
+            this.name = name;
+        }
+
+        /**
+         * Returns the cleavage preference of the given index.
+         *
+         * @param index the index of the cleavage preference
+         *
+         * @return the corresponding cleavage preference
+         */
+        public static CleavagePreference getCleavagePreferences(int index) {
+            for (CleavagePreference cleavagePreference : values()) {
+                if (cleavagePreference.index == index) {
+                    return cleavagePreference;
+                }
             }
+            throw new IllegalArgumentException("No cleavage preference found for index " + index + ".");
+        }
+
+        /**
+         * Returns the different options as command line description.
+         *
+         * @return the different options as command line description
+         */
+        public static String getCommandLineDescription() {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (CleavagePreference cleavagePreference : values()) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(", ");
+                }
+                stringBuilder.append(cleavagePreference.index).append(": ").append(cleavagePreference.name);
+            }
+            return stringBuilder.toString();
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
     /**
      * Boolean indicating whether the sample was not digested.
      */
-    private boolean wholeProtein = false;
-    /**
-     * Boolean indicating whether there is no enzymatic specificity.
-     */
-    private boolean noEnzymeSpecificity = false;
+    private CleavagePreference cleavagePreference;
     /**
      * List of enzyme used.
      */
@@ -81,15 +194,14 @@ public class DigestionPreferences {
 
     /**
      * Clones the given preferences.
-     * 
+     *
      * @param digestionPreferences the preferences to clone
-     * 
+     *
      * @return a new object containing the same preferences
      */
     public static DigestionPreferences clone(DigestionPreferences digestionPreferences) {
         DigestionPreferences clone = new DigestionPreferences();
-        clone.setWholeProtein(digestionPreferences.isWholeProtein());
-        clone.setNoEnzymeSpecificity(digestionPreferences.isNoEnzymeSpecificity());
+        clone.setCleavagePreference(digestionPreferences.getCleavagePreference());
         for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
             clone.addEnzyme(enzyme);
             String enzymeName = enzyme.getName();
@@ -98,19 +210,30 @@ public class DigestionPreferences {
         }
         return clone;
     }
-    
+
     /**
-     * Returns default digestion preferences. Trypsin specific with two missed cleavages.
-     * 
+     * Returns default digestion preferences. Trypsin specific with two missed
+     * cleavages.
+     *
      * @return default digestion preferences
      */
     public static DigestionPreferences getDefaultPreferences() {
+        DigestionPreferences digestionPreferences = new DigestionPreferences();
+        digestionPreferences.setCleavagePreference(CleavagePreference.enzyme);
         String enzymeName = "Tryspsin";
         Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
-        DigestionPreferences digestionPreferences = new DigestionPreferences();
         digestionPreferences.addEnzyme(trypsin);
         digestionPreferences.setnMissedCleavages(enzymeName, 2);
         return digestionPreferences;
+    }
+
+    /**
+     * Returns a boolean indicating whether enzyme settings were set.
+     * 
+     * @return a boolean indicating whether enzyme settings were set
+     */
+    public boolean hasEnzymes() {
+        return enzymes != null && !enzymes.isEmpty();
     }
 
     /**
@@ -150,10 +273,21 @@ public class DigestionPreferences {
      * Clears the parameters.
      */
     public void clear() {
+        cleavagePreference = null;
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
     }
+
+    /**
+     * Clears the enzymes set including specificity and missed cleavages.
+     */
+    public void clearEnzymes() {
+        enzymes = null;
+        nMissedCleavages = null;
+        specificity = null;
+    }
+
 
     /**
      * Returns the number of allowed missed cleavages for the given enzyme. Null
@@ -212,41 +346,21 @@ public class DigestionPreferences {
     }
 
     /**
-     * Returns a boolean indicating whether no digestion was performed.
+     * Returns the cleavage preferences.
      *
-     * @return a boolean indicating whether no digestion was performed
+     * @return the cleavage preferences
      */
-    public boolean isWholeProtein() {
-        return wholeProtein;
+    public CleavagePreference getCleavagePreference() {
+        return cleavagePreference;
     }
 
     /**
-     * Sets whether no digestion was performed.
+     * Sets the cleavage preferences.
      *
-     * @param wholeProtein a boolean indicating whether no digestion was
-     * performed
+     * @param cleavagePreference the cleavage preferences
      */
-    public void setWholeProtein(boolean wholeProtein) {
-        this.wholeProtein = wholeProtein;
-    }
-
-    /**
-     * Indicates whether no enzyme specificity should be used.
-     *
-     * @return a boolean indicating whether no enzyme specificity should be used
-     */
-    public boolean isNoEnzymeSpecificity() {
-        return noEnzymeSpecificity;
-    }
-
-    /**
-     * Sets whether no enzyme specificity should be used.
-     *
-     * @param noEnzymeSpecificity a boolean indicating whether no enzyme
-     * specificity should be used
-     */
-    public void setNoEnzymeSpecificity(boolean noEnzymeSpecificity) {
-        this.noEnzymeSpecificity = noEnzymeSpecificity;
+    public void setCleavagePreference(CleavagePreference cleavagePreference) {
+        this.cleavagePreference = cleavagePreference;
     }
 
     /**
@@ -259,23 +373,29 @@ public class DigestionPreferences {
         StringBuilder stringBuilder = new StringBuilder();
         if (!defaultPreferences.isSameAs(this)) {
             String newLine = System.getProperty("line.separator");
-            if (wholeProtein) {
-                stringBuilder.append("Whole Protein").append(newLine);
-            } else if (noEnzymeSpecificity) {
-                stringBuilder.append("No Enzyme Specificity").append(newLine);
-            } else {
-                for (int i = 0; i < enzymes.size(); i++) {
-                    if (stringBuilder.length() > 0) {
-                        stringBuilder.append(newLine);
+            switch (cleavagePreference) {
+                case wholeProtein:
+                    stringBuilder.append("Whole Protein").append(newLine);
+                    break;
+                case unSpecific:
+                    stringBuilder.append("No Enzyme Specificity").append(newLine);
+                    break;
+                case enzyme:
+                    for (Enzyme enzyme1 : enzymes) {
+                        if (stringBuilder.length() > 0) {
+                            stringBuilder.append(newLine);
+                        }
+                        Enzyme enzyme = enzyme1;
+                        String enzymeName = enzyme.getName();
+                        stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
+                        Integer nmc = getnMissedCleavages(enzymeName);
+                        if (nmc != null) {
+                            stringBuilder.append(" ").append(nmc).append(" missed cleavages");
+                        }
                     }
-                    Enzyme enzyme = enzymes.get(i);
-                    String enzymeName = enzyme.getName();
-                    stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
-                    Integer nmc = getnMissedCleavages(enzymeName);
-                    if (nmc != null) {
-                        stringBuilder.append(" ").append(nmc).append(" missed cleavages");
-                    }
-                }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Description not implemented for cleavage preference " + cleavagePreference + ".");
             }
         }
         return stringBuilder.toString();
@@ -291,8 +411,7 @@ public class DigestionPreferences {
      * same as the given other preferences
      */
     public boolean isSameAs(DigestionPreferences otherDigestionPreferences) {
-        if (otherDigestionPreferences.isNoEnzymeSpecificity() != noEnzymeSpecificity
-                || otherDigestionPreferences.isWholeProtein() != wholeProtein) {
+        if (cleavagePreference == otherDigestionPreferences.getCleavagePreference()) {
             return false;
         }
         ArrayList<Enzyme> otherEnzymes = otherDigestionPreferences.getEnzymes();
@@ -326,61 +445,64 @@ public class DigestionPreferences {
      */
     public String getXTandemFormat() {
 
-        StringBuilder result = new StringBuilder();
-
-        if (noEnzymeSpecificity) {
-            result.append("[X]|[X]");
-        } else if (!wholeProtein) {
-            for (Enzyme enzyme : enzymes) {
-                if (result.length() > 0) {
-                    result.append(",");
-                }
-                Specificity specificity = getSpecificity(enzyme.getName());
-                if (enzyme.getAminoAcidBefore().size() > 0) {
-                    result.append("[");
-                    for (Character aa : enzyme.getAminoAcidBefore()) {
-                        result.append(aa);
+        switch (cleavagePreference) {
+            case wholeProtein:
+                return "";
+            case unSpecific:
+                return "[X]|[X]";
+            case enzyme:
+                StringBuilder result = new StringBuilder();
+                for (Enzyme enzyme : enzymes) {
+                    if (result.length() > 0) {
+                        result.append(",");
                     }
-                    result.append("]");
-                }
-
-                if (enzyme.getRestrictionBefore().size() > 0) {
-                    result.append("{");
-                    for (Character aa : enzyme.getRestrictionBefore()) {
-                        result.append(aa);
+                    Specificity specificity = getSpecificity(enzyme.getName());
+                    if (enzyme.getAminoAcidBefore().size() > 0) {
+                        result.append("[");
+                        for (Character aa : enzyme.getAminoAcidBefore()) {
+                            result.append(aa);
+                        }
+                        result.append("]");
                     }
-                    result.append("}");
-                }
 
-                if (enzyme.getAminoAcidBefore().isEmpty() && enzyme.getRestrictionBefore().isEmpty()) {
-                    result.append("[X]");
-                }
-
-                result.append("|");
-
-                if (enzyme.getAminoAcidAfter().size() > 0) {
-                    result.append("[");
-                    for (Character aa : enzyme.getAminoAcidAfter()) {
-                        result.append(aa);
+                    if (enzyme.getRestrictionBefore().size() > 0) {
+                        result.append("{");
+                        for (Character aa : enzyme.getRestrictionBefore()) {
+                            result.append(aa);
+                        }
+                        result.append("}");
                     }
-                    result.append("]");
-                }
 
-                if (enzyme.getRestrictionAfter().size() > 0) {
-                    result.append("{");
-                    for (Character aa : enzyme.getRestrictionAfter()) {
-                        result.append(aa);
+                    if (enzyme.getAminoAcidBefore().isEmpty() && enzyme.getRestrictionBefore().isEmpty()) {
+                        result.append("[X]");
                     }
-                    result.append("}");
-                }
 
-                if (enzyme.getAminoAcidAfter().isEmpty() && enzyme.getRestrictionAfter().isEmpty()) {
-                    result.append("[X]");
+                    result.append("|");
+
+                    if (enzyme.getAminoAcidAfter().size() > 0) {
+                        result.append("[");
+                        for (Character aa : enzyme.getAminoAcidAfter()) {
+                            result.append(aa);
+                        }
+                        result.append("]");
+                    }
+
+                    if (enzyme.getRestrictionAfter().size() > 0) {
+                        result.append("{");
+                        for (Character aa : enzyme.getRestrictionAfter()) {
+                            result.append(aa);
+                        }
+                        result.append("}");
+                    }
+
+                    if (enzyme.getAminoAcidAfter().isEmpty() && enzyme.getRestrictionAfter().isEmpty()) {
+                        result.append("[X]");
+                    }
                 }
-            }
+                return result.toString();
+            default:
+                throw new UnsupportedOperationException("X!Tandem format not implemented for cleavage preference " + cleavagePreference + ".");
         }
-
-        return result.toString();
     }
 
     /**

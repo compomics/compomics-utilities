@@ -23,7 +23,6 @@ public class DigestionTest extends TestCase {
 
         EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
         File enzymeFile = new File("src/test/resources/experiment/enzymes.xml");
-        enzymeFactory.importEnzymes(enzymeFile);
         Enzyme enzyme = enzymeFactory.getEnzyme("Trypsin");
         HashSet<String> peptides = enzyme.digest(testSequence, 2, 4, 8);
 

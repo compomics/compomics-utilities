@@ -250,7 +250,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Returns the type of fragment ion as a letter.
+     * Returns the type of fragment ion as a letter. e.g. 'a' for an a-ion.
      *
      * @param subType the subtype
      * @return the type of fragment ion as a letter
@@ -272,6 +272,32 @@ public class PeptideFragmentIon extends Ion {
             default:
                 throw new UnsupportedOperationException("No name for subtype: " + subType + ".");
         }
+    }
+
+    /**
+     * Returns the ion index corresponding to the given symbol in the drop down
+     * menu.
+     *
+     * @param ionSymbol the ion symbol
+     *
+     * @return the ion index corresponding to the given symbol in the drop down
+     * menu
+     */
+    public static Integer getIonType(String ionSymbol) {
+        if (ionSymbol.equals("a")) {
+            return PeptideFragmentIon.A_ION;
+        } else if (ionSymbol.equals("b")) {
+            return PeptideFragmentIon.B_ION;
+        } else if (ionSymbol.equals("c")) {
+            return PeptideFragmentIon.C_ION;
+        } else if (ionSymbol.equals("x")) {
+            return PeptideFragmentIon.X_ION;
+        } else if (ionSymbol.equals("y")) {
+            return PeptideFragmentIon.Y_ION;
+        } else if (ionSymbol.equals("z")) {
+            return PeptideFragmentIon.Z_ION;
+        }
+        throw new UnsupportedOperationException("Ion of type " + ionSymbol + " not supported.");
     }
 
     /**

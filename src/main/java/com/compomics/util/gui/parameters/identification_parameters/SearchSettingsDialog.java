@@ -1961,27 +1961,33 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         DigestionPreferences digestionPreferences = searchParameters.getDigestionPreferences();
-        if (digestionPreferences.isNoEnzymeSpecificity()) {
-            // @TODO: Set not specific
-        } else if (digestionPreferences.isWholeProtein()) {
-            // @TODO: Set whole protein
-        } else {
-            if (digestionPreferences.getEnzymes() != null && !digestionPreferences.getEnzymes().isEmpty()) {
-                // @TODO: Allow the selection of multiple enzymes?
-                Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
-                String enzymeName = enzyme.getName();
-                enzymesCmb.setSelectedItem(enzymeName);
-                Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
-                if (nMissedCleavages != null) {
-                    maxMissedCleavagesTxt.setText(nMissedCleavages + "");
+        switch (digestionPreferences.getCleavagePreference()) {
+            case unSpecific:
+                // @TODO: Set not specific
+                break;
+            case wholeProtein:
+                // @TODO: Set whole protein
+                break;
+            case enzyme:
+                if (digestionPreferences.hasEnzymes()) {
+                    // @TODO: Allow the selection of multiple enzymes?
+                    Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
+                    String enzymeName = enzyme.getName();
+                    enzymesCmb.setSelectedItem(enzymeName);
+                    Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+                    if (nMissedCleavages != null) {
+                        maxMissedCleavagesTxt.setText(nMissedCleavages + "");
+                    } else {
+                        maxMissedCleavagesTxt.setText("Not set");
+                    }
+                    // @TODO: Set specificity
                 } else {
-                    maxMissedCleavagesTxt.setText("Not set");
+                    // @TODO: Set nothing selected
+                    enzymesCmb.setSelectedIndex(0);
                 }
-                // @TODO: Set specificity
-            } else {
-                // @TODO: Set nothing selected
-                enzymesCmb.setSelectedIndex(0);
-            }
+                break;
+            default:
+                throw new IllegalArgumentException("cleavage preference " + digestionPreferences.getCleavagePreference() + " not supported.");
         }
 
         if (searchParameters.getForwardIons() != null && !searchParameters.getForwardIons().isEmpty()) {
@@ -2265,11 +2271,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
         ArrayList<Integer> selectedForwardIons = new ArrayList<Integer>(1);
-        Integer ionType = getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
+        Integer ionType = PeptideFragmentIon.getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
         selectedForwardIons.add(ionType);
         tempSearchParameters.setForwardIons(selectedForwardIons);
         ArrayList<Integer> selectedRewindIons = new ArrayList<Integer>(1);
-        ionType = getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
+        ionType = PeptideFragmentIon.getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
         selectedRewindIons.add(ionType);
         tempSearchParameters.setRewindIons(selectedRewindIons);
         tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
@@ -2573,31 +2579,5 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             error += ".\nPlease verify the definition of the PTM(s) in the modifications editor.";
         }
         return error;
-    }
-
-    /**
-     * Returns the ion index corresponding to the given symbol in the drop down
-     * menu.
-     *
-     * @param ionSymbol the ion symbol
-     *
-     * @return the ion index corresponding to the given symbol in the drop down
-     * menu
-     */
-    public static Integer getIonType(String ionSymbol) {
-        if (ionSymbol.equals("a")) {
-            return PeptideFragmentIon.A_ION;
-        } else if (ionSymbol.equals("b")) {
-            return PeptideFragmentIon.B_ION;
-        } else if (ionSymbol.equals("c")) {
-            return PeptideFragmentIon.C_ION;
-        } else if (ionSymbol.equals("x")) {
-            return PeptideFragmentIon.X_ION;
-        } else if (ionSymbol.equals("y")) {
-            return PeptideFragmentIon.Y_ION;
-        } else if (ionSymbol.equals("z")) {
-            return PeptideFragmentIon.Z_ION;
-        }
-        throw new UnsupportedOperationException("Ion of type " + ionSymbol + " not supported.");
     }
 }

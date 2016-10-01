@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.parameters_cli;
 
+import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -101,8 +102,13 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public Object call() {
 
         try {
-            if (input.isListMods()) {
-                printModifications();
+            if (input.isListMods() || input.isListEnzymes()) {
+                if (input.isListMods()) {
+                    printModifications();
+                }
+                if (input.isListEnzymes()) {
+                    printEnzymes();
+                }
             } else {
                 File outputFile = input.getDestinationFile();
                 IdentificationParameters identificationParameters = input.getIdentificationParameters();
@@ -118,7 +124,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     }
 
     /**
-     * Prints the available modifications on the screen.
+     * Prints the available modifications.
      */
     public void printModifications() {
 
@@ -194,6 +200,22 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
         }
 
         return ptm.getName() + "\t" + "(" + sign + ptmMass + " targeting " + target + ")";
+    }
+
+    /**
+     * Prints the available enzymes.
+     */
+    public void printEnzymes() {
+
+        System.out.println(System.getProperty("line.separator")
+                + "========================" + System.getProperty("line.separator")
+                + "Available Enzymes:" + System.getProperty("line.separator")
+                + "========================"
+                + System.getProperty("line.separator"));
+        for (Enzyme enzyme : enzymeFactory.getEnzymes()) {
+            System.out.println(enzyme.getDescription());
+        }
+        System.out.println();
     }
 
     /**

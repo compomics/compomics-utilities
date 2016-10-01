@@ -47,7 +47,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 
 /**
- * This class contains the parses parameters from a command line and stores them
+ * This class parses the parameters from a command line and stores them
  * in a SearchParameters object.
  *
  * @author Marc Vaudel
@@ -71,6 +71,9 @@ public class IdentificationParametersInputBean {
             return false;
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
+            return true;
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ENZYMES.id)) {
             return true;
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
@@ -1604,9 +1607,13 @@ public class IdentificationParametersInputBean {
      */
     private File destinationFile;
     /**
-     * If true the modifications will be listed on the screen
+     * If true the modifications will be printed.
      */
     private Boolean listMods = false;
+    /**
+     * If true the enzymes will be printed.
+     */
+    private Boolean listEnzymes = false;
     /**
      * The compomics PTM factory.
      */
@@ -1638,6 +1645,9 @@ public class IdentificationParametersInputBean {
         ///////////////////////////////////
         if (commandLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
             listMods = true;
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ENZYMES.id)) {
+            listEnzymes = true;
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id);
@@ -3429,12 +3439,21 @@ public class IdentificationParametersInputBean {
     }
 
     /**
-     * Indicates whether the modifications should be printed on the screen.
+     * Indicates whether the modifications should be printed.
      *
-     * @return true if the modifications should be printed on the screen
+     * @return true if the modifications should be printed
      */
     public Boolean isListMods() {
         return listMods;
+    }
+
+    /**
+     * Indicates whether the enzymes should be printed.
+     *
+     * @return true if the enzymes should be printed
+     */
+    public Boolean isListEnzymes() {
+        return listEnzymes;
     }
 
     /**

@@ -63,10 +63,8 @@ public class IdentificationParametersInputBean {
      * are included
      *
      * @return true if the startup was valid
-     * @throws IOException if an IOException occurs
-     *
      */
-    public static boolean isValidStartup(CommandLine aLine, boolean checkMandatoryParameters) throws IOException {
+    public static boolean isValidStartup(CommandLine aLine, boolean checkMandatoryParameters) {
         if (aLine.getOptions().length == 0) {
             return false;
         }

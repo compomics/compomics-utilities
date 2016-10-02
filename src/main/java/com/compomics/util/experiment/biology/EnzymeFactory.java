@@ -46,48 +46,78 @@ public class EnzymeFactory {
     }
 
     /**
-     * Static method to get an instance of the factory.
+     * Static method to get an instance of the factory. Attempts to load the
+     * factory from the file set in the path preferences. If any
+     * exception occurs it is ignored silently and defaults are used.
      *
      * @return the factory instance
      */
     public static EnzymeFactory getInstance() {
+        return getInstance(null);
+    }
+
+    /**
+     * Static method to get an instance of the factory. Attempts to load the
+     * factory from the given file. If the file is null, attempts to load from
+     * the file set in the path preferences. If any exception occurs it
+     * is ignored silently and defaults are used.
+     *
+     * @param enzymeFile the file to load the factory from
+     *
+     * @return the factory instance
+     */
+    public static EnzymeFactory getInstance(File enzymeFile) {
         if (instance == null) {
             try {
-                File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
-                if (savedFile.exists()) {
-                    instance = loadFromFile(savedFile);
+                if (enzymeFile == null) {
+                    enzymeFile = getSerializationFile();
+                }
+                if (enzymeFile.exists()) {
+                    instance = loadFromFile(enzymeFile);
                 } else {
-                    instance = new EnzymeFactory();
+                    instance = getDefault();
                 }
             } catch (Exception e) {
-                instance = new EnzymeFactory();
+                instance = getDefault();
             }
         }
         return instance;
     }
 
     /**
-     * Loads an enzyme factory from a file. The file must be an export of the factory in the json format.
-     * 
+     * Returns an instance containing only the default enzymes.
+     *
+     * @return an instance containing only the default enzymes
+     */
+    public static EnzymeFactory getDefault() {
+        return new EnzymeFactory();
+    }
+
+    /**
+     * Loads an enzyme factory from a file. The file must be an export of the
+     * factory in the json format.
+     *
      * @param file the file to load
-     * 
+     *
      * @return the enzyme factory saved in file
-     * 
-     * @throws IOException exception thrown whenever an error occurred while loading the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading the file
      */
     public static EnzymeFactory loadFromFile(File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
         EnzymeFactory result = (EnzymeFactory) jsonMarshaller.fromJson(EnzymeFactory.class, file);
         return result;
     }
-    
+
     /**
      * Saves en enzyme factory to a file.
-     * 
+     *
      * @param enzymeFactory the enzyme factory to save
      * @param file the file where to save
-     * 
-     * @throws IOException exception thrown whenever an error occurred while saving the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the file
      */
     public static void saveToFile(EnzymeFactory enzymeFactory, File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
@@ -110,6 +140,27 @@ public class EnzymeFactory {
      */
     public static void setSerializationFolder(String serializationFolder) {
         EnzymeFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
+    }
+
+    /**
+     * Returns the file where to save the factory.
+     * 
+     * @return the file where to save the factory
+     */
+    public static File getSerializationFile() {
+        return new File(getSerializationFolder(), SERIALIZATION_FILE_NAME);
+    }
+
+    /**
+     * Sets the file where to save the factory. Warning: this overwrites SERIALIZATION_FILE_FOLDER.
+     * 
+     * @param serializationFile the file where to save the factory
+     */
+    public static void setSerializationFile(File serializationFile) {
+        String parent = serializationFile.getParent();
+        String name = serializationFile.getName();
+        setSerializationFolder(parent);
+        SERIALIZATION_FILE_NAME = name;
     }
 
     /**
@@ -138,6 +189,15 @@ public class EnzymeFactory {
      */
     public void addEnzyme(Enzyme enzyme) {
         enzymes.put(enzyme.getName(), enzyme);
+    }
+    
+    /**
+     * Removes an enzyme from the mapping.
+     * 
+     * @param enzymeName the name of the enzyme to remove.
+     */
+    public void removeEnzyme(String enzymeName) {
+        enzymes.remove(enzymeName);
     }
 
     /**

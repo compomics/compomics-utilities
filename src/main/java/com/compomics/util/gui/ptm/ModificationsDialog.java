@@ -1,5 +1,6 @@
 package com.compomics.util.gui.ptm;
 
+import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
@@ -11,6 +12,9 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -252,6 +256,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         searchPreviousButton = new javax.swing.JButton();
         searchInputTxt = new javax.swing.JTextField();
         findJLabel = new javax.swing.JLabel();
+        exportDefaultModsLabel = new javax.swing.JLabel();
         userModsPanel = new javax.swing.JPanel();
         userModsScrollPane = new javax.swing.JScrollPane();
         userModificationsTable = new JTable() {
@@ -269,6 +274,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         deleteUserPTM = new javax.swing.JButton();
         editUserPTM = new javax.swing.JButton();
         addUserPTM = new javax.swing.JButton();
+        exportUserModsLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         modificationsHelpJButton = new javax.swing.JButton();
 
@@ -305,7 +311,6 @@ public class ModificationsDialog extends javax.swing.JDialog {
         modificationsSplitPane.setDividerSize(-1);
         modificationsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         modificationsSplitPane.setResizeWeight(0.65);
-        modificationsSplitPane.setOpaque(false);
 
         defaultModsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Modifications"));
         defaultModsPanel.setOpaque(false);
@@ -391,6 +396,20 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         findJLabel.setText("Find:");
 
+        exportDefaultModsLabel.setText("<html><a href>Export to file</a></html>");
+        exportDefaultModsLabel.setToolTipText("Export to tab delimited text file");
+        exportDefaultModsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exportDefaultModsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exportDefaultModsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exportDefaultModsLabelMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout defaultModsPanelLayout = new javax.swing.GroupLayout(defaultModsPanel);
         defaultModsPanel.setLayout(defaultModsPanelLayout);
         defaultModsPanelLayout.setHorizontalGroup(
@@ -398,8 +417,11 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
+                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
                     .addGroup(defaultModsPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(exportDefaultModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(findJLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchInputTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,7 +444,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     .addComponent(searchInputTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchIndexLabel)
                     .addComponent(searchPreviousButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchNextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchNextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exportDefaultModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -477,6 +500,20 @@ public class ModificationsDialog extends javax.swing.JDialog {
             }
         });
 
+        exportUserModsLabel.setText("<html><a href>Export to file</a></html>");
+        exportUserModsLabel.setToolTipText("Export to tab delimited text file");
+        exportUserModsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exportUserModsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exportUserModsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exportUserModsLabelMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout userModsPanelLayout = new javax.swing.GroupLayout(userModsPanel);
         userModsPanel.setLayout(userModsPanelLayout);
         userModsPanelLayout.setHorizontalGroup(
@@ -486,7 +523,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createSequentialGroup()
-                        .addGap(10, 717, Short.MAX_VALUE)
+                        .addGap(6, 6, 6)
+                        .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -503,7 +542,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(editUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -1013,6 +1054,89 @@ public class ModificationsDialog extends javax.swing.JDialog {
         formWindowClosing(null);
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void exportDefaultModsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_exportDefaultModsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void exportDefaultModsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_exportDefaultModsLabelMouseExited
+
+    /**
+     * Export the default modification to a user selected tab separated text
+     * file.
+     *
+     * @param evt
+     */
+    private void exportDefaultModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseReleased
+
+        // get the file to send the output to
+        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
+
+        if (selectedFile != null) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
+                Util.tableToFile(defaultModificationsTable, "\t", null, true, writer);
+                writer.close();
+                JOptionPane.showMessageDialog(this, "Data copied to file:\n" + selectedFile.getAbsolutePath(), "Data Exported.", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "An error occurred when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_exportDefaultModsLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void exportUserModsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportUserModsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_exportUserModsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void exportUserModsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportUserModsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_exportUserModsLabelMouseExited
+
+    /**
+     * Export the user modification to a user selected tab separated text file.
+     *
+     * @param evt
+     */
+    private void exportUserModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportUserModsLabelMouseReleased
+
+        // get the file to send the output to
+        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "user modifications.txt", false);
+
+        if (selectedFile != null) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
+                Util.tableToFile(userModificationsTable, "\t", null, true, writer);
+                writer.close();
+                JOptionPane.showMessageDialog(this, "Data copied to file:\n" + selectedFile.getAbsolutePath(), "Data Exported.", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "An error occurred when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_exportUserModsLabelMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserPTM;
     private javax.swing.JTable defaultModificationsTable;
@@ -1022,6 +1146,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private javax.swing.JButton deleteUserPTM;
     private javax.swing.JButton editUserPTM;
     private javax.swing.JMenuItem editUserPtmJMenuItem;
+    private javax.swing.JLabel exportDefaultModsLabel;
+    private javax.swing.JLabel exportUserModsLabel;
     private javax.swing.JLabel findJLabel;
     private javax.swing.JPanel modificationsEditorPanel;
     private javax.swing.JButton modificationsHelpJButton;

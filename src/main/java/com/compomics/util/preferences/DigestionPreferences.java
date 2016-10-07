@@ -220,7 +220,7 @@ public class DigestionPreferences {
     public static DigestionPreferences getDefaultPreferences() {
         DigestionPreferences digestionPreferences = new DigestionPreferences();
         digestionPreferences.setCleavagePreference(CleavagePreference.enzyme);
-        String enzymeName = "Tryspsin";
+        String enzymeName = "Trypsin";
         Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
         digestionPreferences.addEnzyme(trypsin);
         digestionPreferences.setnMissedCleavages(enzymeName, 2);
@@ -411,7 +411,7 @@ public class DigestionPreferences {
      * same as the given other preferences
      */
     public boolean isSameAs(DigestionPreferences otherDigestionPreferences) {
-        if (cleavagePreference == otherDigestionPreferences.getCleavagePreference()) {
+        if (cleavagePreference != otherDigestionPreferences.getCleavagePreference()) {
             return false;
         }
         ArrayList<Enzyme> otherEnzymes = otherDigestionPreferences.getEnzymes();

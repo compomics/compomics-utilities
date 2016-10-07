@@ -40,15 +40,13 @@ public class EnzymeFactory {
      * The factory constructor.
      */
     private EnzymeFactory() {
-        for (Enzyme enzyme : getDefaultEnzymes()) {
-            instance.addEnzyme(enzyme);
-        }
+        enzymes = new HashMap<String, Enzyme>();
     }
 
     /**
      * Static method to get an instance of the factory. Attempts to load the
-     * factory from the file set in the path preferences. If any
-     * exception occurs it is ignored silently and defaults are used.
+     * factory from the file set in the path preferences. If any exception
+     * occurs it is ignored silently and defaults are used.
      *
      * @return the factory instance
      */
@@ -59,8 +57,8 @@ public class EnzymeFactory {
     /**
      * Static method to get an instance of the factory. Attempts to load the
      * factory from the given file. If the file is null, attempts to load from
-     * the file set in the path preferences. If any exception occurs it
-     * is ignored silently and defaults are used.
+     * the file set in the path preferences. If any exception occurs it is
+     * ignored silently and defaults are used.
      *
      * @param enzymeFile the file to load the factory from
      *
@@ -90,7 +88,11 @@ public class EnzymeFactory {
      * @return an instance containing only the default enzymes
      */
     public static EnzymeFactory getDefault() {
-        return new EnzymeFactory();
+        EnzymeFactory enzymeFactory = new EnzymeFactory();
+        for (Enzyme enzyme : getDefaultEnzymes()) {
+            enzymeFactory.addEnzyme(enzyme);
+        }
+        return enzymeFactory;
     }
 
     /**
@@ -144,7 +146,7 @@ public class EnzymeFactory {
 
     /**
      * Returns the file where to save the factory.
-     * 
+     *
      * @return the file where to save the factory
      */
     public static File getSerializationFile() {
@@ -152,8 +154,9 @@ public class EnzymeFactory {
     }
 
     /**
-     * Sets the file where to save the factory. Warning: this overwrites SERIALIZATION_FILE_FOLDER.
-     * 
+     * Sets the file where to save the factory. Warning: this overwrites
+     * SERIALIZATION_FILE_FOLDER.
+     *
      * @param serializationFile the file where to save the factory
      */
     public static void setSerializationFile(File serializationFile) {
@@ -190,10 +193,10 @@ public class EnzymeFactory {
     public void addEnzyme(Enzyme enzyme) {
         enzymes.put(enzyme.getName(), enzyme);
     }
-    
+
     /**
      * Removes an enzyme from the mapping.
-     * 
+     *
      * @param enzymeName the name of the enzyme to remove.
      */
     public void removeEnzyme(String enzymeName) {

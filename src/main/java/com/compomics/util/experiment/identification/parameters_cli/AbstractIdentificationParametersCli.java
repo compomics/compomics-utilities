@@ -28,14 +28,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      * The parameters input bean containing the command line arguments.
      */
     private IdentificationParametersInputBean input;
-    /**
-     * The post translational modifications factory.
-     */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The enzyme factory.
-     */
-    private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
 
     /**
      * Initiates the IdentificationParametersCli.
@@ -136,6 +128,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
         System.out.println("----------------------");
         System.out.println("Default Modifications:");
         System.out.println("----------------------");
+        PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String ptmName : ptmFactory.getDefaultModificationsOrdered()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
             System.out.println(getPtmLine(ptm));
@@ -212,7 +205,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 + "Available Enzymes:" + System.getProperty("line.separator")
                 + "========================"
                 + System.getProperty("line.separator"));
-        for (Enzyme enzyme : enzymeFactory.getEnzymes()) {
+        for (Enzyme enzyme : EnzymeFactory.getInstance().getEnzymes()) {
             System.out.println(enzyme.getDescription());
         }
         System.out.println();

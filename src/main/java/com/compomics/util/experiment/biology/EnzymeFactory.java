@@ -27,14 +27,9 @@ public class EnzymeFactory {
      */
     private static EnzymeFactory instance = null;
     /**
-     * The folder containing the enzyme factory.
+     * The file where the factory is saved.
      */
-    private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
-    /**
-     * The name of the enzyme factory back-up file. The version number follows
-     * the one of utilities.
-     */
-    private static String SERIALIZATION_FILE_NAME = "enzymeFactory-4.8.0.json";
+    private static String SERIALIZATION_FILE = null;
 
     /**
      * The factory constructor.
@@ -67,10 +62,10 @@ public class EnzymeFactory {
     public static EnzymeFactory getInstance(File enzymeFile) {
         if (instance == null) {
             try {
-                if (enzymeFile == null) {
-                    enzymeFile = getSerializationFile();
+                if (enzymeFile == null && getSerializationFile() != null) {
+                    enzymeFile = new File(getSerializationFile());
                 }
-                if (enzymeFile.exists()) {
+                if (enzymeFile != null && enzymeFile.exists()) {
                     instance = loadFromFile(enzymeFile);
                 } else {
                     instance = getDefault();
@@ -127,43 +122,22 @@ public class EnzymeFactory {
     }
 
     /**
-     * Returns the folder where the factory is saved.
-     *
-     * @return the folder where the factory is saved
-     */
-    public static String getSerializationFolder() {
-        return SERIALIZATION_FILE_FOLDER;
-    }
-
-    /**
-     * Sets the folder where the factory is saved.
-     *
-     * @param serializationFolder the folder where the factory is saved
-     */
-    public static void setSerializationFolder(String serializationFolder) {
-        EnzymeFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
-    }
-
-    /**
      * Returns the file where to save the factory.
      *
      * @return the file where to save the factory
      */
-    public static File getSerializationFile() {
-        return new File(getSerializationFolder(), SERIALIZATION_FILE_NAME);
+    public static String getSerializationFile() {
+        return SERIALIZATION_FILE;
     }
 
     /**
      * Sets the file where to save the factory. Warning: this overwrites
      * SERIALIZATION_FILE_FOLDER.
      *
-     * @param serializationFile the file where to save the factory
+     * @param serializationFilePath the file where to save the factory
      */
-    public static void setSerializationFile(File serializationFile) {
-        String parent = serializationFile.getParent();
-        String name = serializationFile.getName();
-        setSerializationFolder(parent);
-        SERIALIZATION_FILE_NAME = name;
+    public static void setSerializationFile(String serializationFilePath) {
+        SERIALIZATION_FILE = serializationFilePath;
     }
 
     /**

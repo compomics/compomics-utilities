@@ -28,7 +28,7 @@ public class EnzymesCLIInputBean {
         if (aLine.getOptions().length == 0) {
             return false;
         }
-        EnzymeFactory enzymeFactory;
+        EnzymeFactory enzymeFactory = null;
         if (aLine.hasOption(EnzymesCLIParams.IN.id)) {
             String arg = aLine.getOptionValue(EnzymesCLIParams.IN.id);
             if (arg.equals("")) {
@@ -47,14 +47,6 @@ public class EnzymesCLIInputBean {
                 e.printStackTrace();
                 return false;
             }
-        } else {
-            try {
-                enzymeFactory = EnzymeFactory.loadFromFile(EnzymeFactory.getSerializationFile());
-            } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing " + EnzymeFactory.getSerializationFile() + "." + System.getProperty("line.separator"));
-                e.printStackTrace();
-                return false;
-            }
         }
         if (aLine.hasOption(EnzymesCLIParams.LIST.id)) {
             return true;
@@ -63,12 +55,7 @@ public class EnzymesCLIInputBean {
             String arg = aLine.getOptionValue(EnzymesCLIParams.RM.id);
             Enzyme enzyme = enzymeFactory.getEnzyme(arg);
             if (enzyme == null) {
-                String file;
-                if (aLine.hasOption(EnzymesCLIParams.IN.id)) {
-                    file = aLine.getOptionValue(EnzymesCLIParams.IN.id);
-                } else {
-                    file = EnzymeFactory.getSerializationFile().toString();
-                }
+                String file = aLine.getOptionValue(EnzymesCLIParams.IN.id);
                 System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not found in " + file + "." + System.getProperty("line.separator"));
                 return false;
             }

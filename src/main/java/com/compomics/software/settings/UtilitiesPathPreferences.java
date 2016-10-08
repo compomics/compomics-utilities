@@ -50,9 +50,9 @@ public class UtilitiesPathPreferences {
          */
         ptmFactoryKey("ptm_configuration", "Folder containing the supported PTMs.", "", true),
         /**
-         * Folder containing the enzymes user preferences file.
+         * File containing the enzymes implemented.
          */
-        enzymeFactoryKey("enzyme_configuration", "Folder containing the supported enzymes.", "", true),
+        enzymeFactoryKey("enzyme_configuration", "File containing the supported enzymes.", "", true),
         /**
          * Folder containing the indexes of the protein sequences databases.
          */
@@ -201,7 +201,7 @@ public class UtilitiesPathPreferences {
                 PTMFactory.setSerializationFolder(path);
                 return;
             case enzymeFactoryKey:
-                EnzymeFactory.setSerializationFolder(path);
+                EnzymeFactory.setSerializationFile(path);
                 return;
             case utilitiesPreferencesKey:
                 UtilitiesUserPreferences.setUserPreferencesFolder(path);
@@ -232,7 +232,7 @@ public class UtilitiesPathPreferences {
             case ptmFactoryKey:
                 return PTMFactory.getSerializationFolder();
             case enzymeFactoryKey:
-                return EnzymeFactory.getSerializationFolder();
+                return EnzymeFactory.getSerializationFile();
             case utilitiesPreferencesKey:
                 return UtilitiesUserPreferences.getUserPreferencesFolder();
             case identificationParametersKey:
@@ -365,7 +365,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case enzymeFactoryKey:
-                toWrite = EnzymeFactory.getSerializationFolder();
+                toWrite = EnzymeFactory.getSerializationFile();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }

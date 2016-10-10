@@ -167,8 +167,9 @@ public class PTM extends ExperimentObject {
         this.type = type;
         this.name = name;
         this.mass = mass;
-        this.pattern = new AminoAcidPattern(residues);
-        mass = null;
+        if (residues != null) {
+            this.pattern = new AminoAcidPattern(residues);
+        }
     }
 
     /**

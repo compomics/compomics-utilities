@@ -134,7 +134,6 @@
             <Property name="dividerSize" type="int" value="-1"/>
             <Property name="orientation" type="int" value="0"/>
             <Property name="resizeWeight" type="double" value="0.65"/>
-            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -160,8 +159,11 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="defaultModsScrollPane" alignment="0" pref="924" max="32767" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
+                              <Component id="defaultModsScrollPane" pref="924" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                  <Component id="exportDefaultModsLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="findJLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="searchInputTxt" min="-2" pref="205" max="-2" attributes="0"/>
@@ -189,6 +191,7 @@
                               <Component id="searchIndexLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="searchPreviousButton" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
                               <Component id="searchNextButton" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
+                              <Component id="exportDefaultModsLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -303,6 +306,17 @@
                     <Property name="text" type="java.lang.String" value="Find:"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="exportDefaultModsLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;Export to file&lt;/a&gt;&lt;/html&gt;"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Export to tab delimited text file"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportDefaultModsLabelMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportDefaultModsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportDefaultModsLabelMouseReleased"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="userModsPanel">
@@ -326,9 +340,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="userModsScrollPane" alignment="0" pref="924" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="10" pref="717" max="32767" attributes="0"/>
+                              <Component id="userModsScrollPane" pref="924" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                  <Component id="exportUserModsLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="addUserPTM" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editUserPTM" min="-2" pref="65" max="-2" attributes="2"/>
@@ -349,7 +365,10 @@
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="deleteUserPTM" alignment="1" max="32767" attributes="1"/>
                               <Component id="editUserPTM" alignment="1" max="32767" attributes="1"/>
-                              <Component id="addUserPTM" alignment="1" max="32767" attributes="1"/>
+                              <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                  <Component id="addUserPTM" alignment="3" max="32767" attributes="1"/>
+                                  <Component id="exportUserModsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -418,6 +437,17 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addUserPTMActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="exportUserModsLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;Export to file&lt;/a&gt;&lt;/html&gt;"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Export to tab delimited text file"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportUserModsLabelMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportUserModsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="exportUserModsLabelMouseReleased"/>
                   </Events>
                 </Component>
               </SubComponents>

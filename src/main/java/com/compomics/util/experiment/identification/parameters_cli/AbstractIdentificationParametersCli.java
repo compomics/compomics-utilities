@@ -212,13 +212,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     }
 
     /**
-     * Returns the enzyme file needed to initiate the factory.
-     *
-     * @return the enzyme file needed to initiate the factory
-     */
-    protected abstract File getEnzymeFile();
-
-    /**
      * Returns the path to the jar file.
      *
      * @return the path to the jar file

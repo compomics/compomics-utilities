@@ -579,19 +579,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         if (digestionPreferences.getEnzymes().size() == 1) {
             Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
             String enzymeName = enzyme.getName();
-            if (enzymeName.equalsIgnoreCase("Trypsin")
-                    || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
+            if (enzymeName.equalsIgnoreCase("Trypsin")) {
                 return "Trypsin";
-            } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")
-                    || enzymeName.equalsIgnoreCase("Chymotrypsin, no P rule (FYWL)") // not strictly correct, but better than no support...
-                    || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
+            } else if (enzymeName.equalsIgnoreCase("Trypsin (no P rule)")) {
+                return "Trypsin/P";
+            } else if (enzymeName.equalsIgnoreCase("Chymotrypsin")) {
                 return "Chymotrypsin";
-            } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
-                return "Lys-C/P";
-            } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
-                    || enzymeName.equalsIgnoreCase("Semi-Glu-C (DE)")
-                    || enzymeName.equalsIgnoreCase("Glu-C") // again not strictly, but really the same enzyme...
-                    || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
+            } else if (enzymeName.equalsIgnoreCase("Glu-C")) {
                 return "glutamyl endopeptidase";
             } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
                 return "Arg-C";
@@ -601,15 +595,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
                 return "CNBr";
             } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
                 return "Formic_acid";
-            } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
+            } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
+                return "Lys-C/P";
+            } else if (enzymeName.equalsIgnoreCase("Lys-C (no P rule)")) {
                 return "Lys-C";
             } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
                 return "Pepsin A";
-            } else if (enzymeName.equalsIgnoreCase("Trypsin + Chymotrypsin (FYWLKR)")) {
-                return "TrypChymo";
-            } else if (enzymeName.equalsIgnoreCase("Trypsin, no P rule")) {
-                return "Trypsin/P";
-            } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
+            } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
                 return "Asp-N";
             }
         }

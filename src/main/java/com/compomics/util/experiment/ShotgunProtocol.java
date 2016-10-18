@@ -15,10 +15,6 @@ import java.util.HashMap;
 public class ShotgunProtocol implements Serializable {
 
     /**
-     * The enzyme used for digestion.
-     */
-    private Enzyme enzyme;
-    /**
      * The PTMs enriched for.
      */
     private ArrayList<String> enrichedPtms;
@@ -47,24 +43,6 @@ public class ShotgunProtocol implements Serializable {
      * Boolean indicating whether the MS2 resolution is in ppm.
      */
     private boolean ms2ResolutionPpm;
-
-    /**
-     * Returns the enzyme used for digestion.
-     *
-     * @return the enzyme used for digestion
-     */
-    public Enzyme getEnzyme() {
-        return enzyme;
-    }
-
-    /**
-     * Sets the enzyme used for digestion.
-     *
-     * @param enzyme the enzyme used for digestion
-     */
-    public void setEnzyme(Enzyme enzyme) {
-        this.enzyme = enzyme;
-    }
 
     /**
      * Returns the PTMs used for enrichment. Null if no enrichment.
@@ -210,7 +188,6 @@ public class ShotgunProtocol implements Serializable {
      */
     public static ShotgunProtocol inferProtocolFromSearchSettings(SearchParameters searchParameters) {
         ShotgunProtocol shotgunProtocol = new ShotgunProtocol();
-        shotgunProtocol.setEnzyme(searchParameters.getEnzyme());
         shotgunProtocol.setMs1Resolution(searchParameters.getPrecursorAccuracy());
         shotgunProtocol.setMs1ResolutionPpm(searchParameters.isPrecursorAccuracyTypePpm());
         shotgunProtocol.setMs2Resolution(searchParameters.getFragmentIonAccuracy());

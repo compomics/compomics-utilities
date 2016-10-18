@@ -817,7 +817,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
 
-        if (digestionPreferences != null && !defaultParameters.getDigestionPreferences().equals(digestionPreferences)) {
+        if (digestionPreferences != null && !DigestionPreferences.getDefaultPreferences().equals(digestionPreferences)) {
             output.append(digestionPreferences.getShortDescription());
         }
 
@@ -853,10 +853,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 }
                 output.append(".").append(newLine);
             }
-        }
-
-        if (!nMissedCleavages.equals(defaultParameters.getnMissedCleavages())) {
-            output.append("Missed Cleavages: ").append(nMissedCleavages).append(".").append(newLine);
         }
 
         if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())

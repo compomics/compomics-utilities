@@ -9,6 +9,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 import java.io.FileNotFoundException;
@@ -321,6 +322,25 @@ public class Peptide extends ExperimentObject {
      */
     public int getNMissedCleavages(Enzyme enzyme) {
         return enzyme.getNmissedCleavages(sequence);
+    }
+
+    /**
+     * Returns the number of missed cleavages using the digestion preferences. Null if no cleavage set.
+     *
+     * @param digestionPreferences the digestion preferences
+     * @return the amount of missed cleavages
+     */
+    public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
+            Integer peptideMinMissedCleavages = null;
+            if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+                for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+                    int tempMissedCleavages = getNMissedCleavages(enzyme);
+                    if (peptideMinMissedCleavages == null || tempMissedCleavages < peptideMinMissedCleavages) {
+                        peptideMinMissedCleavages = tempMissedCleavages;
+                    }
+                }
+            }
+        return peptideMinMissedCleavages;
     }
 
     /**

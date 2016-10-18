@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.protein_sequences.SequenceFa
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
@@ -142,11 +143,11 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param peptide the peptide to validate
      * @param sequenceMatchingPreferences the sequence matching preferences
      * containing the maximal share of X's allowed
-     * @param enzyme the enzyme
+     * @param digestionPreferences the digestion preferences
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, Enzyme enzyme) {
+    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, DigestionPreferences digestionPreferences) {
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -163,12 +164,12 @@ public class PeptideAssumptionFilter implements Serializable {
 
         if (minMissedCleavages != null || maxMissedCleavages != null) {
 
-            int numberOfMissedCleavages = peptide.getNMissedCleavages(enzyme);
+            Integer peptideMinMissedCleavages = peptide.getNMissedCleavages(digestionPreferences);
 
-            if (minMissedCleavages != null && numberOfMissedCleavages < minMissedCleavages) {
+            if (minMissedCleavages != null && peptideMinMissedCleavages != null && peptideMinMissedCleavages < minMissedCleavages) {
                 return false;
             }
-            if (maxMissedCleavages != null && numberOfMissedCleavages > maxMissedCleavages) {
+            if (maxMissedCleavages != null && peptideMinMissedCleavages != null && peptideMinMissedCleavages > maxMissedCleavages) {
                 return false;
             }
         }
@@ -200,7 +201,8 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideMapper the peptide mapper to use for peptide to protein mapping
+     * @param peptideMapper the peptide mapper to use for peptide to protein
+     * mapping
      *
      * @return a boolean indicating whether the peptide passed the test
      *

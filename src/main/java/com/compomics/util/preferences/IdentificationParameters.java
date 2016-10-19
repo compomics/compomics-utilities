@@ -622,7 +622,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (!sequenceMatchingPreferences.isSameAs(otherIdentificationParameters.getSequenceMatchingPreferences())) {
             return false;
         }
-        if (getPeptideVariantsPreferences().isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
+        if (!getPeptideVariantsPreferences().isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
             return false;
         }
         if (!genePreferences.equals(otherIdentificationParameters.getGenePreferences())) {

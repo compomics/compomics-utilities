@@ -434,24 +434,22 @@ public class ProteinMatch extends IdentificationMatch {
      * considering the given accession as main accession.
      *
      * @param accession the candidate main accession
-     * @param enzyme the enzyme used
+     * @param enzymes the enzymes used
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      *
      * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean hasEnzymaticPeptide(String accession, ArrayList<Enzyme> enzymes, SequenceMatchingPreferences sequenceMatchingPreferences)
+            throws IOException, InterruptedException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatchesKeys) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, sequenceMatchingPreferences)) {
+            if (protein.isEnzymaticPeptide(peptideSequence, enzymes, sequenceMatchingPreferences)) {
                 return true;
             }
         }

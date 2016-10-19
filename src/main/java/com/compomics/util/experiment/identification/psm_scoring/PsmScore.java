@@ -126,7 +126,6 @@ public enum PsmScore {
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
@@ -138,9 +137,9 @@ public enum PsmScore {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
         PsmScore psmScore = getScore(scoreIndex);
-        double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
+        double score = getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
         if (psmScore.increasing) {
             return -score;
         }
@@ -154,7 +153,6 @@ public enum PsmScore {
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
@@ -166,9 +164,9 @@ public enum PsmScore {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
         PsmScore psmScore = getScore(scoreIndex);
-        return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
+        return getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
 
     /**
@@ -178,7 +176,6 @@ public enum PsmScore {
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
@@ -190,12 +187,12 @@ public enum PsmScore {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) throws InterruptedException {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) throws InterruptedException {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
+                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
             case ms2_mz_fidelity:
                 return MS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:

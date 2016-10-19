@@ -172,6 +172,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
+            this.searchParameters.setDigestionPreferences(DigestionPreferences.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
         }
@@ -228,6 +229,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
+            this.searchParameters.setDigestionPreferences(DigestionPreferences.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
         }
@@ -1996,7 +1998,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         if (searchParameters.getRewindIons() != null && !searchParameters.getRewindIons().isEmpty()) {
-            Integer ionSearched = searchParameters.getForwardIons().get(0);
+            Integer ionSearched = searchParameters.getRewindIons().get(0);
             fragmentIon2Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
         }
 

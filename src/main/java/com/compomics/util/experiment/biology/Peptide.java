@@ -344,30 +344,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the number of missed cleavages using the specified enzyme for the
-     * given sequence.
-     *
-     * @param sequence the peptide sequence
-     * @param enzyme the enzyme used
-     *
-     * @return the amount of missed cleavages
-     */
-    public static int getNMissedCleavages(String sequence, Enzyme enzyme) {
-        int mc = 0;
-        for (int aa = 0; aa < sequence.length() - 1; aa++) {
-            if (enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))
-                    && !enzyme.getRestrictionAfter().contains(sequence.charAt(aa + 1))) {
-                mc++;
-            }
-            if (enzyme.getAminoAcidAfter().contains(sequence.charAt(aa + 1))
-                    && !enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))) {
-                mc++;
-            }
-        }
-        return mc;
-    }
-
-    /**
      * Returns the parent proteins and remaps the peptide to the protein in the
      * sequence factory if no protein mapping was set using the default mapper
      * of the sequence factory.

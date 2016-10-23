@@ -1640,7 +1640,7 @@ public class Peptide extends ExperimentObject {
      * @return the sequence as AminoAcidPattern
      */
     public static AminoAcidPattern getSequenceAsPattern(String sequence) {
-        return new AminoAcidPattern(sequence);
+        return AminoAcidPattern.getAminoAcidPatternFromString(sequence);
     }
 
     /**

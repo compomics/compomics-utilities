@@ -52,22 +52,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Constructor taking a sequence of targeted amino acids as input.
-     *
-     * @param sequence a sequence of targeted amino acids
-     */
-    public AminoAcidPattern(String sequence) {
-        residueTargeted = new HashMap<Integer, ArrayList<Character>>(sequence.length());
-        for (int i = 0; i < sequence.length(); i++) {
-            char letter = sequence.charAt(i);
-            ArrayList<Character> list = new ArrayList<Character>(1);
-            list.add(letter);
-            residueTargeted.put(i, list);
-        }
-        length = sequence.length();
-    }
-
-    /**
      * Creates an amino acid pattern based on the given amino acid sequence.
      * Warning, the modification mapping is the same, modifying it here modifies
      * the original sequence.
@@ -108,6 +92,42 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 targetModifications.put(index, (ArrayList<ModificationMatch>) modificationMatches.get(index).clone());
             }
         }
+    }
+
+    /**
+     * Parses the amino acid pattern from the given string as created by the toString() method.
+     * 
+     * @param aminoAcidPatternAsString the amino acid pattern as created by the toString() method
+     * 
+     * @return the amino acid pattern
+     */
+    public static AminoAcidPattern getAminoAcidPatternFromString(String aminoAcidPatternAsString) {
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
+        char[] aminoAcidPattenrAsStringCharArray = aminoAcidPatternAsString.toCharArray();
+        int index = 0;
+        for (int i = 0; i < aminoAcidPattenrAsStringCharArray.length; i++) {
+            char character = aminoAcidPattenrAsStringCharArray[i];
+            ArrayList<Character> aminoAcids = new ArrayList<Character>(1);
+            if (character == '[') {
+                if (i + 1 == aminoAcidPattenrAsStringCharArray.length) {
+                    throw new IllegalArgumentException("Reached the end of the amino acid pattern while parsing amino acid combination in " + aminoAcidPatternAsString + ".");
+                }
+                while ((character = aminoAcidPattenrAsStringCharArray[i++]) != ']') {
+                    AminoAcid.getAminoAcid(character);
+                    aminoAcids.add(character);
+                    if (i + 1 == aminoAcidPattenrAsStringCharArray.length) {
+                        throw new IllegalArgumentException("Reached the end of the amino acid pattern while parsing amino acid combination in " + aminoAcidPatternAsString + ".");
+                    }
+                }
+            } else {
+                    AminoAcid.getAminoAcid(character);
+                    aminoAcids.add(character);
+            }
+            aminoAcidPattern.setTargeted(index, aminoAcids);
+            index++;
+            i++;
+        }
+        return aminoAcidPattern;
     }
 
     /**
@@ -529,7 +549,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the first index where the amino acid pattern is found
      */
     public boolean contains(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        AminoAcidPattern pattern = new AminoAcidPattern(aminoAcidSequence);
+        AminoAcidPattern pattern = getAminoAcidPatternFromString(aminoAcidSequence);
         return pattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
     }
 

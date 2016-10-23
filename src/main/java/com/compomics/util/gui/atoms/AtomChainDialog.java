@@ -58,12 +58,12 @@ public class AtomChainDialog extends javax.swing.JDialog {
         if (atomChainAdded != null) {
             this.atomChainAdded = atomChainAdded.clone();
         } else {
-            this.atomChainAdded = new AtomChain(true);
+            this.atomChainAdded = new AtomChain();
         }
         if (atomChainRemoved != null) {
             this.atomChainRemoved = atomChainRemoved.clone();
         } else {
-            this.atomChainRemoved = new AtomChain(false);
+            this.atomChainRemoved = new AtomChain();
         }
         this.addOnly = onlyAddition;
         setupGUI();
@@ -85,12 +85,12 @@ public class AtomChainDialog extends javax.swing.JDialog {
         if (atomChainAdded != null) {
             this.atomChainAdded = atomChainAdded.clone();
         } else {
-            this.atomChainAdded = new AtomChain(true);
+            this.atomChainAdded = new AtomChain();
         }
         if (atomChainRemoved != null) {
             this.atomChainRemoved = atomChainRemoved.clone();
         } else {
-            this.atomChainRemoved = new AtomChain(false);
+            this.atomChainRemoved = new AtomChain();
         }
         this.addOnly = onlyAddition;
         setupGUI();
@@ -201,8 +201,8 @@ public class AtomChainDialog extends javax.swing.JDialog {
     public void updateAtomComposition() {
 
         if (!settingUpGUI) {
-            atomChainAdded = new AtomChain(true);
-            atomChainRemoved = new AtomChain(false);
+            atomChainAdded = new AtomChain();
+            atomChainRemoved = new AtomChain();
 
             for (int componentIndex = 0; componentIndex < elementsPanel.getComponentCount(); componentIndex++) {
                 Component tempComponent = elementsPanel.getComponent(componentIndex);
@@ -275,7 +275,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AtomChainDialog dialog = new AtomChainDialog(new JFrame(), new AtomChain(true), new AtomChain(false), false);
+                AtomChainDialog dialog = new AtomChainDialog(new JFrame(), new AtomChain(), new AtomChain(), false);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

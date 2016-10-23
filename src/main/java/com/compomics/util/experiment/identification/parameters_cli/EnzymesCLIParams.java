@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.parameters_cli;
 import org.apache.commons.cli.Options;
 
 /**
- * Enum class specifying the EnzymeCLI parameters.
+ * Enum class specifying the EnzymesCLI parameters.
  *
  * @author Marc Vaudel
  */

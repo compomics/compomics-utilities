@@ -93,8 +93,8 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
             pattern = null;
-            this.atomChainAdded = new AtomChain(true);
-            this.atomChainRemoved = new AtomChain(false);
+            this.atomChainAdded = new AtomChain();
+            this.atomChainRemoved = new AtomChain();
         }
         this.editable = editable;
 
@@ -124,8 +124,8 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
             pattern = null;
-            this.atomChainAdded = new AtomChain(true);
-            this.atomChainRemoved = new AtomChain(false);
+            this.atomChainAdded = new AtomChain();
+            this.atomChainRemoved = new AtomChain();
         }
 
         initComponents();
@@ -1174,7 +1174,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
-        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(true), false, false));
+        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(), false, false));
         updateTables();
     }//GEN-LAST:event_addNeutralLossActionPerformed
 

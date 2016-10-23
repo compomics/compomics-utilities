@@ -37,15 +37,15 @@ public class AminoAcidPatternTest extends TestCase {
         input = "IJX";
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        AminoAcidPattern pattern = new AminoAcidPattern("IJX");
+        AminoAcidPattern pattern = AminoAcidPattern.getAminoAcidPatternFromString("IJX");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
-        pattern = new AminoAcidPattern("IIX");
+        pattern = AminoAcidPattern.getAminoAcidPatternFromString("IIX");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
-        pattern = new AminoAcidPattern("JJX");
+        pattern = AminoAcidPattern.getAminoAcidPatternFromString("JJX");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
-        pattern = new AminoAcidPattern("JJJ");
+        pattern = AminoAcidPattern.getAminoAcidPatternFromString("JJJ");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
-        pattern = new AminoAcidPattern("XXX");
+        pattern = AminoAcidPattern.getAminoAcidPatternFromString("XXX");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
     }
 }

@@ -369,7 +369,7 @@ public abstract class Ion extends ExperimentObject {
             case REPORTER_ION:
                 return ReporterIon.getReporterIon(subType);
             case RELATED_ION:
-                return new RelatedIon(AminoAcid.A, new AtomChain("H"), -1, false);
+                return new RelatedIon(AminoAcid.A, AtomChain.getAtomChain("H"), -1, false);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }
@@ -400,7 +400,7 @@ public abstract class Ion extends ExperimentObject {
             case REPORTER_ION:
                 return ReporterIon.getReporterIon(subType);
             case RELATED_ION:
-                return new RelatedIon(AminoAcid.A, new AtomChain("H"), -1, false);
+                return new RelatedIon(AminoAcid.A, AtomChain.getAtomChain("H"), -1, false);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }

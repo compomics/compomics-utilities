@@ -250,7 +250,7 @@ public abstract class AminoAcid implements Serializable {
             case 'o':
                 return AminoAcid.O;
             default:
-                throw new IllegalArgumentException("No amino acid found for letter " + letter + "."); // @TODO: what about stop codons?
+                throw new IllegalArgumentException("No amino acid found for letter " + letter + ".");
         }
     }
 
@@ -317,7 +317,7 @@ public abstract class AminoAcid implements Serializable {
      */
     public static String getMatchingAminoAcid(String aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences) {
         AminoAcid aa = AminoAcid.getAminoAcid(aminoAcid);
-        AminoAcidPattern aaPattern = new AminoAcidPattern(aminoAcid);
+        AminoAcidPattern aaPattern = AminoAcidPattern.getAminoAcidPatternFromString(aminoAcid);
         for (String candidateAA : aminoAcidStrings) {
             if (aaPattern.matches(candidateAA, sequenceMatchingPreferences)) {
                 if (!aa.iscombination()) {

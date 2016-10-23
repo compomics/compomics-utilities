@@ -174,83 +174,83 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
-    public final static ReporterIon ACE_K_126 = new ReporterIon("aceK126", new AtomChain("C7H11ON"));
+    public final static ReporterIon ACE_K_126 = new ReporterIon("aceK126", AtomChain.getAtomChain("C(7)H(11)ON"));
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
-    public final static ReporterIon ACE_K_143 = new ReporterIon("aceK143", new AtomChain("C7H14ON2"));
+    public final static ReporterIon ACE_K_143 = new ReporterIon("aceK143", AtomChain.getAtomChain("C(7)H(14)ON(2)"));
     /**
      * Standard reporter ion for phosphorylation of tyrosine (PMID: 11473401).
      */
-    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY", new AtomChain("C8H10NPO4"));
+    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY", AtomChain.getAtomChain("C(8)H(10)NPO(4)"));
     /**
      * Standard reporter ion for formylation of K (PMID: 24895383).
      */
-    public final static ReporterIon FORMYL_K = new ReporterIon("fK112", new AtomChain("C6H9NO"));
+    public final static ReporterIon FORMYL_K = new ReporterIon("fK112", AtomChain.getAtomChain("C(6)H(9)NO"));
     /**
      * Standard reporter ion for methylation of R.
      */
-    public final static ReporterIon METHYL_R_87 = new ReporterIon("metR87", new AtomChain("C4H10N2"));
+    public final static ReporterIon METHYL_R_87 = new ReporterIon("metR87", AtomChain.getAtomChain("C(4)H(10)N(2)"));
     /**
      * Standard reporter ion for methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon METHYL_R_112 = new ReporterIon("metR112", new AtomChain("C5H9N3"));
+    public final static ReporterIon METHYL_R_112 = new ReporterIon("metR112", AtomChain.getAtomChain("C(5)H(9)N(3)"));
     /**
      * Standard reporter ion for methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon METHYL_R_115 = new ReporterIon("metR115", new AtomChain("C5H10N2O"));
+    public final static ReporterIon METHYL_R_115 = new ReporterIon("metR115", AtomChain.getAtomChain("C(5)H(10)N(2)O"));
     /**
      * Standard reporter ion for methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon METHYL_R_143 = new ReporterIon("metR143", new AtomChain("C6H14N4"));
+    public final static ReporterIon METHYL_R_143 = new ReporterIon("metR143", AtomChain.getAtomChain("C(6)H(14)N(4)"));
     /**
      * Standard reporter ion for methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon METHYL_R_70 = new ReporterIon("metR70", new AtomChain("C4H7N"));
+    public final static ReporterIon METHYL_R_70 = new ReporterIon("metR70", AtomChain.getAtomChain("C(4)H(7)N"));
     /**
      * Standard reporter ion for di-methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon DI_METHYL_R_112 = new ReporterIon("dimetR112", new AtomChain("C5H9N3"));
+    public final static ReporterIon DI_METHYL_R_112 = new ReporterIon("dimetR112", AtomChain.getAtomChain("C(5)H(9)N(3)"));
     /**
      * Standard reporter ion for di-methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon DI_METHYL_R_115 = new ReporterIon("dimetR115", new AtomChain("C5H10N2O"));
+    public final static ReporterIon DI_METHYL_R_115 = new ReporterIon("dimetR115", AtomChain.getAtomChain("C(5)H(10)N(2)O"));
     /**
      * Standard reporter ion for di-methylation of R (PMID: 16335983).
      */
-    public final static ReporterIon DI_METHYL_R_157 = new ReporterIon("metR157", new AtomChain("C7H16N4"));
+    public final static ReporterIon DI_METHYL_R_157 = new ReporterIon("metR157", AtomChain.getAtomChain("C(7)H(16)N(4)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQ = new ReporterIon("QQ", new AtomChain("C10H16N4O4"));
+    public final static ReporterIon QQ = new ReporterIon("QQ", AtomChain.getAtomChain("C(10)H(16)N(4)O(4)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQ_H2O = new ReporterIon("QQ-H2O", new AtomChain("C10H14N4O3"));
+    public final static ReporterIon QQ_H2O = new ReporterIon("QQ-H2O", AtomChain.getAtomChain("C(10)H(14)N(4)O(3)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQT = new ReporterIon("QQT", new AtomChain("C14H24N5O6"));
+    public final static ReporterIon QQT = new ReporterIon("QQT", AtomChain.getAtomChain("C(14)H(24)N(5)O(6)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQT_H2O = new ReporterIon("QQT-H2O", new AtomChain("C14H22N5O5"));
+    public final static ReporterIon QQT_H2O = new ReporterIon("QQT-H2O", AtomChain.getAtomChain("C(14)H(22)N(5)O(5)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQTG = new ReporterIon("QQTG", new AtomChain("C16H26N6O7"));
+    public final static ReporterIon QQTG = new ReporterIon("QQTG", AtomChain.getAtomChain("C(16)H(26)N(6)O(7)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQTG_H2O = new ReporterIon("QQTG-H2O", new AtomChain("C16H24N6O6"));
+    public final static ReporterIon QQTG_H2O = new ReporterIon("QQTG-H2O", AtomChain.getAtomChain("C(16)H(24)N(6)O(6)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQTGG = new ReporterIon("QQTGG", new AtomChain("C18H29N7O8"));
+    public final static ReporterIon QQTGG = new ReporterIon("QQTGG", AtomChain.getAtomChain("C(18)H(29)N(7)O(8)"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */
-    public final static ReporterIon QQTGG_H2O = new ReporterIon("QQTGG-H2O", new AtomChain("C18H27N7O7"));
+    public final static ReporterIon QQTGG_H2O = new ReporterIon("QQTGG-H2O", AtomChain.getAtomChain("C(18)H(27)N(7)O(7)"));
     /**
      * Ion name for user defined ions.
      */

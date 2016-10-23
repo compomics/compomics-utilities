@@ -39,6 +39,6 @@ public class Sodium extends Atom {
         representativeComposition = new HashMap<Integer, Double>(1);
         representativeComposition.put(0, 1.0);
         this.name = "Sodium";
-        this.letter = "S";
+        this.letter = "Na";
     }
 }

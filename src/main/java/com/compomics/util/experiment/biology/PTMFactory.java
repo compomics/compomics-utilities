@@ -1354,12 +1354,12 @@ public class PTMFactory implements Serializable {
     private void setDefaultModifications() {
 
         // Acetylation of K
-        AtomChain atomChainAdded = new AtomChain(true);
+        AtomChain atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         AtomChain atomChainRemoved = null;
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("K");
+        AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         String ptmName = "Acetylation of K";
         PTM ptm = new PTM(PTM.MODAA, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
@@ -1369,7 +1369,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Acetylation of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
@@ -1382,7 +1382,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Acetylation of protein N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
@@ -1395,13 +1395,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carbamidomethylation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Carbamidomethylation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
@@ -1409,13 +1409,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carbamidomethylation of E
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("E");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         ptmName = "Carbamidomethylation of E";
         ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
@@ -1423,13 +1423,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carbamidomethylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Carbamidomethylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
@@ -1437,10 +1437,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Oxidation of M
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("M");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         ptmName = "Oxidation of M";
         ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
@@ -1449,10 +1449,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Oxidation of P
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("P");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
         ptmName = "Oxidation of P";
         ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
@@ -1460,10 +1460,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Oxidation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Oxidation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
@@ -1471,10 +1471,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Oxidation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Oxidation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
@@ -1482,10 +1482,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dioxydation of M
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("M");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         ptmName = "Dioxidation of M";
         ptm = new PTM(PTM.MODAA, ptmName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
@@ -1493,10 +1493,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dioxydation of M
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("W");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
         ptmName = "Dioxidation of W";
         ptm = new PTM(PTM.MODAA, ptmName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
@@ -1504,10 +1504,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trioxidation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Trioxidation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "triox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:345", "Trioxidation", null));
@@ -1515,12 +1515,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Phosphorylation of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Phosphorylation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
@@ -1529,12 +1529,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Phosphorylation of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Phosphorylation of T";
         ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
@@ -1543,12 +1543,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Phosphorylation of Y
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("Y");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         ptmName = "Phosphorylation of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
@@ -1558,11 +1558,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Arg6
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Arginine 13C(6)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
@@ -1570,13 +1570,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Arg10
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 4);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 4);
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Arginine 13C(6) 15N(4)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:267", "Label:13C(6)15N(4)", null));
@@ -1584,11 +1584,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Lys4
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Lysine 2H(4)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
@@ -1596,11 +1596,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Lys6
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Lysine 13C(6)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
@@ -1608,13 +1608,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Lys8
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Lysine 13C(6) 15N(2)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:259", "Label:13C(6)15N(2)", null));
@@ -1622,11 +1622,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Pro5
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 5);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
-        aminoAcidPattern = new AminoAcidPattern("P");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
         ptmName = "Proline 13C(5)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:772", "Label:13C(5)", null));
@@ -1634,12 +1634,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // 4-Hydroxyloproline
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("P");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
         ptmName = "4-Hydroxyproline";
         ptm = new PTM(PTM.MODAA, ptmName, "hydroxy", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
@@ -1647,13 +1647,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Leu7
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("L");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
         ptmName = "Leucine 13C(6) 15N(1)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
@@ -1661,13 +1661,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Ile7
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("I");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
         ptmName = "Isoleucine 13C(6) 15N(1)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
@@ -1675,11 +1675,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Label of K 2H4
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Label of K 2H(4)";
         ptm = new PTM(PTM.MODAA, ptmName, "2H(4)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
@@ -1687,12 +1687,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of K 2H6
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Dimethylation of K 2H(6)";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291", "Dimethyl:2H(6)", null)); // note: does not have a PSI name, using interim name
@@ -1700,7 +1700,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of peptide N-term 2H4
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = null;
@@ -1712,10 +1712,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of peptide N-term 2H6
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = null;
         ptmName = "Dimethylation of peptide N-term 2H(6)";
@@ -1725,10 +1725,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of peptide N-term 2H(6) 13C(2)
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = null;
         ptmName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
@@ -1738,12 +1738,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of K 2H(6) 13C(2)
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Dimethylation of K 2H(6) 13C(2)";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
@@ -1751,9 +1751,9 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // 18O(2) of peptide C-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 2), 2);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
         aminoAcidPattern = null;
         ptmName = "18O(2) of peptide C-term";
@@ -1763,9 +1763,9 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // 18O(1) of peptide C-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 2), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
         ptmName = "18O(1) of peptide C-term";
@@ -1775,13 +1775,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICAT-0
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 10);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 17);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "ICAT-O";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:105", "ICAT-C", null));
@@ -1789,14 +1789,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICAT-9
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 9);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 17);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "ICAT-9";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:106", "ICAT-C:13C(9)", null));
@@ -1804,13 +1804,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL0 of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "ICPL0 of K";
         ptm = new PTM(PTM.MODAA, ptmName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
@@ -1818,7 +1818,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL0 of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
@@ -1832,14 +1832,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL4 of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "ICPL4 of K";
         ptm = new PTM(PTM.MODAA, ptmName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
@@ -1847,12 +1847,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL4 of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
         ptmName = "ICPL4 of peptide N-term";
@@ -1862,13 +1862,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL6 of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "ICPL6 of K";
         ptm = new PTM(PTM.MODAA, ptmName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
@@ -1876,7 +1876,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL6 of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
@@ -1890,14 +1890,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL10 of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "ICPL10 of K";
         ptm = new PTM(PTM.MODAA, ptmName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
@@ -1905,12 +1905,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // ICPL10 of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
         ptmName = "ICPL10 of peptide N-term";
@@ -1920,13 +1920,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of K light
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "mTRAQ of K light";
         ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", null)); // note: does not have a PSI name, using interim name
@@ -1934,7 +1934,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of peptide N-term light
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
@@ -1948,7 +1948,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of K 13C3 15N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -1956,7 +1956,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "mTRAQ of K 13C(3) 15N";
         ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
@@ -1964,7 +1964,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of peptide N-term 13C3 15N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -1980,14 +1980,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of K 13C6 15N2
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "mTRAQ of 13C(6) 15N(2)";
         ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
@@ -1995,7 +1995,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // mTRAQ of peptide N-term 13C3 15N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -2010,7 +2010,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 4-plex of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -2030,7 +2030,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 4-plex of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -2038,7 +2038,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "iTRAQ 4-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
@@ -2050,7 +2050,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 4-plex of Y
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
@@ -2058,7 +2058,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("Y");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         ptmName = "iTRAQ 4-plex of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
@@ -2070,7 +2070,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 8-plex of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
@@ -2094,7 +2094,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 8-plex of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
@@ -2102,7 +2102,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "iTRAQ 8-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
@@ -2118,7 +2118,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // iTRAQ 8-plex of Y
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
@@ -2126,7 +2126,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("Y");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         ptmName = "iTRAQ 8-plex of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
@@ -2142,7 +2142,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 2-plex of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 11);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
@@ -2160,14 +2160,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 2-plex of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 11);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "TMT 2-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
@@ -2178,7 +2178,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 6-plex of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
@@ -2218,7 +2218,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 6-plex of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
@@ -2226,7 +2226,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "TMT 6-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
@@ -2258,7 +2258,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 10-plex of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
@@ -2294,7 +2294,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // TMT 10-plex of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
@@ -2302,7 +2302,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "TMT 10-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
@@ -2330,13 +2330,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Ubiquitination of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Ubiquitination of K";
         ptm = new PTM(PTM.MODAA, ptmName, "ub", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:121", "GG", null));
@@ -2344,11 +2344,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Methylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2356,11 +2356,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of R
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Methylation of R";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2373,11 +2373,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of E
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("E");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         ptmName = "Methylation of E";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2385,11 +2385,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Methylation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2397,11 +2397,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of D
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("D");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         ptmName = "Methylation of D";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2409,11 +2409,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylation of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Methylation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
@@ -2421,11 +2421,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Dimethylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
@@ -2433,7 +2433,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
@@ -2445,11 +2445,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Dimethylation of R
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Dimethylation of R";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
@@ -2460,11 +2460,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trimethylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Trimethylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
@@ -2473,11 +2473,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trimethylation of R
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Trimethylation of R";
         ptm = new PTM(PTM.MODAA, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
@@ -2485,11 +2485,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trimethylation of protein N-term A
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("A");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
         ptmName = "Trimethylation of protein N-term A";
         ptm = new PTM(PTM.MODN, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
@@ -2498,10 +2498,10 @@ public class PTMFactory implements Serializable {
 
         // Pyrolidone from E
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("E");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         ptmName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:27", "Glu->pyro-Glu", null));
@@ -2510,10 +2510,10 @@ public class PTMFactory implements Serializable {
 
         // Pyrolidone from Q
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
-        aminoAcidPattern = new AminoAcidPattern("Q");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
         ptmName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:28", "Gln->pyro-Glu", null));
@@ -2522,10 +2522,10 @@ public class PTMFactory implements Serializable {
 
         // Pyrolidone from carbamidomethylated C
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", null));
@@ -2533,13 +2533,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // HexNAc of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 13);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "HexNAc of S";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
@@ -2547,13 +2547,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // HexNAc of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 13);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "HexNAc of T";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
@@ -2561,13 +2561,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Hex(1)NAc(1) of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 14);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 23);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Hex(1)NAc(1) of S";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
@@ -2575,13 +2575,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Hex(1)NAc(1) of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 14);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 23);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Hex(1)NAc(1) of T";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
@@ -2589,12 +2589,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Hexose of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 10);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Hexose of K";
         ptm = new PTM(PTM.MODAA, ptmName, "hex", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:41", "Hex", null));
@@ -2602,13 +2602,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Hex(5) HexNAc(4) NeuAc(2) of N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 84);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 136);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 61);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 6);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("N");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         ptmName = "Hex(5) HexNAc(4) NeuAc(2) of N";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
@@ -2616,14 +2616,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Hex(5) HexNAc(4) NeuAc(2) Na of N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 84);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 135);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 61);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.Na, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("N");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         ptmName = "Hex(5) HexNAc(4) NeuAc(2) Na of N";
         ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1408", "Hex(5)HexNAc(4)NeuAc(2) ", null));
@@ -2631,13 +2631,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // SUMO-2/3 Q87R
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 18);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 29);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 8);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "SUMO-2/3 Q87R";
         ptm = new PTM(PTM.MODAA, ptmName, "sumo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
@@ -2653,12 +2653,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Deamidation of N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("N");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         ptmName = "Deamidation of N";
         ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
@@ -2666,12 +2666,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Deamidation of Q
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("Q");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
         ptmName = "Deamidation of Q";
         ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
@@ -2679,12 +2679,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Deamidation of N 18O
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 2), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("N");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         ptmName = "Deamidation of N 18O";
         ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 366", "Deamidation in presence of O18", null));
@@ -2692,7 +2692,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carbamylation of protein N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
@@ -2706,13 +2706,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carbamylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Carbamilation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
@@ -2720,7 +2720,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Acetaldehyde +26
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
@@ -2732,11 +2732,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Sodium adduct to D
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.Na, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("D");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         ptmName = "Sodium adduct to D";
         ptm = new PTM(PTM.MODAA, ptmName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
@@ -2744,11 +2744,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Sodium adduct to E
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.Na, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("E");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         ptmName = "Sodium adduct to E";
         ptm = new PTM(PTM.MODAA, ptmName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
@@ -2756,10 +2756,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Amidation of the peptide C-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
         ptmName = "Amidation of the peptide C-term";
@@ -2769,10 +2769,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Amidation of the protein C-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
         ptmName = "Amidation of the protein C-term";
@@ -2782,11 +2782,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Sulfonation of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Sulfonation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
@@ -2794,11 +2794,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Sulfonation of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Sulfonation of T";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
@@ -2806,11 +2806,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Sulfonation of Y
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("Y");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         ptmName = "Sulfonation of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
@@ -2818,12 +2818,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Palmitoylation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Palmitoylation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
@@ -2831,12 +2831,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Palmitoylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Palmitoylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
@@ -2844,12 +2844,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Palmitoylation of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Palmitoylation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
@@ -2857,12 +2857,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Palmitoylation of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Palmitoylation of T";
         ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
@@ -2870,7 +2870,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Palmitoylation of protein N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
@@ -2883,11 +2883,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Formylation of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Formylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
@@ -2896,11 +2896,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Formylation of S
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Formylation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
@@ -2908,11 +2908,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Formylation of T
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Formylation of T";
         ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
@@ -2920,7 +2920,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Formylation of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
@@ -2932,7 +2932,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Formylation of protein N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
@@ -2944,12 +2944,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionyl of K light
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Propionyl of K light";
         ptm = new PTM(PTM.MODAA, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
@@ -2957,7 +2957,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionyl of peptide N-term light
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
@@ -2970,12 +2970,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionyl of K heavy
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Propionyl of K heavy";
         ptm = new PTM(PTM.MODAA, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
@@ -2983,7 +2983,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionyl of peptide N-term heavy
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
@@ -2996,12 +2996,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trideuterated Methyl Ester of D
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
-        atomChainRemoved = new AtomChain(true);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("D");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         ptmName = "Trideuterated Methyl Ester of D";
         ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
@@ -3009,12 +3009,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trideuterated Methyl Ester of E
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("E");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         ptmName = "Trideuterated Methyl Ester of E";
         ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
@@ -3022,12 +3022,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trideuterated Methyl Ester of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Trideuterated Methyl Ester of K";
         ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
@@ -3035,12 +3035,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trideuterated Methyl Ester of R
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("R");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Trideuterated Methyl Ester of R";
         ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
@@ -3048,10 +3048,10 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Trideuterated Methyl Ester of peptide C-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
         ptmName = "Trideuterated Methyl Ester of peptide C-term";
@@ -3061,12 +3061,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Carboxymethylation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Carboxymethylation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:6", "Carboxymethyl", null));
@@ -3074,11 +3074,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Farnesylation of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 15);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Farnesylation of C";
         ptm = new PTM(PTM.MODAA, ptmName, "far", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:44", "Farnesyl", null));
@@ -3086,11 +3086,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Geranyl-geranyl of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 20);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Geranyl-geranyl of C";
         ptm = new PTM(PTM.MODAA, ptmName, "geranyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:48", "GeranylGeranyl", null));
@@ -3098,12 +3098,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Guanidination of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Guanidination of K";
         ptm = new PTM(PTM.MODAA, ptmName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
@@ -3111,7 +3111,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Guanidination of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
@@ -3124,13 +3124,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Homoserine of peptide C-term M
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("M");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         ptmName = "Homoserine of peptide C-term M";
         ptm = new PTM(PTM.MODCPAA, ptmName, "hse", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:10", "Met->Hse", null));
@@ -3139,11 +3139,11 @@ public class PTMFactory implements Serializable {
 
         // Homoserine lactone of peptide C-term M
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("M");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         ptmName = "Homoserine lactone of peptide C-term M";
         ptm = new PTM(PTM.MODCPAA, ptmName, "hsel", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:11", "Met->Hsl", null));
@@ -3151,13 +3151,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Lipoyl of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Lipoyl of K";
         ptm = new PTM(PTM.MODAA, ptmName, "lip", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:42", "Lipoyl", null));
@@ -3165,12 +3165,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylthio of D
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("D");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         ptmName = "Methylthio of D";
         ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
@@ -3178,12 +3178,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylthio of N
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("N");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         ptmName = "Methylthio of N";
         ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
@@ -3191,12 +3191,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Methylthio of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Methylthio of C";
         ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
@@ -3204,13 +3204,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // NIPCAM of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "NIPCAM of C";
         ptm = new PTM(PTM.MODAA, ptmName, "nipcam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:17", "NIPCAM", null));
@@ -3218,13 +3218,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionamide of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Propionamide of C";
         ptm = new PTM(PTM.MODAA, ptmName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
@@ -3232,13 +3232,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionamide of K
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "Propionamide of K";
         ptm = new PTM(PTM.MODAA, ptmName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
@@ -3246,7 +3246,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Propionamide of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
@@ -3260,12 +3260,12 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Pyridylethyl of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Pyridylethyl of C";
         ptm = new PTM(PTM.MODAA, ptmName, "pyri", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:31", "Pyridylethyl", null));
@@ -3274,10 +3274,10 @@ public class PTMFactory implements Serializable {
 
         // Dehydration of S
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("S");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         ptmName = "Dehydration of S";
         ptm = new PTM(PTM.MODAA, ptmName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
@@ -3286,10 +3286,10 @@ public class PTMFactory implements Serializable {
 
         // Dehydration of T
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Dehydration of T";
         ptm = new PTM(PTM.MODAA, ptmName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
@@ -3297,13 +3297,13 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Nethylmaleimide of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Nethylmaleimide of C";
         ptm = new PTM(PTM.MODAA, ptmName, "nem", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:108", "Nethylmaleimide", null));
@@ -3311,14 +3311,14 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Glutathione of C
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 15);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 10);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("C");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         ptmName = "Glutathione of C";
         ptm = new PTM(PTM.MODAA, ptmName, "glut", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:55", "Glutathione", null));
@@ -3326,7 +3326,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // FormylMet of protein N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
@@ -3342,9 +3342,9 @@ public class PTMFactory implements Serializable {
 
         // Didehydro of T
         atomChainAdded = null;
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("T");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         ptmName = "Didehydro of T";
         ptm = new PTM(PTM.MODAA, ptmName, "didehyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:401", "Didehydro", null));
@@ -3352,7 +3352,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Thioacyl of peptide N-term
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
@@ -3366,11 +3366,11 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Diiodination of Y
-        atomChainAdded = new AtomChain(true);
+        atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.I, 0), 2);
-        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = new AminoAcidPattern("Y");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         ptmName = "Diiodination of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", null));

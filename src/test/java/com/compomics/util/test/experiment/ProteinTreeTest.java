@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
@@ -117,7 +116,7 @@ public class ProteinTreeTest extends TestCase {
         proteinTree.initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
 
         // TESTMRITESTCKTESTK
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("LTEST");
+        AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("LTEST");
         double nTermGap = AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         double cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         Tag tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
@@ -162,7 +161,7 @@ public class ProteinTreeTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
 
-        aminoAcidPattern = new AminoAcidPattern("TEST");
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("TEST");
         nTermGap = AminoAcid.K.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + 57.02 - 17.0265;
         cTermGap = AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);

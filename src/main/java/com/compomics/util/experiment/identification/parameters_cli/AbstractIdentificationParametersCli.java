@@ -131,7 +131,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String ptmName : ptmFactory.getDefaultModificationsOrdered()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
-            System.out.println(getPtmLine(ptm));
+            System.out.println(ptm);
         }
         System.out.println();
         if (!ptmFactory.getUserModifications().isEmpty()) {
@@ -140,59 +140,10 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             System.out.println("-------------------");
             for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
                 PTM ptm = ptmFactory.getPTM(ptmName);
-                System.out.println(getPtmLine(ptm));
+            System.out.println(ptm);
             }
         }
         System.out.println();
-    }
-
-    /**
-     * Returns the description line for a PTM.
-     *
-     * @param ptm the PTM to display
-     *
-     * @return the description line for a PTM
-     */
-    private String getPtmLine(PTM ptm) {
-
-        String target = "";
-        switch (ptm.getType()) {
-            case PTM.MODAA:
-                target = ptm.getPattern().toString();
-                break;
-            case PTM.MODC:
-                target = "Protein C-terminus";
-                break;
-            case PTM.MODCAA:
-                target = "Protein C-terminus ending with " + ptm.getPattern().toString();
-                break;
-            case PTM.MODCP:
-                target = "Peptide C-terminus";
-                break;
-            case PTM.MODCPAA:
-                target = "Peptide C-terminus ending with " + ptm.getPattern().toString();
-                break;
-            case PTM.MODN:
-                target = "Protein N-terminus";
-                break;
-            case PTM.MODNAA:
-                target = "Protein N-terminus starting with " + ptm.getPattern().toString();
-                break;
-            case PTM.MODNP:
-                target = "Peptide N-terminus";
-                break;
-            case PTM.MODNPAA:
-                target = "Peptide N-terminus starting with " + ptm.getPattern().toString();
-                break;
-        }
-
-        double ptmMass = ptm.getRoundedMass();
-        String sign = "";
-        if (ptmMass > 0) {
-            sign = "+";
-        }
-
-        return ptm.getName() + "\t" + "(" + sign + ptmMass + " targeting " + target + ")";
     }
 
     /**

@@ -217,4 +217,9 @@ public abstract class Atom extends ExperimentObject {
         }
         return isotopeMass - getMonoisotopicMass();
     }
+    
+    @Override
+    public String toString() {
+        return getLetter();
+    }
 }

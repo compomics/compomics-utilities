@@ -284,7 +284,7 @@ public class Protein extends ExperimentObject {
      * sequence
      */
     public ArrayList<Integer> getPeptideStart(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
+        AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(peptideSequence);
         return aminoAcidPattern.getIndexes(sequence, sequenceMatchingPreferences);
     }
 

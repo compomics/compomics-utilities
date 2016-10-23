@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.parameters_cli;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,11 +14,19 @@ import org.apache.commons.cli.Options;
  *
  * @author Marc Vaudel
  */
-public class EnzymeCLI {
+public class EnzymesCLI {
 
+    /**
+     * The parsed command line input.
+     */
     private EnzymesCLIInputBean enzymesCLIInputBean;
     
-    public EnzymeCLI(EnzymesCLIInputBean enzymesCLIInputBean) {
+    /**
+     * Constructor.
+     * 
+     * @param enzymesCLIInputBean the parsed command line input
+     */
+    public EnzymesCLI(EnzymesCLIInputBean enzymesCLIInputBean) {
         this.enzymesCLIInputBean = enzymesCLIInputBean;
     }
 
@@ -28,7 +35,7 @@ public class EnzymeCLI {
      */
     private static String getHeader() {
         return System.getProperty("line.separator")
-                + "The EnzymeCLI command line allows the command line management of enzymes. It can be used to create and edit json files containing enzymes compatible with CompOmics tools." + System.getProperty("line.separator")
+                + "The EnzymesCLI command line allows the command line management of enzymes. It can be used to create and edit json files containing enzymes compatible with CompOmics tools." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
 //                + "For further help see http://compomics.github.io/projects/peptide-shaker.html and http://compomics.github.io/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
 //                + System.getProperty("line.separator")
@@ -58,7 +65,7 @@ public class EnzymeCLI {
             if (!EnzymesCLIInputBean.isValidStartup(line)) {
                 PrintWriter lPrintWriter = new PrintWriter(System.out);
                 lPrintWriter.print(System.getProperty("line.separator") + "========================================" + System.getProperty("line.separator"));
-                lPrintWriter.print("PeptideShaker Follow Up - Command Line" + System.getProperty("line.separator"));
+                lPrintWriter.print("Compomics Enzymes - Command Line" + System.getProperty("line.separator"));
                 lPrintWriter.print("========================================" + System.getProperty("line.separator"));
                 lPrintWriter.print(getHeader());
                 lPrintWriter.print(EnzymesCLIParams.getOptionsAsString());
@@ -68,25 +75,25 @@ public class EnzymeCLI {
                 System.exit(0);
             } else {
                 EnzymesCLIInputBean inputBean = new EnzymesCLIInputBean(line);
-                EnzymeCLI cli = new EnzymeCLI(inputBean);
+                EnzymesCLI cli = new EnzymesCLI(inputBean);
                 cli.call();
             }
         } catch (OutOfMemoryError e) {
-            System.out.println("<CompomicsError>EnzymeCLI used up all the memory and had to be stopped.</CompomicsError>");
+            System.out.println("<CompomicsError>EnzymesCLI used up all the memory and had to be stopped.</CompomicsError>");
             System.err.println("Ran out of memory!");
             System.err.println("Memory given to the Java virtual machine: " + Runtime.getRuntime().maxMemory() + ".");
             System.err.println("Memory used by the Java virtual machine: " + Runtime.getRuntime().totalMemory() + ".");
             System.err.println("Free memory in the Java virtual machine: " + Runtime.getRuntime().freeMemory() + ".");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.print("<CompomicsError>EnzymeCLI processing failed.</CompomicsError>");
+            System.out.print("<CompomicsError>EnzymesCLI processing failed.</CompomicsError>");
             e.printStackTrace();
         }
     }
 
     @Override
     public String toString() {
-        return "FollowUpCLI{"
+        return "EnzymesCLI{"
                 + ", cliInputBean=" + enzymesCLIInputBean
                 + '}';
     }

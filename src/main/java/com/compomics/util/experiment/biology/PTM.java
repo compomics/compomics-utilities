@@ -91,11 +91,11 @@ public class PTM extends ExperimentObject {
     /**
      * The composition of the molecule added.
      */
-    private AtomChain atomChainAdded = new AtomChain(true);
+    private AtomChain atomChainAdded = new AtomChain();
     /**
      * The composition of the molecule removed.
      */
-    private AtomChain atomChainRemoved = new AtomChain(false);
+    private AtomChain atomChainRemoved = new AtomChain();
     /**
      * The CV term associated with this PTM. Null if not set.
      */
@@ -553,5 +553,66 @@ public class PTM extends ExperimentObject {
      */
     public void setCvTerm(CvTerm cvTerm) {
         this.cvTerm = cvTerm;
+    }
+    
+    @Override
+    public String toString() {
+        
+        String target = "";
+        switch (getType()) {
+            case PTM.MODAA:
+                target = getPattern().toString();
+                break;
+            case PTM.MODC:
+                target = "Protein C-terminus";
+                break;
+            case PTM.MODCAA:
+                target = "Protein C-terminus ending with " + getPattern().toString();
+                break;
+            case PTM.MODCP:
+                target = "Peptide C-terminus";
+                break;
+            case PTM.MODCPAA:
+                target = "Peptide C-terminus ending with " + getPattern().toString();
+                break;
+            case PTM.MODN:
+                target = "Protein N-terminus";
+                break;
+            case PTM.MODNAA:
+                target = "Protein N-terminus starting with " + getPattern().toString();
+                break;
+            case PTM.MODNP:
+                target = "Peptide N-terminus";
+                break;
+            case PTM.MODNPAA:
+                target = "Peptide N-terminus starting with " + getPattern().toString();
+                break;
+        }
+        
+        StringBuilder description = new StringBuilder();
+        description.append(name);
+        if (shortName != null && !shortName.equals("")) {
+            description.append("(").append(shortName).append(")");
+        }
+        description.append("\t");
+        if (atomChainAdded != null) {
+            description.append("+{").append(atomChainAdded).append("}");
+        }
+        if (atomChainRemoved != null) {
+            description.append("-{").append(atomChainRemoved).append("}");
+        }
+        
+        double ptmMass = getRoundedMass();
+        String sign;
+        if (ptmMass > 0) {
+            sign = "+";
+        } else {
+            sign = "-";
+        }
+        description.append(" (").append(sign).append(ptmMass).append(")");
+        
+        description.append(" targeting ").append(target);
+
+        return description.toString();
     }
 }

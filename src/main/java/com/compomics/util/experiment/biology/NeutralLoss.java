@@ -18,27 +18,27 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * H2O loss.
      */
-    public static final NeutralLoss H2O = new NeutralLoss("H2O", new AtomChain("H2O", true), false);
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", AtomChain.getAtomChain("H(2)O"), false);
     /**
      * NH3 loss.
      */
-    public static final NeutralLoss NH3 = new NeutralLoss("NH3", new AtomChain("NH3", true), false);
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", AtomChain.getAtomChain("NH(3)"), false);
     /**
      * H3PO4 loss.
      */
-    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", new AtomChain("H3PO4", true), false);
+    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", AtomChain.getAtomChain("H(3)PO(4)"), false);
     /**
      * H3PO3 loss.
      */
-    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", new AtomChain("HPO3", true), false);
+    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", AtomChain.getAtomChain("HPO(3)"), false);
     /**
      * CH4OS loss.
      */
-    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", new AtomChain("CH4OS", true), false);
+    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", AtomChain.getAtomChain("CH(4)OS"), false);
     /**
      * C3H9N loss.
      */
-    public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", new AtomChain("C3H9N", true), false);
+    public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", AtomChain.getAtomChain("C(3)H(9)N"), false);
     /**
      * The mass lost.
      *
@@ -139,14 +139,13 @@ public class NeutralLoss extends ExperimentObject {
      * Returns the CV term for the neutral loss. Null if none
      * corresponding.
      *
-     * @return the CV term for the neutral loss. Null if none
-     * corresponding
+     * @return the CV term for the neutral loss.
      */
     public CvTerm getPsiMsCvTerm() {
         if (psiCvTerm != null) {
             return psiCvTerm;
         }
-        psiCvTerm = new CvTerm("PSI-MS", "MS:1000336", "neutral loss", composition.toHillNotation());
+        psiCvTerm = new CvTerm("PSI-MS", "MS:1000336", "neutral loss", composition.toString());
         return psiCvTerm;
     }
     

@@ -30,12 +30,30 @@ public class AtomImpl implements Serializable {
     }
 
     /**
-     * Returns the mass of the atom.
+     * Returns the mass of the atom. Null if not implemented.
      *
      * @return the mass of the atom
      */
     public Double getMass() {
         return atom.getIsotopeMass(isotope);
+    }
+    
+    /**
+     * Returns the isotope number corresponding to the given rounded mass. e.g. returns +1 for 13 if the atom is C. Null if no isotope was found.
+     * 
+     * @param roundedMass the rounded mass as integer
+     * 
+     * @return the isotope number
+     */
+    public Integer getIsotopeNumber(Integer roundedMass) {
+        for (Integer isotopeNumber : atom.getImplementedIsotopes()) {
+            Double isotopeMass = atom.getIsotopeMass(isotopeNumber);
+            Integer isotopeRoundedMass = (int) Math.round(isotopeMass);
+            if (roundedMass.equals(isotopeRoundedMass)) {
+                return isotopeNumber;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -43,6 +61,9 @@ public class AtomImpl implements Serializable {
         if (isotope == 0) {
             return atom.getLetter();
         } else {
+            if (getMass() == null) {
+                throw new UnsupportedOperationException("Isotope " + isotope + " not implemented for atom " + atom + ".");
+            }
             return Math.round(getMass()) + atom.getLetter();
         }
     }
@@ -68,6 +89,15 @@ public class AtomImpl implements Serializable {
     }
 
     /**
+     * Sets the atom.
+     * 
+     * @param atom the atom
+     */
+    public void setAtom(Atom atom) {
+        this.atom = atom;
+    }
+
+    /**
      * Returns the isotope, 0 for monoisotope.
      *
      * @return the isotope
@@ -75,4 +105,14 @@ public class AtomImpl implements Serializable {
     public Integer getIsotope() {
         return isotope;
     }
+
+    /**
+     * Sets the isotope, 0 for monoisotope.
+     * 
+     * @param isotope the isotope
+     */
+    public void setIsotope(Integer isotope) {
+        this.isotope = isotope;
+    }
+    
 }

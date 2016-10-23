@@ -375,7 +375,7 @@ public class FragmentFactoryTest extends TestCase {
     public void testTagFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        Tag tag = new Tag(0, new AminoAcidPattern(sequence), 0);
+        Tag tag = new Tag(0, AminoAcidPattern.getAminoAcidPatternFromString(sequence), 0);
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
         neutralLosses.put(NeutralLoss.H2O, 3);

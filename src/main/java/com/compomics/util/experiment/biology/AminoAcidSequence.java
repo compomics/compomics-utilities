@@ -152,7 +152,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     public AminoAcidPattern getAsAminoAcidPattern() {
         setSequenceStringBuilder(false);
         if (aminoAcidPattern == null) {
-            aminoAcidPattern = new AminoAcidPattern(sequence);
+            aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(sequence);
             if (modifications != null) {
                 for (Integer location : modifications.keySet()) {
                     for (ModificationMatch modMatch : modifications.get(location)) {

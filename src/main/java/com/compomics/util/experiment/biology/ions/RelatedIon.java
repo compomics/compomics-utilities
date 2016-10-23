@@ -44,7 +44,7 @@ public class RelatedIon extends Ion {
     /**
      * Related ion for R (C5H10N2O).
      */
-    public final static RelatedIon RELATED_R_4 = new RelatedIon(AminoAcid.R, AtomChain.getAtomChain("C(5)H(10)N(2O)"), subTypeCounter++);
+    public final static RelatedIon RELATED_R_4 = new RelatedIon(AminoAcid.R, AtomChain.getAtomChain("C(5)H(10)N(2)O"), subTypeCounter++);
     /**
      * Related ion for N. Ammonia loss from immonium ion (C3H3NO).
      */
@@ -145,12 +145,13 @@ public class RelatedIon extends Ion {
         this.atomChain = atomChain;
         this.subType = subType;
         if (save) {
-            ArrayList<RelatedIon> relatedIons = implementedIons.get(aminoAcidTarget.getSingleLetterCodeAsChar());
+            Character aminoAcidChar = aminoAcidTarget.getSingleLetterCodeAsChar();
+            ArrayList<RelatedIon> relatedIons = implementedIons.get(aminoAcidChar);
             if (relatedIons == null) {
                 relatedIons = new ArrayList<RelatedIon>(1);
+                implementedIons.put(aminoAcidTarget.getSingleLetterCodeAsChar(), relatedIons);
             }
             relatedIons.add(this);
-            implementedIons.put(aminoAcidTarget.getSingleLetterCodeAsChar(), relatedIons);
         }
     }
 
@@ -179,7 +180,7 @@ public class RelatedIon extends Ion {
         // return new CvTerm("PSI-MS", "MS:100????", "frag: related ion", null);
         return null;
     }
-    
+
     @Override
     public CvTerm getPsiMsCvTerm() {
         // @TODO: implement when the required cv terms are available

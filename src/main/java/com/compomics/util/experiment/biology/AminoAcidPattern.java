@@ -112,7 +112,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 if (i + 1 == aminoAcidPattenrAsStringCharArray.length) {
                     throw new IllegalArgumentException("Reached the end of the amino acid pattern while parsing amino acid combination in " + aminoAcidPatternAsString + ".");
                 }
-                while ((character = aminoAcidPattenrAsStringCharArray[i++]) != ']') {
+                while ((character = aminoAcidPattenrAsStringCharArray[++i]) != ']') {
                     AminoAcid.getAminoAcid(character);
                     aminoAcids.add(character);
                     if (i + 1 == aminoAcidPattenrAsStringCharArray.length) {
@@ -125,7 +125,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
             aminoAcidPattern.setTargeted(index, aminoAcids);
             index++;
-            i++;
         }
         return aminoAcidPattern;
     }

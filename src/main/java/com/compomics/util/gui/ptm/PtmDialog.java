@@ -259,7 +259,7 @@ public class PtmDialog extends javax.swing.JDialog {
                 mass += atomChainAdded.getMass();
             }
             if (atomChainRemoved != null) {
-                mass += atomChainRemoved.getMass();
+                mass -= atomChainRemoved.getMass();
             }
             massTxt.setText("" + Util.roundDouble(mass, 4));
         } catch (IllegalArgumentException e) {

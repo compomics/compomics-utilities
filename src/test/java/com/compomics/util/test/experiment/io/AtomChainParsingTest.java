@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * This class tests that the parsing of atom chains works.
+ * This class tests the parsing of atom chains.
  * 
  * @author Marc Vaudel
  */

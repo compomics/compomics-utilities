@@ -220,8 +220,8 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 }
             }
 
-            compositionTxt.setText((atomChainAdded.toString() + " " + atomChainRemoved.toString()).trim());
-            massTxt.setText(Util.roundDouble(atomChainAdded.getMass() + atomChainRemoved.getMass(), 6) + " Da");
+            compositionTxt.setText((atomChainAdded.toString() + " - " + atomChainRemoved.toString()).trim());
+            massTxt.setText(Util.roundDouble(atomChainAdded.getMass() - atomChainRemoved.getMass(), 6) + " Da");
         }
     }
 

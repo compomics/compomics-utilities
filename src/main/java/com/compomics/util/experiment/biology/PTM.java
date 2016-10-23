@@ -239,7 +239,7 @@ public class PTM extends ExperimentObject {
                 tempMass += atomChainAdded.getMass();
             }
             if (atomChainRemoved != null) {
-                tempMass += atomChainRemoved.getMass();
+                tempMass -= atomChainRemoved.getMass();
             }
             mass = tempMass;
         }

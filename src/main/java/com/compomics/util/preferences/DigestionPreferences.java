@@ -610,5 +610,4 @@ public class DigestionPreferences implements Serializable {
 
         return result + "]";
     }
-
 }

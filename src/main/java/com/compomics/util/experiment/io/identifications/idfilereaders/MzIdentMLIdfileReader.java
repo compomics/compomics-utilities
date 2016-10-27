@@ -49,6 +49,7 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
  * This IdfileReader reads identifications from an mzIdentML result file.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileReader {
 

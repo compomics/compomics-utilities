@@ -190,13 +190,13 @@ public class EnzymeFactory {
     /**
      * Returns the enzyme associated to the given cvTerm. Null if not found.
      *
-     * @param cvTermAccession the accession of the cv term.
+     * @param cvTermAccession the accession of the cv term
      *
      * @return the associated enzyme.
      */
     public Enzyme getUtilitiesEnzyme(String cvTermAccession) {
         for (Enzyme enzyme : enzymes.values()) {
-            if (enzyme.getCvTerm().getAccession().equals(cvTermAccession)) {
+            if (enzyme.getCvTerm() != null && enzyme.getCvTerm().getAccession().equals(cvTermAccession)) {
                 return enzyme;
             }
         }

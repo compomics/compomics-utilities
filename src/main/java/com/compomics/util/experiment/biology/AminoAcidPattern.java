@@ -724,8 +724,30 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is matches the given amino acid sequence in
-     * .
+     * Indicates whether the pattern is found in the given amino acid sequence at the given index. Returns false if the entire pattern cannot be mapped to the sequence.
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param index the index at which the matching should be done
+     *
+     * @return a boolean indicating whether the pattern is found in the given
+     * amino acid sequence at the given index
+     */
+    public boolean matchesAt(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, int index) {
+        int startIndex = index - target;
+        int endIndex = length() - target;
+        if (startIndex < 0) {
+            return false;
+        }
+        if (endIndex >= aminoAcidSequence.length()) {
+            return false;
+        }
+        String subSequence = aminoAcidSequence.substring(index, index+length());
+        return matches(subSequence, sequenceMatchingPreferences);
+    }
+
+    /**
+     * Indicates whether the pattern matches the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences

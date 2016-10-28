@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.atoms.Carbon;
+import com.compomics.util.experiment.biology.atoms.Fluorine;
 import com.compomics.util.experiment.biology.atoms.Helium;
 import com.compomics.util.experiment.biology.atoms.Hydrogen;
 import com.compomics.util.experiment.biology.atoms.Iodine;
@@ -19,6 +20,7 @@ import java.util.HashMap;
  * This interface contains information about atoms.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class Atom extends ExperimentObject {
 
@@ -70,6 +72,31 @@ public abstract class Atom extends ExperimentObject {
      * The Iodine atom.
      */
     public static final Atom I = new Iodine();
+    /**
+     * The Fluorine atom.
+     */
+    public static final Atom F = new Fluorine();
+    /**
+     * The monoisotopic mass. Access is faster then querying the isotope map.
+     */
+    protected Double monoisotopicMass;
+    /**
+     * Map of the isotope masses relative to the monoisotopic peak (+1 for
+     * carbon 13).
+     */
+    protected HashMap<Integer, Double> isotopeMap;
+    /**
+     * Map of the isotope representative composition of the stable isotopes.
+     */
+    protected HashMap<Integer, Double> representativeComposition;
+    /**
+     * The name of the atom.
+     */
+    protected String name;
+    /**
+     * The single letter code of the atom.
+     */
+    protected String letter;
     
     /**
      * Returns an array of implemented atoms indicated by their short name.
@@ -79,9 +106,9 @@ public abstract class Atom extends ExperimentObject {
      */
     public static String[] getImplementedAtoms(boolean includeSelect) {
         if (includeSelect) {
-            return new String[] {"- Select -", "C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se"};
+            return new String[] {"- Select -", "C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F"};
         } else {
-            return new String[] {"C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se"};
+            return new String[] {"C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F"};
         }
     }
 
@@ -115,31 +142,11 @@ public abstract class Atom extends ExperimentObject {
             return Na;
         } else if (shortName.equals("Se")) {
             return Se;
+        } else if (shortName.equals("F")) {
+            return F;
         }
         throw new UnsupportedOperationException("Atom " + shortName + " not implemented.");
     }
-
-    /**
-     * The monoisotopic mass. Access is faster then querying the isotope map.
-     */
-    protected Double monoisotopicMass;
-    /**
-     * Map of the isotope masses relative to the monoisotopic peak (+1 for
-     * carbon 13).
-     */
-    protected HashMap<Integer, Double> isotopeMap;
-    /**
-     * Map of the isotope representative composition of the stable isotopes.
-     */
-    protected HashMap<Integer, Double> representativeComposition;
-    /**
-     * The name of the atom.
-     */
-    protected String name;
-    /**
-     * The single letter code of the atom.
-     */
-    protected String letter;
 
     /**
      * Returns the monoisotopic mass.

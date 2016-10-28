@@ -2231,6 +2231,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         digestionPreferences.addEnzyme(enzyme);
         String enzymeName = enzyme.getName();
         digestionPreferences.setnMissedCleavages(enzymeName, new Integer(maxMissedCleavagesTxt.getText().trim()));
+        tempSearchParameters.setDigestionPreferences(digestionPreferences);
         // @TODO: set specificity
 
         double fragmentAccuracy = new Double(fragmentIonAccuracyTxt.getText().trim());

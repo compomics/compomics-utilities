@@ -279,6 +279,9 @@ public class EnzymeFactory {
      * @return a list of default enzymes
      */
     private static ArrayList<Enzyme> getDefaultEnzymes() {
+        
+        // note that enzyme names cannot contain comma as this is used by
+        // some of the search engines to separate multiple enzymes!
         ArrayList<Enzyme> enzymes = new ArrayList<Enzyme>();
 
         Enzyme enzyme = new Enzyme("Trypsin");
@@ -302,6 +305,10 @@ public class EnzymeFactory {
 
         enzyme = new Enzyme("Arg-C (no P rule)");
         enzyme.addAminoAcidBefore('R');
+        enzymes.add(enzyme);
+        
+        enzyme = new Enzyme("Arg-N");
+        enzyme.addAminoAcidAfter('R');
         enzymes.add(enzyme);
 
         enzyme = new Enzyme("Glu-C");

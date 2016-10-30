@@ -724,7 +724,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino acid sequence at the given index. Returns false if the entire pattern cannot be mapped to the sequence.
+     * Indicates whether the pattern is found in the given amino acid sequence at the given index, where 0 is the first amino acid. Returns false if the entire pattern cannot be mapped to the sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences

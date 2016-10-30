@@ -1002,6 +1002,24 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         }
         return combination;
     }
+    
+    /**
+     * Returns a boolean indicating whether the given sequence contains ambiguous amino acids like X.
+     * 
+     * @param sequence the amino acid sequence to inspect
+     * 
+     * @return a boolean indicating whether the given sequence contains ambiguous amino acids
+     */
+    public static boolean containsAmbiguousAminoAcid(String sequence) {
+        char[] sequenceAsCharArray = sequence.toCharArray();
+        for (char aa : sequenceAsCharArray) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (aminoAcid.iscombination()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public String toString() {

@@ -325,21 +325,22 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the number of missed cleavages using the digestion preferences. Null if no cleavage set.
+     * Returns the number of missed cleavages using the digestion preferences.
+     * Null if no cleavage set.
      *
      * @param digestionPreferences the digestion preferences
      * @return the amount of missed cleavages
      */
     public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
-            Integer peptideMinMissedCleavages = null;
-            if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
-                for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
-                    int tempMissedCleavages = getNMissedCleavages(enzyme);
-                    if (peptideMinMissedCleavages == null || tempMissedCleavages < peptideMinMissedCleavages) {
-                        peptideMinMissedCleavages = tempMissedCleavages;
-                    }
+        Integer peptideMinMissedCleavages = null;
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+            for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+                int tempMissedCleavages = getNMissedCleavages(enzyme);
+                if (peptideMinMissedCleavages == null || tempMissedCleavages < peptideMinMissedCleavages) {
+                    peptideMinMissedCleavages = tempMissedCleavages;
                 }
             }
+        }
         return peptideMinMissedCleavages;
     }
 
@@ -1596,18 +1597,14 @@ public class Peptide extends ExperimentObject {
         if (mass == null) {
 
             Double tempMass = Atom.H.getMonoisotopicMass();
+            char[] sequenceAsCharArray = sequence.toCharArray();
 
-            for (int aa = 0; aa < sequence.length(); aa++) {
+            for (char aa : sequenceAsCharArray) {
                 try {
-                    AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
-
-                    if (currentAA != null) {
-                        tempMass += currentAA.getMonoisotopicMass();
-                    } else {
-                        System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
-                    }
+                    AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
+                    tempMass += currentAA.getMonoisotopicMass();
                 } catch (NullPointerException e) {
-                    throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                    throw new IllegalArgumentException("Unknown amino acid: " + aa + ".");
                 }
             }
 

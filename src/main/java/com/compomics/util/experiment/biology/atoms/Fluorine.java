@@ -4,14 +4,14 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- * Fluorine
+ * The fluorine atom.
  *
  * @author Marc Vaudel
  */
 public class Fluorine extends Atom {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Fluorine() {
         monoisotopicMass = 18.99840322;
@@ -36,7 +36,7 @@ public class Fluorine extends Atom {
         isotopeMap.put(10, 31.06043);
         representativeComposition = new HashMap<Integer, Double>(2);
         representativeComposition.put(0, 1.0);
-        
+
         this.name = "Fluorine";
         this.letter = "F";
     }

@@ -578,7 +578,7 @@ public class ProteinSequenceIterator {
             for (Integer peptideStart : peptideSequences.keySet()) {
                 ArrayList<String> peptidesAtPosition = peptideSequences.get(peptideStart);
                 for (String peptideSequence : peptidesAtPosition) {
-                HashMap<Integer, ArrayList<String>> digestedSequence = enzyme.digest(peptideSequence, specificity, nMissedCleavages, massMin, massMax);
+                HashMap<Integer, ArrayList<String>> digestedSequence = new HashMap<Integer, ArrayList<String>>(0); //enzyme.digest(peptideSequence, specificity, nMissedCleavages, massMin, massMax);
                 for (Integer tempPeptideStart : digestedSequence.keySet()) {
                 ArrayList<String> tempPeptidesAtPosition = digestedSequence.get(tempPeptideStart);
                     Integer newPeptideStart = peptideStart + tempPeptideStart;

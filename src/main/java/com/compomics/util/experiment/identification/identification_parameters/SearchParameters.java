@@ -447,6 +447,10 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
+        if (forwardIons == null) { // Backward compatibility
+            forwardIons = new ArrayList<Integer>(1);
+            forwardIons.add(forwardIon);
+        }
         return forwardIons;
     }
 
@@ -467,6 +471,10 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
+        if (rewindIons == null) { // Backward compatibility
+            rewindIons = new ArrayList<Integer>(1);
+            rewindIons.add(rewindIon);
+        }
         return rewindIons;
     }
 

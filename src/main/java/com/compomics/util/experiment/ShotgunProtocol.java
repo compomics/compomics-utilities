@@ -15,6 +15,10 @@ import java.util.HashMap;
 public class ShotgunProtocol implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -6331062569130128058L;
+    /**
      * The PTMs enriched for.
      */
     private ArrayList<String> enrichedPtms;

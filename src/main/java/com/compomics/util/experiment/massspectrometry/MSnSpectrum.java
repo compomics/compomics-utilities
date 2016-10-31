@@ -102,7 +102,7 @@ public class MSnSpectrum extends Spectrum {
      * @return the peak list as an mgf bloc
      */
     public String asMgf() {
-        return asMgf(new HashMap<String, String>());
+        return asMgf(null);
     }
 
     /**
@@ -123,8 +123,9 @@ public class MSnSpectrum extends Spectrum {
             ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
             Collections.sort(additionalTagsKeys);
             for (String tag : additionalTagsKeys) {
-                if (additionalTags.get(tag) != null) {
-                    results.append(tag).append("=").append(additionalTags.get(tag)).append(lineBreak);
+                String attribute = additionalTags.get(tag);
+                if (attribute != null && !attribute.equals("")) {
+                    results.append(tag).append("=").append(attribute).append(lineBreak);
                 }
             }
         }

@@ -10,6 +10,10 @@ import java.io.Serializable;
 public class AtomImpl implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = 3269643086590455656L;
+    /**
      * The reference atom.
      */
     private Atom atom;

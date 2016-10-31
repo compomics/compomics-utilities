@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.protein_sequences;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -308,7 +309,7 @@ public class ProteinSequenceIterator {
                 }
             }
             for (int j = i + 1; j < sequenceAsCharArray.length; j++) {
-                int aaIndex = j-i;
+                int aaIndex = j - i;
                 ArrayList<StringBuilder> newPeptideSequences = new ArrayList<StringBuilder>(peptideSequences.size());
                 ArrayList<Double> newSequenceMasses = new ArrayList<Double>(sequenceMasses.size());
                 ArrayList<HashMap<Integer, String>> newFixedModifications = new ArrayList<HashMap<Integer, String>>(fixedModifications.size());
@@ -328,7 +329,7 @@ public class ProteinSequenceIterator {
                         if (modificationAtAa != null) {
                             AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
                             if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, j)) {
-                                peptideModifications.put(aaIndex+1, modificationAtAa);
+                                peptideModifications.put(aaIndex + 1, modificationAtAa);
                                 peptideMass += fixedModificationsAtAaMass.get(aaChar);
                             }
                         }
@@ -382,9 +383,8 @@ public class ProteinSequenceIterator {
             if (fixedProteinCtermModification != null) {
                 cTermModification = fixedProteinCtermModification;
                 peptideMass += fixedProteinCtermModificationMass;
-            }
-            String fixedProteinCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
-            if (fixedProteinCtermModificationAtAa != null) {
+            } else {
+                String fixedProteinCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinCtermModificationAtAa);
                 if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, proteinSequence.length() - 1)) {
                     cTermModification = fixedProteinCtermModification;
@@ -478,17 +478,23 @@ public class ProteinSequenceIterator {
     }
 
     public Peptide getPeptideNoDigestion(String proteinSequence) {
+        return getPeptideNoDigestion(proteinSequence, true, true);
+    }
+
+    public Peptide getPeptideNoDigestion(String sequence, boolean proteinNTerminus, boolean proteinCTerminus) {
         String nTermModification = null;
         HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(1);
-        char aa = proteinSequence.charAt(0);
-        if (fixedProteinNtermModification != null) {
-            nTermModification = fixedProteinNtermModification;
-        } else {
-            String fixedProteinNtermModificationAtAa = fixedProteinNtermModificationsAtAa.get(aa);
-            if (fixedProteinNtermModificationAtAa != null) {
-                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinNtermModificationAtAa);
-                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
-                    nTermModification = fixedProteinNtermModificationAtAa;
+        char aa = sequence.charAt(0);
+        if (proteinNTerminus) {
+            if (fixedProteinNtermModification != null) {
+                nTermModification = fixedProteinNtermModification;
+            } else {
+                String fixedProteinNtermModificationAtAa = fixedProteinNtermModificationsAtAa.get(aa);
+                if (fixedProteinNtermModificationAtAa != null) {
+                    AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinNtermModificationAtAa);
+                    if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+                        nTermModification = fixedProteinNtermModificationAtAa;
+                    }
                 }
             }
         }
@@ -499,31 +505,32 @@ public class ProteinSequenceIterator {
             String fixedPeptideNtermModificationAtAa = fixedProteinNtermModificationsAtAa.get(aa);
             if (fixedPeptideNtermModificationAtAa != null) {
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedPeptideNtermModificationAtAa);
-                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
                     nTermModification = fixedPeptideNtermModificationAtAa;
                 }
             }
         }
-        for (int i = 0; i < proteinSequence.length(); i++) {
-            aa = proteinSequence.charAt(i);
+        for (int i = 0; i < sequence.length(); i++) {
+            aa = sequence.charAt(i);
             String modificationAtAa = fixedModificationsAtAa.get(aa);
             if (modificationAtAa != null) {
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
-                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, i)) {
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, i)) {
                     peptideModifications.put(i + 1, modificationAtAa);
                 }
             }
         }
-        char aaChar = proteinSequence.charAt(proteinSequence.length() - 1);
+        char aaChar = sequence.charAt(sequence.length() - 1);
         String cTermModification = null;
-        if (fixedProteinCtermModification != null) {
-            cTermModification = fixedProteinCtermModification;
-        }
-        String fixedProteinCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
-        if (fixedProteinCtermModificationAtAa != null) {
-            AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinCtermModificationAtAa);
-            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, proteinSequence.length() - 1)) {
+        if (proteinCTerminus) {
+            if (fixedProteinCtermModification != null) {
                 cTermModification = fixedProteinCtermModification;
+            } else {
+                String fixedProteinCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
+                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinCtermModificationAtAa);
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, sequence.length() - 1)) {
+                    cTermModification = fixedProteinCtermModification;
+                }
             }
         }
         if (cTermModification == null && fixedPeptideCtermModification != null) {
@@ -532,7 +539,7 @@ public class ProteinSequenceIterator {
         String fixedPeptideCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
         if (cTermModification == null && fixedPeptideCtermModificationAtAa != null) {
             AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedPeptideCtermModificationAtAa);
-            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, proteinSequence.length() - 1)) {
+            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, sequence.length() - 1)) {
                 cTermModification = fixedPeptideCtermModificationAtAa;
             }
         }
@@ -545,7 +552,7 @@ public class ProteinSequenceIterator {
             if (modificationMatches == null) {
                 modificationMatches = new ArrayList<ModificationMatch>(peptideModifications.size() + 1);
             }
-            modificationMatches.add(new ModificationMatch(cTermModification, false, proteinSequence.length()));
+            modificationMatches.add(new ModificationMatch(cTermModification, false, sequence.length()));
         }
         for (Integer site : peptideModifications.keySet()) {
             if (modificationMatches == null) {
@@ -554,8 +561,47 @@ public class ProteinSequenceIterator {
             String modificationName = peptideModifications.get(site);
             modificationMatches.add(new ModificationMatch(modificationName, false, site));
         }
-        Peptide peptide = new Peptide(proteinSequence, modificationMatches);
+        Peptide peptide = new Peptide(sequence, modificationMatches);
         return peptide;
+    }
+    
+    public ArrayList<Peptide> getPeptidesDigestion(String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+        HashMap<Integer, ArrayList<String>> peptideSequences = new HashMap<Integer, ArrayList<String>>();
+        ArrayList<String> originalSequence = new ArrayList<String>(1);
+        originalSequence.add(proteinSequence);
+        peptideSequences.put(0, originalSequence);
+        for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+            String enzymeName = enzyme.getName();
+            Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+            DigestionPreferences.Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+            HashMap<Integer, ArrayList<String>> newPeptideSequences = new HashMap<Integer, ArrayList<String>>();
+            for (Integer peptideStart : peptideSequences.keySet()) {
+                ArrayList<String> peptidesAtPosition = peptideSequences.get(peptideStart);
+                for (String peptideSequence : peptidesAtPosition) {
+                HashMap<Integer, ArrayList<String>> digestedSequence = enzyme.digest(peptideSequence, specificity, nMissedCleavages, massMin, massMax);
+                for (Integer tempPeptideStart : digestedSequence.keySet()) {
+                ArrayList<String> tempPeptidesAtPosition = digestedSequence.get(tempPeptideStart);
+                    Integer newPeptideStart = peptideStart + tempPeptideStart;
+                ArrayList<String> newPeptidesAtPosition = newPeptideSequences.get(newPeptideStart);
+                if (newPeptidesAtPosition == null) {
+                    newPeptideSequences.put(newPeptideStart, tempPeptidesAtPosition);
+                } else {
+                    newPeptidesAtPosition.addAll(tempPeptidesAtPosition);
+                }
+                }
+                }
+            }
+            peptideSequences = newPeptideSequences;
+        }
+        ArrayList<Peptide> peptides = new ArrayList<Peptide>(peptideSequences.size());
+        for (Integer peptideStart : peptideSequences.keySet()) {
+            for (String peptideSequence : peptideSequences.get(peptideStart)) {
+                Integer peptideEnd = peptideStart + peptideSequence.length();
+                Peptide peptide = getPeptideNoDigestion(peptideSequence, peptideStart == 0, peptideEnd == proteinSequence.length());
+                peptides.add(peptide);
+            }
+        }
+        return peptides;
     }
 
     public ArrayList<Peptide> getPeptides(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {

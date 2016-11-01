@@ -8,21 +8,22 @@ package com.compomics.util.general;
  * @param <K> the type of object to encapsulate
  */
 public class EncapsulatedObject<K> {
-    
+
     /**
      * The object to encapsulate.
      */
     private K object;
+
     /**
      * Constructor.
      */
     public EncapsulatedObject() {
-        
+
     }
 
     /**
      * Returns the encapsulated object.
-     * 
+     *
      * @return the encapsulated object
      */
     public K getObject() {
@@ -31,11 +32,10 @@ public class EncapsulatedObject<K> {
 
     /**
      * Sets the encapsulated object.
-     * 
+     *
      * @param object the encapsulated object
      */
     public void setObject(K object) {
         this.object = object;
     }
-    
 }

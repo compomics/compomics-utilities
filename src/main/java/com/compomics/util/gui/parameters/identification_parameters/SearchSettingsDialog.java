@@ -278,6 +278,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         // set the settings editable or not
         digestionCmb.setEnabled(editable);
         enzymesCmb.setEnabled(editable && ((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme);
+        specificityComboBox.setEnabled(editable);
         precursorIonAccuracyTxt.setEditable(editable);
         precursorIonUnit.setEnabled(editable);
         fragmentIon1Cmb.setEnabled(editable);

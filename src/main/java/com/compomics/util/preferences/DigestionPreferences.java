@@ -398,8 +398,8 @@ public class DigestionPreferences implements Serializable {
                 default:
                     throw new UnsupportedOperationException("Description not implemented for cleavage preference " + cleavagePreference + ".");
             }
+            stringBuilder.append(".").append(newLine);
         }
-        stringBuilder.append(".").append(newLine);
         return stringBuilder.toString();
     }
 

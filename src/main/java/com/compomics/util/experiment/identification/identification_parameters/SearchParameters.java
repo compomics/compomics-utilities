@@ -1121,7 +1121,12 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 return false;
             }
         }
-        if (!this.getDigestionPreferences().isSameAs(otherSearchParameters.getDigestionPreferences())) {
+        if ((this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() == null)
+                || this.getDigestionPreferences() == null && otherSearchParameters.getDigestionPreferences() != null) {
+            return false;
+        }
+        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() != null 
+                && !this.getDigestionPreferences().isSameAs(otherSearchParameters.getDigestionPreferences())) {
             return false;
         }
         if (!Util.sameLists(forwardIons, otherSearchParameters.getForwardIons())) {
@@ -1160,6 +1165,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 return false;
             }
         }
+
         return true;
     }
 

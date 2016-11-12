@@ -564,7 +564,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="fixedModificationsLabel" pref="114" max="32767" attributes="1"/>
+                                          <Component id="fixedModificationsLabel" pref="115" max="32767" attributes="1"/>
                                           <EmptySpace min="-2" pref="242" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
@@ -678,7 +678,7 @@
                               <Component id="variableModificationsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="variableModsJScrollPane" pref="349" max="32767" attributes="0"/>
+                                  <Component id="variableModsJScrollPane" pref="350" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="addVariableModification" alignment="1" min="-2" pref="54" max="-2" attributes="0"/>
@@ -780,9 +780,9 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="modificationsJScrollPane" pref="362" max="32767" attributes="0"/>
+                          <Component id="modificationsJScrollPane" pref="363" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="modificationsListCombo" pref="308" max="32767" attributes="1"/>
+                              <Component id="modificationsListCombo" pref="337" max="32767" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="openModificationSettingsJButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>

@@ -615,5 +615,4 @@ public class ProteinSequenceIterator {
                 throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");
         }
     }
-
 }

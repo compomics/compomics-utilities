@@ -230,7 +230,7 @@ public class DigestionPreferences implements Serializable {
 
     /**
      * Returns a boolean indicating whether enzyme settings were set.
-     * 
+     *
      * @return a boolean indicating whether enzyme settings were set
      */
     public boolean hasEnzymes() {
@@ -288,7 +288,6 @@ public class DigestionPreferences implements Serializable {
         nMissedCleavages = null;
         specificity = null;
     }
-
 
     /**
      * Returns the number of allowed missed cleavages for the given enzyme. Null
@@ -372,14 +371,15 @@ public class DigestionPreferences implements Serializable {
     public String getShortDescription() {
         DigestionPreferences defaultPreferences = DigestionPreferences.getDefaultPreferences();
         StringBuilder stringBuilder = new StringBuilder();
+        String newLine = System.getProperty("line.separator");
         if (!defaultPreferences.isSameAs(this)) {
-            String newLine = System.getProperty("line.separator");
+            stringBuilder.append("Digestion: ");
             switch (cleavagePreference) {
                 case wholeProtein:
                     stringBuilder.append("Whole Protein").append(newLine);
                     break;
                 case unSpecific:
-                    stringBuilder.append("No Enzyme Specificity").append(newLine);
+                    stringBuilder.append("Unspecific").append(newLine);
                     break;
                 case enzyme:
                     for (Enzyme enzyme1 : enzymes) {
@@ -391,7 +391,7 @@ public class DigestionPreferences implements Serializable {
                         stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
                         Integer nmc = getnMissedCleavages(enzymeName);
                         if (nmc != null) {
-                            stringBuilder.append(" ").append(nmc).append(" missed cleavages");
+                            stringBuilder.append(", ").append(nmc).append(" missed cleavages");
                         }
                     }
                     break;
@@ -399,6 +399,7 @@ public class DigestionPreferences implements Serializable {
                     throw new UnsupportedOperationException("Description not implemented for cleavage preference " + cleavagePreference + ".");
             }
         }
+        stringBuilder.append(".").append(newLine);
         return stringBuilder.toString();
     }
 
@@ -416,24 +417,30 @@ public class DigestionPreferences implements Serializable {
             return false;
         }
         ArrayList<Enzyme> otherEnzymes = otherDigestionPreferences.getEnzymes();
-        if (enzymes.size() != otherEnzymes.size()) {
+        if ((enzymes != null && otherEnzymes == null)
+                || (enzymes == null && otherEnzymes != null)) {
             return false;
         }
-        ArrayList<String> enzymeNames = new ArrayList<String>(enzymes.size());
-        for (Enzyme enzyme : enzymes) {
-            enzymeNames.add(enzyme.getName());
-        }
-        ArrayList<String> otherNames = new ArrayList<String>(otherEnzymes.size());
-        for (Enzyme enzyme : otherEnzymes) {
-            otherNames.add(enzyme.getName());
-        }
-        if (!Util.sameLists(enzymeNames, otherNames)) {
-            return false;
-        }
-        for (String enzymeName : enzymeNames) {
-            if (getSpecificity(enzymeName) != otherDigestionPreferences.getSpecificity(enzymeName)
-                    || !getnMissedCleavages(enzymeName).equals(otherDigestionPreferences.getnMissedCleavages(enzymeName))) {
+        if (enzymes != null && otherEnzymes != null) {
+            if (enzymes.size() != otherEnzymes.size()) {
                 return false;
+            }
+            ArrayList<String> enzymeNames = new ArrayList<String>(enzymes.size());
+            for (Enzyme enzyme : enzymes) {
+                enzymeNames.add(enzyme.getName());
+            }
+            ArrayList<String> otherNames = new ArrayList<String>(otherEnzymes.size());
+            for (Enzyme enzyme : otherEnzymes) {
+                otherNames.add(enzyme.getName());
+            }
+            if (!Util.sameLists(enzymeNames, otherNames)) {
+                return false;
+            }
+            for (String enzymeName : enzymeNames) {
+                if (getSpecificity(enzymeName) != otherDigestionPreferences.getSpecificity(enzymeName)
+                        || !getnMissedCleavages(enzymeName).equals(otherDigestionPreferences.getnMissedCleavages(enzymeName))) {
+                    return false;
+                }
             }
         }
         return true;

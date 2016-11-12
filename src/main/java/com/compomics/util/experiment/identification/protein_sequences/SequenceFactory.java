@@ -398,9 +398,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Processes the sequence as present in the fasta file.
+     * Processes the sequence as present in the FASTA file.
      *
-     * @param fastaSequence the sequence as present in the fasta file
+     * @param fastaSequence the sequence as present in the FASTA file
      *
      * @return the protein sequence
      */

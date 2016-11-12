@@ -39,7 +39,7 @@ public class AtomChain implements Serializable {
     /**
      * Returns an atom chain from the input as string. Atoms are
      * represented by their canonical short name, e.g. C for Carbon, Na for
-     * Sodium. The occurrence of a given atom is to be written in parantheses,
+     * Sodium. The occurrence of a given atom is to be written in parentheses,
      * e.g. C(3)PO is parsed as three C's, one P and one O. No negative values
      * are allowed. The isotope is to be written prior to the atom, e.g.
      * 13C(2)18OP is parsed as two 13C atoms, one 18O, and one P.

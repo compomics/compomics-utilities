@@ -106,7 +106,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Modification with mass limits
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 724.0, 725.0);
-        Assert.assertTrue(peptides.size() == 7);
+        Assert.assertTrue(peptides.size() == 6);
         
         
         // Trypsin digestion
@@ -114,44 +114,73 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
-        Assert.assertTrue(peptides.size() == 5);
+        Assert.assertTrue(peptides.size() == 6);
         
         // Combination
         peptides = iteratorNoModifications.getPeptides(testSequenceCombination, digestionPreferences, null, null);
-        Assert.assertTrue(peptides.size() == 6);
+        Assert.assertTrue(peptides.size() == 10);
         
         // No modification lower mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 667.0, null);
-        Assert.assertTrue(peptides.size() == 64);
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 770.0, null);
+        Assert.assertTrue(peptides.size() == 4);
         
         // No modification upper mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, 668.0);
-        Assert.assertTrue(peptides.size() == 80);
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, 771.0);
+        Assert.assertTrue(peptides.size() == 3);
         
         // No modification with mass limits
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 667.0, 668.0);
-        Assert.assertTrue(peptides.size() == 8);
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 770.0, 771.0);
+        Assert.assertTrue(peptides.size() == 1);
         
         // Modifications
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, null, null);
-        Assert.assertTrue(peptides.size() == 136);
+        Assert.assertTrue(peptides.size() == 6);
         
         // Modification lower mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 667.0, null);
-        Assert.assertTrue(peptides.size() == 71);
+        peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 867.0, null);
+        Assert.assertTrue(peptides.size() == 4);
         
         // Modification upper mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, 668.0);
-        Assert.assertTrue(peptides.size() == 65);
+        peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, null, 868.0);
+        Assert.assertTrue(peptides.size() == 3);
         
         // Modification with mass limits
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 667.0, 668.0);
-        Assert.assertTrue(peptides.isEmpty());
+        peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 867.0, 868.0);
+        Assert.assertTrue(peptides.size() == 1);
+        Assert.assertTrue(peptides.get(0).getSequence().equals("CTESCTK"));
+        Assert.assertTrue(peptides.get(0).getModificationMatches().size() == 3);
         
-        // Modification with mass limits
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 724.0, 725.0);
-        Assert.assertTrue(peptides.size() == 7);
-     
+        
+        // No missed cleavages
+        digestionPreferences.setnMissedCleavages("Trypsin", 0);
+        
+        // No modification
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        Assert.assertTrue(peptides.size() == 3);
+        
+        
+        // Semi-tryptic N
+        digestionPreferences.setSpecificity("Trypsin", DigestionPreferences.Specificity.specificNTermOnly);
+        
+        // No modification
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        Assert.assertTrue(peptides.size() == 16);
+        
+        
+        // Semi-tryptic C
+        digestionPreferences.setSpecificity("Trypsin", DigestionPreferences.Specificity.specificCTermOnly);
+        
+        // No modification
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        Assert.assertTrue(peptides.size() == 16);
+        
+        
+        // Semi-tryptic
+        digestionPreferences.setSpecificity("Trypsin", DigestionPreferences.Specificity.semiSpecific);
+        
+        // No modification
+        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        Assert.assertTrue(peptides.size() == 29);
         
         
     }

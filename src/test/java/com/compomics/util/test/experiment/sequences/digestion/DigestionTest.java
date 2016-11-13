@@ -17,7 +17,7 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class DigestionTest extends TestCase {
 
-    public void testDigestion() throws XmlPullParserException, IOException {
+    public void testEnzymeDigestion() throws XmlPullParserException, IOException {
 
         String testSequence = "MKMMKMMRMMMKPMMRMMMMMMMMMMMRMMMMRMM";
 
@@ -33,4 +33,6 @@ public class DigestionTest extends TestCase {
         Assert.assertTrue(peptides.contains("MMMKPMMR"));
         Assert.assertTrue(peptides.contains("MMMMRMM"));
     }
+    
+    
 }

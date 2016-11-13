@@ -898,5 +898,4 @@ public class ProteinSequenceIterator {
             return missedCleavages;
         }
     }
-
 }

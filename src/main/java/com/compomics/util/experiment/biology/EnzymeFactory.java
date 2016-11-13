@@ -335,7 +335,7 @@ public class EnzymeFactory {
         enzyme.setCvTerm(new CvTerm("PSI-MS", "MS:1001304", "Asp-N", null));
         enzymes.add(enzyme);
 
-        enzyme = new Enzyme("Asp-N Ammonium Bicarbonate");
+        enzyme = new Enzyme("Asp-N (ambic)");
         enzyme.addAminoAcidAfter('D');
         enzyme.addAminoAcidAfter('E');
         enzyme.setCvTerm(new CvTerm("PSI-MS", "MS:1001305", "Asp-N_ambic", null));

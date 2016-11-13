@@ -95,10 +95,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Parses the amino acid pattern from the given string as created by the toString() method.
-     * 
-     * @param aminoAcidPatternAsString the amino acid pattern as created by the toString() method
-     * 
+     * Parses the amino acid pattern from the given string as created by the
+     * toString() method.
+     *
+     * @param aminoAcidPatternAsString the amino acid pattern as created by the
+     * toString() method
+     *
      * @return the amino acid pattern
      */
     public static AminoAcidPattern getAminoAcidPatternFromString(String aminoAcidPatternAsString) {
@@ -120,8 +122,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     }
                 }
             } else {
-                    AminoAcid.getAminoAcid(character);
-                    aminoAcids.add(character);
+                AminoAcid.getAminoAcid(character);
+                aminoAcids.add(character);
             }
             aminoAcidPattern.setTargeted(index, aminoAcids);
             index++;
@@ -724,7 +726,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino acid sequence at the given index, where 0 is the first amino acid. Returns false if the entire pattern cannot be mapped to the sequence.
+     * Indicates whether the pattern is found in the given amino acid sequence
+     * at the given index, where 0 is the first amino acid. Returns false if the
+     * entire pattern cannot be mapped to the sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -742,7 +746,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (endIndex >= aminoAcidSequence.length()) {
             return false;
         }
-        String subSequence = aminoAcidSequence.substring(index, index+length());
+        String subSequence = aminoAcidSequence.substring(index, index + length());
         return matches(subSequence, sequenceMatchingPreferences);
     }
 

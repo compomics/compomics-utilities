@@ -550,7 +550,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         }
         if (proteinInferencePreferences == null) {
             proteinInferencePreferences = new ProteinInferencePreferences();
-            if (searchParameters.getFastaFile() != null) {
+            if (searchParameters != null && searchParameters.getFastaFile() != null) {
                 proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
             }
         }
@@ -560,7 +560,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (fractionSettings == null) {
             fractionSettings = new FractionSettings();
         }
-        setDescription(searchParameters.getShortDescription(), true);
+        if (searchParameters != null) {
+            setDescription(searchParameters.getShortDescription(), true);
+        }
     }
 
     @Override

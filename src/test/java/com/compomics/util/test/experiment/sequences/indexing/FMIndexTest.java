@@ -1,4 +1,4 @@
-package com.compomics.util.test.experiment;
+package com.compomics.util.test.experiment.sequences.indexing;
 
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;

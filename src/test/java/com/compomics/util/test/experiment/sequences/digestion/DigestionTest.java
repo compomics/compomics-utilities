@@ -1,4 +1,4 @@
-package com.compomics.util.test.experiment;
+package com.compomics.util.test.experiment.sequences.digestion;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
@@ -22,7 +22,6 @@ public class DigestionTest extends TestCase {
         String testSequence = "MKMMKMMRMMMKPMMRMMMMMMMMMMMRMMMMRMM";
 
         EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
-        File enzymeFile = new File("src/test/resources/experiment/enzymes.xml");
         Enzyme enzyme = enzymeFactory.getEnzyme("Trypsin");
         HashSet<String> peptides = enzyme.digest(testSequence, 2, 4, 8);
 

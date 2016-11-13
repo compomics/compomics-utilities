@@ -1,4 +1,4 @@
-package com.compomics.util.test.experiment;
+package com.compomics.util.test.experiment.io;
 
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;

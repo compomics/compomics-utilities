@@ -237,7 +237,7 @@ public class ProteinSequenceIterator {
         }
         ArrayList<Peptide> result = new ArrayList<Peptide>();
         char[] sequenceAsCharArray = proteinSequence.toCharArray();
-        for (int i = 0; i < sequenceAsCharArray.length - 1; i++) {
+        for (int i = 0; i < sequenceAsCharArray.length; i++) {
             Double sequenceMass = 0.0;
             char nTermAaChar = sequenceAsCharArray[i];
             StringBuilder peptideSequence = new StringBuilder(sequenceAsCharArray.length - i);
@@ -276,7 +276,7 @@ public class ProteinSequenceIterator {
     private ArrayList<Peptide> getPeptidesAaCombinations(String sequence, Double massMin, Double massMax) {
         ArrayList<Peptide> result = new ArrayList<Peptide>();
         char[] sequenceAsCharArray = sequence.toCharArray();
-        for (int i = 0; i < sequenceAsCharArray.length - 1; i++) {
+        for (int i = 0; i < sequenceAsCharArray.length; i++) {
             ArrayList<PeptideDraft> peptideDrafts = new ArrayList<PeptideDraft>(1);
             char sequenceNTermAaChar = sequenceAsCharArray[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(sequenceNTermAaChar);

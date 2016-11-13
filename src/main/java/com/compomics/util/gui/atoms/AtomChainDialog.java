@@ -220,7 +220,11 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 }
             }
 
-            compositionTxt.setText((atomChainAdded.toString() + " - " + atomChainRemoved.toString()).trim());
+            if (atomChainRemoved.size() > 0) {
+                compositionTxt.setText(atomChainAdded.toString() + " - " + atomChainRemoved.toString());
+            } else {
+                compositionTxt.setText(atomChainAdded.toString());
+            }
             massTxt.setText(Util.roundDouble(atomChainAdded.getMass() - atomChainRemoved.getMass(), 6) + " Da");
         }
     }
@@ -486,8 +490,8 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
      * Change the icon to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -495,8 +499,8 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
      * Change the icon back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -504,15 +508,15 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
      * Open the help dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(this, getClass().getResource("/helpFiles/AtomChainDialog.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            "Help - Atom Composition", 500, 10);
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                "Help - Atom Composition", 500, 10);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

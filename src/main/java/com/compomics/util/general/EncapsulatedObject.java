@@ -19,6 +19,14 @@ public class EncapsulatedObject<K> {
     public EncapsulatedObject() {
         
     }
+    /**
+     * Constructor.
+     * 
+     * @param initialValue the initial value
+     */
+    public EncapsulatedObject(K initialValue) {
+        object = initialValue;
+    }
 
     /**
      * Returns the encapsulated object.

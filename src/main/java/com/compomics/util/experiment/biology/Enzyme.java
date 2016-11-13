@@ -48,14 +48,14 @@ public class Enzyme extends ExperimentObject {
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
-     * 
+     *
      * @deprecated use the digestion preferences instead
      */
     private Boolean isSemiSpecific = false;
     /**
      * If true, the enzyme does not cleave, i.e., the whole protein sequence is
      * used.
-     * 
+     *
      * @deprecated use the digestion preferences instead
      */
     private Boolean isWholeProtein = false;
@@ -90,10 +90,11 @@ public class Enzyme extends ExperimentObject {
     public int getId() {
         return id;
     }
-    
+
     /**
-     * Adds an amino acid to the list of allowed amino acids after the cleavage site.
-     * 
+     * Adds an amino acid to the list of allowed amino acids after the cleavage
+     * site.
+     *
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidAfter(Character aminoAcid) {
@@ -101,17 +102,19 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids potentially following the cleavage. Null if none.
+     * Getter for the amino acids potentially following the cleavage. Null if
+     * none.
      *
      * @return the amino acids potentially following the cleavage
      */
     public ArrayList<Character> getAminoAcidAfter() {
         return aminoAcidAfter;
     }
-    
+
     /**
-     * Adds an amino acid to the list of allowed amino acids before the cleavage site.
-     * 
+     * Adds an amino acid to the list of allowed amino acids before the cleavage
+     * site.
+     *
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidBefore(Character aminoAcid) {
@@ -119,17 +122,19 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids potentially preceding the cleavage. Null if none.
+     * Getter for the amino acids potentially preceding the cleavage. Null if
+     * none.
      *
      * @return the amino acids potentially preceding the cleavage
      */
     public ArrayList<Character> getAminoAcidBefore() {
         return aminoAcidBefore;
     }
-    
+
     /**
-     * Adds an amino acid to the list of forbidden amino acids after the cleavage site.
-     * 
+     * Adds an amino acid to the list of forbidden amino acids after the
+     * cleavage site.
+     *
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionAfter(Character aminoAcid) {
@@ -137,17 +142,19 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids restricting when following the cleavage. Null if none.
+     * Getter for the amino acids restricting when following the cleavage. Null
+     * if none.
      *
      * @return the amino acids restricting when following the cleavage
      */
     public ArrayList<Character> getRestrictionAfter() {
         return restrictionAfter;
     }
-    
+
     /**
-     * Adds an amino acid to the list of forbidden amino acids before the cleavage site.
-     * 
+     * Adds an amino acid to the list of forbidden amino acids before the
+     * cleavage site.
+     *
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionBefore(Character aminoAcid) {
@@ -155,7 +162,8 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids restricting when preceding the cleavage. Null if none.
+     * Getter for the amino acids restricting when preceding the cleavage. Null
+     * if none.
      *
      * @return the amino acids restricting when preceding the cleavage
      */
@@ -273,7 +281,8 @@ public class Enzyme extends ExperimentObject {
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
-        String currentPeptide = aaAfter + "";
+        StringBuilder currentPeptide = new StringBuilder();
+        currentPeptide.append(aaAfter);
         HashSet<String> results = new HashSet<String>();
 
         HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
@@ -287,47 +296,49 @@ public class Enzyme extends ExperimentObject {
             aaBefore = aaAfter;
             aaAfter = aa;
 
-            if (isCleavageSite(aaBefore, aaAfter) && !currentPeptide.equals("")) {
+            if (isCleavageSite(aaBefore, aaAfter) && currentPeptide.length() != 0) {
 
+                String currentPeptideString = currentPeptide.toString();
                 if ((nMin == null || currentPeptide.length() >= nMin) && (nMax == null || currentPeptide.length() <= nMax)) {
-                    results.add(currentPeptide);
+                    results.add(currentPeptideString);
                 }
 
                 for (int nMc : mc.keySet()) {
-                    mc.get(nMc).add(currentPeptide);
+                    mc.get(nMc).add(currentPeptideString);
                     while (mc.get(nMc).size() > nMc + 1) {
                         mc.get(nMc).remove(0);
                     }
-                    String mcSequence = "";
+                    StringBuilder mcSequence = new StringBuilder();
                     for (String subPeptide : mc.get(nMc)) {
-                        mcSequence += subPeptide;
+                        mcSequence.append(subPeptide);
                     }
                     if ((nMin == null || mcSequence.length() >= nMin) && (nMax == null || mcSequence.length() <= nMax)) {
-                        results.add(mcSequence);
+                        results.add(mcSequence.toString());
                     }
                 }
 
-                currentPeptide = "";
+                currentPeptide = new StringBuilder();
             }
 
-            currentPeptide += aa;
+            currentPeptide.append(aa);
         }
 
+        String currentPeptideString = currentPeptide.toString();
         if ((nMin == null || currentPeptide.length() >= nMin) && (nMax == null || currentPeptide.length() <= nMax)) {
-            results.add(currentPeptide);
+            results.add(currentPeptideString);
         }
 
         for (int nMc : mc.keySet()) {
-            mc.get(nMc).add(currentPeptide);
+            mc.get(nMc).add(currentPeptideString);
             while (mc.get(nMc).size() > nMc + 1) {
                 mc.get(nMc).remove(0);
             }
-            String mcSequence = "";
+            StringBuilder mcSequence = new StringBuilder();
             for (String subPeptide : mc.get(nMc)) {
-                mcSequence += subPeptide;
+                mcSequence.append(subPeptide);
             }
             if ((nMin == null || mcSequence.length() >= nMin) && (nMax == null || mcSequence.length() <= nMax)) {
-                results.add(mcSequence);
+                results.add(mcSequence.toString());
             }
         }
 
@@ -348,7 +359,8 @@ public class Enzyme extends ExperimentObject {
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
-        String currentPeptide = aaAfter + "";
+        StringBuilder currentPeptide = new StringBuilder();
+        currentPeptide.append(aaAfter);
         Double currentMass = AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
         HashSet<String> results = new HashSet<String>();
 
@@ -364,54 +376,56 @@ public class Enzyme extends ExperimentObject {
             aaBefore = aaAfter;
             aaAfter = aa;
 
-            if (isCleavageSite(aaBefore, aaAfter) && !currentPeptide.equals("")) {
+            if (isCleavageSite(aaBefore, aaAfter) && currentPeptide.length() > 0) {
 
+                String currentPeptideString = currentPeptide.toString();
                 if ((massMin == null || currentMass >= massMin) && (massMax == null || currentMass <= massMax)) {
-                    results.add(currentPeptide);
+                    results.add(currentPeptideString);
                 }
 
                 for (int nMc : mc.keySet()) {
-                    mc.get(nMc).add(currentPeptide);
-                    peptideMasses.put(currentPeptide, currentMass);
+                    mc.get(nMc).add(currentPeptideString);
+                    peptideMasses.put(currentPeptideString, currentMass);
                     while (mc.get(nMc).size() > nMc + 1) {
                         mc.get(nMc).remove(0);
                     }
-                    String mcSequence = "";
+                    StringBuilder mcSequence = new StringBuilder();
                     Double mcMass = 0.0;
                     for (String subPeptide : mc.get(nMc)) {
-                        mcSequence += subPeptide;
+                        mcSequence.append(subPeptide);
                         mcMass += peptideMasses.get(subPeptide);
                     }
                     if ((massMin == null || mcMass >= massMin) && (massMax == null || mcMass <= massMax)) {
-                        results.add(mcSequence);
+                        results.add(mcSequence.toString());
                     }
                 }
 
-                currentPeptide = "";
+                currentPeptide = new StringBuilder();
             }
 
-            currentPeptide += aa;
+            currentPeptide.append(aa);
             currentMass += AminoAcid.getAminoAcid(aa).getMonoisotopicMass();
         }
 
+        String currentPeptideString = currentPeptide.toString();
         if ((massMin == null || currentMass >= massMin) && (massMax == null || currentMass <= massMax)) {
-            results.add(currentPeptide);
+            results.add(currentPeptideString);
         }
 
         for (int nMc : mc.keySet()) {
-            mc.get(nMc).add(currentPeptide);
-            peptideMasses.put(currentPeptide, currentMass);
+            mc.get(nMc).add(currentPeptideString);
+            peptideMasses.put(currentPeptideString, currentMass);
             while (mc.get(nMc).size() > nMc + 1) {
                 mc.get(nMc).remove(0);
             }
-            String mcSequence = "";
+            StringBuilder mcSequence = new StringBuilder();
             Double mcMass = 0.0;
             for (String subPeptide : mc.get(nMc)) {
-                mcSequence += subPeptide;
+                mcSequence.append(subPeptide);
                 mcMass += peptideMasses.get(subPeptide);
             }
             if ((massMin == null || mcMass >= massMin) && (massMax == null || mcMass <= massMax)) {
-                results.add(mcSequence);
+                results.add(mcSequence.toString());
             }
         }
 
@@ -494,7 +508,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Returns the CV term associated with this enzyme.
-     * 
+     *
      * @return the CV term associated with this enzyme
      */
     public CvTerm getCvTerm() {
@@ -503,7 +517,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Sets the CV term associated with this enzyme.
-     * 
+     *
      * @param cvTerm the CV term associated with this enzyme
      */
     public void setCvTerm(CvTerm cvTerm) {
@@ -512,7 +526,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Returns true if the enzyme is unspecific, i.e., cleaves at every residue.
-     * 
+     *
      * @deprecated use the digestion preferences instead
      *
      * @return true if the enzyme is unspecific
@@ -523,7 +537,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Returns true if the enzyme is semi-specific.
-     * 
+     *
      * @deprecated use the digestion preferences instead
      *
      * @return true if the enzyme is semi-specific
@@ -538,7 +552,7 @@ public class Enzyme extends ExperimentObject {
     /**
      * Returns true if the enzyme does not cleave at all, i.e., the whole
      * protein is used.
-     * 
+     *
      * @deprecated use the digestion preferences instead
      *
      * @return true if the enzyme does not cleave at all

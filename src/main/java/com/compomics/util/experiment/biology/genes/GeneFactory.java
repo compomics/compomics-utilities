@@ -231,53 +231,58 @@ public class GeneFactory {
 
             if (uniprotTaxonomy != null && !uniprotTaxonomy.equals("")) {
 
-                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, false);
+                try {
+                    Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, false);
 
-                if (taxon != null) {
+                    if (taxon != null) {
 
-                    String speciesName = speciesFactory.getName(taxon);
+                        String speciesName = speciesFactory.getName(taxon);
 
-                    String geneName = header.getGeneName();
-                    if (geneName != null) {
-                        GeneMapping geneMapping = geneMappings.get(speciesName);
-                        if (geneMapping != null) {
-                            String chromosome = geneMapping.getChromosome(geneName);
-                            if (chromosome != null) {
-                                geneNameToChromosomeMap.put(geneName, chromosome);
+                        String geneName = header.getGeneName();
+                        if (geneName != null) {
+                            GeneMapping geneMapping = geneMappings.get(speciesName);
+                            if (geneMapping != null) {
+                                String chromosome = geneMapping.getChromosome(geneName);
+                                if (chromosome != null) {
+                                    geneNameToChromosomeMap.put(geneName, chromosome);
+                                }
+                                String ensemblId = geneMapping.getEnsemblAccession(geneName);
+                                if (ensemblId != null) {
+                                    geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                                }
                             }
-                            String ensemblId = geneMapping.getEnsemblAccession(geneName);
-                            if (ensemblId != null) {
-                                geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                        }
+
+                        GoMapping goMapping = goMappings.get(speciesName);
+                        if (goMapping != null) {
+                            String accession = header.getAccession();
+                            HashSet<String> goTerms = proteinToGoMap.get(accession);
+                            if (goTerms == null) {
+                                goTerms = new HashSet<String>();
+                                proteinToGoMap.put(accession, goTerms);
+                            }
+                            HashSet<String> newTerms = goMapping.getGoAccessions(accession);
+                            if (newTerms != null) {
+                                goTerms.addAll(newTerms);
+                                for (String goTerm : newTerms) {
+                                    String goName = goMapping.getTermName(goTerm);
+                                    if (goName != null) {
+                                        goNamesMap.put(goTerm, goName);
+                                    }
+
+                                    HashSet<String> proteins = goToProteinMap.get(goTerm);
+                                    if (proteins == null) {
+                                        proteins = new HashSet<String>();
+                                        goToProteinMap.put(goTerm, proteins);
+                                    }
+                                    proteins.add(accession);
+                                }
                             }
                         }
                     }
-
-                    GoMapping goMapping = goMappings.get(speciesName);
-                    if (goMapping != null) {
-                        String accession = header.getAccession();
-                        HashSet<String> goTerms = proteinToGoMap.get(accession);
-                        if (goTerms == null) {
-                            goTerms = new HashSet<String>();
-                            proteinToGoMap.put(accession, goTerms);
-                        }
-                        HashSet<String> newTerms = goMapping.getGoAccessions(accession);
-                        if (newTerms != null) {
-                            goTerms.addAll(newTerms);
-                            for (String goTerm : newTerms) {
-                                String goName = goMapping.getTermName(goTerm);
-                                if (goName != null) {
-                                    goNamesMap.put(goTerm, goName);
-                                }
-
-                                HashSet<String> proteins = goToProteinMap.get(goTerm);
-                                if (proteins == null) {
-                                    proteins = new HashSet<String>();
-                                    goToProteinMap.put(goTerm, proteins);
-                                }
-                                proteins.add(accession);
-                            }
-                        }
-                    }
+                } catch (Exception e) {
+                    // Taxon not available, ignore
+                    e.printStackTrace();
                 }
             }
         }
@@ -929,10 +934,8 @@ public class GeneFactory {
 
             if (!goMappingsDownloaded) {
                 waitingHandler.appendReport(PADDING + "Gene ontology mappings not available. Downloading gene mappings only.", true, true);
-            } else {
-                if (waitingHandler.isReport()) {
-                    waitingHandler.appendReport(PADDING + "GO mappings downloaded.", true, true);
-                }
+            } else if (waitingHandler.isReport()) {
+                waitingHandler.appendReport(PADDING + "GO mappings downloaded.", true, true);
             }
         }
 

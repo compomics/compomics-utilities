@@ -86,7 +86,6 @@ public class ProteinSequenceIterator {
      */
     public ProteinSequenceIterator(ArrayList<String> fixedModifications) {
         fillPtmMaps(fixedModifications);
-        fillMassesMaps();
     }
 
     /**

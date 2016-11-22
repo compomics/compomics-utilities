@@ -159,7 +159,7 @@ public abstract class AminoAcid implements Serializable {
      * @return the corresponding amino acid.
      */
     public static AminoAcid getAminoAcid(String aa) {
-        return getAminoAcid(aa.toUpperCase().charAt(0));
+        return getAminoAcid(aa.charAt(0));
     }
 
     /**

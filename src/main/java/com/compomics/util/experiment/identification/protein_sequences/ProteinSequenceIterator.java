@@ -16,32 +16,89 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The iterator goes through a sequence and lists possible peptides.
+ * The iterator goes through a sequence and lists possible peptides with their
+ * fixed modifications.
  *
  * @author Marc Vaudel
  */
 public class ProteinSequenceIterator {
 
+    /**
+     * The fixed protein N-term modification.
+     */
     private String fixedProteinNtermModification = null;
+    /**
+     * The fixed protein C-term modification.
+     */
     private String fixedProteinCtermModification = null;
+    /**
+     * The fixed protein N-term modifications at specific amino acids.
+     */
     private HashMap<Character, String> fixedProteinNtermModificationsAtAa = new HashMap<Character, String>(0);
+    /**
+     * The fixed protein C-term modifications at specific amino acids.
+     */
     private HashMap<Character, String> fixedProteinCtermModificationsAtAa = new HashMap<Character, String>(0);
+    /**
+     * The fixed peptide N-term modification.
+     */
     private String fixedPeptideNtermModification = null;
+    /**
+     * The fixed peptide C-term modification.
+     */
     private String fixedPeptideCtermModification = null;
+    /**
+     * The fixed peptide N-term modifications at specific amino acids.
+     */
     private HashMap<Character, String> fixedPeptideNtermModificationsAtAa = new HashMap<Character, String>(0);
+    /**
+     * The fixed peptide C-term modifications at specific amino acids.
+     */
     private HashMap<Character, String> fixedPeptideCtermModificationsAtAa = new HashMap<Character, String>(0);
+    /**
+     * The fixed modifications at specific amino acids.
+     */
     private HashMap<Character, String> fixedModificationsAtAa = new HashMap<Character, String>(0);
+    /**
+     * Mao of modifications at specific amino acids (termini or not) targetting
+     * a pattern of amino acids.
+     */
     private HashMap<String, AminoAcidPattern> modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
-    private HashMap<Character, Double> aaMasses = new HashMap<Character, Double>(26);
+    /**
+     * Convenience map of the amino acid masses.
+     */
     private HashMap<String, Double> modificationsMasses;
+    /**
+     * The minimal mass a c-terminus modification can have. 0.0 by default for
+     * no modification.
+     */
     private double minCtermMass = 0.0;
+    /**
+     * The mass of water (H2O).
+     */
     private static final double waterMass = (2 * Atom.H.getMonoisotopicMass()) + Atom.O.getMonoisotopicMass();
 
+    /**
+     * Constructor.
+     *
+     * @param fixedModifications a list of fixed modifications to consider when
+     * iterating the protein sequences.
+     */
     public ProteinSequenceIterator(ArrayList<String> fixedModifications) {
         fillPtmMaps(fixedModifications);
         fillMassesMaps();
     }
 
+    /**
+     * Returns the peptides for a given sequence. The peptides can be filtered by minimal and maximal mass. If null is provided as limit no filter will be used.
+     *
+     * @param sequence the sequence to iterate
+     * @param digestionPreferences the digestion preferences to use
+     * @param massMin the minimal mass of a peptide
+     * @param massMax the maximal mass of a peptide
+     *
+     * @return the possible peptides for the sequence
+     */
     public ArrayList<Peptide> getPeptides(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
@@ -56,14 +113,11 @@ public class ProteinSequenceIterator {
         }
     }
 
-    private void fillMassesMaps() {
-        for (char aminoAcidName : AminoAcid.getUniqueAminoAcids()) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aminoAcidName);
-            Double aaMass = aminoAcid.getMonoisotopicMass();
-            aaMasses.put(aminoAcidName, aaMass);
-        }
-    }
-
+    /**
+     * Fills the fixed modification attributes of the class based on the given list of modifications.
+     * 
+     * @param fixedModifications the list of fixed modifications to consider.
+     */
     private void fillPtmMaps(ArrayList<String> fixedModifications) {
         modificationsMasses = new HashMap<String, Double>(fixedModifications.size());
         modificationsMasses.put(null, 0.0);
@@ -204,6 +258,15 @@ public class ProteinSequenceIterator {
         }
     }
 
+    /**
+     * Returns the N-term modification for the given amino acid. Null if no modification is found.
+     * 
+     * @param proteinNTerm boolean indicating whether the amino acid is at the protein N-terminus
+     * @param nTermAaChar the amino acid as character
+     * @param proteinSequence the protein sequence
+     * 
+     * @return the N-term modification for the given amino acid.
+     */
     private String getNtermModification(boolean proteinNTerm, char nTermAaChar, String proteinSequence) {
         if (proteinNTerm) {
             if (fixedProteinNtermModification != null) {
@@ -230,6 +293,15 @@ public class ProteinSequenceIterator {
         return null;
     }
 
+    /**
+     * Returns all the peptides that can be expected from a protein sequence. The peptides can be filtered by minimal and maximal mass. If null is provided as limit no filter will be used.
+     * 
+     * @param proteinSequence the protein 
+     * @param massMin the minimal mass to consider
+     * @param massMax the maximal mass to consider
+     * 
+     * @return a list of all the peptides that can be expected from a protein sequence.
+     */
     public ArrayList<Peptide> getPeptides(String proteinSequence, Double massMin, Double massMax) {
 
         if (AminoAcidSequence.hasCombination(proteinSequence)) {
@@ -247,7 +319,8 @@ public class ProteinSequenceIterator {
             for (int j = i; j < sequenceAsCharArray.length; j++) {
                 Integer aaIndex = j - i;
                 Character aaChar = sequenceAsCharArray[j];
-                sequenceMass += aaMasses.get(aaChar);
+                AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
+                sequenceMass += aminoAcid.getMonoisotopicMass();
                 peptideSequence.append(aaChar);
                 String modificationAtAa = fixedModificationsAtAa.get(aaChar);
                 if (modificationAtAa != null) {
@@ -273,6 +346,15 @@ public class ProteinSequenceIterator {
         return result;
     }
 
+    /**
+     * Returns all the peptides that can be expected from a protein sequence extending amino acid combinations. The peptides can be filtered by minimal and maximal mass. If null is provided as limit no filter will be used.
+     * 
+     * @param proteinSequence the protein 
+     * @param massMin the minimal mass to consider
+     * @param massMax the maximal mass to consider
+     * 
+     * @return a list of all the peptides that can be expected from a protein sequence.
+     */
     private ArrayList<Peptide> getPeptidesAaCombinations(String sequence, Double massMin, Double massMax) {
         ArrayList<Peptide> result = new ArrayList<Peptide>();
         char[] sequenceAsCharArray = sequence.toCharArray();
@@ -354,6 +436,18 @@ public class ProteinSequenceIterator {
         return result;
     }
 
+    /**
+     * Returns the peptides that can be built from the given peptide drafts.
+     * 
+     * @param peptideDrafts a list of peptide drafts
+     * @param proteinSequence the protein sequence
+     * @param indexOnProtein the index of the peptide drafts on the protein
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * @param smallMasses an encapsulated boolean indicating whether at least one of the peptides will pass the maximal mass filter
+     * 
+     * @return the peptides that can be built from the given peptide drafts
+     */
     private ArrayList<Peptide> getPeptides(ArrayList<PeptideDraft> peptideDrafts, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, EncapsulatedObject<Boolean> smallMasses) {
         ArrayList<Peptide> results = new ArrayList<Peptide>();
         for (PeptideDraft peptideDraft : peptideDrafts) {
@@ -370,6 +464,13 @@ public class ProteinSequenceIterator {
         return results;
     }
 
+    /**
+     * Sets the c-terminal modification if any to the given peptide draft.
+     * 
+     * @param peptideDraft the peptide draft of interest
+     * @param proteinSequence the protein sequence
+     * @param indexOnProtein the index of the peptide draft on the protein sequence
+     */
     private void setCterm(PeptideDraft peptideDraft, String proteinSequence, int indexOnProtein) {
         String cTermModification = getCtermModification(peptideDraft, proteinSequence, indexOnProtein);
         if (cTermModification != null) {
@@ -380,6 +481,15 @@ public class ProteinSequenceIterator {
         }
     }
 
+    /**
+     * Returns the c-terminal modification for the given peptide draft.
+     * 
+     * @param peptideDraft the peptide draft of interest
+     * @param proteinSequence the protein sequence
+     * @param indexOnProtein the index of the peptide draft on the protein
+     * 
+     * @return the c-terminal modification for the given peptide draft
+     */
     private String getCtermModification(PeptideDraft peptideDraft, String proteinSequence, int indexOnProtein) {
         StringBuilder peptideSequence = peptideDraft.getSequence();
         char aaChar = peptideSequence.charAt(peptideSequence.length() - 1);
@@ -406,10 +516,29 @@ public class ProteinSequenceIterator {
         return null;
     }
 
+    /**
+     * Returns a peptide from the given peptide draft.
+     * 
+     * @param peptideDraft the peptide draft
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * 
+     * @return the peptide built from the peptide draft
+     */
     private Peptide getPeptide(PeptideDraft peptideDraft, Double massMin, Double massMax) {
         return getPeptide(peptideDraft, massMin, massMax, new EncapsulatedObject<Boolean>(Boolean.FALSE));
     }
 
+    /**
+     * Returns a peptide from the given peptide draft.
+     * 
+     * @param peptideDraft the peptide draft
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * @param smallMass an encapsulated boolean indicating whether the peptide passed the maximal mass filter
+     * 
+     * @return the peptide built from the peptide draft
+     */
     private Peptide getPeptide(PeptideDraft peptideDraft, Double massMin, Double massMax, EncapsulatedObject<Boolean> smallMass) {
         Double peptideMass = peptideDraft.getMass();
         Double tempMass = peptideMass + waterMass;
@@ -444,6 +573,15 @@ public class ProteinSequenceIterator {
         return null;
     }
 
+    /**
+     * Makes a peptide from the given sequence without digestion. If the sequence presents ambiguous amino acids returns all different possibilities. Peptides are filtered according to the given masses. Filters are ignored if null.
+     * 
+     * @param sequence the amino acid sequence
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * 
+     * @return a peptide buit from the given sequence
+     */
     public ArrayList<Peptide> getPeptidesNoDigestion(String sequence, Double massMin, Double massMax) {
         if (AminoAcidSequence.containsAmbiguousAminoAcid(sequence)) {
             char[] sequenceAsCharArray = sequence.toCharArray();
@@ -497,6 +635,17 @@ public class ProteinSequenceIterator {
         }
     }
 
+    /**
+     * Returns a peptide from the given sequence on the given protein. The sequence should not contain ambiguous amino acids. Peptides are filtered according to the given masses. Filters are ignored if null.
+     * 
+     * @param peptideSequence the peptide sequence
+     * @param proteinSequence the protein sequence where this peptide was found
+     * @param indexOnProtein the index of the peptide on the protein
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * 
+     * @return a peptide from the given sequence
+     */
     public Peptide getPeptideNoDigestion(String peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
         char nTermAaChar = peptideSequence.charAt(0);
         String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
@@ -523,6 +672,16 @@ public class ProteinSequenceIterator {
         return getPeptide(peptideDraft, massMin, massMax);
     }
 
+    /**
+     * Returns the possible peptides for the given protein sequence after enzymatic digestion. Peptides are filtered according to the given masses. Filters are ignored if null.
+     * 
+     * @param proteinSequence the protein sequence
+     * @param digestionPreferences the digestion preferences
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * 
+     * @return the possible peptides
+     */
     public ArrayList<Peptide> getPeptidesDigestion(String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         HashMap<Integer, ArrayList<PeptideDraft>> peptides = new HashMap<Integer, ArrayList<PeptideDraft>>();
         ArrayList<PeptideDraft> originalSequence = new ArrayList<PeptideDraft>(1);
@@ -582,6 +741,18 @@ public class ProteinSequenceIterator {
         return result;
     }
 
+    /**
+     * Returns a map of possible non specific peptides for the given peptide draft. the possible peptides are returned in a map indexed by start index on the peptide sequence.
+     * 
+     * @param peptideDraft the peptide draft
+     * @param proteinSequence the protein sequence
+     * @param indexOnProtein the index on protein
+     * @param specificity the specificity
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * 
+     * @return a map of possible non specific peptides for the given peptide draft
+     */
     private HashMap<Integer, ArrayList<PeptideDraft>> getNonSpecificPeptides(PeptideDraft peptideDraft, String proteinSequence, int indexOnProtein, DigestionPreferences.Specificity specificity, Double massMin, Double massMax) {
         switch (specificity) {
             case specificNTermOnly:
@@ -656,6 +827,19 @@ public class ProteinSequenceIterator {
         }
     }
 
+    /**
+     * Digests the given sequence and returns the possible peptide drafts indexed by their starting index on the sequence.
+     * 
+     * @param sequence the sequence to digest
+     * @param proteinSequence the protein sequence
+     * @param indexOnProtein the index of the sequence on the protein
+     * @param enzyme the enzyme to use
+     * @param maxMissedCleavages the maximal number of missed cleavages
+     * @param massMin the minimal mass allowed
+     * @param massMax the maximal mass allowed
+     * 
+     * @return the possible peptide drafts
+     */
     private HashMap<Integer, ArrayList<PeptideDraft>> digest(String sequence, String proteinSequence, Integer indexOnProtein, Enzyme enzyme, int maxMissedCleavages, Double massMin, Double massMax) {
 
         char aa = sequence.charAt(0);
@@ -726,7 +910,7 @@ public class ProteinSequenceIterator {
                             if (modificationAtAa != null) {
                                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
                                 if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
-                                    peptideModifications.put(i+1, modificationAtAa);
+                                    peptideModifications.put(i + 1, modificationAtAa);
                                     mass += modificationsMasses.get(modificationAtAa);
                                 }
                             }
@@ -742,7 +926,7 @@ public class ProteinSequenceIterator {
                                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
                                 if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
                                     HashMap<Integer, String> peptideModifications = peptideDraft.getFixedAaModifications();
-                                    peptideModifications.put(i+1, modificationAtAa);
+                                    peptideModifications.put(i + 1, modificationAtAa);
                                     newMass += modificationsMasses.get(modificationAtAa);
                                 }
                             }
@@ -765,7 +949,7 @@ public class ProteinSequenceIterator {
                     if (modificationAtAa != null) {
                         AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
                         if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
-                            peptideModifications.put(i+1, modificationAtAa);
+                            peptideModifications.put(i + 1, modificationAtAa);
                             currentMass += modificationsMasses.get(modificationAtAa);
                         }
                     }
@@ -796,19 +980,53 @@ public class ProteinSequenceIterator {
         return result;
     }
 
+    /**
+     * Convenience class for the building of peptides.
+     */
     private class PeptideDraft {
 
+        /**
+         * The amino acid sequence.
+         */
         private StringBuilder sequence;
+        /**
+         * The N-terminal modification.
+         */
         private String nTermModification;
+        /**
+         * The C-terminal modification.
+         */
         private String cTermModification;
+        /**
+         * The modifications at specific amino acids.
+         */
         private HashMap<Integer, String> fixedAaModifications;
+        /**
+         * The current mass of the peptide draft
+         */
         private Double mass;
+        /**
+         * The number of missed cleavages.
+         */
         private int missedCleavages = 0;
 
+        /**
+         * Constructor.
+         * 
+         * @param sequence the peptide sequence.
+         */
         public PeptideDraft(String sequence) {
             this.sequence = new StringBuilder(sequence);
         }
 
+        /**
+         * Constructor.
+         * 
+         * @param sequence the peptide sequence
+         * @param nTermModification the N-term modification
+         * @param fixedAaModifications the fixed modifications at amino acids
+         * @param mass the mass
+         */
         public PeptideDraft(StringBuilder sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, Double mass) {
             this.sequence = sequence;
             this.nTermModification = nTermModification;
@@ -816,6 +1034,15 @@ public class ProteinSequenceIterator {
             this.mass = mass;
         }
 
+        /**
+         * Constructor.
+         * 
+         * @param sequence the peptide sequence
+         * @param nTermModification the N-term modification
+         * @param fixedAaModifications the fixed modifications at amino acids
+         * @param mass the mass
+         * @param missedCleavages the number of missed cleavages
+         */
         public PeptideDraft(StringBuilder sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, Double mass, int missedCleavages) {
             this.sequence = sequence;
             this.nTermModification = nTermModification;
@@ -824,6 +1051,15 @@ public class ProteinSequenceIterator {
             this.missedCleavages = missedCleavages;
         }
 
+        /**
+         * Constructor.
+         * 
+         * @param sequence the peptide sequence
+         * @param nTermModification the N-term modification
+         * @param cTermModification the C-term modification
+         * @param fixedAaModifications the fixed modifications at amino acids
+         * @param mass the mass
+         */
         public PeptideDraft(StringBuilder sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, Double mass) {
             this.sequence = sequence;
             this.nTermModification = nTermModification;
@@ -832,6 +1068,16 @@ public class ProteinSequenceIterator {
             this.mass = mass;
         }
 
+        /**
+         * Constructor.
+         * 
+         * @param sequence the peptide sequence
+         * @param nTermModification the N-term modification
+         * @param cTermModification the C-term modification
+         * @param fixedAaModifications the fixed modifications at amino acids
+         * @param mass the mass
+         * @param missedCleavages the number of missed cleavages
+         */
         public PeptideDraft(StringBuilder sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, Double mass, int missedCleavages) {
             this.sequence = sequence;
             this.nTermModification = nTermModification;
@@ -841,59 +1087,127 @@ public class ProteinSequenceIterator {
             this.missedCleavages = missedCleavages;
         }
 
+        /**
+         * Creates a new peptide draft with the same attributes as this one.
+         * 
+         * @return a new peptide draft
+         */
         public PeptideDraft clone() {
             PeptideDraft newPeptideDraft = new PeptideDraft(new StringBuilder(sequence), nTermModification, cTermModification, new HashMap<Integer, String>(fixedAaModifications), mass, missedCleavages);
             return newPeptideDraft;
         }
 
+        /**
+         * Returns the sequence.
+         * 
+         * @return the sequence
+         */
         public StringBuilder getSequence() {
             return sequence;
         }
 
+        /**
+         * Sets the sequence.
+         * 
+         * @param sequence the sequence
+         */
         public void setSequence(StringBuilder sequence) {
             this.sequence = sequence;
         }
 
+        /**
+         * Returns the length of the sequence.
+         * 
+         * @return the length of the sequence
+         */
         public int length() {
             return sequence.length();
         }
 
+        /**
+         * Returns the N-term modification.
+         * 
+         * @return the N-term modification
+         */
         public String getnTermModification() {
             return nTermModification;
         }
 
+        /**
+         * Sets the N-term modification.
+         * 
+         * @param nTermModification the N-term modification
+         */
         public void setnTermModification(String nTermModification) {
             this.nTermModification = nTermModification;
         }
 
+        /**
+         * Returns the C-term modification.
+         * 
+         * @return the C-term modification
+         */
         public String getcTermModification() {
             return cTermModification;
         }
 
+        /**
+         * Sets the C-term modification.
+         * 
+         * @param cTermModification the C-term modification
+         */
         public void setcTermModification(String cTermModification) {
             this.cTermModification = cTermModification;
         }
 
+        /**
+         * Returns the mass.
+         * 
+         * @return the mass
+         */
         public Double getMass() {
             return mass;
         }
 
+        /**
+         * Sets the mass.
+         * 
+         * @param mass the mass
+         */
         public void setMass(Double mass) {
             this.mass = mass;
         }
 
+        /**
+         * Returns the modifications at specific amino acids.
+         * 
+         * @return the modifications at specific amino acids
+         */
         public HashMap<Integer, String> getFixedAaModifications() {
             return fixedAaModifications;
         }
 
+        /**
+         * Sets the modifications at specific amino acids.
+         * 
+         * @param fixedAaModifications the modifications at specific amino acids
+         */
         public void setFixedAaModifications(HashMap<Integer, String> fixedAaModifications) {
             this.fixedAaModifications = fixedAaModifications;
         }
 
+        /**
+         * Increases the number of missed cleavages.
+         */
         public void increaseMissedCleavages() {
             missedCleavages++;
         }
 
+        /**
+         * Returns the number of missed cleavages.
+         * 
+         * @return the number of missed cleavages
+         */
         public int getMissedCleavages() {
             return missedCleavages;
         }

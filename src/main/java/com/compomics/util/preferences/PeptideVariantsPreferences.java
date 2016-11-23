@@ -83,7 +83,6 @@ public class PeptideVariantsPreferences implements Serializable {
      * @param nAaInsertions the number of amino acid insertions allowed
      */
     public void setnAaInsertions(Integer nAaInsertions) {
-        System.out.println("set insertions: " + nAaInsertions);
         this.nAaInsertions = nAaInsertions;
     }
 

@@ -19,7 +19,7 @@ import com.compomics.util.preferences.IdentificationParameters;
  *
  * @author Marc Vaudel
  */
-public class PsmScorer {
+public class PsmScoresEstimator {
     
     /**
      * The peptide fragmentation model to use
@@ -66,7 +66,7 @@ public class PsmScorer {
      * 
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
-    public PsmScorer(PeptideFragmentationModel peptideFragmentationModel) {
+    public PsmScoresEstimator(PeptideFragmentationModel peptideFragmentationModel) {
         this.peptideFragmentationModel = peptideFragmentationModel;
         instantiateScores();
     }
@@ -87,7 +87,7 @@ public class PsmScorer {
     /**
      * Constructor using a unifrom fragmentation.
      */
-    public PsmScorer() {
+    public PsmScoresEstimator() {
         this(PeptideFragmentationModel.uniform);
     }
 

@@ -26,8 +26,14 @@ public class AtomChain implements Serializable {
     private Double mass = null;
     /**
      * Cache for the string value.
+     * 
+     * @deprecated deprectated since utilities version 4.8.2. Use stringValue1 instead.
      */
     private String stringValue = null;
+    /**
+     * Cache for the string value.
+     */
+    private String stringValue1 = null;
 
     /**
      * Creates an empty atom chain.
@@ -140,7 +146,7 @@ public class AtomChain implements Serializable {
      */
     public void append(AtomImpl atom) {
         atomChain.add(atom);
-        stringValue = null;
+        stringValue1 = null;
     }
 
     /**
@@ -156,7 +162,7 @@ public class AtomChain implements Serializable {
         for (int i = 0; i < occurrence; i++) {
             atomChain.add(atom);
         }
-        stringValue = null;
+        stringValue1 = null;
     }
 
     /**
@@ -203,7 +209,7 @@ public class AtomChain implements Serializable {
     }
 
     /**
-     * Sets the string value from the stringValue attribute, sets it from the
+     * Sets the string value from the stringValue1 attribute, sets it from the
      * composition if not set.
      * 
      * @param includeSpaces boolean indicating whether spaces should be included between atoms.
@@ -212,7 +218,7 @@ public class AtomChain implements Serializable {
      */
     private synchronized String getStringValue(boolean includeSpaces) {
 
-        if (stringValue == null) {
+        if (stringValue1 == null) {
             HashMap<String, Integer> composition = new HashMap<String, Integer>(atomChain.size());
             HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<String, HashMap<Integer, String>>(atomChain.size());
 
@@ -255,9 +261,9 @@ public class AtomChain implements Serializable {
                 }
             }
 
-            stringValue = compositionAsString.toString();
+            stringValue1 = compositionAsString.toString();
         }
-        return stringValue;
+        return stringValue1;
     }
 
     /**
@@ -295,7 +301,7 @@ public class AtomChain implements Serializable {
         }
         atomChain = newAtomChain;
         mass = null;
-        stringValue = null;
+        stringValue1 = null;
     }
 
     /**
@@ -309,7 +315,7 @@ public class AtomChain implements Serializable {
         remove(atom, isotope);
         append(new AtomImpl(atom, isotope), occurrence);
         mass = null;
-        stringValue = null;
+        stringValue1 = null;
     }
 
     /**
@@ -331,10 +337,10 @@ public class AtomChain implements Serializable {
 
     @Override
     public String toString() {
-        if (stringValue == null) {
+        if (stringValue1 == null) {
             return getStringValue(false);
         }
-        return stringValue;
+        return stringValue1;
     }
 
     @Override

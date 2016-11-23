@@ -177,7 +177,7 @@ public class PtmSettings implements Serializable {
      * back-up. In case a modification with the same name was already used it
      * will be silently overwritten.
      *
-     * @param modification The modification to add
+     * @param modification the modification to add
      */
     public void addVariableModification(PTM modification) {
         String modName = modification.getName();

@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.8.2</version>
+    <version>4.8.3</version>
     <name>computational omics utilities</name>
     <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
@@ -353,22 +353,6 @@
             <id>ebi-repo</id> 
             <name>The EBI internal repository</name>
             <url>http://www.ebi.ac.uk/~maven/m2repo</url> 
-        </repository>
-
-        <!-- EBI nexus repository -->
-        <repository>
-            <id>nexus-ebi-repo</id> 
-            <name>The EBI nexus repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-            <layout>default</layout>
-        </repository>
-        
-        <!-- EBI nexus snapshot repository -->
-        <repository>
-            <id>nexus-ebi-repo-snapshot</id> 
-            <name>The EBI nexus snapshot repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
-            <layout>default</layout>
         </repository>
 
     </repositories>

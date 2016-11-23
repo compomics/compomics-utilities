@@ -61,9 +61,9 @@ public class SequenceFactory {
      */
     private File currentFastaFile = null;
     /**
-     * Number of proteins to keep in cache, 100000 by default.
+     * Number of proteins to keep in cache. By default 1000000, which corresponds to approx. 120MB.
      */
-    private int nCache = 100000;
+    private int nCache = 1000000;
     /**
      * List of accessions of the loaded proteins.
      */
@@ -437,8 +437,9 @@ public class SequenceFactory {
      */
     private synchronized void addProteinToCache(String accession, Protein protein) {
         while (loadedProteins.size() >= nCache) {
-            currentProteinMap.remove(loadedProteins.get(0));
-            currentHeaderMap.remove(loadedProteins.get(0));
+            String accessionToRemove = loadedProteins.get(0);
+            currentProteinMap.remove(accessionToRemove);
+            currentHeaderMap.remove(accessionToRemove);
             loadedProteins.remove(0);
         }
 

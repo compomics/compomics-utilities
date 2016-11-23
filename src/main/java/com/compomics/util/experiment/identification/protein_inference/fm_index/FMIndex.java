@@ -653,7 +653,7 @@ public class FMIndex implements PeptideMapper {
         }
         numMasses = aaMassVector.size();
 
-        SequenceFactory sf = SequenceFactory.getInstance(100000);
+        SequenceFactory sf = SequenceFactory.getInstance();
         boolean deNovo = true; // @TODO: change it for de novo
         int maxProgressBar = 6 + ((deNovo) ? 4 : 0);
 

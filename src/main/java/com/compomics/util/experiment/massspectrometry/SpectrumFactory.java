@@ -40,9 +40,9 @@ public class SpectrumFactory {
      */
     private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<String, HashMap<String, Precursor>>();
     /**
-     * Maximal number of spectra in cache.
+     * Maximal number of spectra in cache. By default 1000000, which corresponds to approx. 110MB.
      */
-    private static int nSpectraCache = 10000;
+    private static int nSpectraCache = 1000000;
     /**
      * List of the loaded spectra.
      */

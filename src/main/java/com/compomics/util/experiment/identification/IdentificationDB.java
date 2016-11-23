@@ -1339,7 +1339,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getSpectrumParameterTable(String spectrumKey, UrParameter urParameter) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
-        String tableName = ExperimentObject.getParameterKey(urParameter) + "_" + fileName + psmParametersTableSuffix;
+        String tableName = urParameter.getParameterKey() + "_" + fileName + psmParametersTableSuffix;
         tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
@@ -1351,7 +1351,7 @@ public class IdentificationDB implements Serializable {
      * @return the table name of the given peptide parameter
      */
     public String getPeptideParameterTable(UrParameter urParameter) {
-        String tableName = ExperimentObject.getParameterKey(urParameter) + peptideParametersTableSuffix;
+        String tableName = urParameter.getParameterKey() + peptideParametersTableSuffix;
         tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
@@ -1363,7 +1363,7 @@ public class IdentificationDB implements Serializable {
      * @return the table name of the given protein parameter
      */
     public String getProteinParameterTable(UrParameter urParameter) {
-        String tableName = ExperimentObject.getParameterKey(urParameter) + proteinParametersTableSuffix;
+        String tableName = urParameter.getParameterKey() + proteinParametersTableSuffix;
         tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }

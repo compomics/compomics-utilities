@@ -164,7 +164,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     if (ions != null) {
                         for (Ion ion : ions) {
 
-                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) { // @TODO: neutral losses from the same PTM should only be included once?
+                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
 
                                 ArrayList<Integer> ionPossibleCharges;
 

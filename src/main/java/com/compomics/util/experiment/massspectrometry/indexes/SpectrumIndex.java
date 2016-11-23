@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
@@ -10,7 +11,7 @@ import org.apache.commons.math.util.FastMath;
  *
  * @author Marc Vaudel
  */
-public class SpectrumIndex {
+public class SpectrumIndex implements UrParameter {
 
     /**
      * The precursor mass tolerance.
@@ -23,7 +24,7 @@ public class SpectrumIndex {
     /**
      * Map of the precursors by bin and m/z.
      */
-    private HashMap<Integer, HashMap<Double, Peak>> peaksMap = new HashMap<Integer, HashMap<Double, Peak>>();
+    private HashMap<Integer, HashMap<Double, Peak>> peaksMap;
     /**
      * An m/z anchor to determine the bins in ppm
      */
@@ -36,6 +37,13 @@ public class SpectrumIndex {
      * The scaling factor used for the bins in ppm.
      */
     private double scalingFactor;
+    
+    /**
+     * Constructor for an empty index.
+     */
+    public SpectrumIndex() {
+        
+    }
 
     /**
      * Builds a new index.
@@ -47,6 +55,7 @@ public class SpectrumIndex {
      * @param ppm boolean indicating whether the tolerance is in ppm
      */
     public SpectrumIndex(HashMap<Double, Peak> peaks, Double intenstiyLimit, double tolerance, boolean ppm) {
+        this.peaksMap = new HashMap<Integer, HashMap<Double, Peak>>();
         this.precursorTolerance = tolerance;
         this.ppm = ppm;
         if (ppm) {
@@ -72,7 +81,7 @@ public class SpectrumIndex {
      *
      * @return the bin
      */
-    private Integer getBin(double mz) {
+    public Integer getBin(double mz) {
         if (ppm) {
             return getBinPpm(mz);
         } else {
@@ -183,7 +192,7 @@ public class SpectrumIndex {
      *
      * @return the peaks at the given bin
      */
-    public HashMap<Double, Peak> getPrecursorsInBin(int bin) {
+    public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
         return peaksMap.get(bin);
     }
 
@@ -200,5 +209,10 @@ public class SpectrumIndex {
         } else {
             return precursorTolerance * (0.5 + bin);
         }
+    }
+
+    @Override
+    public String getParameterKey() {
+        return "SpectrumIndex";
     }
 }

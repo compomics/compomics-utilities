@@ -30,38 +30,14 @@ public class AAMS2MzFidelityScore {
      * @param spectrum the spectrum of interest
      * @param annotationPreferences the general spectrum annotation preferences
      * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
      * 
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws InterruptedException {
-        return getScore(peptide, spectrum, annotationPreferences, specificAnnotationPreferences, null);
-    }
-
-    /**
-     * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. Returns the average over the peptide sequence of the
-     * minimal mass error of the ions annotating an amino acid.
-     *
-     * @param peptide the peptide of interest
-     * @param spectrum the spectrum of interest
-     * @param annotationPreferences the general spectrum annotation preferences
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
-     * @param peptideSpectrumAnnotator an external annotator (if null an
-     * internal will be used)
-     *
-     * @return the score of the match
-     * 
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
-     */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException {
-
-        if (peptideSpectrumAnnotator == null) {
-            peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
-        }
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException {
 
         int sequenceLength = peptide.getSequence().length();
         HashMap<Integer, Double> aaDeviations = new HashMap(sequenceLength);

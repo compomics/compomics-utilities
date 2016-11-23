@@ -145,17 +145,12 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     }
 
     @Override
-    public String getFamilyName() {
-        return "deNovo";
-    }
-
-    @Override
-    public int getIndex() {
-        return 2;
-    }
-
-    @Override
     public String toString() {
         return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";
+    }
+
+    @Override
+    public String getParameterKey() {
+        return "deNovo|2"; // Should not be changed for backward compatibility
     }
 }

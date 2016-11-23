@@ -194,9 +194,15 @@ public abstract class SpectrumAnnotator {
             // Save spectrum number and intensity limit
             spectrumKey = spectrum.getSpectrumKey();
             this.intensityLimit = intensityLimit;
-
+            
+            // See whether the index was previously stored
+            spectrumIndex = new SpectrumIndex();
+            spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
+            if (spectrumIndex == null) {
             // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
+                spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
+                spectrum.addUrParam(spectrumIndex);
+            }
         }
     }
 

@@ -37,34 +37,11 @@ public class ComplementarityScore {
      * @param spectrum the spectrum of interest
      * @param annotationPreferences the general spectrum annotation preferences
      * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
-        return getScore(peptide, spectrum, annotationPreferences, specificAnnotationPreferences, null);
-    }
-
-    /**
-     * Scores the match between the given peptide and spectrum using the
-     * complementarity of the matched peaks. For every residue, a list of
-     * matched peaks is established and if any is found, the score per residue
-     * is the log of the number of matched ions. The peptide score is the
-     * average of the residue scores.
-     *
-     * @param peptide the peptide of interest
-     * @param spectrum the spectrum of interest
-     * @param annotationPreferences the general spectrum annotation preferences
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
-     * @param peptideSpectrumAnnotator an external annotator (if null an
-     * internal will be used)
-     *
-     * @return the score of the match
-     */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-
-        if (peptideSpectrumAnnotator == null) {
-            peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
-        }
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         int sequenceLength = peptide.getSequence().length();
 

@@ -62,12 +62,7 @@ public class PepnovoAssumptionDetails implements UrParameter {
     }
 
     @Override
-    public String getFamilyName() {
-        return "deNovo";
-    }
-
-    @Override
-    public int getIndex() {
-        return 1;
+    public String getParameterKey() {
+        return "deNovo|1"; // Should not be changed for backward compatibility
     }
 }

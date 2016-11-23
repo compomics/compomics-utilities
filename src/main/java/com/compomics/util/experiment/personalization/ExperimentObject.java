@@ -21,7 +21,7 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
     private HashMap<String, UrParameter> urParams = null;
 
     /**
-     * Method to add a user refinement parameter.
+     * Adds a user refinement parameter.
      *
      * @param parameter The parameter
      */
@@ -29,7 +29,18 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
         if (urParams == null) {
             createParamsMap();
         }
-        urParams.put(getParameterKey(parameter), parameter);
+        urParams.put(parameter.getParameterKey(), parameter);
+    }
+    
+    /**
+     * Removes a user parameter from the user parameters map.
+     * 
+     * @param paramterKey the key of the parameter
+     */
+    public void removeUrParam(String paramterKey) {
+        if (urParams != null) {
+            urParams.remove(paramterKey);
+        }
     }
     
     /**
@@ -42,7 +53,7 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
     }
 
     /**
-     * Method which returns the refinement parameter.
+     * Returns the refinement parameter of the same type than the one provided. Null if not found.
      *
      * @param parameter the desired parameter
      * @return the value stored. Null if not found.
@@ -51,16 +62,13 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
         if (urParams == null) {
             return null;
         }
-        return urParams.get(getParameterKey(parameter));
+        return urParams.get(parameter.getParameterKey());
     }
-
+    
     /**
-     * Returns the key of a personalization parameter.
-     *
-     * @param parameter the desired parameter
-     * @return the corresponding Key
+     * Clears the loaded parameters.
      */
-    public static String getParameterKey(UrParameter parameter) {
-        return parameter.getFamilyName() + "|" + parameter.getIndex();
+    public void clearParametersMap() {
+        urParams = null;
     }
 }

@@ -106,6 +106,14 @@ public abstract class Spectrum extends ExperimentObject {
      * Mutex for the setting of the attributes in cache.
      */
     private Semaphore mutex = new Semaphore(1);
+    /**
+     * Cache for the intensity limit.
+     */
+    private Double intensityLimit = null;
+    /**
+     * Intensity level corresponding to the value in cache.
+     */
+    private double intensityLimitLevel = -1.0;
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -681,6 +689,22 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double getIntensityLimit(double intensityFraction) {
 
+        if (intensityLimit == null || intensityLimitLevel != intensityFraction) {
+            intensityLimit = estimateIntneistyLimit(intensityFraction);
+            intensityLimitLevel = intensityFraction;
+        }
+        return intensityLimit;
+    }
+    
+    /**
+     * Estimates the intensity limit in intensity from a given percentile.
+     *
+     * @param intensityFraction the fraction of the intensity to use as limit,
+     * e.g., 0.75 for the 75% most intense peaks.
+     *
+     * @return the intensity limit
+     */
+        private double estimateIntneistyLimit(double intensityFraction) {
         ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
         for (Peak peak : peakList.values()) {
@@ -870,5 +894,6 @@ public abstract class Spectrum extends ExperimentObject {
         maxMz = null;
         minMz = null;
         intensityPeakMap = null;
+        intensityLimit = null;
     }
 }

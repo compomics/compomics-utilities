@@ -63,6 +63,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     }
 
     /**
+     * Constructor for a simple peptide assumption containing only the information necessary for spectrum annotation.
+     *
+     * @param aPeptide the theoretic peptide
+     * @param identificationCharge the charge used by the search engine for
+     * identification
+     */
+    public PeptideAssumption(Peptide aPeptide, Charge identificationCharge) {
+        this.peptide = aPeptide;
+        super.identificationCharge = identificationCharge;
+    }
+
+    /**
      * Get the theoretic peptide.
      *
      * @return the peptide

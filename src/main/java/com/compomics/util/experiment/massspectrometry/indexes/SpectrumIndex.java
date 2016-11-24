@@ -37,12 +37,12 @@ public class SpectrumIndex implements UrParameter {
      * The scaling factor used for the bins in ppm.
      */
     private double scalingFactor;
-    
+
     /**
      * Constructor for an empty index.
      */
     public SpectrumIndex() {
-        
+
     }
 
     /**

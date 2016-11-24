@@ -23,27 +23,43 @@ import java.util.HashMap;
  */
 public class FastXcorr {
 
+    
+    public enum SpectrumCorrectionMode {
+        average, accurate;
+    }
     /**
      * The peptide fragmentation model to use
      */
-    private PeptideFragmentationModel peptideFragmentationModel;
+    private PeptideFragmentationModel peptideFragmentationModel; 
     
+    private SpectrumCorrectionMode spectrumCorrectionMode;
+
     /**
      * Constructor
-     * 
+     *
+     * @param peptideFragmentationModel the peptide fragmentation model to use
+     */
+    public FastXcorr(PeptideFragmentationModel peptideFragmentationModel, SpectrumCorrectionMode spectrumCorrectionMode) {
+        this.peptideFragmentationModel = peptideFragmentationModel;
+        this.spectrumCorrectionMode = spectrumCorrectionMode;
+    }
+
+    /**
+     * Constructor
+     *
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
     public FastXcorr(PeptideFragmentationModel peptideFragmentationModel) {
-        this.peptideFragmentationModel = peptideFragmentationModel;
+        this(peptideFragmentationModel, SpectrumCorrectionMode.average);
     }
-    
+
     /**
      * Constructor using a unifrom fragmentation.
      */
     public FastXcorr() {
-        this(PeptideFragmentationModel.uniform);
+        this(PeptideFragmentationModel.uniform, SpectrumCorrectionMode.average);
     }
-    
+
     /**
      * Scores the match between the given peptide and spectrum using an m/z
      * fidelity score. The mass interquartile distance of the fragment ion mass
@@ -66,7 +82,7 @@ public class FastXcorr {
         }
 
         HashMap<Double, Double> weightedSpectrum = getYPrime(spectrum, annotationSettings);
-        
+
         double xCorr = 0;
         for (IonMatch ionMatch : matches) {
             Peak peakI = ionMatch.peak;
@@ -76,7 +92,7 @@ public class FastXcorr {
             Double xCorrI = x0I * yPrimeI;
             xCorr += xCorrI;
         }
-        
+
         return xCorr;
     }
 
@@ -113,12 +129,16 @@ public class FastXcorr {
             for (int i = 1; i <= 75; i++) {
                 Integer tempIndex = index + i;
                 HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(tempIndex);
-                double binIntensity = getAverageIntensity(peaksInBin.values());
-                sum += binIntensity;
+                if (peaksInBin != null) {
+                    double binIntensity = getBinIntensity(peaksInBin.values());
+                    sum += binIntensity;
+                }
                 tempIndex = index - i;
                 peaksInBin = spectrumIndex.getPeaksInBin(tempIndex);
-                binIntensity = getAverageIntensity(peaksInBin.values());
-                sum += binIntensity;
+                if (peaksInBin != null) {
+                    double binIntensity = getBinIntensity(peaksInBin.values());
+                    sum += binIntensity;
+                }
             }
             sum /= 150;
             Double weightedIntensity = intensity0 - sum;
@@ -128,6 +148,15 @@ public class FastXcorr {
         YPrime yPrime = new YPrime();
         yPrime.setValues(values);
         return yPrime;
+    }
+    
+    private double getBinIntensity(Collection<Peak> peaks) {
+        switch (spectrumCorrectionMode) {
+            case average:
+                return getAverageIntensity(peaks);
+            default:
+                throw new UnsupportedOperationException("Spectrum correction mode " + spectrumCorrectionMode + " not implemented.");
+        }
     }
 
     private double getAverageIntensity(Collection<Peak> peaks) {

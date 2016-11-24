@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
+import com.compomics.util.experiment.massspectrometry.indexes.PrecursorMap;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import java.io.*;
@@ -1050,5 +1051,24 @@ public class SpectrumFactory {
      */
     public File getMgfFileFromName(String fileName) {
         return filesMap.get(fileName);
+    }
+    
+    /**
+     * Returns a map containing all the precursors of a gven file indexed by spectrum title.
+     * 
+     * @param fileName the name of the file
+     * 
+     * @return a map containing all the precursors of a gven file
+     * 
+     * @throws java.io.IOException Exception thrown whenever an error occurs while reading a precursor
+     * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown whenever an error occurs while reading an mzML file
+     */
+    public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException, MzMLUnmarshallerException {
+        HashMap<String, Precursor> precursorMap = new HashMap<String, Precursor>(getNSpectra(fileName));
+        for (String spectrumtitle : getSpectrumTitles(fileName)) {
+            Precursor precursor = getPrecursor(fileName, spectrumtitle);
+            precursorMap.put(spectrumtitle, precursor);
+        }
+        return precursorMap;
     }
 }

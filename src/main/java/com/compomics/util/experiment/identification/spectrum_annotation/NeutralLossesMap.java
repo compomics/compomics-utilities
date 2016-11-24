@@ -41,6 +41,10 @@ public class NeutralLossesMap implements Serializable {
      * accounted for the reverse ions (y ions for instance).
      */
     private HashMap<String, Integer> rewindBoundaries = new HashMap<String, Integer>();
+    /**
+     * Cache for the accounted neutral losses.
+     */
+    private ArrayList<String> accountedNeutralLosses = null;
 
     /**
      * Constructor.
@@ -89,6 +93,7 @@ public class NeutralLossesMap implements Serializable {
      */
     public void addNeutralLoss(NeutralLoss neutralLoss, Integer bStart, Integer yStart) {
         addNeutralLoss(neutralLoss.name, bStart, yStart);
+        accountedNeutralLosses = null;
     }
 
     /**
@@ -111,6 +116,7 @@ public class NeutralLossesMap implements Serializable {
         if (position == null || yStart < position) {
             rewindBoundaries.put(neutralLossName, yStart);
         }
+        accountedNeutralLosses = null;
     }
 
     /**
@@ -120,6 +126,7 @@ public class NeutralLossesMap implements Serializable {
         backwardCompatibilityFix();
         forwardBoundaries.clear();
         rewindBoundaries.clear();
+        accountedNeutralLosses = null;
     }
 
     /**
@@ -150,7 +157,10 @@ public class NeutralLossesMap implements Serializable {
      */
     public ArrayList<String> getAccountedNeutralLosses() {
         backwardCompatibilityFix();
-        return new ArrayList<String>(forwardBoundaries.keySet());
+        if (accountedNeutralLosses == null) {
+            accountedNeutralLosses = new ArrayList<String>(forwardBoundaries.keySet());
+        }
+        return accountedNeutralLosses;
     }
 
     /**

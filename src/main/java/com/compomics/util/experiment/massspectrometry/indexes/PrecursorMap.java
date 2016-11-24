@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +21,6 @@ public class PrecursorMap {
      */
     boolean ppm;
     /**
-     * The minimal charge to consider.
-     */
-    int minCharge;
-    /**
-     * The maximal charge to consider.
-     */
-    int maxCharge;
-    /**
      * Map of the precursors by bin and m/z.
      */
     private HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>> precursorsMap = new HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>>();
@@ -41,11 +32,10 @@ public class PrecursorMap {
      * The log of the m/z anchor.
      */
     private static final double mzAnchorLog = FastMath.log(mzAnchor);
-    ;
     /**
      * The scaling factor used for the bins in ppm
      */
-    private static double scalingFactor;
+    private double scalingFactor;
     /**
      * The minimal m/z found.
      */
@@ -57,7 +47,6 @@ public class PrecursorMap {
 
     /**
      * Builds a precursor map.
-     * TODO: check only one/two bins when possible
      *
      * @param precursors map of the precursors indexed by spectrum title
      * @param precursorTolerance the precursor mass tolerance to use
@@ -71,7 +60,7 @@ public class PrecursorMap {
         }
         for (String spectrumTitle : precursors.keySet()) {
             Precursor precursor = precursors.get(spectrumTitle);
-            PrecursorWithTitle spectrumTitleWithCharge = new PrecursorWithTitle(precursor, spectrumTitle);
+            PrecursorWithTitle precursorWithTitle = new PrecursorWithTitle(precursor, spectrumTitle);
             double mz = precursor.getMz();
             if (minMz == null || mz < minMz) {
                 minMz = mz;
@@ -80,9 +69,13 @@ public class PrecursorMap {
                 maxMz = mz;
             }
             Integer bin = getBin(mz);
+            if (spectrumTitle.equals("qExactive01819.6612.6612.2 File:\"qExactive01819.raw\", NativeID:\"controllerType=0 controllerNumber=1 scan=6612\"")) {
+                System.out.println(bin);
+                System.out.println(mz);
+            }
             HashMap<Double, ArrayList<PrecursorWithTitle>> precursorsInBin = precursorsMap.get(bin);
             if (precursorsInBin == null) {
-                precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>();
+                precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>(2);
                 precursorsMap.put(bin, precursorsInBin);
             }
             ArrayList<PrecursorWithTitle> precursorsAtMz = precursorsInBin.get(mz);
@@ -90,7 +83,7 @@ public class PrecursorMap {
                 precursorsAtMz = new ArrayList<PrecursorWithTitle>(1);
                 precursorsInBin.put(mz, precursorsAtMz);
             }
-            precursorsAtMz.add(spectrumTitleWithCharge);
+            precursorsAtMz.add(precursorWithTitle);
         }
     }
 
@@ -137,18 +130,15 @@ public class PrecursorMap {
 
     /**
      * Returns a list containing the precursors matching the given m/z.
+     * TODO: check only one/two bins when possible
      *
      * @param referenceMz a mz to query
      *
      * @return a list containing the precursors matching the given m/z
      */
     public ArrayList<PrecursorWithTitle> getMatchingSpectra(double referenceMz) {
-        int bin0;
-        if (ppm) {
-            bin0 = getBinPpm(referenceMz);
-        } else {
-            bin0 = getBinAbsolute(referenceMz);
-        }
+        
+        int bin0 = getBin(referenceMz);
         ArrayList<PrecursorWithTitle> result = new ArrayList<PrecursorWithTitle>(0);
         HashMap<Double, ArrayList<PrecursorWithTitle>> binContent = precursorsMap.get(bin0 - 1);
         if (binContent != null) {
@@ -231,6 +221,24 @@ public class PrecursorMap {
         }
     }
 
+    /**
+     * Returns the minimal m/z encountered among the precursors.
+     * 
+     * @return the minimal m/z encountered among the precursors
+     */
+    public Double getMinMz() {
+        return minMz;
+    }
+
+    /**
+     * Returns the maximal m/z encountered among the precursors.
+     * 
+     * @return the maximal m/z encountered among the precursors
+     */
+    public Double getMaxMz() {
+        return maxMz;
+    }
+    
     /**
      * Convenience class storing the precursor and corresponding spectrum title.
      */

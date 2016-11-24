@@ -120,14 +120,6 @@ public class ProteinSequenceIteratorTest extends TestCase {
         peptides = iteratorNoModifications.getPeptides(testSequenceCombination, digestionPreferences, null, null);
         Assert.assertTrue(peptides.size() == 10);
         
-        // No modification lower mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 770.0, null);
-        Assert.assertTrue(peptides.size() == 4);
-        
-        // No modification upper mass limit
-        peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, 771.0);
-        Assert.assertTrue(peptides.size() == 3);
-        
         // No modification with mass limits
         peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 770.0, 771.0);
         Assert.assertTrue(peptides.size() == 1);
@@ -135,14 +127,6 @@ public class ProteinSequenceIteratorTest extends TestCase {
         // Modifications
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, null, null);
         Assert.assertTrue(peptides.size() == 6);
-        
-        // Modification lower mass limit
-        peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 867.0, null);
-        Assert.assertTrue(peptides.size() == 4);
-        
-        // Modification upper mass limit
-        peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, null, 868.0);
-        Assert.assertTrue(peptides.size() == 3);
         
         // Modification with mass limits
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 867.0, 868.0);

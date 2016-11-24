@@ -396,7 +396,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         }
 
                         // create the peptide
-                        Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
+                        Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
 
                         // get the e-value and advocate
                         HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
@@ -422,7 +422,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                 newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                             }
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                                 if (previousModificationMatches != null) {
                                     for (ModificationMatch modificationMatch : previousModificationMatches) {
                                         newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
@@ -1193,7 +1193,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     modMatches.add(new ModificationMatch(tempMod.getMassDelta() + "@" + tempPeptide.getPeptideSequence().charAt(location - 1), true, location));
                 }
             }
-            Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches);
+            Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches, true);
 
             // get the charge
             Charge peptideCharge = new Charge(Charge.PLUS, chargeState);
@@ -1212,7 +1212,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                 }
                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                    Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                    Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                     if (previousModificationMatches != null) {
                         for (ModificationMatch modificationMatch : previousModificationMatches) {
                             newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));

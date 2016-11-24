@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
+import antlr.StringUtils;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
@@ -23,6 +24,11 @@ import java.util.HashMap;
  */
 public class ProteinSequenceIterator {
 
+    /**
+     * The maximal number of Xs allowed to derive peptide sequences. When
+     * allowing multiple Xs all possibe combinations will be generated.
+     */
+    private int maxXsInSequence = 2;
     /**
      * The fixed protein N-term modification.
      */
@@ -83,9 +89,24 @@ public class ProteinSequenceIterator {
      *
      * @param fixedModifications a list of fixed modifications to consider when
      * iterating the protein sequences.
+     * @param maxX The maximal number of Xs allowed in a sequence to derive the
+     * possible peptides
+     */
+    public ProteinSequenceIterator(ArrayList<String> fixedModifications, Integer maxX) {
+        fillPtmMaps(fixedModifications);
+        if (maxX != null) {
+            maxXsInSequence = maxX;
+        }
+    }
+
+    /**
+     * Constructor with 2 Xs allowed.
+     *
+     * @param fixedModifications a list of fixed modifications to consider when
+     * iterating the protein sequences.
      */
     public ProteinSequenceIterator(ArrayList<String> fixedModifications) {
-        fillPtmMaps(fixedModifications);
+        this(fixedModifications, null);
     }
 
     /**
@@ -427,43 +448,49 @@ public class ProteinSequenceIterator {
 
                 for (PeptideDraft peptideDraft : peptideDrafts) {
 
-                    for (char aaChar : sequenceAminoAcid.getSubAminoAcids()) {
-
-                        StringBuilder peptideSequence;
-
-                        if (sequenceAminoAcid.getSubAminoAcids().length > 1) {
-                            peptideSequence = new StringBuilder(peptideDraft.getSequence());
-                        } else {
-                            peptideSequence = peptideDraft.getSequence();
+                    if (sequenceChar != 'X' || peptideDraft.getnX() < maxXsInSequence) {
+                        if (sequenceChar == 'X') {
+                            peptideDraft.increaseNX();
                         }
 
-                        Double peptideMass = peptideDraft.getMass();
-                        String nTermModification = peptideDraft.getnTermModification();
-                        HashMap<Integer, String> peptideModifications;
+                        for (char aaChar : sequenceAminoAcid.getSubAminoAcids()) {
 
-                        if (sequenceAminoAcid.getSubAminoAcids().length > 1) {
-                            peptideModifications = new HashMap<Integer, String>(peptideDraft.getFixedAaModifications());
-                        } else {
-                            peptideModifications = peptideDraft.getFixedAaModifications();
-                        }
+                            StringBuilder peptideSequence;
 
-                        AminoAcid subAminoAcid = AminoAcid.getAminoAcid(aaChar);
-                        peptideMass += subAminoAcid.getMonoisotopicMass();
-                        peptideSequence.append(aaChar);
-                        String modificationAtAa = fixedModificationsAtAa.get(aaChar);
-
-                        if (modificationAtAa != null) {
-
-                            AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
-
-                            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, j)) {
-                                peptideModifications.put(aaIndex + 1, modificationAtAa);
-                                peptideMass += modificationsMasses.get(modificationAtAa);
+                            if (sequenceAminoAcid.getSubAminoAcids().length > 1) {
+                                peptideSequence = new StringBuilder(peptideDraft.getSequence());
+                            } else {
+                                peptideSequence = peptideDraft.getSequence();
                             }
-                        }
 
-                        PeptideDraft newPeptideDraft = new PeptideDraft(peptideSequence, nTermModification, peptideModifications, peptideMass);
-                        newPeptideDrafts.add(newPeptideDraft);
+                            Double peptideMass = peptideDraft.getMass();
+                            String nTermModification = peptideDraft.getnTermModification();
+                            HashMap<Integer, String> peptideModifications;
+
+                            if (sequenceAminoAcid.getSubAminoAcids().length > 1) {
+                                peptideModifications = new HashMap<Integer, String>(peptideDraft.getFixedAaModifications());
+                            } else {
+                                peptideModifications = peptideDraft.getFixedAaModifications();
+                            }
+
+                            AminoAcid subAminoAcid = AminoAcid.getAminoAcid(aaChar);
+                            peptideMass += subAminoAcid.getMonoisotopicMass();
+                            peptideSequence.append(aaChar);
+                            String modificationAtAa = fixedModificationsAtAa.get(aaChar);
+
+                            if (modificationAtAa != null) {
+
+                                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
+
+                                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(sequence, SequenceMatchingPreferences.defaultStringMatching, j)) {
+                                    peptideModifications.put(aaIndex + 1, modificationAtAa);
+                                    peptideMass += modificationsMasses.get(modificationAtAa);
+                                }
+                            }
+
+                            PeptideDraft newPeptideDraft = new PeptideDraft(peptideSequence, nTermModification, peptideModifications, peptideMass);
+                            newPeptideDrafts.add(newPeptideDraft);
+                        }
                     }
                 }
 
@@ -645,7 +672,7 @@ public class ProteinSequenceIterator {
                     modificationMatches.add(new ModificationMatch(modificationName, false, site));
                 }
 
-                Peptide peptide = new Peptide(peptideDraft.getSequence().toString(), modificationMatches);
+                Peptide peptide = new Peptide(peptideDraft.getSequence().toString(), modificationMatches, false);
                 return peptide;
             }
         }
@@ -668,6 +695,16 @@ public class ProteinSequenceIterator {
     public ArrayList<Peptide> getPeptidesNoDigestion(String sequence, Double massMin, Double massMax) {
 
         if (AminoAcidSequence.containsAmbiguousAminoAcid(sequence)) {
+
+            int nX = 0;
+            for (int i = 0; i < sequence.length(); i++) {
+                if (sequence.charAt(i) == 'X') {
+                    nX++;
+                    if (nX > maxXsInSequence) {
+                        return new ArrayList<Peptide>(0);
+                    }
+                }
+            }
 
             char[] sequenceAsCharArray = sequence.toCharArray();
             char aa = sequenceAsCharArray[0];
@@ -796,6 +833,15 @@ public class ProteinSequenceIterator {
      */
     public ArrayList<Peptide> getPeptidesDigestion(String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
 
+        Double massMinWater = massMin;
+        if (massMinWater != null) {
+            massMinWater -= WATER_MASS;
+        }
+        Double massMaxWater = massMax;
+        if (massMaxWater != null) {
+            massMaxWater -= WATER_MASS;
+        }
+
         HashMap<Integer, ArrayList<PeptideDraft>> peptides = new HashMap<Integer, ArrayList<PeptideDraft>>();
         ArrayList<PeptideDraft> originalSequence = new ArrayList<PeptideDraft>(1);
         PeptideDraft protein = new PeptideDraft(proteinSequence);
@@ -814,7 +860,7 @@ public class ProteinSequenceIterator {
 
                 for (PeptideDraft peptide : peptidesAtPosition) {
 
-                    HashMap<Integer, ArrayList<PeptideDraft>> subPeptides = digest(peptide.getSequence().toString(), proteinSequence, peptideStart, enzyme, nMissedCleavages, massMin, massMax);
+                    HashMap<Integer, ArrayList<PeptideDraft>> subPeptides = digest(peptide.getSequence().toString(), proteinSequence, peptideStart, enzyme, nMissedCleavages, massMinWater, massMaxWater);
 
                     for (Integer tempPeptideStart : subPeptides.keySet()) {
 
@@ -994,19 +1040,19 @@ public class ProteinSequenceIterator {
      * @param indexOnProtein the index of the sequence on the protein
      * @param enzyme the enzyme to use
      * @param maxMissedCleavages the maximal number of missed cleavages
-     * @param massMin the minimal mass allowed
-     * @param massMax the maximal mass allowed
+     * @param massMin the minimal mass allowed with water removed
+     * @param massMax the maximal mass allowed with water removed
      *
      * @return the possible peptide drafts
      */
-    private HashMap<Integer, ArrayList<PeptideDraft>> digest(String sequence, String proteinSequence, Integer indexOnProtein, Enzyme enzyme, int maxMissedCleavages, Double massMin, Double massMax) {
+    private HashMap<Integer, ArrayList<PeptideDraft>> digest(String sequence, String proteinSequence, Integer indexOnProtein, Enzyme enzyme, int maxMissedCleavages, Double massMinWater, Double massMaxWater) {
 
         char aa = sequence.charAt(0);
         ArrayList<PeptideDraft> tempPeptides = new ArrayList<PeptideDraft>();
         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
 
         for (char subAa : aminoAcid.getSubAminoAcids()) {
-            StringBuilder currentPeptide = new StringBuilder();
+            StringBuilder currentPeptide = new StringBuilder(10);
             currentPeptide.append(subAa);
             Double currentMass = AminoAcid.getAminoAcid(subAa).getMonoisotopicMass();
             String nTermModification = getNtermModification(indexOnProtein == 0, subAa, proteinSequence);
@@ -1023,6 +1069,9 @@ public class ProteinSequenceIterator {
             }
 
             PeptideDraft peptideDraft = new PeptideDraft(currentPeptide, nTermModification, peptideModifications, currentMass);
+            if (aa == 'X') {
+                peptideDraft.increaseNX();
+            }
             tempPeptides.add(peptideDraft);
         }
 
@@ -1032,97 +1081,104 @@ public class ProteinSequenceIterator {
 
             aa = sequence.charAt(i);
             aminoAcid = AminoAcid.getAminoAcid(aa);
+
             ArrayList<PeptideDraft> newPeptides = new ArrayList<PeptideDraft>(tempPeptides.size());
 
+            int combinationCount = 1;
             for (char aaAfter : aminoAcid.getSubAminoAcids()) {
 
                 boolean cleavageSite = false;
 
                 for (PeptideDraft peptideDraft : tempPeptides) {
 
-                    char aaBefore = peptideDraft.getSequence().charAt(peptideDraft.length() - 1);
+                    if ((aa != 'X' || peptideDraft.getnX() < maxXsInSequence)
+                            && massMaxWater == null || peptideDraft.getMass() < massMaxWater + minCtermMass) {
+                        if (aa == 'X') {
+                            peptideDraft.increaseNX();
+                        }
+                        char aaBefore = peptideDraft.getSequence().charAt(peptideDraft.length() - 1);
 
-                    if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+                        if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
 
-                        Double peptideMass = peptideDraft.getMass();
-                        String cTermModification = getCtermModification(peptideDraft, proteinSequence, i - 1 + indexOnProtein);
-                        peptideMass += modificationsMasses.get(cTermModification);
-                        Double tempMass = peptideMass + WATER_MASS;
+                            Double peptideMass = peptideDraft.getMass();
+                            String cTermModification = getCtermModification(peptideDraft, proteinSequence, i - 1 + indexOnProtein);
+                            peptideMass += modificationsMasses.get(cTermModification);
 
-                        if ((massMin == null || tempMass >= massMin)
-                                && (massMax == null || tempMass <= massMax)) {
+                            if ((massMinWater == null || peptideMass >= massMinWater)
+                                    && (massMaxWater == null || peptideMass <= massMaxWater)) {
 
-                            PeptideDraft peptideDraftWithCTerm = peptideDraft.clone();
-                            peptideDraftWithCTerm.setcTermModification(cTermModification);
-                            peptideDraftWithCTerm.setMass(peptideMass);
-                            Integer startIndex = i - peptideDraftWithCTerm.length();
-                            ArrayList<PeptideDraft> peptidesAtI = result.get(startIndex);
+                                PeptideDraft peptideDraftWithCTerm = peptideDraft.clone();
+                                peptideDraftWithCTerm.setcTermModification(cTermModification);
+                                peptideDraftWithCTerm.setMass(peptideMass);
+                                Integer startIndex = i - peptideDraftWithCTerm.length();
+                                ArrayList<PeptideDraft> peptidesAtI = result.get(startIndex);
 
-                            if (peptidesAtI == null) {
-                                peptidesAtI = new ArrayList<PeptideDraft>(maxMissedCleavages + 1);
-                                result.put(startIndex, peptidesAtI);
+                                if (peptidesAtI == null) {
+                                    peptidesAtI = new ArrayList<PeptideDraft>(maxMissedCleavages + 1);
+                                    result.put(startIndex, peptidesAtI);
+                                }
+
+                                peptidesAtI.add(peptideDraftWithCTerm);
                             }
 
-                            peptidesAtI.add(peptideDraftWithCTerm);
+                            peptideDraft.increaseMissedCleavages();
+                            cleavageSite = true;
                         }
 
-                        peptideDraft.increaseMissedCleavages();
-                        cleavageSite = true;
-                    }
+                        if (peptideDraft.getMissedCleavages() <= maxMissedCleavages) {
 
-                    if (peptideDraft.getMissedCleavages() <= maxMissedCleavages) {
+                            if (combinationCount < aminoAcid.getSubAminoAcids().length) {
 
-                        if (aminoAcid.getSubAminoAcids().length > 1) {
+                                StringBuilder newSequence = new StringBuilder(peptideDraft.getSequence());
+                                newSequence.append(aaAfter);
+                                Double mass = peptideDraft.getMass();
+                                mass += AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
+                                HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(peptideDraft.getFixedAaModifications());
+                                String modificationAtAa = fixedModificationsAtAa.get(aaAfter);
 
-                            StringBuilder newSequence = new StringBuilder(peptideDraft.getSequence());
-                            newSequence.append(aaAfter);
-                            Double mass = peptideDraft.getMass();
-                            mass += AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
-                            HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(peptideDraft.getFixedAaModifications());
-                            String modificationAtAa = fixedModificationsAtAa.get(aaAfter);
+                                if (modificationAtAa != null) {
 
-                            if (modificationAtAa != null) {
+                                    AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
 
-                                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
-
-                                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
-                                    peptideModifications.put(i + 1, modificationAtAa);
-                                    mass += modificationsMasses.get(modificationAtAa);
+                                    if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
+                                        peptideModifications.put(i + 1, modificationAtAa);
+                                        mass += modificationsMasses.get(modificationAtAa);
+                                    }
                                 }
-                            }
 
-                            if (massMax == null || mass + minCtermMass < massMax) {
-                                PeptideDraft newPeptideDraft = new PeptideDraft(newSequence, peptideDraft.getnTermModification(), peptideModifications, mass, peptideDraft.getMissedCleavages());
-                                newPeptides.add(newPeptideDraft);
-                            }
-
-                        } else {
-
-                            peptideDraft.getSequence().append(aaAfter);
-                            Double newMass = peptideDraft.getMass() + AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
-                            String modificationAtAa = fixedModificationsAtAa.get(aaAfter);
-
-                            if (modificationAtAa != null) {
-
-                                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
-
-                                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
-                                    HashMap<Integer, String> peptideModifications = peptideDraft.getFixedAaModifications();
-                                    peptideModifications.put(i + 1, modificationAtAa);
-                                    newMass += modificationsMasses.get(modificationAtAa);
+                                if (massMaxWater == null || mass + minCtermMass <= massMaxWater) {
+                                    PeptideDraft newPeptideDraft = new PeptideDraft(newSequence, peptideDraft.getnTermModification(), peptideModifications, mass, peptideDraft.getMissedCleavages());
+                                    newPeptides.add(newPeptideDraft);
                                 }
-                            }
 
-                            if (massMax == null || newMass + minCtermMass < massMax) {
-                                peptideDraft.setMass(newMass);
-                                newPeptides.add(peptideDraft);
+                            } else {
+
+                                peptideDraft.getSequence().append(aaAfter);
+                                Double newMass = peptideDraft.getMass() + AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
+                                String modificationAtAa = fixedModificationsAtAa.get(aaAfter);
+
+                                if (modificationAtAa != null) {
+
+                                    AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
+
+                                    if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein)) {
+                                        HashMap<Integer, String> peptideModifications = peptideDraft.getFixedAaModifications();
+                                        peptideModifications.put(i + 1, modificationAtAa);
+                                        newMass += modificationsMasses.get(modificationAtAa);
+                                    }
+                                }
+
+                                if (massMaxWater == null || newMass + minCtermMass <= massMaxWater) {
+                                    peptideDraft.setMass(newMass);
+                                    newPeptides.add(peptideDraft);
+                                }
                             }
                         }
                     }
                 }
                 if (cleavageSite) {
 
-                    StringBuilder currentPeptide = new StringBuilder();
+                    StringBuilder currentPeptide = new StringBuilder(10);
                     currentPeptide.append(aaAfter);
                     Double currentMass = AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
                     String nTermModification = getNtermModification(indexOnProtein + i == 0, aaAfter, proteinSequence);
@@ -1143,6 +1199,8 @@ public class ProteinSequenceIterator {
                     PeptideDraft newPeptideDraft = new PeptideDraft(currentPeptide, nTermModification, peptideModifications, currentMass);
                     newPeptides.add(newPeptideDraft);
                 }
+
+                combinationCount++;
             }
 
             tempPeptides = newPeptides;
@@ -1153,10 +1211,9 @@ public class ProteinSequenceIterator {
             Double peptideMass = peptideDraft.getMass();
             String cTermModification = getCtermModification(peptideDraft, proteinSequence, sequence.length() - 1 + indexOnProtein);
             peptideMass += modificationsMasses.get(cTermModification);
-            Double tempMass = peptideMass + WATER_MASS;
 
-            if ((massMin == null || tempMass >= massMin)
-                    && (massMax == null || tempMass <= massMax)) {
+            if ((massMinWater == null || peptideMass >= massMinWater)
+                    && (massMaxWater == null || peptideMass <= massMaxWater)) {
 
                 peptideDraft.setcTermModification(cTermModification);
                 peptideDraft.setMass(peptideMass);
@@ -1204,6 +1261,10 @@ public class ProteinSequenceIterator {
          * The number of missed cleavages.
          */
         private int missedCleavages = 0;
+        /**
+         * The number of Xs already considered in this draft.
+         */
+        private int nX = 0;
 
         /**
          * Constructor.
@@ -1406,5 +1467,22 @@ public class ProteinSequenceIterator {
         public int getMissedCleavages() {
             return missedCleavages;
         }
+
+        /**
+         * Increases the number of Xs already considered in this draft.
+         */
+        public void increaseNX() {
+            nX++;
+        }
+
+        /**
+         * Returns the number of Xs already considered in this draft.
+         *
+         * @return the number of Xs
+         */
+        public int getnX() {
+            return nX;
+        }
+
     }
 }

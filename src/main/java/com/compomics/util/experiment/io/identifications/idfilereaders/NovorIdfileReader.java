@@ -377,7 +377,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //                    }
 //                }
                 // Create the peptide assumption
-                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
+                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), peptideCharge, novorScore, novorCsvFile.getName());
                 peptideAssumption.setAminoAcidScores(aminoAcidScores);
                 //peptideAssumption.setRawScore(novorScore);
@@ -388,7 +388,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                         newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                     }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                         if (previousModificationMatches != null) {
                             for (ModificationMatch modificationMatch : previousModificationMatches) {
                                 newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));

@@ -123,7 +123,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                         newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                     }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                         if (previousModificationMatches != null) {
                             for (ModificationMatch modificationMatch : previousModificationMatches) {
                                 newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
@@ -164,7 +164,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         String sequence = temp[0];
-        Peptide peptide = new Peptide(sequence, modMatches);
+        Peptide peptide = new Peptide(sequence, modMatches, true);
 
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         Double score = new Double(temp[1]);

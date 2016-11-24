@@ -219,7 +219,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                             }
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                                 if (previousModificationMatches != null) {
                                     for (ModificationMatch modificationMatch : previousModificationMatches) {
                                         newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
@@ -450,7 +450,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             type = parser.next();
         }
 
-        Peptide peptide = new Peptide(sequence, modificationMatches);
+        Peptide peptide = new Peptide(sequence, modificationMatches, true);
         Advocate advocate = Advocate.getAdvocate(searchEngine);
         return new PeptideAssumption(peptide, rank, advocate.getIndex(), new Charge(Charge.PLUS, charge), score, idFile.getName());
     }

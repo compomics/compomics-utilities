@@ -74,15 +74,37 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Constructor for the peptide.
+     * Constructor.
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param modifications the PTM of this peptide
-     * @throws IllegalArgumentException if the peptide sequence contains unknown
-     * amino acids
+     * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, boolean sanityCheck) {
         this.sequence = aSequence;
+        if (modifications != null) {
+            this.modifications = new ArrayList<ModificationMatch>(modifications);
+        }
+        if (sanityCheck) {
+            sanityCheck();
+        }
+    }
+
+    /**
+     * Constructor. No sanity check is performed on the input.
+     *
+     * @param aSequence the peptide sequence, assumed to be in upper case only
+     * @param modifications the PTM of this peptide
+     */
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) {
+        this(aSequence, modifications, false);
+    }
+
+    /**
+     * Removes characters from the sequence and checks the modifications names
+     * for forbidden characters.
+     */
+    private void sanityCheck() {
         sequence = sequence.replaceAll("[#*$%&]", "");
         if (modifications != null) {
             for (ModificationMatch mod : modifications) {
@@ -93,7 +115,6 @@ public class Peptide extends ExperimentObject {
                     throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
                 }
             }
-            this.modifications = new ArrayList<ModificationMatch>(modifications);
         }
     }
 
@@ -103,24 +124,14 @@ public class Peptide extends ExperimentObject {
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param modifications the PTM of this peptide
      * @param variants the variants compared to the database
-     *
-     * @throws IllegalArgumentException if the peptide sequence contains unknown
-     * amino acids
+     * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants) throws IllegalArgumentException {
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants, boolean sanityCheck) {
         this.sequence = aSequence;
-        sequence = sequence.replaceAll("[#*$%&]", "");
-        if (modifications != null) {
-            for (ModificationMatch mod : modifications) {
-                if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
-                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
-                }
-                if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
-                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
-                }
-            }
-            this.modifications = new ArrayList<ModificationMatch>(modifications);
-            this.variants = new ArrayList<VariantMatch>(variants);
+        this.modifications = new ArrayList<ModificationMatch>(modifications);
+        this.variants = new ArrayList<VariantMatch>(variants);
+        if (sanityCheck) {
+            sanityCheck();
         }
     }
 

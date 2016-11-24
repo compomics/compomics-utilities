@@ -396,8 +396,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 }
                 digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
             }
-            enzyme = null;
-            nMissedCleavages = null;
         }
         return digestionPreferences;
     }

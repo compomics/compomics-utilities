@@ -666,6 +666,7 @@ public class FMIndex implements PeptideMapper {
 
         // reading all proteins in a first pass to get information about number and total length
         indexStringLength = 1;
+        long indexStringLengthLong = 1L;
         int numProteins = 0;
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
@@ -675,14 +676,18 @@ public class FMIndex implements PeptideMapper {
                 }
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
-                indexStringLength += proteinLen;
+                indexStringLengthLong += proteinLen;
                 ++numProteins;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        indexStringLength += Math.max(0, numProteins - 1); // delimiters between protein sequences
-        indexStringLength += 2; // last delimiter + sentinal
+        indexStringLengthLong += Math.max(0, numProteins - 1); // delimiters between protein sequences
+        indexStringLengthLong += 2; // last delimiter + sentinal
+        if (indexStringLengthLong > Integer.MAX_VALUE) {
+            throw new UnsupportedOperationException("Database contains more amino acids than currently supported by the index (" + indexStringLengthLong + " amino acids found).");
+        }
+        indexStringLength = (int) indexStringLengthLong;
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();

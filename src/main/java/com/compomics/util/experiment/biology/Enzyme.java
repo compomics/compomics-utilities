@@ -32,19 +32,19 @@ public class Enzyme extends ExperimentObject {
     /*
      * The amino acids before cleavage.
      */
-    private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>(0);
+    private HashSet<Character> aminoAcidBefore = new HashSet<Character>(0);
     /*
      * The amino acids after cleavage.
      */
-    private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>(0);
+    private HashSet<Character> aminoAcidAfter = new HashSet<Character>(0);
     /*
      * The restriction amino acids before cleavage.
      */
-    private ArrayList<Character> restrictionBefore = new ArrayList<Character>(0);
+    private HashSet<Character> restrictionBefore = new HashSet<Character>(0);
     /*
      * The restriction amino acids after cleavage.
      */
-    private ArrayList<Character> restrictionAfter = new ArrayList<Character>(0);
+    private HashSet<Character> restrictionAfter = new HashSet<Character>(0);
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
@@ -107,7 +107,7 @@ public class Enzyme extends ExperimentObject {
      *
      * @return the amino acids potentially following the cleavage
      */
-    public ArrayList<Character> getAminoAcidAfter() {
+    public HashSet<Character> getAminoAcidAfter() {
         return aminoAcidAfter;
     }
 
@@ -127,7 +127,7 @@ public class Enzyme extends ExperimentObject {
      *
      * @return the amino acids potentially preceding the cleavage
      */
-    public ArrayList<Character> getAminoAcidBefore() {
+    public HashSet<Character> getAminoAcidBefore() {
         return aminoAcidBefore;
     }
 
@@ -147,7 +147,7 @@ public class Enzyme extends ExperimentObject {
      *
      * @return the amino acids restricting when following the cleavage
      */
-    public ArrayList<Character> getRestrictionAfter() {
+    public HashSet<Character> getRestrictionAfter() {
         return restrictionAfter;
     }
 
@@ -167,7 +167,7 @@ public class Enzyme extends ExperimentObject {
      *
      * @return the amino acids restricting when preceding the cleavage
      */
-    public ArrayList<Character> getRestrictionBefore() {
+    public HashSet<Character> getRestrictionBefore() {
         return restrictionBefore;
     }
 
@@ -189,63 +189,65 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Returns a boolean indicating whether the given amino acids represent a
-     * cleavage site. Trypsin example: (D, E) returns false (R, D) returns true
-     * Note: returns false if no cleavage site is implemented.
+     * cleavage site. Amino acid combinations are extended to find possible
+     * restrictions or cleavage sites. Trypsin example: (D, E) returns false (R,
+     * D) returns true Note: returns false if no cleavage site is implemented.
      *
      * @param aaBefore the amino acid before the cleavage site
      * @param aaAfter the amino acid after the cleavage site
+     *
      * @return true if the amino acid combination can represent a cleavage site
      */
-    public boolean isCleavageSite(char aaBefore, char aaAfter) {
+    public boolean isCleavageSite(Character aaBefore, Character aaAfter) {
 
-        for (Character aa1 : aminoAcidBefore) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaBefore);
-            for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
-                if (possibleAaBefore == aa1) {
-                    boolean restriction = false;
-                    for (Character aa2 : restrictionAfter) {
-                        aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-                        for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
-                            if (possibleAaAfter == aa2) {
-                                restriction = true;
-                                break;
-                            }
-                        }
-                        if (restriction) {
-                            break;
-                        }
+        AminoAcid aminoAcid1 = AminoAcid.getAminoAcid(aaBefore);
+        AminoAcid aminoAcid2 = AminoAcid.getAminoAcid(aaAfter);
+        for (char possibleAaBefore : aminoAcid1.getSubAminoAcids()) {
+            if (aminoAcidBefore.contains(possibleAaBefore)) {
+                boolean restriction = false;
+                for (char possibleAaAfter : aminoAcid2.getSubAminoAcids()) {
+                    if (restrictionAfter.contains(possibleAaAfter)) {
+                        restriction = true;
+                        break;
                     }
-                    if (!restriction) {
-                        return true;
-                    }
+                }
+                if (!restriction) {
+                    return true;
                 }
             }
         }
 
-        for (Character aa1 : aminoAcidAfter) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-            for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
-                if (possibleAaAfter == aa1) {
-                    boolean restriction = false;
-                    for (Character aa2 : restrictionBefore) {
-                        aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-                        for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
-                            if (possibleAaBefore == aa2) {
-                                restriction = true;
-                                break;
-                            }
-                        }
-                        if (restriction) {
-                            break;
-                        }
+        for (char possibleAaAfter : aminoAcid2.getSubAminoAcids()) {
+            if (aminoAcidAfter.contains(possibleAaAfter)) {
+                boolean restriction = false;
+                for (char possibleAaBefore : aminoAcid1.getSubAminoAcids()) {
+                    if (restrictionBefore.contains(possibleAaAfter)) {
+                        restriction = true;
+                        break;
                     }
-                    if (!restriction) {
-                        return true;
-                    }
+                }
+                if (!restriction) {
+                    return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Returns a boolean indicating whether the given amino acids represent a
+     * cleavage site. This method does not support amino acid combinations.
+     * Trypsin example: (D, E) returns false (R, D) returns true Note: returns
+     * false if no cleavage site is implemented.
+     *
+     * @param aaBefore the amino acid before the cleavage site
+     * @param aaAfter the amino acid after the cleavage site
+     *
+     * @return true if the amino acid combination can represent a cleavage site
+     */
+    public boolean isCleavageSiteNoCombination(Character aaBefore, Character aaAfter) {
+        return aminoAcidBefore.contains(aaBefore) && !restrictionAfter.contains(aaAfter)
+                || aminoAcidAfter.contains(aaAfter) && !restrictionBefore.contains(aaBefore);
     }
 
     /**

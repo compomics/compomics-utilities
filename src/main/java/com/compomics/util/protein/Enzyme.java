@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 /*
@@ -29,6 +30,7 @@ import java.util.Vector;
  *
  * @author Lennart Martens
  * @author Harald Barsnes
+ * @author MArc Vaudel
  */
 public class Enzyme implements Cloneable {
 
@@ -120,9 +122,7 @@ public class Enzyme implements Cloneable {
 
     /**
      * Creates a new Enzyme from a com.compomics.util.experiment.biology.Enzyme
-     * enzyme and the maximum number of missed cleavages. We put a lot of
-     * efforts in standardizing all objects into the experiment package. We are
-     * now very happy to provide you the opportunity to mess up your code!
+     * enzyme and the maximum number of missed cleavages.
      *
      * @param enzyme The com.compomics.util.experiment.biology.Enzyme enzyme
      * @param maxMissedCleavages The maximum number of missed cleavages
@@ -134,30 +134,30 @@ public class Enzyme implements Cloneable {
         if (enzyme.getAminoAcidBefore().size() > 0) {
             position = "Cterm";
 
-            ArrayList<Character> temp = enzyme.getAminoAcidBefore();
+            HashSet<Character> temp = enzyme.getAminoAcidBefore();
 
-            for (int i = 0; i < temp.size(); i++) {
-                cleavage += temp.get(i);
+            for (Character aa : temp) {
+                cleavage += aa;
             }
 
             temp = enzyme.getRestrictionAfter();
 
-            for (int i = 0; i < temp.size(); i++) {
-                restrict += temp.get(i);
+            for (Character aa : temp) {
+                restrict += aa;
             }
         } else {
             position = "Nterm";
 
-            ArrayList<Character> temp = enzyme.getAminoAcidAfter();
+            HashSet<Character> temp = enzyme.getAminoAcidAfter();
 
-            for (int i = 0; i < temp.size(); i++) {
-                cleavage += temp.get(i);
+            for (Character aa : temp) {
+                cleavage += aa;
             }
 
-            temp = enzyme.getRestrictionBefore();
+            temp = enzyme.getRestrictionAfter();
 
-            for (int i = 0; i < temp.size(); i++) {
-                restrict += temp.get(i);
+            for (Character aa : temp) {
+                restrict += aa;
             }
         }
 

@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class groups the preferences for the digestion of proteins.
@@ -536,11 +537,11 @@ public class DigestionPreferences implements Serializable {
             }
         }
 
-        ArrayList<Character> commonRestrictionAfter;
+        HashSet<Character> commonRestrictionAfter;
         if (enzymes.size() == 1) {
             commonRestrictionAfter = enzymes.get(0).getRestrictionAfter();
         } else {
-            commonRestrictionAfter = new ArrayList<Character>();
+            commonRestrictionAfter = new HashSet<Character>();
             for (Character aa : enzymes.get(0).getRestrictionAfter()) {
                 boolean missing = false;
                 for (Enzyme enzyme : enzymes) {
@@ -569,11 +570,11 @@ public class DigestionPreferences implements Serializable {
             result += ". ";
         }
 
-        ArrayList<Character> commonRestrictionBefore;
+        HashSet<Character> commonRestrictionBefore;
         if (enzymes.size() == 1) {
             commonRestrictionBefore = enzymes.get(0).getRestrictionBefore();
         } else {
-            commonRestrictionBefore = new ArrayList<Character>();
+            commonRestrictionBefore = new HashSet<Character>();
             for (Character aa : enzymes.get(0).getRestrictionBefore()) {
                 boolean missing = false;
                 for (Enzyme enzyme : enzymes) {

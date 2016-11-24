@@ -1098,7 +1098,7 @@ public class ProteinSequenceIterator {
                         }
                         char aaBefore = peptideDraft.getSequence().charAt(peptideDraft.length() - 1);
 
-                        if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+                        if (enzyme.isCleavageSiteNoCombination(aaBefore, aaAfter)) {
 
                             Double peptideMass = peptideDraft.getMass();
                             String cTermModification = getCtermModification(peptideDraft, proteinSequence, i - 1 + indexOnProtein);

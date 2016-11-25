@@ -69,10 +69,6 @@ public class PrecursorMap {
                 maxMz = mz;
             }
             Integer bin = getBin(mz);
-            if (spectrumTitle.equals("qExactive01819.6612.6612.2 File:\"qExactive01819.raw\", NativeID:\"controllerType=0 controllerNumber=1 scan=6612\"")) {
-                System.out.println(bin);
-                System.out.println(mz);
-            }
             HashMap<Double, ArrayList<PrecursorWithTitle>> precursorsInBin = precursorsMap.get(bin);
             if (precursorsInBin == null) {
                 precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>(2);

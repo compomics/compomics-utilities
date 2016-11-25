@@ -154,11 +154,14 @@ public abstract class SpectrumAnnotator {
      */
     protected IonMatch matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
 
-        double fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
+        double fragmentMz = theoreticIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+        if (inspectedCharge > 1) {
+            fragmentMz = (fragmentMz + (inspectedCharge - 1) * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
+        }
 
         // Get the peaks matching the desired m/z
         ArrayList<Peak> matchedPeaks = spectrumIndex.getMatchingPeaks(fragmentMz);
-        
+
         if (matchedPeaks.isEmpty()) {
             return null;
         }

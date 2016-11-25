@@ -22,28 +22,10 @@ import java.util.HashMap;
  * @author Marc Vaudel
  */
 public class FastXcorr {
-
-    public enum SpectrumCorrectionMode {
-        average, accurate;
-    }
     /**
      * The peptide fragmentation model to use
      */
     private PeptideFragmentationModel peptideFragmentationModel;
-
-    private SpectrumCorrectionMode spectrumCorrectionMode;
-
-    /**
-     * Constructor
-     *
-     * @param peptideFragmentationModel the peptide fragmentation model to use
-     * @param spectrumCorrectionMode the type of spectrum correction used to
-     * estimate y'
-     */
-    public FastXcorr(PeptideFragmentationModel peptideFragmentationModel, SpectrumCorrectionMode spectrumCorrectionMode) {
-        this.peptideFragmentationModel = peptideFragmentationModel;
-        this.spectrumCorrectionMode = spectrumCorrectionMode;
-    }
 
     /**
      * Constructor
@@ -51,14 +33,14 @@ public class FastXcorr {
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
     public FastXcorr(PeptideFragmentationModel peptideFragmentationModel) {
-        this(peptideFragmentationModel, SpectrumCorrectionMode.average);
+        this.peptideFragmentationModel = peptideFragmentationModel;
     }
 
     /**
      * Constructor using a unifrom fragmentation.
      */
     public FastXcorr() {
-        this(PeptideFragmentationModel.uniform, SpectrumCorrectionMode.average);
+        this(PeptideFragmentationModel.uniform);
     }
 
     /**
@@ -81,38 +63,7 @@ public class FastXcorr {
         if (matches.isEmpty()) {
             return 0.0;
         }
-
-        HashMap<Double, Double> weightedSpectrum = getYPrime(spectrum, annotationSettings);
-
-        double xCorr = 0;
-        for (IonMatch ionMatch : matches) {
-            Peak peakI = ionMatch.peak;
-            Double mzI = peakI.mz;
-            Double x0I = peakI.intensity;
-            Double yPrimeI = weightedSpectrum.get(mzI);
-            Double xCorrI = x0I * yPrimeI;
-            xCorr += xCorrI;
-        }
-
-        return xCorr;
-    }
-
-    private HashMap<Double, Double> getYPrime(MSnSpectrum spectrum, AnnotationSettings annotationSettings) {
-
-        YPrime yPrime = new YPrime();
-        yPrime = (YPrime) spectrum.getUrParam(yPrime);
-        if (yPrime == null) {
-            yPrime = estimateYPrime(spectrum, annotationSettings);
-            spectrum.addUrParam(yPrime);
-        }
-        return yPrime.getValues();
-    }
-
-    private YPrime estimateYPrime(MSnSpectrum spectrum, AnnotationSettings annotationSettings) {
-
-        HashMap<Double, Peak> peakList = spectrum.getPeakMap();
-        HashMap<Double, Double> values = new HashMap<Double, Double>(peakList.size());
-
+        
         SpectrumIndex spectrumIndex = new SpectrumIndex();
         spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
         if (spectrumIndex == null) {
@@ -121,23 +72,62 @@ public class FastXcorr {
                     annotationSettings.getFragmentIonAccuracy(), annotationSettings.isFragmentIonPpm());
             spectrum.addUrParam(spectrumIndex);
         }
+
+        HashMap<Double, Double> weightedSpectrum = getYPrime(spectrum, spectrumIndex);
+        
+        double xCorr = 0;
+        for (IonMatch ionMatch : matches) {
+            Peak peakI = ionMatch.peak;
+            Double mzI = peakI.mz;
+            Double x0I = peakI.intensity / spectrumIndex.getTotalIntensity();
+            Double yPrimeI = weightedSpectrum.get(mzI);
+            xCorr += x0I * yPrimeI;
+        }
+
+        return Math.max(xCorr, 0.0);
+    }
+
+    private HashMap<Double, Double> getYPrime(MSnSpectrum spectrum, SpectrumIndex spectrumIndex) {
+
+        YPrime yPrime = new YPrime();
+        yPrime = (YPrime) spectrum.getUrParam(yPrime);
+        if (yPrime == null) {
+            yPrime = estimateYPrime(spectrum, spectrumIndex);
+            spectrum.addUrParam(yPrime);
+        }
+        return yPrime.getValues();
+    }
+
+    private YPrime estimateYPrime(MSnSpectrum spectrum, SpectrumIndex spectrumIndex) {
+
+        HashMap<Double, Peak> peakList = spectrum.getPeakMap();
+        HashMap<Double, Double> values = new HashMap<Double, Double>(peakList.size());
         
         int spectrumWidth = spectrumIndex.getBinMax() - spectrumIndex.getBinMin();
 
+            double backgroundSum = 0.0;
+            for (int bin : spectrumIndex.getRawBins()) {
+                    HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(bin);
+                    double binIntensity = getBinIntensity(peaksInBin.values());
+                    backgroundSum += binIntensity;
+            }
+            double backgroundYPrime = backgroundSum / spectrumWidth;
+            
         for (Peak peak : peakList.values()) {
             Double mz0 = peak.mz;
             Double intensity0 = peak.intensity;
             int bin0 = spectrumIndex.getBin(mz0);
-            double sum = 0.0;
-            for (int bin : spectrumIndex.getRawBins()) {
-                if (bin != bin0) {
-                    HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(bin);
-                    double binIntensity = getBinIntensity(peaksInBin.values());
-                    sum += binIntensity;
-                }
+            HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(bin0);
+            double averageIntensity;
+            if (peaksInBin != null) {
+                double binIntensity = getBinIntensity(peaksInBin.values());
+                averageIntensity = backgroundSum - binIntensity;
+                averageIntensity /= spectrumWidth;
+            } else {
+                averageIntensity = backgroundYPrime;
             }
-            sum /= spectrumWidth;
-            Double weightedIntensity = intensity0 - sum;
+            Double weightedIntensity = intensity0 - averageIntensity;
+            weightedIntensity /= spectrumIndex.getTotalIntensity();
             values.put(mz0, weightedIntensity);
         }
 
@@ -147,15 +137,6 @@ public class FastXcorr {
     }
 
     private double getBinIntensity(Collection<Peak> peaks) {
-        switch (spectrumCorrectionMode) {
-            case average:
-                return getAverageIntensity(peaks);
-            default:
-                throw new UnsupportedOperationException("Spectrum correction mode " + spectrumCorrectionMode + " not implemented.");
-        }
-    }
-
-    private double getAverageIntensity(Collection<Peak> peaks) {
         if (peaks == null) {
             return 0.0;
         }
@@ -163,7 +144,6 @@ public class FastXcorr {
         for (Peak peak : peaks) {
             binIntensity += peak.intensity;
         }
-        binIntensity /= peaks.size();
         return binIntensity;
     }
 

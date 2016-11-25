@@ -166,13 +166,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
                             if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
 
-                                ArrayList<Integer> ionPossibleCharges;
-
-                                if (ionType == Ion.IonType.PRECURSOR_ION) {
-                                    ionPossibleCharges = precursorCharges;
-                                } else {
-                                    ionPossibleCharges = specificAnnotationSettings.getSelectedCharges();
-                                }
+                                ArrayList<Integer> ionPossibleCharges = (ionType == Ion.IonType.PRECURSOR_ION) ? precursorCharges : specificAnnotationSettings.getSelectedCharges();
 
                                 for (int charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {

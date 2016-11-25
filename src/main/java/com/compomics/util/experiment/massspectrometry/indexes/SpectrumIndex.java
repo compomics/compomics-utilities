@@ -46,6 +46,10 @@ public class SpectrumIndex implements UrParameter {
      * The lowest bin in index.
      */
     private Integer binMin;
+    /**
+     * The total intensity above the intensity threshold.
+     */
+    private Double totalIntensity;
 
     /**
      * Constructor for an empty index.
@@ -70,8 +74,10 @@ public class SpectrumIndex implements UrParameter {
         if (ppm) {
             scalingFactor = FastMath.log((1000000 - tolerance) / (1000000 + tolerance));
         }
+        totalIntensity = 0.0;
         for (Peak peak : peaks.values()) {
             if (intenstiyLimit == null || peak.intensity >= intenstiyLimit) {
+                totalIntensity += peak.intensity;
                 Integer bin = getBin(peak.mz);
                 if (binMax == null || bin > binMax) {
                     binMax = bin;
@@ -251,6 +257,15 @@ public class SpectrumIndex implements UrParameter {
      */
     public Integer getBinMin() {
         return binMin;
+    }
+
+    /**
+     * Returns the total intensity of the peaks above the intensity threshold.
+     * 
+     * @return the total intensity of the peaks above the intensity threshold
+     */
+    public Double getTotalIntensity() {
+        return totalIntensity;
     }
 
     @Override

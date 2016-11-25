@@ -116,10 +116,10 @@ public class Duration {
 
         if (restSeconds < 1) {
             result.append(restMilliseconds).append(" milliseconds");
-        } else if (restMinutes > 1) {
-            result.append(nSeconds).append(" seconds");
+        } else if (restMinutes < 1) {
+            result.append(Util.roundDouble(processingTimeSeconds, 1)).append(" seconds");
         } else {
-            result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");
+            result.append(Util.roundDouble(restSeconds, 0)).append(" seconds");
         }
 
         return result.toString();

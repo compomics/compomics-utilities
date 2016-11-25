@@ -92,8 +92,14 @@ public class AnnotationSettings implements Serializable {
      * If there are more than one matching peak for a given annotation setting
      * this value to true results in the most accurate peak being annotated,
      * while setting this to false annotates the most intense peak.
+     * 
+     * @deprecated use tiesResolution instead
      */
     private Boolean highResolutionAnnotation = true;
+    /**
+     * The method to use for resolution of ties when multiple peaks can be assigned to a fragment.
+     */
+    private SpectrumAnnotator.TiesResolution tiesResolution = SpectrumAnnotator.TiesResolution.mostAccurateMz;
 
     /**
      * Constructor.
@@ -563,6 +569,8 @@ public class AnnotationSettings implements Serializable {
      * Returns true if the peak annotation should be based on the most accurate
      * mz value, false bases the annotation on the most intense peak.
      *
+     * @deprecated use tiesResolution instead
+     * 
      * @return the highResolutionAnnotation
      */
     public boolean isHighResolutionAnnotation() {
@@ -576,12 +584,34 @@ public class AnnotationSettings implements Serializable {
      * Set if the peak annotation should be based on the most accurate mz value,
      * or on the most intense peak.
      *
+     * @deprecated use tiesResolution instead
+     * 
      * @param highResolutionAnnotation the highResolutionAnnotation to set
      */
     public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
         this.highResolutionAnnotation = highResolutionAnnotation;
     }
 
+    /**
+     * Returns the ties resolution method to use when multiple peaks can be assigned to an ion.
+     * 
+     * @return the ties resolution method to use
+     */
+    public SpectrumAnnotator.TiesResolution getTiesResolution() {
+        if (tiesResolution == null) { // backward compatibility
+            tiesResolution = highResolutionAnnotation ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
+        }
+        return tiesResolution;
+    }
+
+    /**
+     * Sets the ties resolution method to use when multiple peaks can be assigned to an ion.
+     * 
+     * @param tiesResolution the ties resolution method to use
+     */
+    public void setTiesResolution(SpectrumAnnotator.TiesResolution tiesResolution) {
+        this.tiesResolution = tiesResolution;
+    }
     /**
      * Clones the settings.
      *
@@ -598,7 +628,7 @@ public class AnnotationSettings implements Serializable {
         annotationSettings.setShowForwardIonDeNovoTags(showForwardIonDeNovoTags);
         annotationSettings.setShowRewindIonDeNovoTags(showRewindIonDeNovoTags);
         annotationSettings.setDeNovoCharge(deNovoCharge);
-        annotationSettings.setHighResolutionAnnotation(highResolutionAnnotation);
+        annotationSettings.setTiesResolution(getTiesResolution());
         annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
         annotationSettings.setReporterIons(getReporterIons());
         annotationSettings.setReporterIons(getRelatedIons());
@@ -650,7 +680,7 @@ public class AnnotationSettings implements Serializable {
         if (deNovoCharge != annotationSettings.getDeNovoCharge()) {
             return false;
         }
-        if (highResolutionAnnotation != annotationSettings.isHighResolutionAnnotation()) {
+        if (getTiesResolution() != annotationSettings.getTiesResolution()) {
             return false;
         }
         if (!neutralLossesAuto.equals(annotationSettings.areNeutralLossesSequenceAuto())) {

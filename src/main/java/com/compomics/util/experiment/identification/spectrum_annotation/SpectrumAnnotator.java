@@ -38,6 +38,22 @@ import java.util.Vector;
 public abstract class SpectrumAnnotator {
 
     /**
+     * Enum of the possibilities for ties resolution when multiple peaks can be
+     * annotated.
+     */
+    public enum TiesResolution {
+        /**
+         * The most intense peak is retained. If two peaks have the same
+         * intensity, the one with the most accurate m/z is retained.
+         */
+        mostIntense,
+        /**
+         * The peak of most accurate m/z is retained. If two peaks have the same
+         * error the most intense is retained.
+         */
+        mostAccurateMz;
+    }
+    /**
      * The precursor charge as deduced by the search engine.
      */
     protected int precursorCharge;
@@ -97,11 +113,9 @@ public abstract class SpectrumAnnotator {
      */
     protected double massShiftCTerm = 0;
     /**
-     * If there are more than one matching peak for a given annotation setting
-     * this value to true results in the most accurate peak being annotated,
-     * while setting this to false annotates the most intense peak.
+     * The methods to use to select the best peak when multiple are possible.
      */
-    protected boolean pickMostAccuratePeak = true;
+    protected TiesResolution tiesResolution;
     /**
      * If provided, the annotator will only look for the ions included in the
      * specific annotation settings.
@@ -144,42 +158,67 @@ public abstract class SpectrumAnnotator {
 
         // Get the peaks matching the desired m/z
         ArrayList<Peak> matchedPeaks = spectrumIndex.getMatchingPeaks(fragmentMz);
+        
+        if (matchedPeaks.isEmpty()) {
+            return null;
+        }
 
         // Select the most accurate or most intense according to the annotation settings
         IonMatch ionMatch = new IonMatch(null, theoreticIon, new Charge(Charge.PLUS, inspectedCharge));
+        Peak bestPeak = (matchedPeaks.size() == 1) ? matchedPeaks.get(0) : getBestPeak(matchedPeaks, ionMatch);
+        ionMatch.peak = bestPeak;
+        return ionMatch;
+    }
+
+    /**
+     * Returns the peak to retain of the matched peaks according to the ties
+     * resolution setting.
+     *
+     * @param matchedPeaks the peaks matched
+     * @param ionMatch an ion match with the ion to be matched
+     *
+     * @return the peak to retain
+     */
+    protected Peak getBestPeak(ArrayList<Peak> matchedPeaks, IonMatch ionMatch) {
         Peak bestPeak = null;
-        for (Peak peak : matchedPeaks) {
-            if (pickMostAccuratePeak) {
-                if (bestPeak == null) {
-                    bestPeak = peak;
-                } else {
-                    ionMatch.peak = bestPeak;
-                    double bestPeakError = Math.abs(ionMatch.getError(isPpm));
-                    ionMatch.peak = peak;
-                    double peakError = Math.abs(ionMatch.getError(isPpm));
-                    if (peakError < bestPeakError) {
+        switch (tiesResolution) {
+            case mostAccurateMz:
+                Double bestPeakError = null;
+                for (Peak peak : matchedPeaks) {
+                    if (bestPeak == null) {
                         bestPeak = peak;
+                        ionMatch.peak = peak;
+                        bestPeakError = Math.abs(ionMatch.getError(isPpm));
+                    } else {
+                        ionMatch.peak = peak;
+                        double peakError = Math.abs(ionMatch.getError(isPpm));
+                        if (peakError < bestPeakError) {
+                            bestPeak = peak;
+                            bestPeakError = peakError;
+                        } else if (peakError == bestPeakError && peak.intensity > bestPeak.intensity) {
+                            bestPeak = peak;
+                        }
                     }
                 }
-            } else if (bestPeak == null || peak.intensity > bestPeak.intensity) {
-                bestPeak = peak;
-            } else if (peak.intensity == bestPeak.intensity) {
-                ionMatch.peak = bestPeak;
-                double bestPeakError = Math.abs(ionMatch.getError(isPpm));
-                ionMatch.peak = peak;
-                double peakError = Math.abs(ionMatch.getError(isPpm));
-                if (peakError < bestPeakError) {
-                    bestPeak = peak;
+                return bestPeak;
+            case mostIntense:
+                for (Peak peak : matchedPeaks) {
+                    if (bestPeak == null || peak.intensity > bestPeak.intensity) {
+                        bestPeak = peak;
+                    } else if (peak.intensity == bestPeak.intensity) {
+                        ionMatch.peak = bestPeak;
+                        bestPeakError = Math.abs(ionMatch.getError(isPpm));
+                        ionMatch.peak = peak;
+                        double peakError = Math.abs(ionMatch.getError(isPpm));
+                        if (peakError < bestPeakError) {
+                            bestPeak = peak;
+                        }
+                    }
                 }
-            }
+                return bestPeak;
+            default:
+                throw new UnsupportedOperationException("Ties resolution method " + tiesResolution + " not implemented.");
         }
-
-        if (bestPeak != null) {
-            ionMatch.peak = bestPeak;
-            return ionMatch;
-        }
-
-        return null;
     }
 
     /**
@@ -212,13 +251,10 @@ public abstract class SpectrumAnnotator {
      * @param mzTolerance the new m/z tolerance (in m/z, Th)
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
-     * @param pickMostAccuratePeak if there are more than one matching peak for
-     * a given annotation setting this value to true results in the most
-     * accurate peak being annotated, while setting this to false annotates the
-     * most intense peak
+     * @param tiesResolution the method used to resolve ties
      */
-    protected void setMassTolerance(double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
-        if (mzTolerance != this.mzTolerance || pickMostAccuratePeak != this.pickMostAccuratePeak) {
+    protected void setMassTolerance(double mzTolerance, boolean isPpm, TiesResolution tiesResolution) {
+        if (mzTolerance != this.mzTolerance || tiesResolution != this.tiesResolution) {
 
             // Clear previous index
             spectrumIndex = null;
@@ -226,7 +262,7 @@ public abstract class SpectrumAnnotator {
             // Save new values
             this.mzTolerance = mzTolerance;
             this.isPpm = isPpm;
-            this.pickMostAccuratePeak = pickMostAccuratePeak;
+            this.tiesResolution = tiesResolution;
         }
     }
 

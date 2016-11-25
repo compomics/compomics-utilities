@@ -28,6 +28,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.DigestionPreferences.Specificity;
@@ -3053,7 +3054,7 @@ public class IdentificationParametersInputBean {
             Double value = new Double(arg);
             annotationSettings.setFragmentIonAccuracy(value);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) {
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) { //@TODO: extend the command line to support ties resolution settings
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
             Integer intValue = new Integer(arg);
             boolean value;
@@ -3067,7 +3068,8 @@ public class IdentificationParametersInputBean {
                 default:
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id + ": " + arg + ". 0 or 1 expected.");
             }
-            annotationSettings.setHighResolutionAnnotation(value);
+            SpectrumAnnotator.TiesResolution tiesResolution = value ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
+            annotationSettings.setTiesResolution(tiesResolution);
         }
 
         //////////////////////////////////

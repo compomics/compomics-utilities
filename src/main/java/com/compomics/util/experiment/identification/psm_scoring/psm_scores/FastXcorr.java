@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * Implementation of the XCorr according to
+ * Adaptation of the XCorr according to
  * https://www.ncbi.nlm.nih.gov/pubmed/18774840, as an extension of
  * https://www.ncbi.nlm.nih.gov/pubmed/24226387.
  *
@@ -23,21 +23,22 @@ import java.util.HashMap;
  */
 public class FastXcorr {
 
-    
     public enum SpectrumCorrectionMode {
         average, accurate;
     }
     /**
      * The peptide fragmentation model to use
      */
-    private PeptideFragmentationModel peptideFragmentationModel; 
-    
+    private PeptideFragmentationModel peptideFragmentationModel;
+
     private SpectrumCorrectionMode spectrumCorrectionMode;
 
     /**
      * Constructor
      *
      * @param peptideFragmentationModel the peptide fragmentation model to use
+     * @param spectrumCorrectionMode the type of spectrum correction used to
+     * estimate y'
      */
     public FastXcorr(PeptideFragmentationModel peptideFragmentationModel, SpectrumCorrectionMode spectrumCorrectionMode) {
         this.peptideFragmentationModel = peptideFragmentationModel;
@@ -120,27 +121,22 @@ public class FastXcorr {
                     annotationSettings.getFragmentIonAccuracy(), annotationSettings.isFragmentIonPpm());
             spectrum.addUrParam(spectrumIndex);
         }
+        
+        int spectrumWidth = spectrumIndex.getBinMax() - spectrumIndex.getBinMin();
 
         for (Peak peak : peakList.values()) {
             Double mz0 = peak.mz;
             Double intensity0 = peak.intensity;
-            int index = spectrumIndex.getBin(mz0);
+            int bin0 = spectrumIndex.getBin(mz0);
             double sum = 0.0;
-            for (int i = 1; i <= 75; i++) {
-                Integer tempIndex = index + i;
-                HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(tempIndex);
-                if (peaksInBin != null) {
-                    double binIntensity = getBinIntensity(peaksInBin.values());
-                    sum += binIntensity;
-                }
-                tempIndex = index - i;
-                peaksInBin = spectrumIndex.getPeaksInBin(tempIndex);
-                if (peaksInBin != null) {
+            for (int bin : spectrumIndex.getRawBins()) {
+                if (bin != bin0) {
+                    HashMap<Double, Peak> peaksInBin = spectrumIndex.getPeaksInBin(bin);
                     double binIntensity = getBinIntensity(peaksInBin.values());
                     sum += binIntensity;
                 }
             }
-            sum /= 150;
+            sum /= spectrumWidth;
             Double weightedIntensity = intensity0 - sum;
             values.put(mz0, weightedIntensity);
         }
@@ -149,7 +145,7 @@ public class FastXcorr {
         yPrime.setValues(values);
         return yPrime;
     }
-    
+
     private double getBinIntensity(Collection<Peak> peaks) {
         switch (spectrumCorrectionMode) {
             case average:

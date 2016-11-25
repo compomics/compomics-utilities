@@ -222,7 +222,7 @@ public class IonFactory {
             }
         }
 
-        // We will account for up to two neutral losses per ion maximum
+        // We account for up to two neutral losses per ion maximum
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = null;
         if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
             neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);

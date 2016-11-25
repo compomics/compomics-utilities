@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -241,7 +242,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
             }
         }
 
-        highResolutionBox.setSelected(annotationSettings.isHighResolutionAnnotation());
+        highResolutionBox.setSelected(annotationSettings.getTiesResolution() == SpectrumAnnotator.TiesResolution.mostAccurateMz); //@TODO: change for a drop down menu
     }
 
     /**
@@ -303,7 +304,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
 
         annotationSettings.setIntensityLimit(((Integer) intensitySpinner.getValue()) / 100.0);
         annotationSettings.setFragmentIonAccuracy((Double) accuracySpinner.getValue());
-        annotationSettings.setHighResolutionAnnotation(highResolutionBox.isSelected());
+        SpectrumAnnotator.TiesResolution tiesResolution = highResolutionBox.isSelected() ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
+        annotationSettings.setTiesResolution(tiesResolution); //@TODO: replace by a drop down menu
 
         for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
             if (neutralLossesMap.get(neutralLoss)) {

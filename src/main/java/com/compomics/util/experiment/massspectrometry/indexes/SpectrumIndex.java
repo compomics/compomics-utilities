@@ -4,6 +4,7 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -37,6 +38,14 @@ public class SpectrumIndex implements UrParameter {
      * The scaling factor used for the bins in ppm.
      */
     private double scalingFactor;
+    /**
+     * The highest bin in index.
+     */
+    private Integer binMax;
+    /**
+     * The lowest bin in index.
+     */
+    private Integer binMin;
 
     /**
      * Constructor for an empty index.
@@ -64,6 +73,12 @@ public class SpectrumIndex implements UrParameter {
         for (Peak peak : peaks.values()) {
             if (intenstiyLimit == null || peak.intensity >= intenstiyLimit) {
                 Integer bin = getBin(peak.mz);
+                if (binMax == null || bin > binMax) {
+                    binMax = bin;
+                }
+                if (binMin == null || bin < binMin) {
+                    binMin = bin;
+                }
                 HashMap<Double, Peak> peaksInBin = peaksMap.get(bin);
                 if (peaksInBin == null) {
                     peaksInBin = new HashMap<Double, Peak>(4);
@@ -177,12 +192,21 @@ public class SpectrumIndex implements UrParameter {
     }
 
     /**
-     * Returns the bins in the map.
+     * Returns the bins in the map as a list. The list is created every time me method is called.
      *
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
         return new ArrayList<Integer>(peaksMap.keySet());
+    }
+
+    /**
+     * Returns the bins in the map as collection of keys from the map.
+     *
+     * @return the bins in the map
+     */
+    public Set<Integer> getRawBins() {
+        return peaksMap.keySet();
     }
 
     /**
@@ -209,6 +233,24 @@ public class SpectrumIndex implements UrParameter {
         } else {
             return precursorTolerance * (0.5 + bin);
         }
+    }
+
+    /**
+     * Returns the highest bin.
+     * 
+     * @return binMax the highest bin
+     */
+    public Integer getBinMax() {
+        return binMax;
+    }
+
+    /**
+     * Returns the lowest bin.
+     * 
+     * @return binMin the lowest bin
+     */
+    public Integer getBinMin() {
+        return binMin;
     }
 
     @Override

@@ -23,14 +23,14 @@ public class NeutralLossesMap implements Serializable {
      *
      * @deprecated use String indexes instead
      */
-    private HashMap<NeutralLoss, Integer> bBoundaries = new HashMap<NeutralLoss, Integer>();
+    private HashMap<NeutralLoss, Integer> bBoundaries;
     /**
      * Map indicating for each neutral loss when they should start being
      * accounted for the reverse ions (y ions for instance).
      *
      * @deprecated use String indexes instead
      */
-    private HashMap<NeutralLoss, Integer> yBoundaries = new HashMap<NeutralLoss, Integer>();
+    private HashMap<NeutralLoss, Integer> yBoundaries;
     /**
      * Map indicating for each neutral loss when they should start being
      * accounted for the forward ions (b ions for instance).

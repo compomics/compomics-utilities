@@ -278,7 +278,7 @@ public class PsmScoringPreferences implements Serializable {
         if (spectrumMatchingScores == null) { // Backward compatibility
             spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(3);
             HashSet<Integer> scores = new HashSet<Integer>(3);
-            scores.add(PsmScore.fastXCorr.index);
+            scores.add(PsmScore.crossCorrelation.index);
             spectrumMatchingScores.put(Advocate.direcTag.getIndex(), scores);
             spectrumMatchingScores.put(Advocate.pepnovo.getIndex(), new HashSet<Integer>(scores));
             spectrumMatchingScores.put(Advocate.pNovo.getIndex(), new HashSet<Integer>(scores));

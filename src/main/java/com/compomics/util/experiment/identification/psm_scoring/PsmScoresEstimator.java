@@ -5,7 +5,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.Peptid
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAIntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAMS2MzFidelityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.ComplementarityScore;
-import com.compomics.util.experiment.identification.psm_scoring.psm_scores.FastXcorr;
+import com.compomics.util.experiment.identification.psm_scoring.psm_scores.HyperScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.IntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.MS2MzFidelityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.PrecursorAccuracy;
@@ -42,9 +42,9 @@ public class PsmScoresEstimator {
     private ComplementarityScore complementarityScore;
     
     /**
-     * Instance of the FastXcorr.
+     * Instance of the cross correlation score.
      */
-    private FastXcorr fastXcorr;
+    private HyperScore crossCorrelation;
     
     /**
      * Instance of the IntensityRankScore.
@@ -78,7 +78,7 @@ public class PsmScoresEstimator {
         aaIntensityRankScore = new AAIntensityRankScore();
         aaMS2MzFidelityScore = new AAMS2MzFidelityScore();
         complementarityScore = new ComplementarityScore();
-        fastXcorr = new FastXcorr(peptideFragmentationModel);
+        crossCorrelation = new HyperScore(peptideFragmentationModel);
         intensityRankScore = new IntensityRankScore();
         ms2MzFidelityScore = new MS2MzFidelityScore();
         precursorAccuracy = new PrecursorAccuracy();
@@ -166,8 +166,8 @@ public class PsmScoresEstimator {
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
                 return precursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
-            case fastXCorr:
-                return fastXcorr.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+            case crossCorrelation:
+                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case ms2_mz_fidelity:
                 return ms2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:

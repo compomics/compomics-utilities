@@ -20,7 +20,7 @@ public enum PsmScore {
      * https://www.ncbi.nlm.nih.gov/pubmed/18774840, as an extension of
      * https://www.ncbi.nlm.nih.gov/pubmed/24226387.
      */
-    fastXCorr(1, "XCorr", true, "Fast XCorr score"),
+    crossCorrelation(1, "cross correlation", true, "Simple cross correlation score"),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).

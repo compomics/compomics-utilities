@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation;
 
 /**
- * Enum for teh different peptide fragmentation models implemented.
+ * Enum for the different peptide fragmentation models implemented.
  *
  * @author Marc Vaudel
  */

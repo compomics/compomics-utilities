@@ -35,19 +35,22 @@ public class BasicMathFunctions {
      * @return the corresponding factorial
      */
     public static Long factorial(Integer n) {
-        if (n < 1) {
-            throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
-        } else if (n > 20) {
-            return null;
-        } else if (n <= 1) {
-            return (long) 1;
-        } else {
+        if (n == 0) {
+            return 0L;
+        } else if (n == 1) {
+            return 1L;
+        } else if (n <= 20) {
             Long result = factorialsCache.get(n);
             if (result == null) {
                 result = estimateFactorial(n);
             }
             return result;
+        } else if (n > 20) {
+            throw new IllegalArgumentException("Factorial only implemented for n <= 20. Reached the maximal capacoty of an integer.");
+        } else if (n < 1) {
+            throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
         }
+        throw new UnsupportedOperationException("Factorial not implemented for n=" + n + ".");
     }
 
     /**

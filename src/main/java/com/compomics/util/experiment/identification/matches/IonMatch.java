@@ -52,8 +52,8 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
-        double theoreticMass = ion.getTheoreticMass();
-        return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge.value);
+        return peak.mz - theoreticMz;
     }
 
     /**
@@ -65,9 +65,10 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError(int minIsotope, int maxIsotope) {
-        double theoreticMass = ion.getTheoreticMass();
-        theoreticMass -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1);
-        return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge.value);
+        double measuredMz = peak.mz;
+        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
+        return measuredMz - theoreticMz;
     }
 
     /**
@@ -76,7 +77,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+        double theoreticMz = ion.getTheoreticMz(charge.value);
         double measuredMz = peak.mz;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
@@ -90,7 +91,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError(int minIsotope, int maxIsotope) {
-        double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+        double theoreticMz = ion.getTheoreticMz(charge.value);
         double measuredMz = peak.mz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;

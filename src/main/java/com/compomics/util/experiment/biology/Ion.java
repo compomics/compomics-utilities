@@ -5,6 +5,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * This class models an ion.
@@ -87,6 +88,10 @@ public abstract class Ion extends ExperimentObject {
      */
     protected Double theoreticMass;
     /**
+     * The protonated mass over charge indexed by charge.
+     */
+    protected HashMap<Integer, Double> mzMap = new HashMap<Integer, Double>(1);
+    /**
      * The atomic composition of the ion.
      */
     protected AtomChain atomChain;
@@ -107,7 +112,7 @@ public abstract class Ion extends ExperimentObject {
      * corresponding
      */
     public abstract CvTerm getPrideCvTerm();
-    
+
     /**
      * Returns the CV term adapted to the fragment ion. Null if none
      * corresponding.
@@ -220,7 +225,7 @@ public abstract class Ion extends ExperimentObject {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
-        StringBuilder result = new StringBuilder(4*neutralLosses.size());
+        StringBuilder result = new StringBuilder(4 * neutralLosses.size());
         for (String name : names) {
             result.append("-").append(name);
         }
@@ -241,6 +246,25 @@ public abstract class Ion extends ExperimentObject {
     }
 
     /**
+     * Returns the m/z expected for this ion at the given charge.
+     *
+     * @param charge the charge of interest
+     *
+     * @return the m/z expected for this ion
+     */
+    public Double getTheoreticMz(Integer charge) {
+        Double mz = mzMap.get(charge);
+        if (mz == null) {
+            Double protonMass = ElementaryIon.proton.getTheoreticMass();
+            mz = getTheoreticMass() + protonMass;
+            if (charge > 1) {
+                mz = (mz + (charge - 1) * protonMass) / charge;
+            }
+        }
+        return mz;
+    }
+
+    /**
      * Returns the atomic composition.
      *
      * @return the atomic composition
@@ -256,16 +280,6 @@ public abstract class Ion extends ExperimentObject {
      */
     public void setAtomicComposition(AtomChain atomChain) {
         this.atomChain = atomChain;
-    }
-
-    /**
-     * Returns the theoretic m/z of an ion at a given charge state.
-     *
-     * @param chargeValue the value of the carried charge
-     * @return the theoretic m/z.
-     */
-    public double getTheoreticMz(int chargeValue) {
-        return (getTheoreticMass() + (chargeValue * ElementaryIon.proton.theoreticMass)) / chargeValue;
     }
 
     /**

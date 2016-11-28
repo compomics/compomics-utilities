@@ -152,12 +152,9 @@ public abstract class SpectrumAnnotator {
      *
      * @return the IonMatch between the ion and the peak
      */
-    protected IonMatch matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
+    protected IonMatch matchInSpectrum(Ion theoreticIon, Integer inspectedCharge) {
 
-        double fragmentMz = theoreticIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
-        if (inspectedCharge > 1) {
-            fragmentMz = (fragmentMz + (inspectedCharge - 1) * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
-        }
+        Double fragmentMz = theoreticIon.getTheoreticMz(inspectedCharge);
 
         // Get the peaks matching the desired m/z
         ArrayList<Peak> matchedPeaks = spectrumIndex.getMatchingPeaks(fragmentMz);
@@ -168,8 +165,7 @@ public abstract class SpectrumAnnotator {
 
         // Select the most accurate or most intense according to the annotation settings
         IonMatch ionMatch = new IonMatch(null, theoreticIon, new Charge(Charge.PLUS, inspectedCharge));
-        Peak bestPeak = (matchedPeaks.size() == 1) ? matchedPeaks.get(0) : getBestPeak(matchedPeaks, ionMatch);
-        ionMatch.peak = bestPeak;
+        ionMatch.peak = (matchedPeaks.size() == 1) ? matchedPeaks.get(0) : getBestPeak(matchedPeaks, ionMatch);
         return ionMatch;
     }
 

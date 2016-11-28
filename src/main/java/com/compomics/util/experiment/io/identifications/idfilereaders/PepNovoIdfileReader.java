@@ -62,7 +62,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * The mass to add to the C-terminal gap so that is corresponds to a peptide
      * fragment.
      */
-    public final double cTermCorrection = Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass() + 2 * ElementaryIon.proton.getTheoreticMass();
+    public final double cTermCorrection = Atom.O.getMonoisotopicMass() + 2 * Atom.H.getMonoisotopicMass() + ElementaryIon.proton.getTheoreticMass();
     /**
      * The mass to add to the N-terminal gap so that is corresponds to a peptide
      * fragment.

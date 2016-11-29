@@ -1414,7 +1414,7 @@ public class SpectrumPanel extends GraphicsPanel {
         for (IonMatch tempMatch : annotations) {
             if (tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
                     && !tempMatch.ion.hasNeutralLosses()
-                    && tempMatch.charge.value == deNovoCharge) {
+                    && tempMatch.charge == deNovoCharge) {
 
                 PeptideFragmentIon fragmentIon = (PeptideFragmentIon) tempMatch.ion;
 
@@ -1529,7 +1529,7 @@ public class SpectrumPanel extends GraphicsPanel {
         for (IonMatch ionMatch : annotations) {
             if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
                     && !ionMatch.ion.hasNeutralLosses()
-                    && ionMatch.charge.value == deNovoCharge) {
+                    && ionMatch.charge == deNovoCharge) {
 
                 TagFragmentIon fragmentIon = (TagFragmentIon) ionMatch.ion;
                 if (fragmentIon.getSubType() == forwardIon) {

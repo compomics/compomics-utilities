@@ -28,7 +28,7 @@ public class PrecursorAccuracy {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, int identificationCharge, Precursor precursor, boolean ppm, int minIsotope, int maxIsotope) {
-        IonMatch ionMatch = new IonMatch(new Peak(precursor.getMz(), 0), new PrecursorIon(peptide.getMass()), new Charge(Charge.PLUS, identificationCharge));
+        IonMatch ionMatch = new IonMatch(new Peak(precursor.getMz(), 0), new PrecursorIon(peptide.getMass()), identificationCharge);
         return Math.abs(ionMatch.getError(ppm, minIsotope, maxIsotope));
     }
 }

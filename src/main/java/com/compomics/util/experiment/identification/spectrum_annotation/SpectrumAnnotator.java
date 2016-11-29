@@ -164,7 +164,7 @@ public abstract class SpectrumAnnotator {
         }
 
         // Select the most accurate or most intense according to the annotation settings
-        IonMatch ionMatch = new IonMatch(null, theoreticIon, new Charge(Charge.PLUS, inspectedCharge));
+        IonMatch ionMatch = new IonMatch(null, theoreticIon, inspectedCharge);
         ionMatch.peak = (matchedPeaks.size() == 1) ? matchedPeaks.get(0) : getBestPeak(matchedPeaks, ionMatch);
         return ionMatch;
     }
@@ -610,7 +610,7 @@ public abstract class SpectrumAnnotator {
                             for (int charge : specificAnnotationSettings.getSelectedCharges()) {
                                 if (chargeValidated(ion, charge, specificAnnotationSettings.getPrecursorCharge())
                                         && lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
-                                    IonMatch ionMatch = new IonMatch(peak, ion, new Charge(Charge.PLUS, charge));
+                                    IonMatch ionMatch = new IonMatch(peak, ion, charge);
                                     if (Math.abs(ionMatch.getError(specificAnnotationSettings.isFragmentIonPpm(), minIsotopicCorrection, maxIsotopicCorrection)) <= specificAnnotationSettings.getFragmentIonAccuracy()) {
                                         result.add(ionMatch);
                                     }
@@ -692,7 +692,7 @@ public abstract class SpectrumAnnotator {
         double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {
             if (Math.abs(mz - targetMass) <= massTolerance) {
-                result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, new Charge(Charge.PLUS, 1)));
+                result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, charge));
             }
             if (mz > targetMass + massTolerance) {
                 break;

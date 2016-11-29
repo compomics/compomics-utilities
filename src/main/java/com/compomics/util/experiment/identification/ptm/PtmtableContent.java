@@ -247,7 +247,7 @@ public class PtmtableContent {
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                     PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                    for (Ion noModIon : fragmentIons.get(ionMatch.charge.value)) {
+                    for (Ion noModIon : fragmentIons.get(ionMatch.charge)) {
                         if (noModIon.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
                                 && peptideFragmentIon.isSameAs(noModIon)) {
                             PeptideFragmentIon noModFragmentIon = (PeptideFragmentIon) noModIon;

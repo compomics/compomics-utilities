@@ -10,7 +10,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 
 /**
- * This class will model the assignment of a peak to a theoretical ion.
+ * This class represents the assignment of a peak to a theoretical ion.
  *
  * @author Marc Vaudel
  */
@@ -29,21 +29,25 @@ public class IonMatch extends ExperimentObject {
      */
     public Ion ion;
     /**
-     * The supposed charge of the ion.
+     * The inferred charge of the ion.
      */
-    public Charge charge;
-
+    public Integer charge;
+    /**
+     * The sign of the charge.
+     */
+    public Integer chargeSign = Charge.PLUS;
+    
     /**
      * Constructor for an ion peak.
      *
      * @param aPeak the matched peak
      * @param anIon the corresponding type of ion
-     * @param aCharge the charge of the ion
+     * @param charge the inferred charge of the ion
      */
-    public IonMatch(Peak aPeak, Ion anIon, Charge aCharge) {
+    public IonMatch(Peak aPeak, Ion anIon, Integer charge) {
         peak = aPeak;
         ion = anIon;
-        charge = aCharge;
+        this.charge = charge;
     }
 
     /**
@@ -52,7 +56,7 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
-        double theoreticMz = ion.getTheoreticMz(charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge);
         return peak.mz - theoreticMz;
     }
 
@@ -65,9 +69,9 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError(int minIsotope, int maxIsotope) {
-        double theoreticMz = ion.getTheoreticMz(charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
-        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
+        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
         return measuredMz - theoreticMz;
     }
 
@@ -77,7 +81,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        double theoreticMz = ion.getTheoreticMz(charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
@@ -91,9 +95,9 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError(int minIsotope, int maxIsotope) {
-        double theoreticMz = ion.getTheoreticMz(charge.value);
+        double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
-        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
+        measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
 
@@ -109,7 +113,7 @@ public class IonMatch extends ExperimentObject {
      * and theoretic mass
      */
     public int getIsotopeNumber(int minIsotope, int maxIsotope) {
-        double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
+        double experimentalMass = peak.mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
         return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
     }
@@ -154,7 +158,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
-        return getPeakAnnotation(false, ion, charge);
+        return getPeakAnnotation(false, ion, new Charge(chargeSign, charge));
     }
 
     /**
@@ -362,7 +366,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation(boolean html) {
-        return getPeakAnnotation(html, ion, charge);
+        return getPeakAnnotation(html, ion, new Charge(chargeSign, charge));
     }
 
     /**
@@ -401,7 +405,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match charge
      */
     public CvTerm getChargePrideCvTerm() {
-        return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge.value + "");
+        return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge + "");
     }
 
     /**

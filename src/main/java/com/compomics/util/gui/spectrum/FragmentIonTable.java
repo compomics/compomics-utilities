@@ -481,7 +481,7 @@ public class FragmentIonTable extends JTable {
             for (IonMatch ionMatch : currentAnnotations) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
-                    int currentCharge = ionMatch.charge.value;
+                    int currentCharge = ionMatch.charge;
                     PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
                     int fragmentNumber = fragmentIon.getNumber();
@@ -657,7 +657,7 @@ public class FragmentIonTable extends JTable {
 
                     if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
-                        int currentCharge = ionMatch.charge.value;
+                        int currentCharge = ionMatch.charge;
                         double peakIntensity = ionMatch.peak.intensity;
 
                         if (allAnnotations.size() > 1) {

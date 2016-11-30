@@ -6,14 +6,13 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.predi
  * @author Marc Vaudel
  */
 public class UniformFragmentation {
-    
+
     /**
      * Returns a default intensity of 1.0.
-     * 
+     *
      * @return a default intensity of 1.0
      */
     public static Double getIntensity() {
         return 1.0;
     }
-
 }

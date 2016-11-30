@@ -43,5 +43,4 @@ public class FragmentItensityPredictor {
                 throw new UnsupportedOperationException("Fragmentation model " + peptideFragmentationModel + " not supported.");
         }
     }
-
 }

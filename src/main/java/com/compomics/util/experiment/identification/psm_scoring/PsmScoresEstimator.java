@@ -20,57 +20,51 @@ import com.compomics.util.preferences.IdentificationParameters;
  * @author Marc Vaudel
  */
 public class PsmScoresEstimator {
-    
+
     /**
-     * The peptide fragmentation model to use
+     * The peptide fragmentation model to use.
      */
     private PeptideFragmentationModel peptideFragmentationModel;
-    
     /**
      * Instance of the AAIntensityRankScore.
      */
     private AAIntensityRankScore aaIntensityRankScore;
-    
     /**
      * Instance of the AAMS2MzFidelityScore.
      */
     private AAMS2MzFidelityScore aaMS2MzFidelityScore;
-    
     /**
      * Instance of the ComplementarityScore.
      */
     private ComplementarityScore complementarityScore;
-    
     /**
      * Instance of the cross correlation score.
      */
     private HyperScore crossCorrelation;
-    
     /**
      * Instance of the IntensityRankScore.
      */
     private IntensityRankScore intensityRankScore;
-    
     /**
      * Instance of the MS2MzFidelityScore.
      */
     private MS2MzFidelityScore ms2MzFidelityScore;
-    
+
     /**
      * Instance of the PrecursorAccuracy.
      */
     private PrecursorAccuracy precursorAccuracy;
-    
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
     public PsmScoresEstimator(PeptideFragmentationModel peptideFragmentationModel) {
         this.peptideFragmentationModel = peptideFragmentationModel;
         instantiateScores();
     }
-    
+
     /**
      * Instantiates the different scores.
      */
@@ -83,9 +77,9 @@ public class PsmScoresEstimator {
         ms2MzFidelityScore = new MS2MzFidelityScore();
         precursorAccuracy = new PrecursorAccuracy();
     }
-    
+
     /**
-     * Constructor using a unifrom fragmentation.
+     * Constructor using a uniform fragmentation.
      */
     public PsmScoresEstimator() {
         this(PeptideFragmentationModel.uniform);
@@ -101,18 +95,21 @@ public class PsmScoresEstimator {
      * @param spectrum the spectrum of interest
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
-     * to this psm
+     * to this PSM
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
-     * 
+     *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
+    public double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) 
+            throws InterruptedException {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
-        double score = getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
+        double score = getScore(peptide, peptideCharge, spectrum, identificationParameters, 
+                specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
         if (psmScore.increasing) {
             return -score;
         }
@@ -128,16 +125,18 @@ public class PsmScoresEstimator {
      * @param spectrum the spectrum of interest
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
-     * to this psm
+     * to this PSM
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
-     * 
+     *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) throws InterruptedException {
+    public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) 
+            throws InterruptedException {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
@@ -156,32 +155,41 @@ public class PsmScoresEstimator {
      * @param psmScore the score to use
      *
      * @return the score of the match
-     * 
+     *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) throws InterruptedException {
+    public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) 
+            throws InterruptedException {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return precursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
+                return precursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), 
+                        identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), 
+                        identificationParameters.getSearchParameters().getMinIsotopicCorrection(), 
+                        identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
             case crossCorrelation:
-                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             case ms2_mz_fidelity:
-                return ms2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return ms2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:
-                return aaMS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return aaMS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             case intensity:
-                return intensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return intensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_intensity:
-                return aaIntensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return aaIntensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             case complementarity:
-                return complementarityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
+                return complementarityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                        specificAnnotationPreferences, peptideSpectrumAnnotator);
             default:
                 throw new UnsupportedOperationException("Score not implemented.");
         }
     }
-    
-
 }

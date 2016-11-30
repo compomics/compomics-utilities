@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.spectrum_annotation.spectrum
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
-import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.linear_regression.LinearRegression;
 import com.compomics.util.math.statistics.linear_regression.RegressionStatistics;
@@ -21,12 +20,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.apache.commons.math.util.FastMath;
-import org.apache.commons.math.util.MathUtils;
 
 /**
  * Simple cross correlation score.
@@ -36,7 +33,7 @@ import org.apache.commons.math.util.MathUtils;
 public class HyperScore {
 
     /**
-     * The peptide fragmentation model to use
+     * The peptide fragmentation model to use.
      */
     private PeptideFragmentationModel peptideFragmentationModel;
 
@@ -45,15 +42,15 @@ public class HyperScore {
     private String fittingFile = "C:\\Projects\\scores\\comparison xtandem\\fitting_values.txt";
 
     private BufferedWriter bwFitting;
-    
+
     private HashMap<Double, Integer> as = new HashMap<Double, Integer>();
-    
+
     private HashMap<Double, Integer> bs = new HashMap<Double, Integer>();
-    
+
     private int nAbInCache = 0;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
@@ -69,7 +66,7 @@ public class HyperScore {
     }
 
     /**
-     * Constructor using a unifrom fragmentation.
+     * Constructor using a uniform fragmentation.
      */
     public HyperScore() {
         this(PeptideFragmentationModel.uniform);
@@ -84,7 +81,7 @@ public class HyperScore {
      * @param spectrum the spectrum of interest
      * @param annotationSettings the general spectrum annotation settings
      * @param specificAnnotationSettings the annotation settings specific to
-     * this psm
+     * this PSM
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
@@ -245,7 +242,7 @@ public class HyperScore {
         bwFitting.newLine();
         return getInterpolation(hyperScores, regressionStatistics.a, regressionStatistics.b);
     }
-    
+
     public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, double a, double b) {
         HashMap<Double, Double> result = new HashMap<Double, Double>();
         for (Double hyperScore : hyperScores) {
@@ -261,22 +258,22 @@ public class HyperScore {
     public void close() throws IOException {
         bwFitting.close();
     }
-    
+
     public double getMendianA() {
         return getMedianValue(as, nAbInCache);
     }
-    
+
     public double getMendianB() {
         return getMedianValue(bs, nAbInCache);
     }
-    
+
     public static Double getMedianValue(HashMap<Double, Integer> histogram, int nValues) {
         ArrayList<Double> values = new ArrayList<Double>(histogram.keySet());
         Collections.sort(values);
         int currentSum = 0;
         int previousSum = 0;
         Double previousValue = 0.0;
-        double limit = ((double) nValues)/2;
+        double limit = ((double) nValues) / 2;
         for (Double value : values) {
             Integer currentOccurence = histogram.get(value);
             currentSum += currentOccurence;
@@ -289,5 +286,4 @@ public class HyperScore {
         }
         throw new IllegalArgumentException("Reached the end of the histogram before reaching the median.");
     }
-
 }

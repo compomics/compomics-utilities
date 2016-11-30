@@ -7,8 +7,8 @@ package com.compomics.util.experiment.identification.peptide_fragmentation;
  */
 public enum PeptideFragmentationModel {
 
-    uniform(0,"uniform", "Returns one for every peak."), 
-    sequest(1,"sequest", "Original sequest CID intensity model.");
+    uniform(0, "uniform", "Returns one for every peak."),
+    sequest(1, "sequest", "Original sequest CID intensity model.");
 
     /**
      * The index of the option.
@@ -22,10 +22,10 @@ public enum PeptideFragmentationModel {
      * The description of the option.
      */
     public final String description;
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param index the index of the option
      * @param name the name of the option
      * @param description the description of the option
@@ -35,5 +35,4 @@ public enum PeptideFragmentationModel {
         this.name = name;
         this.description = description;
     }
-
 }

@@ -10,22 +10,21 @@ public enum PsmScore {
     /**
      * The native score of the search engine.
      */
-    native_score(-1, "native", false, "The algorithm native score"),
+    native_score(-1, "Native", false, "The algorithm native score"),
     /**
      * The precursor accuracy.
      */
-    precursor_accuracy(0, "precursor accuracy", false, "Precursor accuracy score"),
+    precursor_accuracy(0, "Precursor accuracy", false, "Precursor accuracy score"),
     /**
-     * Implementation of the XCorr according to
-     * https://www.ncbi.nlm.nih.gov/pubmed/18774840, as an extension of
-     * https://www.ncbi.nlm.nih.gov/pubmed/24226387.
+     * Hyperscore as variation of the score implemented in X!Tandem www.thegpm.org/tandem.
+     * See com.compomics.util.experiment.identification.psm_scoring.psm_scores.HyperScore for details.
      */
-    crossCorrelation(1, "cross correlation", true, "Simple cross correlation score"),
+    hyperScore(1, "Hyperscore", true, "Hyperscore as variation of the score implemented in X!Tandem."),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    ms2_mz_fidelity(2, "fragment ion mz fildelity", false, "Fragment ion m/z fidelity score"),
+    ms2_mz_fidelity(2, "Fragment ion mz fildelity", false, "Fragment ion m/z fidelity score"),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
@@ -35,7 +34,7 @@ public enum PsmScore {
      * The intensity sub-score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    intensity(4, "intensity", true, "Intensity score"),
+    intensity(4, "Intensity", true, "Intensity score"),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
@@ -45,12 +44,12 @@ public enum PsmScore {
      * The complementarity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    complementarity(6, "complementarity", true, "Ion complementarity score");
+    complementarity(6, "Complementarity", true, "Ion complementarity score");
 
     /**
      * The index of the score of interest.
      */
-    public final int index;
+    public final Integer index;
     /**
      * The name of the score.
      */

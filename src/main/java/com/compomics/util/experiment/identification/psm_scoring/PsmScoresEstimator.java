@@ -170,7 +170,7 @@ public class PsmScoresEstimator {
                         identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), 
                         identificationParameters.getSearchParameters().getMinIsotopicCorrection(), 
                         identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
-            case crossCorrelation:
+            case hyperScore:
                 return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
                         specificAnnotationPreferences, peptideSpectrumAnnotator);
             case ms2_mz_fidelity:

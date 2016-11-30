@@ -13,6 +13,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.math.HistogramUtils;
 import com.compomics.util.math.statistics.linear_regression.LinearRegression;
 import com.compomics.util.math.statistics.linear_regression.RegressionStatistics;
 import java.io.BufferedWriter;
@@ -26,7 +27,12 @@ import java.util.HashSet;
 import org.apache.commons.math.util.FastMath;
 
 /**
- * Simple cross correlation score.
+ * Hyperscore as variation of the score implemented in X!Tandem www.thegpm.org/tandem. 
+ * 
+ * The original X!Tandem score at the link above is governed by the Artistic license (https://opensource.org/licenses/artistic-license-1.0).
+ * X! tandem is a component of the X! proteomics software development project. Copyright Ronald C Beavis, all rights reserved.
+ * 
+ * The code below does not use or reuse any of the X!Tandem code, but the scoring approach is the same. No copyright infringement intended.
  *
  * @author Marc Vaudel
  */
@@ -134,11 +140,9 @@ public class HyperScore {
         HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
-        int nValid = 0;
         for (Double score : hyperScores) {
             Integer intValue = score.intValue();
             if (intValue > 0) {
-                nValid++;
                 Integer nScores = histogram.get(intValue);
                 if (nScores == null) {
                     nScores = 1;
@@ -243,16 +247,25 @@ public class HyperScore {
         return getInterpolation(hyperScores, regressionStatistics.a, regressionStatistics.b);
     }
 
-    public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, double a, double b) {
+    public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, Double a, Double b) {
         HashMap<Double, Double> result = new HashMap<Double, Double>();
         for (Double hyperScore : hyperScores) {
-            if (hyperScore > 0 && !result.containsKey(hyperScore)) {
+            if (!result.containsKey(hyperScore)) {
+                if (hyperScore > 0) {
                 Double logScore = FastMath.log10(hyperScore);
-                Double eValue = b + a * logScore;
+                Double eValue = getInterpolation(logScore, a, b);
                 result.put(hyperScore, eValue);
+                } else {
+                    Double eValue = new Double(hyperScores.size());
+                    result.put(hyperScore, eValue);
+                }
             }
         }
         return result;
+    }
+    
+    public static Double getInterpolation(Double logScore, Double a, Double b) {
+        return b + a * logScore;
     }
 
     public void close() throws IOException {
@@ -260,30 +273,20 @@ public class HyperScore {
     }
 
     public double getMendianA() {
-        return getMedianValue(as, nAbInCache);
+        return HistogramUtils.getMedianValue(as, nAbInCache);
     }
 
-    public double getMendianB() {
-        return getMedianValue(bs, nAbInCache);
+    public Double getMendianB() {
+        return HistogramUtils.getMedianValue(bs, nAbInCache);
     }
 
-    public static Double getMedianValue(HashMap<Double, Integer> histogram, int nValues) {
-        ArrayList<Double> values = new ArrayList<Double>(histogram.keySet());
-        Collections.sort(values);
-        int currentSum = 0;
-        int previousSum = 0;
-        Double previousValue = 0.0;
-        double limit = ((double) nValues) / 2;
-        for (Double value : values) {
-            Integer currentOccurence = histogram.get(value);
-            currentSum += currentOccurence;
-            if (currentSum >= limit) {
-                if (previousSum + 1 > limit && previousSum > 0) {
-                    return (previousValue + value) / 2;
-                }
-                return value;
-            }
-        }
-        throw new IllegalArgumentException("Reached the end of the histogram before reaching the median.");
+    public HashMap<Double, Integer> getAs() {
+        return as;
     }
+
+    public HashMap<Double, Integer> getBs() {
+        return bs;
+    }
+    
+    
 }

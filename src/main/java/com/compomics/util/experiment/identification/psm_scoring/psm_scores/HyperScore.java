@@ -42,18 +42,14 @@ public class HyperScore {
      * The peptide fragmentation model to use.
      */
     private PeptideFragmentationModel peptideFragmentationModel;
-
-    private String histogramFile = "C:\\Projects\\scores\\comparison xtandem\\debug_histogram.txt";
-    private String valuesFile = "C:\\Projects\\scores\\comparison xtandem\\debug_values.txt";
-    private String fittingFile = "C:\\Projects\\scores\\comparison xtandem\\fitting_values.txt";
-
-    private BufferedWriter bwFitting;
-
+    /**
+     * Histogram of the values found for a in the fitting.
+     */
     private HashMap<Double, Integer> as = new HashMap<Double, Integer>();
-
+    /**
+     * Histogram of the values found for b in the fitting.
+     */
     private HashMap<Double, Integer> bs = new HashMap<Double, Integer>();
-
-    private int nAbInCache = 0;
 
     /**
      * Constructor.
@@ -62,13 +58,6 @@ public class HyperScore {
      */
     public HyperScore(PeptideFragmentationModel peptideFragmentationModel) {
         this.peptideFragmentationModel = peptideFragmentationModel;
-        try {
-            bwFitting = new BufferedWriter(new FileWriter(fittingFile));
-            bwFitting.write("a\tb");
-            bwFitting.newLine();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -79,9 +68,7 @@ public class HyperScore {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. The mass interquartile distance of the fragment ion mass
-     * error is used as m/z fidelity score.
+     * Returns the hyperscore.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -136,7 +123,14 @@ public class HyperScore {
         return xCorr * forwardFactorial * rewindFactorial;
     }
 
-    public HashMap<Double, Double> getEValueHistogram(ArrayList<Double> hyperScores, boolean debug) throws IOException {
+    /**
+     * Returns the e-value corresponding to a list of scores in a map. If not enough scores are present or if they are not spread the method returns null.
+     * 
+     * @param hyperScores the different scores
+     * 
+     * @return the e-values corresponding to the given scores
+     */
+    public HashMap<Double, Double> getEValueHistogram(ArrayList<Double> hyperScores) {
         HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
@@ -157,16 +151,6 @@ public class HyperScore {
                     minScore = score;
                 }
             }
-        }
-        if (debug) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(valuesFile)));
-            bw.write("X\tY");
-            bw.newLine();
-            for (Integer score : histogram.keySet()) {
-                bw.write(score + "\t" + histogram.get(score));
-                bw.newLine();
-            }
-            bw.close();
         }
         Integer lowestBin = minScore.intValue();
         Integer highestBin = maxScore.intValue();
@@ -214,18 +198,6 @@ public class HyperScore {
         if (evalueFunctionX.size() <= 1) {
             return null;
         }
-        if (debug) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(histogramFile)));
-            bw.write("X\tY");
-            bw.newLine();
-            for (int i = 0; i < evalueFunctionX.size(); i++) {
-                Double x = evalueFunctionX.get(i);
-                Double y = evalueFunctionY.get(i);
-                bw.write(x + "\t" + y);
-                bw.newLine();
-            }
-            bw.close();
-        }
         RegressionStatistics regressionStatistics = LinearRegression.getSimpleLinearRegression(evalueFunctionX, evalueFunctionY);
         Double roundedA = Util.roundDouble(regressionStatistics.a, 2);
         Double roundedB = Util.roundDouble(regressionStatistics.b, 2);
@@ -241,12 +213,18 @@ public class HyperScore {
         } else {
             bs.put(roundedB, nB + 1);
         }
-        nAbInCache++;
-        bwFitting.write(regressionStatistics.a + "\t" + regressionStatistics.b);
-        bwFitting.newLine();
         return getInterpolation(hyperScores, regressionStatistics.a, regressionStatistics.b);
     }
 
+    /**
+     * Returns the interpolation of a list of hyperscores using a linear interpolation of the form result = a * log(score) + b. If the score is null, returns the number of hyperscores. The value at every score is returned in a map.
+     * 
+     * @param hyperScores a list of hyperscores
+     * @param a the slope of the interpolation
+     * @param b the offset of the interpolation
+     * 
+     * @return the interpolation for every score in a map.
+     */
     public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, Double a, Double b) {
         HashMap<Double, Double> result = new HashMap<Double, Double>();
         for (Double hyperScore : hyperScores) {
@@ -264,26 +242,57 @@ public class HyperScore {
         return result;
     }
     
+    /**
+     * Returns the interpolated value for a given score in log. result = a * logScore + b.
+     * 
+     * @param logScore the log of the score
+     * @param a the slope of the interpolation
+     * @param b the offset of the interpolation
+     * 
+     * @return the interpolated value
+     */
     public static Double getInterpolation(Double logScore, Double a, Double b) {
         return b + a * logScore;
     }
 
-    public void close() throws IOException {
-        bwFitting.close();
+    /**
+     * Returns the rounded median of the as found in the previously interpolated scores. Null if none found.
+     * 
+     * @return the rounded median of the as found in the previously interpolated scores
+     */
+    public Double getMendianA() {
+        if (as.isEmpty()) {
+            return null;
+        }
+        return HistogramUtils.getMedianValue(as);
     }
 
-    public double getMendianA() {
-        return HistogramUtils.getMedianValue(as, nAbInCache);
-    }
-
+    /**
+     * Returns the rounded median of the bs found in the previously interpolated scores. Null if none found.
+     * 
+     * @return the rounded median of the bs found in the previously interpolated scores
+     */
     public Double getMendianB() {
-        return HistogramUtils.getMedianValue(bs, nAbInCache);
+        if (bs.isEmpty()) {
+            return null;
+        }
+        return HistogramUtils.getMedianValue(bs);
     }
 
+    /**
+     * Returns a histogram of the as found in the previously interpolated scores.
+     * 
+     * @return a histogram of the as found in the previously interpolated scores
+     */
     public HashMap<Double, Integer> getAs() {
         return as;
     }
 
+    /**
+     * Returns a histogram of the bs found in the previously interpolated scores.
+     * 
+     * @return a histogram of the bs found in the previously interpolated scores
+     */
     public HashMap<Double, Integer> getBs() {
         return bs;
     }

@@ -150,6 +150,10 @@ public class Advocate {
      */
     public static final Advocate proteinPilot = new Advocate(31, "ProteinPilot Software", AdvocateType.search_engine, new Color(75, 0, 130));
     /**
+     * The Onyase engine script.
+     */
+    public static final Advocate onyaseEngine = new Advocate(32, "Onyase Engine", AdvocateType.search_engine);
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
@@ -262,6 +266,7 @@ public class Advocate {
         return color;
     }
 
+    @Override
     public String toString() {
         return name;
     }
@@ -272,23 +277,26 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[33 + userAdvocates.size()];
+        Advocate[] result = new Advocate[34 + userAdvocates.size()];
         int i = 0;
-        result[i] = mascot;
-        result[++i] = omssa;
+        result[i] = peptideShaker;
+        result[++i] = onyaseEngine;
         result[++i] = xtandem;
-        result[++i] = pepnovo;
-        result[++i] = andromeda;
-        result[++i] = msAmanda;
-        result[++i] = peptideShaker;
-        result[++i] = msgf;
-        result[++i] = direcTag;
-        result[++i] = byonic;
+        result[++i] = myriMatch;
         result[++i] = comet;
+        result[++i] = msAmanda;
+        result[++i] = andromeda;
+        result[++i] = omssa;
+        result[++i] = msgf;
+        result[++i] = mascot;
+        result[++i] = direcTag;
+        result[++i] = novor;
+        result[++i] = genericMzId;
+        result[++i] = pepnovo;
+        result[++i] = byonic;
         result[++i] = tide;
         result[++i] = proteinLynx;
         result[++i] = msFit;
-        result[++i] = myriMatch;
         result[++i] = peaks;
         result[++i] = phenyx;
         result[++i] = proFound;
@@ -303,10 +311,8 @@ public class Advocate {
         result[++i] = zCore;
         result[++i] = percolator;
         result[++i] = pNovo;
-        result[++i] = novor;
         result[++i] = morpheus;
         result[++i] = proteinPilot;
-        result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
@@ -450,8 +456,8 @@ public class Advocate {
         if (advocateColorMap == null) {
             advocateColorMap = new HashMap<Integer, Color>();
 
-            for (Advocate tempAdvoate : values()) {
-                advocateColorMap.put(tempAdvoate.getIndex(), tempAdvoate.getColor());
+            for (Advocate advocate : values()) {
+                advocateColorMap.put(advocate.getIndex(), advocate.getColor());
             }
         }
 

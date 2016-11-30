@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * This interface will retrieve spectrum matches from any identification file.
+ * Generic interface for the parser of a file containing PSMs.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes

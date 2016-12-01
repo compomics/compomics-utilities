@@ -153,11 +153,11 @@ public class Tag extends ExperimentObject {
      * @return The tag as intelligible sequence for display.
      */
     public String asSequence() {
-        String result = "";
+        StringBuilder result = new StringBuilder(content.size() * 4);
         for (TagComponent tagComponent : content) {
-            result += tagComponent.asSequence();
+            result.append(tagComponent.asSequence());
         }
-        return result;
+        return result.toString();
     }
 
     /**

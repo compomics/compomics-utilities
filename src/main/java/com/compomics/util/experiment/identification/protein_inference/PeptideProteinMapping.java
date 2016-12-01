@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -183,15 +184,16 @@ public class PeptideProteinMapping {
      * Aggregates the given mapping into a list of peptides.
      *
      * @param peptideProteinMappings a list of peptides to protein mappings
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a list of peptides
      */
-    public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
+    public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingPreferences sequenceMatchingPreferences) {
         HashMap<String, Peptide> peptidesMap = new HashMap<String, Peptide>(peptideProteinMappings.size());
         HashMap<String, HashSet<String>> proteinsMap = new HashMap<String, HashSet<String>>(peptideProteinMappings.size());
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             Peptide tempPeptide = new Peptide(peptideProteinMapping.getPeptideSequence(), peptideProteinMapping.getModificationMatches());
-            String peptideKey = tempPeptide.getKey();
+            String peptideKey = tempPeptide.getMatchingKey(sequenceMatchingPreferences);
             Peptide peptide = peptidesMap.get(peptideKey);
             if (peptide == null) {
                 tempPeptide.addVariantMatches(peptideProteinMapping.getVariantMatches());

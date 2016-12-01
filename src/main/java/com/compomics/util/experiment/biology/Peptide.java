@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 /**
  * This class models a peptide.
@@ -34,6 +35,14 @@ public class Peptide extends ExperimentObject {
      */
     private String sequence;
     /**
+     * The peptide key.
+     */
+    private String key;
+    /**
+     * The peptide matching key.
+     */
+    private String matchingKey;
+    /**
      * The peptide sequence with the modified residues indicated in lower case.
      */
     private String sequenceWithLowerCasePtms;
@@ -45,6 +54,10 @@ public class Peptide extends ExperimentObject {
      * The parent proteins.
      */
     private ArrayList<String> parentProteins = null;
+    /**
+     * Semaphore for the parent proteins.
+     */
+    static Semaphore proteinsMutex;
     /**
      * The modifications carried by the peptide.
      */
@@ -88,6 +101,7 @@ public class Peptide extends ExperimentObject {
         if (sanityCheck) {
             sanityCheck();
         }
+        proteinsMutex = new Semaphore(1);
     }
 
     /**
@@ -133,6 +147,7 @@ public class Peptide extends ExperimentObject {
         if (sanityCheck) {
             sanityCheck();
         }
+        proteinsMutex = new Semaphore(1);
     }
 
     /**
@@ -164,6 +179,8 @@ public class Peptide extends ExperimentObject {
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         this.modifications = modificationMatches;
         mass = null;
+        key = null;
+        matchingKey = null;
     }
 
     /**
@@ -172,6 +189,8 @@ public class Peptide extends ExperimentObject {
     public void clearModificationMatches() {
         modifications.clear();
         mass = null;
+        key = null;
+        matchingKey = null;
     }
 
     /**
@@ -185,6 +204,8 @@ public class Peptide extends ExperimentObject {
         }
         modifications.add(modificationMatch);
         mass = null;
+        key = null;
+        matchingKey = null;
     }
 
     /**
@@ -437,8 +458,25 @@ public class Peptide extends ExperimentObject {
         return parentProteins;
     }
 
-    public synchronized void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    /**
+     * Maps the peptides to the proteins in the sequence database loaded in the
+     * sequence factory.
+     *
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param peptideMapper the peptide mapper to use
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the dasta file
+     * @throws InterruptedException exception thrown whenever a threading error
+     * occurred while mapping the peptide
+     * @throws SQLException exception thrown whenever an error occurred while
+     * querying the protein tree database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting an object from the protein tree database
+     */
+    public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
+        proteinsMutex.acquire();
         if (parentProteins == null) {
             ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
@@ -448,35 +486,7 @@ public class Peptide extends ExperimentObject {
             parentProteins = new ArrayList<String>(accessionsFound);
             Collections.sort(parentProteins);
         }
-    }
-
-    /**
-     * Saves the peptide protein mapping in the parentProteins list.
-     *
-     * @param proteinMapping the protein mapping for this peptide
-     * @param overwrite boolean indicating whether previous mapping should be
-     * overwritten
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     */
-    private synchronized void saveProteins(HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping, boolean overwrite, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        if (overwrite || parentProteins == null) {
-
-            parentProteins = new ArrayList<String>();
-            for (String peptideSequence : proteinMapping.keySet()) {
-                double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
-                if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                    for (String accession : subMapping.keySet()) {
-                        if (!parentProteins.contains(accession)) {
-                            parentProteins.add(accession);
-                        }
-                    }
-                }
-            }
-
-            Collections.sort(parentProteins);
-        }
-
+        proteinsMutex.release();
     }
 
     /**
@@ -489,13 +499,22 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Sets the parent proteins.
+     * Sets the parent proteins. To clear the parent proteins, please use
+     * clearParentProteins().
      *
      * @param parentProteins the parent proteins as list, cannot be null or
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
         this.parentProteins = parentProteins;
+    }
+
+    /**
+     * Clears the parent proteins list.
+     */
+    public void clearParentProteins() {
+        parentProteins = null;
+        proteinsMutex = new Semaphore(1);
     }
 
     /**
@@ -509,8 +528,11 @@ public class Peptide extends ExperimentObject {
      * @return a key unique to the given matching type
      */
     public String getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences) {
-        String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
-        return getKey(matchingSequence, modifications);
+        if (matchingKey == null) {
+            String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
+            matchingKey = getKey(matchingSequence, modifications);
+        }
+        return matchingKey;
     }
 
     /**
@@ -525,7 +547,10 @@ public class Peptide extends ExperimentObject {
      * @return the key of the peptide
      */
     public String getKey() {
-        return getKey(sequence, modifications);
+        if (key == null) {
+            key = getKey(sequence, modifications);
+        }
+        return key;
     }
 
     /**

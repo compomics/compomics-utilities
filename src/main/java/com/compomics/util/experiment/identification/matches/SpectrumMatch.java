@@ -366,7 +366,7 @@ public class SpectrumMatch extends IdentificationMatch {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         ArrayList<PeptideProteinMapping> proteinMapping
                                 = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
-                        for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping)) {
+                        for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping, sequenceMatchingPreferences)) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
                             peptideAssumption.setRawScore(score);

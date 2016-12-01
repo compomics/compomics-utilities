@@ -238,25 +238,22 @@ public class ProteinMatch extends IdentificationMatch {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public static String getProteinMatchKey(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        ArrayList<String> accessions = new ArrayList<String>(),
-                originalAccessions = peptide.getParentProteinsNoRemapping();
-        if (originalAccessions == null) {
+
+        ArrayList<String> accessions = peptide.getParentProteinsNoRemapping();
+        if (accessions == null) {
             throw new IllegalArgumentException("Proteins not set for peptide " + peptide.getKey() + ".");
         }
-        for (String protein : originalAccessions) {
-            if (!accessions.contains(protein)) {
-                accessions.add(protein);
-            }
-        }
+        HashSet<String> uniqueAccessions = new HashSet<String>(accessions);
+        accessions = new ArrayList<String>(uniqueAccessions);
         Collections.sort(accessions);
-        String result = "";
+        StringBuilder key = new StringBuilder(accessions.size() * 6);
         for (String accession : accessions) {
-            if (!result.equals("")) {
-                result += PROTEIN_KEY_SPLITTER;
+            if (key.length() > 0) {
+                key.append(PROTEIN_KEY_SPLITTER);
             }
-            result += accession;
+            key.append(accession);
         }
-        return result.trim();
+        return key.toString();
     }
 
     /**
@@ -304,7 +301,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param sharedAccessions the accessions of the shared protein match
      * @param uniqueKeys the keys of the unique protein match
-     * 
+     *
      * @return a boolean indicating whether a protein match contains another set
      * of matches.
      */
@@ -394,7 +391,7 @@ public class ProteinMatch extends IdentificationMatch {
      * Returns a list of accessions from the given key.
      *
      * @param groupKey the given key
-     * 
+     *
      * @return the corresponding list of accessions
      */
     public static String[] getAccessions(String groupKey) {
@@ -420,7 +417,7 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return result;
     }
-    
+
     /**
      * Clears the cache.
      */

@@ -15,6 +15,10 @@ public class MassGap extends ExperimentObject implements TagComponent {
      * The value of the mass gap.
      */
     private double value;
+    /**
+     * The value as sequence.
+     */
+    private String sequence = null;
 
     /**
      * Constructor.
@@ -24,19 +28,26 @@ public class MassGap extends ExperimentObject implements TagComponent {
     public MassGap(double value) {
         this.value = value;
     }
-    
+
     /**
      * Sets the mass of the gap.
-     * 
+     *
      * @param value the mass of the gap
      */
     public void setMass(double value) {
         this.value = value;
+        sequence = null;
     }
 
     @Override
     public String asSequence() {
-        return "<" + value + ">";
+        if (sequence == null) {
+            String valueAsString = value + "";
+            StringBuilder stringBuilder = new StringBuilder(valueAsString.length() + 2);
+            stringBuilder.append('<').append(valueAsString).append('>');
+            sequence = stringBuilder.toString();
+        }
+        return sequence;
     }
 
     @Override

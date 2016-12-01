@@ -1615,9 +1615,6 @@ public abstract class Identification extends ExperimentObject {
                 peptide.getParentProteins(sequenceMatchingPreferences);
             }
             String peptideKey = peptide.getMatchingKey(sequenceMatchingPreferences);
-            if (peptideKey.equals("KIFVGGIKEDTEEHHIR")) {
-                int debug = 1;
-            }
             PeptideMatch peptideMatch;
 
             if (peptideIdentification.contains(peptideKey)) {

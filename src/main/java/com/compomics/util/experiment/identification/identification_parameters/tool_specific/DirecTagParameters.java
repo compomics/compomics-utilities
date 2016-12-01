@@ -27,12 +27,12 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * in descending order of intensity, and then picking peaks from that list
      * until the cumulative ion current of the picked peaks divided by the total
      * ion current (TIC) is greater than or equal to this parameter. Lower
-     * percentages mean that less of the spectrums total intensity will be
+     * percentages mean that less of the spectra total intensity will be
      * allowed to pass through preprocessing. See the section on Advanced Usage
      * for tips on how to use this parameter optimally.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private double ticCutoffPercentage = 85;
+    private double ticCutoffPercentage = 100;
     /**
      * Another way of increasing the effectiveness of the MVH scoring algorithm
      * when used for tagging is to set an upper bound on the number of peaks in
@@ -65,13 +65,13 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * limit of adjustment allowable from the original precursor mass, measured
      * in Daltons. (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private double minPrecursorAdjustment = -2.5;
+    private double minPrecursorAdjustment = -0.5;
     /**
      * When adjusting the precursor mass, this parameter sets the upper mass
      * limit of adjustment allowable from the original precursor mass, measured
      * in Daltons. (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private double maxPrecursorAdjustment = 2.5;
+    private double maxPrecursorAdjustment = 1.5;
     /**
      * When adjusting the precursor mass, this parameter sets the size of the
      * steps between adjustments, measured in Daltons.
@@ -86,7 +86,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
     private int numChargeStates = 3;
     /**
      * The output of a DirecTag job will be a TAGS file for each input file. The
-     * string specified by this parameter will be appended to each TAGS
+     * string specified by this parameter will be appended to each TAGS0.5
      * filename. It is useful for differentiating jobs within a single
      * directory. (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
@@ -98,7 +98,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * determine charge state.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private boolean useChargeStateFromMS = false;
+    private boolean useChargeStateFromMS = true;
     /**
      * If DirecTag determines a spectrum to be multiply charged and this
      * parameter is true, the spectrum will be copied and treated as if it was
@@ -133,7 +133,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * peaks complement.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private double complementMzTolerance = 0.5;
+    private double complementMzTolerance = 0.1;
     /**
      * A sequence tag is generated from the gaps between a number of peaks equal
      * to this parameter plus one. Longer tag lengths are more specific, but
@@ -151,7 +151,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * This parameter sets the maximum number of sequence tags to report for
      * each spectrum. (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private int maxTagCount = 10;
+    private int maxTagCount = 20;
     /**
      * This parameter controls how intensity scores are combined to form a total
      * score. DirecTag scores tags on the basis of their peak intensities. Tags
@@ -484,6 +484,9 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * @return the adjustPrecursorMass
      */
     public boolean isAdjustPrecursorMass() {
+        if (adjustPrecursorMass) { // Default to false, DirecTag crashes otherwise...
+            adjustPrecursorMass = false;
+        }
         return adjustPrecursorMass;
     }
 

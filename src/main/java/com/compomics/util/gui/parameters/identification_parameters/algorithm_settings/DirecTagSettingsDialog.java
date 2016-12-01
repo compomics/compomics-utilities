@@ -134,14 +134,14 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
 
         maxTagCountSpinner.setValue(direcTagParameters.getMaxTagCount());
         if (direcTagParameters.isAdjustPrecursorMass()) {
-            adjustPrecursorMassCmb.setSelectedIndex(1);
-        } else {
             adjustPrecursorMassCmb.setSelectedIndex(0);
+        } else {
+            adjustPrecursorMassCmb.setSelectedIndex(1);
         }
         if (direcTagParameters.isUseChargeStateFromMS()) {
-            useSpectrumChargeStateCmb.setSelectedIndex(1);
-        } else {
             useSpectrumChargeStateCmb.setSelectedIndex(0);
+        } else {
+            useSpectrumChargeStateCmb.setSelectedIndex(1);
         }
     }
 
@@ -391,6 +391,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         adjustPrecursorMassLabel.setText("Adjust Precursor Mass");
 
         adjustPrecursorMassCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        adjustPrecursorMassCmb.setEnabled(false);
 
         useSpectrumChargeStateLabel.setText("Use Spectrum Charge State");
 
@@ -969,7 +970,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         direcTagParameters.setMzFidelityScoreWeight(Double.parseDouble(mzFidelityScoreWeightTextField.getText()));
         direcTagParameters.setComplementScoreWeight(Double.parseDouble(complementScoreWeightTextField.getText()));
         direcTagParameters.setMaxTagCount((Integer) maxTagCountSpinner.getValue());
-        direcTagParameters.setAdjustPrecursorMass(adjustPrecursorMassCmb.getSelectedIndex() == 1);
+        direcTagParameters.setAdjustPrecursorMass(adjustPrecursorMassCmb.getSelectedIndex() == 0);
         direcTagParameters.setUseChargeStateFromMS(useSpectrumChargeStateCmb.getSelectedIndex() == 0);
 
         return direcTagParameters;

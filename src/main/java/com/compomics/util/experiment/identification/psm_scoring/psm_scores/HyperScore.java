@@ -16,10 +16,6 @@ import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.HistogramUtils;
 import com.compomics.util.math.statistics.linear_regression.LinearRegression;
 import com.compomics.util.math.statistics.linear_regression.RegressionStatistics;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,12 +23,16 @@ import java.util.HashSet;
 import org.apache.commons.math.util.FastMath;
 
 /**
- * Hyperscore as variation of the score implemented in X!Tandem www.thegpm.org/tandem. 
- * 
- * The original X!Tandem score at the link above is governed by the Artistic license (https://opensource.org/licenses/artistic-license-1.0).
- * X! tandem is a component of the X! proteomics software development project. Copyright Ronald C Beavis, all rights reserved.
- * 
- * The code below does not use or reuse any of the X!Tandem code, but the scoring approach is the same. No copyright infringement intended.
+ * Hyperscore as variation of the score implemented in X!Tandem
+ * www.thegpm.org/tandem.
+ *
+ * The original X!Tandem score at the link above is governed by the Artistic
+ * license (https://opensource.org/licenses/artistic-license-1.0). X! tandem is
+ * a component of the X! proteomics software development project. Copyright
+ * Ronald C Beavis, all rights reserved.
+ *
+ * The code below does not use or reuse any of the X!Tandem code, but the
+ * scoring approach is the same. No copyright infringement intended.
  *
  * @author Marc Vaudel
  */
@@ -124,10 +124,12 @@ public class HyperScore {
     }
 
     /**
-     * Returns the e-value corresponding to a list of scores in a map. If not enough scores are present or if they are not spread the method returns null.
-     * 
+     * Returns the e-value corresponding to a list of scores in a map. If not
+     * enough scores are present or if they are not spread the method returns
+     * null.
+     *
      * @param hyperScores the different scores
-     * 
+     *
      * @return the e-values corresponding to the given scores
      */
     public HashMap<Double, Double> getEValueHistogram(ArrayList<Double> hyperScores) {
@@ -217,12 +219,15 @@ public class HyperScore {
     }
 
     /**
-     * Returns the interpolation of a list of hyperscores using a linear interpolation of the form result = a * log(score) + b. If the score is null, returns the number of hyperscores. The value at every score is returned in a map.
-     * 
+     * Returns the interpolation of a list of hyperscores using a linear
+     * interpolation of the form result = a * log(score) + b. If the score is
+     * null, returns the number of hyperscores. The value at every score is
+     * returned in a map.
+     *
      * @param hyperScores a list of hyperscores
      * @param a the slope of the interpolation
      * @param b the offset of the interpolation
-     * 
+     *
      * @return the interpolation for every score in a map.
      */
     public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, Double a, Double b) {
@@ -230,9 +235,9 @@ public class HyperScore {
         for (Double hyperScore : hyperScores) {
             if (!result.containsKey(hyperScore)) {
                 if (hyperScore > 0) {
-                Double logScore = FastMath.log10(hyperScore);
-                Double eValue = getInterpolation(logScore, a, b);
-                result.put(hyperScore, eValue);
+                    Double logScore = FastMath.log10(hyperScore);
+                    Double eValue = getInterpolation(logScore, a, b);
+                    result.put(hyperScore, eValue);
                 } else {
                     Double eValue = new Double(hyperScores.size());
                     result.put(hyperScore, eValue);
@@ -241,14 +246,15 @@ public class HyperScore {
         }
         return result;
     }
-    
+
     /**
-     * Returns the interpolated value for a given score in log. result = a * logScore + b.
-     * 
+     * Returns the interpolated value for a given score in log. result = a *
+     * logScore + b.
+     *
      * @param logScore the log of the score
      * @param a the slope of the interpolation
      * @param b the offset of the interpolation
-     * 
+     *
      * @return the interpolated value
      */
     public static Double getInterpolation(Double logScore, Double a, Double b) {
@@ -256,9 +262,11 @@ public class HyperScore {
     }
 
     /**
-     * Returns the rounded median of the as found in the previously interpolated scores. Null if none found.
-     * 
-     * @return the rounded median of the as found in the previously interpolated scores
+     * Returns the rounded median of the as found in the previously interpolated
+     * scores. Null if none found.
+     *
+     * @return the rounded median of the as found in the previously interpolated
+     * scores
      */
     public Double getMendianA() {
         if (as.isEmpty()) {
@@ -268,9 +276,11 @@ public class HyperScore {
     }
 
     /**
-     * Returns the rounded median of the bs found in the previously interpolated scores. Null if none found.
-     * 
-     * @return the rounded median of the bs found in the previously interpolated scores
+     * Returns the rounded median of the bs found in the previously interpolated
+     * scores. Null if none found.
+     *
+     * @return the rounded median of the bs found in the previously interpolated
+     * scores
      */
     public Double getMendianB() {
         if (bs.isEmpty()) {
@@ -280,8 +290,9 @@ public class HyperScore {
     }
 
     /**
-     * Returns a histogram of the as found in the previously interpolated scores.
-     * 
+     * Returns a histogram of the as found in the previously interpolated
+     * scores.
+     *
      * @return a histogram of the as found in the previously interpolated scores
      */
     public HashMap<Double, Integer> getAs() {
@@ -289,13 +300,12 @@ public class HyperScore {
     }
 
     /**
-     * Returns a histogram of the bs found in the previously interpolated scores.
-     * 
+     * Returns a histogram of the bs found in the previously interpolated
+     * scores.
+     *
      * @return a histogram of the bs found in the previously interpolated scores
      */
     public HashMap<Double, Integer> getBs() {
         return bs;
     }
-    
-    
 }

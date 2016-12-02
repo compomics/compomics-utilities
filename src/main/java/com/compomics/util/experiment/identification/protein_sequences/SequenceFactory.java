@@ -1531,6 +1531,10 @@ public class SequenceFactory {
          */
         private Header nextHeader = null;
         /**
+         * Semaphore avoiding the overwriting of the nextHeader.
+         */
+        private final Semaphore nextHeaderMutex = new Semaphore(1);
+        /**
          * The buffered reader.
          */
         private BufferedReader br;
@@ -1553,11 +1557,15 @@ public class SequenceFactory {
 
         /**
          * Returns true if there is a next header.
+         * Note: all other threads calling hasNext() are locked until getNext() is called.
          *
          * @return true if there is a next header
+         * 
          * @throws IOException if a IOException occurs
+         * @throws java.lang.InterruptedException exception thrown if a threading issue occurred
          */
-        public boolean hasNext() throws IOException {
+        public boolean hasNext() throws IOException, InterruptedException {
+            nextHeaderMutex.acquire();
             nextHeader = null;
             String line;
             while ((line = br.readLine()) != null) {
@@ -1587,7 +1595,9 @@ public class SequenceFactory {
          * @return the next header in the FASTA file
          */
         public Header getNext() {
-            return nextHeader;
+            Header result = nextHeader;
+            nextHeaderMutex.release();
+            return result;
         }
 
         /**
@@ -1642,6 +1652,7 @@ public class SequenceFactory {
 
         /**
          * Returns true if there is another protein.
+         * Note: all other threads calling hasNext() are locked until getNext() is called.
          *
          * @return true if there is another protein
          *

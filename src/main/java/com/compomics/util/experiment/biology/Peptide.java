@@ -57,7 +57,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Semaphore for the parent proteins.
      */
-    static Semaphore proteinsMutex;
+    private Semaphore proteinsMutex;
     /**
      * The modifications carried by the peptide.
      */

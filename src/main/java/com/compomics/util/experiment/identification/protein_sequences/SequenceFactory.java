@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -61,7 +62,8 @@ public class SequenceFactory {
      */
     private File currentFastaFile = null;
     /**
-     * Number of proteins to keep in cache. By default 1000000, which corresponds to approx. 120MB.
+     * Number of proteins to keep in cache. By default 1000000, which
+     * corresponds to approx. 120MB.
      */
     private int nCache = 1000000;
     /**
@@ -1608,16 +1610,18 @@ public class SequenceFactory {
          * The header of the next protein.
          */
         private Header nextHeader = null;
-
         /**
          * The next protein.
          */
         private Protein nextProtein = null;
-
+        /**
+         * Semaphore avoiding the overwriting of the nextProtein.
+         */
+        private final Semaphore nextProteinMutex = new Semaphore(1);
         /**
          * The buffered reader.
          */
-        private BufferedReader br;
+        private final BufferedReader br;
         /**
          * Boolean indicating whether target protein only should be iterated.
          */
@@ -1642,9 +1646,11 @@ public class SequenceFactory {
          * @return true if there is another protein
          *
          * @throws IOException if an IOException occurs
+         * @throws java.lang.InterruptedException exception thrown if a threading issue occurred
          */
-        public boolean hasNext() throws IOException {
+        public boolean hasNext() throws IOException, InterruptedException {
 
+            nextProteinMutex.acquire();
             nextProtein = null;
             StringBuilder sequence = new StringBuilder();
             Header header = nextHeader;
@@ -1690,7 +1696,6 @@ public class SequenceFactory {
             if (newHeaderFound || line == null) { // line == null means that we read the last protein
                 String accession = header.getAccessionOrRest();
                 nextProtein = new Protein(accession, header.getDatabaseType(), importSequenceFromFasta(sequence), isDecoyAccession(accession));
-                currentHeaderMap.put(accession, header);
                 return true;
             } else {
                 close();
@@ -1704,7 +1709,9 @@ public class SequenceFactory {
          * @return the next protein
          */
         public Protein getNextProtein() {
-            return nextProtein;
+            Protein result = nextProtein;
+            nextProteinMutex.release();
+            return result;
         }
 
         /**

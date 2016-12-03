@@ -133,8 +133,9 @@ public class GeneFactory {
      *
      * @throws java.io.IOException thrown whenever an error occurs while reading
      * or writing data.
+     * @throws java.lang.InterruptedException exception thrown whenever a threading issue occurs.
      */
-    public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException {
+    public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException, InterruptedException {
 
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();

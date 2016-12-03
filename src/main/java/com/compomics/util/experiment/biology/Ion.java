@@ -260,6 +260,7 @@ public abstract class Ion extends ExperimentObject {
             if (charge > 1) {
                 mz = (mz + (charge - 1) * protonMass) / charge;
             }
+            mzMap.put(charge, mz);
         }
         return mz;
     }

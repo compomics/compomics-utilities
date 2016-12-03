@@ -1718,7 +1718,7 @@ public class IdentificationParametersInputBean {
         }
         DigestionPreferences digestionPreferences = searchParameters.getDigestionPreferences();
         if (digestionPreferences == null) {
-            digestionPreferences = new DigestionPreferences();
+            digestionPreferences = DigestionPreferences.getDefaultPreferences();
             searchParameters.setDigestionPreferences(digestionPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {

@@ -1535,6 +1535,10 @@ public class SequenceFactory {
          */
         private final Semaphore nextHeaderMutex = new Semaphore(1);
         /**
+         * Semaphore avoiding multiple threads to use the reader.
+         */
+        private final Semaphore readerMutex = new Semaphore(1);
+        /**
          * The buffered reader.
          */
         private BufferedReader br;
@@ -1556,32 +1560,36 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns true if there is a next header.
-         * Note: all other threads calling hasNext() are locked until getNext() is called.
+         * Returns true if there is a next header. Note: all other threads
+         * calling hasNext() are locked until getNext() is called.
          *
          * @return true if there is a next header
-         * 
+         *
          * @throws IOException if a IOException occurs
-         * @throws java.lang.InterruptedException exception thrown if a threading issue occurred
+         * @throws java.lang.InterruptedException exception thrown if a
+         * threading issue occurred
          */
         public boolean hasNext() throws IOException, InterruptedException {
-            nextHeaderMutex.acquire();
-            nextHeader = null;
+            readerMutex.acquire();
+            Header threadNextHeader = null;
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (!line.equals("")) {
                     if (line.startsWith(">")) {
-                        nextHeader = Header.parseFromFASTA(line);
-                        if (!targetOnly || !isDecoyAccession(nextHeader.getAccession())) {
+                        threadNextHeader = Header.parseFromFASTA(line);
+                        if (!targetOnly || !isDecoyAccession(threadNextHeader.getAccession())) {
                             break;
                         } else {
-                            nextHeader = null;
+                            threadNextHeader = null;
                         }
                     }
                 }
             }
-            if (nextHeader != null) {
+            readerMutex.release();
+            if (threadNextHeader != null) {
+                nextHeaderMutex.acquire();
+                nextHeader = threadNextHeader;
                 return true;
             } else {
                 close();
@@ -1629,6 +1637,10 @@ public class SequenceFactory {
          */
         private final Semaphore nextProteinMutex = new Semaphore(1);
         /**
+         * Semaphore avoiding multiple threads to use the reader.
+         */
+        private final Semaphore readerMutex = new Semaphore(1);
+        /**
          * The buffered reader.
          */
         private final BufferedReader br;
@@ -1651,28 +1663,29 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns true if there is another protein.
-         * Note: all other threads calling hasNext() are locked until getNext() is called.
+         * Returns true if there is another protein. Note: all other threads
+         * calling hasNext() are locked until getNext() is called.
          *
          * @return true if there is another protein
          *
          * @throws IOException if an IOException occurs
-         * @throws java.lang.InterruptedException exception thrown if a threading issue occurred
+         * @throws java.lang.InterruptedException exception thrown if a
+         * threading issue occurred
          */
         public boolean hasNext() throws IOException, InterruptedException {
 
-            nextProteinMutex.acquire();
-            nextProtein = null;
-            StringBuilder sequence = new StringBuilder();
-            Header header = nextHeader;
-            boolean newHeaderFound = false;
-
+            readerMutex.acquire();
             String line = br.readLine();
 
             // reached end of file
             if (line == null) {
+                readerMutex.release();
                 return false;
             }
+
+            StringBuilder sequence = new StringBuilder();
+            Header header = nextHeader;
+            boolean newHeaderFound = false;
 
             while (line != null) {
                 if (line.startsWith(">")) {
@@ -1704,9 +1717,14 @@ public class SequenceFactory {
 
                 line = br.readLine();
             }
+            readerMutex.release();
             if (newHeaderFound || line == null) { // line == null means that we read the last protein
                 String accession = header.getAccessionOrRest();
-                nextProtein = new Protein(accession, header.getDatabaseType(), importSequenceFromFasta(sequence), isDecoyAccession(accession));
+                Header.DatabaseType databaseType = header.getDatabaseType();
+                String cleanedSequence = importSequenceFromFasta(sequence);
+                boolean decoy = isDecoyAccession(accession);
+                nextProteinMutex.acquire();
+                nextProtein = new Protein(accession, databaseType, cleanedSequence, decoy);
                 return true;
             } else {
                 close();

@@ -380,6 +380,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public DigestionPreferences getDigestionPreferences() {
         if (digestionPreferences == null && enzyme != null) { // Backward compatibility check
+            enzyme.backwardCompatibilityFix();
             digestionPreferences = new DigestionPreferences();
             if (enzyme.isWholeProtein()) {
                 digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.wholeProtein);

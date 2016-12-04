@@ -31,20 +31,44 @@ public class Enzyme extends ExperimentObject {
     private String name;
     /*
      * The amino acids before cleavage.
+     * 
+     * @deprecated use the set instead
      */
-    private HashSet<Character> aminoAcidBefore = new HashSet<Character>(0);
+    private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>(0);
+    /*
+     * The amino acids after cleavage.
+     * 
+     * @deprecated use the set instead
+     */
+    private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>(0);
+    /*
+     * The restriction amino acids before cleavage.
+     * 
+     * @deprecated use the set instead
+     */
+    private ArrayList<Character> restrictionBefore = new ArrayList<Character>(0);
+    /*
+     * The restriction amino acids after cleavage.
+     * 
+     * @deprecated use the set instead
+     */
+    private ArrayList<Character> restrictionAfter = new ArrayList<Character>(0);
+    /*
+     * The amino acids before cleavage.
+     */
+    private HashSet<Character> aminoAcidBeforeSet = new HashSet<Character>(0);
     /*
      * The amino acids after cleavage.
      */
-    private HashSet<Character> aminoAcidAfter = new HashSet<Character>(0);
+    private HashSet<Character> aminoAcidAfterSet = new HashSet<Character>(0);
     /*
      * The restriction amino acids before cleavage.
      */
-    private HashSet<Character> restrictionBefore = new HashSet<Character>(0);
+    private HashSet<Character> restrictionBeforeSet = new HashSet<Character>(0);
     /*
      * The restriction amino acids after cleavage.
      */
-    private HashSet<Character> restrictionAfter = new HashSet<Character>(0);
+    private HashSet<Character> restrictionAfterSet = new HashSet<Character>(0);
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
@@ -90,6 +114,24 @@ public class Enzyme extends ExperimentObject {
     public int getId() {
         return id;
     }
+    
+    /**
+     * Converts a list based object (utilities older than 0.8.4) to a set based.
+     */
+    public void backwardCompatibilityFix() {
+        if (aminoAcidAfterSet == null && aminoAcidAfter != null) {
+            aminoAcidAfterSet = new HashSet(aminoAcidAfter);
+        }
+        if (aminoAcidBeforeSet == null && aminoAcidBefore != null) {
+            aminoAcidBeforeSet = new HashSet(aminoAcidBefore);
+        }
+        if (restrictionAfterSet == null && restrictionAfter != null) {
+            restrictionAfterSet = new HashSet(restrictionAfter);
+        }
+        if (restrictionBeforeSet == null && restrictionBefore != null) {
+            restrictionBeforeSet = new HashSet(restrictionBefore);
+        }
+    }
 
     /**
      * Adds an amino acid to the list of allowed amino acids after the cleavage
@@ -98,7 +140,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidAfter(Character aminoAcid) {
-        aminoAcidAfter.add(aminoAcid);
+        aminoAcidAfterSet.add(aminoAcid);
     }
 
     /**
@@ -108,7 +150,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially following the cleavage
      */
     public HashSet<Character> getAminoAcidAfter() {
-        return aminoAcidAfter;
+        return aminoAcidAfterSet;
     }
 
     /**
@@ -118,7 +160,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidBefore(Character aminoAcid) {
-        aminoAcidBefore.add(aminoAcid);
+        aminoAcidBeforeSet.add(aminoAcid);
     }
 
     /**
@@ -128,7 +170,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially preceding the cleavage
      */
     public HashSet<Character> getAminoAcidBefore() {
-        return aminoAcidBefore;
+        return aminoAcidBeforeSet;
     }
 
     /**
@@ -138,7 +180,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionAfter(Character aminoAcid) {
-        restrictionAfter.add(aminoAcid);
+        restrictionAfterSet.add(aminoAcid);
     }
 
     /**
@@ -148,7 +190,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when following the cleavage
      */
     public HashSet<Character> getRestrictionAfter() {
-        return restrictionAfter;
+        return restrictionAfterSet;
     }
 
     /**
@@ -158,7 +200,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionBefore(Character aminoAcid) {
-        restrictionBefore.add(aminoAcid);
+        restrictionBeforeSet.add(aminoAcid);
     }
 
     /**
@@ -168,7 +210,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when preceding the cleavage
      */
     public HashSet<Character> getRestrictionBefore() {
-        return restrictionBefore;
+        return restrictionBeforeSet;
     }
 
     /**
@@ -203,10 +245,10 @@ public class Enzyme extends ExperimentObject {
         AminoAcid aminoAcid1 = AminoAcid.getAminoAcid(aaBefore);
         AminoAcid aminoAcid2 = AminoAcid.getAminoAcid(aaAfter);
         for (char possibleAaBefore : aminoAcid1.getSubAminoAcids()) {
-            if (aminoAcidBefore.contains(possibleAaBefore)) {
+            if (aminoAcidBeforeSet.contains(possibleAaBefore)) {
                 boolean restriction = false;
                 for (char possibleAaAfter : aminoAcid2.getSubAminoAcids()) {
-                    if (restrictionAfter.contains(possibleAaAfter)) {
+                    if (restrictionAfterSet.contains(possibleAaAfter)) {
                         restriction = true;
                         break;
                     }
@@ -218,10 +260,10 @@ public class Enzyme extends ExperimentObject {
         }
 
         for (char possibleAaAfter : aminoAcid2.getSubAminoAcids()) {
-            if (aminoAcidAfter.contains(possibleAaAfter)) {
+            if (aminoAcidAfterSet.contains(possibleAaAfter)) {
                 boolean restriction = false;
                 for (char possibleAaBefore : aminoAcid1.getSubAminoAcids()) {
-                    if (restrictionBefore.contains(possibleAaAfter)) {
+                    if (restrictionBeforeSet.contains(possibleAaAfter)) {
                         restriction = true;
                         break;
                     }
@@ -246,8 +288,8 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSiteNoCombination(Character aaBefore, Character aaAfter) {
-        return aminoAcidBefore.contains(aaBefore) && !restrictionAfter.contains(aaAfter)
-                || aminoAcidAfter.contains(aaAfter) && !restrictionBefore.contains(aaBefore);
+        return aminoAcidBeforeSet.contains(aaBefore) && !restrictionAfterSet.contains(aaAfter)
+                || aminoAcidAfterSet.contains(aaAfter) && !restrictionBeforeSet.contains(aaBefore);
     }
 
     /**

@@ -35,10 +35,11 @@ public class ProteinSequenceIteratorTest extends TestCase {
         digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.wholeProtein);
         
         // No modification
-        ArrayList<Peptide> peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        ArrayList<ProteinSequenceIterator.PeptideWithPosition> peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
         Assert.assertTrue(peptides.size() == 1);
-        Assert.assertTrue(peptides.get(0).getSequence().equals(testSequence));
-        Assert.assertTrue(peptides.get(0).getModificationMatches() == null);
+        Peptide peptide = peptides.get(0).getPeptide();
+        Assert.assertTrue(peptide.getSequence().equals(testSequence));
+        Assert.assertTrue(peptide.getModificationMatches() == null);
         
         // Combination
         peptides = iteratorNoModifications.getPeptides(testSequenceCombination, digestionPreferences, null, null);
@@ -55,14 +56,16 @@ public class ProteinSequenceIteratorTest extends TestCase {
         // No modification with mass limits
         peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, 1734.7, 1734.8);
         Assert.assertTrue(peptides.size() == 1);
-        Assert.assertTrue(peptides.get(0).getSequence().equals(testSequence));
-        Assert.assertTrue(peptides.get(0).getModificationMatches() == null);
+        peptide = peptides.get(0).getPeptide();
+        Assert.assertTrue(peptide.getSequence().equals(testSequence));
+        Assert.assertTrue(peptide.getModificationMatches() == null);
         
         // Modifications
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, null, null);
         Assert.assertTrue(peptides.size() == 1);
-        Assert.assertTrue(peptides.get(0).getSequence().equals(testSequence));
-        Assert.assertTrue(peptides.get(0).getModificationMatches().size() == 3);
+        peptide = peptides.get(0).getPeptide();
+        Assert.assertTrue(peptide.getSequence().equals(testSequence));
+        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
         
         
         // Unspecific digestion
@@ -131,8 +134,9 @@ public class ProteinSequenceIteratorTest extends TestCase {
         // Modification with mass limits
         peptides = iteratorModifications.getPeptides(testSequence, digestionPreferences, 867.0, 868.0);
         Assert.assertTrue(peptides.size() == 1);
-        Assert.assertTrue(peptides.get(0).getSequence().equals("CTESCTK"));
-        Assert.assertTrue(peptides.get(0).getModificationMatches().size() == 3);
+        peptide = peptides.get(0).getPeptide();
+        Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
+        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
         
         
         // No missed cleavages

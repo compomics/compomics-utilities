@@ -121,7 +121,7 @@ public class ProteinSequenceIterator {
      *
      * @return the possible peptides for the sequence
      */
-    public ArrayList<Peptide> getPeptides(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public ArrayList<PeptideWithPosition> getPeptides(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
                 return getPeptides(sequence, massMin, massMax);
@@ -329,13 +329,13 @@ public class ProteinSequenceIterator {
      * @return a list of all the peptides that can be expected from a protein
      * sequence.
      */
-    public ArrayList<Peptide> getPeptides(String proteinSequence, Double massMin, Double massMax) {
+    public ArrayList<PeptideWithPosition> getPeptides(String proteinSequence, Double massMin, Double massMax) {
 
         if (AminoAcidSequence.hasCombination(proteinSequence)) {
             return getPeptidesAaCombinations(proteinSequence, massMin, massMax);
         }
 
-        ArrayList<Peptide> result = new ArrayList<Peptide>();
+        ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>();
         char[] sequenceAsCharArray = proteinSequence.toCharArray();
 
         for (int i = 0; i < sequenceAsCharArray.length; i++) {
@@ -373,7 +373,8 @@ public class ProteinSequenceIterator {
                     break;
                 }
                 if (peptide != null) {
-                    result.add(peptide);
+                    PeptideWithPosition peptideWithPosition = new PeptideWithPosition(peptide, i);
+                    result.add(peptideWithPosition);
                 }
             }
         }
@@ -394,9 +395,9 @@ public class ProteinSequenceIterator {
      * @return a list of all the peptides that can be expected from a protein
      * sequence.
      */
-    private ArrayList<Peptide> getPeptidesAaCombinations(String sequence, Double massMin, Double massMax) {
+    private ArrayList<PeptideWithPosition> getPeptidesAaCombinations(String sequence, Double massMin, Double massMax) {
 
-        ArrayList<Peptide> result = new ArrayList<Peptide>();
+        ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>();
         char[] sequenceAsCharArray = sequence.toCharArray();
 
         for (int i = 0; i < sequenceAsCharArray.length; i++) {
@@ -433,7 +434,9 @@ public class ProteinSequenceIterator {
             }
 
             ArrayList<Peptide> peptidesAtIndex = getPeptides(peptideDrafts, sequence, i, massMin, massMax, smallMasses);
-            result.addAll(peptidesAtIndex);
+            for (Peptide peptide : peptidesAtIndex) {
+                result.add(new PeptideWithPosition(peptide, i));
+            }
 
             if (!smallMasses.getObject()) {
                 return result;
@@ -497,7 +500,9 @@ public class ProteinSequenceIterator {
                 peptideDrafts = newPeptideDrafts;
                 smallMasses.setObject(false);
                 peptidesAtIndex = getPeptides(peptideDrafts, sequence, j, massMin, massMax, smallMasses);
-                result.addAll(peptidesAtIndex);
+                for (Peptide peptide : peptidesAtIndex) {
+                    result.add(new PeptideWithPosition(peptide, i));
+                }
 
                 if (!smallMasses.getObject()) {
                     break;
@@ -692,7 +697,7 @@ public class ProteinSequenceIterator {
      *
      * @return a peptide built from the given sequence
      */
-    public ArrayList<Peptide> getPeptidesNoDigestion(String sequence, Double massMin, Double massMax) {
+    public ArrayList<PeptideWithPosition> getPeptidesNoDigestion(String sequence, Double massMin, Double massMax) {
 
         if (AminoAcidSequence.containsAmbiguousAminoAcid(sequence)) {
 
@@ -701,7 +706,7 @@ public class ProteinSequenceIterator {
                 if (sequence.charAt(i) == 'X') {
                     nX++;
                     if (nX > maxXsInSequence) {
-                        return new ArrayList<Peptide>(0);
+                        return new ArrayList<PeptideWithPosition>(0);
                     }
                 }
             }
@@ -744,7 +749,7 @@ public class ProteinSequenceIterator {
                 }
             }
 
-            ArrayList<Peptide> result = new ArrayList<Peptide>(sequences.size());
+            ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>(sequences.size());
 
             for (StringBuilder peptideSequence : sequences) {
 
@@ -752,20 +757,20 @@ public class ProteinSequenceIterator {
                 Peptide peptide = getPeptideNoDigestion(sequenceAsString, sequenceAsString, 0, massMin, massMax);
 
                 if (peptide != null) {
-                    result.add(peptide);
+                    result.add(new PeptideWithPosition(peptide, 0));
                 }
             }
 
             return result;
         } else {
 
-            ArrayList<Peptide> result = new ArrayList<Peptide>(1);
+            ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>(1);
             Peptide peptide = getPeptideNoDigestion(sequence, sequence, 0, massMin, massMax);
 
             if (peptide != null
                     && (massMin == null || peptide.getMass() >= massMin)
                     && (massMax == null || peptide.getMass() <= massMax)) {
-                result.add(peptide);
+                result.add(new PeptideWithPosition(peptide, 0));
             }
 
             return result;
@@ -831,7 +836,7 @@ public class ProteinSequenceIterator {
      *
      * @return the possible peptides
      */
-    public ArrayList<Peptide> getPeptidesDigestion(String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public ArrayList<PeptideWithPosition> getPeptidesDigestion(String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
 
         Double massMinWater = massMin;
         if (massMinWater != null) {
@@ -911,12 +916,13 @@ public class ProteinSequenceIterator {
             peptides = newPeptides;
         }
 
-        ArrayList<Peptide> result = new ArrayList<Peptide>(peptides.size());
+        ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>(peptides.size());
 
-        for (ArrayList<PeptideDraft> peptidesAtI : peptides.values()) {
+        for (Integer peptideStart : peptides.keySet()) {
+            ArrayList<PeptideDraft> peptidesAtI = peptides.get(peptideStart);
             for (PeptideDraft peptideDraft : peptidesAtI) {
                 Peptide peptide = getPeptide(peptideDraft, massMin, massMax);
-                result.add(peptide);
+                result.add(new PeptideWithPosition(peptide, peptideStart));
             }
         }
 
@@ -1232,6 +1238,27 @@ public class ProteinSequenceIterator {
         return result;
     }
 
+    public class PeptideWithPosition {
+
+        private Peptide peptide;
+
+        private int position;
+
+        public PeptideWithPosition(Peptide peptide, int position) {
+            this.peptide = peptide;
+            this.position = position;
+        }
+
+        public Peptide getPeptide() {
+            return peptide;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+    }
+
     /**
      * Convenience class for the building of peptides.
      */
@@ -1265,6 +1292,7 @@ public class ProteinSequenceIterator {
          * The number of Xs already considered in this draft.
          */
         private int nX = 0;
+        private int indexOnProtein;
 
         /**
          * Constructor.
@@ -1484,5 +1512,12 @@ public class ProteinSequenceIterator {
             return nX;
         }
 
+        public int getIndexOnProtein() {
+            return indexOnProtein;
+        }
+
+        public void setIndexOnProtein(int indexOnProtein) {
+            this.indexOnProtein = indexOnProtein;
+        }
     }
 }

@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 /**
@@ -30,6 +31,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * modification site or a cleavage site. For trypsin: 0.
      */
     private Integer target = 0;
+    /**
+     * Cache for the amino acids at target.
+     */
+    private HashSet<Character> aaAtTarget = null;
     /**
      * The length of the pattern, -1 if not set.
      */
@@ -183,6 +188,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         } else if (target == toRow) {
             target = fromRow;
         }
+        aaAtTarget = null;
     }
 
     /**
@@ -202,6 +208,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void setTarget(Integer target) {
         this.target = target;
+        aaAtTarget = null;
     }
 
     /**
@@ -212,6 +219,19 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public ArrayList<Character> getAminoAcidsAtTarget() {
         return getTargetedAA(target);
+    }
+    
+    /**
+     * Returns a set containing the amino acids at target.
+     * 
+     * @return a set containing the amino acids at target
+     */
+    public HashSet<Character> getAminoAcidsAtTargetSet() {
+        if (aaAtTarget == null) {
+            ArrayList<Character> aaAtTargetList = getAminoAcidsAtTarget();
+            aaAtTarget = new HashSet<Character>(aaAtTargetList);
+        }
+        return aaAtTarget;
     }
 
     /**
@@ -229,6 +249,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (index + 1 > length) {
             length = index + 1;
         }
+        aaAtTarget = null;
     }
 
     /**
@@ -265,6 +286,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (index + 1 > length) {
             length = index + 1;
         }
+        aaAtTarget = null;
     }
 
     /**
@@ -333,6 +355,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
 
+        aaAtTarget = null;
         length = -1;
     }
 

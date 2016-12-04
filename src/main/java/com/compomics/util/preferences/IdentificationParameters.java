@@ -430,6 +430,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         } else {
             throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
         }
+        identificationParameters.getSearchParameters().getDigestionPreferences();
 
         return identificationParameters;
     }

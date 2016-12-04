@@ -8,11 +8,11 @@ package com.compomics.util.experiment.biology;
 public class ElementaryElement {
 
     /**
-     * The name of the ion.
+     * The name of the element.
      */
     private String name;
     /*
-     * Ion attribute - the theoretic mass.
+     * The theoretic mass.
      */
     private double theoreticMass;
     /**

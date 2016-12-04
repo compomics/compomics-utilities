@@ -132,7 +132,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @deprecated moved to the FractionSettings
      */
-    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<String, XYDataPoint>();
+    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges;
     /**
      * The forward ions to consider (a, b or c).
      *
@@ -701,7 +701,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Integer getMaxIsotopicCorrection() {
         if (maxIsotopicCorrection == null) {
-            maxIsotopicCorrection = 4;
+            maxIsotopicCorrection = 1;
         }
         return maxIsotopicCorrection;
     }

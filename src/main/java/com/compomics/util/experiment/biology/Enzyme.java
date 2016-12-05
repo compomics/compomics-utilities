@@ -263,7 +263,7 @@ public class Enzyme extends ExperimentObject {
             if (aminoAcidAfterSet.contains(possibleAaAfter)) {
                 boolean restriction = false;
                 for (char possibleAaBefore : aminoAcid1.getSubAminoAcids()) {
-                    if (restrictionBeforeSet.contains(possibleAaAfter)) {
+                    if (restrictionBeforeSet.contains(possibleAaBefore)) {
                         restriction = true;
                         break;
                     }

@@ -236,11 +236,10 @@ public abstract class SpectrumAnnotator {
             // See whether the index was previously stored
             spectrumIndex = new SpectrumIndex();
             spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
-            if (spectrumIndex == null) {
-                // Create new index
-                spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
-                spectrum.addUrParam(spectrumIndex);
-            }
+
+            // Create new index
+            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
+            spectrum.addUrParam(spectrumIndex);
         }
     }
 

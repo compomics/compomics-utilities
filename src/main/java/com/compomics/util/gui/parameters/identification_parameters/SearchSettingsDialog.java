@@ -278,7 +278,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         // set the settings editable or not
         digestionCmb.setEnabled(editable);
         enzymesCmb.setEnabled(editable && ((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme);
-        specificityComboBox.setEnabled(editable);
+        specificityComboBox.setEnabled(editable && ((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme);
         precursorIonAccuracyTxt.setEditable(editable);
         precursorIonUnit.setEnabled(editable);
         fragmentIon1Cmb.setEnabled(editable);
@@ -1819,7 +1819,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private void digestionCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_digestionCmbActionPerformed
 
         enzymesCmb.setEnabled(((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme);
-        maxMissedCleavagesTxt.setEnabled(!(((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.wholeProtein));
+        maxMissedCleavagesTxt.setEnabled((((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme));
         specificityComboBox.setEnabled(((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme);
 
         if (!(((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionPreferences.CleavagePreference.enzyme)) {
@@ -2266,7 +2266,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         // validate missed cleavages
-        if (((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) != CleavagePreference.wholeProtein) {
+        if (((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem()) == CleavagePreference.enzyme) {
             valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
         }
 
@@ -2305,7 +2305,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             digestionPreferences.setSpecificity(enzymeName, (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem());
 
             // max missed cleavages
-            digestionPreferences.setnMissedCleavages(enzymeName, new Integer(maxMissedCleavagesTxt.getText().trim())); // @TODO: what about the max number of missed cleavages when using unspecific enzyme..?
+            digestionPreferences.setnMissedCleavages(enzymeName, new Integer(maxMissedCleavagesTxt.getText().trim()));
         }
 
         // save the digestion settings

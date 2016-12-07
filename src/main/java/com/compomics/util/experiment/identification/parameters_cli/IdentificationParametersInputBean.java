@@ -1740,6 +1740,7 @@ public class IdentificationParametersInputBean {
             ArrayList<Integer> mcs = null;
             ArrayList<Specificity> specificities = null;
             if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
+                arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 mcs = new ArrayList<Integer>(args.size());
                 for (String stringValue : args) {
@@ -1747,6 +1748,7 @@ public class IdentificationParametersInputBean {
                 }
             }
             if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIFICITY.id)) {
+                arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIFICITY.id);
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 specificities = new ArrayList<Specificity>(args.size());
                 for (String stringValue : args) {

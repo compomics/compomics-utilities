@@ -168,7 +168,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
                                 ArrayList<Integer> ionPossibleCharges = (ionType == Ion.IonType.PRECURSOR_ION) ? precursorCharges : specificAnnotationSettings.getSelectedCharges();
 
-                                for (int charge : ionPossibleCharges) {
+                                for (Integer charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         IonMatch ionMatch = matchInSpectrum(ion, charge);
                                         if (ionMatch != null) {

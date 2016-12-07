@@ -88,10 +88,6 @@ public abstract class Ion extends ExperimentObject {
      */
     protected Double theoreticMass;
     /**
-     * The protonated mass over charge indexed by charge.
-     */
-    protected HashMap<Integer, Double> mzMap = new HashMap<Integer, Double>(1);
-    /**
      * The atomic composition of the ion.
      */
     protected AtomChain atomChain;
@@ -253,14 +249,10 @@ public abstract class Ion extends ExperimentObject {
      * @return the m/z expected for this ion
      */
     public Double getTheoreticMz(Integer charge) {
-        Double mz = mzMap.get(charge);
-        if (mz == null) {
-            Double protonMass = ElementaryIon.proton.getTheoreticMass();
-            mz = getTheoreticMass() + protonMass;
-            if (charge > 1) {
-                mz = (mz + (charge - 1) * protonMass) / charge;
-            }
-            mzMap.put(charge, mz);
+        Double protonMass = ElementaryIon.proton.getTheoreticMass();
+        Double mz = getTheoreticMass() + protonMass;
+        if (charge > 1) {
+            mz = (mz + (charge - 1) * protonMass) / charge;
         }
         return mz;
     }

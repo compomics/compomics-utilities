@@ -70,12 +70,13 @@ public class ToolFactory {
      *
      * @param parent a frame to display the path setting dialog (can be null)
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
-    public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startPeptideShaker(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
         startPeptideShaker(parent, null);
     }
 
@@ -87,12 +88,13 @@ public class ToolFactory {
      * @param parent a frame to display the path setting dialog (can be null)
      * @param cpsFile the file to open (cps format) (can be null)
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
-    public static void startPeptideShaker(JFrame parent, File cpsFile) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startPeptideShaker(JFrame parent, File cpsFile) throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         boolean openPeptideShaker = true;
@@ -120,6 +122,46 @@ public class ToolFactory {
     }
 
     /**
+     * Starts PeptideShaker from the location of utilities preferences in the
+     * Reshake mode and attempts at selecting the given project.
+     *
+     * @param parent a frame to display the path setting dialog (can be null)
+     * @param pxAccession the ProteomeXchange accession of the project to open (can be null)
+     *
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
+     */
+    public static void startReshake(JFrame parent, String pxAccession) throws IOException, ClassNotFoundException, InterruptedException {
+
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        boolean openPeptideShaker = true;
+
+        if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
+            PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
+            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
+        }
+        if (openPeptideShaker) {
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null
+                    && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
+                if (pxAccession != null) {
+                    ArrayList<String> args = new ArrayList<String>();
+                    args.add(peptideShakerPxAccessionOption);
+                    args.add(pxAccession);
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
+                } else {
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+                }
+            } else {
+                throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
+            }
+        }
+    }
+
+    /**
      * Starts PeptideShaker from the location of utilities preferences and opens
      * the file given as argument. If null is given as file or if the file to
      * open is not found, the tool will go for a default start.
@@ -130,12 +172,13 @@ public class ToolFactory {
      * @param downloadUrlFolder the folder to download the project to, mandatory
      * if zipUrl is used
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
-    public static void startPeptideShakerFromURL(JFrame parent, String zipUrl, String downloadUrlFolder) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startPeptideShakerFromURL(JFrame parent, String zipUrl, String downloadUrlFolder) throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         boolean openPeptideShaker = true;
@@ -169,12 +212,13 @@ public class ToolFactory {
      *
      * @param parent a frame to display the path setting dialog.
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
-    public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startReporter(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         boolean openReporter = true;
@@ -199,12 +243,13 @@ public class ToolFactory {
      *
      * @param parent a frame to display the path setting dialog.
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
-    public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startSearchGUI(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
         startSearchGUI(parent, null, null, null, null, null, null);
     }
 
@@ -219,13 +264,14 @@ public class ToolFactory {
      * @param species the species (can be null)
      * @param speciesType the species type (can be null)
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an exception occurs while reading or writing a
+     * file
+     * @throws ClassNotFoundException if an exception occurs while reading the
+     * user preferences
+     * @throws InterruptedException if a threading issue occurs
      */
     public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType)
-            throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+            throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         boolean openSearchGUI = true;

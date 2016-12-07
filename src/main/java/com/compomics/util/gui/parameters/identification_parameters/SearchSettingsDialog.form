@@ -758,9 +758,9 @@
                                 </Property>
                               </Properties>
                               <Events>
-                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseReleased"/>
-                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseMoved"/>
+                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseExited"/>
+                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseReleased"/>
                               </Events>
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {&#xa;        //Always toggle on single selection&#xa;        super.changeSelection(rowIndex, columnIndex, !extend, extend);&#xa;    }&#xa;};"/>

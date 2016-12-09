@@ -13,19 +13,16 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
-import jdk.jfr.events.FileReadEvent;
-import org.xmlpull.v1.XmlPullParserException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -38,7 +35,27 @@ public class OnyaseIdfileReader implements IdfileReader {
     /**
      * The columns separator.
      */
-    public final static String SEPARATOR = " ";
+    public final static char separator = ' ';
+    /**
+     * Character to start the comment lines.
+     */
+    public final static char comment = '#';
+    /**
+     * Tag for the version.
+     */
+    public final static String versionTag = "Version:";
+    /**
+     * Tag for the spectrum file.
+     */
+    public final static String spectraTag = "Spectrum File:";
+    /**
+     * Tag for the fasta file.
+     */
+    public final static String fastaTag = "Fasta File:";
+    /**
+     * Tag for the parameters file path.
+     */
+    public final static String paramsTag = "Parameters File:";
     /**
      * The result file to parse.
      */
@@ -83,7 +100,7 @@ public class OnyaseIdfileReader implements IdfileReader {
         BufferedReader br = new BufferedReader(new FileReader(resultsFile));
         String line;
         while ((line = br.readLine()) != null) {
-            String key = "# Version:";
+            String key = comment + separator + versionTag;
             if (line.startsWith(key)) {
                 String fileVersion = line.substring(key.length()).trim();
                 version = new HashMap<String, ArrayList<String>>(1);
@@ -91,15 +108,15 @@ public class OnyaseIdfileReader implements IdfileReader {
                 versions.add(fileVersion);
                 version.put(Advocate.onyaseEngine.getName(), versions);
             }
-            key = "# Spectra:";
+            key = comment + separator + spectraTag;
             if (line.startsWith(key)) {
                 mgfFile = line.substring(key.length()).trim();
             }
-            key = "# Fasta:";
+            key = comment + separator + fastaTag;
             if (line.startsWith(key)) {
                 fastaFile = line.substring(key.length()).trim();
             }
-            key = "# Parameters:";
+            key = comment + separator + parametersFile;
             if (line.startsWith(key)) {
                 parametersFile = line.substring(key.length()).trim();
             }
@@ -132,15 +149,15 @@ public class OnyaseIdfileReader implements IdfileReader {
         }
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
+        String separatorString = separator + "";
         String line;
         SpectrumMatch spectrumMatch = null;
         int rank = 0;
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (!line.startsWith("#")) {
-                String[] lineSplit = line.split(SEPARATOR);
+                String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0];
                 if (spectrumTitle.length() > 0) {
-                    // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                     if (spectrumMatch != null) {
                         result.add(spectrumMatch);
@@ -150,10 +167,11 @@ public class OnyaseIdfileReader implements IdfileReader {
                 }
                 rank++;
                 String sequence = lineSplit[1];
-                Peptide peptide = new Peptide(sequence, new ArrayList<ModificationMatch>(0));
-                Integer charge = new Integer(lineSplit[2]);
-                Double score = new Double(lineSplit[3]);
-                Double eValue = new Double(lineSplit[4]);
+                ArrayList<ModificationMatch> modificationMatches = getModificationMatches(lineSplit[2]);
+                Peptide peptide = new Peptide(sequence, modificationMatches);
+                Integer charge = new Integer(lineSplit[3]);
+                Double score = new Double(lineSplit[4]);
+                Double eValue = new Double(lineSplit[5]);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addHit(Advocate.onyaseEngine.getIndex(), peptideAssumption, true);
@@ -165,6 +183,32 @@ public class OnyaseIdfileReader implements IdfileReader {
         }
 
         return result;
+    }
+    
+    /**
+     * Parses modification matches from a modification string.
+     * 
+     * @param modificationsString the modification string
+     * 
+     * @return a list of modificaiton matches
+     * 
+     * @throws UnsupportedEncodingException exception thrown whenever an error occurred while decoding the string
+     */
+    private ArrayList<ModificationMatch> getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
+        if (modificationsString.length() == 0) {
+            return new ArrayList<ModificationMatch>(0);
+        }
+        String decodedString = URLDecoder.decode(modificationsString, "utf-8");
+        String[] modifications = decodedString.split(Peptide.MODIFICATION_SEPARATOR);
+        ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>(modifications.length);
+        for (String modification : modifications) {
+            String[] modificationSplit = modification.split(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR);
+            String modificationName = modificationSplit[0];
+            Integer site = new Integer(modificationSplit[1]);
+            ModificationMatch modificationMatch = new ModificationMatch(modificationName, true, site);
+            modificationMatches.add(modificationMatch);
+        }
+        return modificationMatches;
     }
 
     @Override

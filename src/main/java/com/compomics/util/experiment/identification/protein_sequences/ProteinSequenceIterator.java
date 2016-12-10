@@ -1093,8 +1093,6 @@ public class ProteinSequenceIterator {
             int combinationCount = 1;
             for (char aaAfter : aminoAcid.getSubAminoAcids()) {
 
-                boolean cleavageSite = false;
-
                 for (PeptideDraft peptideDraft : tempPeptides) {
 
                     if ((aa != 'X' || peptideDraft.getnX() < maxXsInSequence)
@@ -1128,7 +1126,6 @@ public class ProteinSequenceIterator {
                             }
 
                             peptideDraft.increaseMissedCleavages();
-                            cleavageSite = true;
                         }
 
                         if (peptideDraft.getMissedCleavages() <= maxMissedCleavages) {
@@ -1182,6 +1179,17 @@ public class ProteinSequenceIterator {
                         }
                     }
                 }
+
+                boolean cleavageSite = false;
+                char aa0 = sequence.charAt(i - 1);
+                AminoAcid aminoAcid0 = AminoAcid.getAminoAcid(aa0);
+                for (char aaBefore : aminoAcid0.getSubAminoAcids()) {
+                    if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+                        cleavageSite = true;
+                        break;
+                    }
+                }
+
                 if (cleavageSite) {
 
                     StringBuilder currentPeptide = new StringBuilder(10);

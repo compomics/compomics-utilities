@@ -82,7 +82,19 @@ public class HyperScore {
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
-        if (matches.isEmpty()) {
+        boolean peak = false;
+        Double precursorIntensity = 0.0;
+        for (IonMatch ionMatch : matches) {
+            Ion ion = ionMatch.ion;
+            switch (ion.getType()) {
+                case PRECURSOR_ION:
+                    precursorIntensity += ionMatch.peak.intensity;
+                    break;
+                case PEPTIDE_FRAGMENT_ION:
+                    peak = true;
+            }
+        }
+        if (!peak) {
             return 0.0;
         }
 
@@ -95,29 +107,41 @@ public class HyperScore {
             spectrum.addUrParam(spectrumIndex);
         }
 
+        Double totalIntensity = spectrumIndex.getTotalIntensity() - precursorIntensity;
+
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<Integer>(1);
         HashSet<Integer> ionsRewind = new HashSet<Integer>(1);
+        HashSet<Double> accountedFor = new HashSet<Double>(matches.size());
         for (IonMatch ionMatch : matches) {
             Peak peakI = ionMatch.peak;
-            Double x0I = peakI.intensity / spectrumIndex.getTotalIntensity();
-            xCorr += x0I;
+            Double mz = peakI.mz;
             Ion ion = ionMatch.ion;
-            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
-                if (ion.getSubType() == PeptideFragmentIon.X_ION
-                        || ion.getSubType() == PeptideFragmentIon.Y_ION
-                        || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                    ionsForward.add(peptideFragmentIon.getNumber());
-                } else if (ion.getSubType() == PeptideFragmentIon.A_ION
-                        || ion.getSubType() == PeptideFragmentIon.B_ION
-                        || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                    ionsRewind.add(peptideFragmentIon.getNumber());
+            if (ion.getType() != Ion.IonType.PRECURSOR_ION && !accountedFor.contains(mz)) {
+                accountedFor.add(mz);
+                Double x0I = peakI.intensity / totalIntensity;
+                xCorr += x0I;
+                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
+                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                    int number = peptideFragmentIon.getNumber();
+                    if (number > 1) {
+                        if (ion.getSubType() == PeptideFragmentIon.X_ION
+                                || ion.getSubType() == PeptideFragmentIon.Y_ION
+                                || ion.getSubType() == PeptideFragmentIon.Z_ION) {
+                            ionsForward.add(number);
+                        } else if (ion.getSubType() == PeptideFragmentIon.A_ION
+                                || ion.getSubType() == PeptideFragmentIon.B_ION
+                                || ion.getSubType() == PeptideFragmentIon.C_ION) {
+                            ionsRewind.add(number);
+                        }
+                    }
                 }
             }
         }
-        int nForward = ionsForward.size() > 20 ? 20 : ionsForward.size();
-        int nRewind = ionsRewind.size() > 20 ? 20 : ionsRewind.size();
+        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
+        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
+        nForward = nForward > 20 ? 20 : nForward;
+        nRewind = nRewind > 20 ? 20 : nRewind;
         long forwardFactorial = BasicMathFunctions.factorial(nForward);
         long rewindFactorial = BasicMathFunctions.factorial(nRewind);
         return xCorr * forwardFactorial * rewindFactorial;

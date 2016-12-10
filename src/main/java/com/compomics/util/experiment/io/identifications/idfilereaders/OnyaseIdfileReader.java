@@ -100,7 +100,7 @@ public class OnyaseIdfileReader implements IdfileReader {
         BufferedReader br = new BufferedReader(new FileReader(resultsFile));
         String line;
         while ((line = br.readLine()) != null) {
-            String key = comment + separator + versionTag;
+            String key = "" + comment + separator + versionTag;
             if (line.startsWith(key)) {
                 String fileVersion = line.substring(key.length()).trim();
                 version = new HashMap<String, ArrayList<String>>(1);
@@ -108,15 +108,15 @@ public class OnyaseIdfileReader implements IdfileReader {
                 versions.add(fileVersion);
                 version.put(Advocate.onyaseEngine.getName(), versions);
             }
-            key = comment + separator + spectraTag;
+            key = "" + comment + separator + spectraTag;
             if (line.startsWith(key)) {
                 mgfFile = line.substring(key.length()).trim();
             }
-            key = comment + separator + fastaTag;
+            key = "" + comment + separator + fastaTag;
             if (line.startsWith(key)) {
                 fastaFile = line.substring(key.length()).trim();
             }
-            key = comment + separator + parametersFile;
+            key = "" + comment + separator + parametersFile;
             if (line.startsWith(key)) {
                 parametersFile = line.substring(key.length()).trim();
             }

@@ -712,7 +712,9 @@ public class SpectrumFactory {
      *
      * @param spectrumFile name of the spectrum file
      * @param spectrumTitle title of the spectrum
+     * 
      * @return the desired spectrum
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws MzMLUnmarshallerException exception thrown whenever an error

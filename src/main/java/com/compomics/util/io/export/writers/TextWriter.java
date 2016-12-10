@@ -68,12 +68,11 @@ public class TextWriter extends ExportWriter {
     @Override
     public void startNewSection(String sectionTitle, WorkbookStyle textStyle) throws IOException {
         if (sectionTitle != null) {
+            writer.newLine();
             writer.write(sectionTitle);
         }
-        if (nSections > 0) {
-            for (int i = 1; i <= nSeparationLines; i++) {
-                writer.newLine();
-            }
+        for (int i = 1; i <= nSeparationLines; i++) {
+            writer.newLine();
         }
         nSections++;
     }

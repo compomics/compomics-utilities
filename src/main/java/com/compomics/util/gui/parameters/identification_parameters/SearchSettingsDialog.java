@@ -1300,7 +1300,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         if (variableModifications.length > 6) {
             JOptionPane.showMessageDialog(this,
-                    "It is not recommended to use more than 6 variable modifications in the same search.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    "It is not recommended to use more than six variable modifications in the same search.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
         updateModificationList();
@@ -2334,6 +2334,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             String modName = (String) variableModsTable.getValueAt(i, 1);
             modificationProfile.addVariableModification(ptmFactory.getPTM(modName));
             modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
+        }
+        
+        // re-add the variable refinement modifications
+        ArrayList<String> variableRefinemetModifications = tempSearchParameters.getPtmSettings().getRefinementVariableModifications();
+        for (String varRefinementMod : variableRefinemetModifications) {
+            PTM ptm = ptmFactory.getPTM(varRefinementMod);
+            modificationProfile.addRefinementVariableModification(ptm);
         }
 
         tempSearchParameters.setPtmSettings(modificationProfile);

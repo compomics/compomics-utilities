@@ -111,6 +111,7 @@ If you for some reason cannot use Maven and need a complete build of compomics-u
         <name>EBI Nexus Repository</name>
         <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
     </repository>
+    
 </repositories>
 ```
 

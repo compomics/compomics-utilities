@@ -88,11 +88,31 @@ If you for some reason cannot use Maven and need a complete build of compomics-u
 ```
 
 ```
-<repository>
-    <id>genesis-maven2-repository</id>
-    <name>Genesis maven2 repository</name>
-    <url>http://genesis.UGent.be/maven2</url>
-</repository>
+<repositories>
+
+    <!-- Compomics Genesis Maven 2 repository -->
+    <repository>
+        <id>genesis-maven2-repository</id>
+        <name>Genesis maven2 repository</name>
+        <url>http://genesis.UGent.be/maven2</url>
+        <layout>default</layout>
+    </repository>
+
+    <!-- old EBI repository -->
+    <repository>
+        <id>ebi-repo</id> 
+        <name>The EBI internal repository</name>
+        <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+    </repository>
+
+    <!-- EBI repository -->
+    <repository>
+        <id>pst-release</id>
+        <name>EBI Nexus Repository</name>
+        <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
+    </repository>
+    
+</repositories>
 ```
 
 Update the version number to latest released version, see the [Maven repository](http://genesis.ugent.be/maven2/com/compomics/utilities/).

@@ -205,13 +205,13 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MIN_ISOTOPE.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MIN_ISOTOPE.id, arg, true)) {
+            if (!CommandParameter.isInteger(IdentificationParametersCLIParams.MIN_ISOTOPE.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MAX_ISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MAX_ISOTOPE.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MAX_ISOTOPE.id, arg, true)) {
+            if (!CommandParameter.isInteger(IdentificationParametersCLIParams.MAX_ISOTOPE.id, arg)) {
                 return false;
             }
         }
@@ -1158,13 +1158,13 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id, arg, true)) {
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id, arg, false)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id, arg, true)) {
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id, arg, false)) {
                 return false;
             }
         }

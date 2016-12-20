@@ -66,7 +66,8 @@ public class ObjectsCache {
      */
     private boolean updating = false;
     /**
-     * Boolean indicating whether the cache is being saved to reduce the memory consumption.
+     * Boolean indicating whether the cache is being saved to reduce the memory
+     * consumption.
      */
     private boolean reducingMemoryConsumption = false;
 
@@ -286,14 +287,17 @@ public class ObjectsCache {
      * @param object the object to store in the cache
      * @param modifiedOrNew true if the object is modified or new
      *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws IOException if an IOException occurs while writing to the
+     * database
+     * @throws SQLException if an SQLException occurs while writing to the
+     * database
+     * @throws java.lang.InterruptedException if a threading error occurs
+     * writing to the database
      */
     public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             if (objectKey.contains(cacheSeparator)) {
-                throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator);
+                throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator + ".");
             }
             HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
             HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
@@ -303,15 +307,15 @@ public class ObjectsCache {
                 tableCache = dbCache.get(tableName);
                 if (tableCache == null) {
                     if (tableName.contains(cacheSeparator)) {
-                        throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator);
+                        throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator + ".");
                     }
                     tableCache = new HashMap<String, CacheEntry>(512);
                     dbCache.put(tableName, tableCache);
                 }
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
-            dbMutexMap.release(tableName);
             loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
+            dbMutexMap.release(tableName);
             updateCache();
         }
     }
@@ -408,18 +412,18 @@ public class ObjectsCache {
                     throw new IllegalArgumentException("Object " + objectKey + " corresponding to entry " + entryKey + " not found in cache when saving.");
                 } else {
                     if (entry.isModified()) {
-                        HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
-                        if (dbMap == null) {
-                            dbMap = new HashMap<String, HashMap<String, Object>>();
-                            toSave.put(dbName, dbMap);
-                        }
-                        HashMap<String, Object> tableMap = dbMap.get(tableName);
-                        if (tableMap == null) {
-                            tableMap = new HashMap<String, Object>();
-                            dbMap.put(tableName, tableMap);
-                        }
-                        tableMap.put(objectKey, entry.getObject());
+                    HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
+                    if (dbMap == null) {
+                        dbMap = new HashMap<String, HashMap<String, Object>>();
+                        toSave.put(dbName, dbMap);
                     }
+                    HashMap<String, Object> tableMap = dbMap.get(tableName);
+                    if (tableMap == null) {
+                        tableMap = new HashMap<String, Object>();
+                        dbMap.put(tableName, tableMap);
+                    }
+                    tableMap.put(objectKey, entry.getObject());
+                }
                 }
 
                 if (waitingHandler != null) {
@@ -592,7 +596,8 @@ public class ObjectsCache {
     }
 
     /**
-     * Reduces the memory consumption by saving the given share of cache content.
+     * Reduces the memory consumption by saving the given share of cache
+     * content.
      *
      * @param share the share to be saved, 0.25 means that 25% of the hits will
      * be saved
@@ -612,7 +617,8 @@ public class ObjectsCache {
     }
 
     /**
-     * Reduces the memory consumption by saving the given share of cache content.
+     * Reduces the memory consumption by saving the given share of cache
+     * content.
      *
      * @param share the share to be saved, 0.25 means that 25% of the hits will
      * be saved
@@ -676,8 +682,8 @@ public class ObjectsCache {
                 throw new IllegalStateException("Database " + dbName + " not loaded in cache");
             }
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
-            MapMutex<String> mapMutex = getMapMutex(dbName);
-            mapMutex.acquire(tableName);
+                MapMutex<String> mapMutex = getMapMutex(dbName);
+                mapMutex.acquire(tableName);
 
                 HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
                 HashMap<String, Object> objectsToStore = new HashMap<String, Object>(data.size());
@@ -697,7 +703,7 @@ public class ObjectsCache {
                 }
 
                 objectsDB.insertObjects(tableName, objectsToStore, waitingHandler);
-                
+
                 mapMutex.release(tableName);
             }
         }

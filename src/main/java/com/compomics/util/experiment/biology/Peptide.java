@@ -680,6 +680,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param peptideKey the peptide key
      * @param ptmMass the mass of the modification
+     * 
      * @return the number of modifications confidently localized
      */
     public static ArrayList<Integer> getNModificationLocalized(String peptideKey, Double ptmMass) {
@@ -1214,11 +1215,11 @@ public class Peptide extends ExperimentObject {
                     aa = sequence.charAt(0);
                     if (aminoAcidPattern.length() == 1) {
                         if (targetedAA.contains(aa)) {
-                            possibleSites.add(peptideLength);
+                            possibleSites.add(1);
                         }
                     } else {
                         if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
-                            possibleSites.add(peptideLength);
+                            possibleSites.add(1);
                         }
                     }
                 }
@@ -1230,11 +1231,11 @@ public class Peptide extends ExperimentObject {
                 aa = sequence.charAt(0);
                 if (aminoAcidPattern.length() == 1) {
                     if (targetedAA.contains(aa)) {
-                        possibleSites.add(peptideLength);
+                        possibleSites.add(1);
                     }
                 } else {
                     if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
-                        possibleSites.add(peptideLength);
+                        possibleSites.add(1);
                     }
                 }
                 return possibleSites;

@@ -241,9 +241,6 @@ public class PeptideMatchesIterator {
                     }
                     if (psmParameters != null) {
                         for (UrParameter urParameter : psmParameters) {
-                            if (urParameter == null) {
-                                throw new IllegalArgumentException("Parameter to batch load is null.");
-                            }
                             identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler, false);
 
                             if (waitingHandler != null && waitingHandler.isRunCanceled()) {

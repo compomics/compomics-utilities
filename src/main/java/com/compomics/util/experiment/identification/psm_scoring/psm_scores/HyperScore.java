@@ -80,11 +80,28 @@ public class HyperScore {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+        
+        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
+        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
+    }
 
-        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
+    /**
+     * Returns the hyperscore.
+     *
+     * @param peptide the peptide of interest
+     * @param spectrum the spectrum of interest
+     * @param annotationSettings the general spectrum annotation settings
+     * @param specificAnnotationSettings the annotation settings specific to
+     * this PSM
+     * @param ionMatches the ion matches obtained from spectrum annotation
+     *
+     * @return the score of the match
+     */
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
+
         boolean peak = false;
         Double precursorIntensity = 0.0;
-        for (IonMatch ionMatch : matches) {
+        for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
             switch (ion.getType()) {
                 case PRECURSOR_ION:
@@ -112,8 +129,8 @@ public class HyperScore {
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<Integer>(1);
         HashSet<Integer> ionsRewind = new HashSet<Integer>(1);
-        HashSet<Double> accountedFor = new HashSet<Double>(matches.size());
-        for (IonMatch ionMatch : matches) {
+        HashSet<Double> accountedFor = new HashSet<Double>(ionMatches.size());
+        for (IonMatch ionMatch : ionMatches) {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;
             Ion ion = ionMatch.ion;

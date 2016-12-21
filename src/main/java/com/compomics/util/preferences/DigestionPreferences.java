@@ -204,11 +204,13 @@ public class DigestionPreferences implements Serializable {
     public static DigestionPreferences clone(DigestionPreferences digestionPreferences) {
         DigestionPreferences clone = new DigestionPreferences();
         clone.setCleavagePreference(digestionPreferences.getCleavagePreference());
-        for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
-            clone.addEnzyme(enzyme);
-            String enzymeName = enzyme.getName();
-            clone.setSpecificity(enzymeName, digestionPreferences.getSpecificity(enzymeName));
-            clone.setnMissedCleavages(enzymeName, digestionPreferences.getnMissedCleavages(enzymeName));
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+            for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+                clone.addEnzyme(enzyme);
+                String enzymeName = enzyme.getName();
+                clone.setSpecificity(enzymeName, digestionPreferences.getSpecificity(enzymeName));
+                clone.setnMissedCleavages(enzymeName, digestionPreferences.getnMissedCleavages(enzymeName));
+            }
         }
         return clone;
     }

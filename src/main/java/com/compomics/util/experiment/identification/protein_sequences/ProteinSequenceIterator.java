@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
-import antlr.StringUtils;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
@@ -853,67 +852,69 @@ public class ProteinSequenceIterator {
         originalSequence.add(protein);
         peptides.put(0, originalSequence);
 
-        for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+            for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
 
-            String enzymeName = enzyme.getName();
-            Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
-            HashMap<Integer, ArrayList<PeptideDraft>> newPeptides = new HashMap<Integer, ArrayList<PeptideDraft>>(peptides.size());
+                String enzymeName = enzyme.getName();
+                Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+                HashMap<Integer, ArrayList<PeptideDraft>> newPeptides = new HashMap<Integer, ArrayList<PeptideDraft>>(peptides.size());
 
-            for (Integer peptideStart : peptides.keySet()) {
+                for (Integer peptideStart : peptides.keySet()) {
 
-                ArrayList<PeptideDraft> peptidesAtPosition = peptides.get(peptideStart);
+                    ArrayList<PeptideDraft> peptidesAtPosition = peptides.get(peptideStart);
 
-                for (PeptideDraft peptide : peptidesAtPosition) {
+                    for (PeptideDraft peptide : peptidesAtPosition) {
 
-                    HashMap<Integer, ArrayList<PeptideDraft>> subPeptides = digest(peptide.getSequence().toString(), proteinSequence, peptideStart, enzyme, nMissedCleavages, massMinWater, massMaxWater);
+                        HashMap<Integer, ArrayList<PeptideDraft>> subPeptides = digest(peptide.getSequence().toString(), proteinSequence, peptideStart, enzyme, nMissedCleavages, massMinWater, massMaxWater);
 
-                    for (Integer tempPeptideStart : subPeptides.keySet()) {
+                        for (Integer tempPeptideStart : subPeptides.keySet()) {
 
-                        ArrayList<PeptideDraft> tempPeptides = subPeptides.get(tempPeptideStart);
-                        Integer newPeptideStart = tempPeptideStart + peptideStart;
-                        ArrayList<PeptideDraft> newPeptidesAtI = newPeptides.get(newPeptideStart);
+                            ArrayList<PeptideDraft> tempPeptides = subPeptides.get(tempPeptideStart);
+                            Integer newPeptideStart = tempPeptideStart + peptideStart;
+                            ArrayList<PeptideDraft> newPeptidesAtI = newPeptides.get(newPeptideStart);
 
-                        if (newPeptidesAtI == null) {
-                            newPeptides.put(newPeptideStart, tempPeptides);
-                        } else {
-                            newPeptidesAtI.addAll(tempPeptides);
-                        }
-                    }
-                }
-            }
-
-            DigestionPreferences.Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
-
-            if (specificity != DigestionPreferences.Specificity.specific) {
-
-                HashMap<Integer, ArrayList<PeptideDraft>> semiSpecificPeptides = new HashMap<Integer, ArrayList<PeptideDraft>>(newPeptides.size());
-                for (Integer peptideStart : newPeptides.keySet()) {
-
-                    ArrayList<PeptideDraft> peptidesAtPosition = newPeptides.get(peptideStart);
-
-                    for (PeptideDraft peptideDraft : peptidesAtPosition) {
-
-                        HashMap<Integer, ArrayList<PeptideDraft>> semiSpecificPeptidesMap = getNonSpecificPeptides(peptideDraft, proteinSequence, peptideStart, specificity, massMin, massMax);
-
-                        for (Integer positionOnPeptide : semiSpecificPeptidesMap.keySet()) {
-
-                            ArrayList<PeptideDraft> semiSpecificPeptidesOnPeptide = semiSpecificPeptidesMap.get(positionOnPeptide);
-                            Integer positionOnProtein = peptideStart + positionOnPeptide;
-                            ArrayList<PeptideDraft> semiSpecificPeptidesOnProtein = semiSpecificPeptides.get(positionOnProtein);
-
-                            if (semiSpecificPeptidesOnProtein == null) {
-                                semiSpecificPeptides.put(positionOnProtein, semiSpecificPeptidesOnPeptide);
+                            if (newPeptidesAtI == null) {
+                                newPeptides.put(newPeptideStart, tempPeptides);
                             } else {
-                                semiSpecificPeptidesOnProtein.addAll(semiSpecificPeptidesOnPeptide);
+                                newPeptidesAtI.addAll(tempPeptides);
                             }
                         }
                     }
                 }
 
-                newPeptides = semiSpecificPeptides;
-            }
+                DigestionPreferences.Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
 
-            peptides = newPeptides;
+                if (specificity != DigestionPreferences.Specificity.specific) {
+
+                    HashMap<Integer, ArrayList<PeptideDraft>> semiSpecificPeptides = new HashMap<Integer, ArrayList<PeptideDraft>>(newPeptides.size());
+                    for (Integer peptideStart : newPeptides.keySet()) {
+
+                        ArrayList<PeptideDraft> peptidesAtPosition = newPeptides.get(peptideStart);
+
+                        for (PeptideDraft peptideDraft : peptidesAtPosition) {
+
+                            HashMap<Integer, ArrayList<PeptideDraft>> semiSpecificPeptidesMap = getNonSpecificPeptides(peptideDraft, proteinSequence, peptideStart, specificity, massMin, massMax);
+
+                            for (Integer positionOnPeptide : semiSpecificPeptidesMap.keySet()) {
+
+                                ArrayList<PeptideDraft> semiSpecificPeptidesOnPeptide = semiSpecificPeptidesMap.get(positionOnPeptide);
+                                Integer positionOnProtein = peptideStart + positionOnPeptide;
+                                ArrayList<PeptideDraft> semiSpecificPeptidesOnProtein = semiSpecificPeptides.get(positionOnProtein);
+
+                                if (semiSpecificPeptidesOnProtein == null) {
+                                    semiSpecificPeptides.put(positionOnProtein, semiSpecificPeptidesOnPeptide);
+                                } else {
+                                    semiSpecificPeptidesOnProtein.addAll(semiSpecificPeptidesOnPeptide);
+                                }
+                            }
+                        }
+                    }
+
+                    newPeptides = semiSpecificPeptides;
+                }
+
+                peptides = newPeptides;
+            }
         }
 
         ArrayList<PeptideWithPosition> result = new ArrayList<PeptideWithPosition>(peptides.size());

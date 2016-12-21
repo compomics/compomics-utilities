@@ -945,17 +945,21 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         output.append(newLine);
 
-        ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
-        for (int i = 0; i < enzymes.size(); i++) {
-            Enzyme enzyme = enzymes.get(i);
-            String enzymeName = enzyme.getName();
-            output.append("ENZYME").append(i).append("=");
-            output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
-            Integer nmc = digestionPreferences.getnMissedCleavages(enzymeName);
-            if (nmc != null) {
-                output.append(", ").append(nmc).append(" missed cleavages");
+        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+            ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+            for (int i = 0; i < enzymes.size(); i++) {
+                Enzyme enzyme = enzymes.get(i);
+                String enzymeName = enzyme.getName();
+                output.append("ENZYME").append(i).append("=");
+                output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
+                Integer nmc = digestionPreferences.getnMissedCleavages(enzymeName);
+                if (nmc != null) {
+                    output.append(", ").append(nmc).append(" missed cleavages");
+                }
+                output.append(newLine);
             }
-            output.append(newLine);
+        } else {
+            output.append("ENZYME").append("=").append(digestionPreferences.getCleavagePreference().name);
         }
 
         output.append("FIXED_MODIFICATIONS=");
@@ -1124,7 +1128,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 || this.getDigestionPreferences() == null && otherSearchParameters.getDigestionPreferences() != null) {
             return false;
         }
-        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() != null 
+        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() != null
                 && !this.getDigestionPreferences().isSameAs(otherSearchParameters.getDigestionPreferences())) {
             return false;
         }

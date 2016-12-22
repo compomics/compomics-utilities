@@ -76,6 +76,10 @@ public class PTM extends ExperimentObject {
      */
     private Double mass = null;
     /**
+     * The mass as string.
+     */
+    private String massAsString = null;
+    /**
      * List of known neutral losses for this modification.
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>(0);
@@ -129,7 +133,6 @@ public class PTM extends ExperimentObject {
         this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
         this.cvTerm = null;
-        mass = null;
     }
 
     /**
@@ -151,7 +154,6 @@ public class PTM extends ExperimentObject {
         this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
         this.cvTerm = cvTerm;
-        mass = null;
     }
 
     /**
@@ -283,6 +285,7 @@ public class PTM extends ExperimentObject {
     public void setAtomChainAdded(AtomChain atomChainAdded) {
         this.atomChainAdded = atomChainAdded;
         mass = null;
+        massAsString = null;
     }
 
     /**
@@ -302,6 +305,7 @@ public class PTM extends ExperimentObject {
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
         this.atomChainRemoved = atomChainRemoved;
         mass = null;
+        massAsString = null;
     }
 
     /**
@@ -553,6 +557,18 @@ public class PTM extends ExperimentObject {
      */
     public void setCvTerm(CvTerm cvTerm) {
         this.cvTerm = cvTerm;
+    }
+    
+    /**
+     * Returns the mass of the PTM as a string.
+     * 
+     * @return the mass of the PTM as a string
+     */
+    public String getMassAsString() {
+        if (massAsString == null) {
+            massAsString = "" + getMass();
+        }
+        return massAsString;
     }
     
     @Override

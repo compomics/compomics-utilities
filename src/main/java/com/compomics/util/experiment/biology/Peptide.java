@@ -565,7 +565,6 @@ public class Peptide extends ExperimentObject {
         if (modificationMatches == null) {
             return sequence;
         }
-        StringBuilder result = new StringBuilder(sequence);
         ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
         for (ModificationMatch mod : modificationMatches) {
             if (mod.isVariable()) {
@@ -574,16 +573,17 @@ public class Peptide extends ExperimentObject {
                     PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
                     if (mod.isConfident() || mod.isInferred()) {
                         StringBuilder tempModKey = new StringBuilder();
-                        tempModKey.append(ptm.getMass()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
+                        tempModKey.append(ptm.getMassAsString()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
                         tempModifications.add(tempModKey.toString());
                     } else {
-                        tempModifications.add(ptm.getMass() + "");
+                        tempModifications.add(ptm.getMassAsString());
                     }
                 } else {
                     tempModifications.add("unknown-modification");
                 }
             }
         }
+        StringBuilder result = new StringBuilder(sequence);
         Collections.sort(tempModifications);
         for (String mod : tempModifications) {
             result.append(MODIFICATION_SEPARATOR).append(mod);

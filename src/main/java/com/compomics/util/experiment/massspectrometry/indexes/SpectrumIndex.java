@@ -145,7 +145,7 @@ public class SpectrumIndex implements UrParameter {
      * @return the peaks matching the given m/z
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
-        int bin0;
+        Integer bin0;
         if (ppm) {
             bin0 = getBinPpm(mz);
         } else {

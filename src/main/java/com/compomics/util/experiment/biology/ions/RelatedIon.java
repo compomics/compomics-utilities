@@ -223,8 +223,8 @@ public class RelatedIon extends Ion {
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
-        return new ArrayList<NeutralLoss>(0);
+    public NeutralLoss[] getNeutralLosses() {
+        return new NeutralLoss[0];
     }
 
     @Override

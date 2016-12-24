@@ -833,8 +833,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.H2O);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.H2O};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("b-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -849,8 +848,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.H2O);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.H2O};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("b++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -865,8 +863,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.NH3);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.NH3};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("b-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -881,8 +878,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.NH3);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.NH3};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("b++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -936,8 +932,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.H2O);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.H2O};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("y-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -952,8 +947,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.H2O);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.H2O};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("y++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -968,8 +962,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.NH3);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.NH3};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("y-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
@@ -984,8 +977,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
-            tempNeutralLosses.add(NeutralLoss.NH3);
+            NeutralLoss[] tempNeutralLosses = {NeutralLoss.NH3};
             PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
                 getColumn("y++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,

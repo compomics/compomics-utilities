@@ -23,7 +23,7 @@ public class SequestFragmentationModel {
     public static Double getIntensity(Ion ion) {
         if (ion instanceof PeptideFragmentIon) {
             if (ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.Y_ION) {
-                if (ion.getNeutralLosses().isEmpty()) {
+                if (ion.getNeutralLosses().length == 0) {
                     return 50.0;
                 } else {
                     return 25.0;

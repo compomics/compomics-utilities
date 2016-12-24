@@ -242,8 +242,8 @@ public class FragmentFactoryTest extends TestCase {
                                     Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1265.5857) < tolerance);
                         }
                     }
-                } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                        && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                } else if (peptideFragmentIon.getNeutralLosses().length == 1
+                        && peptideFragmentIon.getNeutralLosses()[0].isSameAs(NeutralLoss.H2O)) {
                     if (peptideFragmentIon.getNumber() == 3) {
                         if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
                             Assert.assertTrue(
@@ -306,8 +306,8 @@ public class FragmentFactoryTest extends TestCase {
                                     Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
                         }
                     }
-                } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                        && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                } else if (peptideFragmentIon.getNeutralLosses().length == 1
+                        && peptideFragmentIon.getNeutralLosses()[0].isSameAs(NeutralLoss.NH3)) {
                     if (peptideFragmentIon.getNumber() == 6) {
                         if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
                             Assert.assertTrue(
@@ -356,12 +356,12 @@ public class FragmentFactoryTest extends TestCase {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2395.1322) < tolerance);
 
-                } else if (ion.getNeutralLosses().size() == 1
-                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                } else if (ion.getNeutralLosses().length == 1
+                        && ion.getNeutralLosses()[0].isSameAs(NeutralLoss.H2O)) {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2377.1216) < tolerance);
-                } else if (ion.getNeutralLosses().size() == 1
-                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                } else if (ion.getNeutralLosses().length == 1
+                        && ion.getNeutralLosses()[0].isSameAs(NeutralLoss.NH3)) {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2378.1056) < tolerance);
                 }
@@ -580,8 +580,8 @@ public class FragmentFactoryTest extends TestCase {
                         }
                     }
 
-                } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                        && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                } else if (tagFragmentIon.getNeutralLosses().length == 1
+                        && tagFragmentIon.getNeutralLosses()[0].isSameAs(NeutralLoss.H2O)) {
                     if (tagFragmentIon.getNumber() == 3) {
                         if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
                             Assert.assertTrue(
@@ -644,8 +644,8 @@ public class FragmentFactoryTest extends TestCase {
                                     Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
                         }
                     }
-                } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                        && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                } else if (tagFragmentIon.getNeutralLosses().length == 1
+                        && tagFragmentIon.getNeutralLosses()[0].isSameAs(NeutralLoss.NH3)) {
                     if (tagFragmentIon.getNumber() == 6) {
                         if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
                             Assert.assertTrue(
@@ -694,12 +694,12 @@ public class FragmentFactoryTest extends TestCase {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2395.1322) < tolerance);
 
-                } else if (ion.getNeutralLosses().size() == 1
-                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                } else if (ion.getNeutralLosses().length == 1
+                        && ion.getNeutralLosses()[0].isSameAs(NeutralLoss.H2O)) {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2377.1216) < tolerance);
-                } else if (ion.getNeutralLosses().size() == 1
-                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                } else if (ion.getNeutralLosses().length == 1
+                        && ion.getNeutralLosses()[0].isSameAs(NeutralLoss.NH3)) {
                     Assert.assertTrue(
                             Math.abs(ion.getTheoreticMass() + protonMass - 2378.1056) < tolerance);
                 }

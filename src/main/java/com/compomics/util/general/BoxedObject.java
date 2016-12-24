@@ -1,23 +1,23 @@
 package com.compomics.util.general;
 
 /**
- * Convenience class allowing the encapsulation of an object.
+ * Convenience class allowing the boxing of an object.
  *
  * @author Marc Vaudel
  *
- * @param <K> the type of object to encapsulate
+ * @param <K> the type of object to box
  */
-public class EncapsulatedObject<K> {
+public class BoxedObject<K> {
 
     /**
-     * The object to encapsulate.
+     * The object to box.
      */
     private K object;
 
     /**
      * Constructor.
      */
-    public EncapsulatedObject() {
+    public BoxedObject() {
 
     }
     /**
@@ -25,23 +25,23 @@ public class EncapsulatedObject<K> {
      * 
      * @param initialValue the initial value
      */
-    public EncapsulatedObject(K initialValue) {
+    public BoxedObject(K initialValue) {
         object = initialValue;
     }
 
     /**
-     * Returns the encapsulated object.
+     * Returns the boxed object.
      *
-     * @return the encapsulated object
+     * @return the boxed object
      */
     public K getObject() {
         return object;
     }
 
     /**
-     * Sets the encapsulated object.
+     * Sets the boxed object.
      *
-     * @param object the encapsulated object
+     * @param object the boxed object
      */
     public void setObject(K object) {
         this.object = object;

@@ -874,8 +874,9 @@ public class SpectrumPanel extends GraphicsPanel {
                 switch (ion.getSubType()) {
                     case PeptideFragmentIon.A_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     // light purple-blue
                                     return new Color(171, 161, 255);
@@ -886,7 +887,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -894,8 +895,9 @@ public class SpectrumPanel extends GraphicsPanel {
                         return new Color(153, 0, 0);
                     case PeptideFragmentIon.B_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     // nice blue
                                     return new Color(0, 125, 200);
@@ -906,7 +908,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -914,8 +916,9 @@ public class SpectrumPanel extends GraphicsPanel {
                         return new Color(0, 0, 255);
                     case PeptideFragmentIon.C_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     // ??
                                     return new Color(188, 150, 255);
@@ -926,7 +929,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -934,8 +937,9 @@ public class SpectrumPanel extends GraphicsPanel {
                         return new Color(188, 0, 255);
                     case PeptideFragmentIon.X_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     // ??
                                     return new Color(78, 200, 150);
@@ -946,7 +950,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -954,8 +958,9 @@ public class SpectrumPanel extends GraphicsPanel {
                         return new Color(78, 200, 0);
                     case PeptideFragmentIon.Y_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     if (isSpectrum) {
                                         // navy blue
@@ -976,7 +981,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -990,8 +995,9 @@ public class SpectrumPanel extends GraphicsPanel {
                         }
                     case PeptideFragmentIon.Z_ION:
                         if (ion.hasNeutralLosses()) {
-                            if (ion.getNeutralLosses().size() == 1) {
-                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+                            if (neutralLosses.length == 1) {
+                                NeutralLoss neutralLoss = neutralLosses[0];
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                     // ??
                                     return new Color(64, 179, 150);
@@ -1002,7 +1008,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                     return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (ion.getNeutralLosses().size() > 1) {
+                            } else if (neutralLosses.length > 1) {
                                 return Color.GRAY;
                             }
                         }
@@ -1332,7 +1338,7 @@ public class SpectrumPanel extends GraphicsPanel {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
                 forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedPtms, mirrored);
     }
-    
+
     /**
      * Add reference areas annotating the de novo tags.
      *
@@ -1441,7 +1447,7 @@ public class SpectrumPanel extends GraphicsPanel {
                     if (modifiedIndexes.contains(currentPeptide.getSequence().length() - i)) {
                         mod = "*";
                     }
-                    
+
                     float currentAlphaLevel = rewindIonAlphaLevel;
                     if (alphaLevels != null) {
                         currentAlphaLevel = alphaLevels.get(0)[currentPeptide.getSequence().length() - i];
@@ -1469,7 +1475,7 @@ public class SpectrumPanel extends GraphicsPanel {
                     if (modifiedIndexes.contains(i + 1)) {
                         mod = "*";
                     }
-                    
+
                     float currentAlphaLevel = forwardIonAlphaLevel;
                     if (alphaLevels != null) {
                         currentAlphaLevel = alphaLevels.get(0)[i];
@@ -1640,12 +1646,12 @@ public class SpectrumPanel extends GraphicsPanel {
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
-                            
+
                             float currentAlphaLevel = rewindIonAlphaLevel;
                             if (alphaLevels != null) {
                                 currentAlphaLevel = alphaLevels.get(tagCount)[sequenceIndex];
                             }
-                            
+
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "r" + sequenceIndex + "_" + mirrored,
                                     aminoAcidPattern.asSequence(sequenceIndex) + mod,
@@ -1672,12 +1678,12 @@ public class SpectrumPanel extends GraphicsPanel {
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
-                            
+
                             float currentAlphaLevel = rewindIonAlphaLevel;
                             if (alphaLevels != null) {
                                 currentAlphaLevel = alphaLevels.get(tagCount)[sequenceIndex];
                             }
-                            
+
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "r" + sequenceIndex + "_" + mirrored,
                                     aminoAcidSequence.charAt(sequenceIndex) + mod,

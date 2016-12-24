@@ -28,6 +28,14 @@ public class ReporterIon extends Ion {
      */
     private static HashMap<String, ReporterIon> implementedIons = new HashMap<String, ReporterIon>();
     /**
+     * List of sorted implemented ions.
+     */
+    private static ArrayList<String> sortedImplementedIonsNames = null;
+    /**
+     * The possible subtypes as list of indexes.
+     */
+    private static ArrayList<Integer> possibleSubtypes = null;
+    /**
      * Standard reporter ion iTRAQ 4Plex 114.
      */
     public final static ReporterIon iTRAQ4Plex_114 = new ReporterIon("iTRAQ4Plex_114", getComposition("iTRAQ4Plex_114"));
@@ -286,6 +294,8 @@ public class ReporterIon extends Ion {
         this.theoreticMass = mass;
         if (save) {
             implementedIons.put(name, this);
+            sortedImplementedIonsNames = null;
+            possibleSubtypes = null;
         }
     }
 
@@ -329,6 +339,8 @@ public class ReporterIon extends Ion {
             implementedIons = new HashMap<String, ReporterIon>();
         }
         implementedIons.put(reporterIon.name, reporterIon);
+        sortedImplementedIonsNames = null;
+        possibleSubtypes = null;
     }
 
     /**
@@ -440,7 +452,7 @@ public class ReporterIon extends Ion {
 
         return cvTerm;
     }
-    
+
     @Override
     public CvTerm getPsiMsCvTerm() {
         return getPrideCvTerm();
@@ -471,8 +483,7 @@ public class ReporterIon extends Ion {
 
     @Override
     public int getSubType() {
-        ArrayList<String> ionList = new ArrayList<String>(getImplementedIons());
-        Collections.sort(ionList);
+        ArrayList<String> ionList = getSortedImplementedIons();
         return ionList.indexOf(name);
     }
 
@@ -489,8 +500,7 @@ public class ReporterIon extends Ion {
      * @return the corresponding reporter ion
      */
     public static ReporterIon getReporterIon(int subType) {
-        ArrayList<String> ionList = new ArrayList<String>(getImplementedIons());
-        Collections.sort(ionList);
+        ArrayList<String> ionList = getSortedImplementedIons();
         String name = ionList.get(subType);
         return getReporterIon(name);
     }
@@ -507,12 +517,26 @@ public class ReporterIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns a set of possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return a set of possible subtypes
      */
     public static Set<String> getImplementedIons() {
         return implementedIons.keySet();
+    }
+
+    /**
+     * Returns an ordered list of possible subtypes.
+     *
+     * @return an ordered list of possible subtypes
+     */
+    public static ArrayList<String> getSortedImplementedIons() {
+        if (sortedImplementedIonsNames == null) {
+            ArrayList<String> tempList = new ArrayList<String>(getImplementedIons());
+            Collections.sort(tempList);
+            sortedImplementedIonsNames = tempList;
+        }
+        return sortedImplementedIonsNames;
     }
 
     /**
@@ -521,16 +545,19 @@ public class ReporterIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>(implementedIons.size());
-        for (int i = 0; i < implementedIons.size(); i++) {
-            possibleTypes.add(i);
+        if (possibleSubtypes == null) {
+            ArrayList<Integer> tempList = new ArrayList<Integer>(implementedIons.size());
+            for (int i = 0; i < implementedIons.size(); i++) {
+                tempList.add(i);
+            }
+            possibleSubtypes = tempList;
         }
-        return possibleTypes;
+        return possibleSubtypes;
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
-        return new ArrayList<NeutralLoss>(0);
+    public NeutralLoss[] getNeutralLosses() {
+        return new NeutralLoss[0];
     }
 
     @Override

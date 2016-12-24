@@ -167,7 +167,7 @@ public abstract class Ion extends ExperimentObject {
      *
      * @return the possible neutral losses of this ion type
      */
-    public abstract ArrayList<NeutralLoss> getNeutralLosses();
+    public abstract NeutralLoss[] getNeutralLosses();
 
     /**
      * Indicates whether the ion has a neutral loss.
@@ -179,8 +179,8 @@ public abstract class Ion extends ExperimentObject {
             case PEPTIDE_FRAGMENT_ION:
             case TAG_FRAGMENT_ION:
             case PRECURSOR_ION:
-                ArrayList<NeutralLoss> neutralLosses = getNeutralLosses();
-                return neutralLosses != null && !neutralLosses.isEmpty();
+                NeutralLoss[] neutralLosses = getNeutralLosses();
+                return neutralLosses != null && neutralLosses.length > 0;
             default:
                 return false;
         }
@@ -212,18 +212,18 @@ public abstract class Ion extends ExperimentObject {
      * @param neutralLosses the neutral loss (if any)
      * @return the neutral loss
      */
-    public static String getNeutralLossesAsString(ArrayList<NeutralLoss> neutralLosses) {
+    public static String getNeutralLossesAsString(NeutralLoss[] neutralLosses) {
         if (neutralLosses == null) {
             return "";
         }
-        ArrayList<String> names = new ArrayList<String>(neutralLosses.size());
+        ArrayList<String> names = new ArrayList<String>(neutralLosses.length);
         for (NeutralLoss neutralLoss : neutralLosses) {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
-        StringBuilder result = new StringBuilder(4 * neutralLosses.size());
+        StringBuilder result = new StringBuilder(4 * neutralLosses.length);
         for (String name : names) {
-            result.append("-").append(name);
+            result.append('-').append(name);
         }
         return result.toString();
     }
@@ -359,7 +359,7 @@ public abstract class Ion extends ExperimentObject {
      * @param neutralLosses the neutral losses. Null list if none.
      * @return a generic ion
      */
-    public static Ion getGenericIon(IonType ionType, int subType, ArrayList<NeutralLoss> neutralLosses) {
+    public static Ion getGenericIon(IonType ionType, int subType, NeutralLoss[] neutralLosses) {
         switch (ionType) {
             case ELEMENTARY_ION:
                 return new ElementaryIon("new ElementaryIon", 0.0, subType);

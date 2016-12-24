@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.NeutralLossCombination;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,10 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      * The keys.
      */
     private ArrayList<String> keys;
+    /**
+     * The ion factory.
+     */
+    private IonFactory ionFactory = IonFactory.getInstance();
 
     /**
      * Constructor which sets a new table.
@@ -56,8 +61,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
                                 ionMap.put(key, currentIon);
                                 keys.add(key);
                             } else {
-                                for (ArrayList<NeutralLoss> possibleCombination : IonFactory.getAccountedNeutralLosses(neutralLosses)) {
-                                    currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination);
+                                for (NeutralLossCombination possibleCombination : ionFactory.getNeutralLossesCombinations(neutralLosses)) {
+                                    currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination.getNeutralLossCombination());
                                     String key = currentIon.getName();
                                     ionMap.put(key, currentIon);
                                     keys.add(key);

@@ -120,7 +120,7 @@ public class Glycan extends Ion {
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
+    public NeutralLoss[] getNeutralLosses() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

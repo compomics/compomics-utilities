@@ -23,7 +23,7 @@ public class PrecursorIon extends Ion {
     /**
      * The neutral losses found on the ion.
      */
-    private ArrayList<NeutralLoss> neutralLosses = null;
+    private NeutralLoss[] neutralLosses = null;
     /**
      * The CV term of the reporter ion, null if not set.
      */
@@ -39,10 +39,8 @@ public class PrecursorIon extends Ion {
      * @param theoreticMass the theoretic mass
      * @param neutralLosses the neutral losses
      */
-    public PrecursorIon(double theoreticMass, ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses != null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
-        }
+    public PrecursorIon(double theoreticMass, NeutralLoss[] neutralLosses) {
+        this.neutralLosses = neutralLosses;
         type = IonType.PRECURSOR_ION;
         this.theoreticMass = theoreticMass;
     }
@@ -52,10 +50,8 @@ public class PrecursorIon extends Ion {
      *
      * @param neutralLosses the neutral losses
      */
-    public PrecursorIon(ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses != null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
-        }
+    public PrecursorIon(NeutralLoss[] neutralLosses) {
+        this.neutralLosses = neutralLosses;
         type = IonType.PRECURSOR_ION;
     }
 
@@ -88,11 +84,11 @@ public class PrecursorIon extends Ion {
             return cvTerm;
         }
         
-        if (neutralLosses == null || neutralLosses.isEmpty()) {
+        if (neutralLosses == null || neutralLosses.length == 0) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001523", "frag: precursor ion", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
+        } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001521", "frag: precursor ion - H2O", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
+        } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001522", "frag: precursor ion - NH3", "0");
         }
         
@@ -130,10 +126,7 @@ public class PrecursorIon extends Ion {
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
-        if (neutralLosses == null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(0);
-        }
+    public NeutralLoss[] getNeutralLosses() {
         return neutralLosses;
     }
 

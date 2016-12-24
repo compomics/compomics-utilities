@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class models a peptide fragment ion.
@@ -43,7 +44,7 @@ public class PeptideFragmentIon extends Ion {
     /**
      * The neutral losses found on the ion.
      */
-    private ArrayList<NeutralLoss> neutralLosses;
+    private NeutralLoss[] neutralLosses;
     /**
      * Position of the ion in the peptide for peptide ions.
      */
@@ -70,9 +71,9 @@ public class PeptideFragmentIon extends Ion {
      * @param mass the mass of the fragment ion
      * @param neutralLosses the neutral losses of the ion
      */
-    public PeptideFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
+    public PeptideFragmentIon(int fragmentType, int number, double mass, NeutralLoss[] neutralLosses) {
         if (neutralLosses != null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
+            this.neutralLosses = neutralLosses;
         }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
@@ -87,9 +88,9 @@ public class PeptideFragmentIon extends Ion {
      * static fields
      * @param neutralLosses the neutral losses of the ion
      */
-    public PeptideFragmentIon(int fragmentType, ArrayList<NeutralLoss> neutralLosses) {
+    public PeptideFragmentIon(int fragmentType, NeutralLoss[] neutralLosses) {
         if (neutralLosses != null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
+            this.neutralLosses = neutralLosses;
         }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
@@ -116,10 +117,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
-        if (neutralLosses == null) {
-            this.neutralLosses = new ArrayList<NeutralLoss>(0);
-        }
+    public NeutralLoss[] getNeutralLosses() {
         return neutralLosses;
     }
 
@@ -140,65 +138,64 @@ public class PeptideFragmentIon extends Ion {
     @Override
     public CvTerm getPrideCvTerm() {
 
-        if (cvTerm != null) {
-            return cvTerm;
-        }
+        if (cvTerm == null) {
 
-        switch (subType) {
-            case A_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001234", "frag: a ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001235", "frag: a ion - NH3", "" + getNumber());
-                }
-                break;
-            case B_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001232", "frag: b ion - NH3", "" + getNumber());
-                }
-                break;
-            case C_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001515", "frag: c ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001516", "frag: c ion - NH3", "" + getNumber());
-                }
-                break;
-            case X_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001519", "frag: x ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001520", "frag: x ion - NH3", "" + getNumber());
-                }
-                break;
-            case Y_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001223", "frag: y ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001233", "frag: y ion - NH3", "" + getNumber());
-                }
-                break;
-            case Z_ION:
-                if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001517", "frag: z ion - H2O", "" + getNumber());
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1001518", "frag: z ion - NH3", "" + getNumber());
-                }
-                break;
+            switch (subType) {
+                case A_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001234", "frag: a ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001235", "frag: a ion - NH3", "" + getNumber());
+                    }
+                    break;
+                case B_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001232", "frag: b ion - NH3", "" + getNumber());
+                    }
+                    break;
+                case C_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001515", "frag: c ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001516", "frag: c ion - NH3", "" + getNumber());
+                    }
+                    break;
+                case X_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001519", "frag: x ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001520", "frag: x ion - NH3", "" + getNumber());
+                    }
+                    break;
+                case Y_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001223", "frag: y ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001233", "frag: y ion - NH3", "" + getNumber());
+                    }
+                    break;
+                case Z_ION:
+                    if (neutralLosses == null || neutralLosses.length == 0) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001517", "frag: z ion - H2O", "" + getNumber());
+                    } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
+                        cvTerm = new CvTerm("PSI-MS", "MS:1001518", "frag: z ion - NH3", "" + getNumber());
+                    }
+                    break;
+            }
         }
 
         return cvTerm;

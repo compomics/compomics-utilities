@@ -89,13 +89,8 @@ public class ElementaryIon extends Ion {
     }
 
     @Override
-    public ArrayList<NeutralLoss> getNeutralLosses() {
-        switch (subType) {
-            case PROTON:
-                return new ArrayList<NeutralLoss>(); // If you see a neutral loss of a proton, call Gell-Mann and Zweig
-            default:
-                return new ArrayList<NeutralLoss>();
-        }
+    public NeutralLoss[] getNeutralLosses() {
+        return new NeutralLoss[0];
     }
 
     @Override

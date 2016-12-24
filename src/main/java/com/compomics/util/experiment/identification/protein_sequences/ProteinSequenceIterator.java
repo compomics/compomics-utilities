@@ -10,7 +10,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.general.EncapsulatedObject;
+import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
@@ -365,7 +365,7 @@ public class ProteinSequenceIterator {
                 }
 
                 PeptideDraft peptideDraft = new PeptideDraft(peptideSequence, nTermModification, fixedModifications, sequenceMass);
-                EncapsulatedObject<Boolean> smallMass = new EncapsulatedObject<Boolean>(Boolean.FALSE);
+                BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.FALSE);
                 setCterm(peptideDraft, proteinSequence, j);
                 Peptide peptide = getPeptide(peptideDraft, massMin, massMax, smallMass);
 
@@ -405,7 +405,7 @@ public class ProteinSequenceIterator {
             ArrayList<PeptideDraft> peptideDrafts = new ArrayList<PeptideDraft>(1);
             char sequenceNTermAaChar = sequenceAsCharArray[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(sequenceNTermAaChar);
-            EncapsulatedObject<Boolean> smallMasses = new EncapsulatedObject<Boolean>(Boolean.FALSE);
+            BoxedObject<Boolean> smallMasses = new BoxedObject<Boolean>(Boolean.FALSE);
 
             for (char nTermAaChar : aminoAcid.getSubAminoAcids()) {
 
@@ -526,13 +526,13 @@ public class ProteinSequenceIterator {
      *
      * @return the peptides that can be built from the given peptide drafts
      */
-    private ArrayList<Peptide> getPeptides(ArrayList<PeptideDraft> peptideDrafts, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, EncapsulatedObject<Boolean> smallMasses) {
+    private ArrayList<Peptide> getPeptides(ArrayList<PeptideDraft> peptideDrafts, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, BoxedObject<Boolean> smallMasses) {
 
         ArrayList<Peptide> results = new ArrayList<Peptide>();
 
         for (PeptideDraft peptideDraft : peptideDrafts) {
 
-            EncapsulatedObject<Boolean> smallMass = new EncapsulatedObject<Boolean>(Boolean.FALSE);
+            BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.FALSE);
             setCterm(peptideDraft, proteinSequence, indexOnProtein);
             Peptide peptide = getPeptide(peptideDraft, massMin, massMax, smallMass);
 
@@ -623,7 +623,7 @@ public class ProteinSequenceIterator {
      * @return the peptide built from the peptide draft
      */
     private Peptide getPeptide(PeptideDraft peptideDraft, Double massMin, Double massMax) {
-        return getPeptide(peptideDraft, massMin, massMax, new EncapsulatedObject<Boolean>(Boolean.FALSE));
+        return getPeptide(peptideDraft, massMin, massMax, new BoxedObject<Boolean>(Boolean.FALSE));
     }
 
     /**
@@ -637,7 +637,7 @@ public class ProteinSequenceIterator {
      *
      * @return the peptide built from the peptide draft
      */
-    private Peptide getPeptide(PeptideDraft peptideDraft, Double massMin, Double massMax, EncapsulatedObject<Boolean> smallMass) {
+    private Peptide getPeptide(PeptideDraft peptideDraft, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
 
         Double peptideMass = peptideDraft.getMass();
         Double tempMass = peptideMass + WATER_MASS;

@@ -75,9 +75,13 @@ public class Peptide extends ExperimentObject {
      */
     public final static String MODIFICATION_LOCALIZATION_SEPARATOR = "-ATAA-";
     /**
-     * Separator used to separate modifications in peptide keys.
+     * Separator used to separate modifications in peptide keys as string.
      */
     public final static String MODIFICATION_SEPARATOR = "_";
+    /**
+     * Separator used to separate modifications in peptide keys as char.
+     */
+    public final static char MODIFICATION_SEPARATOR_CHAR = '_';
 
     /**
      * Constructor for the peptide.
@@ -586,7 +590,7 @@ public class Peptide extends ExperimentObject {
         StringBuilder result = new StringBuilder(sequence);
         Collections.sort(tempModifications);
         for (String mod : tempModifications) {
-            result.append(MODIFICATION_SEPARATOR).append(mod);
+            result.append(MODIFICATION_SEPARATOR_CHAR).append(mod);
         }
         return result.toString();
     }

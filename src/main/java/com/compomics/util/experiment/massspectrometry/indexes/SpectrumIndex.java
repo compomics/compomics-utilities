@@ -102,7 +102,7 @@ public class SpectrumIndex implements UrParameter {
      *
      * @return the bin
      */
-    public Integer getBin(double mz) {
+    public int getBin(double mz) {
         if (ppm) {
             return getBinPpm(mz);
         } else {
@@ -118,8 +118,8 @@ public class SpectrumIndex implements UrParameter {
      *
      * @return the bin
      */
-    private Integer getBinAbsolute(double mz) {
-        Integer bin = (int) (mz / precursorTolerance);
+    private int getBinAbsolute(double mz) {
+        int bin = (int) (mz / precursorTolerance);
         return bin;
     }
 
@@ -131,7 +131,7 @@ public class SpectrumIndex implements UrParameter {
      *
      * @return the bin
      */
-    private Integer getBinPpm(double mz) {
+    private int getBinPpm(double mz) {
         int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
         return bin;
     }
@@ -145,7 +145,7 @@ public class SpectrumIndex implements UrParameter {
      * @return the peaks matching the given m/z
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
-        Integer bin0;
+        int bin0;
         if (ppm) {
             bin0 = getBinPpm(mz);
         } else {

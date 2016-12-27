@@ -466,7 +466,7 @@ public abstract class AminoAcid implements Serializable {
      * 
      * @return the mass of the amino acid
      */
-    public Double getMonoisotopicMass() {
+    public double getMonoisotopicMass() {
         if (monoisotopicAtomChain == null) {
             return monoisotopicMass;
         }

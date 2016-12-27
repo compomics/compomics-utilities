@@ -154,7 +154,7 @@ public abstract class SpectrumAnnotator {
      */
     protected IonMatch matchInSpectrum(Ion theoreticIon, Integer inspectedCharge) {
 
-        Double fragmentMz = theoreticIon.getTheoreticMz(inspectedCharge);
+        double fragmentMz = theoreticIon.getTheoreticMz(inspectedCharge);
 
         // Get the peaks matching the desired m/z
         ArrayList<Peak> matchedPeaks = spectrumIndex.getMatchingPeaks(fragmentMz);

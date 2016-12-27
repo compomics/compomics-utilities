@@ -86,7 +86,7 @@ public abstract class Ion extends ExperimentObject {
     /**
      * The theoretic mass.
      */
-    protected Double theoreticMass;
+    protected double theoreticMass;
     /**
      * The atomic composition of the ion.
      */
@@ -234,7 +234,7 @@ public abstract class Ion extends ExperimentObject {
      *
      * @return the theoretic mass
      */
-    public Double getTheoreticMass() {
+    public double getTheoreticMass() {
         if (atomChain != null) {
             return atomChain.getMass();
         }
@@ -248,9 +248,9 @@ public abstract class Ion extends ExperimentObject {
      *
      * @return the m/z expected for this ion
      */
-    public Double getTheoreticMz(Integer charge) {
-        Double protonMass = ElementaryIon.proton.getTheoreticMass();
-        Double mz = getTheoreticMass() + protonMass;
+    public double getTheoreticMz(Integer charge) {
+        double protonMass = ElementaryIon.proton.getTheoreticMass();
+        double mz = getTheoreticMass() + protonMass;
         if (charge > 1) {
             mz = (mz + (charge - 1) * protonMass) / charge;
         }

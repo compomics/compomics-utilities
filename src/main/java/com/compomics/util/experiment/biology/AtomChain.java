@@ -23,7 +23,7 @@ public class AtomChain implements Serializable {
     /**
      * The mass of the atom chain.
      */
-    private Double mass = null;
+    private double mass = -1.0;
     /**
      * Cache for the string value.
      * 
@@ -179,8 +179,8 @@ public class AtomChain implements Serializable {
      *
      * @return the mass of the atomic chain as sum of the individual atoms
      */
-    public Double getMass() {
-        if (mass == null) {
+    public double getMass() {
+        if (mass == -1.0) {
             estimateMass();
         }
         return mass;
@@ -199,8 +199,8 @@ public class AtomChain implements Serializable {
      * Estimates the mass of the atom chain.
      */
     private synchronized void estimateMass() {
-        if (mass == null) {
-            Double tempMass = 0.0;
+        if (mass == -1.0) {
+            double tempMass = 0.0;
             for (AtomImpl atom : atomChain) {
                 tempMass += atom.getMass();
             }
@@ -300,7 +300,7 @@ public class AtomChain implements Serializable {
             }
         }
         atomChain = newAtomChain;
-        mass = null;
+        mass = -1.0;
         stringValue1 = null;
     }
 
@@ -314,7 +314,7 @@ public class AtomChain implements Serializable {
     public void setOccurrence(Atom atom, Integer isotope, Integer occurrence) {
         remove(atom, isotope);
         append(new AtomImpl(atom, isotope), occurrence);
-        mass = null;
+        mass = -1.0;
         stringValue1 = null;
     }
 

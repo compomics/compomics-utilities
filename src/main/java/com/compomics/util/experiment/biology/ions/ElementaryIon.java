@@ -97,7 +97,7 @@ public class ElementaryIon extends Ion {
     public boolean isSameAs(Ion anotherIon) {
         return anotherIon.getType() == IonType.ELEMENTARY_ION
                 && anotherIon.getSubType() == subType
-                && anotherIon.getTheoreticMass().doubleValue() == theoreticMass
+                && anotherIon.getTheoreticMass() == theoreticMass
                 && anotherIon.getNeutralLossesAsString().equals(getNeutralLossesAsString());
     }
 }

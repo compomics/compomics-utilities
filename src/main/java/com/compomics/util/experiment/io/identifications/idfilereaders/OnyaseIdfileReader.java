@@ -98,29 +98,34 @@ public class OnyaseIdfileReader implements IdfileReader {
         this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
         BufferedReader br = new BufferedReader(new FileReader(resultsFile));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String key = "" + comment + separator + versionTag;
-            if (line.startsWith(key)) {
-                String fileVersion = line.substring(key.length()).trim();
-                version = new HashMap<String, ArrayList<String>>(1);
-                ArrayList<String> versions = new ArrayList<String>(1);
-                versions.add(fileVersion);
-                version.put(Advocate.onyaseEngine.getName(), versions);
-            }
-            key = "" + comment + separator + spectraTag;
-            if (line.startsWith(key)) {
-                mgfFile = line.substring(key.length()).trim();
-            }
-            key = "" + comment + separator + fastaTag;
-            if (line.startsWith(key)) {
-                fastaFile = line.substring(key.length()).trim();
-            }
-            key = "" + comment + separator + parametersFile;
-            if (line.startsWith(key)) {
-                parametersFile = line.substring(key.length()).trim();
-            }
-        }
+//        String line;
+//        while ((line = br.readLine()) != null) {
+//            String key = "" + comment + separator + versionTag;
+//            if (line.startsWith(key)) {
+//                String fileVersion = line.substring(key.length()).trim();
+//                version = new HashMap<String, ArrayList<String>>(1);
+//                ArrayList<String> versions = new ArrayList<String>(1);
+//                versions.add(fileVersion);
+//                version.put(Advocate.onyaseEngine.getName(), versions);
+//            }
+//            key = "" + comment + separator + spectraTag;
+//            if (line.startsWith(key)) {
+//                mgfFile = line.substring(key.length()).trim();
+//            }
+//            key = "" + comment + separator + fastaTag;
+//            if (line.startsWith(key)) {
+//                fastaFile = line.substring(key.length()).trim();
+//            }
+//            key = "" + comment + separator + parametersFile;
+//            if (line.startsWith(key)) {
+//                parametersFile = line.substring(key.length()).trim();
+//            }
+//        }
+        String fileVersion = "test";
+        version = new HashMap<String, ArrayList<String>>(1);
+        ArrayList<String> versions = new ArrayList<String>(1);
+        versions.add(fileVersion);
+        version.put(Advocate.onyaseEngine.getName(), versions);
     }
 
     @Override
@@ -166,12 +171,12 @@ public class OnyaseIdfileReader implements IdfileReader {
                     rank = 0;
                 }
                 rank++;
-                String sequence = lineSplit[1];
-                ArrayList<ModificationMatch> modificationMatches = getModificationMatches(lineSplit[2]);
+                String sequence = lineSplit[3];
+                ArrayList<ModificationMatch> modificationMatches = getModificationMatches(lineSplit[4]);
                 Peptide peptide = new Peptide(sequence, modificationMatches);
-                Integer charge = new Integer(lineSplit[3]);
-                Double score = new Double(lineSplit[4]);
-                Double eValue = new Double(lineSplit[5]);
+                Integer charge = new Integer(lineSplit[5]);
+                Double score = new Double(lineSplit[6]);
+                Double eValue = new Double(lineSplit[7]);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addHit(Advocate.onyaseEngine.getIndex(), peptideAssumption, true);
@@ -184,15 +189,16 @@ public class OnyaseIdfileReader implements IdfileReader {
 
         return result;
     }
-    
+
     /**
      * Parses modification matches from a modification string.
-     * 
+     *
      * @param modificationsString the modification string
-     * 
+     *
      * @return a list of modificaiton matches
-     * 
-     * @throws UnsupportedEncodingException exception thrown whenever an error occurred while decoding the string
+     *
+     * @throws UnsupportedEncodingException exception thrown whenever an error
+     * occurred while decoding the string
      */
     private ArrayList<ModificationMatch> getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
         if (modificationsString.length() == 0) {

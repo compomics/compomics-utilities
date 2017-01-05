@@ -174,6 +174,21 @@ public class HyperScore {
      * @return the e-values corresponding to the given scores
      */
     public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores) {
+        return getEValueMap(hyperScores, true);
+    }
+
+    /**
+     * Returns the e-value corresponding to a list of scores in a map. If not
+     * enough scores are present or if they are not spread the method returns
+     * null.
+     *
+     * @param hyperScores the different scores
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
+     *
+     * @return the e-values corresponding to the given scores
+     */
+    public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores, boolean useCache) {
         HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
@@ -219,7 +234,7 @@ public class HyperScore {
                 histogram.put(bin, 1);
             }
         }
-        double[] ab = getInterpolationValues(histogram);
+        double[] ab = getInterpolationValues(histogram, useCache);
         return getInterpolation(hyperScores, ab[0], ab[1]);
     }
 
@@ -227,10 +242,12 @@ public class HyperScore {
      * Returns the interpolation values for the given scores in the form {a, b}.
      *
      * @param scores the scores
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
      *
      * @return
      */
-    public double[] getInterpolationValues(int[] scores) {
+    public double[] getInterpolationValues(int[] scores, boolean useCache) {
         HashMap<Integer, Integer> scoreHistogram = new HashMap<Integer, Integer>();
         int maxScore = 0;
         int minScore = Integer.MAX_VALUE;
@@ -273,7 +290,7 @@ public class HyperScore {
                 scoreHistogram.put(bin, 1);
             }
         }
-        return getInterpolationValues(scoreHistogram);
+        return getInterpolationValues(scoreHistogram, useCache);
     }
 
     /**
@@ -281,10 +298,12 @@ public class HyperScore {
      * form {a, b}.
      *
      * @param scoreHistogram the score histogram
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
      *
      * @return the interpolation values for the given score histogram
      */
-    public double[] getInterpolationValues(HashMap<Integer, Integer> scoreHistogram) {
+    public double[] getInterpolationValues(HashMap<Integer, Integer> scoreHistogram, boolean useCache) {
 
         ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
         Collections.sort(bins, Collections.reverseOrder());
@@ -309,19 +328,21 @@ public class HyperScore {
             return null;
         }
         RegressionStatistics regressionStatistics = LinearRegression.getSimpleLinearRegression(evalueFunctionX, evalueFunctionY);
-        Double roundedA = Util.roundDouble(regressionStatistics.a, 2);
-        Double roundedB = Util.roundDouble(regressionStatistics.b, 2);
-        Integer nA = as.get(roundedA);
-        if (nA == null) {
-            as.put(roundedA, 1);
-        } else {
-            as.put(roundedA, nA + 1);
-        }
-        Integer nB = bs.get(roundedB);
-        if (nB == null) {
-            bs.put(roundedB, 1);
-        } else {
-            bs.put(roundedB, nB + 1);
+        if (useCache) {
+            Double roundedA = Util.roundDouble(regressionStatistics.a, 2);
+            Double roundedB = Util.roundDouble(regressionStatistics.b, 2);
+            Integer nA = as.get(roundedA);
+            if (nA == null) {
+                as.put(roundedA, 1);
+            } else {
+                as.put(roundedA, nA + 1);
+            }
+            Integer nB = bs.get(roundedB);
+            if (nB == null) {
+                bs.put(roundedB, 1);
+            } else {
+                bs.put(roundedB, nB + 1);
+            }
         }
         return new double[]{regressionStatistics.a, regressionStatistics.b};
     }

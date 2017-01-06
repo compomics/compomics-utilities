@@ -1374,7 +1374,7 @@ public class ObjectsDB implements Serializable {
         if (dbFolder.exists() && deleteOldDatabase) {
 
             close();
-
+            
             DerbyUtil.closeConnection();
             boolean deleted = Util.deleteDir(dbFolder);
             //TODO: Restore connections?
@@ -1382,6 +1382,10 @@ public class ObjectsDB implements Serializable {
             if (!deleted) {
                 System.out.println("Failed to delete db folder: " + dbFolder.getPath());
             }
+        }
+        else {
+            close();
+            DerbyUtil.closeConnection();
         }
 
         if (useSQLite) {
@@ -1397,7 +1401,7 @@ public class ObjectsDB implements Serializable {
         }
         if (!useSQLite) {
             if (isConnectionActive()) {
-                throw new IllegalArgumentException("Impossible to establish a Derby connection in " + path + ", connection to the folder already active.");
+                //throw new IllegalArgumentException("Impossible to establish a Derby connection in " + path + ", connection to the folder already active.");
             }
             String url = "jdbc:derby:" + path + ";create=true";
             dbConnection = DriverManager.getConnection(url);
@@ -1486,7 +1490,7 @@ public class ObjectsDB implements Serializable {
         // @TODO: escape special characters:
         //String correctedKey = key.replaceAll("[^\\dA-Za-z ]", "");
         String correctedKey = key;
-        if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
+        if (longKeysMap != null && !correctedKey.startsWith(LONG_KEY_PREFIX)) {
             if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
                 correctedKey = LONG_KEY_PREFIX + longKeysMap.get(tableName).indexOf(key);
             } else if (key.length() >= MAX_KEY_LENGTH) { // @TODO: find the optimal value

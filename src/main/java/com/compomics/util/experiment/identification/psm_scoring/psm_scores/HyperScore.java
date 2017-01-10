@@ -80,7 +80,6 @@ public class HyperScore {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-        
         ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
         return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
     }
@@ -155,8 +154,8 @@ public class HyperScore {
                 }
             }
         }
-        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
-        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
+        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
+        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
         nForward = nForward > 20 ? 20 : nForward;
         nRewind = nRewind > 20 ? 20 : nRewind;
         long forwardFactorial = BasicMathFunctions.factorial(nForward);

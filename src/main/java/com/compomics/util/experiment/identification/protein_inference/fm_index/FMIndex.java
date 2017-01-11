@@ -48,6 +48,10 @@ public class FMIndex implements PeptideMapper {
     **/
     private int indexParts = 0;
     /**
+     * Byte size of index chuck
+     */
+    private final int indexChunkSize = 100 * 1024 * 1024;
+    /**
      * Sampled suffix array.
      */
     private ArrayList<int[]> suffixArraysPrimary = new ArrayList<int[]>();
@@ -208,7 +212,7 @@ public class FMIndex implements PeptideMapper {
      */
     double lookupTolerance = 0.02;
     /**
-     * Maximum mass for lookup table.
+     * Maximum mass for lookup table [Da].
      */
     double lookupMaxMass = 800;
     /**
@@ -247,7 +251,7 @@ public class FMIndex implements PeptideMapper {
     public long getAllocatedBytes() {
         long bytes = 0;
         for (int indexPart = 0; indexPart < indexParts; ++indexPart){
-            bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + indexStringLengths.get(indexPart);
+            bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + suffixArraysPrimary.get(indexPart).length * 4;
         }
         return bytes;
     }
@@ -680,7 +684,7 @@ public class FMIndex implements PeptideMapper {
         // reading all proteins in a first pass to get information about number and total length
         ArrayList<Integer> tmpLengths = new ArrayList<Integer>();
         ArrayList<Integer> tmpProteins = new ArrayList<Integer>();
-        long ticker = 250 * 1024 * 1024;
+        long ticker = indexChunkSize;
         try {
             int indexStringLength = 1;
             int numProteins = 0;
@@ -715,8 +719,6 @@ public class FMIndex implements PeptideMapper {
             );
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        
-        System.out.println("Num Chunks: " + tmpLengths.size());
         
         try {
             ProteinIterator pi = sf.getProteinIterator(false);

@@ -663,14 +663,6 @@ public class FMIndex implements PeptideMapper {
         numMasses = aaMassVector.size();
 
         SequenceFactory sf = SequenceFactory.getInstance();
-        int maxProgressBar = 10;
-
-        if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar
-            );
-            waitingHandler.setSecondaryProgressCounter(0);
-        }
         
         
 
@@ -686,30 +678,51 @@ public class FMIndex implements PeptideMapper {
         }
 
         // reading all proteins in a first pass to get information about number and total length
-        long indexStringLengthLong = 1L;
-        int indexStringLengthZero = 1;
-        int numProteins = 0;
-        int numProteinsZero = 0;
-        long ticker = 5 * 1024 * 1024;
+        ArrayList<Integer> tmpLengths = new ArrayList<Integer>();
+        ArrayList<Integer> tmpProteins = new ArrayList<Integer>();
+        long ticker = 250 * 1024 * 1024;
         try {
+            int indexStringLength = 1;
+            int numProteins = 0;
             ProteinIterator pi = sf.getProteinIterator(false);
-            ProteinIterator pi2 = sf.getProteinIterator(false);
             while (pi.hasNext()) {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
-                indexStringLengthZero += proteinLen;
+                indexStringLength += proteinLen;
                 ++numProteins;
-                ++numProteinsZero;
-                if (indexStringLengthZero > ticker){
-                    addDataToIndex(pi2, indexStringLengthZero, numProteinsZero, alphabet, waitingHandler, displayProgress);
-                    indexStringLengthZero = 1;
-                    numProteinsZero = 0;
+                if (indexStringLength > ticker){
+                    tmpLengths.add(indexStringLength);
+                    tmpProteins.add(numProteins);
+                    indexStringLength = 1;
+                    numProteins = 0;
                 }
             }
-            addDataToIndex(pi2, indexStringLengthZero, numProteinsZero, alphabet, waitingHandler, displayProgress);
+            tmpLengths.add(indexStringLength);
+            tmpProteins.add(numProteins);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        
+        int maxProgressBar = 10 * tmpLengths.size();
+
+        if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar
+            );
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+        
+        System.out.println("Num Chunks: " + tmpLengths.size());
+        
+        try {
+            ProteinIterator pi = sf.getProteinIterator(false);
+            for (int i = 0; i < tmpLengths.size(); ++i){
+                addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, waitingHandler, displayProgress);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -755,6 +768,7 @@ public class FMIndex implements PeptideMapper {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
+                if (!pi.hasNext()) throw new Exception("More sequences from database requested than contained.");
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
                 T[tmpN++] = '/'; // adding the delimiters
@@ -804,6 +818,7 @@ public class FMIndex implements PeptideMapper {
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
+        
 
         // creating the occurrence table and less table for backward search over forward text
         WaveletTree occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
@@ -853,11 +868,6 @@ public class FMIndex implements PeptideMapper {
         occurrenceTablesReversed.add(occurrenceTableReversed);
         lessTablesPrimary.add(lessTablePrimary);
         lessTablesReversed.add(lessTableReversed);
-
-        TReversed = null;
-        T = null;
-        bwt = null;
-
     }
     
     
@@ -1078,7 +1088,6 @@ public class FMIndex implements PeptideMapper {
      * @return the mapping
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
-        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();

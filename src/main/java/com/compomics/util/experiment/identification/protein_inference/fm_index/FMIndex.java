@@ -42,30 +42,35 @@ public class FMIndex implements PeptideMapper {
      * Semaphore for caching.
      */
     static Semaphore cacheMutex = new Semaphore(1);
+    
+    /**
+    * Number of chunks of complete index
+    **/
+    private int indexParts = 0;
     /**
      * Sampled suffix array.
      */
-    private int[] suffixArrayPrimary = null; //private int[] suffixArrayReversed = null;
+    private ArrayList<int[]> suffixArraysPrimary = new ArrayList<int[]>();
     /**
      * Wavelet tree for storing the burrows wheeler transform.
      */
-    public WaveletTree occurrenceTablePrimary = null;
+    public ArrayList<WaveletTree> occurrenceTablesPrimary = new ArrayList<WaveletTree>();
     /**
      * Wavelet tree for storing the burrows wheeler transform reversed.
      */
-    public WaveletTree occurrenceTableReversed = null;
+    public ArrayList<WaveletTree> occurrenceTablesReversed = new ArrayList<WaveletTree>();
     /**
      * Less table for doing an update step according to the LF step.
      */
-    public int[] lessTablePrimary = null;
+    public ArrayList<int[]> lessTablesPrimary = new ArrayList<int[]>();
     /**
      * Less table for doing an update step according to the LF step reversed.
      */
-    public int[] lessTableReversed = null;
+    public ArrayList<int[]> lessTablesReversed = new ArrayList<int[]>();
     /**
      * Length of the indexed string (all concatenated protein sequences).
      */
-    public int indexStringLength = 0;
+    public ArrayList<Integer> indexStringLengths = new ArrayList<Integer>();
     /**
      * Every 2^samplingShift suffix array entry will be sampled.
      */
@@ -81,11 +86,11 @@ public class FMIndex implements PeptideMapper {
     /**
      * Storing the starting positions of the protein sequences.
      */
-    private int[] boundaries = null;
+    private ArrayList<int[]> boundaries = new ArrayList<int[]>();
     /**
      * List of all accession IDs in the FASTA file.
      */
-    private String[] accessions = null;
+    private ArrayList<String[]> accessions = new ArrayList<String[]>();
     /**
      * List of all amino acid masses.
      */
@@ -240,7 +245,11 @@ public class FMIndex implements PeptideMapper {
 
     // @TODO: add javadoc
     public long getAllocatedBytes() {
-        return occurrenceTablePrimary.getAllocatedBytes() + occurrenceTableReversed.getAllocatedBytes() + indexStringLength;
+        long bytes = 0;
+        for (int indexPart = 0; indexPart < indexParts; ++indexPart){
+            bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + indexStringLengths.get(indexPart);
+        }
+        return bytes;
     }
 
     /**
@@ -654,8 +663,7 @@ public class FMIndex implements PeptideMapper {
         numMasses = aaMassVector.size();
 
         SequenceFactory sf = SequenceFactory.getInstance();
-        boolean deNovo = true; // @TODO: change it for de novo
-        int maxProgressBar = 6 + ((deNovo) ? 4 : 0);
+        int maxProgressBar = 10;
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -663,32 +671,66 @@ public class FMIndex implements PeptideMapper {
             );
             waitingHandler.setSecondaryProgressCounter(0);
         }
+        
+        
+
+        // Prepare alphabet
+        char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
+        System.arraycopy(AminoAcid.getAminoAcids(), 0, sortedAas, 0, AminoAcid.getAminoAcids().length);
+        sortedAas[AminoAcid.getAminoAcids().length] = '$';
+        sortedAas[AminoAcid.getAminoAcids().length + 1] = '/';
+        Arrays.sort(sortedAas);
+        long[] alphabet = new long[]{0, 0};
+        for (int i = 0; i < sortedAas.length; ++i) {
+            alphabet[sortedAas[i] >> 6] |= 1L << (sortedAas[i] & 63);
+        }
 
         // reading all proteins in a first pass to get information about number and total length
-        indexStringLength = 1;
         long indexStringLengthLong = 1L;
+        int indexStringLengthZero = 1;
         int numProteins = 0;
+        int numProteinsZero = 0;
+        long ticker = 5 * 1024 * 1024;
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
+            ProteinIterator pi2 = sf.getProteinIterator(false);
             while (pi.hasNext()) {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
-                indexStringLengthLong += proteinLen;
+                indexStringLengthZero += proteinLen;
                 ++numProteins;
+                ++numProteinsZero;
+                if (indexStringLengthZero > ticker){
+                    addDataToIndex(pi2, indexStringLengthZero, numProteinsZero, alphabet, waitingHandler, displayProgress);
+                    indexStringLengthZero = 1;
+                    numProteinsZero = 0;
+                }
             }
+            addDataToIndex(pi2, indexStringLengthZero, numProteinsZero, alphabet, waitingHandler, displayProgress);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        indexStringLengthLong += Math.max(0, numProteins - 1); // delimiters between protein sequences
-        indexStringLengthLong += 2; // last delimiter + sentinal
-        if (indexStringLengthLong > Integer.MAX_VALUE) {
-            throw new UnsupportedOperationException("Database contains more amino acids than currently supported by the index (" + indexStringLengthLong + " amino acids found).");
+        
+        
+        lookupMasses = new long[(((int) ((lookupMaxMass + lookupTolerance) * lookupMultiplier)) >>> 6) + 3];
+        for (int i = 0; i < lookupMasses.length; ++i) {
+            lookupMasses[i] = 0L;
         }
-        indexStringLength = (int) indexStringLengthLong;
+        recursiveMassFilling(lookupMasses, lookupMultiplier, lookupTolerance, lookupMaxMass, 0., 0);
 
+    }
+    
+    
+    
+    
+    void addDataToIndex(ProteinIterator pi, int indexStringLength, int numProteins, long[] alphabet, WaitingHandler waitingHandler, boolean displayProgress){
+        indexParts += 1;
+        indexStringLength += numProteins + 1; // delimiters between protein sequences + sentinal
+        indexStringLengths.add(indexStringLength);
+        
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
@@ -697,20 +739,19 @@ public class FMIndex implements PeptideMapper {
         T[indexStringLength - 2] = '/'; // adding delimiter at ending
         T[indexStringLength - 1] = '$'; // adding the sentinal
 
-        //System.out.println("Num Proteins: " + numProteins);
-        //System.out.println("Num AA: " + (indexStringLength - numProteins - 2));
 
-        boundaries = new int[numProteins + 1];
-        accessions = new String[numProteins];
-        boundaries[0] = 1;
+        int[] bndaries = new int[numProteins + 1];
+        boundaries.add(bndaries);
+        String[] accssions = new String[numProteins];
+        accessions.add(accssions);
+        boundaries.get(0)[0] = 1;
 
         // reading proteins in a second pass to store their amino acid sequences and their accession numbers
         int tmpN = 0;
         int tmpNumProtein = 0;
         try {
-            ProteinIterator pi = sf.getProteinIterator(false);
-
-            while (pi.hasNext()) {
+            
+            for (int i = 0; i < numProteins; ++i){
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
@@ -719,8 +760,8 @@ public class FMIndex implements PeptideMapper {
                 T[tmpN++] = '/'; // adding the delimiters
                 System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
                 tmpN += proteinLen;
-                accessions[tmpNumProtein++] = currentProtein.getAccession();
-                boundaries[tmpNumProtein] = tmpN + 1;
+                accssions[tmpNumProtein++] = currentProtein.getAccession();
+                bndaries[tmpNumProtein] = tmpN + 1;
 
             }
         } catch (Exception e) {
@@ -734,23 +775,12 @@ public class FMIndex implements PeptideMapper {
         for (int i = 0; i < indexStringLength; ++i) {
             T_int[i] = T[i];
         }
-        suffixArrayPrimary = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);
+        int[] suffixArrayPrimary = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
         T_int = null;
-
-        // Prepare alphabet
-        char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
-        System.arraycopy(AminoAcid.getAminoAcids(), 0, sortedAas, 0, AminoAcid.getAminoAcids().length);
-        sortedAas[AminoAcid.getAminoAcids().length] = '$';
-        sortedAas[AminoAcid.getAminoAcids().length + 1] = '/';
-        Arrays.sort(sortedAas);
-        long[] alphabet = new long[]{0, 0};
-        for (int i = 0; i < sortedAas.length; ++i) {
-            alphabet[sortedAas[i] >> 6] |= 1L << (sortedAas[i] & 63);
-        }
 
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[indexStringLength];
@@ -770,69 +800,67 @@ public class FMIndex implements PeptideMapper {
             }
             sampledSuffixArray[sampledIndex++] = suffixArrayPrimary[i];
         }
-        suffixArrayPrimary = sampledSuffixArray;
+        suffixArraysPrimary.add(sampledSuffixArray);
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
 
         // creating the occurrence table and less table for backward search over forward text
-        occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
-        lessTablePrimary = occurrenceTablePrimary.createLessTable();
+        WaveletTree occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
+        int[] lessTablePrimary = occurrenceTablePrimary.createLessTable();
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
 
         bwt = null;
-        if (deNovo) {
-            // create inversed text for inversed index
-            byte[] TReversed = new byte[indexStringLength];
-            for (int i = 0; i < indexStringLength - 1; ++i) {
-                TReversed[indexStringLength - 2 - i] = T[i];
-            }
-            TReversed[indexStringLength - 1] = '$';
-            if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
-
-            // create the inversed suffix array using at most 128 characters
-            T_int = new int[indexStringLength];
-            for (int i = 0; i < indexStringLength; ++i) {
-                T_int[i] = TReversed[i];
-            }
-            int[] suffixArrayReversed = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);
-            if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
-
-            // create inversed Burrows-Wheeler-Transform
-            bwt = new byte[indexStringLength];
-            for (int i = 0; i < indexStringLength; ++i) {
-                bwt[i] = (suffixArrayReversed[i] != 0) ? TReversed[suffixArrayReversed[i] - 1] : TReversed[indexStringLength - 1];
-            }
-            if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
-
-            // create inversed less and occurrence table
-            occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
-            lessTableReversed = occurrenceTableReversed.createLessTable();
-            if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
-
-            TReversed = null;
+        // create inversed text for inversed index
+        byte[] TReversed = new byte[indexStringLength];
+        for (int i = 0; i < indexStringLength - 1; ++i) {
+            TReversed[indexStringLength - 2 - i] = T[i];
+        }
+        TReversed[indexStringLength - 1] = '$';
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
         }
 
+        // create the inversed suffix array using at most 128 characters
+        T_int = new int[indexStringLength];
+        for (int i = 0; i < indexStringLength; ++i) {
+            T_int[i] = TReversed[i];
+        }
+        int[] suffixArrayReversed = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
+
+        // create inversed Burrows-Wheeler-Transform
+        bwt = new byte[indexStringLength];
+        for (int i = 0; i < indexStringLength; ++i) {
+            bwt[i] = (suffixArrayReversed[i] != 0) ? TReversed[suffixArrayReversed[i] - 1] : TReversed[indexStringLength - 1];
+        }
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
+
+        // create inversed less and occurrence table
+        WaveletTree occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
+        int[] lessTableReversed = occurrenceTableReversed.createLessTable();
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
+        
+        occurrenceTablesPrimary.add(occurrenceTablePrimary);
+        occurrenceTablesReversed.add(occurrenceTableReversed);
+        lessTablesPrimary.add(lessTablePrimary);
+        lessTablesReversed.add(lessTableReversed);
+
+        TReversed = null;
         T = null;
         bwt = null;
 
-        lookupMasses = new long[(((int) ((lookupMaxMass + lookupTolerance) * lookupMultiplier)) >>> 6) + 3];
-        for (int i = 0; i < lookupMasses.length; ++i) {
-            lookupMasses[i] = 0L;
-        }
-        recursiveMassFilling(lookupMasses, lookupMultiplier, lookupTolerance, lookupMaxMass, 0., 0);
-
     }
+    
+    
 
     /**
      * Recursive function to compute all possible mass combinations up to a
@@ -993,7 +1021,11 @@ public class FMIndex implements PeptideMapper {
      * @param index the position
      * @return the text position
      */
-    private int getTextPosition(int index) {
+    private int getTextPosition(int index, int indexPart) {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
+        int indexStringLength = indexStringLengths.get(indexPart);
         int numIterations = 0;
         while (((index & samplingMask) != 0) && (index != 0)) {
             int[] aminoInfo = occurrenceTablePrimary.getCharacterInfo(index);
@@ -1016,15 +1048,24 @@ public class FMIndex implements PeptideMapper {
      */
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref) {
-
+        ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<PeptideProteinMapping>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             if (genericVariantMatching) {
-                return getProteinMappingWithVariantsGeneric(peptide, seqMatchPref);
+                for (int i = 0; i < indexParts; ++i){
+                    peptideProteinMapping.addAll(getProteinMappingWithVariantsGeneric(peptide, seqMatchPref, i));
+                }
+                return peptideProteinMapping;
             } else {
-                return getProteinMappingWithVariantsSpecific(peptide, seqMatchPref);
+                for (int i = 0; i < indexParts; ++i){
+                     peptideProteinMapping.addAll(getProteinMappingWithVariantsSpecific(peptide, seqMatchPref, i));
+                }
+                return peptideProteinMapping;
             }
         } else {
-            return getProteinMappingWithoutVariants(peptide, seqMatchPref);
+            for (int i = 0; i < indexParts; ++i){
+                peptideProteinMapping.addAll(getProteinMappingWithoutVariants(peptide, seqMatchPref, i));
+            }
+            return peptideProteinMapping;
         }
 
     }
@@ -1036,7 +1077,10 @@ public class FMIndex implements PeptideMapper {
      * @param seqMatchPref the sequence matching preferences
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
 
         String pep_rev = new StringBuilder(peptide).reverse().toString();
@@ -1055,7 +1099,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         if (countX <= maxX) {
-            backwardList[0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
+            backwardList[0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1)); // L, R, char, previous content, num of X
             for (int j = 0; j < lenPeptide; ++j) {
                 String combinationSequence = combinations.get(j);
                 ArrayList<MatrixContent> cell = backwardList[j];
@@ -1097,11 +1141,11 @@ public class FMIndex implements PeptideMapper {
                 int rightIndex = content.right;
 
                 for (int j = leftIndex; j <= rightIndex; ++j) {
-                    int pos = getTextPosition(j);
-                    int index = binarySearch(boundaries, pos);
-                    String accession = accessions[index];
+                    int pos = getTextPosition(j, indexPart);
+                    int index = binarySearch(boundaries.get(indexPart), pos);
+                    String accession = accessions.get(indexPart)[index];
 
-                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentPeptide, pos - boundaries[index]);
+                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentPeptide, pos - boundaries.get(indexPart)[index]);
                     allMatches.add(peptideProteinMapping);
                 }
             }
@@ -1121,7 +1165,10 @@ public class FMIndex implements PeptideMapper {
      * @param seqMatchPref the sequence match preferences
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingPreferences seqMatchPref) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
@@ -1143,7 +1190,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         if (countX <= xNumLimit) {
-            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1));
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
 
             for (int k = 0; k <= maxNumberVariants; ++k) {
                 ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
@@ -1228,11 +1275,11 @@ public class FMIndex implements PeptideMapper {
                     String cleanPeptide = currentPeptide.replace("*", "");
 
                     for (int j = leftIndex; j <= rightIndex; ++j) {
-                        int pos = getTextPosition(j);
-                        int index = binarySearch(boundaries, pos);
-                        String accession = accessions[index];
+                        int pos = getTextPosition(j, indexPart);
+                        int index = binarySearch(boundaries.get(indexPart), pos);
+                        String accession = accessions.get(indexPart)[index];
 
-                        int startPosition = pos - boundaries[index];
+                        int startPosition = pos - boundaries.get(indexPart)[index];
                         boolean newPeptide = true;
 
                         for (PeptideProteinMapping ppm : allMatches) {
@@ -1284,7 +1331,10 @@ public class FMIndex implements PeptideMapper {
      * @param seqMatchPref the sequence matching preferences
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
 
         String pep_rev = new StringBuilder(peptide).reverse().toString();
@@ -1308,7 +1358,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         if (countX <= xNumLimit) {
-            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1));
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
 
             for (int k = 0; k <= numErrors; ++k) {
                 LinkedList<MatrixContent>[] backwardList = backwardMatrix[k];
@@ -1398,11 +1448,11 @@ public class FMIndex implements PeptideMapper {
                     String cleanPeptide = currentPeptide.replace("*", "");
 
                     for (int j = leftIndex; j <= rightIndex; ++j) {
-                        int pos = getTextPosition(j);
-                        int index = binarySearch(boundaries, pos);
-                        String accession = accessions[index];
+                        int pos = getTextPosition(j, indexPart);
+                        int index = binarySearch(boundaries.get(indexPart), pos);
+                        String accession = accessions.get(indexPart)[index];
 
-                        int startPosition = pos - boundaries[index];
+                        int startPosition = pos - boundaries.get(indexPart)[index];
                         boolean newPeptide = true;
 
                         for (PeptideProteinMapping ppm : allMatches) {
@@ -2475,10 +2525,17 @@ public class FMIndex implements PeptideMapper {
      */
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
-            return getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+            for (int i = 0; i < indexParts; ++i){
+                allMatches.addAll(getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance, i));
+            }
+            return allMatches;
         } else {
-            return getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+            for (int i = 0; i < indexParts; ++i){
+                allMatches.addAll(getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance, i));
+            }
+            return allMatches;
         }
     }
 
@@ -2495,7 +2552,12 @@ public class FMIndex implements PeptideMapper {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
+        int[] lessTableReversed = lessTablesReversed.get(indexPart);
+        WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
@@ -2588,7 +2650,7 @@ public class FMIndex implements PeptideMapper {
                 matrix[0].add(matrixContent);
             }
         } else {
-            matrixReversed[0].add(new MatrixContent(indexStringLength - 1));
+            matrixReversed[0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
         }
 
         if (cached == null) {
@@ -2605,7 +2667,7 @@ public class FMIndex implements PeptideMapper {
                 String currentPeptide = "";
 
                 int leftIndexFront = 0;
-                int rightIndexFront = indexStringLength - 1;
+                int rightIndexFront = indexStringLengths.get(indexPart) - 1;
                 ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
 
                 while (currentContent.previousContent != null) {
@@ -2682,7 +2744,7 @@ public class FMIndex implements PeptideMapper {
 
             if (turned) {
                 leftIndex = 0;
-                rightIndex = indexStringLength - 1;
+                rightIndex = indexStringLengths.get(indexPart) - 1;
 
                 for (int p = 0; p < peptide.length(); ++p) {
                     final int aminoAcid = peptide.charAt(p);
@@ -2701,11 +2763,11 @@ public class FMIndex implements PeptideMapper {
             }
 
             for (int j = leftIndex; j <= rightIndex; ++j) {
-                int pos = getTextPosition(j);
-                int index = binarySearch(boundaries, pos);
-                String accession = accessions[index];
+                int pos = getTextPosition(j, indexPart);
+                int index = binarySearch(boundaries.get(indexPart), pos);
+                String accession = accessions.get(indexPart)[index];
 
-                PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries[index], modifications);
+                PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries.get(indexPart)[index], modifications);
                 allMatches.add(peptideProteinMapping);
             }
         }
@@ -2733,8 +2795,12 @@ public class FMIndex implements PeptideMapper {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
+        int[] lessTableReversed = lessTablesReversed.get(indexPart);
+        WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
 
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
@@ -2835,7 +2901,7 @@ public class FMIndex implements PeptideMapper {
                 matrix[error][0].add(matrixContent);
             }
         } else {
-            matrixReversed[0][0].add(new MatrixContent(indexStringLength - 1));
+            matrixReversed[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
         }
 
         if (cached == null) {
@@ -2852,7 +2918,7 @@ public class FMIndex implements PeptideMapper {
                     MatrixContent currentContent = content;
                     String currentPeptide = "";
                     int leftIndexFront = 0;
-                    int rightIndexFront = indexStringLength - 1;
+                    int rightIndexFront = indexStringLengths.get(indexPart) - 1;
                     ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
                     String allVariants = "";
 
@@ -2960,7 +3026,7 @@ public class FMIndex implements PeptideMapper {
 
                 if (turned) {
                     leftIndex = 0;
-                    rightIndex = indexStringLength - 1;
+                    rightIndex = indexStringLengths.get(indexPart) - 1;
 
                     for (int p = 0; p < peptide.length(); ++p) {
                         boolean update = true;
@@ -3010,11 +3076,11 @@ public class FMIndex implements PeptideMapper {
 
                 String cleanPeptide = peptide.replace("*", "");
                 for (int j = leftIndex; j <= rightIndex; ++j) {
-                    int pos = getTextPosition(j);
-                    int index = binarySearch(boundaries, pos);
-                    String accession = accessions[index];
+                    int pos = getTextPosition(j, indexPart);
+                    int index = binarySearch(boundaries.get(indexPart), pos);
+                    String accession = accessions.get(indexPart)[index];
 
-                    int startPosition = pos - boundaries[index];
+                    int startPosition = pos - boundaries.get(indexPart)[index];
                     boolean newPeptide = true;
 
                     for (PeptideProteinMapping ppm : allMatches) {

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -20,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -121,11 +123,15 @@ public class OnyaseIdfileReader implements IdfileReader {
 //                parametersFile = line.substring(key.length()).trim();
 //            }
 //        }
+
+        // To remove
         String fileVersion = "test";
         version = new HashMap<String, ArrayList<String>>(1);
         ArrayList<String> versions = new ArrayList<String>(1);
         versions.add(fileVersion);
         version.put(Advocate.onyaseEngine.getName(), versions);
+        mgfFile = "bla\\qExactive01819.mgf";
+
     }
 
     @Override
@@ -144,11 +150,13 @@ public class OnyaseIdfileReader implements IdfileReader {
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
+        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<String, SpectrumMatch>();
+
         String spectrumFileName = Util.getFileName(mgfFile);
         String resultFileName = Util.getFileName(resultsFile);
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
+        bufferedRandomAccessFile.readLine(); // To remove
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
@@ -156,28 +164,24 @@ public class OnyaseIdfileReader implements IdfileReader {
 
         String separatorString = separator + "";
         String line;
-        SpectrumMatch spectrumMatch = null;
-        int rank = 0;
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (!line.startsWith("#")) {
                 String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0];
-                if (spectrumTitle.length() > 0) {
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                    if (spectrumMatch != null) {
-                        result.add(spectrumMatch);
-                    }
-                    spectrumMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
-                    rank = 0;
+                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
+                if (spectrumMatch == null) {
+                    spectrumMatch = new SpectrumMatch(spectrumKey);
+                    spectrumMatchesMap.put(spectrumKey, spectrumMatch);
                 }
-                rank++;
                 String sequence = lineSplit[3];
                 ArrayList<ModificationMatch> modificationMatches = getModificationMatches(lineSplit[4]);
                 Peptide peptide = new Peptide(sequence, modificationMatches);
                 Integer charge = new Integer(lineSplit[5]);
                 Double score = new Double(lineSplit[6]);
                 Double eValue = new Double(lineSplit[7]);
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addHit(Advocate.onyaseEngine.getIndex(), peptideAssumption, true);
                 long currentIndex = bufferedRandomAccessFile.getFilePointer();
@@ -185,6 +189,24 @@ public class OnyaseIdfileReader implements IdfileReader {
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
             }
+        }
+
+        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        for (SpectrumMatch spectrumMatch : spectrumMatchesMap.values()) {
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> assumptionsMap = spectrumMatch.getAllAssumptions(Advocate.onyaseEngine.getIndex());
+            ArrayList<Double> eValues = new ArrayList<Double>(assumptionsMap.keySet());
+            Collections.sort(eValues);
+            int rank = 1;
+            int cpt = 1;
+            for (Double eValue : eValues) {
+                ArrayList<SpectrumIdentificationAssumption> spectrumIdentificationAssumptions = assumptionsMap.get(eValue);
+                for (SpectrumIdentificationAssumption spectrumIdentificationAssumption : spectrumIdentificationAssumptions) {
+                    spectrumIdentificationAssumption.setRank(rank);
+                    cpt++;
+                }
+                rank = cpt;
+            }
+            result.add(spectrumMatch);
         }
 
         return result;

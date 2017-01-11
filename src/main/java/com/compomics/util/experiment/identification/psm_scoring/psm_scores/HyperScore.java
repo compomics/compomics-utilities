@@ -100,15 +100,21 @@ public class HyperScore {
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
 
         boolean peak = false;
-        Double precursorIntensity = 0.0;
+        Double coveredIntensity = 0.0;
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
             switch (ion.getType()) {
-                case PRECURSOR_ION:
-                    precursorIntensity += ionMatch.peak.intensity;
-                    break;
                 case PEPTIDE_FRAGMENT_ION:
-                    peak = true;
+                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                    if (peptideFragmentIon.hasNeutralLosses() || peptideFragmentIon.getNumber() < 2) {
+                        coveredIntensity += ionMatch.peak.intensity;
+                    } else {
+                        peak = true;
+                    }
+                    break;
+                default:
+                    coveredIntensity += ionMatch.peak.intensity;
+
             }
         }
         if (!peak) {
@@ -124,7 +130,7 @@ public class HyperScore {
             spectrum.addUrParam(spectrumIndex);
         }
 
-        Double totalIntensity = spectrumIndex.getTotalIntensity() - precursorIntensity;
+        Double totalIntensity = spectrumIndex.getTotalIntensity() - coveredIntensity;
 
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<Integer>(1);
@@ -134,14 +140,14 @@ public class HyperScore {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;
             Ion ion = ionMatch.ion;
-            if (ion.getType() != Ion.IonType.PRECURSOR_ION && !accountedFor.contains(mz)) {
-                accountedFor.add(mz);
-                Double x0I = peakI.intensity / totalIntensity;
-                xCorr += x0I;
-                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
-                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
-                    int number = peptideFragmentIon.getNumber();
-                    if (number > 1) {
+            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses() && !accountedFor.contains(mz)) {
+                PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                int number = peptideFragmentIon.getNumber();
+                if (number > 1) {
+                    accountedFor.add(mz);
+                    Double x0I = peakI.intensity / totalIntensity;
+                    xCorr += x0I;
+                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
                         if (ion.getSubType() == PeptideFragmentIon.X_ION
                                 || ion.getSubType() == PeptideFragmentIon.Y_ION
                                 || ion.getSubType() == PeptideFragmentIon.Z_ION) {

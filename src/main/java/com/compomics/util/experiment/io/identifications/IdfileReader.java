@@ -58,7 +58,6 @@ public interface IdfileReader {
      * @return a list of spectrum matches
      *
      * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws SQLException if an SQLException occurs
      * @throws ClassNotFoundException if an\ ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
@@ -66,7 +65,7 @@ public interface IdfileReader {
      * @throws XmlPullParserException if an XmlPullParserException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
 
     /**
      * Retrieves all the identifications from an identification file as a list
@@ -103,21 +102,4 @@ public interface IdfileReader {
      * @return a boolean indicating whether the file contains de novo results as tags
      */
     public boolean hasDeNovoTags();
-    /**
-     * Returns a map of all simple tags found in this file indexed by the
-     * beginning of the amino acid sequence. A simple tag is a triplet
-     * consisting of a mass gap, an amino acid sequence and a mass gap. The size
-     * of the subsequence is the one of the initial size the protein tree in the
-     * sequence factory. The subsequence is unique according to the given
-     * sequence matching preferences.
-     *
-     * @return a map of all simple tags found in this file indexed by the
-     * beginning of the amino acid sequence
-     */
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap();
-
-    /**
-     * Clears the tags map.
-     */
-    public void clearTagsMap();
 }

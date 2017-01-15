@@ -522,16 +522,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
-    }
-
-    @Override
-    public void clearTagsMap() {
-        // No tags yet
-    }
-
-    @Override
     public boolean hasDeNovoTags() {
         return hasDenovoTags;
     }

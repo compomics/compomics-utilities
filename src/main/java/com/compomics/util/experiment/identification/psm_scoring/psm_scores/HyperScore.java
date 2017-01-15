@@ -241,6 +241,9 @@ public class HyperScore {
             }
         }
         double[] ab = getInterpolationValues(histogram, useCache);
+        if (ab == null) {
+            return null;
+        }
         return getInterpolation(hyperScores, ab[0], ab[1]);
     }
 

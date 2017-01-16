@@ -80,7 +80,6 @@ public class HyperScore {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-
         ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
         return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
     }

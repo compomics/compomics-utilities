@@ -946,6 +946,8 @@ public class ProteinTree implements PeptideMapper {
 
         sequenceIndexers.removeAll(done);
     }
+    
+    
 
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
@@ -1090,6 +1092,11 @@ public class ProteinTree implements PeptideMapper {
                 lastSlowQueriedPeptidesCache.remove(key);
             }
         }
+    }
+    
+    @Override
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        throw new InterruptedException("Error: function not implemented");
     }
 
     @Override

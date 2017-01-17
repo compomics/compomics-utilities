@@ -1349,12 +1349,10 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Adds the raw assumptions corresponding to a spectrum to the database.
-     * Warning: maps and lists are reused and not duplicated.
+     * Warning: maps and lists are reused and not duplicated. Only one thread should access the same spectrum match at a time.
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
-     * @param singleThread boolean indicating whether multiple thread can
-     * provide assumptions for the same spectrum at a time
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -1365,44 +1363,25 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean singleThread)
+    public void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions;
-        if (singleThread) {
-            currentAssumptions = getRawAssumptions(spectrumKey, true);
-            if (currentAssumptions == null) {
-                identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
-            }
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getRawAssumptions(spectrumKey, true);
+        if (currentAssumptions == null) {
+            identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
         } else {
-            currentAssumptions = getRawAssumptions(spectrumKey, false);
-            if (currentAssumptions == null) {
-                currentAssumptions = addRawAssumptionsSynchronized(spectrumKey, newAssumptions);
-            }
-        }
-        if (currentAssumptions != null) {
             for (Integer advocateId : newAssumptions.keySet()) {
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap = newAssumptions.get(advocateId);
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
                 if (newAdvocateMap != null) {
                     if (currentAdvocateMap == null) {
-                        if (singleThread) {
-                            currentAssumptions.put(advocateId, newAdvocateMap);
-                        } else {
-                            currentAdvocateMap = addAdvocateMapSynchronized(currentAssumptions, advocateId, newAdvocateMap);
-                        }
-                    }
-                    if (currentAdvocateMap != null) {
+                        currentAssumptions.put(advocateId, newAdvocateMap);
+                    } else {
                         for (double score : newAdvocateMap.keySet()) {
                             ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
                             ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
                             if (currentAssumptionList == null) {
-                                if (singleThread) {
-                                    currentAdvocateMap.put(score, newAssumptionList);
-                                } else {
-                                    currentAssumptionList = getAssumptionListSynchronized(currentAdvocateMap, score, newAssumptionList);
-                                }
-                            }
-                            if (currentAssumptionList != null) {
+                                currentAdvocateMap.put(score, newAssumptionList);
+                            } else {
                                 currentAssumptionList.addAll(newAssumptionList);
                             }
                         }
@@ -1411,70 +1390,6 @@ public abstract class Identification extends ExperimentObject {
             }
             updateRawAssumptions(spectrumKey, currentAssumptions);
         }
-    }
-
-    /**
-     * Checks whether the assumptions for this spectrum are set in the cache or
-     * database. Returns the assumptions if yes. If no, adds the given
-     * assumptions and returns null.
-     *
-     * @param spectrumKey the key of the spectrum
-     * @param newAssumptions the assumptions to add to the mapping
-     *
-     * @return the assumptions stored, null if none
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    private synchronized HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> addRawAssumptionsSynchronized(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getRawAssumptions(spectrumKey, true);
-        if (currentAssumptions == null) {
-            identificationDB.addRawAssumptions(spectrumKey, newAssumptions);
-        }
-        return currentAssumptions;
-    }
-
-    /**
-     * Checks whether the advocate has a map in the given assumptions map.
-     * Returns it if yes, otherwise sets the new map and returns null.
-     *
-     * @param currentAssumptions the assumptions map
-     * @param advocateId the advocate index
-     * @param newAdvocateMap the new map to set
-     *
-     * @return the advocate map, null if not set
-     */
-    private synchronized HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> addAdvocateMapSynchronized(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions, Integer advocateId, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap) {
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
-        if (currentAdvocateMap == null) {
-            currentAssumptions.put(advocateId, newAdvocateMap);
-        }
-        return currentAdvocateMap;
-    }
-
-    /**
-     * Checks whether there is an assumption list at the given score in the
-     * given map. If yes, returns the list. If no, add the given list and
-     * returns null.
-     *
-     * @param currentAdvocateMap the map for a given advocate
-     * @param score the score
-     * @param newAssumptionList the list to set
-     *
-     * @return the assumption list at the given score, null if not set
-     */
-    private synchronized ArrayList<SpectrumIdentificationAssumption> getAssumptionListSynchronized(HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap, Double score, ArrayList<SpectrumIdentificationAssumption> newAssumptionList) {
-        ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
-        if (currentAssumptionList == null) {
-            currentAdvocateMap.put(score, newAssumptionList);
-        }
-        return currentAssumptionList;
     }
 
     /**
@@ -1516,15 +1431,15 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.addSpectrumMatch(newMatch);
         }
     }
-    
+
     /**
      * Adds a key to a set.
-     * 
+     *
      * @param spectrumKeys the set
      * @param spectrumKey the key
      */
     public synchronized void addKeyToSetSynchronized(HashSet<String> spectrumKeys, String spectrumKey) {
-            spectrumKeys.add(spectrumKey);
+        spectrumKeys.add(spectrumKey);
     }
 
     /**

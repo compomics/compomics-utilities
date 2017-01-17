@@ -80,7 +80,6 @@ public class HyperScore {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-        
         ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
         return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
     }
@@ -100,15 +99,21 @@ public class HyperScore {
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
 
         boolean peak = false;
-        Double precursorIntensity = 0.0;
+        Double coveredIntensity = 0.0;
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
             switch (ion.getType()) {
-                case PRECURSOR_ION:
-                    precursorIntensity += ionMatch.peak.intensity;
-                    break;
                 case PEPTIDE_FRAGMENT_ION:
-                    peak = true;
+                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                    if (peptideFragmentIon.hasNeutralLosses() || peptideFragmentIon.getNumber() < 2) {
+                        coveredIntensity += ionMatch.peak.intensity;
+                    } else {
+                        peak = true;
+                    }
+                    break;
+                default:
+                    coveredIntensity += ionMatch.peak.intensity;
+
             }
         }
         if (!peak) {
@@ -124,7 +129,7 @@ public class HyperScore {
             spectrum.addUrParam(spectrumIndex);
         }
 
-        Double totalIntensity = spectrumIndex.getTotalIntensity() - precursorIntensity;
+        Double totalIntensity = spectrumIndex.getTotalIntensity() - coveredIntensity;
 
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<Integer>(1);
@@ -134,14 +139,14 @@ public class HyperScore {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;
             Ion ion = ionMatch.ion;
-            if (ion.getType() != Ion.IonType.PRECURSOR_ION && !accountedFor.contains(mz)) {
-                accountedFor.add(mz);
-                Double x0I = peakI.intensity / totalIntensity;
-                xCorr += x0I;
-                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
-                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
-                    int number = peptideFragmentIon.getNumber();
-                    if (number > 1) {
+            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses() && !accountedFor.contains(mz)) {
+                PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                int number = peptideFragmentIon.getNumber();
+                if (number > 1) {
+                    accountedFor.add(mz);
+                    Double x0I = peakI.intensity / totalIntensity;
+                    xCorr += x0I;
+                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
                         if (ion.getSubType() == PeptideFragmentIon.X_ION
                                 || ion.getSubType() == PeptideFragmentIon.Y_ION
                                 || ion.getSubType() == PeptideFragmentIon.Z_ION) {
@@ -155,8 +160,8 @@ public class HyperScore {
                 }
             }
         }
-        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
-        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge()-1, 1));
+        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
+        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
         nForward = nForward > 20 ? 20 : nForward;
         nRewind = nRewind > 20 ? 20 : nRewind;
         long forwardFactorial = BasicMathFunctions.factorial(nForward);
@@ -173,7 +178,22 @@ public class HyperScore {
      *
      * @return the e-values corresponding to the given scores
      */
-    public HashMap<Double, Double> getEValueHistogram(ArrayList<Double> hyperScores) {
+    public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores) {
+        return getEValueMap(hyperScores, true);
+    }
+
+    /**
+     * Returns the e-value corresponding to a list of scores in a map. If not
+     * enough scores are present or if they are not spread the method returns
+     * null.
+     *
+     * @param hyperScores the different scores
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
+     *
+     * @return the e-values corresponding to the given scores
+     */
+    public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores, boolean useCache) {
         HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
@@ -219,13 +239,87 @@ public class HyperScore {
                 histogram.put(bin, 1);
             }
         }
-        bins = new ArrayList<Integer>(histogram.keySet());
+        double[] ab = getInterpolationValues(histogram, useCache);
+        if (ab == null) {
+            return null;
+        }
+        return getInterpolation(hyperScores, ab[0], ab[1]);
+    }
+
+    /**
+     * Returns the interpolation values for the given scores in the form {a, b}.
+     *
+     * @param scores the scores
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
+     *
+     * @return
+     */
+    public double[] getInterpolationValues(int[] scores, boolean useCache) {
+        HashMap<Integer, Integer> scoreHistogram = new HashMap<Integer, Integer>();
+        int maxScore = 0;
+        int minScore = Integer.MAX_VALUE;
+        for (int score : scores) {
+            if (score > 0) {
+                Integer nScores = scoreHistogram.get(score);
+                if (nScores == null) {
+                    nScores = 1;
+                } else {
+                    nScores++;
+                }
+                scoreHistogram.put(score, nScores);
+                if (score > maxScore) {
+                    maxScore = score;
+                }
+                if (score < minScore) {
+                    minScore = score;
+                }
+            }
+        }
+        Integer secondEmptybin = maxScore;
+        Integer firstEmptybin = maxScore;
+        boolean emptyBin = false;
+        for (int bin = minScore; bin <= maxScore; bin++) {
+            if (!scoreHistogram.containsKey(bin)) {
+                if (!emptyBin) {
+                    emptyBin = true;
+                    firstEmptybin = bin;
+                } else {
+                    secondEmptybin = bin;
+                    break;
+                }
+            }
+        }
+        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
+        for (Integer bin : bins) {
+            if (bin > secondEmptybin) {
+                scoreHistogram.remove(bin);
+            } else if (bin > firstEmptybin) {
+                scoreHistogram.put(bin, 1);
+            }
+        }
+        return getInterpolationValues(scoreHistogram, useCache);
+    }
+
+    /**
+     * Returns the interpolation values for the given score histogram in the
+     * form {a, b}.
+     *
+     * @param scoreHistogram the score histogram
+     * @param useCache if true the interpolation values will be stored in the
+     * histograms in cache
+     *
+     * @return the interpolation values for the given score histogram
+     */
+    public double[] getInterpolationValues(HashMap<Integer, Integer> scoreHistogram, boolean useCache) {
+
+        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
         Collections.sort(bins, Collections.reverseOrder());
-        ArrayList<Double> evalueFunctionX = new ArrayList<Double>(histogram.size());
-        ArrayList<Double> evalueFunctionY = new ArrayList<Double>(histogram.size());
+        ArrayList<Double> evalueFunctionX = new ArrayList<Double>(scoreHistogram.size());
+        ArrayList<Double> evalueFunctionY = new ArrayList<Double>(scoreHistogram.size());
         Integer currentSum = 0;
         for (Integer bin : bins) {
-            Integer nInBin = histogram.get(bin);
+            Integer nInBin = scoreHistogram.get(bin);
             if (nInBin != null) {
                 currentSum += nInBin;
             }
@@ -242,21 +336,23 @@ public class HyperScore {
             return null;
         }
         RegressionStatistics regressionStatistics = LinearRegression.getSimpleLinearRegression(evalueFunctionX, evalueFunctionY);
-        Double roundedA = Util.roundDouble(regressionStatistics.a, 2);
-        Double roundedB = Util.roundDouble(regressionStatistics.b, 2);
-        Integer nA = as.get(roundedA);
-        if (nA == null) {
-            as.put(roundedA, 1);
-        } else {
-            as.put(roundedA, nA + 1);
+        if (useCache) {
+            Double roundedA = Util.roundDouble(regressionStatistics.a, 2);
+            Double roundedB = Util.roundDouble(regressionStatistics.b, 2);
+            Integer nA = as.get(roundedA);
+            if (nA == null) {
+                as.put(roundedA, 1);
+            } else {
+                as.put(roundedA, nA + 1);
+            }
+            Integer nB = bs.get(roundedB);
+            if (nB == null) {
+                bs.put(roundedB, 1);
+            } else {
+                bs.put(roundedB, nB + 1);
+            }
         }
-        Integer nB = bs.get(roundedB);
-        if (nB == null) {
-            bs.put(roundedB, 1);
-        } else {
-            bs.put(roundedB, nB + 1);
-        }
-        return getInterpolation(hyperScores, regressionStatistics.a, regressionStatistics.b);
+        return new double[]{regressionStatistics.a, regressionStatistics.b};
     }
 
     /**
@@ -276,8 +372,8 @@ public class HyperScore {
         for (Double hyperScore : hyperScores) {
             if (!result.containsKey(hyperScore)) {
                 if (hyperScore > 0) {
-                    Double logScore = FastMath.log10(hyperScore);
-                    Double eValue = getInterpolation(logScore, a, b);
+                    double logScore = FastMath.log10(hyperScore);
+                    double eValue = getInterpolation(logScore, a, b);
                     result.put(hyperScore, eValue);
                 } else {
                     Double eValue = new Double(hyperScores.size());
@@ -298,7 +394,7 @@ public class HyperScore {
      *
      * @return the interpolated value
      */
-    public static Double getInterpolation(Double logScore, Double a, Double b) {
+    public static double getInterpolation(double logScore, double a, double b) {
         return b + a * logScore;
     }
 

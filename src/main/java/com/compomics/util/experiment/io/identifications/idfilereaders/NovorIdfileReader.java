@@ -46,10 +46,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
      */
     private File novorCsvFile;
     /**
-     * Map of the tags found indexed by amino acid sequence.
-     */
-    private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
-    /**
      * The spectrum factory used to retrieve spectrum titles.
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
@@ -433,21 +429,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
         versions.add(softwareVersion);
         result.put(softwareName, versions);
         return result;
-    }
-
-    @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        if (tagsMap == null) {
-            return new HashMap<String, LinkedList<SpectrumMatch>>(0);
-        }
-        return tagsMap;
-    }
-
-    @Override
-    public void clearTagsMap() {
-        if (tagsMap != null) {
-            tagsMap.clear();
-        }
     }
 
     @Override

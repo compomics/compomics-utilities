@@ -314,7 +314,8 @@ public class ObjectsCache {
                 }
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
-            loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
+            String key = getCacheKey(dbName, tableName, objectKey);
+            loadedObjectsKeys.add(key);
             dbMutexMap.release(tableName);
             updateCache();
         }
@@ -409,6 +410,7 @@ public class ObjectsCache {
                 CacheEntry entry = getEntry(dbName, tableName, objectKey);
 
                 if (entry == null) {
+                    saveObjects(entryKeys, waitingHandler, clearEntries);
                     throw new IllegalArgumentException("Object " + objectKey + " corresponding to entry " + entryKey + " not found in cache when saving.");
                 } else {
                     if (entry.isModified()) {

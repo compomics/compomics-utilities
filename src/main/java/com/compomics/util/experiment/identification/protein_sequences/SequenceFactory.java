@@ -788,9 +788,12 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-//                if (indexes.containsKey(accession)) {
-//                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
-//                }
+
+                // check if the accession number is unique
+                if (indexes.containsKey(accession)) {
+                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+                }
+
                 indexes.put(accession, index);
                 if (decoyTag == null) {
                     decoyTag = getDecoyFlag(accession);

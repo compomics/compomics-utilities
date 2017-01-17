@@ -2,7 +2,7 @@ package com.compomics.util.experiment.biology;
 
 /**
  * This class represents a combination of multiple neutral losses.
- * 
+ *
  * @author Marc Vaudel
  */
 public class NeutralLossCombination {
@@ -18,7 +18,7 @@ public class NeutralLossCombination {
 
     /**
      * Constructor.
-     * 
+     *
      * @param neutralLossCombination a combination of neutral losses
      */
     public NeutralLossCombination(NeutralLoss[] neutralLossCombination) {
@@ -31,7 +31,7 @@ public class NeutralLossCombination {
 
     /**
      * Returns the neutral losses in this combination.
-     * 
+     *
      * @return the neutral losses in this combination
      */
     public NeutralLoss[] getNeutralLossCombination() {
@@ -40,11 +40,10 @@ public class NeutralLossCombination {
 
     /**
      * Returns the mass of this combination.
-     * 
+     *
      * @return the mass of this combination
      */
     public double getMass() {
         return mass;
     }
-
 }

@@ -121,10 +121,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     public final double nTermCorrection = 0;
     /**
-     * Map of the tags found indexed by amino acid sequence.
-     */
-    private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
-    /**
      * The DirecTag parameters.
      */
     private DirecTagParameters direcTagParameters;
@@ -480,7 +476,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                 tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
             }
-            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
 
         String spectrumFileName = Util.getFileName(getInputFile());
@@ -516,20 +511,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     if (!sId.equals(lastId)) {
                         if (currentMatch != null && currentMatch.hasAssumption()) {
 
-                            if (sequenceMatchingPreferences != null) {
-                                HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
-                                for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-                                    for (String key : advocateMap.keySet()) {
-                                        LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
-                                        if (tagMatches == null) {
-                                            tagMatches = new LinkedList<SpectrumMatch>();
-                                            tagsMap.put(key, tagMatches);
-                                        }
-                                        tagMatches.add(currentMatch);
-                                    }
-                                }
-                            }
-
                             result.add(currentMatch);
                         }
                         int utilitiesId = sId + 1; // first spectrum is 1 in utilities
@@ -554,20 +535,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             }
 
             if (currentMatch != null && currentMatch.hasAssumption()) {
-
-                if (sequenceMatchingPreferences != null) {
-                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
-                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-                        for (String key : advocateMap.keySet()) {
-                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
-                            if (tagMatches == null) {
-                                tagMatches = new LinkedList<SpectrumMatch>();
-                                tagsMap.put(key, tagMatches);
-                            }
-                            tagMatches.add(currentMatch);
-                        }
-                    }
-                }
 
                 result.add(currentMatch);
             }
@@ -750,18 +717,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         versions.add(tagsGeneratorVersion);
         result.put(tagsGenerator, versions);
         return result;
-    }
-
-    @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return tagsMap;
-    }
-
-    @Override
-    public void clearTagsMap() {
-        if (tagsMap != null) {
-            tagsMap.clear();
-        }
     }
 
     @Override

@@ -63,6 +63,31 @@ public interface PeptideMapper {
      * problem occurred while interacting with the tree database.
      */
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    
+    
+    /**
+     * Returns the protein mappings for the given peptide sequence. Peptide
+     * sequence | Protein accession | Index in the protein. An empty map if not
+     * found.
+     *
+     * @param tag the tag to look for in the tree. Must contain a consecutive
+     * amino acid sequence of longer or equal size than the initialTagSize of
+     * the tree
+     * @param tagMatcher the tag matcher to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
+     */
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Empties all caches.

@@ -232,9 +232,11 @@ public class WaveletTree {
         long[] alphabetExcluded = new long[2];
         alphabetExcluded[0] = 1L << '$';
         if (!hasPTMatTerminus) alphabetExcluded[0] |= 1L << '/';
+        /*
         alphabetExcluded[1] = 1L << ('B' & 63);
         alphabetExcluded[1] |= 1L << ('X' & 63);
         alphabetExcluded[1] |= 1L << ('Z' & 63);
+        */
 
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
@@ -442,7 +444,7 @@ public class WaveletTree {
             if (rightChild != null) {
                 rightChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
             } else {
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newLeftIndex, newRightIndex, lastChar};
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newLeftIndex, newRightIndex, lastChar, -1};
             }
         }
 
@@ -452,14 +454,14 @@ public class WaveletTree {
             if (leftChild != null) {
                 leftChild.rangeQuery(newLeftIndex, newRightIndex, setCharacter);
             } else {
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newLeftIndex + 1, newRightIndex + 1, firstChar};
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newLeftIndex + 1, newRightIndex + 1, firstChar, -1};
             }
         }
     }
     
 
     /**
-     * Fills a list of character and new left/right index for a given range.
+     * Fills a list of character and new left/right index for a given index.
      *
      * @param index index boundary
      * @param setCharacter list of counted characters
@@ -481,12 +483,12 @@ public class WaveletTree {
                 
             case 0: // go left and no left child avaliable
                 int newIndex0 = rank.getRankZero(index);
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar};
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar, -1};
                 break;
                 
             case 1: // go right and no right child avaliable
                 int newIndex1 = rank.getRankOne(index);
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar};
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar, -1};
                 break;
         }
     }
@@ -495,7 +497,7 @@ public class WaveletTree {
     
 
     /**
-     * Returns a list of character and new left/right index for a given range
+     * Returns a new left/right index range for a given character
      * recursively.
      *
      * @param leftIndex left index boundary

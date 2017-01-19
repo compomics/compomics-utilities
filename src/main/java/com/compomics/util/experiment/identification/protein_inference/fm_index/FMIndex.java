@@ -42,13 +42,12 @@ public class FMIndex implements PeptideMapper {
      * Semaphore for caching.
      */
     static Semaphore cacheMutex = new Semaphore(1);
-    
     /**
-    * Number of chunks of complete index
+    * Number of chunks of complete index.
     **/
     private int indexParts = 0;
     /**
-     * Byte size of index chuck
+     * Byte size of index chuck.
      */
     private final int indexChunkSize = 100 * 1024 * 1024;
     /**
@@ -715,8 +714,7 @@ public class FMIndex implements PeptideMapper {
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar
-            );
+            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
             waitingHandler.setSecondaryProgressCounter(0);
         }
         
@@ -735,7 +733,6 @@ public class FMIndex implements PeptideMapper {
             lookupMasses[i] = 0L;
         }
         recursiveMassFilling(lookupMasses, lookupMultiplier, lookupTolerance, lookupMaxMass, 0., 0);
-
     }
     
     

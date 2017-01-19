@@ -410,8 +410,7 @@ public class ObjectsCache {
 
                 if (entry == null) {
                     throw new IllegalArgumentException("Object " + objectKey + " corresponding to entry " + entryKey + " not found in cache when saving.");
-                } else {
-                    if (entry.isModified()) {
+                } else if (entry.isModified()) {
                     HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
                     if (dbMap == null) {
                         dbMap = new HashMap<String, HashMap<String, Object>>();
@@ -423,7 +422,6 @@ public class ObjectsCache {
                         dbMap.put(tableName, tableMap);
                     }
                     tableMap.put(objectKey, entry.getObject());
-                }
                 }
 
                 if (waitingHandler != null) {

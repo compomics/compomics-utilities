@@ -469,7 +469,7 @@ public class Peptide extends ExperimentObject {
      * @param peptideMapper the peptide mapper to use
      *
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the dasta file
+     * reading the FASTA file
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while mapping the peptide
      * @throws SQLException exception thrown whenever an error occurred while
@@ -776,7 +776,7 @@ public class Peptide extends ExperimentObject {
         if (parentProteins == null) {
             getParentProteins(sequenceMatchingPreferences);
         }
-
+        
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
             if (protein.isNTerm(sequence, sequenceMatchingPreferences)) {
@@ -1214,7 +1214,6 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNAA:
                 aminoAcidPattern = ptm.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                peptideLength = sequence.length();
                 if (indexOnProtein == 0) {
                     aa = sequence.charAt(0);
                     if (aminoAcidPattern.length() == 1) {
@@ -1231,7 +1230,6 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNPAA:
                 aminoAcidPattern = ptm.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                peptideLength = sequence.length();
                 aa = sequence.charAt(0);
                 if (aminoAcidPattern.length() == 1) {
                     if (targetedAA.contains(aa)) {

@@ -1084,6 +1084,7 @@ public class FMIndex implements PeptideMapper {
      *
      * @param peptide the peptide
      * @param seqMatchPref the sequence matching preferences
+     * @param indexPart the index part
      * @return the mapping
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
@@ -1171,6 +1172,7 @@ public class FMIndex implements PeptideMapper {
      *
      * @param peptide the peptide
      * @param seqMatchPref the sequence match preferences
+     * @param indexPart the index part
      * @return the mapping
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
@@ -1337,6 +1339,7 @@ public class FMIndex implements PeptideMapper {
      *
      * @param peptide the peptide
      * @param seqMatchPref the sequence matching preferences
+     * @param indexPart the index part
      * @return the mapping
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
@@ -2554,6 +2557,7 @@ public class FMIndex implements PeptideMapper {
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the mass tolerance
+     * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs
      * @throws InterruptedException thrown if an InterruptedException occurs
@@ -2797,6 +2801,7 @@ public class FMIndex implements PeptideMapper {
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the mass tolerance
+     * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs
      * @throws InterruptedException thrown if an InterruptedException occurs

@@ -253,7 +253,7 @@ public class HyperScore {
      * @param useCache if true the interpolation values will be stored in the
      * histograms in cache
      *
-     * @return
+     * @return the interpolation values for the given scores
      */
     public double[] getInterpolationValues(int[] scores, boolean useCache) {
         HashMap<Integer, Integer> scoreHistogram = new HashMap<Integer, Integer>();

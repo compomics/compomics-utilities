@@ -133,19 +133,20 @@ public class BasicMathFunctions {
     /**
      * Method to estimate the median.
      *
-     * @param ratios array of double
+     * @param values array of double
+     * 
      * @return median of the input
      */
-    public static double median(double[] ratios) {
-        Arrays.sort(ratios);
-        int length = ratios.length;
-        if (ratios.length == 1) {
-            return ratios[0];
+    public static double median(double[] values) {
+        Arrays.sort(values);
+        int length = values.length;
+        if (values.length == 1) {
+            return values[0];
         }
         if (length % 2 == 1) {
-            return ratios[(length - 1) / 2];
+            return values[(length - 1) / 2];
         } else {
-            return (ratios[length / 2] + ratios[(length) / 2 - 1]) / 2;
+            return (values[length / 2] + values[(length) / 2 - 1]) / 2;
         }
     }
 

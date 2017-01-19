@@ -71,17 +71,6 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-                // Does nothing.
-                return null;
-            }
-
-            @Override
-            public void clearTagsMap() {
-                // Does nothing.
-            }
-
-            @Override
             public boolean hasDeNovoTags() {
                 return false;
             }
@@ -161,17 +150,6 @@ public class TestIdfileReaderFactory extends TestCase {
             versions.add("X.Y.Z");
             result.put("testIdfileReaderRegistration", versions);
             return result;
-        }
-
-        @Override
-        public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-            // Does nothing.
-            return null;
-        }
-
-        @Override
-        public void clearTagsMap() {
-            // Does nothing.
         }
 
         @Override

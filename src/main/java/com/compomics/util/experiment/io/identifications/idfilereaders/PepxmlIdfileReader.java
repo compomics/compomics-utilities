@@ -694,16 +694,6 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
-    }
-
-    @Override
-    public void clearTagsMap() {
-        // Nothing to do here
-    }
-
-    @Override
     public boolean hasDeNovoTags() {
         return false;
     }

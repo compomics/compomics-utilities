@@ -49,10 +49,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * The name of the result file.
      */
     private String fileName;
-    /**
-     * Map of the tags found indexed by amino acid sequence.
-     */
-    private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -138,15 +134,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        int tagMapKeyLength = 3;
-        if (sequenceMatchingPreferences != null) {
-            if (sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
-                SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
-            }
-            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
-        }
-
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
@@ -180,19 +167,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             }
 
             if (solutionsFound) {
-                if (sequenceMatchingPreferences != null) {
-                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
-                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-                        for (String key : advocateMap.keySet()) {
-                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
-                            if (tagMatches == null) {
-                                tagMatches = new LinkedList<SpectrumMatch>();
-                                tagsMap.put(key, tagMatches);
-                            }
-                            tagMatches.add(currentMatch);
-                        }
-                    }
-                }
 
                 spectrumMatches.add(currentMatch);
             }
@@ -281,18 +255,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         versions.add("unknown"); // @TODO: add version number
         result.put("pNovo+", versions);
         return result;
-    }
-
-    @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return tagsMap;
-    }
-
-    @Override
-    public void clearTagsMap() {
-        if (tagsMap != null) {
-            tagsMap.clear();
-        }
     }
 
     @Override

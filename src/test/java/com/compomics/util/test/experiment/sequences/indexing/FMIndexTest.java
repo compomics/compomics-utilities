@@ -41,13 +41,13 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class FMIndexTest extends TestCase {
 
-    boolean testSequenceMatching = false;
-    boolean testSequenceMatchingWithVariants = false;
-    boolean testSequenceMatchingWithVariantsSpecific = false;
+    boolean testSequenceMatching = true;
+    boolean testSequenceMatchingWithVariants = true;
+    boolean testSequenceMatchingWithVariantsSpecific = true;
     boolean testTagMatching = true;
-    boolean testVariantMatchingGeneric = false;
-    boolean testVariantPTMMatching = false;
-    boolean testVariantMatchingSpecific = false;
+    boolean testVariantMatchingGeneric = true;
+    boolean testVariantPTMMatching = true;
+    boolean testVariantMatchingSpecific = true;
 
     /**
      * Tests the import and the mapping of a few peptide sequences.
@@ -480,6 +480,7 @@ public class FMIndexTest extends TestCase {
 
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
@@ -503,6 +504,34 @@ public class FMIndexTest extends TestCase {
         ArrayList<PeptideProteinMapping> peptideProteinMappings;
         int numModifications = 0;
         
+        // G(A)PCVVPINMK => GXPCVVPINMK
+        aminoAcidPattern = new AminoAcidSequence("CVVP");
+        nTermGap = 42.01 + AminoAcid.G.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass();
+        cTermGap = AminoAcid.I.getMonoisotopicMass() + AminoAcid.N.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Acetylation of peptide N-term"));
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences, 0.02);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 1);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("GXPCVVPINMK") == 0);
+        //Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TLGAPCVVPINMK") == 0);
+        
+        //143.05824,RRRP,271.11682
+        aminoAcidPattern = new AminoAcidSequence("RRRP");
+        nTermGap = 143.05824;
+        cTermGap = 271.11682;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("Acetylation of peptide N-term"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("Pyrolidone from Q"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("Oxidation of M"));
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences, 0.2);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 0);
+        
         
         
         // TESTMRITESTCKTESTK with no modifications
@@ -516,6 +545,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        
 
         // TESTMRITESTCKTESTK with one fixed modification
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -1009,6 +1039,7 @@ public class FMIndexTest extends TestCase {
 
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setnVariants(1);
@@ -1449,6 +1480,7 @@ public class FMIndexTest extends TestCase {
         }
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.singleBaseSubstitution);
@@ -1673,6 +1705,7 @@ public class FMIndexTest extends TestCase {
 
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setnAaDeletions(0);

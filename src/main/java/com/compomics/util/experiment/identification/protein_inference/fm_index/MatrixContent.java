@@ -333,8 +333,6 @@ public class MatrixContent {
     
     
     
-    
-    
 
     /**
      * Constructor.

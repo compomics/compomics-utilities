@@ -1351,6 +1351,7 @@ public class SequenceFactory {
      *
      * @param sequenceMatchingPreferences the sequences matching preferences
      * @param ptmSettings contains modification parameters for identification
+     * @param searchParameters contains all information abouut the search parameters
      * @param peptideVariantsPreferences the peptide variants preferences set by
      * the user
      * @param waitingHandler waiting handler displaying progress to the user
@@ -1411,6 +1412,7 @@ public class SequenceFactory {
      * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
      * during the indexation of the database
+     * @param searchParameters contains all information abouut the search parameters
      * @param peptideVariantsPreferences the peptide variants preferences set by
      * the user
      * @param exceptionHandler handler for the exceptions encountered while

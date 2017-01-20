@@ -205,6 +205,7 @@
                 
         
                     <!-- build protein-inferrer -->
+                    <!--
                     <execution>
                         <id>build-protein-inferrer</id>
                         <phase>test</phase>
@@ -231,6 +232,7 @@
                             </resources>
                         </configuration>
                     </execution>
+                    -->
                     
                     <!-- Copy main resources into test classpath when running the tests -->
                     <execution>
@@ -276,6 +278,7 @@
             </plugin>
 
             <!-- Create javadoc on build -->
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -289,6 +292,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
 
             <!-- Pack sources on build -->
             <plugin>
@@ -369,7 +373,7 @@
         <repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
-            <url>http://genesis.UGent.be/maven2</url>
+            <url>http://genesis.ugent.be/maven2</url>
             <layout>default</layout>
         </repository>
         

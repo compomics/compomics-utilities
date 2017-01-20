@@ -20,13 +20,10 @@ import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.File;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * Command line peptide mapping.
@@ -105,7 +102,7 @@ public class PeptideMapping {
         long startTimeIndex = System.nanoTime();
         PeptideMapper peptideMapper = null;
         if (peptideMapperType == PeptideMapperType.fm_index){
-            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences);
+            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences, tolerance);
         }
         else {
             try {

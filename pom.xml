@@ -204,35 +204,6 @@
                     
                 
         
-                    <!-- build protein-inferrer -->
-                    <!--
-                    <execution>
-                        <id>build-protein-inferrer</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <archive>
-                                <manifest>
-                                    <mainClass>com.compomics.util.experiment.identification.protein_inference.ProteinInferrer</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <finalName>ProteinInferrer</finalName>
-                            <overwrite>true</overwrite>
-                            <outputDirectory>src/test/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    -->
                     
                     <!-- Copy main resources into test classpath when running the tests -->
                     <execution>
@@ -316,7 +287,7 @@
             </plugin>
 
             <!-- Deploy the JavaDoc on build -->
-            <!--<plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0-beta-5</version>
@@ -336,7 +307,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
             
             
             <!-- Zip the jar file and the dependencies -->

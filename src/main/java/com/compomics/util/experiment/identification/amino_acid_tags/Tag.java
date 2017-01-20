@@ -63,19 +63,6 @@ public class Tag extends ExperimentObject {
     }
 
     /**
-     * Constructor for a tag consisting of a pattern tag between two mass tags.
-     *
-     * @param nTermGap the N-term mass gap
-     * @param sequenceTag the sequence tag with modifications
-     * @param cTermGap the C-term mass gap
-     */
-    public Tag(double nTermGap, AminoAcidPattern sequenceTag, double cTermGap) {
-        addMassGap(nTermGap);
-        addAminoAcidPattern(sequenceTag);
-        addMassGap(cTermGap);
-    }
-
-    /**
      * Constructor for a tag consisting of a sequence tag between two mass tags.
      *
      * @param nTermGap the N-term mass gap

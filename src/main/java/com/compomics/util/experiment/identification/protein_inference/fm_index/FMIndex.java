@@ -43,13 +43,12 @@ public class FMIndex implements PeptideMapper {
      * Semaphore for caching.
      */
     static Semaphore cacheMutex = new Semaphore(1);
-    
     /**
-    * Number of chunks of complete index
+    * Number of chunks of complete index.
     **/
     private int indexParts = 0;
     /**
-     * Byte size of index chuck
+     * Byte size of index chuck.
      */
     private final int indexChunkSize = 100 * 1024 * 1024;
     /**
@@ -770,8 +769,7 @@ public class FMIndex implements PeptideMapper {
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar
-            );
+            waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
             waitingHandler.setSecondaryProgressCounter(0);
         }
         
@@ -797,7 +795,6 @@ public class FMIndex implements PeptideMapper {
             }
         }
         recursiveMassFilling(0., 0, 0);
-
     }
     
     
@@ -2737,6 +2734,10 @@ public class FMIndex implements PeptideMapper {
      * @param tag the tag
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
+<<<<<<< HEAD
+=======
+     * @param massTolerance the mass tolerance
+>>>>>>> 67664fd516b3067be74d05028cd073137cb7777b
      * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs
@@ -2987,6 +2988,10 @@ public class FMIndex implements PeptideMapper {
      * @param tag the tag
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
+<<<<<<< HEAD
+=======
+     * @param massTolerance the mass tolerance
+>>>>>>> 67664fd516b3067be74d05028cd073137cb7777b
      * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs

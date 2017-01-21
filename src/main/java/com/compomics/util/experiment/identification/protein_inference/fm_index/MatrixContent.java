@@ -42,6 +42,11 @@ public class MatrixContent {
     public String peptideSequence;
     
     /**
+     * Current peptide sequence needed for search.
+     */
+    public String peptideSequenceSearch;
+    
+    /**
      * Current peptide sequence length.
      */
     public int length;
@@ -83,7 +88,10 @@ public class MatrixContent {
      */
     public String allVariants;
     
-    
+    /**
+     * If original character was B, J, X, Z
+     */
+    public int ambiguousChar;
     
     /**
      * Constructor almost empty.
@@ -106,6 +114,8 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = -1;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -135,6 +145,8 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = -1;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -166,6 +178,8 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = -1;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -198,6 +212,8 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = -1;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -233,6 +249,7 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;
         this.allVariants = null;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -268,6 +285,7 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = null;
+        this.peptideSequenceSearch = null;
     }
     
     
@@ -289,9 +307,9 @@ public class MatrixContent {
      * @param length current peptide length
      * @param numX number of current X amino acids
      * @param modifictationPos index to modification list for ptm
+     * @param ambiguousChar ambiguous character
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX, int modifictationPos) {
-
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX, int modifictationPos, int ambiguousChar) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -307,14 +325,9 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = ambiguousChar;
+        this.peptideSequenceSearch = null;
     }
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -330,13 +343,15 @@ public class MatrixContent {
      * @param previousContent previous matrix content
      * @param mass current mass
      * @param peptideSequence intermediate peptide sequence
+     * @param peptideSequenceSearch intermediate peptide sequence for search
      * @param length current peptide length
      * @param numX number of current X amino acids
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
      * @param modifictationPos index to modification list for ptm
+     * @param ambiguousChar ambiguous character
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos, int ambiguousChar) {
 
         this.left = left;
         this.right = right;
@@ -344,6 +359,7 @@ public class MatrixContent {
         this.previousContent = previousContent;
         this.mass = mass;
         this.peptideSequence = peptideSequence;
+        this.peptideSequenceSearch = peptideSequenceSearch;
         this.length = length;
         this.numX = numX;
         this.modification = modification;
@@ -353,6 +369,49 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
         this.allVariants = null;
+        this.ambiguousChar = ambiguousChar;
+    }
+    
+    
+    
+    
+    
+
+    /**
+     * Constructor.
+     *
+     * @param left left index boundary
+     * @param right right index boundary
+     * @param character current character stored
+     * @param previousContent previous matrix content
+     * @param mass current mass
+     * @param peptideSequence intermediate peptide sequence
+     * @param peptideSequenceSearch intermediate peptide sequence for search
+     * @param length current peptide length
+     * @param numX number of current X amino acids
+     * @param modification index to modification list
+     * @param modifications intermediate list of modifications
+     * @param modifictationPos index to modification list for ptm
+     */
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
+
+        this.left = left;
+        this.right = right;
+        this.character = character;
+        this.previousContent = previousContent;
+        this.mass = mass;
+        this.peptideSequence = peptideSequence;
+        this.peptideSequenceSearch = peptideSequenceSearch;
+        this.length = length;
+        this.numX = numX;
+        this.modification = modification;
+        this.modifications = modifications;
+        this.modificationPos = modifictationPos;
+        this.numVariants = 0;
+        this.numSpecificVariants = new int[]{0, 0, 0};
+        this.variant = '\0';
+        this.allVariants = null;
+        this.ambiguousChar = -1;
     }
 
     /**

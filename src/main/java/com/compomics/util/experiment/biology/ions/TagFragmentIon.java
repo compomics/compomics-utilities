@@ -82,7 +82,7 @@ public class TagFragmentIon extends Ion {
         this.neutralLosses = neutralLosses;
         this.subType = fragmentType;
         type = Ion.IonType.TAG_FRAGMENT_ION;
-        this.theoreticMass = mass;
+        this.theoreticMass1 = mass;
         this.number = number;
         this.subNumber = subNumber;
         this.massGap = massGap;

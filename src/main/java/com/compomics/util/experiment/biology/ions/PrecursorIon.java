@@ -42,7 +42,7 @@ public class PrecursorIon extends Ion {
     public PrecursorIon(double theoreticMass, NeutralLoss[] neutralLosses) {
         this.neutralLosses = neutralLosses;
         type = IonType.PRECURSOR_ION;
-        this.theoreticMass = theoreticMass;
+        this.theoreticMass1 = theoreticMass;
     }
 
     /**
@@ -68,7 +68,7 @@ public class PrecursorIon extends Ion {
      * @param theoreticMass the theoretic mass of the precursor
      */
     public PrecursorIon(double theoreticMass) {
-        this.theoreticMass = theoreticMass;
+        this.theoreticMass1 = theoreticMass;
         type = IonType.PRECURSOR_ION;
     }
 

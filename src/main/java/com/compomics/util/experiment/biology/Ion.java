@@ -5,7 +5,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * This class models an ion.
@@ -85,8 +84,14 @@ public abstract class Ion extends ExperimentObject {
     protected IonType type = IonType.UNKNOWN;
     /**
      * The theoretic mass.
+     * 
+     * @deprecated use the double value instead.
      */
-    protected double theoreticMass;
+    protected Double theoreticMass;
+    /**
+     * The theoretic mass.
+     */
+    protected double theoreticMass1;
     /**
      * The atomic composition of the ion.
      */
@@ -238,7 +243,7 @@ public abstract class Ion extends ExperimentObject {
         if (atomChain != null) {
             return atomChain.getMass();
         }
-        return theoreticMass;
+        return theoreticMass1;
     }
 
     /**
@@ -281,7 +286,7 @@ public abstract class Ion extends ExperimentObject {
      * @param theoreticMass a new theoretic mass
      */
     public void setTheoreticMass(double theoreticMass) {
-        this.theoreticMass = theoreticMass;
+        this.theoreticMass1 = theoreticMass;
     }
 
     /**

@@ -291,7 +291,7 @@ public class ReporterIon extends Ion {
     public ReporterIon(String name, double mass, boolean save) {
         type = IonType.REPORTER_ION;
         this.name = name;
-        this.theoreticMass = mass;
+        this.theoreticMass1 = mass;
         if (save) {
             implementedIons.put(name, this);
             sortedImplementedIonsNames = null;
@@ -368,7 +368,7 @@ public class ReporterIon extends Ion {
      * @param referenceMass the mass where the reporter ions should be found
      */
     public void setMass(double referenceMass) {
-        this.theoreticMass = referenceMass;
+        this.theoreticMass1 = referenceMass;
     }
 
     @Override

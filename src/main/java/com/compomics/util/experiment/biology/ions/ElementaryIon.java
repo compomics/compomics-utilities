@@ -42,7 +42,7 @@ public class ElementaryIon extends Ion {
      */
     public ElementaryIon(String name, double theoreticMass, int subType) {
         this.name = name;
-        this.theoreticMass = theoreticMass;
+        this.theoreticMass1 = theoreticMass;
         type = Ion.IonType.ELEMENTARY_ION;
         this.subType = subType;
     }
@@ -97,7 +97,7 @@ public class ElementaryIon extends Ion {
     public boolean isSameAs(Ion anotherIon) {
         return anotherIon.getType() == IonType.ELEMENTARY_ION
                 && anotherIon.getSubType() == subType
-                && anotherIon.getTheoreticMass() == theoreticMass
+                && anotherIon.getTheoreticMass() == theoreticMass1
                 && anotherIon.getNeutralLossesAsString().equals(getNeutralLossesAsString());
     }
 }

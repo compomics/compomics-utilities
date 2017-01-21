@@ -77,7 +77,7 @@ public class PeptideFragmentIon extends Ion {
         }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
-        this.theoreticMass = mass;
+        this.theoreticMass1 = mass;
         this.number = number;
     }
 

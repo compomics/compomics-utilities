@@ -11,7 +11,6 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -119,22 +118,18 @@ public class FMIndex implements PeptideMapper {
      * If true, variable modifications are included.
      */
     private boolean withVariableModifications = false;
-    
     /**
      * Characters that can be substituted by B
      */
     private int[] BSubstitutions = new int[]{'D', 'N'};
-    
     /**
      * Characters that can be substituted by J
      */
     private int[] JSubstitutions = new int[]{'I', 'L'};
-    
     /**
      * Characters that can be substituted by X
      */
     private int[] XSubstitutions = new int[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y'};
-    
     /**
      * Characters that can be substituted by Z
      */
@@ -2734,10 +2729,6 @@ public class FMIndex implements PeptideMapper {
      * @param tag the tag
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
-<<<<<<< HEAD
-=======
-     * @param massTolerance the mass tolerance
->>>>>>> 67664fd516b3067be74d05028cd073137cb7777b
      * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs
@@ -2988,10 +2979,6 @@ public class FMIndex implements PeptideMapper {
      * @param tag the tag
      * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
-<<<<<<< HEAD
-=======
-     * @param massTolerance the mass tolerance
->>>>>>> 67664fd516b3067be74d05028cd073137cb7777b
      * @param indexPart the index part
      * @return the protein mapping
      * @throws IOException thrown if an IOException occurs

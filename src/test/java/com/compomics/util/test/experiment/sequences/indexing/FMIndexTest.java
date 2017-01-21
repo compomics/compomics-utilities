@@ -5,7 +5,6 @@ import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHand
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.biology.variants.amino_acids.Deletion;
 import com.compomics.util.experiment.biology.variants.amino_acids.Insertion;
@@ -27,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
@@ -37,7 +35,7 @@ import org.xmlpull.v1.XmlPullParserException;
  *
  * @author Marc Vaudel
  * @author Kenneth Verheggen
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class FMIndexTest extends TestCase {
 
@@ -518,7 +516,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("GXPCVVPINMK") == 0);
         //Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TLGAPCVVPINMK") == 0);
         
-        //143.05824,RRRP,271.11682
+        // 143.05824,RRRP,271.11682
         aminoAcidPattern = new AminoAcidSequence("RRRP");
         nTermGap = 143.05824;
         cTermGap = 271.11682;

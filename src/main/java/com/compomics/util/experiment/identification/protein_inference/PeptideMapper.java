@@ -63,8 +63,7 @@ public interface PeptideMapper {
      * problem occurred while interacting with the tree database.
      */
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
-    
-    
+
     /**
      * Returns the protein mappings for the given peptide sequence. Peptide
      * sequence | Protein accession | Index in the protein. An empty map if not

@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
@@ -946,8 +945,6 @@ public class ProteinTree implements PeptideMapper {
 
         sequenceIndexers.removeAll(done);
     }
-    
-    
 
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
@@ -1093,7 +1090,7 @@ public class ProteinTree implements PeptideMapper {
             }
         }
     }
-    
+
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         throw new InterruptedException("Error: function not implemented");
@@ -1147,7 +1144,7 @@ public class ProteinTree implements PeptideMapper {
                     componentIndex, massTolerance);
             results.addAll(tagMapping);
         }
-        
+
         return results;
     }
 

@@ -146,11 +146,7 @@ public class PeptideMapping {
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
             ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
 
-            
-            
-            
             // starting the mapping
-
             try {
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < peptides.size(); ++i) {
@@ -217,14 +213,11 @@ public class PeptideMapping {
 
             // starting the mapping
             try {
-                
                 // setting up modifications lists, only relevant for protein tree
                 ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
                 ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();       
                 
-                
                 TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
-                
                 
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {

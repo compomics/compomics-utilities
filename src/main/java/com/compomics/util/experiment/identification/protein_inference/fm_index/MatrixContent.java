@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Element for the matrix necessary in pattern search of the FMIndex.
@@ -94,6 +95,22 @@ public class MatrixContent {
     public int ambiguousChar;
     
     /**
+     * information about the component where the X belongs to
+     */
+    public int[] Xcomponent;
+    
+    /**
+     * information about all component where the Xs belong to
+     */
+    public ArrayList<int[]> allXcomponents;
+    
+    public double XMassDiff;
+    
+    public HashMap<Integer, Double> allXMassDiffs;
+    
+    public int originalComponent;
+    
+    /**
      * Constructor almost empty.
      *
      * @param right right index boundary
@@ -116,6 +133,11 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -147,6 +169,11 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -180,6 +207,11 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -214,6 +246,11 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -250,6 +287,11 @@ public class MatrixContent {
         this.variant = variant;
         this.allVariants = null;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -286,6 +328,11 @@ public class MatrixContent {
         this.variant = variant;
         this.allVariants = null;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -327,6 +374,11 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = ambiguousChar;
         this.peptideSequenceSearch = null;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -370,6 +422,11 @@ public class MatrixContent {
         this.variant = '\0';
         this.allVariants = null;
         this.ambiguousChar = ambiguousChar;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -412,6 +469,11 @@ public class MatrixContent {
         this.variant = '\0';
         this.allVariants = null;
         this.ambiguousChar = -1;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
 
     /**
@@ -448,6 +510,11 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;
         this.allVariants = allVariants;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
 
     /**
@@ -484,6 +551,11 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = allVariants;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -525,6 +597,11 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;
         this.allVariants = allVariants;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -566,6 +643,11 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = allVariants;
+        this.Xcomponent = null;
+        this.allXcomponents = null;
+        this.XMassDiff = -1;
+        this.allXMassDiffs = null;
+        this.originalComponent = -1;
     }
     
     
@@ -593,7 +675,11 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{foreign.numSpecificVariants[0], foreign.numSpecificVariants[1], foreign.numSpecificVariants[2]};
         this.variant = foreign.variant;
         this.allVariants = foreign.allVariants;
+        this.Xcomponent = foreign.Xcomponent;
+        this.allXcomponents = foreign.allXcomponents;
+        this.XMassDiff = foreign.XMassDiff;
+        this.allXMassDiffs = foreign.allXMassDiffs;
+        this.originalComponent = foreign.originalComponent;
     }
 
-    
 }

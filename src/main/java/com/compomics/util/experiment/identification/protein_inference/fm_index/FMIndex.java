@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -24,9 +25,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
 
@@ -234,10 +241,43 @@ public class FMIndex implements PeptideMapper {
      * Mass lookup table.
      */
     long[] lookupMasses = null;
+    
+    /** 
+     * maximum supported number of Xs per tag
+     */
+    int maxXPerTag = 4;
     /**
-     * 
+     * Lookup table for up to maxXPerTag Xs per mass tag
      */
     long[][] Xlookup = null;
+    
+    /**
+     * all permutations
+     */
+    int[][][] allPermutations = {
+        {{-1}},
+        {{0}},
+        {{0, 1}, {1, 0}},
+        {{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}},
+        {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 2, 1, 3}, {0, 2, 3, 1}, {0, 3, 1, 2}, {0, 3, 2, 1}, {1, 0, 2, 3}, {1, 0, 3, 2}, {1, 2, 0, 3}, {1, 2, 3, 0}, {1, 3, 0, 2}, {1, 3, 2, 0}, {2, 0, 1, 3}, {2, 0, 3, 1}, {2, 1, 0, 3}, {2, 1, 3, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 0, 1, 2}, {3, 0, 2, 1}, {3, 1, 0, 2}, {3, 1, 2, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}}};
+    
+    /**
+     * struct for building own data structure for mass to index mapping
+     */
+    public class MassIndexMap {
+        public double mass;
+        public int[] indexes;
+        
+        public MassIndexMap(double mass, int[] indexes){
+            this.mass = mass;
+            this.indexes = indexes;
+        }
+    }
+    
+    /**
+     * Arraylist for sorted masses to index mappings
+     */
+    ArrayList<MassIndexMap> massIndexMaps = null;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -265,8 +305,53 @@ public class FMIndex implements PeptideMapper {
         }
         return mid;
     }
+    
+    
+    public int[] computeMappingRanges(double mass){
+        int[] ranges = new int[]{0, -1};
+        
+        int low = 0;
+        int mid = 0;
+        int high = massIndexMaps.size() - 1;
+        while (low <= high) {
+            mid = (low + high) >> 1;
+            if (massIndexMaps.get(mid).mass <= mass - massTolerance) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        ranges[0] = Math.max(mid, 0);
+        while (ranges[0] < massIndexMaps.size() - 1 && massIndexMaps.get(ranges[0]).mass < mass - massTolerance){
+            ++ranges[0];
+        }
+        if (Math.abs(massIndexMaps.get(ranges[0]).mass - mass) > massTolerance) return ranges;
+        
+        low = ranges[0];
+        high = massIndexMaps.size() - 1;
+        while (low <= high) {
+            mid = (low + high) >> 1;
+            if (massIndexMaps.get(mid).mass < mass + massTolerance) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        
+        ranges[1] = Math.min(mid, massIndexMaps.size());
+        while (0 < ranges[1] && massIndexMaps.get(ranges[1]).mass > mass + massTolerance){
+            --ranges[1];
+        }
+        
+        return ranges;
+    }
+    
+    
 
-    // @TODO: add javadoc
+    /**
+     * computes the number of allocated bytes
+     * @return allocated bytes
+     */
     public long getAllocatedBytes() {
         long bytes = 0;
         for (int indexPart = 0; indexPart < indexParts; ++indexPart){
@@ -321,6 +406,13 @@ public class FMIndex implements PeptideMapper {
         maxNumberInsertions = peptideVariantsPreferences.getnAaInsertions();
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
+        
+        
+        TreeSet<Character> aaGroups = new TreeSet<Character>();
+        aaGroups.add('B');
+        aaGroups.add('J');
+        aaGroups.add('X');
+        aaGroups.add('Z');
         
         substitutionMatrix = new boolean[128][128];
         for (int i = 0; i < 128; ++i) {
@@ -517,7 +609,7 @@ public class FMIndex implements PeptideMapper {
             }
             char[] aminoAcids = AminoAcid.getAminoAcids();
             for (int i = 0; i < aminoAcids.length; ++i) {
-                aaMasses[aminoAcids[i]] = AminoAcid.getAminoAcid(aminoAcids[i]).getMonoisotopicMass();
+                if (!aaGroups.contains(aminoAcids[i])) aaMasses[aminoAcids[i]] = AminoAcid.getAminoAcid(aminoAcids[i]).getMonoisotopicMass();
             }
 
             // change masses for fixed modifications
@@ -698,22 +790,20 @@ public class FMIndex implements PeptideMapper {
             }
             char[] aminoAcids = AminoAcid.getAminoAcids();
             for (int i = 0; i < aminoAcids.length; ++i) {
-                aaMasses[aminoAcids[i]] = AminoAcid.getAminoAcid(aminoAcids[i]).getMonoisotopicMass();
+                if (!aaGroups.contains(aminoAcids[i])) aaMasses[aminoAcids[i]] = AminoAcid.getAminoAcid(aminoAcids[i]).getMonoisotopicMass();
             }
         }
 
         ArrayList<Integer> aaMassVector = new ArrayList<Integer>();
         for (int i = 0; i < aaMasses.length; ++i) {
-            if (aaMasses[i] > 0) {
-                aaMassVector.add(i);
-            }
+            if (aaMasses[i] > 0) aaMassVector.add(i);
         }
 
         aaMassIndexes = new int[aaMassVector.size()];
         for (int i = 0; i < aaMassVector.size(); ++i) {
             aaMassIndexes[i] = aaMassVector.get(i);
         }
-        numMasses = aaMassVector.size();
+        numMasses = aaMassVector.size() + 1; // +1 because of X
 
         SequenceFactory sf = SequenceFactory.getInstance();
         
@@ -777,19 +867,30 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
         
-        
-        lookupMasses = new long[(((int) ((lookupMaxMass + massTolerance) * lookupMultiplier)) >>> 6) + 3];
+        int lookupLength = ((int) ((lookupMaxMass + massTolerance) * lookupMultiplier));
+        lookupMasses = new long[(lookupLength >>> 6) + 3];
         for (int i = 0; i < lookupMasses.length; ++i) {
             lookupMasses[i] = 0L;
         }
-        Xlookup = new long[6][];
-        for (int i = 1; i <= 5; ++i){
-            Xlookup[i] = new long[(((int) ((lookupMaxMass + massTolerance) * lookupMultiplier)) >>> 6) + 3];
+        
+        Xlookup = new long[maxXPerTag + 1][];
+        for (int i = 1; i <= maxXPerTag; ++i){
+            Xlookup[i] = new long[(lookupLength >>> 6) + 3];
             for (int j = 0; j < Xlookup[i].length; ++j) {
                 Xlookup[i][j] = 0L;
             }
         }
-        recursiveMassFilling(0., 0, 0);
+        massIndexMaps = new ArrayList<MassIndexMap>(1000000);
+        
+        recursiveMassFilling(0., 0, 0, null);
+        
+        Collections.sort(massIndexMaps, new Comparator<MassIndexMap>(){
+           public int compare(MassIndexMap m1, MassIndexMap m2){
+               return (int)((m1.mass - m2.mass) * 1000000.);
+           } 
+        });
+        cache = (LinkedList<CacheElement>[])new LinkedList[indexParts];
+        for (int indexPart = 0; indexPart < indexParts; ++indexPart) cache[indexPart] = new LinkedList<CacheElement>();
     }
     
     
@@ -935,7 +1036,7 @@ public class FMIndex implements PeptideMapper {
      * @param mass current mass
      * @param pos current index of amino acid mass array
      */
-    void recursiveMassFilling(double mass, int pos, int loop) {
+    void recursiveMassFilling(double mass, int pos, int loop, int[] massIndexes) {
         if (mass >= lookupMaxMass) {
             return;
         }
@@ -949,17 +1050,26 @@ public class FMIndex implements PeptideMapper {
             }
             lookupMasses[endMass >>> 6] |= (~(0L)) >>> (64 - (endMass & 63));
             
-            if (loop <= 5){
+            if (loop <= maxXPerTag){
                 Xlookup[loop][startMass >>> 6] |= (~(0L)) << (startMass & 63);
                 for (int p = (startMass >>> 6) + 1; p < (endMass >>> 6); ++p) {
                     Xlookup[loop][p] = ~0L;
                 }
                 Xlookup[loop][endMass >>> 6] |= (~(0L)) >>> (64 - (endMass & 63));
+                
+                massIndexMaps.add(new MassIndexMap(mass, massIndexes));
             }
         }
-
+        
         for (int i = pos; i < aaMassIndexes.length; ++i) {
-            recursiveMassFilling(mass + aaMasses[aaMassIndexes[i]], i, loop + 1);
+            int[] massIndexesNew = new int[massIndexes != null ? massIndexes.length + 1 : 1];
+            if (massIndexes != null){
+                for (int j = 0; j < massIndexes.length; ++j){
+                    massIndexesNew[j] = massIndexes[j];
+                }
+            }
+            massIndexesNew[massIndexesNew.length - 1] = aaMassIndexes[i];
+            recursiveMassFilling(mass + aaMasses[aaMassIndexes[i]], i, loop + 1, massIndexesNew);
         }
     }
 
@@ -1603,7 +1713,6 @@ public class FMIndex implements PeptideMapper {
         int maxNum = setCharacter[numMasses][0];
         int[] BValues = null;
         int[] JValues = null;
-        int[] XValues = null;
         int[] ZValues = null;
         for (int i = 0; i < maxNum; ++i) {
             if (setCharacter[i][0] == 'B' || setCharacter[i][0] == 'J' || setCharacter[i][0] == 'Z'){
@@ -1691,39 +1800,39 @@ public class FMIndex implements PeptideMapper {
                     final double oldMass = cell.mass;
                     int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
                     addAmbiguous(setCharacter);
-                    if (withVariableModifications) {
-                        addModifications(setCharacter);
-                    }
+                    if (withVariableModifications) addModifications(setCharacter);
+                    
                     for (int b = 0; b < setCharacter[numMasses][0]; ++b) {
                         int[] borders = setCharacter[b];
                         final int aminoAcid = borders[0];
-                        if (aminoAcid == '/') {
-                            continue;
-                        }
+                        if (aminoAcid == '/') continue;
+                        int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                        if (newNumX > combination.xNumLimit) continue;
                         final double newMass = oldMass + (aminoAcid != 'X' ? aaMasses[borders[3]] : 0);
+                        
                         // check if not exceeding tag mass
                         if (newMass - massTolerance <= combinationMass) {
                             final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
                             final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
                             double massDiff = Math.abs(combinationMass - newMass);
                             int offset = (massDiff <= massTolerance) ? 1 : 0;
-
-                            int intMass = (int) (massDiff * lookupMultiplier);
+                            //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
+                            
                             // make a lookup when mass difference is below 800Da if it is still possible to reach by a AA combination
-                            if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                continue;
-                            }
-                            if (0 < newNumX && newNumX <= 5 && massDiff < lookupMaxMass && (((Xlookup[newNumX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1)){
-                                offset = 1;
-                            }
-                            //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff);
+                            int intMass = (int) (massDiff * lookupMultiplier);
+                            if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0))  continue;
+                            boolean withinMass = withinMassTolerance(massDiff, newNumX);
+                            if (withinMass) offset = 1;
                             
                             if (offset > 0) newNumX = 0;
                             matrix[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]));
-
+                            if (aminoAcid == 'X') matrix[j + offset].getLast().Xcomponent = new int[]{0, j, length + 1};
+                            if (withinMass){
+                                matrix[j + offset].getLast().originalComponent = j;
+                                matrix[j + offset].getLast().XMassDiff = massDiff;
+                            }
                         }
                     }
                 } else {
@@ -2001,12 +2110,8 @@ public class FMIndex implements PeptideMapper {
                                         boolean add = true;
                                         double massDiff = combinationMass - aminoMass;
                                         int intMass = (int) (massDiff * lookupMultiplier);
-                                        if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                            add = false;
-                                        }
-                                        if (add) {
-                                            matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));
-                                        }
+                                        if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0))  add = false;
+                                        if (add) matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));
                                     }
                                 }
                             }
@@ -2110,11 +2215,16 @@ public class FMIndex implements PeptideMapper {
         return mass;
     }
     
+    /**
+     * Lookup, if mass can be described a combination of numX different amino acids
+     * @param mass to be described
+     * @param numX number of Xs
+     * @return decision
+     */
     public boolean withinMassTolerance(double mass, int numX){
         if (mass + massTolerance < negativePTMMass) return false;
-        mass = Math.abs(mass);
         int intMass = (int) (mass * lookupMultiplier);  
-        return ((mass < massTolerance) || (0 < numX && numX <= 5 && mass < lookupMaxMass && (((Xlookup[numX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1)));
+        return (0 < numX && numX <= maxXPerTag && mass < lookupMaxMass && (((Xlookup[numX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1));
     }
 
     /**
@@ -2146,14 +2256,15 @@ public class FMIndex implements PeptideMapper {
 
                     int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
                     addAmbiguous(setCharacter);
-                    if (withVariableModifications) {
-                        addModifications(setCharacter);
-                    }
+                    if (withVariableModifications) addModifications(setCharacter);
                     
                     if (k == lenCombinations - 1) {
                         for (int b = 0; b < setCharacter[numMasses][0]; ++b) {
                             int[] borders = setCharacter[b];
                             final int aminoAcid = borders[0];
+                            int newNumX = cell.numX + ((aminoAcid == 'X') ? 1 : 0);
+                            if (newNumX > combination.xNumLimit) continue;
+                                
 
                             if (aminoAcid != '/') {
                                 final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
@@ -2163,10 +2274,10 @@ public class FMIndex implements PeptideMapper {
                                 final int lessValue = less[aminoAcidSearch];
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
-                                int newNumX = cell.numX + ((aminoAcid == 'X') ? 1 : 0);
-                                //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + newNumX + " " + massDiff);
+                                //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
                                 MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]);
-
+                                if (aminoAcid == 'X') newCell.Xcomponent = new int[]{0, k, length + 1};
+                                
                                 ModificationMatch modificationMatchEnd = null;
                                 ModificationMatch modificationMatchEndEnd = null;
                                 boolean endOfPeptide = false;
@@ -2195,20 +2306,30 @@ public class FMIndex implements PeptideMapper {
                                 }
 
                                 boolean hasFixed = false;
+                                boolean withinMass = false;
+                                double XmassDiff = -1;
 
                                 // fixed aa defined peptide terminal modification
                                 if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
                                     hasFixed = true;
                                     for (int i = 0; i < fmodpaaMass[lastAcid].size(); ++i) {
-                                        double massDiffDiff = Math.abs(massDiff - fmodpaaMass[lastAcid].get(i));             
-                                        if (withinMassTolerance(massDiffDiff, newNumX)){
+                                        double massDiffDiff = Math.abs(massDiff - fmodpaaMass[lastAcid].get(i));
+                                        double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                        boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                        if (massDiffDiffAbs < massTolerance || wmt){
+                                            withinMass |= wmt;
+                                            XmassDiff = massDiffDiffAbs;
                                             endOfPeptide = true;
                                             modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
                                         }
 
                                         if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     endOfPeptide = true;
                                                     modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length + 1);
@@ -2218,7 +2339,11 @@ public class FMIndex implements PeptideMapper {
                                         // variable undefined peptide terminal modifictation
                                         if (!endOfPeptide && vmodp != null) {
                                             for (int j = 0; j < vmodp.size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     endOfPeptide = true;
                                                     modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length + 1);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length + 1);
@@ -2228,20 +2353,29 @@ public class FMIndex implements PeptideMapper {
 
                                     }
                                 }
+                                
 
                                 // fixed undefined peptide terminal modifictation
                                 if (fmodp != null && !endOfPeptide) {
                                     hasFixed = true;
                                     for (int i = 0; i < fmodp.size(); ++i) {
                                         double massDiffDiff = massDiff - fmodpMass.get(i);
-                                        if (withinMassTolerance(massDiffDiff, newNumX)) {
+                                        double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                        boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                        if (massDiffDiffAbs < massTolerance || wmt) {
+                                            withinMass |= wmt;
+                                            XmassDiff = massDiffDiffAbs;
                                             endOfPeptide = true;
                                             modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
                                         }
 
                                         if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     endOfPeptide = true;
                                                     modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length + 1);
@@ -2251,7 +2385,11 @@ public class FMIndex implements PeptideMapper {
                                         // variable undefined peptide terminal modifictation
                                         if (!endOfPeptide && vmodp != null) {
                                             for (int j = 0; j < vmodp.size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     endOfPeptide = true;
                                                     modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length + 1);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length + 1);
@@ -2263,51 +2401,81 @@ public class FMIndex implements PeptideMapper {
 
                                 if (!hasFixedPTM_atTerminus && !hasFixed && !endOfPeptide) {
                                     // without any peptide terminal modification
-                                    if (withinMassTolerance(massDiff, newNumX)) {
+                                    double massDiffF = Math.abs(massDiff);
+                                    boolean wmt = withinMassTolerance(massDiffF, newNumX);
+                                    if (massDiffF < massTolerance || wmt) {
+                                        withinMass |= wmt;
+                                        XmassDiff = massDiffF;
                                         endOfPeptide = true;
                                     }
 
+                                    
                                     // variable aa defined peptide terminal modification
                                     if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                         for (int i = 0; i < vmodpaaMass[lastAcid].size(); ++i) {
-                                            if (withinMassTolerance(massDiff - vmodpaaMass[lastAcid].get(i), newNumX)) {
+                                            double massDiffV = Math.abs(massDiff - vmodpaaMass[lastAcid].get(i));
+                                            boolean wmtV = withinMassTolerance(massDiffV, newNumX);
+                                            if (massDiffV < massTolerance || wmtV) {
+                                                withinMass |= wmtV;
+                                                XmassDiff = massDiffV;
                                                 endOfPeptide = true;
                                                 modificationMatchEnd = new ModificationMatch(vmodpaa[lastAcid].get(i), true, length + 1);
                                             }
                                         }
                                     }
+                                    
+                                
                                     // variable undefined peptide terminal modifictation
                                     if (!endOfPeptide && vmodp != null) {
                                         for (int i = 0; i < vmodp.size(); ++i) {
-                                            if (withinMassTolerance(massDiff - vmodpMass.get(i), newNumX)) {
+                                            double massDiffV = Math.abs(massDiff - vmodpMass.get(i));
+                                            boolean wmtV = withinMassTolerance(massDiffV, newNumX);
+                                            if (massDiffV < massTolerance || wmtV) {
+                                                withinMass |= wmtV;
+                                                XmassDiff = massDiffV;
                                                 endOfPeptide = true;
                                                 modificationMatchEnd = new ModificationMatch(vmodp.get(i), false, length + 1);
                                             }
                                         }
                                     }
                                 }
+                                
                                 if (!endOfPeptide) {
                                     if (newMass - massTolerance + negativePTMMass <= combinationMass) {
                                         content.add(newCell);
                                     }
                                 } else if (modificationMatchEnd != null) {
+                                    if (newNumX > 0 && !withinMass) continue;
                                     MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, null, length + 1, 0, modificationMatchEnd, null, -1);
                                     if (modificationMatchEndEnd == null) {
                                         matrix[k + 1].add(newEndCell);
-                                    } else {
+                                    }
+                                    else {
                                         MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, null, length + 1, 0, modificationMatchEndEnd, null, -1);
                                         matrix[k + 1].add(newEndEndCell);
                                     }
+                                    if (withinMass){
+                                        matrix[k + 1].getLast().originalComponent = k;
+                                        matrix[k + 1].getLast().XMassDiff = XmassDiff;
+                                    }
+                                    matrix[k + 1].getLast().numX = 0;
                                 } else {
+                                    if (newNumX > 0 && !withinMass) continue;
                                     matrix[k + 1].add(newCell);
+                                    matrix[k + 1].getLast().numX = 0;
+                                    if (withinMass){
+                                        matrix[k + 1].getLast().originalComponent = k;
+                                        matrix[k + 1].getLast().XMassDiff = XmassDiff;
+                                    }
                                 }
 
                             } else if (length > 1) {
                                 int lastAcid = cell.character;
-                                int newNumX = cell.numX;
                                 double massDiff = combinationMass - oldMass;
                                 ModificationMatch modificationMatchEnd = null;
                                 ModificationMatch modificationMatchEndEnd = null;
+                                boolean withinMass = false;
+                                double XmassDiff = -1;
 
                                 // ptm at terminus handling
                                 ArrayList<String> fmod = fmodc;
@@ -2349,15 +2517,23 @@ public class FMIndex implements PeptideMapper {
                                 // fixed aa defined protein terminal modification
                                 if (fmodaa != null && lastAcid > 0 && fmodaaMass[lastAcid].size() > 0) {
                                     for (int i = 0; i < fmodaaMass[lastAcid].size(); ++i) {
-                                        Double massDiffDiff = massDiff - fmodaaMass[lastAcid].get(i);
-                                        if (withinMassTolerance(massDiffDiff, newNumX)) {
+                                        double massDiffDiff = massDiff - fmodaaMass[lastAcid].get(i);
+                                        double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                        boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                        if (massDiffDiffAbs < massTolerance || wmt) {
+                                            withinMass |= wmt;
+                                            XmassDiff = massDiffDiffAbs;
                                             modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                         }
 
                                         // variable aa defined protein terminal modification
                                         if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length);
                                                 }
@@ -2366,7 +2542,11 @@ public class FMIndex implements PeptideMapper {
                                         // variable undefined protein terminal modifictation
                                         if (vmod != null && modificationMatchEnd == null) {
                                             for (int j = 0; j < vmod.size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - vmodMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length);
                                                 }
@@ -2377,9 +2557,12 @@ public class FMIndex implements PeptideMapper {
                                         boolean hasFixedPep = false;
                                         if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                                if (withinMassTolerance(massDiffDiff - fmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
                                                     hasFixedPep = true;
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                 }
@@ -2388,8 +2571,12 @@ public class FMIndex implements PeptideMapper {
 
                                         if (fmodp != null) {
                                             for (int j = 0; j < fmodp.size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - fmodpMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - fmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
                                                     hasFixedPep = true;
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                 }
@@ -2399,9 +2586,11 @@ public class FMIndex implements PeptideMapper {
                                         if (!hasFixedPep) {
                                             if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                                 for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                    if (withinMassTolerance(massDiffDiff - vmodpaaMass[lastAcid].get(j), newNumX)) {
-                                                        hasFixedPep = true;
+                                                    double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                    boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length);
                                                         modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                     }
@@ -2410,8 +2599,11 @@ public class FMIndex implements PeptideMapper {
 
                                             if (vmodp != null) {
                                                 for (int j = 0; j < vmodp.size(); ++j) {
-                                                    if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
-                                                        hasFixedPep = true;
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length);
                                                         modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                     }
@@ -2425,15 +2617,23 @@ public class FMIndex implements PeptideMapper {
                                 if (fmod != null && modificationMatchEnd == null) {
 
                                     for (int i = 0; i < fmod.size(); ++i) {
-                                        Double massDiffDiff = massDiff - fmodMass.get(i);
-                                        if (withinMassTolerance(massDiffDiff, newNumX)) {
+                                        double massDiffDiff = massDiff - fmodMass.get(i);
+                                        double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                        boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                        if (massDiffDiffAbs < massTolerance || wmt) {
+                                            withinMass |= wmt;
+                                            XmassDiff = massDiffDiffAbs;
                                             modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                         }
 
                                         // variable aa defined protein terminal modification
                                         if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
-                                                if (withinMassTolerance(massDiff - vmodaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffV = Math.abs(massDiff - vmodaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffV, newNumX);
+                                                if (massDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length);
                                                 }
@@ -2442,7 +2642,11 @@ public class FMIndex implements PeptideMapper {
                                         // variable undefined protein terminal modifictation
                                         if (vmod != null && modificationMatchEnd == null) {
                                             for (int j = 0; j < vmod.size(); ++j) {
-                                                if (withinMassTolerance(massDiff - vmodMass.get(j), newNumX)) {
+                                                double massDiffV = Math.abs(massDiff - vmodMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffV, newNumX);
+                                                if (massDiffV < massTolerance || wmtV) {
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length);
                                                 }
@@ -2453,9 +2657,12 @@ public class FMIndex implements PeptideMapper {
                                         boolean hasFixedPep = false;
                                         if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
                                             for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                                if (withinMassTolerance(massDiffDiff - fmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
                                                     hasFixedPep = true;
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                 }
@@ -2464,8 +2671,12 @@ public class FMIndex implements PeptideMapper {
 
                                         if (fmodp != null) {
                                             for (int j = 0; j < fmodp.size(); ++j) {
-                                                if (withinMassTolerance(massDiffDiff - fmodpMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - fmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                if (massDiffDiffV < massTolerance || wmtV) {
                                                     hasFixedPep = true;
+                                                    withinMass |= wmtV;
+                                                    XmassDiff = massDiffDiffV;
                                                     modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                     modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                 }
@@ -2475,9 +2686,12 @@ public class FMIndex implements PeptideMapper {
                                         if (!hasFixedPep) {
                                             if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                                 for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                    if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                         modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                     }
@@ -2486,8 +2700,12 @@ public class FMIndex implements PeptideMapper {
 
                                             if (vmodp != null) {
                                                 for (int j = 0; j < vmodp.size(); ++j) {
-                                                    if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length);
                                                         modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                     }
@@ -2502,7 +2720,11 @@ public class FMIndex implements PeptideMapper {
                                     if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
                                         for (int i = 0; i < vmodaaMass[lastAcid].size(); ++i) {
                                             double massDiffDiff = massDiff - vmodaaMass[lastAcid].get(i);
-                                            if (withinMassTolerance(massDiffDiff, newNumX)) {
+                                            double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                            boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                            if (massDiffDiffAbs < massTolerance || wmt) {
+                                                withinMass |= wmt;
+                                                XmassDiff = massDiffDiffAbs;
                                                 modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                             }
 
@@ -2510,9 +2732,12 @@ public class FMIndex implements PeptideMapper {
                                             boolean hasFixedPep = false;
                                             if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
                                                 for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                                    if (withinMassTolerance(massDiffDiff - fmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                double massDiffDiffV = Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j));
+                                                boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                                         modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                     }
@@ -2521,8 +2746,12 @@ public class FMIndex implements PeptideMapper {
 
                                             if (fmodp != null) {
                                                 for (int j = 0; j < fmodp.size(); ++j) {
-                                                    if (withinMassTolerance(massDiffDiff - fmodpMass.get(j), newNumX)) {
+                                                    double massDiffDiffV = Math.abs(massDiffDiff - fmodpMass.get(j));
+                                                    boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                                         modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                     }
@@ -2532,9 +2761,11 @@ public class FMIndex implements PeptideMapper {
                                             if (!hasFixedPep) {
                                                 if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                                     for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                        if (withinMassTolerance(massDiffDiff - vmodpaaMass[lastAcid].get(j), newNumX)) {
-                                                            hasFixedPep = true;
+                                                        double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                        boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                        if (massDiffDiffV < massTolerance || wmtV) {
+                                                            withinMass |= wmtV;
+                                                            XmassDiff = massDiffDiffV;
                                                             modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                                             modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                         }
@@ -2543,8 +2774,11 @@ public class FMIndex implements PeptideMapper {
 
                                                 if (vmodp != null) {
                                                     for (int j = 0; j < vmodp.size(); ++j) {
-                                                        if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
-                                                            hasFixedPep = true;
+                                                        double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                        boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                        if (massDiffDiffV < massTolerance || wmtV) {
+                                                            withinMass |= wmtV;
+                                                            XmassDiff = massDiffDiffV;
                                                             modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length);
                                                             modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                         }
@@ -2557,7 +2791,11 @@ public class FMIndex implements PeptideMapper {
                                     if (vmod != null && modificationMatchEnd == null) {
                                         for (int i = 0; i < vmod.size(); ++i) {
                                             double massDiffDiff = massDiff - vmodMass.get(i);
-                                            if (withinMassTolerance(massDiffDiff, newNumX)) {
+                                            double massDiffDiffAbs = Math.abs(massDiffDiff);
+                                            boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
+                                            if (massDiffDiffAbs < massTolerance || wmt) {
+                                                withinMass |= wmt;
+                                                XmassDiff = massDiffDiffAbs;
                                                 modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                             }
 
@@ -2565,8 +2803,12 @@ public class FMIndex implements PeptideMapper {
                                             boolean hasFixedPep = false;
                                             if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
                                                 for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-                                                    if (withinMassTolerance(massDiffDiff - fmodpaaMass[lastAcid].get(j), newNumX)) {
+                                                    double massDiffDiffV = Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j));
+                                                    boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                                         modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length);
                                                     }
@@ -2575,8 +2817,12 @@ public class FMIndex implements PeptideMapper {
 
                                             if (fmodp != null) {
                                                 for (int j = 0; j < fmodp.size(); ++j) {
-                                                    if (withinMassTolerance(massDiffDiff - fmodpMass.get(j), newNumX)) {
+                                                    double massDiffDiffV = Math.abs(massDiffDiff - fmodpMass.get(j));
+                                                    boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                    if (massDiffDiffV < massTolerance || wmtV) {
                                                         hasFixedPep = true;
+                                                        withinMass |= wmtV;
+                                                        XmassDiff = massDiffDiffV;
                                                         modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                                         modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length);
                                                     }
@@ -2586,9 +2832,11 @@ public class FMIndex implements PeptideMapper {
                                             if (!hasFixedPep) {
                                                 if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
                                                     for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                        if (withinMassTolerance(massDiffDiff - vmodpaaMass[lastAcid].get(j), newNumX)) {
-                                                            hasFixedPep = true;
+                                                        double massDiffDiffV = Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j));
+                                                        boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                        if (massDiffDiffV < massTolerance || wmtV) {
+                                                            withinMass |= wmtV;
+                                                            XmassDiff = massDiffDiffV;
                                                             modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                                             modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
                                                         }
@@ -2597,8 +2845,11 @@ public class FMIndex implements PeptideMapper {
 
                                                 if (vmodp != null) {
                                                     for (int j = 0; j < vmodp.size(); ++j) {
-                                                        if (withinMassTolerance(massDiffDiff - vmodpMass.get(j), newNumX)) {
-                                                            hasFixedPep = true;
+                                                        double massDiffDiffV = Math.abs(massDiffDiff - vmodpMass.get(j));
+                                                        boolean wmtV = withinMassTolerance(massDiffDiffV, newNumX);
+                                                        if (massDiffDiffV < massTolerance || wmtV) {
+                                                            withinMass |= wmtV;
+                                                            XmassDiff = massDiffDiffV;
                                                             modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length);
                                                             modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length);
                                                         }
@@ -2617,6 +2868,11 @@ public class FMIndex implements PeptideMapper {
                                         MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, null, length, 0, modificationMatchEndEnd, null, -1);
                                         matrix[k + 1].add(newEndEndCell);
                                     }
+                                    if (withinMass){
+                                        matrix[k + 1].getLast().originalComponent = k;
+                                        matrix[k + 1].getLast().XMassDiff = XmassDiff;
+                                    }
+                                    matrix[k + 1].getLast().numX = 0;
                                 }
                             }
                         }
@@ -2635,22 +2891,24 @@ public class FMIndex implements PeptideMapper {
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
                                 int newNumX = cell.numX + ((aminoAcid == 'X') ? 1 : 0);
-                                int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
+                                if (newNumX > combination.xNumLimit) continue;
+                                double massDiff = Math.abs(combinationMass - newMass);
+                                int offset = (massDiff <= massTolerance) ? 1 : 0;
 
-                                double massDiff = combinationMass - newMass;
                                 int intMass = (int) (massDiff * lookupMultiplier);
                                 // make a lookup when mass difference is below 800Da if it is still possible to reach by a AA combination
-                                if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                    continue;
-                                }
-                                if (0 < newNumX && newNumX <= 5 && massDiff < lookupMaxMass && (((Xlookup[newNumX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1)){
-                                    offset = 1;
-                                }
+                                if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0))  continue;
+                                boolean withinMass = withinMassTolerance(massDiff, newNumX);
+                                if (withinMass) offset = 1;
                                 //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff);
 
                                 if (offset > 0) newNumX = 0;
                                 matrix[k + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]));
-
+                                if (aminoAcid == 'X') matrix[k + offset].getLast().Xcomponent = new int[]{0, k, length + 1};
+                                if (withinMass){
+                                    matrix[k + offset].getLast().originalComponent = k;
+                                    matrix[k + offset].getLast().XMassDiff = massDiff;
+                                }
                             }
                         }
                     }
@@ -2749,7 +3007,7 @@ public class FMIndex implements PeptideMapper {
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
         for (int i = 0; i < tag.getContent().size(); ++i) {
             if (tag.getContent().get(i) instanceof MassGap) {
-                tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), (int)(tag.getContent().get(i).getMass() / 57. * xLimit)); // 57 is the smallest mass of all amino acids
+                tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), (int)Math.round(tag.getContent().get(i).getMass() / 120. * xLimit)); // 120 is the average mass of all amino acids
             } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
                 tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int)(tag.getContent().get(i).asSequence().length() * xLimit));
                 if (maxSequencePosition == -1 || tagElements[i].sequence.length() < tagElements[i].sequence.length()) {
@@ -2766,6 +3024,7 @@ public class FMIndex implements PeptideMapper {
                 && !tagElements[1].isMass
                 && tagElements[2].isMass
                 && tagElements[0].mass < tagElements[2].mass);
+        
 
         TagElement[] refTagContent = null;
         int[] lessPrimary = null;
@@ -2798,7 +3057,7 @@ public class FMIndex implements PeptideMapper {
             occurrenceReversed = occurrenceTableReversed;
         }
 
-        ArrayList<MatrixContent> cached = isCached(refTagContent);
+        ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
         if (cached != null && cached.isEmpty()) {
             return allMatches;
         }
@@ -2854,18 +3113,27 @@ public class FMIndex implements PeptideMapper {
                 int leftIndexFront = 0;
                 int rightIndexFront = indexStringLengths.get(indexPart) - 1;
                 ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-
+                ArrayList<int[]> Xcomponents = new ArrayList<int[]>();
+                HashMap<Integer, Double> XmassDiffs = new HashMap<Integer, Double>();
+                
                 while (currentContent.previousContent != null) {
                     final int aminoAcid = currentContent.character;
                     if (aminoAcid > 0) {
                         currentPeptide += (char) currentContent.character;
                         int c = currentContent.ambiguousChar == -1 ? aminoAcid : currentContent.ambiguousChar;
-                        //System.out.println((char)c);
+                        if (currentContent.Xcomponent != null){
+                            Xcomponents.add(currentContent.Xcomponent);
+                            Xcomponents.get(Xcomponents.size() - 1)[2] = currentContent.length;
+                        }
+                        //System.out.println((char) currentContent.character);
                         currentPeptideSearch += (char)c;
                         final int lessValue = lessPrimary[c];
                         final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, c);
                         leftIndexFront = lessValue + range[0];
                         rightIndexFront = lessValue + range[1] - 1;
+                    }
+                    if (currentContent.XMassDiff > -1){
+                        XmassDiffs.put(currentContent.originalComponent, currentContent.XMassDiff);
                     }
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
@@ -2878,16 +3146,18 @@ public class FMIndex implements PeptideMapper {
                     }
                     currentContent = currentContent.previousContent;
                 }
-                //System.out.println();
                 String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
                 String reversePeptideSearch = (new StringBuilder(currentPeptideSearch).reverse()).toString();
-                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, reversePeptideSearch, content.length, 0, null, modifications, -1));
+                MatrixContent cell = new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, reversePeptideSearch, content.length, 0, null, modifications, -1);
+                cell.allXcomponents = Xcomponents;
+                cell.allXMassDiffs = XmassDiffs;
+                cachePrimary.add(cell);
             }
 
             for (MatrixContent matrixContent : cachePrimary) {
                 matrix[0].add(matrixContent);
             }
-            cacheIt(refTagContent, cachePrimary);
+            cacheIt(refTagContent, cachePrimary, indexPart);
         }
         
         if (!matrix[0].isEmpty()) {
@@ -2904,12 +3174,22 @@ public class FMIndex implements PeptideMapper {
             String currentPeptide = "";
             String currentPeptideSearch = "";
             ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-
+            ArrayList<int[]> Xcomponents = new ArrayList<int[]>();
+            HashMap<Integer, Double> XmassDiffs = new HashMap<Integer, Double>();
+                
             while (currentContent.previousContent != null) {
                 if (currentContent.character != '\0') {
                     currentPeptide += (char) currentContent.character;
                     //System.out.println((char) currentContent.character);
                     currentPeptideSearch += (char)(currentContent.ambiguousChar == -1 ? currentContent.character : currentContent.ambiguousChar);
+                    if (currentContent.Xcomponent != null){
+                        Xcomponents.add(currentContent.Xcomponent);
+                        Xcomponents.get(Xcomponents.size() - 1)[0] = 1;
+                        Xcomponents.get(Xcomponents.size() - 1)[2] = content.length - currentContent.length + 1;
+                    }
+                }
+                if (currentContent.XMassDiff > -1){
+                    XmassDiffs.put(currentContent.originalComponent + 1024, currentContent.XMassDiff);
                 }
 
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
@@ -2928,6 +3208,16 @@ public class FMIndex implements PeptideMapper {
 
             int leftIndex = content.left;
             int rightIndex = content.right;
+
+            for (int[] Xcomponent : currentContent.allXcomponents) {
+                Xcomponents.add(new int[]{Xcomponent[0], Xcomponent[1], Xcomponent[2] + content.length - currentContent.length});
+            }
+            
+            for (Integer key : currentContent.allXMassDiffs.keySet()){
+                XmassDiffs.put(key, currentContent.allXMassDiffs.get(key));
+            }
+            
+            
 
             for (ModificationMatch modificationMatch : currentContent.modifications) {
                 modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
@@ -2953,15 +3243,113 @@ public class FMIndex implements PeptideMapper {
                     modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
                 }
 
+                for (int[] Xcomponent : Xcomponents) {
+                    Xcomponent[2] = peptide.length() - Xcomponent[2] + 1;
+                }
+
                 peptide = (new StringBuilder(peptide).reverse()).toString();
             }
-            for (int j = leftIndex; j <= rightIndex; ++j) {
-                int pos = getTextPosition(j, indexPart);
-                int index = binarySearch(boundaries.get(indexPart), pos);
-                String accession = accessions.get(indexPart)[index];
+            
+            if (Xcomponents.isEmpty()){
+                for (int j = leftIndex; j <= rightIndex; ++j) {
+                    int pos = getTextPosition(j, indexPart);
+                    int index = binarySearch(boundaries.get(indexPart), pos);
+                    String accession = accessions.get(indexPart)[index];
 
-                PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries.get(indexPart)[index], modifications);
-                allMatches.add(peptideProteinMapping);
+                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries.get(indexPart)[index], modifications);
+                    allMatches.add(peptideProteinMapping);
+                }
+            }
+            else {
+                // substituting all Xs if present into their corresponding amino acids
+                ArrayList< ArrayList<Integer> > Xsets = new ArrayList< ArrayList<Integer> >();
+                ArrayList< int[] > Xorigins = new ArrayList< int[] >();
+                
+                int nTag = -1, nComponent = -1;
+                
+                for (int i = 0; i < Xcomponents.size(); ++i){
+                    if (nTag != Xcomponents.get(i)[0] || nComponent != Xcomponents.get(i)[1]){
+                        Xorigins.add(new int[]{Xcomponents.get(i)[0], Xcomponents.get(i)[1]});
+                        Xsets.add(new ArrayList<Integer>() );
+                        nTag = Xcomponents.get(i)[0];
+                        nComponent = Xcomponents.get(i)[1];
+                    }
+                    Xsets.get(Xsets.size() - 1).add(Xcomponents.get(i)[2]);
+                }
+                LinkedList<String> substitutedPeptides = new LinkedList<String>();
+                LinkedList<String> substitutedPeptidesTmp = new LinkedList<String>();
+                substitutedPeptides.add(peptide);
+                LinkedList< ArrayList<ModificationMatch> > substitutedModifications = new LinkedList< ArrayList<ModificationMatch> >();
+                LinkedList< ArrayList<ModificationMatch> > substitutedModificationsTmp = new LinkedList< ArrayList<ModificationMatch> >();
+                substitutedModifications.add(modifications);
+                
+                for (int k = 0; k < Xsets.size(); ++k){
+                    ArrayList<Integer> Xpositions = Xsets.get(k);
+                    int len = Xpositions.size();
+                    HashMap<String, int[][] > uniqueSubstitutions = new HashMap<String, int[][] >();
+                    
+                    
+                    // find amino acids that correspond to the number of Xs and mass gap caused by all Xs
+                    int[] Xranges = computeMappingRanges(XmassDiffs.get(Xorigins.get(k)[0] * 1024 + Xorigins.get(k)[1]));
+                    ArrayList< int[] > possibleAAs = new ArrayList< int[] >();
+                    for (int i = Xranges[0]; i <= Xranges[1]; ++i){
+                        if (massIndexMaps.get(i).indexes.length == len){
+                            possibleAAs.add(massIndexMaps.get(i).indexes);
+                        }
+                    }
+                    
+                    int[][] permutations = allPermutations[len];
+                    for (int j = 0; j < possibleAAs.size(); ++j){
+                        for (int i = 0; i < permutations.length; ++i){
+                            String key = "";
+                            for (int index : permutations[i]){
+                                key += "-" + possibleAAs.get(j)[index];
+                            }
+                            int[][] zipped = {permutations[i], possibleAAs.get(j)};
+                            uniqueSubstitutions.put(key, zipped);
+                        }
+                    }
+                    
+                    
+                    
+                    while (!substitutedPeptides.isEmpty()){
+                        String pep = substitutedPeptides.removeLast();
+                        ArrayList<ModificationMatch> currentModifications = substitutedModifications.removeLast();
+                        char[] pepChars = pep.toCharArray();
+                        for (int[][] uniquePermutations : uniqueSubstitutions.values()){
+
+                            ArrayList<ModificationMatch> newModifications = new ArrayList<ModificationMatch>();
+                            for (ModificationMatch m : currentModifications){
+                                newModifications.add(new ModificationMatch(m.getTheoreticPtm(), m.isVariable(), m.getModificationSite()));
+                            }
+
+                            for (int i = 0; i < uniquePermutations[0].length; ++i){
+                                int pos = uniquePermutations[1][uniquePermutations[0][i]];
+                                pepChars[Xpositions.get(i) - 1] = (char)(pos & 127);
+                                if (modificationFlags[pos]) {
+                                    newModifications.add(new ModificationMatch(modifictationLabels[pos], pos >= 128, Xpositions.get(i)));
+                                }
+                            }
+                            substitutedPeptidesTmp.add(String.valueOf(pepChars));
+                            substitutedModificationsTmp.add(newModifications);
+                        }
+                    }
+                    while(!substitutedPeptidesTmp.isEmpty()){
+                        substitutedPeptides.add(substitutedPeptidesTmp.removeLast());
+                        substitutedModifications.add(substitutedModificationsTmp.removeLast());
+                    }
+                }
+                
+                for (int i = 0; i < substitutedPeptides.size(); ++i){
+                    for (int j = leftIndex; j <= rightIndex; ++j) {
+                        int pos = getTextPosition(j, indexPart);
+                        int index = binarySearch(boundaries.get(indexPart), pos);
+                        String accession = accessions.get(indexPart)[index];
+
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index], substitutedModifications.get(i));
+                        allMatches.add(peptideProteinMapping);
+                    }
+                }
             }
         }/*
         if (tag.getContent().size() == 3){
@@ -3049,7 +3437,7 @@ public class FMIndex implements PeptideMapper {
             occurrenceReversed = occurrenceTableReversed;
         }
 
-        ArrayList<MatrixContent> cached = isCached(refTagContent);
+        ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
         if (cached != null && cached.isEmpty()) {
             return allMatches;
         }
@@ -3165,7 +3553,7 @@ public class FMIndex implements PeptideMapper {
                 int error = genericVariantMatching ? matrixContent.numVariants : matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
                 matrix[error][0].add(matrixContent);
             }
-            cacheIt(refTagContent, cachePrimary);
+            cacheIt(refTagContent, cachePrimary, indexPart);
 
         }
 
@@ -3375,7 +3763,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * List of cached intermediate tag to proteome mapping results.
      */
-    private final LinkedList<CacheElement> cache = new LinkedList<CacheElement>();
+    private LinkedList<CacheElement>[] cache = null;
 
     /**
      * Adding intermediate tag to proteome mapping results into the cache.
@@ -3383,7 +3771,7 @@ public class FMIndex implements PeptideMapper {
      * @param tagComponents
      * @return
      */
-    private ArrayList<MatrixContent> isCached(TagElement[] tagComponents) {
+    private ArrayList<MatrixContent> isCached(TagElement[] tagComponents, int indexPart) {
         if (tagComponents.length != 3 || !tagComponents[0].isMass || tagComponents[1].isMass || !tagComponents[2].isMass) {
             return null;
         }
@@ -3395,7 +3783,7 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
 
-        for (CacheElement cacheElement : cache) {
+        for (CacheElement cacheElement : cache[indexPart]) {
             if (cacheElement.sequence.equals(tagComponents[1].sequence) && Math.abs(cacheElement.massSecond - tagComponents[2].mass) < 1e-5) {
                 cached = new ArrayList<MatrixContent>(cacheElement.cachedPrimary);
                 break;
@@ -3411,7 +3799,7 @@ public class FMIndex implements PeptideMapper {
      * @param tagComponents
      * @param cachedPrimary
      */
-    private void cacheIt(TagElement[] tagComponents, ArrayList<MatrixContent> cachedPrimary) {
+    private void cacheIt(TagElement[] tagComponents, ArrayList<MatrixContent> cachedPrimary, int indexPart) {
         if (tagComponents.length != 3 || !tagComponents[0].isMass || tagComponents[1].isMass || !tagComponents[2].isMass) {
             return;
         }
@@ -3426,9 +3814,9 @@ public class FMIndex implements PeptideMapper {
             cacheContentPrimary.add(new MatrixContent(matrixContent));
         }
         CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
-        cache.addFirst(cacheElement);
-        if (cache.size() > 50) {
-            cache.removeLast();
+        cache[indexPart].addFirst(cacheElement);
+        if (cache[indexPart].size() > 50) {
+            cache[indexPart].removeLast();
         }
         cacheMutex.release();
     }

@@ -422,8 +422,7 @@ public class WaveletTree {
         int[][] query = new int[numMasses + 1][];
         query[numMasses] = new int[]{0};
         
-        if (leftIndex + 1 < rightIndex)
-            rangeQuery(leftIndex, rightIndex, query);
+        if (leftIndex + 1 < rightIndex) rangeQuery(leftIndex, rightIndex, query);
         else rangeQueryOneValue(rightIndex, query);
         
         return query;

@@ -10,7 +10,7 @@ public class Rank {
     /**
      * The length.
      */
-    private final int length;
+    public final int length;
     /**
      * The bit field.
      */
@@ -57,6 +57,38 @@ public class Rank {
             long bit = (aAlphabet[text[i] >>> shift] >>> (text[i] & mask)) & 1L;
             bitfield[cell] |= (bit << pos);
 
+            if (pos == 0 && i != 0) {
+                if ((i & 255) == 0) {
+                    sumsSecondLevel[cell] = 0;
+                } else {
+                    sumsSecondLevel[cell] = (byte) (sumsSecondLevel[cell - 1] + (byte) (Long.bitCount(bitfield[cell - 1])));
+                }
+            }
+            if (((i & 255) == 0) && i != 0) {
+                sums[i >>> 8] = sums[(i >>> 8) - 1] + (sumsSecondLevel[cell - 1] & 0xFF) + Long.bitCount(bitfield[cell - 1]);
+            }
+        }
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param originalBitfield an original bitfield
+     * @param length length of original bitfield
+     */
+    public Rank(long[] originalBitfield, int length) {
+        this.length = length;
+
+        int field_len = (length >>> 6) + 1;
+        bitfield = originalBitfield;
+        sums = new int[(length >>> 8) + 1];
+        sums[0] = 0;
+        sumsSecondLevel = new byte[field_len];
+        sumsSecondLevel[0] = 0;
+
+        for (int i = 0; i < length; ++i) {
+            int cell = i >>> shift;
+            int pos = i & mask;
             if (pos == 0 && i != 0) {
                 if ((i & 255) == 0) {
                     sumsSecondLevel[cell] = 0;

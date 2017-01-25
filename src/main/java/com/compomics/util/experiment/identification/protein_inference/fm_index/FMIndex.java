@@ -1816,7 +1816,7 @@ public class FMIndex implements PeptideMapper {
                             final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            double massDiff = Math.abs(combinationMass - newMass);
+                            final double massDiff = Math.abs(combinationMass - newMass);
                             int offset = (massDiff <= massTolerance) ? 1 : 0;
                             //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
                             
@@ -1827,10 +1827,8 @@ public class FMIndex implements PeptideMapper {
                             if (withinMass) offset = 1;
                             
                             if (offset > 0) newNumX = 0;
-                            matrix[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]));
-                            if (aminoAcid == 'X') matrix[j + offset].getLast().Xcomponent = new int[]{0, j, length + 1};
+                            matrix[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4], j));
                             if (withinMass){
-                                matrix[j + offset].getLast().originalComponent = j;
                                 matrix[j + offset].getLast().XMassDiff = massDiff;
                             }
                         }
@@ -1848,7 +1846,7 @@ public class FMIndex implements PeptideMapper {
                         int newNumX = numX + ((aminoAcidSearch == 'X') ? 1 : 0);
                         if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
                             if (j < combinations.length - 1 && combinations[j].isMass != combinations[j + 1].isMass) newNumX = 0;
-                            matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1, aminoAcidSearch));
+                            matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1, aminoAcidSearch, j));
                         }
                     }
                 }
@@ -2275,8 +2273,8 @@ public class FMIndex implements PeptideMapper {
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
                                 //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
-                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]);
-                                if (aminoAcid == 'X') newCell.Xcomponent = new int[]{0, k, length + 1};
+                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4], k);
+                                if (aminoAcid == 'X') newCell.tagComponent = k;
                                 
                                 ModificationMatch modificationMatchEnd = null;
                                 ModificationMatch modificationMatchEndEnd = null;
@@ -2446,16 +2444,15 @@ public class FMIndex implements PeptideMapper {
                                     }
                                 } else if (modificationMatchEnd != null) {
                                     if (newNumX > 0 && !withinMass) continue;
-                                    MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, null, length + 1, 0, modificationMatchEnd, null, -1);
+                                    MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, null, length + 1, 0, k, modificationMatchEnd, null, -1);
                                     if (modificationMatchEndEnd == null) {
                                         matrix[k + 1].add(newEndCell);
                                     }
                                     else {
-                                        MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, null, length + 1, 0, modificationMatchEndEnd, null, -1);
+                                        MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, null, length + 1, 0, k, modificationMatchEndEnd, null, -1);
                                         matrix[k + 1].add(newEndEndCell);
                                     }
                                     if (withinMass){
-                                        matrix[k + 1].getLast().originalComponent = k;
                                         matrix[k + 1].getLast().XMassDiff = XmassDiff;
                                     }
                                     matrix[k + 1].getLast().numX = 0;
@@ -2464,7 +2461,6 @@ public class FMIndex implements PeptideMapper {
                                     matrix[k + 1].add(newCell);
                                     matrix[k + 1].getLast().numX = 0;
                                     if (withinMass){
-                                        matrix[k + 1].getLast().originalComponent = k;
                                         matrix[k + 1].getLast().XMassDiff = XmassDiff;
                                     }
                                 }
@@ -2861,15 +2857,14 @@ public class FMIndex implements PeptideMapper {
                                 }
 
                                 if (modificationMatchEnd != null) {
-                                    MatrixContent newEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', cell, 0, null, null, length, 0, modificationMatchEnd, null, -1);
+                                    MatrixContent newEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', cell, 0, null, null, length, 0, k, modificationMatchEnd, null, -1);
                                     if (modificationMatchEndEnd == null) {
                                         matrix[k + 1].add(newEndCell);
                                     } else {
-                                        MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, null, length, 0, modificationMatchEndEnd, null, -1);
+                                        MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, null, length, 0, k, modificationMatchEndEnd, null, -1);
                                         matrix[k + 1].add(newEndEndCell);
                                     }
                                     if (withinMass){
-                                        matrix[k + 1].getLast().originalComponent = k;
                                         matrix[k + 1].getLast().XMassDiff = XmassDiff;
                                     }
                                     matrix[k + 1].getLast().numX = 0;
@@ -2903,10 +2898,9 @@ public class FMIndex implements PeptideMapper {
                                 //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff);
 
                                 if (offset > 0) newNumX = 0;
-                                matrix[k + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4]));
-                                if (aminoAcid == 'X') matrix[k + offset].getLast().Xcomponent = new int[]{0, k, length + 1};
+                                matrix[k + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4], k));
+                                if (aminoAcid == 'X') matrix[k + offset].getLast().tagComponent = k;
                                 if (withinMass){
-                                    matrix[k + offset].getLast().originalComponent = k;
                                     matrix[k + offset].getLast().XMassDiff = massDiff;
                                 }
                             }
@@ -2926,7 +2920,7 @@ public class FMIndex implements PeptideMapper {
                         int newNumX = cell.numX + ((aminoAcidSearch == 'X') ? 1 : 0);
                         if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
                             if (k < combinations.length - 1 && combinations[k].isMass != combinations[k + 1].isMass) newNumX = 0;
-                            matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1, aminoAcidSearch));
+                            matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1, aminoAcidSearch, k));
                         }
                     }
                 }
@@ -3121,8 +3115,8 @@ public class FMIndex implements PeptideMapper {
                     if (aminoAcid > 0) {
                         currentPeptide += (char) currentContent.character;
                         int c = currentContent.ambiguousChar == -1 ? aminoAcid : currentContent.ambiguousChar;
-                        if (currentContent.Xcomponent != null){
-                            Xcomponents.add(currentContent.Xcomponent);
+                        if (currentContent.character == 'X'){
+                            Xcomponents.add(new int[]{0, currentContent.tagComponent, currentContent.length});
                             Xcomponents.get(Xcomponents.size() - 1)[2] = currentContent.length;
                         }
                         //System.out.println((char) currentContent.character);
@@ -3133,7 +3127,7 @@ public class FMIndex implements PeptideMapper {
                         rightIndexFront = lessValue + range[1] - 1;
                     }
                     if (currentContent.XMassDiff > -1){
-                        XmassDiffs.put(currentContent.originalComponent, currentContent.XMassDiff);
+                        XmassDiffs.put(currentContent.tagComponent, currentContent.XMassDiff);
                     }
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
@@ -3148,7 +3142,7 @@ public class FMIndex implements PeptideMapper {
                 }
                 String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
                 String reversePeptideSearch = (new StringBuilder(currentPeptideSearch).reverse()).toString();
-                MatrixContent cell = new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, reversePeptideSearch, content.length, 0, null, modifications, -1);
+                MatrixContent cell = new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, reversePeptideSearch, content.length, 0, 0, null, modifications, -1);
                 cell.allXcomponents = Xcomponents;
                 cell.allXMassDiffs = XmassDiffs;
                 cachePrimary.add(cell);
@@ -3182,14 +3176,12 @@ public class FMIndex implements PeptideMapper {
                     currentPeptide += (char) currentContent.character;
                     //System.out.println((char) currentContent.character);
                     currentPeptideSearch += (char)(currentContent.ambiguousChar == -1 ? currentContent.character : currentContent.ambiguousChar);
-                    if (currentContent.Xcomponent != null){
-                        Xcomponents.add(currentContent.Xcomponent);
-                        Xcomponents.get(Xcomponents.size() - 1)[0] = 1;
-                        Xcomponents.get(Xcomponents.size() - 1)[2] = content.length - currentContent.length + 1;
+                    if (currentContent.character == 'X'){
+                        Xcomponents.add(new int[]{1, currentContent.tagComponent, content.length - currentContent.length + 1});
                     }
                 }
                 if (currentContent.XMassDiff > -1){
-                    XmassDiffs.put(currentContent.originalComponent + 1024, currentContent.XMassDiff);
+                    XmassDiffs.put(currentContent.tagComponent + 1024, currentContent.XMassDiff);
                 }
 
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {

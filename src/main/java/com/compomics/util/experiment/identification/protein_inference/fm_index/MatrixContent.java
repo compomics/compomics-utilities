@@ -97,7 +97,7 @@ public class MatrixContent {
     /**
      * information about the component where the X belongs to
      */
-    public int[] Xcomponent;
+    public int tagComponent;
     
     /**
      * information about all component where the Xs belong to
@@ -108,7 +108,6 @@ public class MatrixContent {
     
     public HashMap<Integer, Double> allXMassDiffs;
     
-    public int originalComponent;
     
     /**
      * Constructor almost empty.
@@ -133,11 +132,10 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -169,11 +167,10 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -207,11 +204,10 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -246,11 +242,10 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -287,11 +282,10 @@ public class MatrixContent {
         this.variant = variant;
         this.allVariants = null;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -328,11 +322,10 @@ public class MatrixContent {
         this.variant = variant;
         this.allVariants = null;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -355,8 +348,9 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param modifictationPos index to modification list for ptm
      * @param ambiguousChar ambiguous character
+     * @param tagComponent the tag component index
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX, int modifictationPos, int ambiguousChar) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX, int modifictationPos, int ambiguousChar, int tagComponent) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -374,11 +368,10 @@ public class MatrixContent {
         this.allVariants = null;
         this.ambiguousChar = ambiguousChar;
         this.peptideSequenceSearch = null;
-        this.Xcomponent = null;
+        this.tagComponent = tagComponent;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -422,11 +415,10 @@ public class MatrixContent {
         this.variant = '\0';
         this.allVariants = null;
         this.ambiguousChar = ambiguousChar;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -446,11 +438,12 @@ public class MatrixContent {
      * @param peptideSequenceSearch intermediate peptide sequence for search
      * @param length current peptide length
      * @param numX number of current X amino acids
+     * @param tagComponent the tag component index
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
      * @param modifictationPos index to modification list for ptm
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, int tagComponent, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
 
         this.left = left;
         this.right = right;
@@ -469,11 +462,10 @@ public class MatrixContent {
         this.variant = '\0';
         this.allVariants = null;
         this.ambiguousChar = -1;
-        this.Xcomponent = null;
+        this.tagComponent = tagComponent;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
 
     /**
@@ -510,11 +502,10 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;
         this.allVariants = allVariants;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
 
     /**
@@ -551,11 +542,10 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = allVariants;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -597,11 +587,10 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;
         this.allVariants = allVariants;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -643,11 +632,10 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = allVariants;
-        this.Xcomponent = null;
+        this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
-        this.originalComponent = -1;
     }
     
     
@@ -675,11 +663,10 @@ public class MatrixContent {
         this.numSpecificVariants = new int[]{foreign.numSpecificVariants[0], foreign.numSpecificVariants[1], foreign.numSpecificVariants[2]};
         this.variant = foreign.variant;
         this.allVariants = foreign.allVariants;
-        this.Xcomponent = foreign.Xcomponent;
+        this.tagComponent = foreign.tagComponent;
         this.allXcomponents = foreign.allXcomponents;
         this.XMassDiff = foreign.XMassDiff;
         this.allXMassDiffs = foreign.allXMassDiffs;
-        this.originalComponent = foreign.originalComponent;
     }
 
 }

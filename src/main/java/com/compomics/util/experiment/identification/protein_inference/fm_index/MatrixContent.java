@@ -15,100 +15,89 @@ public class MatrixContent {
      * Left index.
      */
     public int left;
-    
     /**
      * Right index.
      */
     public int right;
-    
     /**
      * Character which was chosen.
      */
     public int character;
-    
     /**
      * Index of the originating entry of a particular cell with the pattern
      * searching matrix.
      */
     public MatrixContent previousContent;
-    
     /**
      * Current mass.
      */
     public double mass;
-    
     /**
      * Current peptide sequence.
      */
     public String peptideSequence;
-    
     /**
      * Current peptide sequence needed for search.
      */
     public String peptideSequenceSearch;
-    
     /**
      * Current peptide sequence length.
      */
     public int length;
-    
     /**
      * Current number of contained X's.
      */
     public int numX;
-    
     /**
      * Index to the modifications list.
      */
     public ModificationMatch modification;
-    
     /**
      * List of all modifications.
      */
     public ArrayList<ModificationMatch> modifications;
-    
     /**
      * List of all modifications.
      */
     public int modificationPos;
-    
     /**
      * List of all modifications.
      */
     public int numVariants;
-    
-    public int[] numSpecificVariants; // (0) deletion, (1) insertion, (2) substitution
-    
     /**
-     * Type of edit operation, either deletion 'd', substitution 's' or insertion 'i'
+     * The specific variants. (0) deletion, (1) insertion, (2) substitution.
+     */
+    public int[] numSpecificVariants;
+    /**
+     * Type of edit operation, either deletion 'd', substitution 's' or
+     * insertion 'i'.
      */
     public char variant;
-    
     /**
-     * Current storing of all variant operations
+     * Current storing of all variant operations.
      */
     public String allVariants;
-    
     /**
-     * If original character was B, J, X, Z
+     * If original character was B, J, X, Z.
      */
     public int ambiguousChar;
-    
     /**
-     * information about the component where the X belongs to
+     * Information about the component where the X belongs to.
      */
     public int tagComponent;
-    
     /**
-     * information about all component where the Xs belong to
+     * Information about all component where the Xs belong to.
      */
     public ArrayList<int[]> allXcomponents;
-    
+    /**
+     * The X mass difference,
+     */
     public double XMassDiff;
-    
+    /**
+     * The all X mass differences.
+     */
     public HashMap<Integer, Double> allXMassDiffs;
-    
-    
+
     /**
      * Constructor almost empty.
      *
@@ -137,11 +126,9 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
+
     /**
-     * Constructor for simple sequance mapping.
+     * Constructor for simple sequence mapping.
      *
      * @param left left index boundary
      * @param right right index boundary
@@ -172,9 +159,7 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
+
     /**
      * Constructor for simple tag mapping.
      *
@@ -209,11 +194,9 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
+
     /**
-     * Constructor for simple tag mapping with peptide Sequence.
+     * Constructor for simple tag mapping with peptide sequence.
      *
      * @param left left index boundary
      * @param right right index boundary
@@ -247,11 +230,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
-    
 
     /**
      * Constructor for sequence with variants.
@@ -263,7 +241,7 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param length length of the current peptide
      * @param numVariants number of edit operations
-     * @param variant type of edit operation 
+     * @param variant type of edit operation
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int length, int numVariants, char variant) {
         this.left = left;
@@ -287,11 +265,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
-    
 
     /**
      * Constructor for sequence with variants.
@@ -303,7 +276,7 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param length length of the current peptide
      * @param numSpecificVariants number of the specific edit operations
-     * @param variant type of edit operation 
+     * @param variant type of edit operation
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int length, int[] numSpecificVariants, char variant) {
         this.left = left;
@@ -327,14 +300,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
-    
-    
-    
-    
 
     /**
      * Constructor.
@@ -373,11 +338,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
-    
 
     /**
      * Constructor.
@@ -396,7 +356,8 @@ public class MatrixContent {
      * @param modifictationPos index to modification list for ptm
      * @param ambiguousChar ambiguous character
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos, int ambiguousChar) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch,
+            int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos, int ambiguousChar) {
 
         this.left = left;
         this.right = right;
@@ -420,11 +381,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
-    
 
     /**
      * Constructor.
@@ -441,9 +397,10 @@ public class MatrixContent {
      * @param tagComponent the tag component index
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
-     * @param modifictationPos index to modification list for ptm
+     * @param modifictationPos index to modification list for PTM
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch, int length, int numX, int tagComponent, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, String peptideSequenceSearch,
+            int length, int numX, int tagComponent, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
 
         this.left = left;
         this.right = right;
@@ -478,14 +435,13 @@ public class MatrixContent {
      * @param mass current mass
      * @param length current peptide length
      * @param numX number of current X amino acids
-     * @param modifictationPos index to modification list for ptm
+     * @param modifictationPos index to modification list for PTM
      * @param numVariants number of edit operations
-     * @param variant type of varient
+     * @param variant type of variant
      * @param allVariants all variants
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX,
             int modifictationPos, int numVariants, char variant, String allVariants) {
-
 
         this.left = left;
         this.right = right;
@@ -518,14 +474,13 @@ public class MatrixContent {
      * @param mass current mass
      * @param length current peptide length
      * @param numX number of current X amino acids
-     * @param modifictationPos index to modification list for ptm
+     * @param modifictationPos index to modification list for PTM
      * @param numSpecificVariants number of the specific edit operations
-     * @param variant type of varient
+     * @param variant type of variant
      * @param allVariants all variants
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, int length, int numX,
             int modifictationPos, int[] numSpecificVariants, char variant, String allVariants) {
-
 
         this.left = left;
         this.right = right;
@@ -547,8 +502,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
 
     /**
      * Constructor.
@@ -563,14 +516,13 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
-     * @param modifictationPos index to modification list for ptm
+     * @param modifictationPos index to modification list for PTM
      * @param numVariants number of edit operations
-     * @param variant type of varient
+     * @param variant type of variant
      * @param allVariants all variants
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications,
             int modifictationPos, int numVariants, char variant, String allVariants) {
-
 
         this.left = left;
         this.right = right;
@@ -592,8 +544,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
 
     /**
      * Constructor.
@@ -608,14 +558,13 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
-     * @param modifictationPos index to modification list for ptm
+     * @param modifictationPos index to modification list for PTM
      * @param numSpecificVariants number of the specific edit operations
-     * @param variant type of varient
+     * @param variant type of variant
      * @param allVariants all variants
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications,
             int modifictationPos, int[] numSpecificVariants, char variant, String allVariants) {
-
 
         this.left = left;
         this.right = right;
@@ -637,10 +586,6 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
-    
-    
-    
-    
 
     /**
      * Copy constructor.
@@ -668,5 +613,4 @@ public class MatrixContent {
         this.XMassDiff = foreign.XMassDiff;
         this.allXMassDiffs = foreign.allXMassDiffs;
     }
-
 }

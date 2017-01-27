@@ -170,6 +170,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     private Integer maxIsotopicCorrection = 1;
     /**
+     * Reference mass for the conversion of the fragment ion tolerance from ppm
+     * to Dalton.
+     */
+    private Double refMass = 2000.0;
+    /**
      * The algorithm specific parameters.
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
@@ -212,6 +217,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.maxChargeSearched = searchParameters.getMaxChargeSearched();
         this.minIsotopicCorrection = searchParameters.getMinIsotopicCorrection();
         this.maxIsotopicCorrection = searchParameters.getMaxIsotopicCorrection();
+        this.refMass = searchParameters.getRefMass();
 
         // Set advanced parameters
         setDefaultAdvancedSettings(searchParameters);
@@ -307,6 +313,27 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
+     * Returns the reference mass used to convert ppm to Da.
+     * 
+     * @return the reference mass used to convert ppm to Da
+     */
+    public Double getRefMass() {
+        if (refMass == null) { // Backward compatibility
+            refMass = 2000.0;
+        }
+        return refMass; 
+    }
+
+    /**
+     * Sets the reference mass used to convert ppm to Da.
+     * 
+     * @param refMass the reference mass used to convert ppm to Da
+     */
+    public void setRefMass(Double refMass) {
+        this.refMass = refMass;
+    }
+
+    /**
      * Returns the PTM settings.
      *
      * @return the PTM settings
@@ -331,6 +358,16 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Double getFragmentIonAccuracy() {
         return fragmentIonMZTolerance;
+    }
+
+    /**
+     * Returns the absolute fragment ion tolerance in Dalton. If the tolerance
+     * is in ppm, the internal reference mass is used.
+     *
+     * @return the absolute fragment ion tolerance in Dalton
+     */
+    public Double getFragmentIonAccuracyInDaltons() {
+        return getFragmentIonAccuracyInDaltons(refMass);
     }
 
     /**
@@ -1022,10 +1059,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         output.append(newLine);
 
-        output.append("MAX_MISSED_CLEAVAGES=");
-        output.append(nMissedCleavages);
-        output.append(newLine);
-
         output.append("PRECURSOR_MASS_TOLERANCE=");
         output.append(precursorTolerance);
         output.append(newLine);
@@ -1040,6 +1073,18 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
         output.append("FRAGMENT_MASS_TOLERANCE=");
         output.append(fragmentIonMZTolerance);
+        output.append(newLine);
+
+        output.append("FRAGMENT_MASS_TOLERANCE_UNIT=");
+        if (getFragmentAccuracyType()== MassAccuracyType.PPM) {
+            output.append("ppm");
+        } else {
+            output.append("Da");
+        }
+        output.append(newLine);
+
+        output.append("PPM_TO_DA_CONVERSION_REF_MASS=");
+        output.append(getRefMass());
         output.append(newLine);
 
         output.append("FORWARD_FRAGMENT_ION_TYPE=");

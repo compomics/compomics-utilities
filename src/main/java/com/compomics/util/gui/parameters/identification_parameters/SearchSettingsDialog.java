@@ -144,7 +144,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * Reference mass for the conversion of the fragment ion tolerance from ppm
      * to Dalton.
      */
-    private Double refMass = 2000.0; // @TODO: should be moved to SearchGUI user preferences
+    private Double refMass;
 
     /**
      * Creates a new SearchSettingsDialog with a frame as owner.
@@ -274,6 +274,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         setScreenProps();
         validateParametersInput(false);
+        
+        // Set reference mass for ppm to Da conversion
+        this.refMass = searchParameters.getRefMass();
 
         // set the settings editable or not
         digestionCmb.setEnabled(editable);

@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -180,7 +179,7 @@ public class PeptideAssumptionFilter implements Serializable {
     /**
      * Validates a peptide depending on its protein inference status. Maps the
      * peptide to proteins in case it was not done before using the default
-     * protein tree of the sequence factory
+     * protein tree of the sequence factory.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -197,7 +196,7 @@ public class PeptideAssumptionFilter implements Serializable {
 
     /**
      * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before
+     * peptide to proteins in case it was not done before.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences

@@ -985,8 +985,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
             ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
             for (int i = 0; i < enzymes.size(); i++) {
-                Enzyme enzyme = enzymes.get(i);
-                String enzymeName = enzyme.getName();
+                Enzyme tempEnzyme = enzymes.get(i);
+                String enzymeName = tempEnzyme.getName();
                 output.append("ENZYME").append(i).append("=");
                 output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
                 Integer nmc = digestionPreferences.getnMissedCleavages(enzymeName);

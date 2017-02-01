@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.8.0.json";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.10.0.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2781,37 +2781,37 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Sulfonation of S
+        // Sulfation of S
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Sulfonation of S";
+        ptmName = "Sulfation of S";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Sulfonation of T
+        // Sulfation of T
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Sulfonation of T";
+        ptmName = "Sulfation of T";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Sulfonation of Y
+        // Sulfation of Y
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "Sulfonation of Y";
+        ptmName = "Sulfation of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
         defaultMods.add(ptmName);
@@ -3374,6 +3374,18 @@ public class PTMFactory implements Serializable {
         ptmName = "Diiodination of Y";
         ptm = new PTM(PTM.MODAA, ptmName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+
+        // Citrullination of R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        ptmName = "Citrullination of R";
+        ptm = new PTM(PTM.MODAA, ptmName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
     }

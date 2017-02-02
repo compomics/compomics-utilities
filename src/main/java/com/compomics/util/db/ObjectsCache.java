@@ -300,9 +300,9 @@ public class ObjectsCache {
                 throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator + ".");
             }
             HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
-            HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
             MapMutex<String> dbMutexMap = getMapMutex(dbName);
             dbMutexMap.acquire(tableName);
+            HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
             if (tableCache == null) {
                 tableCache = dbCache.get(tableName);
                 if (tableCache == null) {
@@ -313,9 +313,11 @@ public class ObjectsCache {
                     dbCache.put(tableName, tableCache);
                 }
             }
+            if (!tableCache.containsKey(objectKey)) {
+                String key = getCacheKey(dbName, tableName, objectKey);
+                loadedObjectsKeys.add(key);
+            }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
-            String key = getCacheKey(dbName, tableName, objectKey);
-            loadedObjectsKeys.add(key);
             dbMutexMap.release(tableName);
             updateCache();
         }
@@ -410,7 +412,6 @@ public class ObjectsCache {
                 CacheEntry entry = getEntry(dbName, tableName, objectKey);
 
                 if (entry == null) {
-                    saveObjects(entryKeys, waitingHandler, clearEntries);
                     throw new IllegalArgumentException("Object " + objectKey + " corresponding to entry " + entryKey + " not found in cache when saving.");
                 } else if (entry.isModified()) {
                     HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);

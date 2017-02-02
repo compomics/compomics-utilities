@@ -60,6 +60,14 @@ public class ObjectsDB implements Serializable {
      */
     private HashSet<String> usedTables = new HashSet<String>();
     /**
+     * Number of tables where the content should be stored in memory.
+     */
+    private int tablesContentCacheSize = 4;
+    /**
+     * Cache for the content of the tables. Will be null for projects older than 4.10.1.
+     */
+    private HashMap<String, HashSet<String>> tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
+    /**
      * The table where to save the long keys. Note: needs to keep the same value
      * for backward compatibility
      */
@@ -390,9 +398,9 @@ public class ObjectsDB implements Serializable {
             PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
             try {
                 dbConnection.setAutoCommit(false);
-                ArrayList<String> tableContent = new ArrayList<String>();
+                HashSet<String> tableContent = new HashSet<String>();
                 if (!allNewObjects) {
-                    tableContent = tableContent(tableName);
+                    tableContent = getTableContent(tableName);
                 }
                 int rowCounter = 0;
 
@@ -998,22 +1006,52 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Returns an arraylist with the content in the given table.
+     * Returns an arraylist with the content of a table.
      *
-     * @param tableName the table to get the content for
+     * @param tableName the name of  the table to get the content for
      *
-     * @return an arraylist with the content in the given table
+     * @return an arraylist with the content of the table
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
      */
-    public synchronized ArrayList<String> tableContent(String tableName) throws SQLException {
+    public HashSet<String> getTableContent(String tableName) throws SQLException {
+        
+        HashSet<String> tableContent;
+        if (tablesContentCache != null) {
+            tableContent = tablesContentCache.get(tableName);
+            if (tableContent != null) {
+                return tableContent;
+            }
+        }
+        return getTableContentSynchronized(tableName);
+    }
 
+    /**
+     * Returns an arraylist with the content of a table.
+     *
+     * @param tableName the name of  the table to get the content for
+     *
+     * @return an arraylist with the content of the table
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     */
+    private synchronized HashSet<String> getTableContentSynchronized(String tableName) throws SQLException {
+
+        HashSet<String> tableContent;
+        if (tablesContentCache != null) {
+            tableContent = tablesContentCache.get(tableName);
+            if (tableContent != null) {
+                return tableContent;
+            }
+        }
+        
         if (debugInteractions) {
             System.out.println("checking db content, table: " + tableName);
         }
 
-        ArrayList<String> tableContent = new ArrayList<String>();
+        tableContent = new HashSet<String>();
         Statement stmt = dbConnection.createStatement();
 
         try {
@@ -1031,6 +1069,22 @@ public class ObjectsDB implements Serializable {
             }
         } finally {
             stmt.close();
+        }
+        
+        if (tablesContentCache != null) {
+            if (tablesContentCache.size() == tablesContentCacheSize) {
+                String keyToRemove = null;
+                for (String key : tablesContentCache.keySet()) {
+                    if (!key.equals(tableName)) {
+                        keyToRemove = key;
+                        break;
+                    }
+                }
+                if (keyToRemove != null) {
+                    tablesContentCache.remove(keyToRemove);
+                }
+            }
+            tablesContentCache.put(tableName, tableContent);
         }
 
         return tableContent;

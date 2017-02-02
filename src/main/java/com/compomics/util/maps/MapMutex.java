@@ -60,7 +60,7 @@ public class MapMutex<K> {
     }
 
     /**
-     * Constructor with one permit per key and not cache limit size.
+     * Constructor with one permit per key and no cache limit size.
      */
     public MapMutex() {
         this(null, null, null);
@@ -103,7 +103,8 @@ public class MapMutex<K> {
             }
             mutex.release();
         }
-            semaphore.acquire();
+        // Acquire
+        semaphore.acquire();
     }
 
     /**

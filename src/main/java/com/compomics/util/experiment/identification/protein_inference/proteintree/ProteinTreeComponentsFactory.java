@@ -164,8 +164,9 @@ public class ProteinTreeComponentsFactory {
      *
      * @throws IOException if an IOException occurs
      * @throws SQLException exception thrown if closing the db failed
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close() throws IOException, SQLException {
+    public void close() throws IOException, SQLException, InterruptedException {
         if (objectsDB != null) {
             objectsDB.close();
             objectsCache = new ObjectsCache();
@@ -226,8 +227,9 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
      * loading data in the database
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void saveNodes(HashMap<String, Object> nodes, WaitingHandler waitingHandler) throws SQLException, IOException {
+    public void saveNodes(HashMap<String, Object> nodes, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObjects(nodeTable, nodes, waitingHandler, true);
     }
 
@@ -459,9 +461,10 @@ public class ProteinTreeComponentsFactory {
      * Loads the tags implemented in the database.
      *
      * @throws SQLException if an SQLException occurs
+     * @throws java.lang.InterruptedException if a threading error occurs
      */
-    public void loadTags() throws SQLException {
-        tagsInTree = objectsDB.tableContentAsSet(nodeTable);
+    public void loadTags() throws SQLException, InterruptedException {
+        tagsInTree = objectsDB.getTableContent(nodeTable);
     }
 
     /**

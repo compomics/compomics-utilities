@@ -286,6 +286,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      * @param modifiedOrNew true if the object is modified or new
+     * @param updateCache boolean indicating whether the cache should be updated
      *
      * @throws IOException if an IOException occurs while writing to the
      * database
@@ -294,7 +295,7 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if a threading error occurs
      * writing to the database
      */
-    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
+    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew, boolean updateCache) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             if (objectKey.contains(cacheSeparator)) {
                 throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator + ".");
@@ -319,7 +320,9 @@ public class ObjectsCache {
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
             dbMutexMap.release(tableName);
-            updateCache();
+            if (updateCache) {
+                updateCache();
+            }
         }
     }
 

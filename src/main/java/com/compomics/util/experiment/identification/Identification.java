@@ -1639,8 +1639,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close() throws SQLException {
+    public void close() throws SQLException, InterruptedException {
         if (identificationDB != null) {
             identificationDB.close();
         }

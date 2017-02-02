@@ -1148,10 +1148,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         if (databaseSettingsTxt.getText().trim().length() == 0) {
             try {
                 sequenceFactory.clearFactory();
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Failed to clear the sequence factory.", "File Error", JOptionPane.ERROR_MESSAGE);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Failed to clear the sequence factory.", "File Error", JOptionPane.ERROR_MESSAGE);
             }

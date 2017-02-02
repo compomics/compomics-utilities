@@ -101,6 +101,7 @@ public interface PeptideMapper {
      * reading or writing a file.
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with a database.
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close() throws IOException, SQLException;
+    public void close() throws IOException, SQLException, InterruptedException;
 }

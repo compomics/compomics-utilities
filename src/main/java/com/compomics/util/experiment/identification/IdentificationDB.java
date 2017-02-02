@@ -124,8 +124,9 @@ public class IdentificationDB implements Serializable {
      *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean spectrumMatchLoaded(String spectrumKey) throws SQLException {
+    public boolean spectrumMatchLoaded(String spectrumKey) throws SQLException, InterruptedException {
         String tableName = getSpectrumMatchTable(spectrumKey);
         return objectsDB.inDB(tableName, spectrumKey, true);
     }
@@ -140,8 +141,9 @@ public class IdentificationDB implements Serializable {
      *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean peptideMatchLoaded(String peptideKey) throws SQLException {
+    public boolean peptideMatchLoaded(String peptideKey) throws SQLException, InterruptedException {
         return objectsDB.inDB(peptideTableName, peptideKey, true);
     }
 
@@ -155,8 +157,9 @@ public class IdentificationDB implements Serializable {
      *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean proteinMatchLoaded(String proteinKey) throws SQLException {
+    public boolean proteinMatchLoaded(String proteinKey) throws SQLException, InterruptedException {
         return objectsDB.inDB(proteinTableName, proteinKey, true);
     }
 
@@ -1408,12 +1411,13 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Closes the db connection.
+     * Finishes queued operations and closes the db connection.
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close() throws SQLException {
+    public void close() throws SQLException, InterruptedException {
         objectsDB.close();
     }
 }

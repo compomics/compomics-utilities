@@ -146,10 +146,12 @@ public class SequenceFactory {
     /**
      * Clears the factory getInstance() needs to be called afterwards.
      *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurred while
+     * closing a file
+     * @throws SQLException if an exception occurs when closing the ProteinTree
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void clearFactory() throws IOException, SQLException {
+    public void clearFactory() throws IOException, SQLException, InterruptedException {
         closeFile();
         defaultPeptideMapper = null;
         currentHeaderMap.clear();
@@ -919,10 +921,11 @@ public class SequenceFactory {
      * Closes the opened file.
      *
      * @throws IOException exception thrown whenever an error occurred while
-     * closing the file
-     * @throws SQLException if an SQLException occurs
+     * closing a file
+     * @throws SQLException if an exception occurs when closing the ProteinTree
+     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void closeFile() throws IOException, SQLException {
+    public void closeFile() throws IOException, SQLException, InterruptedException {
         if (currentRandomAccessFile != null) {
             currentRandomAccessFile.close();
             currentFastaFile = null;

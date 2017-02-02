@@ -1368,7 +1368,7 @@ public class ProteinTree implements PeptideMapper {
     }
 
     @Override
-    public void close() throws IOException, SQLException {
+    public void close() throws IOException, SQLException, InterruptedException {
         if (debugSpeed) {
             try {
                 debugSpeedWriter.flush();

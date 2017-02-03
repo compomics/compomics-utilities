@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.parameters_cli;
+package com.compomics.cli.enzymes;
 
 import org.apache.commons.cli.Options;
 

@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.parameters_cli;
+package com.compomics.cli.modifications;
 
 import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.AminoAcidPattern;

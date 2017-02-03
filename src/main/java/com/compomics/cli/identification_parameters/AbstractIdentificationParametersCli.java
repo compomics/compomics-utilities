@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.parameters_cli;
+package com.compomics.cli.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;

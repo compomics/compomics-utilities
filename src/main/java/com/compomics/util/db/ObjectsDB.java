@@ -69,6 +69,7 @@ public class ObjectsDB implements Serializable {
      * 4.10.1.
      */
     private HashMap<String, HashSet<String>> tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
+    private HashSet<String> filledTables = new HashSet<String>();
     /**
      * The table where to save the long keys. Note: needs to keep the same value
      * for backward compatibility
@@ -371,6 +372,9 @@ public class ObjectsDB implements Serializable {
         } finally {
             ps.close();
         }
+        
+        tablesContentCache.remove(tableName);
+        
         mutex.release();
     }
 
@@ -418,15 +422,17 @@ public class ObjectsDB implements Serializable {
             usedTables.add(tableName);
         }
 
+        mutex.acquire();
+
         HashSet<String> tableContent = new HashSet<String>();
         if (!allNewObjects) {
-            tableContent = getTableContent(tableName);
+            tableContent = getTableContentFromDBNoMutex(tableName);
         }
-
-        mutex.acquire();
+        
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
             PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
+            int batchCpt = 0;
             try {
                 dbConnection.setAutoCommit(false);
                 int rowCounter = 0;
@@ -459,7 +465,7 @@ public class ObjectsDB implements Serializable {
                         try {
                             oos.writeObject(objects.get(objectKey));
 
-                            if (!allNewObjects && tableContent.contains(objectKey)) {
+                            if (!allNewObjects && tableContent.contains(correctedKey)) {
                                 updateStatement.setString(2, correctedKey);
                                 updateStatement.setBytes(1, bos.toByteArray());
                                 updateStatement.addBatch();
@@ -469,6 +475,7 @@ public class ObjectsDB implements Serializable {
                                 insertStatement.addBatch();
                             }
 
+                            try {
                             if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
                                 updateStatement.executeBatch();
                                 insertStatement.executeBatch();
@@ -476,6 +483,14 @@ public class ObjectsDB implements Serializable {
                                 insertStatement.clearParameters();
                                 dbConnection.commit();
                                 rowCounter = 0;
+                                batchCpt++;
+                            }
+                            } catch (java.sql.BatchUpdateException e) {
+                                System.out.println("Table " + tableName);
+                                System.out.println("Key " + objectKey);
+                                System.out.println("Table size " + tableContent.size());
+                                System.out.println("batch " + batchCpt);
+                                throw e;
                             }
 
                         } finally {
@@ -493,6 +508,7 @@ public class ObjectsDB implements Serializable {
                     }
                 }
 
+                            try {
                 if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
                     // insert the remaining data
                     updateStatement.executeBatch();
@@ -501,6 +517,13 @@ public class ObjectsDB implements Serializable {
                     insertStatement.clearParameters();
                     dbConnection.commit();
                 }
+                            } catch (java.sql.BatchUpdateException e) {
+                                System.out.println("Table " + tableName);
+                                System.out.println("Key end batch");
+                                System.out.println("Table size " + tableContent.size());
+                                System.out.println("batch " + batchCpt);
+                                throw e;
+                            }
 
                 dbConnection.setAutoCommit(true);
 
@@ -511,6 +534,10 @@ public class ObjectsDB implements Serializable {
         } finally {
             insertStatement.close();
         }
+        
+        tableContent.addAll(objects.keySet());
+        
+        filledTables.add(tableName);
         mutex.release();
     }
 
@@ -984,6 +1011,11 @@ public class ObjectsDB implements Serializable {
         if (useCache) {
             objectsCache.addObject(dbName, tableName, objectKey, object, false, true);
         }
+        
+        if (object == null) {
+            System.out.println("Table: " + tableName);
+            System.out.println("Object: " + objectKey);
+        }
 
         return object;
     }
@@ -1090,7 +1122,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Returns the content of a table.
+     * Returns the content of a table from the database.
      *
      * @param tableName the name of the table to get the content for
      *
@@ -1103,6 +1135,26 @@ public class ObjectsDB implements Serializable {
     private HashSet<String> getTableContentFromDB(String tableName) throws SQLException, InterruptedException {
 
         mutex.acquire();
+        
+        HashSet<String> result = getTableContentFromDBNoMutex(tableName);
+
+        mutex.release();
+        
+        return result;
+    }
+
+    /**
+     * Returns the content of a table from the database without using the mutex.
+     *
+     * @param tableName the name of the table to get the content for
+     *
+     * @return an arraylist with the content of the table
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     */
+    private HashSet<String> getTableContentFromDBNoMutex(String tableName) throws SQLException, InterruptedException {
 
         HashSet<String> tableContent;
         if (tablesContentCache != null) {
@@ -1151,8 +1203,6 @@ public class ObjectsDB implements Serializable {
             }
             tablesContentCache.put(tableName, tableContent);
         }
-
-        mutex.release();
 
         return tableContent;
     }

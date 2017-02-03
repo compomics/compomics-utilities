@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.parameters_cli;
+package com.compomics.cli.enzymes;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.cli.CommandParameter;

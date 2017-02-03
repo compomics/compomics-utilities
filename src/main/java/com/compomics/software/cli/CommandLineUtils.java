@@ -12,6 +12,11 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  */
 public class CommandLineUtils {
+    
+    /**
+     * The format to use for string output.
+     */
+    public static final String formatter = "%-35s";
 
     /**
      * The command line argument separator.

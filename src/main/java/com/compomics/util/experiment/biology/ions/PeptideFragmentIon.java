@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This class models a peptide fragment ion.
@@ -44,7 +43,7 @@ public class PeptideFragmentIon extends Ion {
     /**
      * The neutral losses found on the ion.
      */
-    private NeutralLoss[] neutralLosses;
+    private NeutralLoss[] neutralLosses = null;
     /**
      * Position of the ion in the peptide for peptide ions.
      */

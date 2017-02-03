@@ -372,9 +372,9 @@ public class ObjectsDB implements Serializable {
         } finally {
             ps.close();
         }
-        
+
         tablesContentCache.remove(tableName);
-        
+
         mutex.release();
     }
 
@@ -428,7 +428,7 @@ public class ObjectsDB implements Serializable {
         if (!allNewObjects) {
             tableContent = getTableContentFromDBNoMutex(tableName);
         }
-        
+
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
             PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
@@ -476,15 +476,15 @@ public class ObjectsDB implements Serializable {
                             }
 
                             try {
-                            if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
-                                updateStatement.executeBatch();
-                                insertStatement.executeBatch();
-                                updateStatement.clearParameters();
-                                insertStatement.clearParameters();
-                                dbConnection.commit();
-                                rowCounter = 0;
-                                batchCpt++;
-                            }
+                                if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
+                                    updateStatement.executeBatch();
+                                    insertStatement.executeBatch();
+                                    updateStatement.clearParameters();
+                                    insertStatement.clearParameters();
+                                    dbConnection.commit();
+                                    rowCounter = 0;
+                                    batchCpt++;
+                                }
                             } catch (java.sql.BatchUpdateException e) {
                                 System.out.println("Table " + tableName);
                                 System.out.println("Key " + objectKey);
@@ -508,22 +508,22 @@ public class ObjectsDB implements Serializable {
                     }
                 }
 
-                            try {
-                if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                    // insert the remaining data
-                    updateStatement.executeBatch();
-                    insertStatement.executeBatch();
-                    updateStatement.clearParameters();
-                    insertStatement.clearParameters();
-                    dbConnection.commit();
+                try {
+                    if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
+                        // insert the remaining data
+                        updateStatement.executeBatch();
+                        insertStatement.executeBatch();
+                        updateStatement.clearParameters();
+                        insertStatement.clearParameters();
+                        dbConnection.commit();
+                    }
+                } catch (java.sql.BatchUpdateException e) {
+                    System.out.println("Table " + tableName);
+                    System.out.println("Key end batch");
+                    System.out.println("Table size " + tableContent.size());
+                    System.out.println("batch " + batchCpt);
+                    throw e;
                 }
-                            } catch (java.sql.BatchUpdateException e) {
-                                System.out.println("Table " + tableName);
-                                System.out.println("Key end batch");
-                                System.out.println("Table size " + tableContent.size());
-                                System.out.println("batch " + batchCpt);
-                                throw e;
-                            }
 
                 dbConnection.setAutoCommit(true);
 
@@ -534,9 +534,9 @@ public class ObjectsDB implements Serializable {
         } finally {
             insertStatement.close();
         }
-        
+
         tableContent.addAll(objects.keySet());
-        
+
         filledTables.add(tableName);
         mutex.release();
     }
@@ -1011,7 +1011,7 @@ public class ObjectsDB implements Serializable {
         if (useCache) {
             objectsCache.addObject(dbName, tableName, objectKey, object, false, true);
         }
-        
+
         if (object == null) {
             System.out.println("Table: " + tableName);
             System.out.println("Object: " + objectKey);
@@ -1133,13 +1133,9 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     private HashSet<String> getTableContentFromDB(String tableName) throws SQLException, InterruptedException {
-
         mutex.acquire();
-        
         HashSet<String> result = getTableContentFromDBNoMutex(tableName);
-
         mutex.release();
-        
         return result;
     }
 

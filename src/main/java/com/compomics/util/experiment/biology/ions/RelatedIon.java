@@ -224,7 +224,7 @@ public class RelatedIon extends Ion {
 
     @Override
     public NeutralLoss[] getNeutralLosses() {
-        return new NeutralLoss[0];
+        return null;
     }
 
     @Override

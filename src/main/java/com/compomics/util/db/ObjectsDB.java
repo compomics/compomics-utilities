@@ -69,7 +69,6 @@ public class ObjectsDB implements Serializable {
      * 4.10.1.
      */
     private HashMap<String, HashSet<String>> tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
-    private HashSet<String> filledTables = new HashSet<String>();
     /**
      * The table where to save the long keys. Note: needs to keep the same value
      * for backward compatibility
@@ -114,11 +113,7 @@ public class ObjectsDB implements Serializable {
     /**
      * Mutex for the interaction with the database.
      */
-    private Semaphore mutex = new Semaphore(1);
-    /**
-     * The name of the table currently updating in the queue.
-     */
-    private String tableQueueUpdating = "";
+    private Semaphore dbMutex = new Semaphore(1);
     /**
      * A queue of entire tables to load.
      */
@@ -126,11 +121,15 @@ public class ObjectsDB implements Serializable {
     /**
      * A queue of table components to load.
      */
-    private HashMap<String, ArrayList<String>> contentQueue = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, HashSet<String>> contentQueue = new HashMap<String, HashSet<String>>();
     /**
      * A queue of tables of content to load.
      */
     private ArrayList<String> contentTableQueue = new ArrayList<String>();
+    /**
+     * Mutex for the edition of the queue.
+     */
+    private Semaphore queueMutex = new Semaphore(1);
     /**
      * Debug, if true will output a table containing statistics on the speed of
      * the objects I/O.
@@ -223,7 +222,7 @@ public class ObjectsDB implements Serializable {
             System.out.println("Inserting table, table: " + tableName);
         }
         Statement stmt = dbConnection.createStatement();
-        mutex.acquire();
+        dbMutex.acquire();
         try {
             stmt.execute("CREATE table " + tableName + " ("
                     + "NAME VARCHAR(" + VARCHAR_MAX_LENGTH + ") PRIMARY KEY,"
@@ -235,7 +234,7 @@ public class ObjectsDB implements Serializable {
         } finally {
             stmt.close();
         }
-        mutex.release();
+        dbMutex.release();
     }
 
     /**
@@ -280,7 +279,7 @@ public class ObjectsDB implements Serializable {
      */
     public ArrayList<String> getTables() throws SQLException, InterruptedException {
 
-        mutex.acquire();
+        dbMutex.acquire();
         DatabaseMetaData dmd = dbConnection.getMetaData();
         ArrayList<String> result = new ArrayList<String>();
         ResultSet rs = dmd.getTables(null, null, null, null); //@TODO: not sure to which extend this is Derby dependent...
@@ -293,7 +292,7 @@ public class ObjectsDB implements Serializable {
         } finally {
             rs.close();
         }
-        mutex.release();
+        dbMutex.release();
 
         return result;
     }
@@ -349,10 +348,10 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("Inserting single object, table: " + tableName + ", key: " + objectKey);
         }
-        if (usedTables != null && !usedTables.contains(tableName)) {
+        if (usedTables != null) {
             usedTables.add(tableName);
         }
-        mutex.acquire();
+        dbMutex.acquire();
         PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
             ps.setString(1, correctedKey);
@@ -372,10 +371,10 @@ public class ObjectsDB implements Serializable {
         } finally {
             ps.close();
         }
-        
+
         tablesContentCache.remove(tableName);
-        
-        mutex.release();
+
+        dbMutex.release();
     }
 
     /**
@@ -418,28 +417,32 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("Preparing table insertion: " + tableName);
         }
-        if (usedTables != null && !usedTables.contains(tableName)) {
+        if (usedTables != null) {
             usedTables.add(tableName);
         }
 
-        mutex.acquire();
+        dbMutex.acquire();
 
         HashSet<String> tableContent = new HashSet<String>();
         if (!allNewObjects) {
             tableContent = getTableContentFromDBNoMutex(tableName);
         }
-        
+
+        HashSet<String> addedKeys = new HashSet<String>(objects.size());
+
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
             PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
-            int batchCpt = 0;
             try {
                 dbConnection.setAutoCommit(false);
                 int rowCounter = 0;
+                boolean insert = false;
+                boolean update = false;
 
                 for (String objectKey : objects.keySet()) {
 
                     String correctedKey = correctKey(tableName, objectKey);
+                    addedKeys.add(correctedKey);
 
                     if (debugContent) {
                         if (debugInteractions) {
@@ -469,28 +472,28 @@ public class ObjectsDB implements Serializable {
                                 updateStatement.setString(2, correctedKey);
                                 updateStatement.setBytes(1, bos.toByteArray());
                                 updateStatement.addBatch();
+                                update = true;
                             } else {
                                 insertStatement.setString(1, correctedKey);
                                 insertStatement.setBytes(2, bos.toByteArray());
                                 insertStatement.addBatch();
+                                insert = true;
                             }
 
-                            try {
                             if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
-                                updateStatement.executeBatch();
-                                insertStatement.executeBatch();
-                                updateStatement.clearParameters();
-                                insertStatement.clearParameters();
-                                dbConnection.commit();
+                                if (update) {
+                                    updateStatement.executeBatch();
+                                    updateStatement.clearParameters();
+                                    dbConnection.commit();
+                                    update = false;
+                                }
+                                if (insert) {
+                                    insertStatement.executeBatch();
+                                    insertStatement.clearParameters();
+                                    dbConnection.commit();
+                                    insert = false;
+                                }
                                 rowCounter = 0;
-                                batchCpt++;
-                            }
-                            } catch (java.sql.BatchUpdateException e) {
-                                System.out.println("Table " + tableName);
-                                System.out.println("Key " + objectKey);
-                                System.out.println("Table size " + tableContent.size());
-                                System.out.println("batch " + batchCpt);
-                                throw e;
                             }
 
                         } finally {
@@ -508,22 +511,18 @@ public class ObjectsDB implements Serializable {
                     }
                 }
 
-                            try {
                 if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                    // insert the remaining data
-                    updateStatement.executeBatch();
-                    insertStatement.executeBatch();
-                    updateStatement.clearParameters();
-                    insertStatement.clearParameters();
-                    dbConnection.commit();
+                    if (update) {
+                        updateStatement.executeBatch();
+                        updateStatement.clearParameters();
+                        dbConnection.commit();
+                    }
+                    if (insert) {
+                        insertStatement.executeBatch();
+                        insertStatement.clearParameters();
+                        dbConnection.commit();
+                    }
                 }
-                            } catch (java.sql.BatchUpdateException e) {
-                                System.out.println("Table " + tableName);
-                                System.out.println("Key end batch");
-                                System.out.println("Table size " + tableContent.size());
-                                System.out.println("batch " + batchCpt);
-                                throw e;
-                            }
 
                 dbConnection.setAutoCommit(true);
 
@@ -534,11 +533,10 @@ public class ObjectsDB implements Serializable {
         } finally {
             insertStatement.close();
         }
-        
-        tableContent.addAll(objects.keySet());
-        
-        filledTables.add(tableName);
-        mutex.release();
+
+        tableContent.addAll(addedKeys);
+
+        dbMutex.release();
     }
 
     /**
@@ -572,7 +570,7 @@ public class ObjectsDB implements Serializable {
                     waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
                     // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar.
-                    mutex.acquire();
+                    dbMutex.acquire();
                     Statement rowCountStatement = dbConnection.createStatement();
                     Integer numberOfRows = null;
                     try {
@@ -582,7 +580,7 @@ public class ObjectsDB implements Serializable {
                     } finally {
                         rowCountStatement.close();
                     }
-                    mutex.release();
+                    dbMutex.release();
 
                     if (numberOfRows != null) {
                         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -593,7 +591,7 @@ public class ObjectsDB implements Serializable {
 
                 HashMap<String, Object> objectsFromDb = new HashMap<String, Object>();
 
-                mutex.acquire();
+                dbMutex.acquire();
                 loading = true;
 
                 try {
@@ -653,7 +651,7 @@ public class ObjectsDB implements Serializable {
                 } finally {
                     loading = false;
                 }
-                mutex.release();
+                dbMutex.release();
 
                 for (String key : objectsFromDb.keySet()) {
                     Object object = objectsFromDb.get(key);
@@ -695,7 +693,46 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
+        HashSet<String> keysToQuery = new HashSet<String>(keys);
+
+        HashSet<String> queue = contentQueue.get(tableName);
+
+        if (queue != null) {
+            queueMutex.acquire();
+            queue = contentQueue.get(tableName);
+            if (queue != null) {
+                keysToQuery.addAll(queue);
+                contentTableQueue.remove(tableName);
+                contentQueue.remove(tableName);
+            }
+            queueMutex.release();
+        }
+
+        loadObjects(tableName, keysToQuery, waitingHandler, displayProgress);
+    }
+
+    /**
+     * Loads some objects from a table in the cache.
+     *
+     * @param tableName the table name
+     * @param keys the keys of the objects to load
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    private synchronized void loadObjects(String tableName, HashSet<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         if (usedTables == null || usedTables.contains(tableName)) {
             if (!loading && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
@@ -704,28 +741,9 @@ public class ObjectsDB implements Serializable {
                     System.out.println("getting " + keys.size() + " objects, table: " + tableName);
                 }
 
-                boolean concurrentAccess = tableQueueUpdating.equals(tableName);
-                ArrayList<String> queue = null;
+                ArrayList<String> toLoad = new ArrayList<String>(keys.size());
 
-                if (!concurrentAccess && contentQueue.get(tableName) != null) {
-                    queue = contentQueue.get(tableName);
-                    contentTableQueue.remove(tableName);
-                    contentQueue.remove(tableName);
-                }
-                if (queue == null) {
-                    queue = keys;
-                } else if (keys != queue) {
-                    HashSet<String> queueAsSet = new HashSet<String>(queue);
-                    for (String key : keys) {
-                        if (!queueAsSet.contains(key)) {
-                            queue.add(key);
-                        }
-                    }
-                }
-
-                ArrayList<String> toLoad = new ArrayList<String>(queue.size());
-
-                for (String key : queue) {
+                for (String key : keys) {
                     String correctedKey = correctKey(tableName, key);
                     if (objectsCache != null && !objectsCache.inCache(dbName, tableName, correctedKey)) {
                         toLoad.add(correctedKey);
@@ -736,7 +754,7 @@ public class ObjectsDB implements Serializable {
 
                     HashMap<String, Object> objectsFromDb = new HashMap<String, Object>(toLoad.size());
 
-                    mutex.acquire();
+                    dbMutex.acquire();
                     loading = true;
 
                     try {
@@ -793,7 +811,7 @@ public class ObjectsDB implements Serializable {
                     } finally {
                         loading = false;
                     }
-                    mutex.release();
+                    dbMutex.release();
 
                     for (String key : objectsFromDb.keySet()) {
                         Object object = objectsFromDb.get(key);
@@ -803,8 +821,8 @@ public class ObjectsDB implements Serializable {
                 }
             } else {
 
-                tableQueueUpdating = tableName;
-                ArrayList<String> queue = contentQueue.get(tableName);
+                queueMutex.acquire();
+                HashSet<String> queue = contentQueue.get(tableName);
                 if (queue == null) {
                     contentTableQueue.add(tableName);
                     contentQueue.put(tableName, keys);
@@ -814,14 +832,9 @@ public class ObjectsDB implements Serializable {
                     }
                     loadObjects(tableName, keys, waitingHandler, displayProgress);
                 } else {
-                    HashSet<String> queueAsSet = new HashSet<String>(queue);
-                    for (String newItem : keys) {
-                        if (!queueAsSet.contains(newItem)) {
-                            queue.add(newItem);
-                        }
-                    }
+                    queue.addAll(keys);
                 }
-                tableQueueUpdating = "";
+                queueMutex.release();
             }
         }
     }
@@ -887,6 +900,7 @@ public class ObjectsDB implements Serializable {
         } else if (usedTables == null || usedTables.contains(tableName)) {
             return retrieveObject(tableName, objectKey, correctedKey, useDB, useCache);
         } else {
+            System.out.println("Table not used: " + tableName);
             return null;
         }
     }
@@ -930,10 +944,11 @@ public class ObjectsDB implements Serializable {
         }
 
         if (dbConnection == null || usedTables != null && !usedTables.contains(tableName)) {
+            System.out.println("Table not used: " + tableName);
             return object;
         }
 
-        mutex.acquire();
+        dbMutex.acquire();
 
         long start = System.currentTimeMillis();
 
@@ -1006,12 +1021,12 @@ public class ObjectsDB implements Serializable {
             stmt.close();
         }
 
-        mutex.release();
+        dbMutex.release();
 
         if (useCache) {
             objectsCache.addObject(dbName, tableName, objectKey, object, false, true);
         }
-        
+
         if (object == null) {
             System.out.println("Table: " + tableName);
             System.out.println("Object: " + objectKey);
@@ -1080,7 +1095,7 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("checking db content, table: " + tableName + ", key: " + objectKey);
         }
-        mutex.acquire();
+        dbMutex.acquire();
         Statement stmt = dbConnection.createStatement();
         boolean result = false;
         try {
@@ -1093,7 +1108,7 @@ public class ObjectsDB implements Serializable {
         } finally {
             stmt.close();
         }
-        mutex.release();
+        dbMutex.release();
 
         return result;
     }
@@ -1134,12 +1149,12 @@ public class ObjectsDB implements Serializable {
      */
     private HashSet<String> getTableContentFromDB(String tableName) throws SQLException, InterruptedException {
 
-        mutex.acquire();
-        
+        dbMutex.acquire();
+
         HashSet<String> result = getTableContentFromDBNoMutex(tableName);
 
-        mutex.release();
-        
+        dbMutex.release();
+
         return result;
     }
 
@@ -1160,7 +1175,7 @@ public class ObjectsDB implements Serializable {
         if (tablesContentCache != null) {
             tableContent = tablesContentCache.get(tableName);
             if (tableContent != null) {
-                return tableContent;
+//                return tableContent;
             }
         }
 
@@ -1227,7 +1242,7 @@ public class ObjectsDB implements Serializable {
         objectsCache.removeObject(dbName, tableName, correctedKey);
 
         // delete from database
-        mutex.acquire();
+        dbMutex.acquire();
         if (debugInteractions) {
             System.out.println("Removing object, table: " + tableName + ", key: " + objectKey);
         }
@@ -1242,7 +1257,7 @@ public class ObjectsDB implements Serializable {
                 stmt.close();
             }
         }
-        mutex.release();
+        dbMutex.release();
     }
 
     /**
@@ -1321,7 +1336,7 @@ public class ObjectsDB implements Serializable {
             if (debugInteractions) {
                 System.out.println("Updating object, table: " + tableName + ", key: " + objectKey);
             }
-            mutex.acquire();
+            dbMutex.acquire();
             PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'");
             try {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -1340,7 +1355,7 @@ public class ObjectsDB implements Serializable {
             } finally {
                 ps.close();
             }
-            mutex.release();
+            dbMutex.release();
         }
     }
 
@@ -1443,13 +1458,13 @@ public class ObjectsDB implements Serializable {
     public void close() throws SQLException, InterruptedException {
 
         // Make sure that previous queries are done
-        mutex.acquire();
-        while (mutex.getQueueLength() > 0) {
-            mutex.release();
+        dbMutex.acquire();
+        while (dbMutex.getQueueLength() > 0) {
+            dbMutex.release();
             wait(5);
-            mutex.acquire();
+            dbMutex.acquire();
         }
-        mutex.release();
+        dbMutex.release();
 
         if (dbConnection != null) {
             // try to save the long key indexes
@@ -1462,7 +1477,7 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        mutex.acquire();
+        dbMutex.acquire();
         objectsCache = null;
 
         try {
@@ -1494,7 +1509,7 @@ public class ObjectsDB implements Serializable {
 
         dbConnection = null;
 
-        mutex.release();
+        dbMutex.release();
     }
 
     /**
@@ -1536,7 +1551,7 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        mutex.acquire();
+        dbMutex.acquire();
 
         if (useSQLite) {
             try {
@@ -1596,7 +1611,7 @@ public class ObjectsDB implements Serializable {
                 e.printStackTrace();
             }
         }
-        mutex.release();
+        dbMutex.release();
 
         // test the connection by logging the connection in the database
         logConnection();

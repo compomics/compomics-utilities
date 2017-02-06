@@ -653,7 +653,7 @@ public class ObjectsCache {
      * @return a boolean indicating whether an object is loaded in the cache
      */
     public boolean inCache(String dbName, String tableName, String objectKey) {
-        return loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName) && loadedObjectsMap.get(dbName).get(tableName).containsKey(objectKey);
+        return  getEntry(dbName, tableName, objectKey) != null;
     }
 
     /**

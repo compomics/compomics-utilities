@@ -230,7 +230,7 @@ public class ProteinTreeComponentsFactory {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public void saveNodes(HashMap<String, Object> nodes, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
-        objectsDB.insertObjects(nodeTable, nodes, waitingHandler, true);
+        objectsDB.insertObjects(nodeTable, nodes, waitingHandler);
     }
 
     /**

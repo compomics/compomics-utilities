@@ -88,6 +88,15 @@
                 <role>Java Developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Dominik Kopczynski</name>
+            <id>dominik</id>
+            <email>dominik.kopczynski AT isas.de</email>
+            <organization>Leibniz-Institut für Analytische Wissenschaften – ISAS – e.V.</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
     </developers>
 
 
@@ -236,6 +245,7 @@
                                 <resource>
                                     <directory>./</directory>
                                     <includes>
+                                        <include>resources/</include>
                                         <include>exampleFiles/</include>
                                         <include>compomics-utilities.ico</include>
                                         <include>LICENSE-2.0.txt</include>

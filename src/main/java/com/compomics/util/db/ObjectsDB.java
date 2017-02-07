@@ -144,7 +144,7 @@ public class ObjectsDB implements Serializable {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private boolean debugInteractions = false;
+    private static boolean debugInteractions = false;
     /**
      * If true, SQLite is used as the database, if false Derby is used.
      */
@@ -1339,7 +1339,6 @@ public class ObjectsDB implements Serializable {
      */
     private void updateObjectInDb(String tableName, String objectKey, String correctedKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
 
-        dbMutex.acquire();
 
         boolean cacheUpdated = false;
 
@@ -1348,6 +1347,9 @@ public class ObjectsDB implements Serializable {
         }
 
         if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
+        
+        dbMutex.acquire();
+        
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " Updating object, table: " + tableName + ", key: " + objectKey);
             }
@@ -1369,9 +1371,9 @@ public class ObjectsDB implements Serializable {
             } finally {
                 ps.close();
             }
-        }
 
         dbMutex.release();
+        }
     }
 
     /**
@@ -1566,6 +1568,12 @@ public class ObjectsDB implements Serializable {
             }
         }
 
+        if (dbMutex == null) { // Backward compatibility fix for projects made with a utilities version older than 4.10.1
+            dbMutex = new Semaphore(1);
+            queueMutex = new Semaphore(1);
+            tablesContentCacheSize = 4;
+            tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
+        }
         dbMutex.acquire();
 
         if (useSQLite) {
@@ -1717,5 +1725,9 @@ public class ObjectsDB implements Serializable {
      */
     public String getPath() {
         return path;
+    }
+    
+    public static void setDebugInteractions(boolean debug) {
+        debugInteractions = debug;
     }
 }

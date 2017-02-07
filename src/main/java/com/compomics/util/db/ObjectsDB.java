@@ -449,12 +449,12 @@ public class ObjectsDB implements Serializable {
                             insertStatement.addBatch();
 
                             if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
-                                    insertStatement.executeBatch();
-                                    insertStatement.clearParameters();
-                                    dbConnection.commit();
-                                    insertStatement.close();
-                                    insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-                                    rowCounter = 0;
+                                insertStatement.executeBatch();
+                                insertStatement.clearParameters();
+                                dbConnection.commit();
+                                insertStatement.close();
+                                insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
+                                rowCounter = 0;
                             }
                         } finally {
                             oos.close();
@@ -475,9 +475,9 @@ public class ObjectsDB implements Serializable {
             }
 
             if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                    insertStatement.executeBatch();
-                    insertStatement.clearParameters();
-                    dbConnection.commit();
+                insertStatement.executeBatch();
+                insertStatement.clearParameters();
+                dbConnection.commit();
             }
 
             tableContent.addAll(addedKeys);
@@ -1339,7 +1339,6 @@ public class ObjectsDB implements Serializable {
      */
     private void updateObjectInDb(String tableName, String objectKey, String correctedKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
 
-
         boolean cacheUpdated = false;
 
         if (cache) {
@@ -1347,9 +1346,9 @@ public class ObjectsDB implements Serializable {
         }
 
         if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
-        
-        dbMutex.acquire();
-        
+
+            dbMutex.acquire();
+
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " Updating object, table: " + tableName + ", key: " + objectKey);
             }
@@ -1372,7 +1371,7 @@ public class ObjectsDB implements Serializable {
                 ps.close();
             }
 
-        dbMutex.release();
+            dbMutex.release();
         }
     }
 
@@ -1726,7 +1725,12 @@ public class ObjectsDB implements Serializable {
     public String getPath() {
         return path;
     }
-    
+
+    /**
+     * Turn the debugging of interactions on or off.
+     *
+     * @param debug if true, the debugging is turned on
+     */
     public static void setDebugInteractions(boolean debug) {
         debugInteractions = debug;
     }

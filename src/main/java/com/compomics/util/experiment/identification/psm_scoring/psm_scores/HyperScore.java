@@ -32,7 +32,7 @@ import org.apache.commons.math.util.FastMath;
  * Ronald C Beavis, all rights reserved.
  *
  * The code below does not use or reuse any of the X!Tandem code, but the
- * scoring approach is the same. No copyright infringement intended.
+ * scoring approach is in many points similar. No copyright infringement intended.
  *
  * @author Marc Vaudel
  */

@@ -537,6 +537,14 @@ public class Peptide extends ExperimentObject {
         }
         return matchingKey;
     }
+    
+    /**
+     * Resets the internal cache of the keys.
+     */
+    public void resetKeysCaches() {
+        matchingKey = null;
+        key = null;
+    }
 
     /**
      * Returns the reference key of a peptide. index =
@@ -569,6 +577,7 @@ public class Peptide extends ExperimentObject {
         if (modificationMatches == null) {
             return sequence;
         }
+        int size = sequence.length();
         ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
         for (ModificationMatch mod : modificationMatches) {
             if (mod.isVariable()) {
@@ -579,15 +588,19 @@ public class Peptide extends ExperimentObject {
                         StringBuilder tempModKey = new StringBuilder();
                         tempModKey.append(ptm.getMassAsString()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
                         tempModifications.add(tempModKey.toString());
+                        size += tempModKey.length();
                     } else {
-                        tempModifications.add(ptm.getMassAsString());
+                        String massAsString = ptm.getMassAsString();
+                        tempModifications.add(massAsString);
+                        size += massAsString.length();
                     }
                 } else {
                     tempModifications.add("unknown-modification");
                 }
             }
         }
-        StringBuilder result = new StringBuilder(sequence);
+        StringBuilder result = new StringBuilder(size);
+        result.append(sequence);
         Collections.sort(tempModifications);
         for (String mod : tempModifications) {
             result.append(MODIFICATION_SEPARATOR_CHAR).append(mod);

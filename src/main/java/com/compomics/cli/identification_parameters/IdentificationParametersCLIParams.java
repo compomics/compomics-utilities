@@ -30,7 +30,7 @@ public enum IdentificationParametersCLIParams {
     USAGE_3("help", "Lists the available options.", false, false),
     MODS("mods", "Lists the available modifications.", false, false),
     ENZYMES("enzymes", "Lists the available enzymes.", false, false),
-    IDENTIFICATION_PARAMETERS("id_params", "An identification parameters file to modify. Generated using the GUI or via IdentificationParametersCLI.", false, true),
+    IDENTIFICATION_PARAMETERS("id_params", "The identification parameters file to use.", false, true),
     OUT("out", "The destination Identification Parameters file (.par).", true, true),
     //////////////////////////////////
     // Search Parameters

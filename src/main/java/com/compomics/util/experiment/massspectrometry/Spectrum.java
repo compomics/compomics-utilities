@@ -3,12 +3,14 @@ package com.compomics.util.experiment.massspectrometry;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * This class models a spectrum.
@@ -114,6 +116,10 @@ public abstract class Spectrum extends ExperimentObject {
      * Intensity level corresponding to the value in cache.
      */
     private double intensityLimitLevel = -1.0;
+    /**
+     * The distribution of the log of the peaks intensities.
+     */
+    private NonSymmetricalNormalDistribution intensityLogDistribution = null;
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -695,7 +701,7 @@ public abstract class Spectrum extends ExperimentObject {
         }
         return intensityLimit;
     }
-    
+
     /**
      * Estimates the intensity limit in intensity from a given percentile.
      *
@@ -704,7 +710,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @return the intensity limit
      */
-        private double estimateIntneistyLimit(double intensityFraction) {
+    private double estimateIntneistyLimit(double intensityFraction) {
         ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
         for (Peak peak : peakList.values()) {
@@ -888,6 +894,7 @@ public abstract class Spectrum extends ExperimentObject {
         mzValuesOrderedAsArray = null;
         intensityValuesAsArray = null;
         intensityValuesNormaizedAsArray = null;
+        intensityLogDistribution = null;
         mzAndIntensityAsArray = null;
         totalIntensity = null;
         maxIntensity = null;
@@ -895,5 +902,30 @@ public abstract class Spectrum extends ExperimentObject {
         minMz = null;
         intensityPeakMap = null;
         intensityLimit = null;
+    }
+
+    /**
+     * Returns the intensity of the log of the peaks intensities.
+     *
+     * @return the intensity of the log of the peaks intensities
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * issue occurs
+     */
+    public NonSymmetricalNormalDistribution getIntensityLogDistribution() throws InterruptedException {
+        if (intensityLogDistribution == null) {
+            mutex.acquire();
+            if (intensityLogDistribution == null) {
+                ArrayList<Double> intensitiesLog = new ArrayList<Double>(peakList.size());
+                for (Peak peak : peakList.values()) {
+                    double log = FastMath.log10(peak.intensity);
+                    intensitiesLog.add(log);
+                }
+                Collections.sort(intensitiesLog);
+                intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
+            }
+            mutex.release();
+        }
+        return intensityLogDistribution;
     }
 }

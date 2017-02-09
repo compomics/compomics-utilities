@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
@@ -95,7 +96,7 @@ public class MSnSpectrum extends Spectrum {
     public void setPrecursor(Precursor precursor) {
         this.precursor = precursor;
     }
-
+    
     /**
      * Returns the peak list as an mgf bloc.
      *

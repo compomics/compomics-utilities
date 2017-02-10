@@ -68,7 +68,6 @@ public class PeptideMapping {
         }
 
         SearchParameters searchParameters = null;
-        PtmSettings ptmSettings = null;
         PeptideVariantsPreferences peptideVariantsPreferences = null;
         SequenceMatchingPreferences sequenceMatchingPreferences = null;
         if (args.length >= 5) {
@@ -85,15 +84,14 @@ public class PeptideMapping {
                 peptideMapperType = identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType();
                 System.err.println("New mapping index: " + peptideMapperType.name);
             }
-            ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
             searchParameters = identificationParameters.getSearchParameters();
 
         } else {
-            ptmSettings = new PtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             searchParameters = new SearchParameters();
+            searchParameters.setPtmSettings(new PtmSettings());
             searchParameters.setFragmentIonAccuracy(0.02);
             searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
             sequenceMatchingPreferences = new SequenceMatchingPreferences();
@@ -213,8 +211,8 @@ public class PeptideMapping {
             // starting the mapping
             try {
                 // setting up modifications lists, only relevant for protein tree
-                ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
-                ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
+                ArrayList<String> variableModifications = searchParameters.getPtmSettings().getVariableModifications();
+                ArrayList<String> fixedModifications = searchParameters.getPtmSettings().getFixedModifications();
 
                 TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
 

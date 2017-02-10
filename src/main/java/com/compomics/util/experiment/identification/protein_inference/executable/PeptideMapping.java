@@ -8,6 +8,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
@@ -66,7 +67,7 @@ public class PeptideMapping {
             System.exit(-1);
         }
 
-        double tolerance = 0.02;
+        SearchParameters searchParameters = null;
         PtmSettings ptmSettings = null;
         PeptideVariantsPreferences peptideVariantsPreferences = null;
         SequenceMatchingPreferences sequenceMatchingPreferences = null;
@@ -80,8 +81,7 @@ public class PeptideMapping {
                 System.exit(-1);
             }
 
-            tolerance = identificationParameters.getSearchParameters().getFragmentIonAccuracy();
-            System.err.println("New fragment m/z tolerance: " + tolerance + " Da");
+            
             if (peptideMapperType != identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType()){
                 peptideMapperType = identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType();
                 System.err.println("New mapping index: " + peptideMapperType.name);
@@ -89,10 +89,14 @@ public class PeptideMapping {
             ptmSettings = identificationParameters.getSearchParameters().getPtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+            searchParameters = identificationParameters.getSearchParameters();
 
         } else {
             ptmSettings = new PtmSettings();
             peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+            searchParameters = new SearchParameters();
+            searchParameters.setFragmentIonAccuracy(0.02);
+            searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
             sequenceMatchingPreferences = new SequenceMatchingPreferences();
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
@@ -102,7 +106,7 @@ public class PeptideMapping {
         long startTimeIndex = System.nanoTime();
         PeptideMapper peptideMapper = null;
         if (peptideMapperType == PeptideMapperType.fm_index){
-            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences, tolerance);
+            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences, searchParameters);
         }
         else {
             try {
@@ -222,7 +226,7 @@ public class PeptideMapping {
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), tagMatcher, sequenceMatchingPreferences, tolerance);
+                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), tagMatcher, sequenceMatchingPreferences, searchParameters.getFragmentIonAccuracyInDaltons());
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                     for (int j = 0; j < peptideProteinMappings.size(); ++j) {
                         tagIndexes.add(i);

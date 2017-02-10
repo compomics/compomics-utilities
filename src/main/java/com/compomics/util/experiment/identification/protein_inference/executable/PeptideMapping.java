@@ -28,14 +28,14 @@ import java.io.FileReader;
 
 /**
  * Command line peptide mapping.
- * 
+ *
  * @author Dominik Kopczynski
  */
 public class PeptideMapping {
 
     /**
      * Main class.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -54,7 +54,7 @@ public class PeptideMapping {
 
             System.exit(-1);
         }
-        
+
         PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
         System.err.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
@@ -81,8 +81,7 @@ public class PeptideMapping {
                 System.exit(-1);
             }
 
-            
-            if (peptideMapperType != identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType()){
+            if (peptideMapperType != identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType()) {
                 peptideMapperType = identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType();
                 System.err.println("New mapping index: " + peptideMapperType.name);
             }
@@ -101,30 +100,27 @@ public class PeptideMapping {
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
-        
+
         System.err.println("Start indexing proteome");
         long startTimeIndex = System.nanoTime();
         PeptideMapper peptideMapper = null;
-        if (peptideMapperType == PeptideMapperType.fm_index){
-            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, ptmSettings, peptideVariantsPreferences, searchParameters);
-        }
-        else {
+        if (peptideMapperType == PeptideMapperType.fm_index) {
+            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+        } else {
             try {
                 peptideMapper = new ProteinTree(1000, 1000);
                 ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
-                ((ProteinTree)peptideMapper).initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
-            }
-            catch (Exception e){
+                ((ProteinTree) peptideMapper).initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
+            } catch (Exception e) {
                 System.err.println("Error: could not set up index");
                 System.exit(-1);
             }
         }
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
         System.err.println();
-        if (peptideMapperType == PeptideMapperType.fm_index){
-            System.err.println("Indexing took " + (diffTimeIndex/ 1e9) + " seconds and consumes " + (((float) ((FMIndex)peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
-        }
-        else {
+        if (peptideMapperType == PeptideMapperType.fm_index) {
+            System.err.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
+        } else {
             System.err.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds");
         }
 
@@ -162,8 +158,7 @@ public class PeptideMapping {
                 long diffTimeMapping = System.nanoTime() - startTimeMapping;
                 System.err.println();
                 System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.err.println("Error: mapping went wrong for unknown reasons");
                 System.exit(-1);
             }
@@ -219,10 +214,10 @@ public class PeptideMapping {
             try {
                 // setting up modifications lists, only relevant for protein tree
                 ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
-                ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();       
-                
+                ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
+
                 TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
-                
+
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
@@ -265,12 +260,11 @@ public class PeptideMapping {
                 System.exit(-1);
             }
         }
-        
-        if (peptideMapperType == PeptideMapperType.tree){
+
+        if (peptideMapperType == PeptideMapperType.tree) {
             try {
-                ((ProteinTree)peptideMapper).close();
-            }
-            catch (Exception e){
+                ((ProteinTree) peptideMapper).close();
+            } catch (Exception e) {
                 System.err.println("Error: could not close index");
                 System.exit(-1);
             }

@@ -129,14 +129,16 @@ public class SnrScore {
                 }
             }
         }
-        double notAnnotatedCorrection = 0.0;
+        if (pAnnotatedMinusLog == 0.0) {
+            return pAnnotatedMinusLog;
+        }
         if (pNotAnnotatedMinusLog < limitLog10) {
             double pNotAnnotated = FastMath.pow(10, -pNotAnnotatedMinusLog);
             if (pNotAnnotated > 1.0 - Double.MIN_VALUE) {
                 pNotAnnotated = 1.0 - Double.MIN_VALUE;
             }
             pNotAnnotated = 1.0 - pNotAnnotated;
-            notAnnotatedCorrection = -FastMath.log10(pNotAnnotated);
+            double notAnnotatedCorrection = -FastMath.log10(pNotAnnotated);
             if (notAnnotatedCorrection > pAnnotatedMinusLog) {
                 notAnnotatedCorrection = pAnnotatedMinusLog;
             }

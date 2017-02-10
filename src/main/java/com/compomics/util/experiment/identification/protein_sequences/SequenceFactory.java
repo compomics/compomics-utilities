@@ -1353,7 +1353,6 @@ public class SequenceFactory {
      * if none found.
      *
      * @param sequenceMatchingPreferences the sequences matching preferences
-     * @param ptmSettings contains modification parameters for identification
      * @param searchParameters the search parameters
      * @param peptideVariantsPreferences the peptide variants preferences set by
      * the user
@@ -1373,10 +1372,10 @@ public class SequenceFactory {
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with an SQL database
      */
-    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, SearchParameters searchParameters, PeptideVariantsPreferences peptideVariantsPreferences,
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, SearchParameters searchParameters, PeptideVariantsPreferences peptideVariantsPreferences,
             WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
-        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, searchParameters, peptideVariantsPreferences, waitingHandler, exceptionHandler, true, nThreads);
+        return getDefaultPeptideMapper(sequenceMatchingPreferences, searchParameters, peptideVariantsPreferences, waitingHandler, exceptionHandler, true, nThreads);
     }
 
     /**
@@ -1404,7 +1403,7 @@ public class SequenceFactory {
      */
     public PeptideMapper getDefaultPeptideMapper(WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler, int nThreads, IdentificationParameters identificationParameters) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getDefaultPeptideMapper(identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getSearchParameters().getPtmSettings(), 
+        return getDefaultPeptideMapper(identificationParameters.getSequenceMatchingPreferences(), 
                 identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsPreferences(), waitingHandler, exceptionHandler, true, nThreads);
     }
 
@@ -1424,7 +1423,6 @@ public class SequenceFactory {
      * @param displayProgress boolean indicating whether the progress of the
      * indexing should be displayed
      * @param nThreads the number of threads to use during indexing
-     * @param ptmSettings contains modification parameters for identification
      *
      * @return the default peptide mapper
      *
@@ -1437,14 +1435,14 @@ public class SequenceFactory {
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with an SQL database
      */
-    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, SearchParameters searchParameters, PeptideVariantsPreferences peptideVariantsPreferences, WaitingHandler waitingHandler,
+    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, SearchParameters searchParameters, PeptideVariantsPreferences peptideVariantsPreferences, WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (defaultPeptideMapper == null) {
 
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
             switch (peptideMapperType) {
                 case fm_index:
-                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences, searchParameters);
+                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress, peptideVariantsPreferences, searchParameters);
                     break;
                 case tree:
 

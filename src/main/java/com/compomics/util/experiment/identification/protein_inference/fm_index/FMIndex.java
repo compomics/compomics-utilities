@@ -379,14 +379,13 @@ public class FMIndex implements PeptideMapper {
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param ptmSettings contains modification parameters for identification
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param searchParameters the search parameters
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences, SearchParameters searchParameters) {
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsPreferences peptideVariantsPreferences, SearchParameters searchParameters) {
         massTolerance = searchParameters.getFragmentIonAccuracy();
         massAccuracyType = searchParameters.getFragmentAccuracyType();
-        init(waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
+        init(waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
     }
     
     /**

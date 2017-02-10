@@ -9,17 +9,14 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
-import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
- * This score uses the instensity distribution of the peaks to evaluate an SNR
+ * This score uses the intensity distribution of the peaks to evaluate an SNR
  * score.
  *
  * @author Marc Vaudel
@@ -30,7 +27,7 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
-    
+
     /**
      * Returns the hyperscore.
      *
@@ -146,5 +143,4 @@ public class SnrScore {
         }
         return pAnnotatedMinusLog;
     }
-
 }

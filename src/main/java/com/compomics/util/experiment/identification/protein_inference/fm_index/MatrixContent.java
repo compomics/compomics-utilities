@@ -599,6 +599,7 @@ public class MatrixContent {
         this.previousContent = foreign.previousContent;
         this.mass = foreign.mass;
         this.peptideSequence = foreign.peptideSequence;
+        this.peptideSequenceSearch = foreign.peptideSequenceSearch;
         this.length = foreign.length;
         this.numX = foreign.numX;
         this.modification = foreign.modification;

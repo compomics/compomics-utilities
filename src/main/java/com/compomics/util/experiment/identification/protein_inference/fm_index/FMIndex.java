@@ -3746,6 +3746,7 @@ public class FMIndex implements PeptideMapper {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
+        
         // copying tags into own data structure
         int maxSequencePosition = -1;
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
@@ -3987,6 +3988,7 @@ public class FMIndex implements PeptideMapper {
             String peptide = currentPeptide + currentContent.peptideSequence;
             String peptideSearch = currentPeptideSearch + currentContent.peptideSequenceSearch;
 
+            
             if (turned) {
                 leftIndex = 0;
                 rightIndex = indexStringLengths.get(indexPart) - 1;
@@ -4576,7 +4578,7 @@ public class FMIndex implements PeptideMapper {
         }
         CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
         cache[indexPart].addFirst(cacheElement);
-        if (cache[indexPart].size() > 50) {
+        if (cache[indexPart].size() > 100) {
             cache[indexPart].removeLast();
         }
         cacheMutex.release();

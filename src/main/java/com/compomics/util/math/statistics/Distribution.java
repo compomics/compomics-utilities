@@ -1,8 +1,6 @@
 package com.compomics.util.math.statistics;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import org.apache.commons.math.MathException;
 
 /**

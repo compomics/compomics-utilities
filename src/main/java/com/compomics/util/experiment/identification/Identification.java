@@ -1540,6 +1540,11 @@ public abstract class Identification extends ExperimentObject {
                 peptideMatch.addSpectrumMatchKey(spectrumMatchKey);
                 identificationDB.updatePeptideMatch(peptideMatch);
             } else {
+        
+        if (peptide.getSequence().equals("AMHQAQTMEGCSSPMVVK")) {
+        System.out.println("Creating peptide: " + peptideKey);
+        }
+        
                 peptideMatch = new PeptideMatch(peptide, peptideKey);
                 peptideMatch.addSpectrumMatchKey(spectrumMatchKey);
                 peptideIdentification.add(peptideKey);

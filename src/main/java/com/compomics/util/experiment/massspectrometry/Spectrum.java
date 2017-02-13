@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
+import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -117,9 +118,9 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double intensityLimitLevel = -1.0;
     /**
-     * The distribution of the log of the peaks intensities.
+     * The binned cumulative function of the distribution of the log of the peaks intensities.
      */
-    private NonSymmetricalNormalDistribution intensityLogDistribution = null;
+    private SimpleNoiseDistribution binnedCumulativeFunction = null;
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -894,7 +895,7 @@ public abstract class Spectrum extends ExperimentObject {
         mzValuesOrderedAsArray = null;
         intensityValuesAsArray = null;
         intensityValuesNormaizedAsArray = null;
-        intensityLogDistribution = null;
+        binnedCumulativeFunction = null;
         mzAndIntensityAsArray = null;
         totalIntensity = null;
         maxIntensity = null;
@@ -911,21 +912,16 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @throws java.lang.InterruptedException exception thrown if a threading
      * issue occurs
+     * @throws org.apache.commons.math.MathException exception thrown whenever an error occurred while estimating probabilities.
      */
-    public NonSymmetricalNormalDistribution getIntensityLogDistribution() throws InterruptedException {
-        if (intensityLogDistribution == null) {
+    public SimpleNoiseDistribution getIntensityLogDistribution() throws InterruptedException, MathException {
+        if (binnedCumulativeFunction == null) {
             mutex.acquire();
-            if (intensityLogDistribution == null) {
-                ArrayList<Double> intensitiesLog = new ArrayList<Double>(peakList.size());
-                for (Peak peak : peakList.values()) {
-                    double log = FastMath.log10(peak.intensity);
-                    intensitiesLog.add(log);
-                }
-                Collections.sort(intensitiesLog);
-                intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
+            if (binnedCumulativeFunction == null) {
+                binnedCumulativeFunction = new SimpleNoiseDistribution(peakList);
             }
             mutex.release();
         }
-        return intensityLogDistribution;
+        return binnedCumulativeFunction;
     }
 }

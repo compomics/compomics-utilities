@@ -9,12 +9,9 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
-import com.compomics.util.math.BasicMathFunctions;
-import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
+import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
@@ -107,22 +104,20 @@ public class SnrScore {
         Double pAnnotatedMinusLog = 0.0;
         Double pNotAnnotatedMinusLog = 0.0;
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
-        NonSymmetricalNormalDistribution intensityDistribution = spectrum.getIntensityLogDistribution();
+        SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         for (Double mz : spectrum.getOrderedMzValues()) {
             Peak peak = peakMap.get(mz);
             double intensity = peak.intensity;
-            double intensityLog = FastMath.log10(intensity);
-            double p = intensityDistribution.getDescendingCumulativeProbabilityAt(intensityLog);
-            double pLog = -FastMath.log10(p);
+            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
             if (peakMatches == null) {
-                pNotAnnotatedMinusLog += pLog;
+                pNotAnnotatedMinusLog += pMinusLog;
             } else {
                 for (IonMatch ionMatch : peakMatches) {
                     if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                         PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
                         if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
-                            pAnnotatedMinusLog += pLog;
+                            pAnnotatedMinusLog += pMinusLog;
                             break;
                         }
                     }

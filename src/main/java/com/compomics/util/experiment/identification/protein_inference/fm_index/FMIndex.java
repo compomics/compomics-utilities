@@ -901,8 +901,8 @@ public class FMIndex implements PeptideMapper {
                return (int)((m1.mass - m2.mass) * 1000000.);
            } 
         });
-        cache = (LinkedList<CacheElement>[])new LinkedList[indexParts];
-        for (int indexPart = 0; indexPart < indexParts; ++indexPart) cache[indexPart] = new LinkedList<CacheElement>();
+        cache = (HashMap<String, CacheElement>[])new HashMap[indexParts];
+        for (int indexPart = 0; indexPart < indexParts; ++indexPart) cache[indexPart] = new HashMap<String, CacheElement>();
     }
     
     
@@ -3746,6 +3746,7 @@ public class FMIndex implements PeptideMapper {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
+        
         // copying tags into own data structure
         int maxSequencePosition = -1;
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
@@ -3800,7 +3801,7 @@ public class FMIndex implements PeptideMapper {
             occurrencePrimary = occurrenceTablePrimary;
             occurrenceReversed = occurrenceTableReversed;
         }
-
+        
         ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
         if (cached != null && cached.isEmpty()) {
             return allMatches;
@@ -3987,6 +3988,7 @@ public class FMIndex implements PeptideMapper {
             String peptide = currentPeptide + currentContent.peptideSequence;
             String peptideSearch = currentPeptideSearch + currentContent.peptideSequenceSearch;
 
+            
             if (turned) {
                 leftIndex = 0;
                 rightIndex = indexStringLengths.get(indexPart) - 1;
@@ -4493,6 +4495,18 @@ public class FMIndex implements PeptideMapper {
             this.mass = mass;
             this.xNumLimit = 0;
         }
+        
+        /**
+         * Creating String output
+         * @return String output
+         */
+        @Override
+        public String toString() { 
+            String output;
+            if (isMass) output = String.format("%.5f", mass);
+            else output = sequence;
+            return output;
+        }
     }
 
     /**
@@ -4524,7 +4538,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * List of cached intermediate tag to proteome mapping results.
      */
-    private LinkedList<CacheElement>[] cache = null;
+    private HashMap<String, CacheElement>[] cache = null;
 
     /**
      * Adding intermediate tag to proteome mapping results into the cache.
@@ -4543,13 +4557,18 @@ public class FMIndex implements PeptideMapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
+        
+        String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
+        CacheElement cacheElement = cache[indexPart].get(key);
+        if (cacheElement != null) cached = cacheElement.cachedPrimary;
+        /*
         for (CacheElement cacheElement : cache[indexPart]) {
             if (cacheElement.sequence.equals(tagComponents[1].sequence) && Math.abs(cacheElement.massSecond - tagComponents[2].mass) < 1e-5) {
                 cached = new ArrayList<MatrixContent>(cacheElement.cachedPrimary);
                 break;
             }
-        }
+        }*/
         cacheMutex.release();
         return cached;
     }
@@ -4574,11 +4593,14 @@ public class FMIndex implements PeptideMapper {
         for (MatrixContent matrixContent : cachedPrimary) {
             cacheContentPrimary.add(new MatrixContent(matrixContent));
         }
+        
+        String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
         CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
-        cache[indexPart].addFirst(cacheElement);
-        if (cache[indexPart].size() > 50) {
+        if (!cache[indexPart].containsKey(key)) cache[indexPart].put(key, cacheElement);
+        /*cache[indexPart].addFirst(cacheElement);
+        if (cache[indexPart].size() > 100) {
             cache[indexPart].removeLast();
-        }
+        }*/
         cacheMutex.release();
     }
 }

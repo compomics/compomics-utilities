@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.peptide_fragmentation.FragmentDensity;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
@@ -28,7 +27,7 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
-    
+
     /**
      * Returns the score.
      *
@@ -92,7 +91,6 @@ public class SnrScore {
      * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      * indexed by mz
-     * @param fragmentDensity the density of fragment ions for this peptid
      *
      * @return the score of the match
      *
@@ -144,5 +142,4 @@ public class SnrScore {
         }
         return pAnnotatedMinusLog;
     }
-
 }

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.massspectrometry;
 
-import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;

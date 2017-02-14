@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.peptide_fragmentation.FragmentDensity;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
@@ -16,7 +17,7 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
- * This score uses the instensity distribution of the peaks to evaluate an SNR
+ * This score uses the intensity distribution of the peaks to evaluate an SNR
  * score.
  *
  * @author Marc Vaudel
@@ -29,7 +30,7 @@ public class SnrScore {
     private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
     
     /**
-     * Returns the hyperscore.
+     * Returns the score.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -51,7 +52,7 @@ public class SnrScore {
     }
 
     /**
-     * Returns the hyperscore.
+     * Returns the score.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -82,7 +83,7 @@ public class SnrScore {
     }
 
     /**
-     * Returns the hyperscore.
+     * Returns the score.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -91,6 +92,7 @@ public class SnrScore {
      * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      * indexed by mz
+     * @param fragmentDensity the density of fragment ions for this peptid
      *
      * @return the score of the match
      *
@@ -100,11 +102,12 @@ public class SnrScore {
      * occurs when calculating logs
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
-
+        
         Double pAnnotatedMinusLog = 0.0;
         Double pNotAnnotatedMinusLog = 0.0;
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
+        
         for (Double mz : spectrum.getOrderedMzValues()) {
             Peak peak = peakMap.get(mz);
             double intensity = peak.intensity;

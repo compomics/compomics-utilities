@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -49,6 +50,10 @@ public class ObjectsCache {
      * List of the loaded objects with the most used matches in the end.
      */
     private LinkedBlockingDeque<String> loadedObjectsKeys = new LinkedBlockingDeque<String>();
+    /**
+     * Mutex for the edition of the object keys list.
+     */
+    private Semaphore loadedObjectKeysMutex = new Semaphore(1);
     /**
      * Separator used to concatenate strings.
      */
@@ -186,7 +191,9 @@ public class ObjectsCache {
     public void removeObject(String dbName, String tableName, String objectKey) throws InterruptedException {
         if (!readOnly) {
             String cacheKey = getCacheKey(dbName, tableName, objectKey);
+            loadedObjectKeysMutex.acquire();
             loadedObjectsKeys.remove(cacheKey);
+            loadedObjectKeysMutex.release();
             HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
             if (dbObjects != null) {
                 MapMutex<String> dbMutexMap = getMapMutex(dbName);
@@ -316,7 +323,9 @@ public class ObjectsCache {
             }
             if (!tableCache.containsKey(objectKey)) {
                 String key = getCacheKey(dbName, tableName, objectKey);
+                loadedObjectKeysMutex.acquire();
                 loadedObjectsKeys.add(key);
+                loadedObjectKeysMutex.release();
             }
             tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
             dbMutexMap.release(tableName);
@@ -544,7 +553,9 @@ public class ObjectsCache {
                 }
             }
             if (clearEntry) {
+                loadedObjectKeysMutex.acquire();
                 loadedObjectsKeys.remove(entryKey);
+                loadedObjectKeysMutex.release();
                 HashMap<String, HashMap<String, ObjectsCache.CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
                 HashMap<String, ObjectsCache.CacheEntry> tableCache = dbCache.get(tableName);
                 tableCache.remove(objectKey);
@@ -586,10 +597,15 @@ public class ObjectsCache {
                 || (automatedMemoryManagement && !memoryCheck())) {
             int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
             if (toRemove <= 1) {
-                saveObject(loadedObjectsKeys.take());
+                loadedObjectKeysMutex.acquire();
+                String objectKey = loadedObjectsKeys.take();
+                loadedObjectKeysMutex.release();
+                saveObject(objectKey);
             } else {
                 ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                loadedObjectKeysMutex.acquire();
                 loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+                loadedObjectKeysMutex.release();
                 saveObjects(keysToRemove);
             }
             if (loadedObjectsKeys.isEmpty()) {
@@ -639,7 +655,9 @@ public class ObjectsCache {
         reducingMemoryConsumption = true;
         int toRemove = (int) (share * loadedObjectsKeys.size());
         ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+        loadedObjectKeysMutex.acquire();
         loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+        loadedObjectKeysMutex.release();
         saveObjects(keysToRemove, waitingHandler);
         reducingMemoryConsumption = false;
     }
@@ -653,7 +671,7 @@ public class ObjectsCache {
      * @return a boolean indicating whether an object is loaded in the cache
      */
     public boolean inCache(String dbName, String tableName, String objectKey) {
-        return  getEntry(dbName, tableName, objectKey) != null;
+        return getEntry(dbName, tableName, objectKey) != null;
     }
 
     /**
@@ -714,7 +732,9 @@ public class ObjectsCache {
 
         if (emptyCache && !readOnly) {
             loadedObjectsMap.clear();
+            loadedObjectKeysMutex.acquire();
             loadedObjectsKeys.clear();
+            loadedObjectKeysMutex.release();
         }
     }
 

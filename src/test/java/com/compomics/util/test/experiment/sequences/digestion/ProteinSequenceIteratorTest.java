@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.sequences.digestion;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.protein_sequences.ProteinSequenceIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.IteratorGenerator;
 import com.compomics.util.preferences.DigestionPreferences;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class ProteinSequenceIteratorTest extends TestCase {
         fixedModifications.add("Acetylation of protein N-term");
         fixedModifications.add("Pyrolidone from carbamidomethylated C");
         
-        ProteinSequenceIterator iteratorNoModifications = new ProteinSequenceIterator(new ArrayList<String>());
-        ProteinSequenceIterator iteratorModifications = new ProteinSequenceIterator(fixedModifications);
+        IteratorGenerator iteratorNoModifications = new IteratorGenerator(new ArrayList<String>());
+        IteratorGenerator iteratorModifications = new IteratorGenerator(fixedModifications);
         
         String testSequence = "TESTKCTESCTKTEST";
         String testSequenceCombination = "TESTKCTJSCTKTEST";
@@ -35,7 +35,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.wholeProtein);
         
         // No modification
-        ArrayList<ProteinSequenceIterator.PeptideWithPosition> peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
+        ArrayList<IteratorGenerator.PeptideWithPosition> peptides = iteratorNoModifications.getPeptides(testSequence, digestionPreferences, null, null);
         Assert.assertTrue(peptides.size() == 1);
         Peptide peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));

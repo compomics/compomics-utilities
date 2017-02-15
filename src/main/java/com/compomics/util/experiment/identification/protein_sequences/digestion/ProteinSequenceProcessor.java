@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.protein_sequences;
+package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The iterator goes through a sequence and lists possible peptides with their
+ * The processor goes through a sequence and lists possible peptides with their
  * fixed modifications.
  *
  * @author Marc Vaudel
  */
-public class ProteinSequenceIterator {
+public class ProteinSequenceProcessor {
 
     /**
      * The maximal number of Xs allowed to derive peptide sequences. When
@@ -91,7 +91,7 @@ public class ProteinSequenceIterator {
      * @param maxX The maximal number of Xs allowed in a sequence to derive the
      * possible peptides
      */
-    public ProteinSequenceIterator(ArrayList<String> fixedModifications, Integer maxX) {
+    public ProteinSequenceProcessor(ArrayList<String> fixedModifications, Integer maxX) {
         fillPtmMaps(fixedModifications);
         if (maxX != null) {
             maxXsInSequence = maxX;
@@ -104,7 +104,7 @@ public class ProteinSequenceIterator {
      * @param fixedModifications a list of fixed modifications to consider when
      * iterating the protein sequences.
      */
-    public ProteinSequenceIterator(ArrayList<String> fixedModifications) {
+    public ProteinSequenceProcessor(ArrayList<String> fixedModifications) {
         this(fixedModifications, null);
     }
 

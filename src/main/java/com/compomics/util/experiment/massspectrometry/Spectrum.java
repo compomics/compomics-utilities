@@ -3,7 +3,6 @@ package com.compomics.util.experiment.massspectrometry;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
-import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import org.apache.commons.math.MathException;
-import org.apache.commons.math.util.FastMath;
 
 /**
  * This class models a spectrum.
@@ -118,7 +116,8 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double intensityLimitLevel = -1.0;
     /**
-     * The binned cumulative function of the distribution of the log of the peaks intensities.
+     * The binned cumulative function of the distribution of the log of the
+     * peaks intensities.
      */
     private SimpleNoiseDistribution binnedCumulativeFunction = null;
 
@@ -912,7 +911,8 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @throws java.lang.InterruptedException exception thrown if a threading
      * issue occurs
-     * @throws org.apache.commons.math.MathException exception thrown whenever an error occurred while estimating probabilities.
+     * @throws org.apache.commons.math.MathException exception thrown whenever
+     * an error occurred while estimating probabilities.
      */
     public SimpleNoiseDistribution getIntensityLogDistribution() throws InterruptedException, MathException {
         if (binnedCumulativeFunction == null) {

@@ -18,7 +18,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class EnzymaticIterator implements SequenceIterator {
+public class SingleEnzymeIterator implements SequenceIterator {
 
     /**
      * Utilities classes for the digestion.
@@ -34,7 +34,7 @@ public class EnzymaticIterator implements SequenceIterator {
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public EnzymaticIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public SingleEnzymeIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
     }
 

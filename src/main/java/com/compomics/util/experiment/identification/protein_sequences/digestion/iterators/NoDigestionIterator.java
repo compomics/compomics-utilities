@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
-import com.compomics.util.preferences.DigestionPreferences;
 
 /**
  * Iterator for no digestion.
@@ -27,11 +26,10 @@ public class NoDigestionIterator implements SequenceIterator {
      *
      * @param proteinIteratorUtils utils for the creation of the peptides
      * @param sequence the sequence to iterate
-     * @param digestionPreferences the digestion preferences to use
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, Double massMin, Double massMax) {
         
         this.proteinIteratorUtils = proteinIteratorUtils;
         setPeptide(sequence, massMin, massMax);

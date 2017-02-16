@@ -1,20 +1,13 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.AmbiguousSequenceIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideDraft;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.general.BoxedObject;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Iterator for unspecific cleavage.
@@ -27,31 +20,49 @@ public class UnspecificCombinationIterator implements SequenceIterator {
      * Utilities classes for the digestion.
      */
     private ProteinIteratorUtils proteinIteratorUtils;
-
+    /**
+     * The protein sequence.
+     */
     private String proteinSequence;
+    /**
+     * The protein sequence as char array.
+     */
     private char[] proteinSequenceAsCharArray;
-
+    /**
+     * The minimal mass to consider.
+     */
     private Double massMin;
+    /**
+     * The maximal mass to consider.
+     */
     private Double massMax;
-
-    AmbiguousSequenceIterator ambiguousSequenceIterator = null;
-
+    /**
+     * The peptide beginning index of the iterator.
+     */
     private int index1 = 0;
+    /**
+     * The peptide end index of the iterator.
+     */
     private int index2 = 1;
+    /**
+     * The ambiguous sequence iterator.
+     */
+    AmbiguousSequenceIterator ambiguousSequenceIterator = null;
 
     /**
      * Constructor.
      *
      * @param proteinIteratorUtils utils for the creation of the peptides
      * @param proteinSequence the sequence to iterate
-     * @param digestionPreferences the digestion preferences to use
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public UnspecificCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public UnspecificCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Double massMin, Double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
+        this.massMin = massMin;
+        this.massMax = massMax;
     }
 
     @Override
@@ -121,6 +132,11 @@ public class UnspecificCombinationIterator implements SequenceIterator {
         }
     }
 
+    /**
+     * Increases the index.
+     * 
+     * @return a boolean indicating whether there is another index
+     */
     private boolean increaseIndex() {
 
         index2++;

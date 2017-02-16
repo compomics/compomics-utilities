@@ -5,7 +5,6 @@ import com.compomics.util.experiment.identification.protein_sequences.digestion.
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.general.BoxedObject;
-import com.compomics.util.preferences.DigestionPreferences;
 import java.util.Arrays;
 
 /**
@@ -19,14 +18,29 @@ public class UnspecificIterator implements SequenceIterator {
      * Utilities classes for the digestion.
      */
     private ProteinIteratorUtils proteinIteratorUtils;
-
+    /**
+     * The protein sequence.
+     */
     private String proteinSequence;
+    /**
+     * The protein sequence as char array.
+     */
     private char[] proteinSequenceAsCharArray;
-
+    /**
+     * The minimal mass to consider.
+     */
     private Double massMin;
+    /**
+     * The maximal mass to consider.
+     */
     private Double massMax;
-
+    /**
+     * The peptide beginning index of the iterator.
+     */
     private int index1 = 0;
+    /**
+     * The peptide end index of the iterator.
+     */
     private int index2 = 1;
 
     /**
@@ -34,11 +48,10 @@ public class UnspecificIterator implements SequenceIterator {
      *
      * @param proteinIteratorUtils utils for the creation of the peptides
      * @param proteinSequence the sequence to iterate
-     * @param digestionPreferences the digestion preferences to use
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public UnspecificIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public UnspecificIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Double massMin, Double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
@@ -78,6 +91,11 @@ public class UnspecificIterator implements SequenceIterator {
         }
     }
 
+    /**
+     * Increases the index.
+     *
+     * @return a boolean indicating whether there is another index
+     */
     private boolean increaseIndex() {
 
         index2++;

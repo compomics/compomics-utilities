@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.EnzymaticIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SingleEnzymeIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificCombinationIterator;
@@ -59,16 +59,16 @@ public class IteratorFactory {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
                 if (AminoAcidSequence.hasCombination(sequence)) {
-                    return new UnspecificCombinationIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                    return new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax);
                 }
-                return new UnspecificIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                return new UnspecificIterator(proteinIteratorUtils, sequence, massMin, massMax);
             case wholeProtein:
                 if (AminoAcidSequence.hasCombination(sequence)) {
-                    return new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                    return new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax);
                 }
-                return new NoDigestionIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                return new NoDigestionIterator(proteinIteratorUtils, sequence, massMin, massMax);
             case enzyme:
-                return new EnzymaticIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                return new SingleEnzymeIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             default:
                 throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");
         }

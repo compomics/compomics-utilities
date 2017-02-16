@@ -7,7 +7,9 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideDraft;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.general.BoxedObject;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +19,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class UnspecificIterator {
+public class UnspecificIterator implements SequenceIterator {
 
     /**
      * Utilities classes for the digestion.
@@ -28,9 +30,18 @@ public class UnspecificIterator {
      * Constructor.
      * 
      * @param proteinIteratorUtils utils for the creation of the peptides
+     * @param sequence the sequence to iterate
+     * @param digestionPreferences the digestion preferences to use
+     * @param massMin the minimal mass of a peptide
+     * @param massMax the maximal mass of a peptide
      */
-    public UnspecificIterator(ProteinIteratorUtils proteinIteratorUtils) {
+    public UnspecificIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
+    }
+
+    @Override
+    public PeptideWithPosition getNextPeptide() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 

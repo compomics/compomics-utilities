@@ -9,6 +9,9 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.EnzymaticIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -21,10 +24,10 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class IteratorGenerator {
+public class IteratorFactory {
 
     /**
-     * Ute utils used during digestion.
+     * The utils used to generate the peptides.
      */
     private ProteinIteratorUtils proteinIteratorUtils;
 
@@ -36,7 +39,7 @@ public class IteratorGenerator {
      * @param maxX The maximal number of Xs allowed in a sequence to derive the
      * possible peptides
      */
-    public IteratorGenerator(ArrayList<String> fixedModifications, Integer maxX) {
+    public IteratorFactory(ArrayList<String> fixedModifications, Integer maxX) {
         this.proteinIteratorUtils = new ProteinIteratorUtils(fixedModifications, maxX);
     }
 
@@ -46,30 +49,28 @@ public class IteratorGenerator {
      * @param fixedModifications a list of fixed modifications to consider when
      * iterating the protein sequences.
      */
-    public IteratorGenerator(ArrayList<String> fixedModifications) {
+    public IteratorFactory(ArrayList<String> fixedModifications) {
         this(fixedModifications, null);
     }
-
+    
     /**
-     * Returns the peptides for a given sequence. The peptides can be filtered
-     * by minimal and maximal mass. If null is provided as limit no filter will
-     * be used.
-     *
+     * Returns a sequence iterator for the given protein sequence and digestion preferences.
+     * 
      * @param sequence the sequence to iterate
      * @param digestionPreferences the digestion preferences to use
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
-     *
-     * @return the possible peptides for the sequence
+     * 
+     * @return a sequence iterator
      */
-    public ArrayList<PeptideWithPosition> getPeptides(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
-                return getPeptides(sequence, massMin, massMax);
+                return new UnspecificIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case wholeProtein:
-                return getPeptidesNoDigestion(sequence, massMin, massMax);
+                return new NoDigestionIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case enzyme:
-                return getPeptidesDigestion(sequence, digestionPreferences, massMin, massMax);
+                return new EnzymaticIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             default:
                 throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");
         }

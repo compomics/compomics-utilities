@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.EnzymaticIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIteratorCombination;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.DigestionPreferences;
@@ -52,15 +53,16 @@ public class IteratorFactory {
     public IteratorFactory(ArrayList<String> fixedModifications) {
         this(fixedModifications, null);
     }
-    
+
     /**
-     * Returns a sequence iterator for the given protein sequence and digestion preferences.
-     * 
+     * Returns a sequence iterator for the given protein sequence and digestion
+     * preferences.
+     *
      * @param sequence the sequence to iterate
      * @param digestionPreferences the digestion preferences to use
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
-     * 
+     *
      * @return a sequence iterator
      */
     public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
@@ -68,6 +70,12 @@ public class IteratorFactory {
             case unSpecific:
                 return new UnspecificIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case wholeProtein:
+                for (char aa : sequence.toCharArray()) {
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+                    if (aminoAcid.iscombination()) {
+                        return new NoDigestionIteratorCombination(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                    }
+                }
                 return new NoDigestionIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case enzyme:
                 return new EnzymaticIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);

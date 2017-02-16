@@ -1,9 +1,11 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -367,6 +369,59 @@ public class ProteinIteratorUtils {
      */
     public double getMinCtermMass() {
         return minCtermMass;
+    }
+
+    /**
+     * Returns a peptide from the given sequence on the given protein. The
+     * sequence should not contain ambiguous amino acids. Peptides are filtered
+     * according to the given masses. Filters are ignored if null.
+     *
+     * @param peptideSequence the peptide sequence
+     * @param proteinSequence the protein sequence where this peptide was found
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     *
+     * @return a peptide from the given sequence
+     */
+    public Peptide getPeptideNoDigestion(String peptideSequence, String proteinSequence, Double massMin, Double massMax) {
+
+        char nTermAaChar = peptideSequence.charAt(0);
+        String nTermModification = getNtermModification(true, nTermAaChar, proteinSequence);
+        HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(1);
+        double peptideMass = modificationsMasses.get(nTermModification);
+
+        for (int i = 0; i < peptideSequence.length(); i++) {
+
+            char aaChar = peptideSequence.charAt(i);
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
+            peptideMass += aminoAcid.getMonoisotopicMass();
+
+            if (massMax != null && peptideMass + minCtermMass > massMax) {
+                return null;
+            }
+
+            String modificationAtAa = fixedModificationsAtAa.get(aaChar);
+
+            if (modificationAtAa != null) {
+                AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, i)) {
+                    peptideModifications.put(i + 1, modificationAtAa);
+                    peptideMass += modificationsMasses.get(modificationAtAa);
+                }
+            }
+        }
+
+        PeptideDraft peptideDraft = new PeptideDraft(new StringBuilder(peptideSequence), nTermModification, peptideModifications, peptideMass);
+
+        String cTermModification = getCtermModification(peptideDraft, proteinSequence, 0);
+        if (cTermModification != null) {
+            double modificationMass = modificationsMasses.get(cTermModification);
+            peptideMass = peptideDraft.getMass() + modificationMass;
+            peptideDraft.setMass(peptideMass);
+            peptideDraft.setcTermModification(cTermModification);
+        }
+
+        return peptideDraft.getPeptide(massMin, massMax);
     }
     
 }

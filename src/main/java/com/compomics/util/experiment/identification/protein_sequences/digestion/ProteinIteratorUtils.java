@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -285,8 +286,8 @@ public class ProteinIteratorUtils {
      */
     public String getCtermModification(PeptideDraft peptideDraft, String proteinSequence, int indexOnProtein) {
 
-        StringBuilder peptideSequence = peptideDraft.getSequence();
-        char aaChar = peptideSequence.charAt(peptideSequence.length() - 1);
+        char[] peptideSequence = peptideDraft.getSequence();
+        char aaChar = peptideSequence[peptideSequence.length - 1];
 
         if (indexOnProtein == proteinSequence.length() - peptideDraft.length()) {
 
@@ -372,6 +373,21 @@ public class ProteinIteratorUtils {
     }
 
     /**
+     * Returns a peptide from the given sequence. The
+     * sequence should not contain ambiguous amino acids. Peptides are filtered
+     * according to the given masses. Filters are ignored if null.
+     *
+     * @param proteinSequence the protein sequence where this peptide was found
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     *
+     * @return a peptide from the given sequence
+     */
+    public Peptide getPeptideFromProtein(char[] proteinSequence, Double massMin, Double massMax) {
+        return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), massMin, massMax);
+    }
+
+    /**
      * Returns a peptide from the given sequence on the given protein. The
      * sequence should not contain ambiguous amino acids. Peptides are filtered
      * according to the given masses. Filters are ignored if null.
@@ -383,20 +399,39 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideNoDigestion(String peptideSequence, String proteinSequence, Double massMin, Double massMax) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, Double massMin, Double massMax) {
+        return getPeptideFromProtein(peptideSequence, proteinSequence, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
+    }
 
-        char nTermAaChar = peptideSequence.charAt(0);
+    /**
+     * Returns a peptide from the given sequence on the given protein. The
+     * sequence should not contain ambiguous amino acids. Peptides are filtered
+     * according to the given masses. Filters are ignored if null.
+     *
+     * @param peptideSequence the peptide sequence
+     * @param proteinSequence the protein sequence where this peptide was found
+     * @param massMin the minimal mass
+     * @param massMax the maximal mass
+     * @param smallMass an encapsulated boolean indicating whether the peptide
+     * passed the maximal mass filter
+     *
+     * @return a peptide from the given sequence
+     */
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
+
+        char nTermAaChar = peptideSequence[0];
         String nTermModification = getNtermModification(true, nTermAaChar, proteinSequence);
         HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(1);
         double peptideMass = modificationsMasses.get(nTermModification);
 
-        for (int i = 0; i < peptideSequence.length(); i++) {
+        for (int i = 0; i < peptideSequence.length; i++) {
 
-            char aaChar = peptideSequence.charAt(i);
+            char aaChar = peptideSequence[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
             peptideMass += aminoAcid.getMonoisotopicMass();
 
             if (massMax != null && peptideMass + minCtermMass > massMax) {
+                smallMass.setObject(Boolean.FALSE);
                 return null;
             }
 
@@ -411,7 +446,7 @@ public class ProteinIteratorUtils {
             }
         }
 
-        PeptideDraft peptideDraft = new PeptideDraft(new StringBuilder(peptideSequence), nTermModification, peptideModifications, peptideMass);
+        PeptideDraft peptideDraft = new PeptideDraft(peptideSequence, nTermModification, peptideModifications, peptideMass);
 
         String cTermModification = getCtermModification(peptideDraft, proteinSequence, 0);
         if (cTermModification != null) {

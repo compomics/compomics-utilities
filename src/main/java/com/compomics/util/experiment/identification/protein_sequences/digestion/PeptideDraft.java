@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.general.BoxedObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -14,9 +15,9 @@ import java.util.HashMap;
 public class PeptideDraft {
 
     /**
-     * The amino acid sequence.
+     * The amino acid sequence as char array.
      */
-    private StringBuilder sequence;
+    private char[] sequence;
     /**
      * The N-terminal modification.
      */
@@ -51,8 +52,8 @@ public class PeptideDraft {
      *
      * @param sequence the peptide sequence.
      */
-    public PeptideDraft(String sequence) {
-        this.sequence = new StringBuilder(sequence);
+    public PeptideDraft(char[] sequence) {
+        this.sequence = sequence;
     }
 
     /**
@@ -63,7 +64,7 @@ public class PeptideDraft {
      * @param fixedAaModifications the fixed modifications at amino acids
      * @param mass the mass
      */
-    public PeptideDraft(StringBuilder sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, double mass) {
+    public PeptideDraft(char[] sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, double mass) {
         this.sequence = sequence;
         this.nTermModification = nTermModification;
         this.fixedAaModifications = fixedAaModifications;
@@ -79,7 +80,7 @@ public class PeptideDraft {
      * @param mass the mass
      * @param missedCleavages the number of missed cleavages
      */
-    public PeptideDraft(StringBuilder sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, double mass, int missedCleavages) {
+    public PeptideDraft(char[] sequence, String nTermModification, HashMap<Integer, String> fixedAaModifications, double mass, int missedCleavages) {
         this.sequence = sequence;
         this.nTermModification = nTermModification;
         this.fixedAaModifications = fixedAaModifications;
@@ -96,7 +97,7 @@ public class PeptideDraft {
      * @param fixedAaModifications the fixed modifications at amino acids
      * @param mass the mass
      */
-    public PeptideDraft(StringBuilder sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, double mass) {
+    public PeptideDraft(char[] sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, double mass) {
         this.sequence = sequence;
         this.nTermModification = nTermModification;
         this.cTermModification = cTermModification;
@@ -114,7 +115,7 @@ public class PeptideDraft {
      * @param mass the mass
      * @param missedCleavages the number of missed cleavages
      */
-    public PeptideDraft(StringBuilder sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, double mass, int missedCleavages) {
+    public PeptideDraft(char[] sequence, String nTermModification, String cTermModification, HashMap<Integer, String> fixedAaModifications, double mass, int missedCleavages) {
         this.sequence = sequence;
         this.nTermModification = nTermModification;
         this.cTermModification = cTermModification;
@@ -129,7 +130,7 @@ public class PeptideDraft {
      * @return a new peptide draft
      */
     public PeptideDraft clone() {
-        PeptideDraft newPeptideDraft = new PeptideDraft(new StringBuilder(sequence), nTermModification, cTermModification, new HashMap<Integer, String>(fixedAaModifications), mass, missedCleavages);
+        PeptideDraft newPeptideDraft = new PeptideDraft(Arrays.copyOf(sequence, sequence.length), nTermModification, cTermModification, new HashMap<Integer, String>(fixedAaModifications), mass, missedCleavages);
         return newPeptideDraft;
     }
 
@@ -138,7 +139,7 @@ public class PeptideDraft {
      *
      * @return the sequence
      */
-    public StringBuilder getSequence() {
+    public char[] getSequence() {
         return sequence;
     }
 
@@ -147,7 +148,7 @@ public class PeptideDraft {
      *
      * @param sequence the sequence
      */
-    public void setSequence(StringBuilder sequence) {
+    public void setSequence(char[] sequence) {
         this.sequence = sequence;
     }
 
@@ -157,7 +158,7 @@ public class PeptideDraft {
      * @return the length of the sequence
      */
     public int length() {
-        return sequence.length();
+        return sequence.length;
     }
 
     /**

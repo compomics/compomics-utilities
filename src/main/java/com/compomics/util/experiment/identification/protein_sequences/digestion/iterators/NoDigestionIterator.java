@@ -1,17 +1,10 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideDraft;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Iterator for no digestion.
@@ -39,14 +32,19 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param massMax the maximal mass of a peptide
      */
     public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+        
         this.proteinIteratorUtils = proteinIteratorUtils;
+        setPeptide(sequence, massMin, massMax);
+    
     }
 
     @Override
     public PeptideWithPosition getNextPeptide() {
+        
         PeptideWithPosition result = peptideWithPosition;
         peptideWithPosition = null;
         return result;
+        
     }
 
     /**
@@ -59,9 +57,9 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param massMin the minimal mass
      * @param massMax the maximal mass
      */
-    public void setPeptide(String sequence, Double massMin, Double massMax) {
+    private void setPeptide(String sequence, Double massMin, Double massMax) {
 
-        Peptide peptide = proteinIteratorUtils.getPeptideNoDigestion(sequence, sequence, massMin, massMax);
+        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, massMin, massMax);
 
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)

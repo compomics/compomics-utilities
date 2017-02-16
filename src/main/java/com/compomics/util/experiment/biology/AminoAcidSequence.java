@@ -959,8 +959,21 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * acid which is in fact a combination of amino acids
      */
     public static boolean hasCombination(String sequence) {
-        for (int i = 0; i < sequence.length(); i++) {
-            char aa = sequence.charAt(i);
+        return hasCombination(sequence.toCharArray());
+    }
+
+    /**
+     * Indicates whether the given sequence contains an amino acid which is in
+     * fact a combination of amino acids.
+     *
+     * @param sequence the sequence of interest
+     *
+     * @return a boolean indicating whether the given sequence contains an amino
+     * acid which is in fact a combination of amino acids
+     */
+    public static boolean hasCombination(char[] sequence) {
+        for (int i = 0; i < sequence.length; i++) {
+            char aa = sequence[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             if (aminoAcid.iscombination()) {
                 return true;

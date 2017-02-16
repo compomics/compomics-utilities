@@ -1,23 +1,13 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.EnzymaticIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIteratorCombination;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionCombinationIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
-import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The iterator goes through a sequence and lists possible peptides with their
@@ -68,13 +58,13 @@ public class IteratorFactory {
     public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
+                if (AminoAcidSequence.hasCombination(sequence)) {
+                    return new UnspecificCombinationIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
+                }
                 return new UnspecificIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case wholeProtein:
-                for (char aa : sequence.toCharArray()) {
-                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                    if (aminoAcid.iscombination()) {
-                        return new NoDigestionIteratorCombination(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
-                    }
+                if (AminoAcidSequence.hasCombination(sequence)) {
+                    return new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
                 }
                 return new NoDigestionIterator(proteinIteratorUtils, sequence, digestionPreferences, massMin, massMax);
             case enzyme:

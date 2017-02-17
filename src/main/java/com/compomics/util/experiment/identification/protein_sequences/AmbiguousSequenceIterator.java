@@ -12,26 +12,62 @@ import java.util.Arrays;
  */
 public class AmbiguousSequenceIterator {
 
+    /**
+     * The sequence as char array.
+     */
     private char[] sequenceAsCharArray;
-
+    /**
+     * The amino acid combinations
+     */
     private ArrayList<char[]> aaCombinations;
+    /**
+     * The amino acid combination iteration indices.
+     */
     private int[] iterationIndices;
+    /**
+     * The indices on the sequence.
+     */
     private int[] indicesOnSequence;
+    /**
+     * The secondary iteration index.
+     */
     private int secondaryIndex = 0;
 
+    /**
+     * Constructor.
+     *
+     * @param sequence the sequence to iterate as char array
+     * @param expectedNumberOfCombinations the expected number of combinations
+     */
     public AmbiguousSequenceIterator(char[] sequence, int expectedNumberOfCombinations) {
         this.sequenceAsCharArray = sequence;
         initialize(expectedNumberOfCombinations);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param sequence the sequence as String
+     * @param expectedNumberOfCombinations the expected number of combinations
+     */
     public AmbiguousSequenceIterator(String sequence, int expectedNumberOfCombinations) {
         this(sequence.toCharArray(), expectedNumberOfCombinations);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param sequence the sequence as String
+     */
     public AmbiguousSequenceIterator(String sequence) {
         this(sequence, 2);
     }
 
+    /**
+     * Initializes the iterator.
+     *
+     * @param expectedNumberOfCombinations the expected number of combinations
+     */
     private void initialize(int expectedNumberOfCombinations) {
 
         // Find amino acid combinations and store them in a map
@@ -60,6 +96,11 @@ public class AmbiguousSequenceIterator {
         }
     }
 
+    /**
+     * Returns the next sequence, null if none.
+     *
+     * @return the next sequence
+     */
     public char[] getNextSequence() {
 
         // Increase the amino acid iteration indices
@@ -80,6 +121,11 @@ public class AmbiguousSequenceIterator {
         return newSequenceAsCharArray;
     }
 
+    /**
+     * Increases the iteration indices.
+     *
+     * @return a boolean indicating whether there are new indices
+     */
     private boolean increaseIndices() {
         if (secondaryIndex == iterationIndices.length) {
             return false;

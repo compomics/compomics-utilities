@@ -2,10 +2,10 @@ package com.compomics.util.experiment.identification.protein_sequences.digestion
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SingleEnzymeIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SpecificSingleEnzymeIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionCombinationIterator;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SingleEnzymeCombinationIterator;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SpecificSingleEnzymeCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
 import com.compomics.util.preferences.DigestionPreferences;
@@ -75,9 +75,9 @@ public class IteratorFactory {
                     Enzyme enzyme = enzymes.get(0);
                     int nMissedCleavages = digestionPreferences.getnMissedCleavages(enzyme.getName());
                     if (AminoAcidSequence.hasCombination(sequence)) {
-                        return new SingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
+                        return new SpecificSingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
                     }
-                    return new SingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
+                    return new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
                 }
             default:
                 throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");

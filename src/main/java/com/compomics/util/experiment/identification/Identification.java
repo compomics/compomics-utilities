@@ -921,14 +921,11 @@ public abstract class Identification extends ExperimentObject {
     public void removeProteinMatch(String matchKey) throws SQLException, IOException, InterruptedException {
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
-                if (proteinMap.get(protein) == null) {
-                    throw new IllegalArgumentException("Protein not found: " + protein + ".");
-                } else {
-                    if (proteinMap.get(protein).contains(matchKey)) {
-                        proteinMap.get(protein).remove(matchKey);
-                        if (proteinMap.get(protein).isEmpty()) {
-                            proteinMap.remove(protein);
-                        }
+                HashSet<String> proteinKeys = proteinMap.get(protein);
+                if (proteinKeys != null) {
+                    proteinKeys.remove(matchKey);
+                    if (proteinKeys.isEmpty()) {
+                        proteinMap.remove(protein);
                     }
                 }
             }

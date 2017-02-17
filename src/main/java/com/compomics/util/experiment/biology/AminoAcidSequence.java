@@ -959,14 +959,57 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * acid which is in fact a combination of amino acids
      */
     public static boolean hasCombination(String sequence) {
-        for (int i = 0; i < sequence.length(); i++) {
-            char aa = sequence.charAt(i);
+        return hasCombination(sequence.toCharArray());
+    }
+
+    /**
+     * Indicates whether the given sequence contains an amino acid which is in
+     * fact a combination of amino acids.
+     *
+     * @param sequence the sequence of interest
+     *
+     * @return a boolean indicating whether the given sequence contains an amino
+     * acid which is in fact a combination of amino acids
+     */
+    public static boolean hasCombination(char[] sequence) {
+        for (int i = 0; i < sequence.length; i++) {
+            char aa = sequence[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             if (aminoAcid.iscombination()) {
                 return true;
             }
         }
         return false;
+    }
+    
+    /**
+     * Returns the minimal mass that an amino acid sequence can have taking into account ambiguous amino acids.
+     * 
+     * @param sequence a sequence of amino acids represented by their single letter code
+     * 
+     * @return the minimal mass the sequence can have
+     */
+    public static Double getMinMass(char[] sequence) {
+        Double minMass = 0.0;
+        for (char aa : sequence) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (aminoAcid.iscombination()) {
+                char[] subAa = aminoAcid.getSubAminoAcids(false);
+                aminoAcid = AminoAcid.getAminoAcid(subAa[0]);
+                Double minMassTemp = aminoAcid.getMonoisotopicMass();
+                for (int i = 1 ; i < subAa.length ; i++) {
+                    aminoAcid = AminoAcid.getAminoAcid(subAa[i]);
+                    Double massTemp = aminoAcid.getMonoisotopicMass();
+                    if (massTemp < minMassTemp) {
+                        minMassTemp = massTemp;
+                    }
+                }
+                minMass += minMassTemp;
+            } else {
+                minMass += aminoAcid.getMonoisotopicMass();
+            }
+        }
+        return minMass;
     }
 
     /**

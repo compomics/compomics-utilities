@@ -1049,4 +1049,26 @@ public class Util {
     public static Integer convertBooleanToInteger(Boolean booleanToConvert) {
         return booleanToConvert ? 1 : 0;
     }
+
+    /**
+     * Simple method to merge two character arrays.
+     * 
+     * @param array1 a character array
+     * @param array2 a character array
+     * 
+     * @return a concatenation of array1 and array2
+     */
+    public static char[] mergeCharArrays(char[] array1, char[] array2) {
+        char[] result = new char[array1.length + array2.length];
+        int count = 0;
+        for (int i = 0; i < array1.length; i++) {
+            result[count] = array1[i];
+            count++;
+        }
+        for (int i = 0; i < array2.length; i++) {
+            result[count] = array2[i];
+            count++;
+        }
+        return result;
+    }
 }

@@ -54,7 +54,7 @@ public class PeptideDraft {
      */
     public PeptideDraft(char[] sequence) {
         this.sequence = sequence;
-    }
+}
 
     /**
      * Constructor.

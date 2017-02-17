@@ -60,7 +60,7 @@ public class SingleEnzymeIterator implements SequenceIterator {
     /**
      * Index of the result iterator.
      */
-    private int resultIndex = 0;
+    private int resultIndex = -1;
 
     /**
      * Constructor.
@@ -75,6 +75,7 @@ public class SingleEnzymeIterator implements SequenceIterator {
     public SingleEnzymeIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Enzyme enzyme, int nMissedCleavages, Double massMin, Double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
+        this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
         this.enzyme = enzyme;
         this.nMissedCleavages = nMissedCleavages;
         this.massMin = massMin;
@@ -121,7 +122,10 @@ public class SingleEnzymeIterator implements SequenceIterator {
         result.clear();
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
         BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, massMin, massMax, smallMass);
+        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
+        if (peptide != null) {
+        double mass = peptide.getMass();
+        }
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)
                 && (massMax == null || peptide.getMass() <= massMax)) {
@@ -135,7 +139,7 @@ public class SingleEnzymeIterator implements SequenceIterator {
                 for (int peptideStart : peptideStartMap.keySet()) {
                     newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, peptideStart, sequenceIndex);
                     smallMass.setObject(Boolean.TRUE);
-                    peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, massMin, massMax, smallMass);
+                    peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, peptideStart, massMin, massMax, smallMass);
                     if (peptide != null
                             && (massMin == null || peptide.getMass() >= massMin)
                             && (massMax == null || peptide.getMass() <= massMax)) {
@@ -151,5 +155,6 @@ public class SingleEnzymeIterator implements SequenceIterator {
                 peptideStartMap.clear();
             }
         }
+        resultIndex = -1;
     }
 }

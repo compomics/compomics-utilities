@@ -82,18 +82,18 @@ public class AmbiguousSequenceIterator {
                 aaCombinations.add(possibleAas);
                 indicesList.add(i);
             }
-
-            // Set up indices for iteration
-            indicesOnSequence = new int[indicesList.size()];
-            iterationIndices = new int[indicesList.size()];
-            int count = 0;
-            for (Integer index : indicesList) {
-                indicesOnSequence[count] = index;
-                iterationIndices[count] = 0;
-                count++;
-            }
-            iterationIndices[0] = -1;
         }
+
+        // Set up indices for iteration
+        indicesOnSequence = new int[indicesList.size()];
+        iterationIndices = new int[indicesList.size()];
+        int count = 0;
+        for (Integer index : indicesList) {
+            indicesOnSequence[count] = index;
+            iterationIndices[count] = 0;
+            count++;
+        }
+        iterationIndices[0] = -1;
     }
 
     /**

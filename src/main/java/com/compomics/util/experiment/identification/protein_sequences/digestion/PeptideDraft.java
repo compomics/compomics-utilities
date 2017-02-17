@@ -342,7 +342,7 @@ public class PeptideDraft {
                     modificationMatches.add(new ModificationMatch(modificationName, false, site));
                 }
 
-                Peptide peptide = new Peptide(getSequence().toString(), modificationMatches, false);
+                Peptide peptide = new Peptide(new String(getSequence()), modificationMatches, false);
                 return peptide;
             }
         }

@@ -57,7 +57,7 @@ public class NoDigestionIterator implements SequenceIterator {
      */
     private void setPeptide(String sequence, Double massMin, Double massMax) {
 
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, massMin, massMax);
+        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, 0, massMin, massMax);
 
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)

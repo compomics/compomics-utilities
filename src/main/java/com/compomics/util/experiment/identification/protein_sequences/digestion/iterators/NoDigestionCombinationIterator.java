@@ -136,7 +136,7 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
         }
 
         // Create the new peptide
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, massMin, massMax);
+        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, 0, massMin, massMax);
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)
                 && (massMax == null || peptide.getMass() <= massMax)) {

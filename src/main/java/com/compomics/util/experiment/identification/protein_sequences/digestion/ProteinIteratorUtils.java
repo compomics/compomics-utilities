@@ -378,13 +378,14 @@ public class ProteinIteratorUtils {
      * according to the given masses. Filters are ignored if null.
      *
      * @param proteinSequence the protein sequence where this peptide was found
+     * @param indexOnProtein the index on the protein
      * @param massMin the minimal mass
      * @param massMax the maximal mass
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] proteinSequence, Double massMin, Double massMax) {
-        return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), massMin, massMax);
+    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+        return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), indexOnProtein, massMin, massMax);
     }
 
     /**
@@ -394,13 +395,14 @@ public class ProteinIteratorUtils {
      *
      * @param peptideSequence the peptide sequence
      * @param proteinSequence the protein sequence where this peptide was found
+     * @param indexOnProtein the index on the protein
      * @param massMin the minimal mass
      * @param massMax the maximal mass
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, Double massMin, Double massMax) {
-        return getPeptideFromProtein(peptideSequence, proteinSequence, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+        return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
     }
 
     /**
@@ -410,6 +412,7 @@ public class ProteinIteratorUtils {
      *
      * @param peptideSequence the peptide sequence
      * @param proteinSequence the protein sequence where this peptide was found
+     * @param indexOnProtein the index on the protein
      * @param massMin the minimal mass
      * @param massMax the maximal mass
      * @param smallMass an encapsulated boolean indicating whether the peptide
@@ -417,10 +420,10 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
 
         char nTermAaChar = peptideSequence[0];
-        String nTermModification = getNtermModification(true, nTermAaChar, proteinSequence);
+        String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
         HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(1);
         double peptideMass = modificationsMasses.get(nTermModification);
 
@@ -448,7 +451,7 @@ public class ProteinIteratorUtils {
 
         PeptideDraft peptideDraft = new PeptideDraft(peptideSequence, nTermModification, peptideModifications, peptideMass);
 
-        String cTermModification = getCtermModification(peptideDraft, proteinSequence, 0);
+        String cTermModification = getCtermModification(peptideDraft, proteinSequence, indexOnProtein);
         if (cTermModification != null) {
             double modificationMass = modificationsMasses.get(cTermModification);
             peptideMass = peptideDraft.getMass() + modificationMass;

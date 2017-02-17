@@ -41,7 +41,7 @@ public class UnspecificIterator implements SequenceIterator {
     /**
      * The peptide end index of the iterator.
      */
-    private int index2 = 1;
+    private int index2 = 0;
 
     /**
      * Constructor.
@@ -55,6 +55,8 @@ public class UnspecificIterator implements SequenceIterator {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
+        this.massMin = massMin;
+        this.massMax = massMax;
     }
 
     @Override
@@ -70,15 +72,15 @@ public class UnspecificIterator implements SequenceIterator {
 
         // Construct the peptide
         BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, massMin, massMax, smallMass);
+        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax, smallMass);
 
         // Skip too heavy peptides
         if (!smallMass.getObject()) {
             index1++;
-            index2 = index1 + 1;
             if (index1 == proteinSequenceAsCharArray.length) {
                 return null;
             }
+            index2 = index1;
         }
 
         // Return the peptide if it passes the filters, continue iterating otherwise
@@ -101,10 +103,10 @@ public class UnspecificIterator implements SequenceIterator {
         index2++;
         if (index2 == proteinSequenceAsCharArray.length + 1) {
             index1++;
-            index2 = index1 + 1;
             if (index1 == proteinSequenceAsCharArray.length) {
                 return false;
             }
+            index2 = index1 + 1;
         }
         return true;
 

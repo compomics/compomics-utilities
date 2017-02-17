@@ -143,8 +143,8 @@ public class SingleEnzymeCombinationIterator implements SequenceIterator {
                     }
                 }
             }
-                String ambiguousSequence = ambiguousPeptides[ambiguousPeptidesIndex-1];
-                int startIndex = ambiguousPeptidesStartMap.get(ambiguousSequence);
+            String ambiguousSequence = ambiguousPeptides[ambiguousPeptidesIndex - 1];
+            int startIndex = ambiguousPeptidesStartMap.get(ambiguousSequence);
             Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, startIndex, massMin, massMax);
             if (peptide != null
                     && (massMin == null || peptide.getMass() >= massMin)
@@ -199,7 +199,6 @@ public class SingleEnzymeCombinationIterator implements SequenceIterator {
 
         ArrayList<Character> lastAaCombination = new ArrayList<Character>(1);
         int nX = 0;
-        boolean hasCombination = false;
         while (++sequenceIndex < proteinSequenceAsCharArray.length) {
 
             char aaBefore = proteinSequenceAsCharArray[sequenceIndex - 1];
@@ -213,7 +212,6 @@ public class SingleEnzymeCombinationIterator implements SequenceIterator {
             AminoAcid aminoAcidBefore = AminoAcid.getAminoAcid(aaBefore);
             AminoAcid aminoAcidAfter = AminoAcid.getAminoAcid(aaAfter);
             if (aminoAcidBefore.iscombination() || aminoAcidAfter.iscombination()) {
-                hasCombination = true;
                 boolean cleavage = false;
                 for (char aaBeforeTemp : aminoAcidBefore.getSubAminoAcids(false)) {
                     for (char aaAfterTemp : aminoAcidAfter.getSubAminoAcids(false)) {
@@ -245,7 +243,7 @@ public class SingleEnzymeCombinationIterator implements SequenceIterator {
             for (char lastAa : lastAaCombination) {
                 newSequence[newSequence.length - 1] = lastAa;
                 BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
-                if (!hasCombination) {
+                if (!AminoAcidSequence.hasCombination(newSequence)) {
                     Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
                     if (peptide != null
                             && (massMin == null || peptide.getMass() >= massMin)

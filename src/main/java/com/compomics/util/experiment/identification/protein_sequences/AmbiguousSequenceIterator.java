@@ -93,6 +93,11 @@ public class AmbiguousSequenceIterator {
             iterationIndices[count] = 0;
             count++;
         }
+        if (iterationIndices.length == 0) {
+            String string = new String(sequenceAsCharArray);
+            System.out.println(string);
+            int debug = 1;
+        }
         iterationIndices[0] = -1;
     }
 

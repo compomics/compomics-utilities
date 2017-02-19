@@ -65,6 +65,11 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
         
     }
 
+    /**
+     * Returns the sequence iterator.
+     * 
+     * @return the sequence iterator
+     */
     private AmbiguousSequenceIterator getSequenceIterator() {
 
         // See if the sequence is valid

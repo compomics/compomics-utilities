@@ -31,7 +31,7 @@ public class PeptideDraft {
      */
     private HashMap<Integer, String> fixedAaModifications;
     /**
-     * The current mass of the peptide draft
+     * The current mass of the peptide draft.
      */
     private double mass;
     /**
@@ -54,7 +54,7 @@ public class PeptideDraft {
      */
     public PeptideDraft(char[] sequence) {
         this.sequence = sequence;
-}
+    }
 
     /**
      * Constructor.

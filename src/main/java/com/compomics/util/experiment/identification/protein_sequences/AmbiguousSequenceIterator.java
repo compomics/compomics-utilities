@@ -141,5 +141,4 @@ public class AmbiguousSequenceIterator {
         iterationIndices[secondaryIndex] = aaIndex;
         return true;
     }
-
 }

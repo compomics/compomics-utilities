@@ -46,5 +46,4 @@ public class PeptideWithPosition {
     public int getPosition() {
         return position;
     }
-
 }

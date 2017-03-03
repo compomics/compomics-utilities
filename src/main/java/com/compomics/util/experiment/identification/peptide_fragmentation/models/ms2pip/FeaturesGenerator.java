@@ -51,11 +51,55 @@ public class FeaturesGenerator {
      * @return the ms2pip features for the b ions
      */
     public int[][] getBIonsFeatures(Peptide peptide, int charge) {
+        
+        char[] peptideSequence = peptide.getSequence().toCharArray();
+        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        
+        return getIonsFeatures(peptideSequence, modificationMatches, charge);
+    }
+
+    /**
+     * Returns the ms2pip features for the y ions of the given peptide at the
+     * given charge.
+     *
+     * @param peptide the peptide
+     * @param charge the charge
+     *
+     * @return the ms2pip features for the b ions
+     */
+    public int[][] getYIonsFeatures(Peptide peptide, int charge) {
+        
+        char[] peptideSequence = peptide.getSequence().toCharArray();
+        int sequenceLength = peptideSequence.length;
+        char[] reversedSequence = new char[sequenceLength];
+        for (int i = 0 ; i < sequenceLength ; i++) {
+            reversedSequence[i] = peptideSequence[sequenceLength - i - 1];
+        }
+        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        ArrayList<ModificationMatch> reversedModificationMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
+        for (ModificationMatch modificationMatch : modificationMatches) {
+            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
+            reversedModificationMatches.add(reversedModificationMatch);
+        }
+        
+        return getIonsFeatures(reversedSequence, reversedModificationMatches, charge);
+    }
+
+    /**
+     * Returns the ms2pip features for the ions of the given sequence with modifications at the
+     * given charge.
+     *
+     * @param peptideSequence the peptide sequence as char array
+     * @param modificationMatches the modification matches
+     * @param charge the charge
+     *
+     * @return the ms2pip features for the b ions
+     */
+    private int[][] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge) {
 
         // Get the peptide attributes
-        char[] peptideSequence = peptide.getSequence().toCharArray();
         int peptideLength = peptideSequence.length;
-        PeptideMetrics peptideMetrics = new PeptideMetrics(peptideSequence, peptide.getModificationMatches());
+        PeptideMetrics peptideMetrics = new PeptideMetrics(peptideSequence, modificationMatches);
         double[] aaMasses = peptideMetrics.getAaMasses();
         double[] modificationsMasses = peptideMetrics.getModificationsMasses();
         double[] aasMasses = peptideMetrics.getSumAaMasses();

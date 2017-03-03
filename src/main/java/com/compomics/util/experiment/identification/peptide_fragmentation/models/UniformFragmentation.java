@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.peptide_fragmentation.predictors;
+package com.compomics.util.experiment.identification.peptide_fragmentation.models;
 
 /**
  * Dummy intensity predictor that returns 1.0 for every ion.

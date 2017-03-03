@@ -123,9 +123,6 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
         BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
-        if (peptide != null) {
-        double mass = peptide.getMass();
-        }
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)
                 && (massMax == null || peptide.getMass() <= massMax)) {

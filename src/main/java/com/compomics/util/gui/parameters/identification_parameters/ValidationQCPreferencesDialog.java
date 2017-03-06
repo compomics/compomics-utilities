@@ -36,9 +36,9 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      */
     boolean canceled = false;
     /**
-     * Boolean indicating whether the filters have been changed.
+     * Boolean indicating whether the settings have been changed.
      */
-    private boolean filtersChanged = false;
+    private boolean userInput = false;
     /**
      * Boolean indicating whether the settings can be edited by the user.
      */
@@ -306,16 +306,31 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         dbCheck.setText("Hits obtained on small databases (<" + SequenceFactory.minProteinCount + " protein sequences)");
         dbCheck.setIconTextGap(15);
         dbCheck.setOpaque(false);
+        dbCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dbCheckActionPerformed(evt);
+            }
+        });
 
         nTargetCheck.setText("Datasets with a low number of target hits");
         nTargetCheck.setIconTextGap(15);
         nTargetCheck.setOpaque(false);
+        nTargetCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nTargetCheckActionPerformed(evt);
+            }
+        });
 
         markDoubtfulLabel.setText("Mark as Doubtful");
 
         confidenceCheck.setText("Hits near the confidence threshold (margin= 1 x resolution)");
         confidenceCheck.setIconTextGap(15);
         confidenceCheck.setOpaque(false);
+        confidenceCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confidenceCheckActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout generalSettingsPanelLayout = new javax.swing.GroupLayout(generalSettingsPanel);
         generalSettingsPanel.setLayout(generalSettingsPanelLayout);
@@ -538,7 +553,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        if (!filtersChanged) {
+        if (!userInput) {
             canceled = true;
         }
         dispose();
@@ -554,7 +569,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (newFilter != null) {
             psmFilters.add(newFilter);
             ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_addPsmFilterMenuItemActionPerformed
 
@@ -570,7 +585,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (editedFilter != null) {
             psmFilters.set(row, editedFilter);
             ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_editPsmFilterMenuItemActionPerformed
 
@@ -604,7 +619,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (newFilter != null) {
             peptideFilters.add(newFilter);
             ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_addPeptideFilterMenuItemActionPerformed
 
@@ -620,7 +635,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (editedFilter != null) {
             peptideFilters.set(row, editedFilter);
             ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_editPeptideFilterMenuItemActionPerformed
 
@@ -634,7 +649,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (newFilter != null) {
             proteinFilters.add(newFilter);
             ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_addProteinFilterMenuItemActionPerformed
 
@@ -650,7 +665,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (editedFilter != null) {
             proteinFilters.set(row, editedFilter);
             ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
-            filtersChanged = true;
+            userInput = true;
         }
     }//GEN-LAST:event_editProteinFilterMenuItemActionPerformed
 
@@ -703,7 +718,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         int row = proteinTable.getSelectedRow();
         proteinFilters.remove(row);
         ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
-        filtersChanged = true;
+        userInput = true;
     }//GEN-LAST:event_removeProteinFilterMenuItemActionPerformed
 
     /**
@@ -715,7 +730,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         int row = peptideTable.getSelectedRow();
         peptideFilters.remove(row);
         ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
-        filtersChanged = true;
+        userInput = true;
     }//GEN-LAST:event_removePeptideFilterMenuItemActionPerformed
 
     /**
@@ -727,7 +742,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         int row = psmTable.getSelectedRow();
         psmFilters.remove(row);
         ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
-        filtersChanged = true;
+        userInput = true;
     }//GEN-LAST:event_removePsmFilterMenuItemActionPerformed
 
     /**
@@ -765,6 +780,18 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void psmScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_psmScrollPaneMouseReleased
         psmTableMouseReleased(evt);
     }//GEN-LAST:event_psmScrollPaneMouseReleased
+
+    private void dbCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbCheckActionPerformed
+        userInput = true;
+    }//GEN-LAST:event_dbCheckActionPerformed
+
+    private void nTargetCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nTargetCheckActionPerformed
+        userInput = true;
+    }//GEN-LAST:event_nTargetCheckActionPerformed
+
+    private void confidenceCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confidenceCheckActionPerformed
+        userInput = true;
+    }//GEN-LAST:event_confidenceCheckActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPeptideFilterMenuItem;

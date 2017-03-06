@@ -249,6 +249,9 @@
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dbCheckActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="nTargetCheck">
               <Properties>
@@ -256,6 +259,9 @@
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nTargetCheckActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="markDoubtfulLabel">
               <Properties>
@@ -268,6 +274,9 @@
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confidenceCheckActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

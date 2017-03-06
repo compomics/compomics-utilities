@@ -1143,11 +1143,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
             if (parser.getName().equals("SpectrumIdentificationItem") && type == XmlPullParser.END_TAG) {
                 parser.next();
-                parser.next();
+                type = parser.next();
             } else {
                 parser.next();
                 parser.next();
-                parser.next();
+                type = parser.next();
             }
 
             // get the e-value
@@ -1254,7 +1254,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-            currentMatch.setKey(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
+            currentMatch.setKey(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle)); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
         }
 
         result.add(currentMatch);

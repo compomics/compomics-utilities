@@ -20,7 +20,7 @@ public class ProteinIteratorUtils {
 
     /**
      * The maximal number of Xs allowed to derive peptide sequences. When
-     * allowing multiple Xs all possibe combinations will be generated.
+     * allowing multiple Xs all possible combinations will be generated.
      */
     private int maxXsInSequence = 2;
     /**
@@ -77,9 +77,10 @@ public class ProteinIteratorUtils {
      * The mass of water (H2O).
      */
     public static final double WATER_MASS = (2 * Atom.H.getMonoisotopicMass()) + Atom.O.getMonoisotopicMass();
+
     /**
      * Constructor.
-     * 
+     *
      * @param fixedModifications a list of fixed modifications to consider when
      * iterating the protein sequences.
      * @param maxX The maximal number of Xs allowed in a sequence to derive the
@@ -320,34 +321,36 @@ public class ProteinIteratorUtils {
 
         return null;
     }
-    
+
     /**
      * Returns the mass corresponding to a given modification.
-     * 
+     *
      * @param modificationName the name of the modification
-     * 
+     *
      * @return the mass of the modification
      */
     public double getModificationMass(String modificationName) {
         return modificationsMasses.get(modificationName);
     }
-    
+
     /**
-     * Returns the fixed modification that can be found at the given amino acid. Null if none.
-     * 
+     * Returns the fixed modification that can be found at the given amino acid.
+     * Null if none.
+     *
      * @param aa the one letter code of the amino acid
-     * 
+     *
      * @return the fixed modification that can be found at the given amino acid
      */
     public String getFixedModificationAtAa(char aa) {
         return fixedModificationsAtAa.get(aa);
     }
-    
+
     /**
-     * Returns the modification pattern that is targeted by the given modification. Null if no pattern longer than one is targeted.
-     * 
+     * Returns the modification pattern that is targeted by the given
+     * modification. Null if no pattern longer than one is targeted.
+     *
      * @param modificationName the name of the modification
-     * 
+     *
      * @return the modification pattern that is targeted
      */
     public AminoAcidPattern getModificationPattern(String modificationName) {
@@ -356,7 +359,7 @@ public class ProteinIteratorUtils {
 
     /**
      * Returns the maximal number of Xs to account for in a sequence.
-     * 
+     *
      * @return the maximal number of Xs to account for in a sequence
      */
     public int getMaxXsInSequence() {
@@ -365,7 +368,7 @@ public class ProteinIteratorUtils {
 
     /**
      * Returns the minimal mass to consider for a c-terminus.
-     * 
+     *
      * @return the minimal mass to consider for a c-terminus
      */
     public double getMinCtermMass() {
@@ -373,9 +376,9 @@ public class ProteinIteratorUtils {
     }
 
     /**
-     * Returns a peptide from the given sequence. The
-     * sequence should not contain ambiguous amino acids. Peptides are filtered
-     * according to the given masses. Filters are ignored if null.
+     * Returns a peptide from the given sequence. The sequence should not
+     * contain ambiguous amino acids. Peptides are filtered according to the
+     * given masses. Filters are ignored if null.
      *
      * @param proteinSequence the protein sequence where this peptide was found
      * @param indexOnProtein the index on the protein
@@ -461,5 +464,4 @@ public class ProteinIteratorUtils {
 
         return peptideDraft.getPeptide(massMin, massMax);
     }
-    
 }

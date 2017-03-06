@@ -30,19 +30,17 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param massMax the maximal mass of a peptide
      */
     public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, Double massMin, Double massMax) {
-        
+
         this.proteinIteratorUtils = proteinIteratorUtils;
         setPeptide(sequence, massMin, massMax);
-    
+
     }
 
     @Override
     public PeptideWithPosition getNextPeptide() {
-        
         PeptideWithPosition result = peptideWithPosition;
         peptideWithPosition = null;
         return result;
-        
     }
 
     /**

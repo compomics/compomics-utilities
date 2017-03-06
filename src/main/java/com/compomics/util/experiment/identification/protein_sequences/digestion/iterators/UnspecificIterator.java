@@ -109,6 +109,5 @@ public class UnspecificIterator implements SequenceIterator {
             index2 = index1 + 1;
         }
         return true;
-
     }
 }

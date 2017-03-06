@@ -83,5 +83,4 @@ public class IteratorFactory {
                 throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");
         }
     }
-
 }

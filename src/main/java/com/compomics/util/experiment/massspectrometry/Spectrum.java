@@ -288,6 +288,15 @@ public abstract class Spectrum extends ExperimentObject {
     public String getFileName() {
         return fileName;
     }
+    
+    /**
+     * Sets the file name.
+     * 
+     * @param fileName the file name
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     /**
      * Returns at which level the spectrum was recorded.

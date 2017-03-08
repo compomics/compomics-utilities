@@ -32,7 +32,8 @@ import org.apache.commons.math.util.FastMath;
  * Ronald C Beavis, all rights reserved.
  *
  * The code below does not use or reuse any of the X!Tandem code, but the
- * scoring approach is in many points similar. No copyright infringement intended.
+ * scoring approach is in many points similar. No copyright infringement
+ * intended.
  *
  * @author Marc Vaudel
  */
@@ -98,25 +99,25 @@ public class HyperScore {
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
 
-        boolean peak = false;
+        boolean peakMatched = false;
         Double coveredIntensity = 0.0;
+        HashSet<Double> coveredMz = new HashSet<Double>(2);
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
-            switch (ion.getType()) {
-                case PEPTIDE_FRAGMENT_ION:
-                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
-                    if (peptideFragmentIon.hasNeutralLosses() || peptideFragmentIon.getNumber() < 2) {
-                        coveredIntensity += ionMatch.peak.intensity;
-                    } else {
-                        peak = true;
-                    }
-                    break;
-                default:
-                    coveredIntensity += ionMatch.peak.intensity;
-
+            Peak peak = ionMatch.peak;
+            if (!coveredMz.contains(peak.mz)) {
+                coveredIntensity += peak.intensity;
+                coveredMz.add(peak.mz);
+            }
+            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
+                if (peptideFragmentIon.hasNeutralLosses() || peptideFragmentIon.getNumber() < 2) {
+                } else {
+                    peakMatched = true;
+                }
             }
         }
-        if (!peak) {
+        if (!peakMatched) {
             return 0.0;
         }
 

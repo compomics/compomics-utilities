@@ -15,8 +15,12 @@ import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.zip.GZIPInputStream;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -82,6 +87,10 @@ public class OnyaseIdfileReader implements IdfileReader {
      * The version used to create the file.
      */
     private HashMap<String, ArrayList<String>> version;
+    /**
+     * Encoding for the file, cf the second rule.
+     */
+    public static final String encoding = "UTF-8";
 
     /**
      * Default constructor instantiation purposes.
@@ -99,7 +108,11 @@ public class OnyaseIdfileReader implements IdfileReader {
     public OnyaseIdfileReader(File resultsFile) throws IOException {
         this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
-        BufferedReader br = new BufferedReader(new FileReader(resultsFile));
+        
+        InputStream fileStream = new FileInputStream(resultsFile);
+        InputStream gzipStream = new GZIPInputStream(fileStream);
+        Reader decoder = new InputStreamReader(gzipStream, encoding);
+        BufferedReader br = new BufferedReader(decoder);
 //        String line;
 //        while ((line = br.readLine()) != null) {
 //            String key = "" + comment + separator + versionTag;
@@ -155,20 +168,19 @@ public class OnyaseIdfileReader implements IdfileReader {
         String spectrumFileName = Util.getFileName(mgfFile);
         String resultFileName = Util.getFileName(resultsFile);
 
-        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
-        bufferedRandomAccessFile.readLine(); // To remove
-        if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressCounter(100);
-        }
-        long progressUnit = bufferedRandomAccessFile.length() / 100;
+        InputStream fileStream = new FileInputStream(resultsFile);
+        InputStream gzipStream = new GZIPInputStream(fileStream);
+        Reader decoder = new InputStreamReader(gzipStream, encoding);
+        BufferedReader br = new BufferedReader(decoder);
+        br.readLine(); // To remove
 
         String separatorString = separator + "";
         String line;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             if (!line.startsWith("#")) {
                 String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0];
-                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                spectrumTitle = URLDecoder.decode(spectrumTitle, encoding);
                 String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
                 if (spectrumMatch == null) {
@@ -184,10 +196,6 @@ public class OnyaseIdfileReader implements IdfileReader {
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addHit(Advocate.onyaseEngine.getIndex(), peptideAssumption, true);
-                long currentIndex = bufferedRandomAccessFile.getFilePointer();
-                if (waitingHandler != null) {
-                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
-                }
             }
         }
 

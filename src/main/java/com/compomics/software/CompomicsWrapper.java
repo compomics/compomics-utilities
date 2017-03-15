@@ -28,6 +28,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.stream.XMLStreamException;
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
+import java.net.HttpURLConnection;
+import java.io.DataOutputStream;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a
@@ -563,6 +565,27 @@ public class CompomicsWrapper {
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
+                            
+                            // incrementing the counter for a PeptideShaker update 
+                            if (toolName.equals("PeptideShaker") || toolName.equals("SearchGUI")){
+                                String COLLECT_URL = "http://www.google-analytics.com/collect";
+                                String POST = "";
+                                
+                                if (toolName.equals("PeptideShaker")){
+                                    POST = "v=1&tid=UA-36198780-1&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=update&el=peptide-shaker";
+                                }
+                                else if(toolName.equals("SearchGUI")){
+                                    POST = "v=1&tid=UA-36198780-2&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=update&el=searchgui";
+                                }
+                                HttpURLConnection connection = (HttpURLConnection) new URL(COLLECT_URL).openConnection();
+                                connection.setRequestMethod("POST");
+                                connection.setConnectTimeout(3000);
+                                connection.setDoOutput(true);
+                                DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+                                wr.writeBytes(POST);
+                                int response = connection.getResponseCode();
+                            }
+                            
                             if (exitJavaOnCancel) {
                                 System.exit(0);
                             }

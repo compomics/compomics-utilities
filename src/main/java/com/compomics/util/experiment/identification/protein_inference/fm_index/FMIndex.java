@@ -4562,13 +4562,6 @@ public class FMIndex implements PeptideMapper {
         String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
         CacheElement cacheElement = cache[indexPart].get(key);
         if (cacheElement != null) cached = cacheElement.cachedPrimary;
-        /*
-        for (CacheElement cacheElement : cache[indexPart]) {
-            if (cacheElement.sequence.equals(tagComponents[1].sequence) && Math.abs(cacheElement.massSecond - tagComponents[2].mass) < 1e-5) {
-                cached = new ArrayList<MatrixContent>(cacheElement.cachedPrimary);
-                break;
-            }
-        }*/
         cacheMutex.release();
         return cached;
     }
@@ -4597,10 +4590,6 @@ public class FMIndex implements PeptideMapper {
         String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
         CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
         if (!cache[indexPart].containsKey(key)) cache[indexPart].put(key, cacheElement);
-        /*cache[indexPart].addFirst(cacheElement);
-        if (cache[indexPart].size() > 100) {
-            cache[indexPart].removeLast();
-        }*/
         cacheMutex.release();
     }
 }

@@ -151,7 +151,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * This parameter sets the maximum number of sequence tags to report for
      * each spectrum. (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private int maxTagCount = 20;
+    private int maxTagCount = 10;
     /**
      * This parameter controls how intensity scores are combined to form a total
      * score. DirecTag scores tags on the basis of their peak intensities. Tags

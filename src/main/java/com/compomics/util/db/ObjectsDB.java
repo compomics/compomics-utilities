@@ -1050,11 +1050,6 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        if (object == null) {
-            System.out.println("Table: " + tableName);
-            System.out.println("Object: " + objectKey);
-        }
-
         return object;
     }
 

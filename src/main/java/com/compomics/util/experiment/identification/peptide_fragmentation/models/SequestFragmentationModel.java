@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.peptide_fragmentation.predictors;
+package com.compomics.util.experiment.identification.peptide_fragmentation.models;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;

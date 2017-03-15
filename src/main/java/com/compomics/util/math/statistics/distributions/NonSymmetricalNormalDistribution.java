@@ -2,8 +2,6 @@ package com.compomics.util.math.statistics.distributions;
 
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.apache.commons.math.MathException;

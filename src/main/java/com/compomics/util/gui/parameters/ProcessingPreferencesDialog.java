@@ -74,7 +74,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void populateGUI(ProcessingPreferences processingPreferences) {
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
-        nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(processingPreferences.getnThreads(), 1, 16, 1));
+        nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(processingPreferences.getnThreads(), 1, null, 1));
     }
 
     /**

@@ -1037,6 +1037,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
         ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
+            idValidationPreferences = new IdMatchValidationPreferences(idValidationPreferences);
             idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
             updateGUI();
         }

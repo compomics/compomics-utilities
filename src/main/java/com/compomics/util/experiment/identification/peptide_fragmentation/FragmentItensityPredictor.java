@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.identification.peptide_fragmentation.predictors.SequestFragmentationModel;
-import com.compomics.util.experiment.identification.peptide_fragmentation.predictors.UniformFragmentation;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.SequestFragmentationModel;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.UniformFragmentation;
 
 /**
  * Predictor for the peptide fragment intensity.

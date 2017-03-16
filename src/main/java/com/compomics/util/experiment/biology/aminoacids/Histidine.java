@@ -41,4 +41,44 @@ public class Histidine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -4.63;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.97;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 223.7;
+    }
+
+    @Override
+    public double getPI() {
+        return 7.60;
+    }
+
+    @Override
+    public double getPK1() {
+        return 1.80;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.33;
+    }
+
+    @Override
+    public double getPKa() {
+        return 6.54;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 118;
+    }
 }

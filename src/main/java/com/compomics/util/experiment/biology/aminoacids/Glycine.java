@@ -41,4 +41,44 @@ public class Glycine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -3.31;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.15;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 202.7;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.06;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.35;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.78;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 48;
+    }
 }

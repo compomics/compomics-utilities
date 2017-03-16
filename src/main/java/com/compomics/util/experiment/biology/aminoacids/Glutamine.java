@@ -41,4 +41,44 @@ public class Glutamine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -2.76;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.96;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 214.2;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.65;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.17;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.13;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 114;
+    }
 }

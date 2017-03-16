@@ -42,4 +42,44 @@ public class Cysteine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 2.50;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.79;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 206.2;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.50;
+    }
+
+    @Override
+    public double getPK1() {
+        return 1.92;
+    }
+
+    @Override
+    public double getPK2() {
+        return 10.70;
+    }
+
+    @Override
+    public double getPKa() {
+        return 8.55;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 86;
+    }
 }

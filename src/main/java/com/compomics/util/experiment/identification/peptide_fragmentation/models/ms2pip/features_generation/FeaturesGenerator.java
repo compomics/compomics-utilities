@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip;
+package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.PTM;

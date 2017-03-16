@@ -528,6 +528,37 @@ public abstract class AminoAcid implements Serializable {
      * @return the van der Waals volume
      */
     public abstract int getVanDerWaalsVolume();
+    
+    /**
+     * Properties of the amino acids.
+     */
+    public enum Property {
+        
+        mass("Mass"), 
+        hydrophobicity("Hydrophobicity"), 
+        helicity("Helicity"), 
+        basicity("Basicity"), 
+        pI("pI"), 
+        pK1("pK1"), 
+        pK2("pK2"), 
+        pKa("pKa"), 
+        vanDerWaalsVolume("Van der Waals volume");
+        
+        /**
+         * The name of the property.
+         */
+        public final String name;
+        
+        /**
+         * Constructor.
+         * 
+         * @param name the name of the property
+         */
+        private Property(String name) {
+            this.name = name;
+        }
+        
+    }
 
     @Override
     public boolean equals(Object obj) {

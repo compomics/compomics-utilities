@@ -472,6 +472,62 @@ public abstract class AminoAcid implements Serializable {
         }
         return monoisotopicAtomChain.getMass();
     }
+    
+    /**
+     * Returns the hydrophobicity according to PMID 14730315.
+     * 
+     * @return the hydrophobicity
+     */
+    public abstract double getHydrophobicity();
+    
+    /**
+     * Returns the helicity according to PMID 14730315.
+     * 
+     * @return the helicity
+     */
+    public abstract double getHelicity();
+    
+    /**
+     * Returns the basicity according to PMID 14730315.
+     * 
+     * @return the basicity
+     */
+    public abstract double getBasicity();
+    
+    /**
+     * Returns the pI.
+     * 
+     * @return the pI
+     */
+    public abstract double getPI();
+    
+    /**
+     * Returns the pK1.
+     * 
+     * @return the pK1
+     */
+    public abstract double getPK1();
+    
+    /**
+     * Returns the pK2.
+     * 
+     * @return the pK2
+     */
+    public abstract double getPK2();
+    
+    /**
+     * Returns the pKa. 0.0 if none.
+     * 
+     * @return the pKa
+     */
+    public abstract double getPKa();
+    
+    /**
+     * Returns the van der Waals volume in Å3.
+     * 
+     * @return the van der Waals volume
+     */
+    public abstract int getVanDerWaalsVolume();
 
     @Override
     public boolean equals(Object obj) {

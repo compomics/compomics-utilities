@@ -41,4 +41,44 @@ public class Alanine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 0.16;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.24;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 206.4;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.01;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.35;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.87;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 67;
+    }
 }

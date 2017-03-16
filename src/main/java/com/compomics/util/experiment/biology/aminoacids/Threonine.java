@@ -41,4 +41,44 @@ public class Threonine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -1.08;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.09;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 211.7;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.60;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.09;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.10;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 93;
+    }
 }

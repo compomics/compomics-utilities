@@ -41,4 +41,44 @@ public class Isoleucine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 4.41;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.29;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 210.8;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.05;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.32;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.76;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 124;
+    }
 }

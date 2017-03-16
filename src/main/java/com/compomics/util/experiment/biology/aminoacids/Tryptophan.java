@@ -41,4 +41,44 @@ public class Tryptophan extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 4.88;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.07;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 216.1;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.89;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.46;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.41;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 163;
+    }
 }

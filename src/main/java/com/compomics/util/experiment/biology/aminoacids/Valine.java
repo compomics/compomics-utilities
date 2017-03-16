@@ -41,4 +41,44 @@ public class Valine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 3.02;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.27;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 208.7;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.00;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.39;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.74;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 105;
+    }
 }

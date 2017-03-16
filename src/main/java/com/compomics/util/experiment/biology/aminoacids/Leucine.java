@@ -41,4 +41,44 @@ public class Leucine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 4.76;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.28;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 209.6;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.01;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.33;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.74;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 124;
+    }
 }

@@ -41,4 +41,44 @@ public class Arginine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 0.16;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.24;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 206.4;
+    }
+
+    @Override
+    public double getPI() {
+        return 10.76;
+    }
+
+    @Override
+    public double getPK1() {
+        return 1.82;
+    }
+
+    @Override
+    public double getPK2() {
+        return 8.99;
+    }
+
+    @Override
+    public double getPKa() {
+        return 12.3;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 148;
+    }
 }

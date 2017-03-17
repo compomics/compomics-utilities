@@ -29,7 +29,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.io.*;
-import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -591,25 +590,21 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(enzymeLabel)
+                    .addComponent(fragmentIonType1Lbl)
+                    .addComponent(maxMissedCleavagesLabel)
+                    .addComponent(specificityLabel)
+                    .addComponent(digestionLabel))
+                .addGap(26, 26, 26)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(digestionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(enzymesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addComponent(digestionLabel)
-                        .addGap(98, 98, 98)
-                        .addComponent(digestionCmb, 0, 231, Short.MAX_VALUE))
-                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(enzymeLabel)
-                            .addComponent(fragmentIonType1Lbl)
-                            .addComponent(maxMissedCleavagesLabel)
-                            .addComponent(specificityLabel))
-                        .addGap(26, 26, 26)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(enzymesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                                .addComponent(fragmentIon1Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(fragmentIon2Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(specificityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(fragmentIon1Cmb, 0, 106, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(fragmentIon2Cmb, 0, 106, Short.MAX_VALUE))
+                    .addComponent(specificityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(75, 75, 75)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
@@ -814,7 +809,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             .addGroup(fixedModsPanelLayout.createSequentialGroup()
                 .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fixedModsPanelLayout.createSequentialGroup()
-                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                         .addGap(242, 242, 242))
                     .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -886,17 +881,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        variableModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                variableModsTableMouseReleased(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                variableModsTableMouseExited(evt);
-            }
-        });
         variableModsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 variableModsTableMouseMoved(evt);
+            }
+        });
+        variableModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                variableModsTableMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                variableModsTableMouseReleased(evt);
             }
         });
         variableModsJScrollPane.setViewportView(variableModsTable);
@@ -908,7 +903,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             .addComponent(variableModificationsLabel)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, variableModsPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1009,9 +1004,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         availableModsPanel.setLayout(availableModsPanelLayout);
         availableModsPanelLayout.setHorizontalGroup(
             availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
             .addGroup(availableModsPanelLayout.createSequentialGroup()
-                .addComponent(modificationsListCombo, 0, 308, Short.MAX_VALUE)
+                .addComponent(modificationsListCombo, 0, 337, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openModificationSettingsJButton)
                 .addGap(2, 2, 2))

@@ -14,8 +14,9 @@ public abstract class IonFeature implements Ms2pipFeature {
      */
     public enum Property {
         mass(0, "mass", "The ion mass."), 
-        length(1, "length", "The ion length."), 
-        relativeLength(2, "relativeLength", "The length of the ion relative to the length of the peptide.");
+        massOverLength(1, "massOverLength", "The ion mass relative to the ion length."), 
+        length(2, "length", "The ion length."), 
+        relativeLength(3, "relativeLength", "The length of the ion relative to the length of the peptide.");
 
     /**
      * The index of the option.

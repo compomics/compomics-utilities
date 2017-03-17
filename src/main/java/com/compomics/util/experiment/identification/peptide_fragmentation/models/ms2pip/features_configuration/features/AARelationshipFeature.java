@@ -7,13 +7,13 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  *
  * @author Marc Vaudel
  */
-public class AminoAcidRelationship implements Ms2pipFeature {
+public class AARelationshipFeature implements Ms2pipFeature {
     
     /**
      * The different relationships implemented.
      */
     public enum Relationship {
-        sum, subtraction, multiplication;
+        addition, subtraction, multiplication;
     }
     
     /**
@@ -23,11 +23,11 @@ public class AminoAcidRelationship implements Ms2pipFeature {
     /**
      * The first amino acid feature.
      */
-    private AminoAcidFeature aminoAcidFeature1;
+    private AAPropertyFeature aminoAcidFeature1;
     /**
      * The second amino acid feature.
      */
-    private AminoAcidFeature aminoAcidFeature2;
+    private AAPropertyFeature aminoAcidFeature2;
     
     /**
      * Constructor.
@@ -37,7 +37,7 @@ public class AminoAcidRelationship implements Ms2pipFeature {
      * @param aminoAcidFeature1 the first amino acid feature
      * @param aminoAcidFeature2 the second amino acid feature
      */
-    public AminoAcidRelationship(Relationship relationship, AminoAcidFeature aminoAcidFeature1, AminoAcidFeature aminoAcidFeature2) {
+    public AARelationshipFeature(Relationship relationship, AAPropertyFeature aminoAcidFeature1, AAPropertyFeature aminoAcidFeature2) {
         this.relationship = relationship;
         this.aminoAcidFeature1 = aminoAcidFeature1;
         this.aminoAcidFeature2 = aminoAcidFeature2;
@@ -66,7 +66,7 @@ public class AminoAcidRelationship implements Ms2pipFeature {
      * 
      * @return the first amino acid feature
      */
-    public AminoAcidFeature getAminoAcidFeature1() {
+    public AAPropertyFeature getAminoAcidFeature1() {
         return aminoAcidFeature1;
     }
 
@@ -75,7 +75,7 @@ public class AminoAcidRelationship implements Ms2pipFeature {
      * 
      * @param aminoAcidFeature1 the first amino acid feature
      */
-    public void setAminoAcidFeature1(AminoAcidFeature aminoAcidFeature1) {
+    public void setAminoAcidFeature1(AAPropertyFeature aminoAcidFeature1) {
         this.aminoAcidFeature1 = aminoAcidFeature1;
     }
 
@@ -84,7 +84,7 @@ public class AminoAcidRelationship implements Ms2pipFeature {
      * 
      * @return the second amino acid feature
      */
-    public AminoAcidFeature getAminoAcidFeature2() {
+    public AAPropertyFeature getAminoAcidFeature2() {
         return aminoAcidFeature2;
     }
 
@@ -93,7 +93,7 @@ public class AminoAcidRelationship implements Ms2pipFeature {
      * 
      * @param aminoAcidFeature2 the second amino acid feature
      */
-    public void setAminoAcidFeature2(AminoAcidFeature aminoAcidFeature2) {
+    public void setAminoAcidFeature2(AAPropertyFeature aminoAcidFeature2) {
         this.aminoAcidFeature2 = aminoAcidFeature2;
     }
     

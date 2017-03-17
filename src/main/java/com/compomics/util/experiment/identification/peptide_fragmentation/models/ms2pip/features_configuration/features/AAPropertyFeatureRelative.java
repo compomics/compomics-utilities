@@ -3,11 +3,11 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * An amino acid feature at a position relative to the end of an ion on the peptide sequence. In this feature, an index of 0 represents the last amino acid of the ion.
+ * An amino acid property feature at a position relative to the end of an ion on the peptide sequence. In this feature, an index of 0 represents the last amino acid of the ion.
  *
  * @author Marc Vaudel
  */
-public class AminoAcidFeatureRelative extends AminoAcidFeature {
+public class AAPropertyFeatureRelative extends AAPropertyFeature {
 
     /**
      * Constructor. An index of 0 represents the last amino acid of the ion.
@@ -15,7 +15,7 @@ public class AminoAcidFeatureRelative extends AminoAcidFeature {
      * @param index the index
      * @param property the amino acid property
      */
-    public AminoAcidFeatureRelative(int index, AminoAcid.Property property) {
+    public AAPropertyFeatureRelative(int index, AminoAcid.Property property) {
         this.index = index;
         this.property = property;
     }
@@ -30,9 +30,9 @@ public class AminoAcidFeatureRelative extends AminoAcidFeature {
         if (index == 0) {
             return property.name + " of the last amino acid of the ion";
         } else {
-            char sign = '+';
-            if (index > 0) {
-                sign = '-';
+            String sign = "";
+            if (index >= 0) {
+                sign = "+";
             }
             return property.name + " of the amino acid at the end of the ion " + sign + index;
         }

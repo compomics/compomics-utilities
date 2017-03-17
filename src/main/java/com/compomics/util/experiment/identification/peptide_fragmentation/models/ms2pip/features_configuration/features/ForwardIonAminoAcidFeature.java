@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.AminoAcid;
  *
  * @author Marc Vaudel
  */
-public class ForwardIonAminoAcidFeature extends AminoAcidSequenceFeature {
+public class ForwardIonAminoAcidFeature extends AASequenceFeature {
 
     /**
      * Constructor.
@@ -15,7 +15,7 @@ public class ForwardIonAminoAcidFeature extends AminoAcidSequenceFeature {
      * @param aminoAcidProperty the amino acid property to consider
      * @param function the function used to compare the amino acid properties
      */
-    public ForwardIonAminoAcidFeature(AminoAcid.Property aminoAcidProperty, AminoAcidSequenceFeature.Function function) {
+    public ForwardIonAminoAcidFeature(AminoAcid.Property aminoAcidProperty, AASequenceFeature.Function function) {
         this.aminoAcidProperty = aminoAcidProperty;
         this.function = function;
     }

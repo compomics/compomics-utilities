@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  *
  * @author Marc Vaudel
  */
-public abstract class AminoAcidSequenceFeature implements Ms2pipFeature {
+public abstract class AASequenceFeature implements Ms2pipFeature {
     
     /**
      * The different functions implemented to compare the amino acid features.

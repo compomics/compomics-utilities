@@ -3,11 +3,11 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * An amino acid feature at a fixed position on the peptide sequence. In this feature, a positive index refers to counting from the N-term where the first amino acid is 0. A negative index refers to counting from the C-term where the first amino acid is -1.
+ * An amino acid property feature at a fixed position on the peptide sequence. In this feature, a positive index refers to counting from the N-term where the first amino acid is 0. A negative index refers to counting from the C-term where the first amino acid is -1.
  *
  * @author Marc Vaudel
  */
-public class AminoAcidFeatureAbsolute extends AminoAcidFeature {
+public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
 
     /**
      * Constructor. A positive index refers to counting from the N-term where the first amino acid is 0. A negative index refers to counting from the C-term where the first amino acid is -1.
@@ -15,7 +15,7 @@ public class AminoAcidFeatureAbsolute extends AminoAcidFeature {
      * @param index the index
      * @param property the amino acid property
      */
-    public AminoAcidFeatureAbsolute(int index, AminoAcid.Property property) {
+    public AAPropertyFeatureAbsolute(int index, AminoAcid.Property property) {
         this.index = index;
         this.property = property;
     }
@@ -34,8 +34,8 @@ public class AminoAcidFeatureAbsolute extends AminoAcidFeature {
         } else if (index > 0) {
             return property.name + " of the amino acid at N-term +" + index;
         } else {
-            int tempIndex = index - 1;
-            return property.name + " of the amino acid at C-term -" + tempIndex;
+            int tempIndex = index + 1;
+            return property.name + " of the amino acid at C-term " + tempIndex;
         }
     }
 

@@ -4,11 +4,11 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation.Ms2pipFeature;
 
 /**
- * Feature based on an amino acid
+ * Feature based on an amino acid property.
  *
  * @author Marc Vaudel
  */
-public abstract class AminoAcidFeature implements Ms2pipFeature {
+public abstract class AAPropertyFeature implements Ms2pipFeature {
 
     /**
      * The index on the sequence.
@@ -54,7 +54,4 @@ public abstract class AminoAcidFeature implements Ms2pipFeature {
     public void setProperty(AminoAcid.Property property) {
         this.property = property;
     }
-    
-    
-    
 }

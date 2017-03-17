@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.AminoAcid;
  *
  * @author Marc Vaudel
  */
-public class PeptideAminoAcidFeature extends AminoAcidSequenceFeature {
+public class PeptideAminoAcidFeature extends AASequenceFeature {
 
     /**
      * Constructor.

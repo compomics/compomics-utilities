@@ -17,7 +17,7 @@ public class AAPropertyFeatureRelative extends AAPropertyFeature {
      */
     public AAPropertyFeatureRelative(int index, AminoAcid.Property property) {
         this.index = index;
-        this.property = property;
+        this.aminoAcidProperty = property;
     }
     
     @Override
@@ -28,13 +28,13 @@ public class AAPropertyFeatureRelative extends AAPropertyFeature {
     @Override
     public String getDescription() {
         if (index == 0) {
-            return property.name + " of the last amino acid of the ion";
+            return aminoAcidProperty.name + " of the last amino acid of the ion";
         } else {
             String sign = "";
             if (index >= 0) {
                 sign = "+";
             }
-            return property.name + " of the amino acid at the end of the ion " + sign + index;
+            return aminoAcidProperty.name + " of the amino acid at the end of the ion " + sign + index;
         }
     }
 }

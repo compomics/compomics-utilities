@@ -1,14 +1,15 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation.Ms2pipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.SingleAAPropertyFeature;
 
 /**
  * Feature based on the amino acid properties of a sequence.
  *
  * @author Marc Vaudel
  */
-public abstract class AASequenceFeature implements Ms2pipFeature {
+public abstract class AASequenceFeature implements Ms2pipFeature, SingleAAPropertyFeature {
     
     /**
      * The different functions implemented to compare the amino acid features.
@@ -44,24 +45,13 @@ public abstract class AASequenceFeature implements Ms2pipFeature {
         this.function = function;
     }
 
-    /**
-     * Returns the amino acid property to consider.
-     * 
-     * @return the amino acid property to consider
-     */
+    @Override
     public AminoAcid.Property getAminoAcidProperty() {
         return aminoAcidProperty;
     }
 
-    /**
-     * Sets the amino acid property to consider.
-     * 
-     * @param aminoAcidProperty the amino acid property to consider
-     */
+    @Override
     public void setAminoAcidProperty(AminoAcid.Property aminoAcidProperty) {
         this.aminoAcidProperty = aminoAcidProperty;
     }
-    
-    
-
 }

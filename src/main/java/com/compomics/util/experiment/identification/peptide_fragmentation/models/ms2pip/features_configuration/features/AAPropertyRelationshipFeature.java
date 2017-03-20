@@ -1,13 +1,15 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
-import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation.Ms2pipFeature;
+import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.MultipleAAPropertyFeature;
 
 /**
  * Feature based on the relationship between two amino acid features.
  *
  * @author Marc Vaudel
  */
-public class AARelationshipFeature implements Ms2pipFeature {
+public class AAPropertyRelationshipFeature implements Ms2pipFeature, MultipleAAPropertyFeature {
     
     /**
      * The different relationships implemented.
@@ -37,7 +39,7 @@ public class AARelationshipFeature implements Ms2pipFeature {
      * @param aminoAcidFeature1 the first amino acid feature
      * @param aminoAcidFeature2 the second amino acid feature
      */
-    public AARelationshipFeature(Relationship relationship, AAPropertyFeature aminoAcidFeature1, AAPropertyFeature aminoAcidFeature2) {
+    public AAPropertyRelationshipFeature(Relationship relationship, AAPropertyFeature aminoAcidFeature1, AAPropertyFeature aminoAcidFeature2) {
         this.relationship = relationship;
         this.aminoAcidFeature1 = aminoAcidFeature1;
         this.aminoAcidFeature2 = aminoAcidFeature2;
@@ -105,5 +107,13 @@ public class AARelationshipFeature implements Ms2pipFeature {
     @Override
     public String getDescription() {
         return relationship.name() + " between " + aminoAcidFeature1.getDescription() + " and " + aminoAcidFeature2.getDescription();
+    }
+
+    @Override
+    public AminoAcid.Property[] getAminoAcidProperties() {
+        AminoAcid.Property[] properties = new AminoAcid.Property[2];
+        properties[0] = aminoAcidFeature1.getAminoAcidProperty();
+        properties[1] = aminoAcidFeature2.getAminoAcidProperty();
+        return properties;
     }
 }

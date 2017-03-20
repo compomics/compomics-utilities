@@ -1769,7 +1769,7 @@ public class Peptide extends ExperimentObject {
 
         if (mass == null) {
 
-            Double tempMass = Atom.H.getMonoisotopicMass();
+            Double tempMass = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
             char[] sequenceAsCharArray = sequence.toCharArray();
 
             for (char aa : sequenceAsCharArray) {
@@ -1780,8 +1780,6 @@ public class Peptide extends ExperimentObject {
                     throw new IllegalArgumentException("Unknown amino acid: " + aa + ".");
                 }
             }
-
-            tempMass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
             if (modifications != null) {
                 PTMFactory ptmFactory = PTMFactory.getInstance();

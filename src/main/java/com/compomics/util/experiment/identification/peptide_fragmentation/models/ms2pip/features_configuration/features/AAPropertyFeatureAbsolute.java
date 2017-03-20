@@ -17,7 +17,7 @@ public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
      */
     public AAPropertyFeatureAbsolute(int index, AminoAcid.Property property) {
         this.index = index;
-        this.property = property;
+        this.aminoAcidProperty = property;
     }
     
     @Override
@@ -28,14 +28,14 @@ public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
     @Override
     public String getDescription() {
         if (index == 0) {
-            return property.name + " of the N-term amino acid";
+            return aminoAcidProperty.name + " of the N-term amino acid";
         } else if (index == -1) {
-            return property.name + " of the C-term amino acid";
+            return aminoAcidProperty.name + " of the C-term amino acid";
         } else if (index > 0) {
-            return property.name + " of the amino acid at N-term +" + index;
+            return aminoAcidProperty.name + " of the amino acid at N-term +" + index;
         } else {
             int tempIndex = index + 1;
-            return property.name + " of the amino acid at C-term " + tempIndex;
+            return aminoAcidProperty.name + " of the amino acid at C-term " + tempIndex;
         }
     }
 

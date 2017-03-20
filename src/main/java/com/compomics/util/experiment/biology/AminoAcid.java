@@ -552,12 +552,54 @@ public abstract class AminoAcid implements Serializable {
         /**
          * Constructor.
          * 
+         * @param index the index of the property
          * @param name the name of the property
          */
         private Property(String name) {
             this.name = name;
         }
         
+        /**
+         * Returns the number of implemented properties.
+         * 
+         * @return the number of implemented properties
+         */
+        public static int getNProperties() {
+            return values().length;
+        }
+        
+        /**
+         * Returns the property at index.
+         * 
+         * @param index the index
+         * 
+         * @return the property at index
+         */
+        public Property getProperty(int index) {
+            return values()[index];
+        }
+    }
+    
+    /**
+     * Returns a property of the amino acid.
+     * 
+     * @param property the property of interest
+     * 
+     * @return the property of the amino acid
+     */
+    public double getProperty(Property property) {
+        switch(property) {
+            case mass: return getMonoisotopicMass();
+            case hydrophobicity: return getHydrophobicity();
+            case helicity: return getHelicity();
+            case basicity: return getBasicity();
+            case pI: return getPI();
+            case pK1: return getPK1();
+            case pK2: return getPK2();
+            case pKa: return getPKa();
+            case vanDerWaalsVolume: return getVanDerWaalsVolume();
+            default: throw new UnsupportedOperationException("Property " + property + " not implemented.");
+        }
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAIdentityFeatureRelative;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureAbsolute;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureRelative;
-import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AARelationshipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyRelationshipFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AASequenceFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonFeature;
@@ -128,15 +128,15 @@ public class FeaturesMapManager {
 
         // Combination of next and current amino acid features
         properties = new AminoAcid.Property[]{AminoAcid.Property.basicity, AminoAcid.Property.helicity, AminoAcid.Property.hydrophobicity, AminoAcid.Property.pI};
-        AARelationshipFeature.Relationship[] relationships = new AARelationshipFeature.Relationship[]{AARelationshipFeature.Relationship.addition, AARelationshipFeature.Relationship.multiplication};
+        AAPropertyRelationshipFeature.Relationship[] relationships = new AAPropertyRelationshipFeature.Relationship[]{AAPropertyRelationshipFeature.Relationship.addition, AAPropertyRelationshipFeature.Relationship.multiplication};
         for (AminoAcid.Property property : properties) {
             AAPropertyFeatureRelative currentAminoAcidFeature = new AAPropertyFeatureRelative(0, property);
             AAPropertyFeatureRelative nextAminoAcidFeature = new AAPropertyFeatureRelative(1, property);
-            for (AARelationshipFeature.Relationship relationship : relationships) {
-                featuresMap.addFeature(new AARelationshipFeature(relationship, currentAminoAcidFeature, nextAminoAcidFeature));
+            for (AAPropertyRelationshipFeature.Relationship relationship : relationships) {
+                featuresMap.addFeature(new AAPropertyRelationshipFeature(relationship, currentAminoAcidFeature, nextAminoAcidFeature));
             }
-            featuresMap.addFeature(new AARelationshipFeature(AARelationshipFeature.Relationship.subtraction, currentAminoAcidFeature, nextAminoAcidFeature));
-            featuresMap.addFeature(new AARelationshipFeature(AARelationshipFeature.Relationship.subtraction, nextAminoAcidFeature, currentAminoAcidFeature));
+            featuresMap.addFeature(new AAPropertyRelationshipFeature(AAPropertyRelationshipFeature.Relationship.subtraction, currentAminoAcidFeature, nextAminoAcidFeature));
+            featuresMap.addFeature(new AAPropertyRelationshipFeature(AAPropertyRelationshipFeature.Relationship.subtraction, nextAminoAcidFeature, currentAminoAcidFeature));
         }
 
         // Combination of N-term and current amino acid features
@@ -144,7 +144,7 @@ public class FeaturesMapManager {
         for (AminoAcid.Property property : properties) {
             AAPropertyFeatureRelative currentAminoAcidFeature = new AAPropertyFeatureRelative(0, property);
             AAPropertyFeatureAbsolute nTermAminoAcid = new AAPropertyFeatureAbsolute(0, property);
-            featuresMap.addFeature(new AARelationshipFeature(AARelationshipFeature.Relationship.addition, currentAminoAcidFeature, nTermAminoAcid));
+            featuresMap.addFeature(new AAPropertyRelationshipFeature(AAPropertyRelationshipFeature.Relationship.addition, currentAminoAcidFeature, nTermAminoAcid));
         }
 
         // Combination of C-term and next amino acid features
@@ -152,7 +152,7 @@ public class FeaturesMapManager {
         for (AminoAcid.Property property : properties) {
             AAPropertyFeatureRelative currentAminoAcidFeature = new AAPropertyFeatureRelative(1, property);
             AAPropertyFeatureAbsolute cTermAminoAcid = new AAPropertyFeatureAbsolute(-1, property);
-            featuresMap.addFeature(new AARelationshipFeature(AARelationshipFeature.Relationship.addition, currentAminoAcidFeature, cTermAminoAcid));
+            featuresMap.addFeature(new AAPropertyRelationshipFeature(AAPropertyRelationshipFeature.Relationship.addition, currentAminoAcidFeature, cTermAminoAcid));
         }
 
         return featuresMap;

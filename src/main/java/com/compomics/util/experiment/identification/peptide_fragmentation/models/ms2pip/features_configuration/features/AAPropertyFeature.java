@@ -1,23 +1,24 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation.Ms2pipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.SingleAAPropertyFeature;
 
 /**
  * Feature based on an amino acid property.
  *
  * @author Marc Vaudel
  */
-public abstract class AAPropertyFeature implements Ms2pipFeature {
+public abstract class AAPropertyFeature implements Ms2pipFeature, SingleAAPropertyFeature {
 
     /**
      * The index on the sequence.
      */
     protected int index;
     /**
-     * The amino acid property.
+     * The property of the amino acids to consider.
      */
-    protected AminoAcid.Property property;
+    protected AminoAcid.Property aminoAcidProperty;
 
     /**
      * Returns the index on the sequence.
@@ -37,21 +38,13 @@ public abstract class AAPropertyFeature implements Ms2pipFeature {
         this.index = index;
     }
 
-    /**
-     * Returns the amino acid property.
-     * 
-     * @return the amino acid property
-     */
-    public AminoAcid.Property getProperty() {
-        return property;
+    @Override
+    public AminoAcid.Property getAminoAcidProperty() {
+        return aminoAcidProperty;
     }
 
-    /**
-     * Sets the amino acid property.
-     * 
-     * @param property the amino acid property
-     */
-    public void setProperty(AminoAcid.Property property) {
-        this.property = property;
+    @Override
+    public void setAminoAcidProperty(AminoAcid.Property aminoAcidProperty) {
+        this.aminoAcidProperty = aminoAcidProperty;
     }
 }

@@ -1,45 +1,64 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.FeaturesMap;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.MultipleAAPropertyFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.SingleAAPropertyFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureAbsolute;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureRelative;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyRelationshipFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonAminoAcidFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonAminoAcidFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class computes the ms2PIP features from a peptide.
  *
  * It is a java implementation of
- * https://github.com/sdgroeve/ms2pipXGB/blob/master/ms2pipfeatures_cython.pyx
- * with the permission of Sven Degroeve. No license found, no copyright
- * infringement intended.
+ * https://github.com/mvaudel/ms2pip_c/blob/master/ms2pipfeatures_c.c with the
+ * permission of Sven Degroeve. No license found, no copyright infringement
+ * intended.
  *
  * @author Marc Vaudel
  */
 public class FeaturesGenerator {
 
+    private final static double waterMass = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
     /**
      * The PTM factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
-     * Number of amino acids implemented in ms2pip.
+     * Array of supported amino acids in single letter code.
      */
-    private final static int nImplementedAas = 20;
-    /**
-     * The chemical properties of the amino acids in a map indexed by their
-     * single letter code.
-     *
-     * @TODO: implement modifications
-     */
-    private static final HashMap<Character, int[]> chemicalProperties = getChemicalProperties();
+    public static final char[] supportedAminoAcids = {'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y'};
     /**
      * The ms2pip index of every amino acid.
      */
-    private static final HashMap<Character, Integer> aaIndexes = getAminoAcidIndexes();
+    private final HashMap<Character, Integer> aaIndexes = getAminoAcidIndexes();
+    /**
+     * The map of the different features to include.
+     */
+    private final FeaturesMap featuresMap;
+
+    /**
+     * Constructor.
+     *
+     * @param featuresMap a map of the features to include.
+     */
+    public FeaturesGenerator(FeaturesMap featuresMap) {
+        this.featuresMap = featuresMap;
+    }
 
     /**
      * Returns the ms2pip features for the b ions of the given peptide at the
@@ -51,10 +70,10 @@ public class FeaturesGenerator {
      * @return the ms2pip features for the b ions
      */
     public int[][] getBIonsFeatures(Peptide peptide, int charge) {
-        
+
         char[] peptideSequence = peptide.getSequence().toCharArray();
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-        
+
         return getIonsFeatures(peptideSequence, modificationMatches, charge);
     }
 
@@ -68,11 +87,11 @@ public class FeaturesGenerator {
      * @return the ms2pip features for the b ions
      */
     public int[][] getYIonsFeatures(Peptide peptide, int charge) {
-        
+
         char[] peptideSequence = peptide.getSequence().toCharArray();
         int sequenceLength = peptideSequence.length;
         char[] reversedSequence = new char[sequenceLength];
-        for (int i = 0 ; i < sequenceLength ; i++) {
+        for (int i = 0; i < sequenceLength; i++) {
             reversedSequence[i] = peptideSequence[sequenceLength - i - 1];
         }
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
@@ -81,13 +100,13 @@ public class FeaturesGenerator {
             ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
             reversedModificationMatches.add(reversedModificationMatch);
         }
-        
+
         return getIonsFeatures(reversedSequence, reversedModificationMatches, charge);
     }
 
     /**
-     * Returns the ms2pip features for the ions of the given sequence with modifications at the
-     * given charge.
+     * Returns the ms2pip features for the ions of the given sequence with
+     * modifications at the given charge.
      *
      * @param peptideSequence the peptide sequence as char array
      * @param modificationMatches the modification matches
@@ -97,55 +116,71 @@ public class FeaturesGenerator {
      */
     private int[][] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge) {
 
-        // Get the peptide attributes
-        int peptideLength = peptideSequence.length;
-        PeptideMetrics peptideMetrics = new PeptideMetrics(peptideSequence, modificationMatches);
-        double[] aaMasses = peptideMetrics.getAaMasses();
-        double[] modificationsMasses = peptideMetrics.getModificationsMasses();
-        double[] aasMasses = peptideMetrics.getSumAaMasses();
-        double[] aasMinMasses = peptideMetrics.getMinAaMasses();
-        double[] aasMaxMasses = peptideMetrics.getMaxAaMasses();
-        double[] aasMassesComplement = peptideMetrics.getSumAaMassesComplement();
-        double[] aasMinMassesComplement = peptideMetrics.getMinAaMassesComplement();
-        double[] aasMaxMassesComplement = peptideMetrics.getMaxAaMassesComplement();
+        // Get the properties needed for peptides, ions, and amino acids
+        AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
+        AminoAcid.Property[] forwardIonProperties = getAaProperties(ForwardIonAminoAcidFeature.class);
+        AminoAcid.Property[] complementaryIonProperties = getAaProperties(ComplementaryIonAminoAcidFeature.class);
+        AminoAcid.Property[] individualAaProperties = getAaProperties(AAPropertyFeatureAbsolute.class, AAPropertyFeatureRelative.class, AAPropertyRelationshipFeature.class);
 
-        // Get the sum of chemical properties of the entire sequence
-        int[] chemTotal = getChemTotal(peptideSequence);
-
-        // The number of chemical properties tested
-        int nChem = chemTotal.length;
-
-        // Get the chemical attributes of the two first and two last amino acids
-        int[] chem0 = chemicalProperties.get(peptideSequence[0]);
-        int[] chem1 = chemicalProperties.get(peptideSequence[1]);
-        int[] chemLast = chemicalProperties.get(peptideSequence[peptideLength - 1]);
-        int[] chemPenultimate = chemicalProperties.get(peptideSequence[peptideLength - 2]);
-
-        // Normalize the chemical propertise by the length of the sequence
-        for (int chemI = 0; chemI < nChem; chemI++) {
-            chemTotal[chemI] = chemTotal[chemI] / peptideLength;
-        }
-
-        // Get the chem functions along the amino acid sequence
-        PeptideChemFunctions peptideChemFunctions = new PeptideChemFunctions(peptideSequence);
-
-        // Get first and last amino acid indexes
-        int firstAaIndex = aaIndexes.get(peptideSequence[0]);
-        int lastAaIndex = aaIndexes.get(peptideSequence[peptideLength - 1]);
+        // Get the properties along the peptide sequence
+        PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, modificationMatches, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
 
         // Prepare an array for the resutls
-        int[][] features = new int[peptideLength - 1][164];
+        int[][] peptideFeatures = new int[peptideSequence.length - 1][featuresMap.getnFeatures()];
 
-        // Keep track of the mass already iterated
-        double iterationEntitiesMass = 0.0;
+        // Iterate the sequence
+        for (int i = 0; i < peptideSequence.length - 1; i++) {
 
-        // The amino acids at index and following
-        char aa = peptideSequence[0];
-        char nextAa = peptideSequence[1];
+            // The peptide features
+            Ms2pipFeature[] features = featuresMap.getFeatures(PeptideFeature.class.getName());
+            for (Ms2pipFeature ms2pipFeature : features) {
+                PeptideFeature peptideFeature = (PeptideFeature) ms2pipFeature;
+                
+            }
 
-        // Iterate through all amino acids
-        for (int i = 0; i < peptideLength - 1; i++) {
+            peptideLength = peptideSequence.length;
+        PeptideMetrics peptideMetrics = new PeptideMetrics(peptideSequence, modificationMatches);
+            double[] aaMasses = peptideMetrics.getAaMasses();
+            double[] modificationsMasses = peptideMetrics.getModificationsMasses();
+            double[] aasMasses = peptideMetrics.getSumAaMasses();
+            double[] aasMinMasses = peptideMetrics.getMinAaMasses();
+            double[] aasMaxMasses = peptideMetrics.getMaxAaMasses();
+            double[] aasMassesComplement = peptideMetrics.getSumAaMassesComplement();
+            double[] aasMinMassesComplement = peptideMetrics.getMinAaMassesComplement();
+            double[] aasMaxMassesComplement = peptideMetrics.getMaxAaMassesComplement();
 
+            // Get the sum of chemical properties of the entire sequence
+            int[] chemTotal = getChemTotal(peptideSequence);
+
+            // The number of chemical properties tested
+            int nChem = chemTotal.length;
+
+            // Get the chemical attributes of the two first and two last amino acids
+            int[] chem0 = chemicalProperties.get(peptideSequence[0]);
+            int[] chem1 = chemicalProperties.get(peptideSequence[1]);
+            int[] chemLast = chemicalProperties.get(peptideSequence[peptideLength - 1]);
+            int[] chemPenultimate = chemicalProperties.get(peptideSequence[peptideLength - 2]);
+
+            // Normalize the chemical propertise by the length of the sequence
+            for (int chemI = 0; chemI < nChem; chemI++) {
+                chemTotal[chemI] = chemTotal[chemI] / peptideLength;
+            }
+
+            // Get the chem functions along the amino acid sequence
+            PeptideChemFunctions peptideChemFunctions = new PeptideChemFunctions(peptideSequence);
+
+            // Get first and last amino acid indexes
+            int firstAaIndex = aaIndexes.get(peptideSequence[0]);
+            int lastAaIndex = aaIndexes.get(peptideSequence[peptideLength - 1]);
+
+            // Keep track of the mass already iterated
+            double iterationEntitiesMass = 0.0;
+
+            // The amino acids at index and following
+            char aa = peptideSequence[0];
+            char nextAa = peptideSequence[1];
+
+            // Iterate through all amino acids
             // Get the mass of the entities constituting this ion
             iterationEntitiesMass += aaMasses[i];
             double modificationsMass = modificationsMasses[i];
@@ -312,660 +347,262 @@ public class FeaturesGenerator {
     }
 
     /**
-     * Returns a vector of the sum of the amino acid chemical properties for a
-     * peptide sequence.
+     * Extracts the amino acid properties needed in the features map for the
+     * given categories.
      *
-     * @param peptideSequence the peptide sequence as char array
+     * @param featureClasses the categories of interest
      *
-     * @return a vector of the sum of the amino acid chemical properties
+     * @return the amino acid properties needed
      */
-    private int[] getChemTotal(char[] peptideSequence) {
-
-        int[] chemTotal = new int[]{0, 0, 0, 0};
-
-        for (char aa : peptideSequence) {
-
-            int[] chemAA = chemicalProperties.get(aa);
-
-            for (int i = 0; i < chemAA.length; i++) {
-
-                chemTotal[i] += chemAA[i];
-
+    private AminoAcid.Property[] getAaProperties(Class... categories) {
+        AminoAcid.Property[] aminoAcidProperties = AminoAcid.Property.values();
+        HashSet<Integer> indexes = new HashSet<Integer>(4);
+        for (Class category : categories) {
+            Ms2pipFeature[] features = featuresMap.getFeatures(category.getName());
+            for (Ms2pipFeature ms2pipFeature : features) {
+                if (ms2pipFeature instanceof SingleAAPropertyFeature) {
+                    SingleAAPropertyFeature singleAAPropertyFeature = (SingleAAPropertyFeature) ms2pipFeature;
+                    AminoAcid.Property property = singleAAPropertyFeature.getAminoAcidProperty();
+                    indexes.add(property.ordinal());
+                } else if (ms2pipFeature instanceof MultipleAAPropertyFeature) {
+                    MultipleAAPropertyFeature multipleAAPropertyFeature = (MultipleAAPropertyFeature) ms2pipFeature;
+                    for (AminoAcid.Property property : multipleAAPropertyFeature.getAminoAcidProperties()) {
+                        indexes.add(property.ordinal());
+                    }
+                } else {
+                    throw new UnsupportedOperationException("Properties extraction not implemented for feature of class " + ms2pipFeature.getCategory() + ".");
+                }
             }
-
         }
-
-        return chemTotal;
+        AminoAcid.Property[] peptideAminoAcidProperties = new AminoAcid.Property[indexes.size()];
+        int cpt = 0;
+        for (int index : indexes) {
+            peptideAminoAcidProperties[cpt++] = aminoAcidProperties[index];
+        }
+        return peptideAminoAcidProperties;
     }
 
     /**
-     * Returns the ms2pip index of every amino acid.
+     * Returns the index of every amino acid in the array of supported amino
+     * acids in a map.
      *
-     * @return the ms2pip index of every amino acid
+     * @return the index of every amino acid
      */
     public static HashMap<Character, Integer> getAminoAcidIndexes() {
 
-        HashMap<Character, Integer> indexes = new HashMap<Character, Integer>(nImplementedAas);
-        indexes.put('A', 0);
-        indexes.put('C', 1);
-        indexes.put('D', 2);
-        indexes.put('E', 3);
-        indexes.put('F', 4);
-        indexes.put('G', 5);
-        indexes.put('H', 6);
-        indexes.put('I', 7);
-        indexes.put('K', 8);
-        indexes.put('L', 9);
-        indexes.put('M', 10);
-        indexes.put('N', 11);
-        indexes.put('P', 12);
-        indexes.put('Q', 13);
-        indexes.put('R', 14);
-        indexes.put('S', 15);
-        indexes.put('T', 16);
-        indexes.put('V', 17);
-        indexes.put('W', 18);
-        indexes.put('Y', 19);
+        HashMap<Character, Integer> indexes = new HashMap<Character, Integer>(supportedAminoAcids.length);
+
+        for (int i = 0; i < supportedAminoAcids.length; i++) {
+            char aa = supportedAminoAcids[i];
+            indexes.put(aa, i);
+        }
 
         return indexes;
     }
 
     /**
-     * Returns the chemical properties of the amino acids in a map indexed by
-     * their single letter code.
-     *
-     * @return the chemical properties of the amino acids
+     * This class estimates and stores reference attributes of the peptide.
      */
-    public static HashMap<Character, int[]> getChemicalProperties() {
-
-        HashMap<Character, int[]> chemicalProperties = new HashMap<Character, int[]>(nImplementedAas);
-
-        chemicalProperties.put('A', new int[]{10, 51, 93, 40});
-        chemicalProperties.put('C', new int[]{23, 18, 49, 100});
-        chemicalProperties.put('D', new int[]{10, 75, 31, 28});
-        chemicalProperties.put('E', new int[]{14, 25, 45, 0});
-        chemicalProperties.put('F', new int[]{37, 35, 39, 5});
-        chemicalProperties.put('G', new int[]{27, 100, 95, 33});
-        chemicalProperties.put('H', new int[]{0, 16, 79, 40});
-        chemicalProperties.put('I', new int[]{61, 3, 56, 60});
-        chemicalProperties.put('K', new int[]{23, 94, 100, 40});
-        chemicalProperties.put('L', new int[]{55, 0, 43, 87});
-        chemicalProperties.put('M', new int[]{20, 97, 98, 40});
-        chemicalProperties.put('N', new int[]{30, 82, 90, 37});
-        chemicalProperties.put('P', new int[]{29, 12, 52, 33});
-        chemicalProperties.put('Q', new int[]{34, 0, 0, 44});
-        chemicalProperties.put('R', new int[]{33, 22, 54, 36});
-        chemicalProperties.put('S', new int[]{100, 22, 53, 100});
-        chemicalProperties.put('T', new int[]{14, 21, 60, 36});
-        chemicalProperties.put('V', new int[]{26, 39, 72, 35});
-        chemicalProperties.put('W', new int[]{17, 80, 97, 39});
-        chemicalProperties.put('Y', new int[]{39, 98, 69, 39});
-
-        chemicalProperties.put('?', new int[]{21, 95, 100, 40});
-        chemicalProperties.put('?', new int[]{30, 70, 75, 36});
-        chemicalProperties.put('?', new int[]{35, 28, 47, 40});
-
-        return chemicalProperties;
-    }
-
-    /**
-     * Convenience class used to store metrics on the peptide.
-     */
-    private class PeptideMetrics {
+    private class PeptideAttributes {
 
         /**
-         * The amino acid masses as array.
+         * The peptide mass.
          */
-        private double[] aaMasses;
+        private double peptideMass;
         /**
-         * The modification masses carried by every amino acid as array.
+         * The minimal value of amino acid properties along a peptide sequence.
          */
-        private double[] modificationsMasses;
+        private double[] minPeptideAminoAcidProperties;
         /**
-         * The mass of all amino acids and modifications constituting this
-         * peptide.
+         * The maximal value of amino acid properties along a peptide sequence.
          */
-        private double totalEntitiesMass;
+        private double[] maxPeptideAminoAcidProperties;
         /**
-         * The masses of the amino acids constituting making the different b
-         * ions.
+         * The sum of amino acid properties along a peptide sequence.
          */
-        private double[] sumAaMasses;
+        private double[] sumPeptideAminoAcidProperties;
         /**
-         * The minimal mass among all amino acids constituting the different b
-         * ions.
+         * The minimal value of amino acid properties on forward ions derived
+         * from a sequence.
          */
-        private double[] minAaMasses;
+        private double[][] minForwardIonAminoAcidProperties;
         /**
-         * The maximal mass among all amino acids constituting the different b
-         * ions.
+         * The maximal value of amino acid properties on forward ions derived
+         * from a sequence.
          */
-        private double[] maxAaMasses;
+        private double[][] maxForwardIonAminoAcidProperties;
         /**
-         * The masses of the amino acids constituting making the complement of
-         * the different b ions.
+         * The sum of amino acid properties on forward ions derived from a
+         * sequence.
          */
-        private double[] sumAaMassesComplement;
+        private double[][] sumForwardIonAminoAcidProperties;
         /**
-         * The minimal mass among all amino acids constituting the complement of
-         * the different b ions.
+         * The minimal value of amino acid properties on complementary ions
+         * derived from a sequence.
          */
-        private double[] minAaMassesComplement;
+        private double[][] minComplementaryIonAminoAcidProperties;
         /**
-         * The maximal mass among all amino acids constituting the complement of
-         * the different b ions.
+         * The maximal value of amino acid properties on complementary ions
+         * derived from a sequence.
          */
-        private double[] maxAaMassesComplement;
+        private double[][] maxComplementaryIonAminoAcidProperties;
+        /**
+         * The sum of amino acid properties on complementary ions derived from a
+         * sequence.
+         */
+        private double[][] sumComplementaryIonAminoAcidProperties;
+        /**
+         * The mass of forward ions derived from a sequence.
+         */
+        private double[] forwardIonMass;
+        /**
+         * The mass of complementary ions derived from a sequence.
+         */
+        private double[] complementaryIonMass;
+        /**
+         * The properties of all amino acids in a sequence.
+         */
+        private double[][] aminoAcidProperties;
 
         /**
          * Constructor.
          *
-         * @param peptideSequence the peptide sequence as char array
-         * @param modificationMatches the modification matches of the peptide
+         * @param peptideSequence a peptide sequence as char array
+         * @param modificationMatches the modifications carried by the sequence
+         * @param peptideAminoAcidProperties
+         * @param forwardIonAminoAcidProperties
+         * @param complementaryIonAminoAcidProperties
+         * @param individualAminoAcidProperties
          */
-        private PeptideMetrics(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches) {
-            fillAtttributes(peptideSequence, modificationMatches);
-        }
+        private PeptideAttributes(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches,
+                AminoAcid.Property[] peptideAminoAcidProperties, AminoAcid.Property[] forwardIonAminoAcidProperties,
+                AminoAcid.Property[] complementaryIonAminoAcidProperties, AminoAcid.Property[] individualAminoAcidProperties) {
 
-        /**
-         * Fills the attribute of the class.
-         *
-         * @param peptideSequence the peptide sequence as char array
-         * @param modificationMatches the modification matches of the peptide
-         */
-        private void fillAtttributes(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches) {
+            // Values used during iteration
+            peptideMass = 0.0;
 
-            aaMasses = new double[peptideSequence.length];
-            modificationsMasses = new double[peptideSequence.length];
-            sumAaMasses = new double[peptideSequence.length - 1];
-            minAaMasses = new double[peptideSequence.length - 1];
-            maxAaMasses = new double[peptideSequence.length - 1];
+            // Initialize arrays
+            int nPossibleProperties = AminoAcid.Property.getNProperties();
+            minPeptideAminoAcidProperties = new double[nPossibleProperties];
+            maxPeptideAminoAcidProperties = new double[nPossibleProperties];
+            sumPeptideAminoAcidProperties = new double[nPossibleProperties];
+            minForwardIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
+            maxForwardIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
+            sumForwardIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
+            minComplementaryIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
+            maxComplementaryIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
+            sumComplementaryIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
 
-            totalEntitiesMass = 0.0;
-            double tempAaMasses = 0.0;
-            double minMass = Double.MAX_VALUE;
-            double maxMass = 0.0;
+            forwardIonMass = new double[peptideSequence.length];
 
-            for (int i = 0; i < peptideSequence.length - 1; i++) {
+            aminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
 
-                char aa = peptideSequence[i];
-                AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                double aaMass = aminoAcid.getMonoisotopicMass();
-                aaMasses[i] = aaMass;
-                totalEntitiesMass += aaMass;
-
-                tempAaMasses += aaMass;
-                if (aaMass < minMass) {
-                    minMass = aaMass;
-                } 
-                if (aaMass > maxMass) {
-                    maxMass = aaMass;
-                }
-                sumAaMasses[i] = tempAaMasses;
-                minAaMasses[i] = minMass;
-                maxAaMasses[i] = maxMass;
-            }
-
-            int lengthMinusOne = peptideSequence.length - 1;
-            char aa = peptideSequence[lengthMinusOne];
+            // Set initial forward values using the first amino acid
+            char aa = peptideSequence[0];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            double aaMass = aminoAcid.getMonoisotopicMass();
-            aaMasses[lengthMinusOne] = aaMass;
-
-            sumAaMassesComplement = new double[lengthMinusOne];
-            minAaMassesComplement = new double[lengthMinusOne];
-            maxAaMassesComplement = new double[lengthMinusOne];
-
-            int index = lengthMinusOne;
-            tempAaMasses = aaMass;
-            minMass = aaMass;
-            maxMass = aaMass;
-            index--;
-            sumAaMassesComplement[index] = tempAaMasses;
-            minAaMassesComplement[index] = minMass;
-            maxAaMassesComplement[index] = maxMass;
-
-            for (int i = index; i > 0; ) {
-
-                aaMass = aaMasses[i];
-                tempAaMasses += aaMass;
-                if (aaMass < minMass) {
-                    minMass = aaMass;
-                } else if (aaMass > maxMass) {
-                    maxMass = aaMass;
-                }
-                i--;
-                sumAaMassesComplement[i] = tempAaMasses;
-                minAaMassesComplement[i] = minMass;
-                maxAaMassesComplement[i] = maxMass;
-
+            // Peptide and ion mass
+            peptideMass += aminoAcid.getMonoisotopicMass();
+            forwardIonMass[0] = peptideMass;
+            // Peptide amino acid properties
+            for (AminoAcid.Property property : peptideAminoAcidProperties) {
+                double value = aminoAcid.getProperty(property);
+                minPeptideAminoAcidProperties[property.ordinal()] = value;
+                maxPeptideAminoAcidProperties[property.ordinal()] = value;
+                sumPeptideAminoAcidProperties[property.ordinal()] = value;
+            }
+            // Forward ion amino acid properties
+            for (AminoAcid.Property property : forwardIonAminoAcidProperties) {
+                double value = aminoAcid.getProperty(property);
+                minForwardIonAminoAcidProperties[0][property.ordinal()] = value;
+                maxForwardIonAminoAcidProperties[0][property.ordinal()] = value;
+                sumForwardIonAminoAcidProperties[0][property.ordinal()] = value;
+            }
+            // Individual amino acid properties
+            for (AminoAcid.Property property : individualAminoAcidProperties) {
+                double value = aminoAcid.getProperty(property);
+                aminoAcidProperties[0][property.ordinal()] = value;
             }
 
-            if (modificationMatches != null) {
-
-                for (ModificationMatch modificationMatch : modificationMatches) {
-
-                    int site = modificationMatch.getModificationSite();
-                    String modificationName = modificationMatch.getTheoreticPtm();
-                    PTM modification = ptmFactory.getPTM(modificationName);
-
-                    modificationsMasses[site - 1] += modification.getMass();
-
-                }
+            // Set initial complementary values using the first amino acid
+            aa = peptideSequence[peptideSequence.length - 1];
+            aminoAcid = AminoAcid.getAminoAcid(aa);
+            complementaryIonMass[peptideSequence.length - 1] = waterMass + aminoAcid.getMonoisotopicMass();
+            // Complementary ion amino acid properties
+            for (AminoAcid.Property property : complementaryIonAminoAcidProperties) {
+                double value = aminoAcid.getProperty(property);
+                minComplementaryIonAminoAcidProperties[peptideSequence.length - 1][property.ordinal()] = value;
+                maxComplementaryIonAminoAcidProperties[peptideSequence.length - 1][property.ordinal()] = value;
+                sumComplementaryIonAminoAcidProperties[peptideSequence.length - 1][property.ordinal()] = value;
             }
-        }
 
-        /**
-         * Returns the amino acid masses as array.
-         *
-         * @return the amino acid masses as array
-         */
-        public double[] getAaMasses() {
-            return aaMasses;
-        }
+            // Iterate the amino acids and gather the different metrics needed
+            for (int forwardI = 1; forwardI < peptideSequence.length; forwardI++) {
 
-        /**
-         * Returns the modification masses carried by every amino acid as array.
-         *
-         * @return the modification masses carried by every amino acid as array
-         */
-        public double[] getModificationsMasses() {
-            return modificationsMasses;
-        }
+                aa = peptideSequence[forwardI];
+                aminoAcid = AminoAcid.getAminoAcid(aa);
 
-        /**
-         * Returns the mass of all amino acids and modifications constituting
-         * this peptide.
-         *
-         * @return the mass of all amino acids and modifications constituting
-         * this peptide
-         */
-        public double getTotalEntitiesMass() {
-            return totalEntitiesMass;
-        }
+                // Peptide and ion mass
+                peptideMass += aminoAcid.getMonoisotopicMass();
+                forwardIonMass[forwardI] = peptideMass;
 
-        /**
-         * Returns the masses of the amino acids constituting making the
-         * different b ions.
-         *
-         * @return masses of the amino acids constituting making the different b
-         * ions
-         */
-        public double[] getSumAaMasses() {
-            return sumAaMasses;
-        }
-
-        /**
-         * Returns the minimal mass among all amino acids constituting the
-         * different b ions.
-         *
-         * @return minimal mass among all amino acids constituting the different
-         * b ions
-         */
-        public double[] getMinAaMasses() {
-            return minAaMasses;
-        }
-
-        /**
-         * Returns the maximal mass among all amino acids constituting the
-         * different b ions.
-         *
-         * @return maximal mass among all amino acids constituting the different
-         * b ions
-         */
-        public double[] getMaxAaMasses() {
-            return maxAaMasses;
-        }
-
-        /**
-         * Returns the masses of the amino acids constituting making the
-         * complement of the different b ions.
-         *
-         * @return masses of the amino acids constituting making the complement
-         * of the different b ions
-         */
-        public double[] getSumAaMassesComplement() {
-            return sumAaMassesComplement;
-        }
-
-        /**
-         * Returns the minimal mass among all amino acids constituting the
-         * complement of the different b ions.
-         *
-         * @return minimal mass among all amino acids constituting the
-         * complement of the different b ions
-         */
-        public double[] getMinAaMassesComplement() {
-            return minAaMassesComplement;
-        }
-
-        /**
-         * Returns the maximal mass among all amino acids constituting the
-         * complement of the different b ions.
-         *
-         * @return maximal mass among all amino acids constituting the
-         * complement of the different b ions
-         */
-        public double[] getMaxAaMassesComplement() {
-            return maxAaMassesComplement;
-        }
-
-    }
-
-    /**
-     * Convenience class used to store the values of the chem functions along a
-     * peptide sequence.
-     */
-    private class PeptideChemFunctions {
-
-        /**
-         * Chem values of the previous amino acid.
-         */
-        private int[][] chemPreviousAa;
-        /**
-         * Chem values of the amino acid.
-         */
-        private int[][] chemAa;
-        /**
-         * Chem values of the next amino acid.
-         */
-        private int[][] chemNextAa;
-        /**
-         * Chem values of the second next amino acid.
-         */
-        private int[][] chemSecondNextAa;
-        /**
-         * Minimal chem value until amino acid.
-         */
-        private int[][] chemMin;
-        /**
-         * Maximal chem value until amino acid.
-         */
-        private int[][] chemMax;
-        /**
-         * Sum of chem values until amino acid.
-         */
-        private int[][] chemSum;
-        /**
-         * Minimal chem value after amino acid.
-         */
-        private int[][] chemMinComplement;
-        /**
-         * Maximal chem value after amino acid.
-         */
-        private int[][] chemMaxComplement;
-        /**
-         * Sum of chem values after amino acid.
-         */
-        private int[][] chemSumComplement;
-
-        /**
-         * Constructor.
-         *
-         * @param peptideSequence the peptide sequence
-         */
-        private PeptideChemFunctions(char[] peptideSequence) {
-            fillForwardFunctions(peptideSequence);
-            fillRewindFunctions(peptideSequence);
-        }
-
-        /**
-         * Fills the values for the functions along the peptide sequence.
-         *
-         * @param peptideSequence the peptide sequence
-         */
-        private void fillForwardFunctions(char[] peptideSequence) {
-
-            // The chemical properties of the previous amino acid
-            int[] chemPreviousAaAtI = chemicalProperties.get(peptideSequence[0]);
-
-            // The chemical properties of the current amino acid
-            int[] chemAaAtI = chemPreviousAaAtI;
-
-            // The chemical properties of the next amino acid
-            int[] chemNextAaAtI = chemicalProperties.get(peptideSequence[1]);
-
-            // The chemical properties of the sceond next amino acid
-            int[] chemSecondNextAaAtI = chemicalProperties.get(peptideSequence[2]);
-
-            // The minimal, maximal, and sum values of the chemical properties of the amino acids constituting b ions
-            int chemLength = chemAaAtI.length;
-            int[] chemMinAtI = Arrays.copyOf(chemAaAtI, chemLength);
-            int[] chemMaxAtI = Arrays.copyOf(chemAaAtI, chemLength);
-            int[] chemSumAtI = Arrays.copyOf(chemAaAtI, chemLength);
-
-            // Create matrices to store the results
-            int peptideLengthMinusOne = peptideSequence.length - 1;
-            chemPreviousAa = new int[peptideLengthMinusOne][chemLength];
-            chemAa = new int[peptideLengthMinusOne][chemLength];
-            chemNextAa = new int[peptideLengthMinusOne][chemLength];
-            chemSecondNextAa = new int[peptideLengthMinusOne][chemLength];
-            chemMin = new int[peptideLengthMinusOne][chemLength];
-            chemMax = new int[peptideLengthMinusOne][chemLength];
-            chemSum = new int[peptideLengthMinusOne][chemLength];
-
-            // Iterate through all amino acids and populate the matrices
-            int lastIndex = peptideLengthMinusOne - 2;
-            for (int i = 0; i < lastIndex; i++) {
-
-                // Add the value at this amino acid to the matrices
-                chemPreviousAa[i] = chemPreviousAaAtI;
-                chemAa[i] = chemAaAtI;
-                chemNextAa[i] = chemNextAaAtI;
-                chemSecondNextAa[i] = chemSecondNextAaAtI;
-                chemMin[i] = Arrays.copyOf(chemMinAtI, chemLength);
-                chemMax[i] = Arrays.copyOf(chemMaxAtI, chemLength);
-                chemSum[i] = Arrays.copyOf(chemSumAtI, chemLength);
-
-                // Get values for the next amino acid
-                chemPreviousAaAtI = chemAaAtI;
-                chemAaAtI = chemNextAaAtI;
-                chemNextAaAtI = chemSecondNextAaAtI;
-                chemSecondNextAaAtI = chemicalProperties.get(peptideSequence[i + 3]);
-                for (int chemI = 0; chemI < chemLength; chemI++) {
-                    int currentChem = chemAaAtI[chemI];
-                    if (currentChem > chemMaxAtI[chemI]) {
-                        chemMaxAtI[chemI] = currentChem;
-                    } else if (currentChem < chemMinAtI[chemI]) {
-                        chemMinAtI[chemI] = currentChem;
+                // Min, max and sum of the different peptide properties needed
+                for (AminoAcid.Property property : peptideAminoAcidProperties) {
+                    double value = aminoAcid.getProperty(property);
+                    if (value < minPeptideAminoAcidProperties[property.ordinal()]) {
+                        minPeptideAminoAcidProperties[property.ordinal()] = value;
                     }
-                    chemSumAtI[chemI] += currentChem;
-                }
-            }
-
-            // Add the value at last index
-            chemPreviousAa[lastIndex] = chemPreviousAaAtI;
-            chemAa[lastIndex] = chemAaAtI;
-            chemNextAa[lastIndex] = chemNextAaAtI;
-            chemSecondNextAa[lastIndex] = chemSecondNextAaAtI;
-            chemMin[lastIndex] = Arrays.copyOf(chemMinAtI, chemLength);
-            chemMax[lastIndex] = Arrays.copyOf(chemMaxAtI, chemLength);
-            chemSum[lastIndex] = Arrays.copyOf(chemSumAtI, chemLength);
-
-            // Get values for the second last amino acid
-            chemPreviousAaAtI = chemAaAtI;
-            chemAaAtI = chemNextAaAtI;
-            chemNextAaAtI = chemSecondNextAaAtI;
-            for (int chemI = 0; chemI < chemLength; chemI++) {
-                int currentChem = chemAaAtI[chemI];
-                if (currentChem > chemMaxAtI[chemI]) {
-                    chemMaxAtI[chemI] = currentChem;
-                } else if (currentChem < chemMinAtI[chemI]) {
-                    chemMinAtI[chemI] = currentChem;
-                }
-                chemSumAtI[chemI] += currentChem;
-            }
-
-            // Add the value at the second last amino acid
-            lastIndex++;
-            chemPreviousAa[lastIndex] = chemPreviousAaAtI;
-            chemAa[lastIndex] = chemAaAtI;
-            chemNextAa[lastIndex] = chemNextAaAtI;
-            chemSecondNextAa[lastIndex] = chemSecondNextAaAtI;
-            chemMin[lastIndex] = chemMinAtI;
-            chemMax[lastIndex] = chemMaxAtI;
-            chemSum[lastIndex] = chemSumAtI;
-        }
-
-        /**
-         * Fills the values of the complementary functions.
-         *
-         * @param peptideSequence the peptide sequence
-         */
-        private void fillRewindFunctions(char[] peptideSequence) {
-
-            // The chemical properties of the current amino acid
-            int peptideLengthMinusOne = peptideSequence.length - 1;
-            int[] chemAaAtI = chemicalProperties.get(peptideSequence[peptideLengthMinusOne]);
-
-            // The minimal, maximal, and sum values of the chemical properties of the amino acids constituting b ions
-            int chemLength = chemAaAtI.length;
-            int[] chemMinAtI = Arrays.copyOf(chemAaAtI, chemLength);
-            int[] chemMaxAtI = Arrays.copyOf(chemAaAtI, chemLength);
-            int[] chemSumAtI = Arrays.copyOf(chemAaAtI, chemLength);
-
-            // Create matrices to store the results
-            chemMinComplement = new int[peptideLengthMinusOne][chemLength];
-            chemMaxComplement = new int[peptideLengthMinusOne][chemLength];
-            chemSumComplement = new int[peptideLengthMinusOne][chemLength];
-
-            // Iterate through all amino acids and populate the matrices
-            for (int i = peptideLengthMinusOne -1; i > 0; i--) {
-
-                // Set values to the matrices
-                chemMinComplement[i] = Arrays.copyOf(chemMinAtI, chemLength);
-                chemMaxComplement[i] = Arrays.copyOf(chemMaxAtI, chemLength);
-                chemSumComplement[i] = Arrays.copyOf(chemSumAtI, chemLength);
-
-                // Get values for the next amino acid
-                chemAaAtI = chemicalProperties.get(peptideSequence[i]);
-                for (int chemI = 0; chemI < chemLength; chemI++) {
-                    int currentChem = chemAaAtI[chemI];
-                    if (currentChem > chemMaxAtI[chemI]) {
-                        chemMaxAtI[chemI] = currentChem;
-                    } else if (currentChem < chemMinAtI[chemI]) {
-                        chemMinAtI[chemI] = currentChem;
+                    if (value > maxPeptideAminoAcidProperties[property.ordinal()]) {
+                        maxPeptideAminoAcidProperties[property.ordinal()] = value;
                     }
-                    chemSumAtI[chemI] += currentChem;
+                    sumPeptideAminoAcidProperties[property.ordinal()] += value;
+                }
+
+                // Min, max and sum of the different forward ion properties needed
+                for (AminoAcid.Property property : forwardIonAminoAcidProperties) {
+                    double value = aminoAcid.getProperty(property);
+                    double previousValue = minForwardIonAminoAcidProperties[forwardI - 1][property.ordinal()];
+                    minForwardIonAminoAcidProperties[forwardI][property.ordinal()] = value < previousValue ? value : previousValue;
+                    previousValue = maxForwardIonAminoAcidProperties[forwardI - 1][property.ordinal()];
+                    maxForwardIonAminoAcidProperties[forwardI][property.ordinal()] = value > previousValue ? value : previousValue;
+                    sumForwardIonAminoAcidProperties[forwardI][property.ordinal()] = sumForwardIonAminoAcidProperties[forwardI - 1][property.ordinal()] + value;
+                }
+
+                // Individual amino acid properties
+                for (AminoAcid.Property property : individualAminoAcidProperties) {
+                    double value = aminoAcid.getProperty(property);
+                    aminoAcidProperties[forwardI][property.ordinal()] = value;
+                }
+
+                // Complementary amino acid
+                int complementaryI = peptideSequence.length - 1 - forwardI;
+                aa = peptideSequence[complementaryI];
+                aminoAcid = AminoAcid.getAminoAcid(aa);
+
+                // Ion mass
+                complementaryIonMass[complementaryI] = complementaryIonMass[complementaryI + 1] + aminoAcid.getMonoisotopicMass();
+
+                // Min, max and sum of the different complementary ion properties needed
+                for (AminoAcid.Property property : complementaryIonAminoAcidProperties) {
+                    double value = aminoAcid.getProperty(property);
+                    double previousValue = minComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()];
+                    minComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = value < previousValue ? value : previousValue;
+                    previousValue = maxComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()];
+                    maxComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = value > previousValue ? value : previousValue;
+                    sumComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = sumComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()] + value;
                 }
             }
 
-            // Set last values to the matrices
-            chemMinComplement[0] = chemMinAtI;
-            chemMaxComplement[0] = chemMaxAtI;
-            chemSumComplement[0] = chemSumAtI;
+            // Iterate modifications
+            for (ModificationMatch modificationMatch : modificationMatches) {
 
+                String modificationName = modificationMatch.getTheoreticPtm();
+                PTM modification = ptmFactory.getPTM(modificationName);
+                double modificationMass = modification.getMass();
+                int modificationSite = modificationMatch.getModificationSite();
+
+                peptideMass += modificationMass;
+                forwardIonMass[modificationSite - 1] += modificationMass;
+            }
         }
-
-        /**
-         * Returns the chem values at the previous amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemPreviousAa(int aaIndex) {
-            return chemPreviousAa[aaIndex];
-        }
-
-        /**
-         * Returns the chem values at the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemAa(int aaIndex) {
-            return chemAa[aaIndex];
-        }
-
-        /**
-         * Returns the chem values at the next amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemNextAa(int aaIndex) {
-            return chemNextAa[aaIndex];
-        }
-
-        /**
-         * Returns the chem values at the second next amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemSecondNextAa(int aaIndex) {
-            return chemSecondNextAa[aaIndex];
-        }
-
-        /**
-         * Returns the minimal chem values until the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemMin(int aaIndex) {
-            return chemMin[aaIndex];
-        }
-
-        /**
-         * Returns the maximal chem values until the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemMax(int aaIndex) {
-            return chemMax[aaIndex];
-        }
-
-        /**
-         * Returns the sum of chem values until the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemSum(int aaIndex) {
-            return chemSum[aaIndex];
-        }
-
-        /**
-         * Returns the minimal chem values after the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemMinComplement(int aaIndex) {
-            return chemMinComplement[aaIndex];
-        }
-
-        /**
-         * Returns the maximal chem values after the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemMaxComplement(int aaIndex) {
-            return chemMaxComplement[aaIndex];
-        }
-
-        /**
-         * Returns the sum of chem values after the amino acid.
-         *
-         * @param aaIndex the index of the amino acid
-         *
-         * @return the chem values
-         */
-        private int[] getChemSumComplement(int aaIndex) {
-            return chemSumComplement[aaIndex];
-        }
-
     }
 }

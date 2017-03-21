@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -79,8 +80,11 @@ public class HyperScore {
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
         ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
         return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
     }
@@ -96,8 +100,11 @@ public class HyperScore {
      * @param ionMatches the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) throws InterruptedException, MathException {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
@@ -125,7 +132,7 @@ public class HyperScore {
         spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
         if (spectrumIndex == null) {
             // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()),
+            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()),
                     annotationSettings.getFragmentIonAccuracy(), annotationSettings.isFragmentIonPpm());
             spectrum.addUrParam(spectrumIndex);
         }

@@ -440,9 +440,13 @@ public class PhosphoRS {
      * peptide and spectrum
      *
      * @return the phosphoRS score
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred
      */
     private static Double getPhosphoRsScoreP(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
-            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings) throws MathException {
+            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings) throws MathException, InterruptedException {
 
         BinomialDistribution distribution = null;
         HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);

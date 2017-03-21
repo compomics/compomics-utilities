@@ -289,10 +289,12 @@ public class AScore {
      * @return the candidate A-score in a map
      *
      * @throws org.apache.commons.math.MathException exception thrown whenever a
-     * math error occurred while computing the score.
+     * math error occurred while computing the score or estimating the noise level
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException {
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException, InterruptedException {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
 
@@ -506,10 +508,12 @@ public class AScore {
      * @return a map PTM localization &gt; score
      *
      * @throws org.apache.commons.math.MathException exception thrown whenever a
-     * math error occurred while computing the score.
+     * math error occurred while computing the score or estimating the noise level
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException {
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException, InterruptedException {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
 

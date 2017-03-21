@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 
 /**
  * Annotates a spectrum with peptide fragments. Warning: not multi-thread safe,
@@ -114,9 +115,12 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, 
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
+            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null);
     }
 
@@ -134,16 +138,19 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, 
             SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, 
-            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) {
+            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) throws InterruptedException, MathException {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()));
         }
         setPeptide(peptide, possiblePeptideFragments, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
 
@@ -197,9 +204,12 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
+            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) throws InterruptedException, MathException {
 
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
         ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
@@ -261,7 +271,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
     }
 

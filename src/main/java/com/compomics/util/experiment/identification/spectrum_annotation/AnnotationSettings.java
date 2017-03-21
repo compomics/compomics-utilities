@@ -25,6 +25,30 @@ import java.util.HashSet;
 public class AnnotationSettings implements Serializable {
 
     /**
+     * Enum of the types of intensity thresholds available.
+     */
+    public enum IntensityThresholdType {
+        
+        percentile("Percentile of the intensities."), 
+        snp("Signal to noise probability.");
+        
+        /**
+         * The description of the thresold.
+         */
+        public final String description;
+        
+        /**
+         * Constructor.
+         * 
+         * @param description the description of the thresold
+         */
+        private IntensityThresholdType(String description) {
+            this.description = description;
+        }
+    }
+    
+    
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -3739182405876385430L;
@@ -39,10 +63,13 @@ public class AnnotationSettings implements Serializable {
      */
     private boolean showAllPeaks = false;
     /**
-     * The intensity percentile to consider for annotation. e.g. 0.75 means that
-     * the 25% most intense peaks will be annotated.
+     * The type of intensity threshold
      */
-    private double intensityLimit = 0.75;
+    private IntensityThresholdType intensityThresholdType = IntensityThresholdType.snp;
+    /**
+     * The intensity thresold to use. The type of threshold is defined according to the IntensityThreshold enum.
+     */
+    private double intensityLimit = 0.05;
     /**
      * Shall automatic annotation be used.
      */
@@ -468,6 +495,28 @@ public class AnnotationSettings implements Serializable {
      */
     public void setIntensityLimit(double intensityLimit) {
         this.intensityLimit = intensityLimit;
+    }
+
+    /**
+     * Returns the intensity threshold type.
+     * 
+     * @return the intensity threshold type
+     */
+    public IntensityThresholdType getIntensityThresholdType() {
+        
+        if (intensityThresholdType == null) { // Backward compatibility
+            intensityThresholdType = IntensityThresholdType.percentile;
+        }
+        return intensityThresholdType;
+    }
+
+    /**
+     * Sets the intensity threshold type.
+     * 
+     * @param intensityThresholdType the intensity threshold type
+     */
+    public void setIntensityThresholdType(IntensityThresholdType intensityThresholdType) {
+        this.intensityThresholdType = intensityThresholdType;
     }
 
     /**

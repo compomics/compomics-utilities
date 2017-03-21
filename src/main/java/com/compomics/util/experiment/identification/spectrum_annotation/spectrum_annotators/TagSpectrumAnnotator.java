@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 
 /**
  * Annotates a spectrum with information from a tag.
@@ -217,14 +218,17 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) throws InterruptedException, MathException {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()));
         }
         setTag(tag, specificAnnotationSettings.getPrecursorCharge());
 
@@ -276,7 +280,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag);
     }
 }

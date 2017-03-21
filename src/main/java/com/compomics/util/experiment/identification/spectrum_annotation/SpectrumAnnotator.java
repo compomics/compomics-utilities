@@ -45,12 +45,26 @@ public abstract class SpectrumAnnotator {
          * The most intense peak is retained. If two peaks have the same
          * intensity, the one with the most accurate m/z is retained.
          */
-        mostIntense,
+        mostIntense("Higest intensity"),
         /**
          * The peak of most accurate m/z is retained. If two peaks have the same
          * error the most intense is retained.
          */
-        mostAccurateMz;
+        mostAccurateMz("Most accurate m/z");
+        
+        /**
+         * The description.
+         */
+        public final String description;
+        
+        /**
+         * Constructor.
+         * 
+         * @param description the description
+         */
+        private TiesResolution(String description) {
+            this.description = description;
+        }
     }
     /**
      * The precursor charge as deduced by the search engine.

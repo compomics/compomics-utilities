@@ -708,6 +708,9 @@ public class AnnotationSettings implements Serializable {
         if (showAllPeaks != annotationSettings.showAllPeaks()) {
             return false;
         }
+        if (intensityThresholdType != annotationSettings.getIntensityThresholdType()) {
+            return false;
+        }
         if (intensityLimit != annotationSettings.getAnnotationIntensityLimit()) {
             return false;
         }
@@ -898,7 +901,8 @@ public class AnnotationSettings implements Serializable {
             output.append(neutralLosses).append(".").append(newLine);
         }
 
-        output.append("Intensity Limit: ").append(intensityLimit * 100).append(".").append(newLine);
+        output.append("Intensity Threshold Type: ").append(intensityThresholdType).append(".").append(newLine);
+        output.append("Intensity Threshold: ").append(intensityLimit * 100).append(".").append(newLine);
 
         String unit;
         if (fragmentIonPpm) {
@@ -908,7 +912,7 @@ public class AnnotationSettings implements Serializable {
         }
         output.append("Fragment Ion Accuracy: ").append(fragmentIonAccuracy).append(" ").append(unit).append(".").append(newLine);
 
-        output.append("High Resolution Annotation: ").append(highResolutionAnnotation).append(".").append(newLine);
+        output.append("Best peak selection: ").append(tiesResolution.description).append(".").append(newLine);
 
         return output.toString();
     }

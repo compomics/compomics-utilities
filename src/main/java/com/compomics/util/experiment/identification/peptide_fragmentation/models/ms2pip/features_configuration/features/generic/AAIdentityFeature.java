@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
+package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic;
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 
@@ -12,7 +12,7 @@ public abstract class AAIdentityFeature implements Ms2pipFeature {
     /**
      * The index on the sequence.
      */
-    protected int index;
+    protected int aaIndex;
     /**
      * The amino acid targeted represented as single letter code.
      */
@@ -23,17 +23,17 @@ public abstract class AAIdentityFeature implements Ms2pipFeature {
      * 
      * @return the index on the sequence
      */
-    public int getIndex() {
-        return index;
+    public int getAaIndex() {
+        return aaIndex;
     }
 
     /**
      * Sets the index on the sequence.
      * 
-     * @param index the index on the sequence
+     * @param aaIndex the index on the sequence
      */
-    public void setIndex(int index) {
-        this.index = index;
+    public void setAaIndex(int aaIndex) {
+        this.aaIndex = aaIndex;
     }
 
     /**

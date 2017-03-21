@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AASequenceFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
@@ -9,6 +10,11 @@ import com.compomics.util.experiment.biology.AminoAcid;
  */
 public class PeptideAminoAcidFeature extends AASequenceFeature {
 
+    /**
+     * The index of this ms2pip feature.
+     */
+    public static final int index = 1;
+    
     /**
      * Constructor.
      * 
@@ -28,5 +34,10 @@ public class PeptideAminoAcidFeature extends AASequenceFeature {
     @Override
     public String getDescription() {
         return function.name() + " of the " + aminoAcidProperty.name + " of the amino acids of the peptide."; 
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 }

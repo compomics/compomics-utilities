@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
@@ -10,13 +11,17 @@ import com.compomics.util.experiment.biology.AminoAcid;
 public class AAPropertyFeatureRelative extends AAPropertyFeature {
 
     /**
+     * The index of this ms2pip feature.
+     */
+    public static final int index = 7;
+    /**
      * Constructor. An index of 0 represents the last amino acid of the ion.
      * 
-     * @param index the index
+     * @param aaIndex the index on the sequence
      * @param property the amino acid property
      */
-    public AAPropertyFeatureRelative(int index, AminoAcid.Property property) {
-        this.index = index;
+    public AAPropertyFeatureRelative(int aaIndex, AminoAcid.Property property) {
+        this.aaIndex = aaIndex;
         this.aminoAcidProperty = property;
     }
     
@@ -36,5 +41,10 @@ public class AAPropertyFeatureRelative extends AAPropertyFeature {
             }
             return aminoAcidProperty.name + " of the amino acid at the end of the ion " + sign + index;
         }
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 }

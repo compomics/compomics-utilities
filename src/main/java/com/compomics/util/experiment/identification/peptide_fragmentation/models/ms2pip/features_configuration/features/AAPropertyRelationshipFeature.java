@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.MultipleAAPropertyFeature;
@@ -11,6 +12,10 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  */
 public class AAPropertyRelationshipFeature implements Ms2pipFeature, MultipleAAPropertyFeature {
     
+    /**
+     * The index of this ms2pip feature.
+     */
+    public static final int index = 8;
     /**
      * The different relationships implemented.
      */
@@ -115,5 +120,10 @@ public class AAPropertyRelationshipFeature implements Ms2pipFeature, MultipleAAP
         properties[0] = aminoAcidFeature1.getAminoAcidProperty();
         properties[1] = aminoAcidFeature2.getAminoAcidProperty();
         return properties;
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 }

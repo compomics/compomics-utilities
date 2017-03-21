@@ -38,4 +38,11 @@ public interface Ms2pipFeature {
      * @return the description of the feature
      */
     public String getDescription();
+    
+    /**
+     * Returns an integer unique to this class.
+     * 
+     * @return an integer unique to this class
+     */
+    public int getIndex();
 }

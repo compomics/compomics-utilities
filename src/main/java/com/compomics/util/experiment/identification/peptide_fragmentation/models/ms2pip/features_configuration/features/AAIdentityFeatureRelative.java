@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAIdentityFeature;
+
 /**
  * An amino acid identity feature at a position relative to the end of an ion on the peptide sequence. In this feature, an index of 0 represents the last amino acid of the ion.
  *
@@ -8,13 +10,17 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 public class AAIdentityFeatureRelative extends AAIdentityFeature {
 
     /**
+     * The index of this ms2pip feature.
+     */
+    public static final int index = 10;
+    /**
      * Constructor. An index of 0 represents the last amino acid of the ion.
      * 
-     * @param index the index
+     * @param aaIndex the index of the amino acid
      * @param aminoAcid the amino acid targeted
      */
-    public AAIdentityFeatureRelative(int index, char aminoAcid) {
-        this.index = index;
+    public AAIdentityFeatureRelative(int aaIndex, char aminoAcid) {
+        this.aaIndex = aaIndex;
         this.aminoAcid = aminoAcid;
     }
     
@@ -34,6 +40,11 @@ public class AAIdentityFeatureRelative extends AAIdentityFeature {
             }
             return aminoAcid + " as amino acid at the end of the ion " + sign + index;
         }
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 
 }

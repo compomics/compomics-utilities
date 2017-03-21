@@ -10,13 +10,18 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.FeaturesMap;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.MultipleAAPropertyFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.SingleAAPropertyFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAIdentityFeatureAbsolute;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAIdentityFeatureRelative;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureAbsolute;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyFeatureRelative;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.AAPropertyRelationshipFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonAminoAcidFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonAminoAcidFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -126,220 +131,22 @@ public class FeaturesGenerator {
         PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, modificationMatches, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
 
         // Prepare an array for the resutls
-        int[][] peptideFeatures = new int[peptideSequence.length - 1][featuresMap.getnFeatures()];
+        int[][] features = new int[peptideSequence.length - 1][featuresMap.getnFeatures()];
 
         // Iterate the sequence
         for (int i = 0; i < peptideSequence.length - 1; i++) {
 
-            // The peptide features
-            Ms2pipFeature[] features = featuresMap.getFeatures(PeptideFeature.class.getName());
-            for (Ms2pipFeature ms2pipFeature : features) {
-                PeptideFeature peptideFeature = (PeptideFeature) ms2pipFeature;
-                
+            // Iterate the different features categories
+            int featureIndex = 0;
+            for (String category : featuresMap.getCategories()) {
+
+                // Iterate the features for this category
+                for (Ms2pipFeature ms2pipFeature : featuresMap.getFeatures(category)) {
+
+                    // Add the feature value to the array
+                    features[i][featureIndex++] = getFeatureValue(ms2pipFeature, peptideSequence, charge, peptideAttributes, i);
+                }
             }
-
-            peptideLength = peptideSequence.length;
-        PeptideMetrics peptideMetrics = new PeptideMetrics(peptideSequence, modificationMatches);
-            double[] aaMasses = peptideMetrics.getAaMasses();
-            double[] modificationsMasses = peptideMetrics.getModificationsMasses();
-            double[] aasMasses = peptideMetrics.getSumAaMasses();
-            double[] aasMinMasses = peptideMetrics.getMinAaMasses();
-            double[] aasMaxMasses = peptideMetrics.getMaxAaMasses();
-            double[] aasMassesComplement = peptideMetrics.getSumAaMassesComplement();
-            double[] aasMinMassesComplement = peptideMetrics.getMinAaMassesComplement();
-            double[] aasMaxMassesComplement = peptideMetrics.getMaxAaMassesComplement();
-
-            // Get the sum of chemical properties of the entire sequence
-            int[] chemTotal = getChemTotal(peptideSequence);
-
-            // The number of chemical properties tested
-            int nChem = chemTotal.length;
-
-            // Get the chemical attributes of the two first and two last amino acids
-            int[] chem0 = chemicalProperties.get(peptideSequence[0]);
-            int[] chem1 = chemicalProperties.get(peptideSequence[1]);
-            int[] chemLast = chemicalProperties.get(peptideSequence[peptideLength - 1]);
-            int[] chemPenultimate = chemicalProperties.get(peptideSequence[peptideLength - 2]);
-
-            // Normalize the chemical propertise by the length of the sequence
-            for (int chemI = 0; chemI < nChem; chemI++) {
-                chemTotal[chemI] = chemTotal[chemI] / peptideLength;
-            }
-
-            // Get the chem functions along the amino acid sequence
-            PeptideChemFunctions peptideChemFunctions = new PeptideChemFunctions(peptideSequence);
-
-            // Get first and last amino acid indexes
-            int firstAaIndex = aaIndexes.get(peptideSequence[0]);
-            int lastAaIndex = aaIndexes.get(peptideSequence[peptideLength - 1]);
-
-            // Keep track of the mass already iterated
-            double iterationEntitiesMass = 0.0;
-
-            // The amino acids at index and following
-            char aa = peptideSequence[0];
-            char nextAa = peptideSequence[1];
-
-            // Iterate through all amino acids
-            // Get the mass of the entities constituting this ion
-            iterationEntitiesMass += aaMasses[i];
-            double modificationsMass = modificationsMasses[i];
-            iterationEntitiesMass += modificationsMass;
-
-            // Get the chem functions for this amino acid
-            int[] chemPreviousAa = peptideChemFunctions.getChemPreviousAa(i);
-            int[] chemAa = peptideChemFunctions.getChemAa(i);
-            int[] chemNextAa = peptideChemFunctions.getChemNextAa(i);
-            int[] chemSecondNextAa = peptideChemFunctions.getChemSecondNextAa(i);
-            int[] chemMin = peptideChemFunctions.getChemMin(i);
-            int[] chemMax = peptideChemFunctions.getChemMax(i);
-            int[] chemSum = peptideChemFunctions.getChemSum(i);
-            int[] chemMinComplement = peptideChemFunctions.getChemMinComplement(i);
-            int[] chemMaxComplement = peptideChemFunctions.getChemMaxComplement(i);
-            int[] chemSumComplement = peptideChemFunctions.getChemSumComplement(i);
-
-            // Create a vector of features for every amino acid and populate it
-            int[] featuresAtAa = new int[164];
-            int j = 0;
-
-            // The total peptide length
-            featuresAtAa[j] = peptideLength;
-
-            // The b ion number
-            featuresAtAa[++j] = i;
-
-            // The ion number relative to the peptide length in percent
-            featuresAtAa[++j] = (int) (100.0 * i / peptideLength);
-
-            // The sum of the masses of the peptide entities
-            featuresAtAa[++j] = (int) peptideMetrics.getTotalEntitiesMass();
-
-            // The sum of the chemical properties of the peptide
-            for (int chemI = 0; chemI < nChem; chemI++) {
-                featuresAtAa[++j] = chemTotal[chemI];
-            }
-
-            // The sum of the masses of the entities consituting this ion
-            featuresAtAa[++j] = (int) iterationEntitiesMass;
-
-            // The complement of the iteration mass in the total mass
-            featuresAtAa[++j] = (int) (peptideMetrics.getTotalEntitiesMass() - iterationEntitiesMass);
-
-            // The charge
-            featuresAtAa[++j] = charge;
-
-            // The mass of the modifications carried by the amino acid
-            featuresAtAa[++j] = (int) modificationsMass;
-
-            // Iterate throught the chemical properties
-            for (int chemI = 0; chemI < nChem; chemI++) {
-
-                // The first amino acid
-                featuresAtAa[++j] = chem0[chemI];
-
-                // The second amino acid
-                featuresAtAa[j + nChem] = chem1[chemI];
-
-                // The penultimate amino acid
-                featuresAtAa[j + 2 * nChem] = chemPenultimate[chemI];
-
-                // The last amino acid
-                featuresAtAa[j + 3 * nChem] = chemLast[chemI];
-
-                // The current amino acid
-                featuresAtAa[j + 4 * nChem] = chemAa[chemI];
-
-                // The previous amino acid
-                featuresAtAa[j + 5 * nChem] = chemPreviousAa[chemI];
-
-                // The next amino acid
-                featuresAtAa[j + 6 * nChem] = chemNextAa[chemI];
-
-                // The second next amino acid
-                featuresAtAa[j + 7 * nChem] = chemSecondNextAa[chemI];
-
-                // The sum of the chemical properties until the amino acid
-                int chemSumI = chemSum[chemI];
-                featuresAtAa[j + 8 * nChem] = chemSumI;
-
-                // The previous feature normalized to the length of the ion
-                featuresAtAa[j + 9 * nChem] = chemSumI / (i + 1);
-
-                // The maximal chemical property until the amino acid
-                featuresAtAa[j + 10 * nChem] = chemMax[chemI];
-
-                // The minimal chemical property until the amino acid
-                featuresAtAa[j + 11 * nChem] = chemMin[chemI];
-
-                // The sum of the chemical properties after the amino acid
-                chemSumI = chemSumComplement[chemI];
-                featuresAtAa[j + 8 * nChem] = chemSumI;
-
-                // The previous feature normalized to the length of the complementary ion
-                featuresAtAa[j + 9 * nChem] = chemSumI / (peptideLength - (i + 1));
-
-                // The maximal chemical property after the amino acid
-                featuresAtAa[j + 10 * nChem] = chemMaxComplement[chemI];
-
-                // The minimal chemical property after the amino acid
-                featuresAtAa[j + 11 * nChem] = chemMinComplement[chemI];
-
-            }
-            j += 11 * nChem;
-
-            j = 75; // nothing between 60 and 76?
-
-            // The mass of the amino acids constituting this ion
-            double aasMass = aasMasses[i];
-            featuresAtAa[++j] = (int) aasMass;
-
-            // The mass of the amino acids constituting this ion normalized by the length of the ion
-            featuresAtAa[++j] = (int) (aasMass / (i + 1));
-
-            // The maximal mass among the amino acids constituting this ion
-            featuresAtAa[++j] = (int) aasMaxMasses[i];
-
-            // The minimal mass among the amino acids constituting this ion
-            featuresAtAa[++j] = (int) aasMinMasses[i];
-
-            // The mass of the amino acids complementary to this ion
-            aasMass = aasMassesComplement[i];
-            featuresAtAa[++j] = (int) aasMass;
-
-            // The mass of the amino acids complementary to this ion normalized by the length of the ion
-            featuresAtAa[++j] = (int) (aasMass / (peptideLength - (i + 1)));
-
-            // The maximal mass among the amino acids complementary to this ion
-            featuresAtAa[++j] = (int) aasMaxMassesComplement[i];
-
-            // The minimal mass among the amino acids complementary to this ion
-            featuresAtAa[++j] = (int) aasMinMassesComplement[i];
-
-            // The mass of the different amin
-            // The first amino acid index
-            j++;
-            featuresAtAa[j + firstAaIndex] = 1;
-
-            // The last amino acid index
-            j += nImplementedAas;
-            featuresAtAa[j + lastAaIndex] = 1;
-
-            // The amino acid index
-            j += nImplementedAas;
-            int aaIndex = aaIndexes.get(aa);
-            featuresAtAa[j + aaIndex] = 1;
-
-            // The next amino acid index
-            j += nImplementedAas;
-            aaIndex = aaIndexes.get(nextAa);
-            featuresAtAa[j + aaIndex] = 1;
-
-            // Save the features for this ion
-            features[i] = featuresAtAa;
-
-            // Go to next amino acid
-            aa = nextAa;
-            nextAa = peptideSequence[i + 1];
         }
 
         return features;
@@ -380,6 +187,363 @@ public class FeaturesGenerator {
             peptideAminoAcidProperties[cpt++] = aminoAcidProperties[index];
         }
         return peptideAminoAcidProperties;
+    }
+
+    private int getFeatureValue(Ms2pipFeature ms2pipFeature, char[] peptideSequence, int charge, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (ms2pipFeature.getIndex()) {
+            case PeptideFeature.index:
+                PeptideFeature peptideFeature = (PeptideFeature) ms2pipFeature;
+                return getPeptideFeature(peptideFeature, peptideSequence.length, charge, peptideAttributes);
+            case PeptideAminoAcidFeature.index:
+                PeptideAminoAcidFeature peptideAminoAcidFeature = (PeptideAminoAcidFeature) ms2pipFeature;
+                return getPeptideAminoAcidFeature(peptideAminoAcidFeature, peptideSequence.length, peptideAttributes);
+            case ForwardIonFeature.index:
+                ForwardIonFeature forwardIonFeature = (ForwardIonFeature) ms2pipFeature;
+                return getForwardIonFeature(forwardIonFeature, peptideSequence.length, peptideAttributes, aaIndex);
+            case ForwardIonAminoAcidFeature.index:
+                ForwardIonAminoAcidFeature forwardIonAminoAcidFeature = (ForwardIonAminoAcidFeature) ms2pipFeature;
+                return getForwardIonAminoAcidFeature(forwardIonAminoAcidFeature, peptideAttributes, aaIndex);
+            case ComplementaryIonFeature.index:
+                ComplementaryIonFeature complementaryIonFeature = (ComplementaryIonFeature) ms2pipFeature;
+                return getComplementaryIonFeature(complementaryIonFeature, peptideSequence.length, peptideAttributes, aaIndex);
+            case ComplementaryIonAminoAcidFeature.index:
+                ComplementaryIonAminoAcidFeature complementaryIonAminoAcidFeature = (ComplementaryIonAminoAcidFeature) ms2pipFeature;
+                return getComplementaryIonAminoAcidFeature(complementaryIonAminoAcidFeature, peptideSequence.length, peptideAttributes, aaIndex);
+            case AAPropertyFeatureAbsolute.index:
+                AAPropertyFeatureAbsolute aaPropertyFeatureAbsolute = (AAPropertyFeatureAbsolute) ms2pipFeature;
+                return getAAPropertyFeatureAbsolute(aaPropertyFeatureAbsolute, peptideSequence.length, peptideAttributes);
+            case AAPropertyFeatureRelative.index:
+                AAPropertyFeatureRelative aaPropertyFeatureRelative = (AAPropertyFeatureRelative) ms2pipFeature;
+                return getAAPropertyFeatureRelative(aaPropertyFeatureRelative, peptideSequence.length, peptideAttributes, aaIndex);
+            case AAPropertyRelationshipFeature.index:
+                AAPropertyRelationshipFeature aaPropertyRelationshipFeature = (AAPropertyRelationshipFeature) ms2pipFeature;
+                return getAAPropertyRelationshipFeature(aaPropertyRelationshipFeature, peptideSequence.length, peptideAttributes, aaIndex);
+            case AAIdentityFeatureAbsolute.index:
+                AAIdentityFeatureAbsolute aaIdentityFeatureAbsolute = (AAIdentityFeatureAbsolute) ms2pipFeature;
+                return getAAIdentityFeatureAbsolute(aaIdentityFeatureAbsolute, peptideSequence);
+            case AAIdentityFeatureRelative.index:
+                AAIdentityFeatureRelative aaIdentityFeatureRelative = (AAIdentityFeatureRelative) ms2pipFeature;
+                return getAAIdentityFeatureRelative(aaIdentityFeatureRelative, peptideSequence, aaIndex);
+            default:
+                throw new UnsupportedOperationException("Feature " + ms2pipFeature.getClass().getName() + " not implemented.");
+        }
+
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param charge the charge
+     * @param peptideAttributes the peptide attributes
+     *
+     * @return the requested feature
+     */
+    private int getPeptideFeature(PeptideFeature feature, int sequenceLength, int charge, PeptideAttributes peptideAttributes) {
+
+        switch (feature.getFeature()) {
+            case charge:
+                return charge;
+            case length:
+                return sequenceLength;
+            case mass:
+                return (int) peptideAttributes.getPeptideMass();
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     *
+     * @return the requested feature
+     */
+    private int getPeptideAminoAcidFeature(PeptideAminoAcidFeature feature, int sequenceLength, PeptideAttributes peptideAttributes) {
+
+        switch (feature.getFunction()) {
+            case sum:
+                return (int) peptideAttributes.getSumPeptideAminoAcidProperties(feature.getAminoAcidProperty());
+            case mean:
+                double value = peptideAttributes.getSumPeptideAminoAcidProperties(feature.getAminoAcidProperty());
+                return (int) (value / sequenceLength);
+            case minimum:
+                return (int) peptideAttributes.getMinPeptideAminoAcidProperties(feature.getAminoAcidProperty());
+            case maximum:
+                return (int) peptideAttributes.getMaxPeptideAminoAcidProperties(feature.getAminoAcidProperty());
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getForwardIonFeature(ForwardIonFeature feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (feature.getFeature()) {
+            case mass:
+                return (int) peptideAttributes.getForwardIonMass(aaIndex);
+            case massOverLength:
+                double value = peptideAttributes.getForwardIonMass(aaIndex);
+                int ionLength = aaIndex + 1;
+                return (int) (value / ionLength);
+            case length:
+                return aaIndex + 1;
+            case relativeLength:
+                return (int) (100.0 * (aaIndex + 1) / sequenceLength);
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getForwardIonAminoAcidFeature(ForwardIonAminoAcidFeature feature, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (feature.getFunction()) {
+            case sum:
+                return (int) peptideAttributes.getSumForwardIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            case mean:
+                double value = peptideAttributes.getSumForwardIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+                int ionLength = aaIndex + 1;
+                return (int) (value / ionLength);
+            case minimum:
+                return (int) peptideAttributes.getMinForwardIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            case maximum:
+                return (int) peptideAttributes.getMaxForwardIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getComplementaryIonFeature(ComplementaryIonFeature feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (feature.getFeature()) {
+            case mass:
+                double value = peptideAttributes.getPeptideMass() - peptideAttributes.getForwardIonMass(aaIndex);
+                return (int) value;
+            case massOverLength:
+                value = peptideAttributes.getPeptideMass() - peptideAttributes.getForwardIonMass(aaIndex);
+                int ionLength = sequenceLength - aaIndex - 1;
+                return (int) (value / ionLength);
+            case length:
+                return aaIndex + 1;
+            case relativeLength:
+                ionLength = sequenceLength - aaIndex - 1;
+                return (int) (100.0 * (ionLength) / sequenceLength);
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getComplementaryIonAminoAcidFeature(ComplementaryIonAminoAcidFeature feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (feature.getFunction()) {
+            case sum:
+                return (int) peptideAttributes.getSumComplementaryIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            case mean:
+                double value = peptideAttributes.getSumComplementaryIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+                int ionLength = sequenceLength - aaIndex - 1;
+                return (int) (value / ionLength);
+            case minimum:
+                return (int) peptideAttributes.getMinComplementaryIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            case maximum:
+                return (int) peptideAttributes.getMaxComplementaryIonAminoAcidProperties(feature.getAminoAcidProperty(), aaIndex);
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     *
+     * @return the requested feature
+     */
+    private int getAAPropertyFeatureAbsolute(AAPropertyFeatureAbsolute feature, int sequenceLength, PeptideAttributes peptideAttributes) {
+
+        int sequenceIndex = getSequenceIndexAbsolute(sequenceLength, sequenceLength);
+        return (int) peptideAttributes.getAminoAcidProperties(feature.getAminoAcidProperty(), sequenceIndex);
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getAAPropertyFeatureRelative(AAPropertyFeatureRelative feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        int sequenceIndex = getSequenceIndexRelative(sequenceLength, sequenceLength, aaIndex);
+        return (int) peptideAttributes.getAminoAcidProperties(feature.getAminoAcidProperty(), sequenceIndex);
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param sequenceLength the peptide sequence length
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getAAPropertyRelationshipFeature(AAPropertyRelationshipFeature feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        AAPropertyFeature aaPropertyFeature1 = feature.getAminoAcidFeature1();
+        double value1;
+        if (aaPropertyFeature1 instanceof AAPropertyFeatureAbsolute) {
+            AAPropertyFeatureAbsolute subFeature = (AAPropertyFeatureAbsolute) aaPropertyFeature1;
+            int sequenceIndex = getSequenceIndexAbsolute(sequenceLength, sequenceLength);
+            value1 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
+        } else if (aaPropertyFeature1 instanceof AAPropertyFeatureRelative) {
+            AAPropertyFeatureRelative subFeature = (AAPropertyFeatureRelative) aaPropertyFeature1;
+            int sequenceIndex = getSequenceIndexRelative(sequenceLength, sequenceLength, aaIndex);
+            value1 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
+        } else {
+            throw new UnsupportedOperationException("Feature " + aaPropertyFeature1.getDescription() + " not implemented.");
+        }
+
+        AAPropertyFeature aaPropertyFeature2 = feature.getAminoAcidFeature2();
+        double value2;
+        if (aaPropertyFeature2 instanceof AAPropertyFeatureAbsolute) {
+            AAPropertyFeatureAbsolute subFeature = (AAPropertyFeatureAbsolute) aaPropertyFeature2;
+            int sequenceIndex = getSequenceIndexAbsolute(subFeature.getAaIndex(), sequenceLength);
+            value2 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
+        } else if (aaPropertyFeature2 instanceof AAPropertyFeatureRelative) {
+            AAPropertyFeatureRelative subFeature = (AAPropertyFeatureRelative) aaPropertyFeature2;
+            int sequenceIndex = getSequenceIndexRelative(subFeature.getAaIndex(), sequenceLength, aaIndex);
+            value2 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
+        } else {
+            throw new UnsupportedOperationException("Feature " + aaPropertyFeature2.getDescription() + " not implemented.");
+        }
+
+        switch (feature.getRelationship()) {
+            case addition:
+                return (int) (value1 + value2);
+            case multiplication:
+                return (int) (value1 * value2);
+            case subtraction:
+                return (int) (value1 - value2);
+            default:
+                throw new UnsupportedOperationException("Operation " + feature.getRelationship() + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param peptideSequence the peptide sequence as char array
+     *
+     * @return the requested feature
+     */
+    private int getAAIdentityFeatureAbsolute(AAIdentityFeatureAbsolute feature, char[] peptideSequence) {
+
+        int sequenceIndex = getSequenceIndexAbsolute(feature.getAaIndex(), peptideSequence.length);
+        return peptideSequence[sequenceIndex] == feature.getAminoAcid() ? 1 : 0;
+    }
+
+    /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param peptideSequence the peptide sequence as char array
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getAAIdentityFeatureRelative(AAIdentityFeatureRelative feature, char[] peptideSequence, int aaIndex) {
+
+        int sequenceIndex = getSequenceIndexRelative(feature.getAaIndex(), peptideSequence.length, aaIndex);
+        return peptideSequence[sequenceIndex] == feature.getAminoAcid() ? 1 : 0;
+    }
+
+    /**
+     * Returns the peptide sequence index based on the index of an absolute
+     * feature.
+     *
+     * @param featureIndex the index of the feature
+     * @param sequenceLength the peptide sequence length
+     *
+     * @return the peptide sequence index
+     */
+    private int getSequenceIndexAbsolute(int featureIndex, int sequenceLength) {
+
+        int sequenceIndex = featureIndex;
+        if (sequenceIndex < 0) {
+            sequenceIndex = sequenceLength + sequenceIndex;
+        }
+        return sequenceIndex;
+    }
+
+    /**
+     * Returns the peptide sequence index based on the index of an relative
+     * feature.
+     *
+     * @param featureIndex the index of the feature
+     * @param sequenceLength the peptide sequence length
+     * @param aaIndex the current index on the sequence
+     *
+     * @return the peptide sequence index
+     */
+    private int getSequenceIndexRelative(int featureIndex, int sequenceLength, int aaIndex) {
+
+        int sequenceIndex = aaIndex + featureIndex;
+        if (sequenceIndex < 0) {
+            sequenceIndex = 0;
+        }
+        if (sequenceIndex >= sequenceLength) {
+            sequenceIndex = sequenceLength - 1;
+        }
+        return sequenceIndex;
     }
 
     /**
@@ -456,10 +620,6 @@ public class FeaturesGenerator {
          */
         private double[] forwardIonMass;
         /**
-         * The mass of complementary ions derived from a sequence.
-         */
-        private double[] complementaryIonMass;
-        /**
          * The properties of all amino acids in a sequence.
          */
         private double[][] aminoAcidProperties;
@@ -526,7 +686,6 @@ public class FeaturesGenerator {
             // Set initial complementary values using the first amino acid
             aa = peptideSequence[peptideSequence.length - 1];
             aminoAcid = AminoAcid.getAminoAcid(aa);
-            complementaryIonMass[peptideSequence.length - 1] = waterMass + aminoAcid.getMonoisotopicMass();
             // Complementary ion amino acid properties
             for (AminoAcid.Property property : complementaryIonAminoAcidProperties) {
                 double value = aminoAcid.getProperty(property);
@@ -578,9 +737,6 @@ public class FeaturesGenerator {
                 aa = peptideSequence[complementaryI];
                 aminoAcid = AminoAcid.getAminoAcid(aa);
 
-                // Ion mass
-                complementaryIonMass[complementaryI] = complementaryIonMass[complementaryI + 1] + aminoAcid.getMonoisotopicMass();
-
                 // Min, max and sum of the different complementary ion properties needed
                 for (AminoAcid.Property property : complementaryIonAminoAcidProperties) {
                     double value = aminoAcid.getProperty(property);
@@ -604,5 +760,157 @@ public class FeaturesGenerator {
                 forwardIonMass[modificationSite - 1] += modificationMass;
             }
         }
+
+        /**
+         * Returns the peptide mass.
+         *
+         * @return the peptide mass
+         */
+        public double getPeptideMass() {
+            return peptideMass;
+        }
+
+        /**
+         * Returns the minimal amino acid property along the peptide sequence.
+         *
+         * @param property the amino acid property
+         *
+         * @return the minimal amino acid property along the peptide sequence
+         */
+        public double getMinPeptideAminoAcidProperties(AminoAcid.Property property) {
+            return minPeptideAminoAcidProperties[property.ordinal()];
+        }
+
+        /**
+         * Returns the maximal amino acid property along the peptide sequence.
+         *
+         * @param property the amino acid property
+         *
+         * @return the maximal amino acid property along the peptide sequence
+         */
+        public double getMaxPeptideAminoAcidProperties(AminoAcid.Property property) {
+            return maxPeptideAminoAcidProperties[property.ordinal()];
+        }
+
+        /**
+         * Returns the summed amino acid property along the peptide sequence.
+         *
+         * @param property the amino acid property
+         *
+         * @return the summed amino acid property along the peptide sequence
+         */
+        public double getSumPeptideAminoAcidProperties(AminoAcid.Property property) {
+            return sumPeptideAminoAcidProperties[property.ordinal()];
+        }
+
+        /**
+         * Returns the minimal amino acid property along the peptide sequence
+         * until the given index.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the minimal amino acid property along the peptide sequence
+         * until the given index
+         */
+        public double getMinForwardIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return minForwardIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the maximal amino acid property along the peptide sequence
+         * until the given index.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the maximal amino acid property along the peptide sequence
+         * until the given index
+         */
+        public double getMaxForwardIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return maxForwardIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the summed amino acid property along the peptide sequence
+         * until the given index.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the summed amino acid property along the peptide sequence
+         * until the given index
+         */
+        public double getSumForwardIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return sumForwardIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the minimal amino acid property along the peptide sequence
+         * from the given index to the end.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the minimal amino acid property along the peptide sequence
+         * from the given index to the end
+         */
+        public double getMinComplementaryIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return minComplementaryIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the maximal amino acid property along the peptide sequence
+         * from the given index to the end.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the maximal amino acid property along the peptide sequence
+         * from the given index to the end
+         */
+        public double getMaxComplementaryIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return maxComplementaryIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the summed amino acid property along the peptide sequence
+         * from the given index to the end.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the summed amino acid property along the peptide sequence
+         * from the given index to the end
+         */
+        public double getSumComplementaryIonAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return sumComplementaryIonAminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the mass of the amino acid sequence until the given index.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         *
+         * @return the mass of the amino acid sequence until the given index
+         */
+        public double getForwardIonMass(int aaIndex) {
+            return forwardIonMass[aaIndex];
+        }
+
+        /**
+         * Returns the value of the property of interest of the amino acid at
+         * the given index.
+         *
+         * @param aaIndex an index on the amino acid sequence
+         * @param property the amino acid property
+         *
+         * @return the value of the property of interest of the amino acid at
+         * the given index
+         */
+        public double getAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
+            return aminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
     }
 }

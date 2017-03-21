@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
@@ -10,13 +11,17 @@ import com.compomics.util.experiment.biology.AminoAcid;
 public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
 
     /**
+     * The index of this ms2pip feature.
+     */
+    public static final int index = 6;
+    /**
      * Constructor. A positive index refers to counting from the N-term where the first amino acid is 0. A negative index refers to counting from the C-term where the first amino acid is -1.
      * 
-     * @param index the index
+     * @param aaIndex the index on the sequence
      * @param property the amino acid property
      */
-    public AAPropertyFeatureAbsolute(int index, AminoAcid.Property property) {
-        this.index = index;
+    public AAPropertyFeatureAbsolute(int aaIndex, AminoAcid.Property property) {
+        this.aaIndex = aaIndex;
         this.aminoAcidProperty = property;
     }
     
@@ -37,6 +42,11 @@ public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
             int tempIndex = index + 1;
             return aminoAcidProperty.name + " of the amino acid at C-term " + tempIndex;
         }
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 
 }

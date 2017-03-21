@@ -1,27 +1,22 @@
-package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
+package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic;
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 
 /**
- * Feature based on a peptide property.
+ * Feature based on a property of an ion.
  *
  * @author Marc Vaudel
  */
-public class PeptideFeature implements Ms2pipFeature {
-    
-    /**
-     * The index of this ms2pip feature.
-     */
-    public static final int index = 0;
+public abstract class IonFeature implements Ms2pipFeature {
 
     /**
      * Enum for the possible features.
      */
     public enum Property {
-        
-        mass(0, "mass", "The peptide mass."),
-        length(1, "length", "The peptide length."),
-        charge(2, "charge", "The peptide charge.");
+        mass(0, "mass", "The ion mass."),
+        massOverLength(1, "massOverLength", "The ion mass relative to the ion length."),
+        length(2, "length", "The ion length."),
+        relativeLength(3, "relativeLength", "The length of the ion relative to the length of the peptide.");
 
         /**
          * The index of the option.
@@ -53,16 +48,7 @@ public class PeptideFeature implements Ms2pipFeature {
     /**
      * The peptide feature.
      */
-    private Property property;
-
-    /**
-     * Constructor.
-     *
-     * @param property the peptide property
-     */
-    public PeptideFeature(Property property) {
-        this.property = property;
-    }
+    protected Property property;
 
     /**
      * Returns the peptide feature;
@@ -85,15 +71,5 @@ public class PeptideFeature implements Ms2pipFeature {
     @Override
     public String getCategory() {
         return this.getClass().getName();
-    }
-
-    @Override
-    public String getDescription() {
-        return property.description;
-    }
-
-    @Override
-    public int getIndex() {
-        return index;
     }
 }

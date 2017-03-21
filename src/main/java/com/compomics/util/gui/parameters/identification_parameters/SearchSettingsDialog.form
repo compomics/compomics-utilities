@@ -111,30 +111,23 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="enzymeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="fragmentIonType1Lbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxMissedCleavagesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="specificityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="digestionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="digestionCmb" max="32767" attributes="2"/>
+                          <Component id="enzymesCmb" max="32767" attributes="2"/>
+                          <Component id="maxMissedCleavagesTxt" alignment="1" max="32767" attributes="2"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="digestionLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
-                              <Component id="digestionCmb" pref="231" max="32767" attributes="2"/>
+                              <Component id="fragmentIon1Cmb" pref="106" max="32767" attributes="2"/>
+                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                              <Component id="fragmentIon2Cmb" pref="106" max="32767" attributes="2"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="enzymeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="fragmentIonType1Lbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="maxMissedCleavagesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="specificityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="enzymesCmb" max="32767" attributes="2"/>
-                                  <Component id="maxMissedCleavagesTxt" alignment="1" max="32767" attributes="2"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="fragmentIon1Cmb" max="32767" attributes="2"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                      <Component id="fragmentIon2Cmb" max="32767" attributes="2"/>
-                                  </Group>
-                                  <Component id="specificityComboBox" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="specificityComboBox" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">

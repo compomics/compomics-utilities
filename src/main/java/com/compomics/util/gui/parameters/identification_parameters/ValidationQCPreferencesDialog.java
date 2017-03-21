@@ -781,14 +781,29 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         psmTableMouseReleased(evt);
     }//GEN-LAST:event_psmScrollPaneMouseReleased
 
+    /**
+     * Set user input to true.
+     * 
+     * @param evt 
+     */
     private void dbCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbCheckActionPerformed
         userInput = true;
     }//GEN-LAST:event_dbCheckActionPerformed
 
+    /**
+     * Set user input to true.
+     * 
+     * @param evt 
+     */
     private void nTargetCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nTargetCheckActionPerformed
         userInput = true;
     }//GEN-LAST:event_nTargetCheckActionPerformed
 
+    /**
+     * Set user input to true.
+     * 
+     * @param evt 
+     */
     private void confidenceCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confidenceCheckActionPerformed
         userInput = true;
     }//GEN-LAST:event_confidenceCheckActionPerformed

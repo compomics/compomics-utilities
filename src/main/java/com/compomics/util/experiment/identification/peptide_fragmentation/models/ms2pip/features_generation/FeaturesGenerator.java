@@ -19,11 +19,11 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ModificationFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -38,19 +38,10 @@ import java.util.HashSet;
  */
 public class FeaturesGenerator {
 
-    private final static double waterMass = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
     /**
      * The PTM factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * Array of supported amino acids in single letter code.
-     */
-    public static final char[] supportedAminoAcids = {'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y'};
-    /**
-     * The ms2pip index of every amino acid.
-     */
-    private final HashMap<Character, Integer> aaIndexes = getAminoAcidIndexes();
     /**
      * The map of the different features to include.
      */
@@ -66,32 +57,31 @@ public class FeaturesGenerator {
     }
 
     /**
-     * Returns the ms2pip features for the b ions of the given peptide at the
-     * given charge.
+     * Returns the ms2pip features for the forward ions of the given peptide at
+     * the given charge.
      *
      * @param peptide the peptide
      * @param charge the charge
      *
      * @return the ms2pip features for the b ions
      */
-    public int[][] getBIonsFeatures(Peptide peptide, int charge) {
+    public int[][] getForwardIonsFeatures(Peptide peptide, int charge) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-
         return getIonsFeatures(peptideSequence, modificationMatches, charge);
     }
 
     /**
-     * Returns the ms2pip features for the y ions of the given peptide at the
-     * given charge.
+     * Returns the ms2pip features for the complementary ions of the given
+     * peptide at the given charge.
      *
      * @param peptide the peptide
      * @param charge the charge
      *
      * @return the ms2pip features for the b ions
      */
-    public int[][] getYIonsFeatures(Peptide peptide, int charge) {
+    public int[][] getComplementaryIonsFeatures(Peptide peptide, int charge) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
         int sequenceLength = peptideSequence.length;
@@ -162,7 +152,6 @@ public class FeaturesGenerator {
      * @return the amino acid properties needed
      */
     private AminoAcid.Property[] getAaProperties(Class... categories) {
-        AminoAcid.Property[] aminoAcidProperties = AminoAcid.Property.values();
         HashSet<Integer> indexes = new HashSet<Integer>(4);
         for (Class category : categories) {
             Ms2pipFeature[] features = featuresMap.getFeatures(category.getName());
@@ -181,6 +170,7 @@ public class FeaturesGenerator {
                 }
             }
         }
+        AminoAcid.Property[] aminoAcidProperties = AminoAcid.Property.values();
         AminoAcid.Property[] peptideAminoAcidProperties = new AminoAcid.Property[indexes.size()];
         int cpt = 0;
         for (int index : indexes) {
@@ -189,6 +179,18 @@ public class FeaturesGenerator {
         return peptideAminoAcidProperties;
     }
 
+    /**
+     * Returns the value for the given feature.
+     *
+     * @param ms2pipFeature the ms2pip feature of interest
+     * @param peptideSequence the peptide sequence as char array
+     * @param charge the charge
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the current index of the amino acid on the peptide
+     * sequence
+     *
+     * @return the value of the feature
+     */
     private int getFeatureValue(Ms2pipFeature ms2pipFeature, char[] peptideSequence, int charge, PeptideAttributes peptideAttributes, int aaIndex) {
 
         switch (ms2pipFeature.getIndex()) {
@@ -225,6 +227,9 @@ public class FeaturesGenerator {
             case AAIdentityFeatureRelative.index:
                 AAIdentityFeatureRelative aaIdentityFeatureRelative = (AAIdentityFeatureRelative) ms2pipFeature;
                 return getAAIdentityFeatureRelative(aaIdentityFeatureRelative, peptideSequence, aaIndex);
+            case ModificationFeature.index:
+                ModificationFeature modificationFeature = (ModificationFeature) ms2pipFeature;
+                return getModificationFeature(modificationFeature, peptideAttributes, aaIndex);
             default:
                 throw new UnsupportedOperationException("Feature " + ms2pipFeature.getClass().getName() + " not implemented.");
         }
@@ -243,7 +248,7 @@ public class FeaturesGenerator {
      */
     private int getPeptideFeature(PeptideFeature feature, int sequenceLength, int charge, PeptideAttributes peptideAttributes) {
 
-        switch (feature.getFeature()) {
+        switch (feature.getProperty()) {
             case charge:
                 return charge;
             case length:
@@ -405,7 +410,7 @@ public class FeaturesGenerator {
      */
     private int getAAPropertyFeatureAbsolute(AAPropertyFeatureAbsolute feature, int sequenceLength, PeptideAttributes peptideAttributes) {
 
-        int sequenceIndex = getSequenceIndexAbsolute(sequenceLength, sequenceLength);
+        int sequenceIndex = getSequenceIndexAbsolute(feature.getAaIndex(), sequenceLength);
         return (int) peptideAttributes.getAminoAcidProperties(feature.getAminoAcidProperty(), sequenceIndex);
     }
 
@@ -421,7 +426,7 @@ public class FeaturesGenerator {
      */
     private int getAAPropertyFeatureRelative(AAPropertyFeatureRelative feature, int sequenceLength, PeptideAttributes peptideAttributes, int aaIndex) {
 
-        int sequenceIndex = getSequenceIndexRelative(sequenceLength, sequenceLength, aaIndex);
+        int sequenceIndex = getSequenceIndexRelative(feature.getAaIndex(), sequenceLength, aaIndex);
         return (int) peptideAttributes.getAminoAcidProperties(feature.getAminoAcidProperty(), sequenceIndex);
     }
 
@@ -441,11 +446,11 @@ public class FeaturesGenerator {
         double value1;
         if (aaPropertyFeature1 instanceof AAPropertyFeatureAbsolute) {
             AAPropertyFeatureAbsolute subFeature = (AAPropertyFeatureAbsolute) aaPropertyFeature1;
-            int sequenceIndex = getSequenceIndexAbsolute(sequenceLength, sequenceLength);
+            int sequenceIndex = getSequenceIndexAbsolute(subFeature.getAaIndex(), sequenceLength);
             value1 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
         } else if (aaPropertyFeature1 instanceof AAPropertyFeatureRelative) {
             AAPropertyFeatureRelative subFeature = (AAPropertyFeatureRelative) aaPropertyFeature1;
-            int sequenceIndex = getSequenceIndexRelative(sequenceLength, sequenceLength, aaIndex);
+            int sequenceIndex = getSequenceIndexRelative(subFeature.getAaIndex(), sequenceLength, aaIndex);
             value1 = peptideAttributes.getAminoAcidProperties(subFeature.getAminoAcidProperty(), sequenceIndex);
         } else {
             throw new UnsupportedOperationException("Feature " + aaPropertyFeature1.getDescription() + " not implemented.");
@@ -507,6 +512,25 @@ public class FeaturesGenerator {
     }
 
     /**
+     * Returns the requested feature value.
+     *
+     * @param feature the ms2pip feature
+     * @param peptideAttributes the peptide attributes
+     * @param aaIndex the index on the sequence
+     *
+     * @return the requested feature
+     */
+    private int getModificationFeature(ModificationFeature feature, PeptideAttributes peptideAttributes, int aaIndex) {
+
+        switch (feature.getProperty()) {
+            case mass:
+                return (int) peptideAttributes.getModificationMass(aaIndex);
+            default:
+                throw new UnsupportedOperationException("Feature " + feature.getDescription() + " not implemented.");
+        }
+    }
+
+    /**
      * Returns the peptide sequence index based on the index of an absolute
      * feature.
      *
@@ -544,24 +568,6 @@ public class FeaturesGenerator {
             sequenceIndex = sequenceLength - 1;
         }
         return sequenceIndex;
-    }
-
-    /**
-     * Returns the index of every amino acid in the array of supported amino
-     * acids in a map.
-     *
-     * @return the index of every amino acid
-     */
-    public static HashMap<Character, Integer> getAminoAcidIndexes() {
-
-        HashMap<Character, Integer> indexes = new HashMap<Character, Integer>(supportedAminoAcids.length);
-
-        for (int i = 0; i < supportedAminoAcids.length; i++) {
-            char aa = supportedAminoAcids[i];
-            indexes.put(aa, i);
-        }
-
-        return indexes;
     }
 
     /**
@@ -623,6 +629,10 @@ public class FeaturesGenerator {
          * The properties of all amino acids in a sequence.
          */
         private double[][] aminoAcidProperties;
+        /**
+         * The mass added by modifications on the amino acids.
+         */
+        private double[] modificationsMasses;
 
         /**
          * Constructor.
@@ -654,6 +664,7 @@ public class FeaturesGenerator {
             sumComplementaryIonAminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
 
             forwardIonMass = new double[peptideSequence.length];
+            modificationsMasses = new double[peptideSequence.length];
 
             aminoAcidProperties = new double[peptideSequence.length][nPossibleProperties];
 
@@ -740,24 +751,31 @@ public class FeaturesGenerator {
                 // Min, max and sum of the different complementary ion properties needed
                 for (AminoAcid.Property property : complementaryIonAminoAcidProperties) {
                     double value = aminoAcid.getProperty(property);
-                    double previousValue = minComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()];
+                    double previousValue = minComplementaryIonAminoAcidProperties[complementaryI + 1][property.ordinal()];
                     minComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = value < previousValue ? value : previousValue;
-                    previousValue = maxComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()];
+                    previousValue = maxComplementaryIonAminoAcidProperties[complementaryI + 1][property.ordinal()];
                     maxComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = value > previousValue ? value : previousValue;
-                    sumComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = sumComplementaryIonAminoAcidProperties[complementaryI - 1][property.ordinal()] + value;
+                    sumComplementaryIonAminoAcidProperties[complementaryI][property.ordinal()] = sumComplementaryIonAminoAcidProperties[complementaryI + 1][property.ordinal()] + value;
                 }
             }
 
             // Iterate modifications
-            for (ModificationMatch modificationMatch : modificationMatches) {
+            if (modificationMatches != null) {
+                for (ModificationMatch modificationMatch : modificationMatches) {
 
-                String modificationName = modificationMatch.getTheoreticPtm();
-                PTM modification = ptmFactory.getPTM(modificationName);
-                double modificationMass = modification.getMass();
-                int modificationSite = modificationMatch.getModificationSite();
+                    String modificationName = modificationMatch.getTheoreticPtm();
+                    PTM modification = ptmFactory.getPTM(modificationName);
+                    double modificationMass = modification.getMass();
+                    int modificationSite = modificationMatch.getModificationSite();
 
-                peptideMass += modificationMass;
-                forwardIonMass[modificationSite - 1] += modificationMass;
+                    peptideMass += modificationMass;
+
+                    modificationsMasses[modificationSite - 1] += modificationMass;
+
+                    for (int i = modificationSite - 1; i < peptideSequence.length; i++) {
+                        forwardIonMass[i] += modificationMass;
+                    }
+                }
             }
         }
 
@@ -910,6 +928,17 @@ public class FeaturesGenerator {
          */
         public double getAminoAcidProperties(AminoAcid.Property property, int aaIndex) {
             return aminoAcidProperties[aaIndex][property.ordinal()];
+        }
+
+        /**
+         * Returns the mass added by modifications at a given amino acid.
+         *
+         * @param aaIndex the amino acid index on the sequence
+         *
+         * @return the mass added by modifications
+         */
+        public double getModificationMass(int aaIndex) {
+            return modificationsMasses[aaIndex];
         }
 
     }

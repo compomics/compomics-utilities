@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ModificationFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.IonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
@@ -154,6 +155,9 @@ public class FeaturesMapManager {
             AAPropertyFeatureAbsolute cTermAminoAcid = new AAPropertyFeatureAbsolute(-1, property);
             featuresMap.addFeature(new AAPropertyRelationshipFeature(AAPropertyRelationshipFeature.Relationship.addition, currentAminoAcidFeature, cTermAminoAcid));
         }
+        
+        // Modifications features
+        featuresMap.addFeature(new ModificationFeature(ModificationFeature.Property.mass));
 
         return featuresMap;
     }

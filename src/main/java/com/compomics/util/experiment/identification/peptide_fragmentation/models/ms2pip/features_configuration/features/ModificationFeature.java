@@ -3,25 +3,23 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 
 /**
- * Feature based on a peptide property.
+ * Feature based on the modification status of an amino acid.
  *
  * @author Marc Vaudel
  */
-public class PeptideFeature implements Ms2pipFeature {
+public class ModificationFeature implements Ms2pipFeature {
     
     /**
      * The index of this ms2pip feature.
      */
-    public static final int index = 0;
+    public static final int index = 11;
 
     /**
      * Enum for the possible features.
      */
     public enum Property {
         
-        mass("The peptide mass."),
-        length("The peptide length."),
-        charge("The peptide charge.");
+        mass("The cumulated mass of the modifications carried by the amino acid.");
         /**
          * The description of the option.
          */
@@ -41,22 +39,24 @@ public class PeptideFeature implements Ms2pipFeature {
      * The peptide feature.
      */
     private Property property;
+    
+    
 
     /**
      * Constructor.
      *
      * @param property the peptide property
      */
-    public PeptideFeature(Property property) {
+    public ModificationFeature(ModificationFeature.Property property) {
         this.property = property;
     }
 
     /**
-     * Returns the feature property;
+     * Returns the feature property.
      *
      * @return the feature property
      */
-    public Property getProperty() {
+    public ModificationFeature.Property getProperty() {
         return property;
     }
 
@@ -65,7 +65,7 @@ public class PeptideFeature implements Ms2pipFeature {
      *
      * @param property the feature property
      */
-    public void setProperty(Property property) {
+    public void setProperty(ModificationFeature.Property property) {
         this.property = property;
     }
 
@@ -83,4 +83,5 @@ public class PeptideFeature implements Ms2pipFeature {
     public int getIndex() {
         return index;
     }
+
 }

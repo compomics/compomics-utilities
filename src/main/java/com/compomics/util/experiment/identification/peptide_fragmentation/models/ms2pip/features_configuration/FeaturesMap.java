@@ -65,6 +65,8 @@ public class FeaturesMap {
 
         categoryFeatures = Arrays.copyOf(categoryFeatures, categoryFeatures.length + 1);
         categoryFeatures[categoryFeatures.length - 1] = ms2pipFeature;
+        
+        featuresMap.put(category, categoryFeatures);
 
         nFeatures++;
     }

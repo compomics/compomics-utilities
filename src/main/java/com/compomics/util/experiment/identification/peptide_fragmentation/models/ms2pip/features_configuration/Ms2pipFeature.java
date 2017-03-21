@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ComplementaryIonFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ForwardIonFeature;
+import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.ModificationFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
 
@@ -23,7 +24,7 @@ public interface Ms2pipFeature {
      * Array of the implemented features.
      */
     public static final Class[] implementations = {PeptideFeature.class, PeptideAminoAcidFeature.class, ForwardIonFeature.class, ComplementaryIonFeature.class, ForwardIonAminoAcidFeature.class, ComplementaryIonAminoAcidFeature.class,
-        AAPropertyFeatureAbsolute.class, AAPropertyFeatureRelative.class, AAPropertyRelationshipFeature.class, AAIdentityFeatureAbsolute.class, AAIdentityFeatureRelative.class};
+        AAPropertyFeatureAbsolute.class, AAPropertyFeatureRelative.class, AAPropertyRelationshipFeature.class, AAIdentityFeatureAbsolute.class, AAIdentityFeatureRelative.class, ModificationFeature.class};
 
     /**
      * Returns the category of the feature.

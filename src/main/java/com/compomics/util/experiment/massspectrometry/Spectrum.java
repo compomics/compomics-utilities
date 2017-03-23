@@ -293,10 +293,10 @@ public abstract class Spectrum extends ExperimentObject {
     public String getFileName() {
         return fileName;
     }
-    
+
     /**
      * Sets the file name.
-     * 
+     *
      * @param fileName the file name
      */
     public void setFileName(String fileName) {
@@ -706,9 +706,11 @@ public abstract class Spectrum extends ExperimentObject {
      * @param intensityFraction the threshold value.
      *
      * @return the intensity limit
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
      */
     public double getIntensityLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityFraction) throws InterruptedException, MathException {
 
@@ -727,39 +729,46 @@ public abstract class Spectrum extends ExperimentObject {
      * e.g., 0.75 for the 75% most intense peaks.
      *
      * @return the intensity limit
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
      */
     private double estimateIntneistyLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityThreshold) throws InterruptedException, MathException {
-        
+
+        if (intensityThreshold == 0) {
+            return 0.0;
+        } else if (intensityThreshold == 1.0) {
+            return getMaxIntensity();
+        }
         switch (intensityThresholdType) {
-            
+
             case snp:
-                
+
                 SimpleNoiseDistribution binnedCumulativeFunction = getIntensityLogDistribution();
-                return binnedCumulativeFunction.getIntensityAtP(intensityThreshold);
-            
+                return binnedCumulativeFunction.getIntensityAtP(1 - intensityThreshold);
+
             case percentile:
-                
-        ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
-        for (Peak peak : peakList.values()) {
-            double mz = peak.mz;
-            // Skip the low mass region of the spectrum @TODO: skip precursor as well
-            if (mz > 200) {
-                intensities.add(peak.intensity);
-            }
-        }
+                ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
-        if (intensities.isEmpty()) {
-            return 0;
-        }
+                for (Peak peak : peakList.values()) {
+                    double mz = peak.mz;
+                    // Skip the low mass region of the spectrum @TODO: skip precursor as well
+                    if (mz > 200) {
+                        intensities.add(peak.intensity);
+                    }
+                }
 
-        return BasicMathFunctions.percentile(intensities, intensityThreshold);
-        
-        default:
-            throw new UnsupportedOperationException("Threshold of type " + intensityThresholdType + " not supported.");
+                if (intensities.isEmpty()) {
+                    return 0;
+                }
+
+                return BasicMathFunctions.percentile(intensities, intensityThreshold);
+
+            default:
+                throw new UnsupportedOperationException("Threshold of type " + intensityThresholdType + " not supported.");
         }
     }
 

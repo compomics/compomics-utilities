@@ -65,11 +65,11 @@ public class AnnotationSettings implements Serializable {
     /**
      * The type of intensity threshold
      */
-    private IntensityThresholdType intensityThresholdType = IntensityThresholdType.snp;
+    private IntensityThresholdType intensityThresholdType = IntensityThresholdType.percentile;
     /**
      * The intensity thresold to use. The type of threshold is defined according to the IntensityThreshold enum.
      */
-    private double intensityLimit = 0.05;
+    private double intensityLimit = 0.75;
     /**
      * Shall automatic annotation be used.
      */

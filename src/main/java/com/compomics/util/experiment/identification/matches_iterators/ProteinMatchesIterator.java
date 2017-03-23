@@ -151,16 +151,6 @@ public class ProteinMatchesIterator {
     }
 
     /**
-     * Indicates whether the iterator is done iterating. Warning: this method
-     * can be wrong when multi threading.
-     *
-     * @return false if the iterator is done iterating
-     */
-    public boolean hasNext() {
-        return index < nMatches - 1;
-    }
-
-    /**
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.
      *

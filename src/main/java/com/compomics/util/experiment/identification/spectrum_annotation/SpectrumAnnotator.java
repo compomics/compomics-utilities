@@ -51,15 +51,15 @@ public abstract class SpectrumAnnotator {
          * error the most intense is retained.
          */
         mostAccurateMz("Most accurate m/z");
-        
+
         /**
          * The description.
          */
         public final String description;
-        
+
         /**
          * Constructor.
-         * 
+         *
          * @param description the description
          */
         private TiesResolution(String description) {
@@ -251,8 +251,10 @@ public abstract class SpectrumAnnotator {
             spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
 
             // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
-            spectrum.addUrParam(spectrumIndex);
+            if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit) {
+                spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
+                spectrum.addUrParam(spectrumIndex);
+            }
         }
     }
 
@@ -391,18 +393,39 @@ public abstract class SpectrumAnnotator {
     }
 
     /**
-     * Returns the currently matched ions with the given settings.
+     * Returns the currently matched ions with the given settings using the intensity filter.
      *
      * @param spectrum the spectrum of interest
      * @param annotationSettings the annotation settings
      * @param specificAnnotationSettings the specific annotation settings
      *
      * @return the currently matched ions with the given settings
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException;
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
+        return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
+    }
+
+    /**
+     * Returns the currently matched ions with the given settings.
+     *
+     * @param spectrum the spectrum of interest
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     *
+     * @return the currently matched ions with the given settings
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
+     */
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException;
 
     /**
      * Returns the spectrum currently inspected.

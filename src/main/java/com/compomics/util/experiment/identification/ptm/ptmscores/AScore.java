@@ -329,7 +329,7 @@ public class AScore {
         Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrumAtBestDepth, tempPeptide);
+                spectrumAtBestDepth, tempPeptide, false);
         int n = 0;
 
         for (IonMatch match : matches) {
@@ -361,7 +361,7 @@ public class AScore {
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
         matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrumAtBestDepth, tempPeptide);
+                spectrumAtBestDepth, tempPeptide, false);
         n = 0;
 
         for (IonMatch match : matches) {
@@ -543,7 +543,7 @@ public class AScore {
                 tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, position));
 
                 ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                        spectrumMap.get(i), tempPeptide);
+                        spectrumMap.get(i), tempPeptide, false);
                 int n = matches.size();
 
                 BinomialDistribution distribution = new BinomialDistribution(N, p);

@@ -56,7 +56,7 @@ public class AAIntensityRankScore {
         }
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrum, peptide);
+                spectrum, peptide, false);
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             if (ion instanceof PeptideFragmentIon) {

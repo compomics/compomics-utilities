@@ -459,7 +459,7 @@ public class PhosphoRS {
             inCache = false;
         }
 
-        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide, possiblePeptideFragments);
+        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide, possiblePeptideFragments, false);
         int k = 0;
         for (IonMatch ionMatch : matches) {
             if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
@@ -27,6 +28,10 @@ public class FeaturesMap {
      */
     private final HashMap<String, Ms2pipFeature[]> featuresMap = new HashMap<String, Ms2pipFeature[]>(4);
     /**
+     * Sorted list of keys of the features map.
+     */
+    private String[] sortedFeaturesList;
+    /**
      * The number of features in the map.
      */
     private int nFeatures = 0;
@@ -35,10 +40,17 @@ public class FeaturesMap {
      * Constructor.
      */
     public FeaturesMap() {
+        
+        Class[] implementations = Ms2pipFeature.implementations;
+        
+        sortedFeaturesList = new String[implementations.length];
 
-        for (Class implementedFeature : Ms2pipFeature.implementations) {
+        for (int i = 0 ; i < implementations.length ; i++) {
             
-            featuresMap.put(implementedFeature.getName(), new Ms2pipFeature[0]);
+            Class implementedFeature = implementations[i];
+            String featureName = implementedFeature.getName();
+            featuresMap.put(featureName, new Ms2pipFeature[0]);
+            sortedFeaturesList[i] = featureName;
             
         }
     }
@@ -78,6 +90,15 @@ public class FeaturesMap {
      */
     public Set<String> getCategories() {
         return featuresMap.keySet();
+    }
+
+    /**
+     * Returns a sorted list of features categories.
+     * 
+     * @return a sorted list of features categories
+     */
+    public String[] getSortedFeaturesList() {
+        return sortedFeaturesList;
     }
 
     /**

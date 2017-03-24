@@ -171,6 +171,19 @@ public class ZipUtils {
     /**
      * Adds a new file to the zip stream. The file should not be a folder.
      *
+     * @param file the file to add to the zip
+     * @param out the zip stream
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     */
+    public static void addFileToZip(File file, ZipOutputStream out) throws IOException {
+        addFileToZip("", file, out, null, 0);
+    }
+
+    /**
+     * Adds a new file to the zip stream. The file should not be a folder.
+     *
      * @param subDirectory the subdirectory relative to the zip file location
      * (e.g. "data", note that there is no tailing "/")
      * @param file the file to add to the zip

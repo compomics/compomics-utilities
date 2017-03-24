@@ -62,14 +62,15 @@ public class FeaturesGenerator {
      *
      * @param peptide the peptide
      * @param charge the charge
+     * @param ionIndex the ion index
      *
      * @return the ms2pip features for the b ions
      */
-    public int[][] getForwardIonsFeatures(Peptide peptide, int charge) {
+    public int[] getForwardIonsFeatures(Peptide peptide, int charge, int ionIndex) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-        return getIonsFeatures(peptideSequence, modificationMatches, charge);
+        return getIonsFeatures(peptideSequence, modificationMatches, charge, ionIndex);
     }
 
     /**
@@ -78,10 +79,11 @@ public class FeaturesGenerator {
      *
      * @param peptide the peptide
      * @param charge the charge
+     * @param ionIndex the ion index
      *
      * @return the ms2pip features for the b ions
      */
-    public int[][] getComplementaryIonsFeatures(Peptide peptide, int charge) {
+    public int[] getComplementaryIonsFeatures(Peptide peptide, int charge, int ionIndex) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
         int sequenceLength = peptideSequence.length;
@@ -96,20 +98,21 @@ public class FeaturesGenerator {
             reversedModificationMatches.add(reversedModificationMatch);
         }
 
-        return getIonsFeatures(reversedSequence, reversedModificationMatches, charge);
+        return getIonsFeatures(reversedSequence, reversedModificationMatches, charge, ionIndex);
     }
 
     /**
-     * Returns the ms2pip features for the ions of the given sequence with
+     * Returns the ms2pip features for the ion at index of the given sequence with
      * modifications at the given charge.
      *
      * @param peptideSequence the peptide sequence as char array
      * @param modificationMatches the modification matches
      * @param charge the charge
+     * @param ionIndex the ion index
      *
      * @return the ms2pip features for the b ions
      */
-    private int[][] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge) {
+    private int[] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge, int ionIndex) {
 
         // Get the properties needed for peptides, ions, and amino acids
         AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
@@ -121,21 +124,18 @@ public class FeaturesGenerator {
         PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, modificationMatches, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
 
         // Prepare an array for the resutls
-        int[][] features = new int[peptideSequence.length - 1][featuresMap.getnFeatures()];
+        int[] features = new int[featuresMap.getnFeatures()];
 
-        // Iterate the sequence
-        for (int i = 0; i < peptideSequence.length - 1; i++) {
+        // Iterate the different features categories
+        int featureIndex = 0;
+        
+        for (String category : featuresMap.getSortedFeaturesList()) {
 
-            // Iterate the different features categories
-            int featureIndex = 0;
-            for (String category : featuresMap.getCategories()) {
+            // Iterate the features for this category
+            for (Ms2pipFeature ms2pipFeature : featuresMap.getFeatures(category)) {
 
-                // Iterate the features for this category
-                for (Ms2pipFeature ms2pipFeature : featuresMap.getFeatures(category)) {
-
-                    // Add the feature value to the array
-                    features[i][featureIndex++] = getFeatureValue(ms2pipFeature, peptideSequence, charge, peptideAttributes, i);
-                }
+                // Add the feature value to the array
+                features[featureIndex++] = getFeatureValue(ms2pipFeature, peptideSequence, charge, peptideAttributes, ionIndex);
             }
         }
 

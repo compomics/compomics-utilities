@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -92,18 +91,23 @@ public class FeaturesGenerator {
             reversedSequence[i] = peptideSequence[sequenceLength - i - 1];
         }
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-        ArrayList<ModificationMatch> reversedModificationMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
-        for (ModificationMatch modificationMatch : modificationMatches) {
-            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
-            reversedModificationMatches.add(reversedModificationMatch);
+        ArrayList<ModificationMatch> reversedModificationMatches;
+        if (modificationMatches != null) {
+            reversedModificationMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
+            for (ModificationMatch modificationMatch : modificationMatches) {
+                ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
+                reversedModificationMatches.add(reversedModificationMatch);
+            }
+        } else {
+            reversedModificationMatches = null;
         }
 
         return getIonsFeatures(reversedSequence, reversedModificationMatches, charge, ionIndex);
     }
 
     /**
-     * Returns the ms2pip features for the ion at index of the given sequence with
-     * modifications at the given charge.
+     * Returns the ms2pip features for the ion at index of the given sequence
+     * with modifications at the given charge.
      *
      * @param peptideSequence the peptide sequence as char array
      * @param modificationMatches the modification matches
@@ -115,10 +119,16 @@ public class FeaturesGenerator {
     private int[] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge, int ionIndex) {
 
         // Get the properties needed for peptides, ions, and amino acids
-        AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
-        AminoAcid.Property[] forwardIonProperties = getAaProperties(ForwardIonAminoAcidFeature.class);
-        AminoAcid.Property[] complementaryIonProperties = getAaProperties(ComplementaryIonAminoAcidFeature.class);
-        AminoAcid.Property[] individualAaProperties = getAaProperties(AAPropertyFeatureAbsolute.class, AAPropertyFeatureRelative.class, AAPropertyRelationshipFeature.class);
+        AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class
+        );
+        AminoAcid.Property[] forwardIonProperties = getAaProperties(ForwardIonAminoAcidFeature.class
+        );
+        AminoAcid.Property[] complementaryIonProperties = getAaProperties(ComplementaryIonAminoAcidFeature.class
+        );
+        AminoAcid.Property[] individualAaProperties = getAaProperties(AAPropertyFeatureAbsolute.class,
+                 AAPropertyFeatureRelative.class,
+                 AAPropertyRelationshipFeature.class
+        );
 
         // Get the properties along the peptide sequence
         PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, modificationMatches, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
@@ -128,7 +138,7 @@ public class FeaturesGenerator {
 
         // Iterate the different features categories
         int featureIndex = 0;
-        
+
         for (String category : featuresMap.getSortedFeaturesList()) {
 
             // Iterate the features for this category
@@ -568,6 +578,7 @@ public class FeaturesGenerator {
             sequenceIndex = sequenceLength - 1;
         }
         return sequenceIndex;
+
     }
 
     /**

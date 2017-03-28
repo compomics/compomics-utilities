@@ -103,32 +103,47 @@ public class SnrScore {
         
         Double pAnnotatedMinusLog = 0.0;
         Double pNotAnnotatedMinusLog = 0.0;
-        HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         
-        for (Double mz : spectrum.getOrderedMzValues()) {
-            Peak peak = peakMap.get(mz);
-            double intensity = peak.intensity;
+        double[] mzs = spectrum.getMzValuesAsArray();
+        double[] intensities = spectrum.getIntensityValuesAsArray();
+        
+        for (int i = 0 ; i < mzs.length ; i++) {
+            
+            double mz = mzs[i];
+            double intensity = intensities[i];
             double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
+            
             if (peakMatches == null) {
+                
                 pNotAnnotatedMinusLog += pMinusLog;
+                
             } else {
+                
                 for (IonMatch ionMatch : peakMatches) {
+                    
                     if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                        
                         PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                        
                         if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
+                            
                             pAnnotatedMinusLog += pMinusLog;
                             break;
+                            
                         }
                     }
                 }
             }
         }
+        
         if (pAnnotatedMinusLog == 0.0) {
             return pAnnotatedMinusLog;
         }
+        
         if (pNotAnnotatedMinusLog < limitLog10) {
+            
             double pNotAnnotated = FastMath.pow(10, -pNotAnnotatedMinusLog);
             if (pNotAnnotated > 1.0 - Double.MIN_VALUE) {
                 pNotAnnotated = 1.0 - Double.MIN_VALUE;
@@ -139,6 +154,7 @@ public class SnrScore {
                 notAnnotatedCorrection = pAnnotatedMinusLog;
             }
             pAnnotatedMinusLog += notAnnotatedCorrection;
+            
         }
         return pAnnotatedMinusLog;
     }

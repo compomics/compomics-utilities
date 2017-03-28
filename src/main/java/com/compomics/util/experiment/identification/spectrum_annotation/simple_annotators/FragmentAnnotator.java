@@ -129,11 +129,11 @@ public class FragmentAnnotator {
         for (int i = 0; i < peptideLength; i++) {
 
             double ionMz = forwardIonMz1[i];
-            int ionNumber = i + 1;
             ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
 
             if (!peaks.isEmpty()) {
 
+                int ionNumber = i + 1;
                 double ionMass = ionMz - ElementaryIon.proton.getTheoreticMass();
 
                 for (Peak peak : peaks) {
@@ -143,12 +143,12 @@ public class FragmentAnnotator {
             }
 
             ionMz = complementaryIonMz1[i];
-            ionNumber = peptideLength - ionNumber;
             peaks = spectrumIndex.getMatchingPeaks(ionMz);
 
             if (!peaks.isEmpty()) {
 
                 double ionMass = ionMz - ElementaryIon.proton.getTheoreticMass();
+                int ionNumber = peptideLength - i - 1;
 
                 for (Peak peak : peaks) {
                     Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, null);
@@ -166,11 +166,11 @@ public class FragmentAnnotator {
 
                 double ionMz1 = forwardIonMz1[i];
                 double ionMz = (ionMz1 + protonContribution) / ionCharge;
-                int ionNumber = i + 1;
                 ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
 
                 if (!peaks.isEmpty()) {
 
+                    int ionNumber = i + 1;
                     double ionMass = ionMz1 - ElementaryIon.proton.getTheoreticMass();
 
                     for (Peak peak : peaks) {
@@ -181,12 +181,12 @@ public class FragmentAnnotator {
 
                 ionMz1 = complementaryIonMz1[i];
                 ionMz = (ionMz1 + protonContribution) / ionCharge;
-                ionNumber = peptideLength - ionNumber;
                 peaks = spectrumIndex.getMatchingPeaks(ionMz);
 
                 if (!peaks.isEmpty()) {
 
                     double ionMass = ionMz1 - ElementaryIon.proton.getTheoreticMass();
+                    int ionNumber = peptideLength - i - 1;
 
                     for (Peak peak : peaks) {
                         Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, null);

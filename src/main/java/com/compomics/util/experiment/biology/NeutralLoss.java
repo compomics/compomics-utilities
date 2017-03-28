@@ -18,11 +18,11 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * H2O loss.
      */
-    public static final NeutralLoss H2O = new NeutralLoss("H2O", AtomChain.getAtomChain("H(2)O"), false);
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", AtomChain.getAtomChain("H(2)O"), false, new char[]{'D', 'E', 'S', 'T'});
     /**
      * NH3 loss.
      */
-    public static final NeutralLoss NH3 = new NeutralLoss("NH3", AtomChain.getAtomChain("NH(3)"), false);
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", AtomChain.getAtomChain("NH(3)"), false, new char[]{'K', 'N', 'Q', 'R'});
     /**
      * H3PO4 loss.
      */
@@ -65,6 +65,23 @@ public class NeutralLoss extends ExperimentObject {
      * The PSI MS CV term of the neutral loss, null if not set.
      */
     private CvTerm psiCvTerm = null;
+    /**
+     * Amino acids that are likely to induce this loss. Null if not a loss originating from amino acids.
+     */
+    public final char[] aminoAcids;
+
+    /**
+     * Constructor for a user defined neutral loss. The neutral loss is added to
+     * the factory.
+     *
+     * @param name name of the neutral loss
+     * @param composition the atomic composition of the neutral loss
+     * @param fixed is the neutral loss fixed or not
+     * @param aminoAcids the amino acids that are likely to induce this loss
+     */
+    public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids) {
+        this(name, composition, fixed, aminoAcids, true);
+    }
 
     /**
      * Constructor for a user defined neutral loss. The neutral loss is added to
@@ -75,7 +92,7 @@ public class NeutralLoss extends ExperimentObject {
      * @param fixed is the neutral loss fixed or not
      */
     public NeutralLoss(String name, AtomChain composition, boolean fixed) {
-        this(name, composition, fixed, true);
+        this(name, composition, fixed, null, true);
     }
 
     /**
@@ -84,12 +101,14 @@ public class NeutralLoss extends ExperimentObject {
      * @param name name of the neutral loss
      * @param composition the atomic composition of the neutral loss
      * @param fixed is the neutral loss fixed or not
+     * @param aminoAcids the amino acids that are likely to induce this loss
      * @param save if true, the neutral loss will be added to the factory
      */
-    public NeutralLoss(String name, AtomChain composition, boolean fixed, boolean save) {
+    public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids, boolean save) {
         this.name = name;
         this.composition = composition;
         this.fixed = fixed;
+        this.aminoAcids = aminoAcids;
         if (save) {
             addNeutralLoss(this);
         }
@@ -220,6 +239,6 @@ public class NeutralLoss extends ExperimentObject {
 
     @Override
     public NeutralLoss clone() {
-        return new NeutralLoss(name, composition.clone(), fixed, false);
+        return new NeutralLoss(name, composition.clone(), fixed, aminoAcids, false);
     }
 }

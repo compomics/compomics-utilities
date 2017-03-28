@@ -163,14 +163,15 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * Returns the amino acid corresponding to the letter given, null if not
+     * Returns the amino acid corresponding to the single letter code given, null if not
      * implemented.
      *
-     * @param letter the letter given
+     * @param aa the single letter code of the amino acid
+     * 
      * @return the corresponding amino acid.
      */
-    public static AminoAcid getAminoAcid(char letter) {
-        switch (letter) {
+    public static AminoAcid getAminoAcid(char aa) {
+        switch (aa) {
             case 'A':
             case 'a':
                 return AminoAcid.A;
@@ -250,7 +251,7 @@ public abstract class AminoAcid implements Serializable {
             case 'o':
                 return AminoAcid.O;
             default:
-                throw new IllegalArgumentException("No amino acid found for letter " + letter + ".");
+                throw new IllegalArgumentException("No amino acid found for letter " + aa + ".");
         }
     }
 

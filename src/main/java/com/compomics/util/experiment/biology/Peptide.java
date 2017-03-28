@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -1769,7 +1770,7 @@ public class Peptide extends ExperimentObject {
 
         if (mass == null) {
 
-            Double tempMass = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
+            Double tempMass = StandardMasses.h2o.mass;
             char[] sequenceAsCharArray = sequence.toCharArray();
 
             for (char aa : sequenceAsCharArray) {

@@ -19,6 +19,31 @@ public class ElementaryElement {
      * A neutron.
      */
     public static final ElementaryElement neutron = new ElementaryElement("Neutron", 1.00866491600);
+    /**
+     * Cache for the multiples of the neutron mass.
+     */
+    public static double[] protonMassMultiples = {0.0, 
+        neutron.theoreticMass,
+        2* neutron.theoreticMass,
+        3* neutron.theoreticMass,
+        4* neutron.theoreticMass,
+        5* neutron.theoreticMass,
+        6* neutron.theoreticMass,
+        7* neutron.theoreticMass,
+        8* neutron.theoreticMass,
+        9* neutron.theoreticMass,
+        10* neutron.theoreticMass};
+    
+    /**
+     * Returns the mass of the neutron multiplied by i. If i is smaller or equal to ten a value in cache is used. It is calculated otherwise. Throws an exception for negative i without sanity check.
+     * 
+     * @param i i
+     * 
+     * @return the mass of the proton multiplied by i
+     */
+    public static double getProtonMassMultiple(int i) {
+        return i <= 10 ? protonMassMultiples[i] : i * neutron.theoreticMass;
+    }
 
     /**
      * Constructor.

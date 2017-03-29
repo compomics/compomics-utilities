@@ -100,50 +100,55 @@ public class SnrScore {
      * occurs when calculating logs
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
-        
-        Double pAnnotatedMinusLog = 0.0;
-        Double pNotAnnotatedMinusLog = 0.0;
+
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         
-        double[] mzs = spectrum.getMzValuesAsArray();
-        double[] intensities = spectrum.getIntensityValuesAsArray();
-        
-        for (int i = 0 ; i < mzs.length ; i++) {
-            
-            double mz = mzs[i];
-            double intensity = intensities[i];
-            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+        double pFragmentIonMinusLog = 0.0;
+        double pAnnotatedMinusLog = 0.0;
+
+        for (double mz : ionMatches.keySet()) {
+
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
-            
-            if (peakMatches == null) {
-                
-                pNotAnnotatedMinusLog += pMinusLog;
-                
-            } else {
-                
-                for (IonMatch ionMatch : peakMatches) {
-                    
-                    if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                        
-                        PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                        
-                        if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
-                            
-                            pAnnotatedMinusLog += pMinusLog;
-                            break;
-                            
-                        }
+
+            double intensity = peakMatches.get(0).peak.intensity;
+            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+
+            for (IonMatch ionMatch : peakMatches) {
+
+                if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+
+                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+
+                    if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
+
+                        pFragmentIonMinusLog += pMinusLog;
+                        break;
+
                     }
                 }
             }
+
+            pAnnotatedMinusLog += pMinusLog;
+
         }
-        
-        if (pAnnotatedMinusLog == 0.0) {
+
+        if (pFragmentIonMinusLog == 0.0) {
             return pAnnotatedMinusLog;
         }
-        
+
+        double pTotalMinusLog = 0.0;
+        double[] intensities = spectrum.getIntensityValuesAsArray();
+
+        for (double intensity : intensities) {
+
+            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+            pTotalMinusLog += pMinusLog;
+        }
+
+        double pNotAnnotatedMinusLog = pTotalMinusLog - pAnnotatedMinusLog;
+
         if (pNotAnnotatedMinusLog < limitLog10) {
-            
+
             double pNotAnnotated = FastMath.pow(10, -pNotAnnotatedMinusLog);
             if (pNotAnnotated > 1.0 - Double.MIN_VALUE) {
                 pNotAnnotated = 1.0 - Double.MIN_VALUE;
@@ -154,7 +159,7 @@ public class SnrScore {
                 notAnnotatedCorrection = pAnnotatedMinusLog;
             }
             pAnnotatedMinusLog += notAnnotatedCorrection;
-            
+
         }
         return pAnnotatedMinusLog;
     }

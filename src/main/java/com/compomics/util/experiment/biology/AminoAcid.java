@@ -310,35 +310,18 @@ public abstract class AminoAcid implements Serializable {
      * returned for both I and L. The first of the amino acid string array is
      * returned.
      *
-     * @param aminoAcid the single letter code of the amino acid of interest
+     * @param aa the single letter code of the amino acid of interest
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a matching amino acid using the given matching type and
      * massTolerance
      */
-    public static String getMatchingAminoAcid(String aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        AminoAcid aa = AminoAcid.getAminoAcid(aminoAcid);
-        AminoAcidPattern aaPattern = AminoAcidPattern.getAminoAcidPatternFromString(aminoAcid);
-        for (String candidateAA : aminoAcidStrings) {
-            if (aaPattern.matches(candidateAA, sequenceMatchingPreferences)) {
-                if (!aa.iscombination()) {
-                    return candidateAA;
-                } else {
-                    char[] subAas = aa.getSubAminoAcids();
-                    boolean subAa = false;
-                    for (char aaChar : subAas) {
-                        if (aaChar == candidateAA.charAt(0)) {
-                            subAa = true;
-                            break;
-                        }
-                    }
-                    if (!subAa) {
-                        return candidateAA;
-                    }
-                }
-            }
+    public static char getMatchingAminoAcid(char aa, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids
+                && aa == 'L') {
+            return 'I';
         }
-        throw new IllegalArgumentException("No unique amino acid found for amino acid " + aminoAcid);
+        return aa;
     }
 
     /**
@@ -352,13 +335,19 @@ public abstract class AminoAcid implements Serializable {
      * @return the matching sequence
      */
     public static String getMatchingSequence(String sequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        StringBuilder stringBuilder = new StringBuilder(sequence.length());
-        for (int i = 0; i < sequence.length(); i++) {
-            String aa = String.valueOf(sequence.charAt(i));
-            aa = getMatchingAminoAcid(aa, sequenceMatchingPreferences);
-            stringBuilder.append(aa);
+        
+        if (sequenceMatchingPreferences.getSequenceMatchingType() != SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
+            return sequence;
         }
-        return stringBuilder.toString();
+        
+        char[] aas = sequence.toCharArray();
+        for (int i = 0 ; i < aas.length ; i++) {
+            if (aas[i] == 'L') {
+                aas[i] = 'I';
+            }
+        }
+        
+        return new String(aas);
     }
 
     /**

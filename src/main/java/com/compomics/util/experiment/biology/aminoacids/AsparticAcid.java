@@ -41,4 +41,44 @@ public class AsparticAcid extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -2.49;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.89;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 208.6;
+    }
+
+    @Override
+    public double getPI() {
+        return 2.85;
+    }
+
+    @Override
+    public double getPK1() {
+        return 1.99;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.90;
+    }
+
+    @Override
+    public double getPKa() {
+        return 3.67;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 91;
+    }
 }

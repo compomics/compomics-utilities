@@ -41,4 +41,44 @@ public class Asparagine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -3.79;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.94;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 212.8;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.41;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.14;
+    }
+
+    @Override
+    public double getPK2() {
+        return 8.72;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 96;
+    }
 }

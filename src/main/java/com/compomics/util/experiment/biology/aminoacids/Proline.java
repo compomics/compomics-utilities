@@ -41,4 +41,44 @@ public class Proline extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -4.92;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.57;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 214.4;
+    }
+
+    @Override
+    public double getPI() {
+        return 6.30;
+    }
+
+    @Override
+    public double getPK1() {
+        return 1.95;
+    }
+
+    @Override
+    public double getPK2() {
+        return 10.64;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 90;
+    }
 }

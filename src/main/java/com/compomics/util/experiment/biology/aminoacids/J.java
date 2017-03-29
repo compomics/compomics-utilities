@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.aminoacids;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import java.util.ArrayList;
 
 /**
  * Isoleucine or Leucine.
@@ -33,5 +32,45 @@ public class J extends AminoAcid {
     @Override
     public boolean iscombination() {
         return true;
+    }
+
+    @Override
+    public double getHydrophobicity() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getHelicity() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getBasicity() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getPI() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getPK1() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getPK2() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public double getPKa() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        throw new UnsupportedOperationException("Not supported for amino acid combinations.");
     }
 }

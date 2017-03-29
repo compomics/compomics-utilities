@@ -41,4 +41,44 @@ public class Lysine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -5.00;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.88;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 221.8;
+    }
+
+    @Override
+    public double getPI() {
+        return 9.60;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.16;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.06;
+    }
+
+    @Override
+    public double getPKa() {
+        return 10.40;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 135;
+    }
 }

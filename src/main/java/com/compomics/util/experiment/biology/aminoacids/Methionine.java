@@ -42,4 +42,44 @@ public class Methionine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 3.23;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.22;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 213.3;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.74;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.13;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.28;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 124;
+    }
 }

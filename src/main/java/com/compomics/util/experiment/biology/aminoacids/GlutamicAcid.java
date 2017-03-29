@@ -41,4 +41,44 @@ public class GlutamicAcid extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -1.50;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 0.85;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 215.6;
+    }
+
+    @Override
+    public double getPI() {
+        return 3.15;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.10;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.47;
+    }
+
+    @Override
+    public double getPKa() {
+        return 4.25;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 109;
+    }
 }

@@ -41,4 +41,44 @@ public class Serine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return -2.85;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.00;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 207.6;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.68;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.19;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.21;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 73;
+    }
 }

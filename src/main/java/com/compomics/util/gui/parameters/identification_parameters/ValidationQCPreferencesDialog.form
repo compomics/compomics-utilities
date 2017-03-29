@@ -247,7 +247,6 @@
                   <Connection code="&quot;Hits obtained on small databases (&lt;&quot; + SequenceFactory.minProteinCount + &quot; protein sequences)&quot;" type="code"/>
                 </Property>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dbCheckActionPerformed"/>
@@ -257,7 +256,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Datasets with a low number of target hits"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nTargetCheckActionPerformed"/>
@@ -272,7 +270,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hits near the confidence threshold (margin= 1 x resolution)"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confidenceCheckActionPerformed"/>
@@ -312,9 +309,6 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="proteinScrollPane">
-              <Properties>
-                <Property name="opaque" type="boolean" value="false"/>
-              </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="proteinScrollPaneMouseReleased"/>
               </Events>
@@ -376,9 +370,6 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="peptideScrollPane">
-              <Properties>
-                <Property name="opaque" type="boolean" value="false"/>
-              </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideScrollPaneMouseReleased"/>
               </Events>
@@ -440,9 +431,6 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="psmScrollPane">
-              <Properties>
-                <Property name="opaque" type="boolean" value="false"/>
-              </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="psmScrollPaneMouseReleased"/>
               </Events>

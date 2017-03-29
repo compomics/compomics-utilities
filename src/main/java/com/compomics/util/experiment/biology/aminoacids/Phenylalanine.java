@@ -41,4 +41,44 @@ public class Phenylalanine extends AminoAcid {
     public boolean iscombination() {
         return false;
     }
+
+    @Override
+    public double getHydrophobicity() {
+        return 5.00;
+    }
+
+    @Override
+    public double getHelicity() {
+        return 1.26;
+    }
+
+    @Override
+    public double getBasicity() {
+        return 212.1;
+    }
+
+    @Override
+    public double getPI() {
+        return 5.49;
+    }
+
+    @Override
+    public double getPK1() {
+        return 2.20;
+    }
+
+    @Override
+    public double getPK2() {
+        return 9.31;
+    }
+
+    @Override
+    public double getPKa() {
+        return 0.0;
+    }
+
+    @Override
+    public int getVanDerWaalsVolume() {
+        return 135;
+    }
 }

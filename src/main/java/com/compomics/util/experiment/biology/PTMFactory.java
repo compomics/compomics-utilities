@@ -3388,27 +3388,6 @@ public class PTMFactory implements Serializable {
         ptm = new PTM(PTM.MODAA, ptmName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-
-        // Replacement of cysteine by selenocysteine
-        atomChainAdded = new AtomChain();
-        atomChainAdded.append(new AtomImpl(Atom.Se, 0), 1);
-        atomChainRemoved = new AtomChain();
-        atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
-        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Selenocysteine";
-        ptm = new PTM(PTM.MODAA, ptmName, "Sec", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-
-        // Replacement of methionine by selenomethionine
-        atomChainAdded = new AtomChain();
-        atomChainAdded.append(new AtomImpl(Atom.Se, 0), 1);
-        atomChainRemoved = new AtomChain();
-        atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
-        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
-        ptmName = "Selenomethionine";
-        ptm = new PTM(PTM.MODAA, ptmName, "Sem", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        
     }
 }

@@ -10,6 +10,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.spectrum_annotation.SimplePeptideAnnotator.IonSeries;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
@@ -21,12 +22,6 @@ import java.util.ArrayList;
  */
 public class FragmentAnnotator {
 
-    /**
-     * The type of ion series to annotate.
-     */
-    public enum IonSeries {
-        ax, by, cz;
-    }
     /**
      * The modifications factory.
      */
@@ -59,6 +54,20 @@ public class FragmentAnnotator {
      * @param ionSeries the ion series to annotate
      */
     public FragmentAnnotator(Peptide peptide, IonSeries ionSeries) {
+        this(peptide, ionSeries, true, true);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param peptide the peptide
+     * @param ionSeries the ion series to annotate
+     * @param forward boolean indicating whether forward ions should be
+     * annotated
+     * @param complementary boolean indicating whether complementary ions should
+     * be annotated
+     */
+    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries, boolean forward, boolean complementary) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -109,8 +118,12 @@ public class FragmentAnnotator {
 
             forwardMass += modificationsMasses[i];
 
-            forwardIonMz1[i] = forwardMass;
-            complementaryIonMz1[i] = complementaryMass - forwardMass;
+            if (forward) {
+                forwardIonMz1[i] = forwardMass;
+            }
+            if (complementary) {
+                complementaryIonMz1[i] = complementaryMass - forwardMass;
+            }
         }
     }
 

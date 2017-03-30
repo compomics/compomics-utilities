@@ -28,26 +28,25 @@ public class AnnotationSettings implements Serializable {
      * Enum of the types of intensity thresholds available.
      */
     public enum IntensityThresholdType {
-        
-        percentile("Percentile of the intensities."), 
+
+        percentile("Percentile of the intensities."),
         snp("Signal to noise probability.");
-        
+
         /**
          * The description of the thresold.
          */
         public final String description;
-        
+
         /**
          * Constructor.
-         * 
+         *
          * @param description the description of the thresold
          */
         private IntensityThresholdType(String description) {
             this.description = description;
         }
     }
-    
-    
+
     /**
      * Serial number for backward compatibility.
      */
@@ -67,7 +66,8 @@ public class AnnotationSettings implements Serializable {
      */
     private IntensityThresholdType intensityThresholdType = IntensityThresholdType.percentile;
     /**
-     * The intensity thresold to use. The type of threshold is defined according to the IntensityThreshold enum.
+     * The intensity thresold to use. The type of threshold is defined according
+     * to the IntensityThreshold enum.
      */
     private double intensityLimit = 0.75;
     /**
@@ -119,12 +119,13 @@ public class AnnotationSettings implements Serializable {
      * If there are more than one matching peak for a given annotation setting
      * this value to true results in the most accurate peak being annotated,
      * while setting this to false annotates the most intense peak.
-     * 
+     *
      * @deprecated use tiesResolution instead
      */
     private Boolean highResolutionAnnotation = true;
     /**
-     * The method to use for resolution of ties when multiple peaks can be assigned to a fragment.
+     * The method to use for resolution of ties when multiple peaks can be
+     * assigned to a fragment.
      */
     private SpectrumAnnotator.TiesResolution tiesResolution = SpectrumAnnotator.TiesResolution.mostAccurateMz;
 
@@ -370,10 +371,13 @@ public class AnnotationSettings implements Serializable {
      * @param subType the ion sub type
      */
     public void addIonType(Ion.IonType ionType, int subType) {
-        if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
+        HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
+        if (selectedSubtypes == null) {
+            selectedSubtypes = new HashSet<Integer>(1);
+            selectedIonsMap.put(ionType, selectedSubtypes);
         }
-        this.selectedIonsMap.get(ionType).add(subType);
+        selectedSubtypes.add(subType);
+
     }
 
     /**
@@ -382,11 +386,13 @@ public class AnnotationSettings implements Serializable {
      * @param ionType a new ion type to annotate
      */
     public void addIonType(Ion.IonType ionType) {
-        if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
-        }
-        for (int subType : Ion.getPossibleSubtypes(ionType)) {
-            this.selectedIonsMap.get(ionType).add(subType);
+        ArrayList<Integer> possibleSubtypes = Ion.getPossibleSubtypes(ionType);
+        HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
+        if (selectedSubtypes == null) {
+            selectedSubtypes = new HashSet<Integer>(possibleSubtypes);
+            selectedIonsMap.put(ionType, selectedSubtypes);
+        } else {
+            selectedSubtypes.addAll(possibleSubtypes);
         }
     }
 
@@ -499,11 +505,11 @@ public class AnnotationSettings implements Serializable {
 
     /**
      * Returns the intensity threshold type.
-     * 
+     *
      * @return the intensity threshold type
      */
     public IntensityThresholdType getIntensityThresholdType() {
-        
+
         if (intensityThresholdType == null) { // Backward compatibility
             intensityThresholdType = IntensityThresholdType.percentile;
         }
@@ -512,7 +518,7 @@ public class AnnotationSettings implements Serializable {
 
     /**
      * Sets the intensity threshold type.
-     * 
+     *
      * @param intensityThresholdType the intensity threshold type
      */
     public void setIntensityThresholdType(IntensityThresholdType intensityThresholdType) {
@@ -619,7 +625,7 @@ public class AnnotationSettings implements Serializable {
      * mz value, false bases the annotation on the most intense peak.
      *
      * @deprecated use tiesResolution instead
-     * 
+     *
      * @return the highResolutionAnnotation
      */
     public boolean isHighResolutionAnnotation() {
@@ -634,7 +640,7 @@ public class AnnotationSettings implements Serializable {
      * or on the most intense peak.
      *
      * @deprecated use tiesResolution instead
-     * 
+     *
      * @param highResolutionAnnotation the highResolutionAnnotation to set
      */
     public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
@@ -642,8 +648,9 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Returns the ties resolution method to use when multiple peaks can be assigned to an ion.
-     * 
+     * Returns the ties resolution method to use when multiple peaks can be
+     * assigned to an ion.
+     *
      * @return the ties resolution method to use
      */
     public SpectrumAnnotator.TiesResolution getTiesResolution() {
@@ -654,13 +661,15 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Sets the ties resolution method to use when multiple peaks can be assigned to an ion.
-     * 
+     * Sets the ties resolution method to use when multiple peaks can be
+     * assigned to an ion.
+     *
      * @param tiesResolution the ties resolution method to use
      */
     public void setTiesResolution(SpectrumAnnotator.TiesResolution tiesResolution) {
         this.tiesResolution = tiesResolution;
     }
+
     /**
      * Clones the settings.
      *

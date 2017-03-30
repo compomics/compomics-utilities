@@ -28,11 +28,24 @@ public class PrecursorAnnotator {
      */
     private final PTMFactory ptmFactory = PTMFactory.getInstance();
 
+    /**
+     * The mass of the precursor to annotate.
+     */
     private double precursorMass;
-
+    /**
+     * The masses of the neutral losses to consider.
+     */
     private double[] neutralLossesMasses;
+    /**
+     * Array of the neutral losses to consider.
+     */
     private NeutralLoss[] neutralLosses = null;
 
+    /**
+     * Constructor.
+     *
+     * @param peptide the peptide of interest.
+     */
     public PrecursorAnnotator(Peptide peptide) {
 
         precursorMass = peptide.getMass();
@@ -141,7 +154,7 @@ public class PrecursorAnnotator {
                 }
             }
         }
-        
+
         return results;
     }
 

@@ -1,14 +1,11 @@
 package com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators;
 
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Annotator for reporter ions.
@@ -17,10 +14,21 @@ import java.util.HashMap;
  */
 public class ReporterIonAnnotator {
 
+    /**
+     * Array of the m/z of the reporter ions to annotate.
+     */
     private double[] reporterIonsMz;
     
+    /**
+     * Array of the reporter ions to annotate.
+     */
     private ReporterIon[] reporterIons;
     
+    /**
+     * Constructor.
+     * 
+     * @param reporterIons array of the reporter ions to annotate
+     */
     public ReporterIonAnnotator(ReporterIon[] reporterIons) {
         
         this.reporterIons = reporterIons;

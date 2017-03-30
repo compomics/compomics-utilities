@@ -40,6 +40,20 @@ public class ImmoniumIonAnnotator {
      * @param peptideSequence the peptide sequence
      */
     public ImmoniumIonAnnotator(char[] peptideSequence) {
+        this(peptideSequence, true, true);
+    }
+
+    /**
+     * Constructor. Warning: there is no check for amino acid uniticy, if
+     * duplicates are present, they will be reported multiple times.
+     *
+     * @param peptideSequence the peptide sequence
+     * @param immonium boolean indicating whether immonium ions should be
+     * annotated
+     * @param related boolean indicating whether related ions should be
+     * annotated
+     */
+    public ImmoniumIonAnnotator(char[] peptideSequence, boolean immonium, boolean related) {
 
         aas = peptideSequence;
         immoniumIonsMz = new double[peptideSequence.length];
@@ -50,15 +64,20 @@ public class ImmoniumIonAnnotator {
         for (int i = 1; i < aas.length; i++) {
 
             char aa = aas[i];
-            immoniumIonsMz[i] = ImmoniumIon.getImmoniumIon(aa).getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
 
-            ArrayList<RelatedIon> aaRelatedIons = RelatedIon.getRelatedIons(aa);
-            int j = relatedIons.length;
-            System.arraycopy(relatedIons, 0, relatedIons, 0, relatedIons.length + aaRelatedIons.size());
-            System.arraycopy(relatedIonsMz, 0, relatedIonsMz, 0, relatedIonsMz.length + aaRelatedIons.size());
-            for (RelatedIon relatedIon : aaRelatedIons) {
-                relatedIons[j] = relatedIon;
-                relatedIonsMz[j++] = relatedIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+            if (immonium) {
+                immoniumIonsMz[i] = ImmoniumIon.getImmoniumIon(aa).getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+            }
+
+            if (related) {
+                ArrayList<RelatedIon> aaRelatedIons = RelatedIon.getRelatedIons(aa);
+                int j = relatedIons.length;
+                System.arraycopy(relatedIons, 0, relatedIons, 0, relatedIons.length + aaRelatedIons.size());
+                System.arraycopy(relatedIonsMz, 0, relatedIonsMz, 0, relatedIonsMz.length + aaRelatedIons.size());
+                for (RelatedIon relatedIon : aaRelatedIons) {
+                    relatedIons[j] = relatedIon;
+                    relatedIonsMz[j++] = relatedIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+                }
             }
         }
     }

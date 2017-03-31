@@ -102,6 +102,18 @@ public class Peptide extends ExperimentObject {
      * @param sanityCheck boolean indicating whether the input should be checked
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, boolean sanityCheck) {
+        this(aSequence, modifications, sanityCheck, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param aSequence the peptide sequence, assumed to be in upper case only
+     * @param modifications the PTM of this peptide
+     * @param sanityCheck boolean indicating whether the input should be checked
+     * @param mass the mass of the peptide
+     */
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, boolean sanityCheck, Double mass) {
         this.sequence = aSequence;
         if (modifications != null) {
             this.modifications = new ArrayList<ModificationMatch>(modifications);
@@ -110,7 +122,10 @@ public class Peptide extends ExperimentObject {
             sanityCheck();
         }
         proteinsMutex = new Semaphore(1);
-        massMutex = new Semaphore(1);
+        this.mass = mass;
+        if (mass == null) {
+            massMutex = new Semaphore(1);
+        }
     }
 
     /**
@@ -1781,23 +1796,19 @@ public class Peptide extends ExperimentObject {
     public void estimateTheoreticMass() throws InterruptedException {
 
         if (mass == null) {
-            
+
             Semaphore threadMutex = massMutex;
 
             threadMutex.acquire();
 
             if (mass == null) {
 
-                Double tempMass = StandardMasses.h2o.mass;
+                double tempMass = StandardMasses.h2o.mass;
                 char[] sequenceAsCharArray = sequence.toCharArray();
 
                 for (char aa : sequenceAsCharArray) {
-                    try {
-                        AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-                        tempMass += currentAA.getMonoisotopicMass();
-                    } catch (NullPointerException e) {
-                        throw new IllegalArgumentException("Unknown amino acid: " + aa + ".");
-                    }
+                    AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
+                    tempMass += currentAA.getMonoisotopicMass();
                 }
 
                 if (modifications != null) {

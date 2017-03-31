@@ -423,7 +423,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, double massMin, double massMax, BoxedObject<Boolean> smallMass) {
 
         char nTermAaChar = peptideSequence[0];
         String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
@@ -436,7 +436,7 @@ public class ProteinIteratorUtils {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
             peptideMass += aminoAcid.getMonoisotopicMass();
 
-            if (massMax != null && peptideMass + minCtermMass > massMax) {
+            if (massMax != 0.0 && peptideMass + minCtermMass > massMax) {
                 smallMass.setObject(Boolean.FALSE);
                 return null;
             }

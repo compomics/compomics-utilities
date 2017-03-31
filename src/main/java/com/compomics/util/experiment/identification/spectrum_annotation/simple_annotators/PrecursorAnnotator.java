@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -105,7 +104,7 @@ public class PrecursorAnnotator {
 
         for (int isotope = 0; isotope <= isotopeMax; isotope++) {
 
-            double mass = protonatedMass + ElementaryElement.getProtonMassMultiple(isotope);
+            double mass = protonatedMass + ElementaryElement.getNeutronMassMultiple(isotope);
 
             double mz = mass / peptideCharge;
 

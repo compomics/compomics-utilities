@@ -47,7 +47,7 @@ public class SnrScore {
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
         ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, false);
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatchesList);
+        return getScore(peptide, spectrum, ionMatchesList);
     }
 
     /**
@@ -55,9 +55,6 @@ public class SnrScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatchesList the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
@@ -67,7 +64,7 @@ public class SnrScore {
      * @throws org.apache.commons.math.MathException exception if an exception
      * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
         HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<Double, ArrayList<IonMatch>>(ionMatchesList.size());
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
@@ -78,7 +75,7 @@ public class SnrScore {
             }
             peakMatches.add(ionMatch);
         }
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
+        return getScore(peptide, spectrum, ionMatches);
     }
 
     /**
@@ -86,9 +83,6 @@ public class SnrScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      * indexed by mz
      *
@@ -99,7 +93,7 @@ public class SnrScore {
      * @throws org.apache.commons.math.MathException exception if an exception
      * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
 
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         

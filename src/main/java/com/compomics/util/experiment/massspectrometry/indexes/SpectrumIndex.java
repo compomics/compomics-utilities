@@ -49,7 +49,7 @@ public class SpectrumIndex implements UrParameter {
     /**
      * The total intensity above the intensity threshold.
      */
-    private Double totalIntensity;
+    private double totalIntensity;
     /**
      * The intensity limit used for the index.
      */
@@ -269,7 +269,7 @@ public class SpectrumIndex implements UrParameter {
      * 
      * @return the total intensity of the peaks above the intensity threshold
      */
-    public Double getTotalIntensity() {
+    public double getTotalIntensity() {
         return totalIntensity;
     }
 

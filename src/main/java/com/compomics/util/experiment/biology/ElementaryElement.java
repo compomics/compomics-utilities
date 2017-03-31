@@ -22,7 +22,7 @@ public class ElementaryElement {
     /**
      * Cache for the multiples of the neutron mass.
      */
-    public static double[] protonMassMultiples = {0.0, 
+    public static double[] neutronMassMultiples = {0.0, 
         neutron.theoreticMass,
         2* neutron.theoreticMass,
         3* neutron.theoreticMass,
@@ -41,8 +41,8 @@ public class ElementaryElement {
      * 
      * @return the mass of the proton multiplied by i
      */
-    public static double getProtonMassMultiple(int i) {
-        return i <= 10 ? protonMassMultiples[i] : i * neutron.theoreticMass;
+    public static double getNeutronMassMultiple(int i) {
+        return i <= 10 ? neutronMassMultiples[i] : i * neutron.theoreticMass;
     }
 
     /**

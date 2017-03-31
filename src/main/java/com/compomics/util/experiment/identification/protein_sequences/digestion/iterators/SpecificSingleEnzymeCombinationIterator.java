@@ -117,7 +117,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
 
         // Return the next result if any
         resultIndex++;
@@ -172,8 +172,11 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
     /**
      * Iterates the sequence to the next missed cleavage and stores the peptides
      * found in the result list.
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    private void iterateSequence() {
+    private void iterateSequence() throws InterruptedException {
 
         int initialIndex = sequenceIndex;
 

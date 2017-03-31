@@ -74,8 +74,11 @@ public class FragmentAnnotatorNL {
      * @param ionSeries the ion series to annotate
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent) {
+    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent) throws InterruptedException {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -215,8 +218,11 @@ public class FragmentAnnotatorNL {
      * annotated
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
+    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) throws InterruptedException {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;

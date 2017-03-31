@@ -66,7 +66,7 @@ public class UnspecificCombinationIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
 
         // See if an ambiguous sequence is being iterated
         if (ambiguousSequenceIterator != null) {

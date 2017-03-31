@@ -47,6 +47,10 @@ public class Peptide extends ExperimentObject {
      */
     private String sequenceWithLowerCasePtms;
     /**
+     * Semaphore for the mass estimation.
+     */
+    private Semaphore massMutex;
+    /**
      * The peptide mass.
      */
     private Double mass = null;
@@ -106,6 +110,7 @@ public class Peptide extends ExperimentObject {
             sanityCheck();
         }
         proteinsMutex = new Semaphore(1);
+        massMutex = new Semaphore(1);
     }
 
     /**
@@ -152,14 +157,18 @@ public class Peptide extends ExperimentObject {
             sanityCheck();
         }
         proteinsMutex = new Semaphore(1);
+        massMutex = new Semaphore(1);
     }
 
     /**
      * Getter for the mass.
      *
      * @return the peptide mass
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public Double getMass() {
+    public Double getMass() throws InterruptedException {
         if (mass == null) {
             estimateTheoreticMass();
         }
@@ -183,6 +192,7 @@ public class Peptide extends ExperimentObject {
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         this.modifications = modificationMatches;
         mass = null;
+        massMutex = new Semaphore(1);
         key = null;
         matchingKey = null;
     }
@@ -193,6 +203,7 @@ public class Peptide extends ExperimentObject {
     public void clearModificationMatches() {
         modifications.clear();
         mass = null;
+        massMutex = new Semaphore(1);
         key = null;
         matchingKey = null;
     }
@@ -208,6 +219,7 @@ public class Peptide extends ExperimentObject {
         }
         modifications.add(modificationMatch);
         mass = null;
+        massMutex = new Semaphore(1);
         key = null;
         matchingKey = null;
     }
@@ -538,7 +550,7 @@ public class Peptide extends ExperimentObject {
         }
         return matchingKey;
     }
-    
+
     /**
      * Resets the internal cache of the keys.
      */
@@ -698,7 +710,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param peptideKey the peptide key
      * @param ptmMass the mass of the modification
-     * 
+     *
      * @return the number of modifications confidently localized
      */
     public static ArrayList<Integer> getNModificationLocalized(String peptideKey, Double ptmMass) {
@@ -790,7 +802,7 @@ public class Peptide extends ExperimentObject {
         if (parentProteins == null) {
             getParentProteins(sequenceMatchingPreferences);
         }
-        
+
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
             if (protein.isNTerm(sequence, sequenceMatchingPreferences)) {
@@ -1763,33 +1775,44 @@ public class Peptide extends ExperimentObject {
      * Estimates the theoretic mass of the peptide. The previous version is
      * silently overwritten.
      *
-     * @throws IllegalArgumentException if the peptide sequence contains unknown
-     * amino acids
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
+    public void estimateTheoreticMass() throws InterruptedException {
 
         if (mass == null) {
+            
+            Semaphore threadMutex = massMutex;
 
-            Double tempMass = StandardMasses.h2o.mass;
-            char[] sequenceAsCharArray = sequence.toCharArray();
+            threadMutex.acquire();
 
-            for (char aa : sequenceAsCharArray) {
-                try {
-                    AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-                    tempMass += currentAA.getMonoisotopicMass();
-                } catch (NullPointerException e) {
-                    throw new IllegalArgumentException("Unknown amino acid: " + aa + ".");
+            if (mass == null) {
+
+                Double tempMass = StandardMasses.h2o.mass;
+                char[] sequenceAsCharArray = sequence.toCharArray();
+
+                for (char aa : sequenceAsCharArray) {
+                    try {
+                        AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
+                        tempMass += currentAA.getMonoisotopicMass();
+                    } catch (NullPointerException e) {
+                        throw new IllegalArgumentException("Unknown amino acid: " + aa + ".");
+                    }
                 }
+
+                if (modifications != null) {
+                    PTMFactory ptmFactory = PTMFactory.getInstance();
+                    for (ModificationMatch ptmMatch : modifications) {
+                        tempMass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+                    }
+                }
+
+                mass = tempMass;
+
             }
 
-            if (modifications != null) {
-                PTMFactory ptmFactory = PTMFactory.getInstance();
-                for (ModificationMatch ptmMatch : modifications) {
-                    tempMass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
-                }
-            }
-
-            mass = tempMass;
+            threadMutex.release();
+            massMutex = null;
         }
     }
 

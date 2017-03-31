@@ -18,7 +18,7 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class ProteinSequenceIteratorTest extends TestCase {
 
-    public void testEnzymeDigestion() throws XmlPullParserException, IOException {
+    public void testEnzymeDigestion() throws XmlPullParserException, IOException, InterruptedException {
 
         int nXs = 2;
         

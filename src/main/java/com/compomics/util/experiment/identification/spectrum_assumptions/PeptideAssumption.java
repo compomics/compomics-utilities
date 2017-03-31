@@ -85,7 +85,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     }
 
     @Override
-    public Double getTheoreticMass() {
+    public Double getTheoreticMass() throws InterruptedException {
         return peptide.getMass();
     }
 }

@@ -52,8 +52,11 @@ public class FragmentAnnotator {
      *
      * @param peptide the peptide
      * @param ionSeries the ion series to annotate
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries) {
+    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries) throws InterruptedException {
         this(peptide, ionSeries, true, true);
     }
 
@@ -66,8 +69,11 @@ public class FragmentAnnotator {
      * annotated
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries, boolean forward, boolean complementary) {
+    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries, boolean forward, boolean complementary) throws InterruptedException {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;

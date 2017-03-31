@@ -56,8 +56,11 @@ public class IteratorFactory {
      * @param massMax the maximal mass of a peptide
      *
      * @return a sequence iterator
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) {
+    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) throws InterruptedException {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
                 if (AminoAcidSequence.hasCombination(sequence)) {

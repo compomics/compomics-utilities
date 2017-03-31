@@ -44,8 +44,11 @@ public class PrecursorAnnotator {
      * Constructor.
      *
      * @param peptide the peptide of interest.
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public PrecursorAnnotator(Peptide peptide) {
+    public PrecursorAnnotator(Peptide peptide) throws InterruptedException {
 
         precursorMass = peptide.getMass();
 

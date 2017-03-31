@@ -28,8 +28,11 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param sequence the sequence to iterate
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, Double massMin, Double massMax) {
+    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, Double massMin, Double massMax) throws InterruptedException {
 
         this.proteinIteratorUtils = proteinIteratorUtils;
         setPeptide(sequence, massMin, massMax);
@@ -52,8 +55,11 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param sequence the amino acid sequence
      * @param massMin the minimal mass
      * @param massMax the maximal mass
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    private void setPeptide(String sequence, Double massMin, Double massMax) {
+    private void setPeptide(String sequence, Double massMin, Double massMax) throws InterruptedException {
 
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, 0, massMin, massMax);
 

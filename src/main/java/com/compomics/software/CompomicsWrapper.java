@@ -563,6 +563,11 @@ public class CompomicsWrapper {
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
+                            
+                            // incrementing the counter for a PeptideShaker update 
+                            if (toolName.equals("PeptideShaker")) Util.sendGAUpdate("UA-36198780-1", "update", "peptide-shaker");
+                            else if (toolName.equals("SearchGUI")) Util.sendGAUpdate("UA-36198780-2", "update", "searchgui");
+                            
                             if (exitJavaOnCancel) {
                                 System.exit(0);
                             }

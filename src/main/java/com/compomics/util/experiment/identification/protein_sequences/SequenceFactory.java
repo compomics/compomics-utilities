@@ -5,7 +5,6 @@ import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
@@ -791,6 +790,10 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
+
+                // check accessions for quotation marks
+                // @TODO: implement me ..?
+
 
                 // check if the accession number is unique
                 if (indexes.containsKey(accession)) {

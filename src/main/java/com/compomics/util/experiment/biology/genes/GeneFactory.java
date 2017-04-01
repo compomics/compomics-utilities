@@ -355,12 +355,16 @@ public class GeneFactory {
 
         if (swissProtMapping) {
             if (ensemblType.equalsIgnoreCase("ensembl")) {
-                accessionMapping = "\"uniprot_swissprot\"";
+                accessionMapping = "\"uniprotswissprot\"";
             } else {
                 accessionMapping = "\"uniprot_swissprot_accession\"";
             }
         } else {
-            accessionMapping = "\"uniprot_sptrembl\"";
+            if (ensemblType.equalsIgnoreCase("ensembl")) {
+                accessionMapping = "\"uniprotsptrembl\"";
+            } else {
+                accessionMapping = "\"uniprot_sptrembl\"";
+            }
         }
 
         // construct data
@@ -487,7 +491,7 @@ public class GeneFactory {
                                     if (rowLine != null && rowLine.startsWith("Query ERROR")) {
                                         if (rowLine.lastIndexOf("Attribute goslim_goa_accession NOT FOUND") != -1) {
                                             success = false;
-                                        } else if (rowLine.lastIndexOf("Attribute uniprot_swissprot_accession NOT FOUND") != -1) {
+                                        } else if (rowLine.lastIndexOf("Attribute uniprotswissprot_accession NOT FOUND") != -1) {
                                             success = false;
                                         } else {
                                             throw new IllegalArgumentException("Query error: " + rowLine);

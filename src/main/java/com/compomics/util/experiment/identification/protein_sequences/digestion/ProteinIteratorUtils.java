@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
@@ -436,7 +437,7 @@ public class ProteinIteratorUtils {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
             peptideMass += aminoAcid.getMonoisotopicMass();
 
-            if (massMax != 0.0 && peptideMass + minCtermMass > massMax) {
+            if (peptideMass + minCtermMass > massMax) {
                 smallMass.setObject(Boolean.FALSE);
                 return null;
             }

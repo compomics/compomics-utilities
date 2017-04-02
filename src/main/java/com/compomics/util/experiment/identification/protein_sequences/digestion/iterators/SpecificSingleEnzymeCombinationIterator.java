@@ -36,11 +36,11 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
     /**
      * The minimal mass to consider.
      */
-    private Double massMin;
+    private double massMin;
     /**
      * The maximal mass to consider.
      */
-    private Double massMax;
+    private double massMax;
     /**
      * The enzyme to use to digest the sequence.
      */
@@ -100,7 +100,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public SpecificSingleEnzymeCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Enzyme enzyme, int nMissedCleavages, Double massMin, Double massMax) {
+    public SpecificSingleEnzymeCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Enzyme enzyme, int nMissedCleavages, double massMin, double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
@@ -147,8 +147,8 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
             int startIndex = ambiguousPeptidesStartMap.get(ambiguousSequence);
             Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, startIndex, massMin, massMax);
             if (peptide != null
-                    && (massMin == null || peptide.getMass() >= massMin)
-                    && (massMax == null || peptide.getMass() <= massMax)) {
+                    && (peptide.getMass() >= massMin)
+                    && (peptide.getMass() <= massMax)) {
                 return new PeptideWithPosition(peptide, startIndex);
             }
             return getNextPeptide();
@@ -249,12 +249,12 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
                 if (!AminoAcidSequence.hasCombination(newSequence)) {
                     Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
                     if (peptide != null
-                            && (massMin == null || peptide.getMass() >= massMin)
-                            && (massMax == null || peptide.getMass() <= massMax)) {
+                            && peptide.getMass() >= massMin
+                            && peptide.getMass() <= massMax) {
                         result.add(new PeptideWithPosition(peptide, initialIndex));
                     }
                 } else if (nX <= proteinIteratorUtils.getMaxXsInSequence()) {
-                    smallMass.setObject(massMax == null || AminoAcidSequence.getMinMass(newSequence) <= massMax);
+                    smallMass.setObject(AminoAcidSequence.getMinMass(newSequence) <= massMax);
                     if (smallMass.getObject()) {
                         String newSequenceAsString = new String(newSequence);
                         newAmbiguousPeptidesStartMap.put(newSequenceAsString, initialIndex);
@@ -272,8 +272,8 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
                                 smallMass.setObject(Boolean.TRUE);
                                 Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, peptideStart, massMin, massMax, smallMass);
                                 if (peptide != null
-                                        && (massMin == null || peptide.getMass() >= massMin)
-                                        && (massMax == null || peptide.getMass() <= massMax)) {
+                                        && peptide.getMass() >= massMin
+                                        && peptide.getMass() <= massMax) {
                                     result.add(new PeptideWithPosition(peptide, initialIndex));
                                 }
                                 int peptideMissedCleavages = peptideStartMap.get(peptideStart);

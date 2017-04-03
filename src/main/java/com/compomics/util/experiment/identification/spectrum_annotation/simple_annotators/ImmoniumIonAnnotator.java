@@ -71,12 +71,19 @@ public class ImmoniumIonAnnotator {
 
             if (related) {
                 ArrayList<RelatedIon> aaRelatedIons = RelatedIon.getRelatedIons(aa);
-                int j = relatedIons.length;
-                System.arraycopy(relatedIons, 0, relatedIons, 0, relatedIons.length + aaRelatedIons.size());
-                System.arraycopy(relatedIonsMz, 0, relatedIonsMz, 0, relatedIonsMz.length + aaRelatedIons.size());
-                for (RelatedIon relatedIon : aaRelatedIons) {
-                    relatedIons[j] = relatedIon;
-                    relatedIonsMz[j++] = relatedIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+                if (aaRelatedIons != null) {
+                    int j = relatedIons.length;
+                    int newLength = j + aaRelatedIons.size();
+                    RelatedIon[] newIons = new RelatedIon[newLength];
+                    double[] newMz = new double[newLength];
+                    System.arraycopy(relatedIons, 0, newIons, 0, relatedIons.length);
+                    System.arraycopy(relatedIonsMz, 0, newMz, 0, relatedIonsMz.length);
+                    for (RelatedIon relatedIon : aaRelatedIons) {
+                        newIons[j] = relatedIon;
+                        newMz[j++] = relatedIon.getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+                    }
+                    relatedIons = newIons;
+                    relatedIonsMz = newMz;
                 }
             }
         }

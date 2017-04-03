@@ -101,7 +101,7 @@ public class ImmoniumIon extends Ion {
     /**
      * Valine immonium ion.
      */
-    public static final ImmoniumIon VALINE = new ImmoniumIon(20, 'V');
+    public static final ImmoniumIon VALINE = new ImmoniumIon(21, 'V');
     /**
      * Subtype of immonium ion.
      */
@@ -228,6 +228,8 @@ public class ImmoniumIon extends Ion {
                 return SERINE;
             case 'T':
                 return THREONINE;
+            case 'U':
+                return SELENOCYSTEINE;
             case 'V':
                 return VALINE;
             case 'W':

@@ -127,7 +127,7 @@ public class SnrScore {
         }
 
         if (pFragmentIonMinusLog == 0.0) {
-            return pAnnotatedMinusLog;
+            return pFragmentIonMinusLog;
         }
 
         double pTotalMinusLog = 0.0;
@@ -152,9 +152,9 @@ public class SnrScore {
             if (notAnnotatedCorrection > pAnnotatedMinusLog) {
                 notAnnotatedCorrection = pAnnotatedMinusLog;
             }
-            pAnnotatedMinusLog += notAnnotatedCorrection;
+            pFragmentIonMinusLog += notAnnotatedCorrection;
 
         }
-        return pAnnotatedMinusLog;
+        return pFragmentIonMinusLog;
     }
 }

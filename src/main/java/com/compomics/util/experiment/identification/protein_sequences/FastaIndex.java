@@ -75,6 +75,8 @@ public class FastaIndex extends ExperimentObject {
      * The species occurrence in the database.
      */
     private HashMap<String, Integer> speciesOccurrence;
+    
+    private int[] aaOccurrence;
 
     /**
      * Constructor.
@@ -95,10 +97,12 @@ public class FastaIndex extends ExperimentObject {
      * @param decoyTag the decoy tag
      * @param version the database version
      * @param speciesOccurrence the species occurrence in the database
+     * @param aaOccurrence the occurrence of every amino acid in per mille
      */
     public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name,
             boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified,
-            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, String version, HashMap<String, Integer> speciesOccurrence) {
+            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, 
+            String version, HashMap<String, Integer> speciesOccurrence, int[] aaOccurrence) {
         this.indexes = indexes;
         this.decoyAccessions = decoyAccessions;
         this.fileName = fileName;
@@ -112,6 +116,7 @@ public class FastaIndex extends ExperimentObject {
         this.decoyTag = decoyTag;
         this.version = version;
         this.speciesOccurrence = speciesOccurrence;
+        this.aaOccurrence = aaOccurrence;
     }
 
     /**

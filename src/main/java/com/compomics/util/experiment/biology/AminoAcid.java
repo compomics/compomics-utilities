@@ -96,19 +96,19 @@ public abstract class AminoAcid implements Serializable {
     /**
      * The amino acid one letter codes as char array.
      */
-    private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
-        'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
+    private static final char[] aminoAcidChars = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
     /**
      * A char array of the one letter code of amino acids without combinations
      * of amino acids.
      */
-    private static final char[] uniqueAminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
-        'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
+    private static final char[] uniqueAminoAcidChars = {'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O',
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y'};
     /**
      * The amino acid one letter codes as string array.
      */
-    public static final String[] aminoAcidStrings = new String[]{"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N",
-        "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
+    public static final String[] aminoAcidStrings = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+        "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     /**
      * Convenience method returning an array of all implemented amino acids
@@ -590,6 +590,60 @@ public abstract class AminoAcid implements Serializable {
             case vanDerWaalsVolume: return getVanDerWaalsVolume();
             default: throw new UnsupportedOperationException("Property " + property + " not implemented.");
         }
+    }
+    
+    /**
+     * Returns the number of amino acids excluding combinations.
+     * 
+     * @return the number of amino acids excluding combinations
+     */
+    public static int getNUnique() {
+        return 22;
+    }
+    
+    /**
+     * Convenience array of the amino acid indexes excluding combinations.
+     */
+    private static final int[] aaIndexes = {0, -1, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, -1, 21, -1};
+    
+    /**
+     * Returns an index for the amino acid excluding combinations. The amino acid must be provided as upper case single letter code. No sanity check is done.
+     * 
+     * @param aa the upper case single letter code of the amino acid.
+     * 
+     * @return an index for the amino acid
+     */
+    public static int getIndex(char aa) {
+        int index = ((int) aa) - 65;
+        return aaIndexes[index];
+    }
+    
+    /**
+     * Returns a boolean indicating whether the given character is a supported amino acid.
+     * 
+     * @param aa the amino acid as single character code
+     * 
+     * @return a boolean indicating whether the given character is a supported amino acid
+     */
+    public static boolean isAa(char aa) {
+        
+        // Accept all capital letters between A and Z
+        int aaInt = (int) aa;
+        return aaInt >= 65 && aaInt <= 90;
+    }
+    
+    /**
+     * Returns a boolean indicating whether the given character is a supported amino acid excluding combinations.
+     * 
+     * @param aa the amino acid as single character code
+     * 
+     * @return a boolean indicating whether the given character is a supported amino acid excluding combinations
+     */
+    public static boolean isUniqueAa(char aa) {
+        
+        // Accept all capital letters between A and Z except B, J, X, and Z
+        int aaInt = (int) aa;
+        return aaInt >= 65 && aaInt <= 90 && aaInt != 66 && aaInt != 74 && aaInt != 88;
     }
 
     @Override

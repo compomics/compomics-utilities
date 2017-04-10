@@ -613,9 +613,20 @@ public abstract class AminoAcid implements Serializable {
      * 
      * @return an index for the amino acid
      */
-    public static int getIndex(char aa) {
+    public static int getUniqueIndex(char aa) {
         int index = ((int) aa) - 65;
         return aaIndexes[index];
+    }
+    
+    /**
+     * Returns an index for the amino acid excluding combinations. The amino acid must be provided as upper case single letter code. No sanity check is done.
+     * 
+     * @param aa the upper case single letter code of the amino acid.
+     * 
+     * @return an index for the amino acid
+     */
+    public static int getIndex(char aa) {
+        return ((int) aa) - 65;
     }
     
     /**

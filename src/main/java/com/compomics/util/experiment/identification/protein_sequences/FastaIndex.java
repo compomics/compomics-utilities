@@ -75,7 +75,9 @@ public class FastaIndex extends ExperimentObject {
      * The species occurrence in the database.
      */
     private HashMap<String, Integer> speciesOccurrence;
-    
+    /**
+     * The occurrence of every amino acid letter in the database, including combinations.
+     */
     private int[] aaOccurrence;
 
     /**
@@ -385,5 +387,14 @@ public class FastaIndex extends ExperimentObject {
      */
     public void setSpecies(HashMap<String, Integer> species) {
         this.speciesOccurrence = species;
+    }
+
+    /**
+     * Returns the occurrence of every amino acid relatively to SequenceFactory.nAaOccurrence indexed as in the AminoAcid class.
+     * 
+     * @return the occurrence of every amino acid
+     */
+    public int[] getAaOccurrence() {
+        return aaOccurrence;
     }
 }

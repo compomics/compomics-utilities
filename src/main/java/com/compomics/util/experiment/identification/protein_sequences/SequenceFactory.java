@@ -1230,9 +1230,9 @@ public class SequenceFactory {
      * @throws InterruptedException if an InterruptedException occurs
      * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
-    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, Long> getAAOccurrences(JProgressBar progressBar) throws IOException, InterruptedException, ClassNotFoundException {
 
-        HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
+        HashMap<String, Long> aaMap = new HashMap<String, Long>(26);
         Set<String> accessions = getAccessions();
 
         if (progressBar != null) {
@@ -1246,9 +1246,9 @@ public class SequenceFactory {
             if (!isDecoyAccession(accession)) {
                 Protein protein = getProtein(accession);
                 for (String aa : protein.getSequence().split("")) {
-                    Integer n = aaMap.get(aa);
+                    Long n = aaMap.get(aa);
                     if (n == null) {
-                        n = 0;
+                        n = 0l;
                     }
                     aaMap.put(aa, n + 1);
                 }

@@ -4,11 +4,11 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.protein_sequences.AaOccurrence;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,19 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
+    /**
+     * The occurrence of amino acids in the database.
+     */
+    private AaOccurrence aaOccurrence;
+    
+    /**
+     * Constructor.
+     * 
+     * @param aaOccurrence the amino acid occurrence in the database
+     */
+    public SnrScore(AaOccurrence aaOccurrence) {
+        this.aaOccurrence = aaOccurrence;
+    }
 
     /**
      * Returns the score.
@@ -95,6 +108,9 @@ public class SnrScore {
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
 
+        char[] sequence = peptide.getSequence().toCharArray();
+        int sequenceLength = sequence.length;
+        
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         
         double pFragmentIonMinusLog = 0.0;
@@ -112,10 +128,19 @@ public class SnrScore {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
                     PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                    int number = peptideFragmentIon.getNumber();
 
-                    if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
+                    if (!peptideFragmentIon.hasNeutralLosses() && number >= 2) {
 
-                        pFragmentIonMinusLog += pMinusLog;
+                        double aasP;
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION
+                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION
+                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
+                            aasP = aaOccurrence.getP(sequence, 0, number, 4);
+                        } else {
+                            aasP = aaOccurrence.getP(sequence, sequenceLength-number, sequenceLength, 4);
+                        }
+                        pFragmentIonMinusLog += pMinusLog + aasP;
                         break;
 
                     }

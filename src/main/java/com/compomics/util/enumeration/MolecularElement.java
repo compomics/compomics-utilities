@@ -10,7 +10,7 @@ package com.compomics.util.enumeration;
  */
 public enum MolecularElement {
 
-    H,C,N,O,S,HDeut,C13,N15,O18;
+    H,C,N,O,S,HDeut,C13,N15,O18,Se;
 
     /**
      * Private constructor to initialize variables for each type.

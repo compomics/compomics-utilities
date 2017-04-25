@@ -339,8 +339,8 @@ public class GeneFactory {
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
      * @param ensemblDbName the Ensembl db name of the selected species
-     * @param swissProtMapping if true, use the uniprot_swissprot_accession
-     * parameter, if false use the uniprot_sptrembl parameter
+     * @param swissProtMapping if true, use the uniprotswissprot_accession
+     * parameter, if false use the uniprotsptrembl parameter
      * @param waitingHandler waiting handler displaying progress and allowing
      * canceling the process
      *
@@ -354,17 +354,9 @@ public class GeneFactory {
         String accessionMapping;
 
         if (swissProtMapping) {
-            if (ensemblType.equalsIgnoreCase("ensembl")) {
-                accessionMapping = "\"uniprotswissprot\"";
-            } else {
-                accessionMapping = "\"uniprot_swissprot_accession\"";
-            }
+            accessionMapping = "\"uniprotswissprot\"";
         } else {
-            if (ensemblType.equalsIgnoreCase("ensembl")) {
-                accessionMapping = "\"uniprotsptrembl\"";
-            } else {
-                accessionMapping = "\"uniprot_sptrembl\"";
-            }
+            accessionMapping = "\"uniprotsptrembl\"";
         }
 
         // construct data
@@ -374,13 +366,8 @@ public class GeneFactory {
                 + "<Dataset name = \"" + ensemblDbName + "\" interface = \"default\" >"
                 + "<Attribute name = " + accessionMapping + " />";
 
-        if (ensemblType.equalsIgnoreCase("ensembl")) {
-            requestXml += "<Attribute name = \"goslim_goa_accession\" />"
+        requestXml += "<Attribute name = \"goslim_goa_accession\" />"
                     + "<Attribute name = \"goslim_goa_description\" />";
-        } else {
-            requestXml += "<Attribute name = \"go_accession\" />"
-                    + "<Attribute name = \"go_name_1006\" />";
-        }
 
         requestXml += "</Dataset>"
                 + "</Query>";
@@ -558,21 +545,13 @@ public class GeneFactory {
     public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String ensemblDatasetName, String ensemblVersion,
             WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
-        // fix needed to support both default and custom ensembl species
-        String externalReference;
-        if (ensemblSchemaName.equalsIgnoreCase("default")) {
-            externalReference = "<Attribute name = \"external_gene_name\" />";
-        } else {
-            externalReference = "<Attribute name = \"external_gene_id\" />";
-        }
-
         // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + ensemblDatasetName + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
-                + externalReference
+                + "<Attribute name = \"external_gene_name\" />"
                 + "<Attribute name = \"chromosome_name\" />"
                 + "</Dataset>"
                 + "</Query>";

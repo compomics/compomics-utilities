@@ -1,4 +1,4 @@
-# compomics-utilities # 
+# compomics-utilities #
 
   * [What is compomics-utilities?](#what-is-compomics-utilities?)
   * [Projects Using compomics-utilities](#projects-using-compomics-utilities)

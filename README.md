@@ -67,7 +67,7 @@ We strongly recommend [Maven](http://maven.apache.org) when using compomics-util
 
 All compomics-utilities builds are available [here](http://genesis.ugent.be/maven2/com/compomics/utilities/).
 
-See also the [JavaDoc](http://genesis.ugent.be/maven2/com/compomics/utilities/javadoc/).
+See also the [JavaDoc](http://compomics.github.io/compomics-utilities/javadoc/).
 
 If you for some reason cannot use Maven and need a complete build of compomics-utilities, please let us know and we will send you the latest build as a zip file.
 

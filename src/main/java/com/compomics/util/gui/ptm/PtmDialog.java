@@ -167,11 +167,13 @@ public class PtmDialog extends javax.swing.JDialog {
         reporterIonTableToolTips = new ArrayList<String>();
         reporterIonTableToolTips.add(null);
         reporterIonTableToolTips.add("Reporter Ion Name");
+        reporterIonTableToolTips.add("Reporter Ion Composition");
         reporterIonTableToolTips.add("Reporter Ion Mass (m/z)");
 
         neutralLossesTableToolTips = new ArrayList<String>();
         neutralLossesTableToolTips.add(null);
         neutralLossesTableToolTips.add("Neutral Loss Name");
+        neutralLossesTableToolTips.add("Neutral Loss Composition");
         neutralLossesTableToolTips.add("Neutral Loss Mass");
         neutralLossesTableToolTips.add("Fixed Neutral Loss");
 

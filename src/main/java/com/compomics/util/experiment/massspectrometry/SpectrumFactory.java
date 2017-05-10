@@ -2,7 +2,6 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
-import com.compomics.util.experiment.massspectrometry.indexes.PrecursorMap;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import java.io.*;
@@ -169,7 +168,7 @@ public class SpectrumFactory {
     /**
      * Add spectra to the factory.
      *
-     * @param spectrumFile The spectrum file, can be mgf or mzML
+     * @param spectrumFile the spectrum file, can be mgf or mzML
      * @param waitingHandler the waiting handler
      *
      * @throws FileNotFoundException Exception thrown whenever the file was not

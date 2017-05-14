@@ -7,8 +7,9 @@ package com.compomics.util.experiment.io.identifications;
  */
 public enum MzIdentMLVersion {
 
-    v1_1("v1.1", "Version 1.1"), 
+    v1_1("v1.1", "Version 1.1"),
     v1_2("v1.2", "Version 1.2");
+
     /**
      * The name of the option.
      */
@@ -17,10 +18,10 @@ public enum MzIdentMLVersion {
      * The description of the option.
      */
     public final String description;
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param name the name of the option
      * @param description the description of the option
      */
@@ -28,12 +29,12 @@ public enum MzIdentMLVersion {
         this.name = name;
         this.description = description;
     }
-    
+
     /**
      * Returns the mzIdentML format corresponding to the given index.
-     * 
+     *
      * @param index the index
-     * 
+     *
      * @return the mzIdentML format corresponding to the given index
      */
     public static MzIdentMLVersion getMzIdentMLVersion(int index) {
@@ -43,21 +44,20 @@ public enum MzIdentMLVersion {
         }
         return values()[index];
     }
-    
+
     /**
      * Returns a string describing the different options.
-     * 
+     *
      * @return a string describing the different options
      */
     public static String getCommandLineOptions() {
-        
+
         StringBuilder stringBuilder = new StringBuilder();
         MzIdentMLVersion[] versions = values();
-            stringBuilder.append(0).append(": ").append(versions[0].name);
-        for (int i = 1 ; i < versions.length ; i++) {
+        stringBuilder.append(0).append(": ").append(versions[0].name);
+        for (int i = 1; i < versions.length; i++) {
             stringBuilder.append(", ").append(i).append(": ").append(versions[i].name);
         }
         return stringBuilder.toString();
     }
-
 }

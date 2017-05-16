@@ -792,12 +792,13 @@ public class SequenceFactory {
 //                }
 
                 // check accessions for quotation marks
-                // @TODO: implement me ..?
-
+                if (accession.lastIndexOf("'") != -1 || accession.lastIndexOf("\"") != -1) {
+                    throw new IllegalArgumentException("Accession numbers cannot contain quotation marks: \'" + accession + "\'!\nPlease check your FASTA file.");
+                }
 
                 // check if the accession number is unique
                 if (indexes.containsKey(accession)) {
-                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check your FASTA file.");
                 }
 
                 indexes.put(accession, index);

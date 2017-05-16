@@ -194,7 +194,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 + System.getProperty("line.separator")
                 + "Use the out option to specify the output file or the mods option to list the available modifications." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
-                + "For further help see http://compomics.github.io/compomics-utilities/wiki/identificationparameterscli.html." + System.getProperty("line.separator")
+                + "For further help see http://compomics.github.io/projects/compomics-utilities/wiki/identificationparameterscli.html." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
                 + "Or contact the developers at http://compomics.github.io/projects/compomics-utilities.html." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")

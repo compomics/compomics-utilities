@@ -3,7 +3,10 @@ package com.compomics.util.test.experiment.sequences.indexing;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.biology.variants.amino_acids.Deletion;
@@ -28,6 +31,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
@@ -515,7 +520,10 @@ public class FMIndexTest extends TestCase {
         searchParameters.setFragmentIonAccuracy(0.02);
         searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         
-        
+        AtomChain atomChainAdded;
+        AtomChain atomChainRemoved;
+        AminoAcidPattern aminoAcidPatternPattern;
+        PTM ptmPattern;
         
         
         ////////////////////////////////////////////////////////////////////////
@@ -538,6 +546,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         
@@ -554,6 +563,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         
@@ -569,6 +579,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         // TESTMRITESTCKTESTK with one fixed modification
@@ -589,6 +600,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
         Assert.assertTrue(modificationMatch.getModificationSite() == 9);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
 
         // TESTMRITESTCKTESTK with one fixed modification
         aminoAcidPattern = new AminoAcidSequence("TESTC");
@@ -609,6 +621,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
         Assert.assertTrue(modificationMatch.getModificationSite() == 1);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
 
          
         // TESTMRITESTCKTESTK with two fixed modifications
@@ -627,6 +640,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
         modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
         modificationMatch = modificationMatches.get(0);
@@ -654,7 +668,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
-        
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         
@@ -670,6 +684,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         
@@ -687,6 +702,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         // TESTMRITESTCKTESTK with one fixed modification
@@ -703,6 +719,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
         modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
@@ -723,6 +740,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
         modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
@@ -745,6 +763,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
         modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
         modificationMatch = modificationMatches.get(0);
@@ -767,6 +786,10 @@ public class FMIndexTest extends TestCase {
 
         peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+        
 
         // TESTMRITESTCKTESTK with one fixed and one variable modification
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -783,6 +806,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
@@ -804,6 +828,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -825,6 +850,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -851,6 +877,73 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TTGFQASNLGKTGMIILGGGLPKHH"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
+        
+        
+        ////////////////////////////////////////////////////////////////////////
+        // tags with modification patterns 
+        ////////////////////////////////////////////////////////////////////////
+        
+        
+        
+        
+        
+        // TESTMRITESTCKTESTK with one fixed pattern modification
+        atomChainAdded = ptmFactory.getPTM("Carbamidomethylation of C").getAtomChainAdded();
+        atomChainRemoved = null;
+        aminoAcidPatternPattern = AminoAcidPattern.getAminoAcidPatternFromString("[AST][MPST][RS]", 2);
+        ptmPattern = new PTM(PTM.MODAA, "Domification of R", "doc", atomChainAdded, atomChainRemoved, aminoAcidPatternPattern);
+        ptmFactory.addUserPTM(ptmPattern);
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = ptmFactory.getPTM("Carbamidomethylation of C").getMass() + AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        ptmSettings.addFixedModification(ptmPattern);
+        searchParameters.setPtmSettings(ptmSettings);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 1);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
+        Assert.assertTrue(modificationMatches != null);
+        Assert.assertTrue(modificationMatches.size() == 1);
+        modificationMatch = modificationMatches.get(0);
+        Assert.assertTrue(modificationMatch.getModificationSite() == 3);
+        
+        
+        
+        
+        
+        // TESTMRITESTCKTESTK with one fixed pattern modification
+        atomChainAdded = ptmFactory.getPTM("Carbamidomethylation of C").getAtomChainAdded();
+        atomChainRemoved = null;
+        aminoAcidPatternPattern = AminoAcidPattern.getAminoAcidPatternFromString("[PST][IJT][CMP]", 2);
+        ptmPattern = new PTM(PTM.MODAA, "Domification of R", "doc", atomChainAdded, atomChainRemoved, aminoAcidPatternPattern);
+        ptmFactory.addUserPTM(ptmPattern);
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        cTermGap = ptmFactory.getPTM("Carbamidomethylation of C").getMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        ptmSettings.addVariableModification(ptmPattern);
+        searchParameters.setPtmSettings(ptmSettings);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 1);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
+        Assert.assertTrue(modificationMatches != null);
+        Assert.assertTrue(modificationMatches.size() == 1);
+        modificationMatch = modificationMatches.get(0);
+        Assert.assertTrue(modificationMatch.getModificationSite() == 9);
+        
+        
+        
         
         ////////////////////////////////////////////////////////////////////////
         // tags with modifications at the termini
@@ -870,6 +963,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -903,6 +997,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -924,6 +1019,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.isEmpty());
@@ -943,6 +1039,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
@@ -964,6 +1061,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
@@ -986,6 +1084,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -1007,6 +1106,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -1028,6 +1128,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TMRITESTCK"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.isEmpty());
@@ -1046,6 +1147,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TESTMRITE"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.isEmpty());
@@ -1065,6 +1167,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TESTMRITE"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -1086,6 +1189,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TESTMRITE"));
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 1);
@@ -1221,6 +1325,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LGMPCVVPINMKILD") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 49);
         
         
         // LG(M)PCVVPINMKILD => LGXPCVVPINMKILD
@@ -1242,6 +1347,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
         Assert.assertTrue(modificationMatch.getModificationSite() == 3);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 49);
         
         
         // G(C)PCVVPINMKILD => GXPCVVPINMKILD
@@ -1258,6 +1364,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("GCPCVVPINMKILD") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 50);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
@@ -1283,6 +1390,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         
         
@@ -1305,6 +1413,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
         Assert.assertTrue(modificationMatch.getModificationSite() == 10);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         
         // LATAWOIDN(K)KRRRP => LATAWOIDNXKRRRP
@@ -1321,6 +1430,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNKKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         modificationMatches = peptideProteinMapping.getModificationMatches();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.size() == 2);
@@ -1516,6 +1626,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         // LATAWOIDN(P)KRRRP => LATAWOIDNXKRRRP
         aminoAcidPattern = new AminoAcidSequence("AWOIDN");
@@ -1532,6 +1643,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         // LATAWOIDN(P)KRRRP => LATAWOIDNXKRRRP
         aminoAcidPattern = new AminoAcidSequence("AWOIDN");
@@ -1548,6 +1660,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         // LATAWOIDN(P)KRRRP => LATAWOIDNXKRRRP
         aminoAcidPattern = new AminoAcidSequence("AWOIDN");
@@ -1579,6 +1692,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMappings.size() == 1);
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
         
         // G(C)PCVVPINMKILD => GXPCVVPINMKILD
         aminoAcidPattern = new AminoAcidSequence("VVPI");
@@ -1753,6 +1867,7 @@ public class FMIndexTest extends TestCase {
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;
             }
@@ -1773,6 +1888,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITSTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'E') {
@@ -1799,6 +1915,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITGSTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'E' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'G') {
@@ -1825,6 +1942,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITGESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'G') {
@@ -1851,6 +1969,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMITESTCKT")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'R') {
@@ -1877,6 +1996,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("SCMRITESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 2 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'C') {
@@ -1903,6 +2023,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'T') {
@@ -1929,6 +2050,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("TMRITESTCTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 10 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'K') {
@@ -1955,6 +2077,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCCTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 11 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'K' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'C') {
@@ -1981,6 +2104,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTACKT")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 10 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'A') {
@@ -2007,6 +2131,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMITESTCKTES")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 4 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'R') {
@@ -2033,6 +2158,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("SCMRITESTCKTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 2 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'C') {
@@ -2059,6 +2185,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCKTESTK")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'T') {
@@ -2085,6 +2212,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("TMRITESTCTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 10 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'K') {
@@ -2111,6 +2239,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCCTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 11 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'K' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'C') {
@@ -2137,6 +2266,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTACKTES")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 10 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'A') {
@@ -2237,6 +2367,7 @@ public class FMIndexTest extends TestCase {
         numPTMs = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCMTES")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (ModificationMatch mm : peptideProteinMapping.getModificationMatches()) {
                     if (mm.getModificationSite() == 2) {
@@ -2275,6 +2406,7 @@ public class FMIndexTest extends TestCase {
         numPTMs = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCMTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (ModificationMatch mm : peptideProteinMapping.getModificationMatches()) {
                     if (mm.getModificationSite() == 2) {
@@ -2316,6 +2448,7 @@ public class FMIndexTest extends TestCase {
         numPTMs = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCMTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (ModificationMatch mm : peptideProteinMapping.getModificationMatches()) {
                     if (mm.getModificationSite() == 2) {
@@ -2354,6 +2487,7 @@ public class FMIndexTest extends TestCase {
         numPTMs = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCMTEST")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (ModificationMatch mm : peptideProteinMapping.getModificationMatches()) {
                     if (mm.getModificationSite() == 2) {
@@ -2450,6 +2584,7 @@ public class FMIndexTest extends TestCase {
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;
             }
@@ -2499,6 +2634,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITSTCKTE")) {
                 isPresent = true;
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Deletion && ((Deletion) v.getVariant()).getDeletedAminoAcid() == 'E') {
                         ++correctVariants;
@@ -2538,6 +2674,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITGESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'G') {
@@ -2583,6 +2720,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITASTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 7 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'E' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'A') {
@@ -2613,6 +2751,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STKRITESTCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 3 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'M' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'K') {
@@ -2642,6 +2781,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STTMRITESTCTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 2 && v.getVariant() instanceof Insertion && ((Insertion) v.getVariant()).getInsertedAminoAcid() == 'T') {
@@ -2675,6 +2815,7 @@ public class FMIndexTest extends TestCase {
         correctVariants = 0;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("TMRICESTCKCE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 isPresent = true;
                 for (VariantMatch v : peptideProteinMapping.getVariantMatches()) {
                     if (v.getSite() == 5 && v.getVariant() instanceof Substitution && ((Substitution) v.getVariant()).getOriginalAminoAcid() == 'T' && ((Substitution) v.getVariant()).getSubstitutedAminoAcid() == 'C') {

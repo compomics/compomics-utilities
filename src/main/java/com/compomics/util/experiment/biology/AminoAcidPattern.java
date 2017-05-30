@@ -142,14 +142,43 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         
         
         if (cntOpenBrackets == 0){
-            ArrayList<Character> aminoAcids = new ArrayList<Character>();
-            for (char c : aminoAcidPatternAsString.toCharArray()){
-                AminoAcid.getAminoAcid(c);
-                aminoAcids.add(c);
+            for (int i = 0; i < aminoAcidPatternAsString.length(); ++i){
+                ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
+                aminoAcids.add(aminoAcidPatternAsString.charAt(i));
+                aminoAcidPattern.addPTMSite(i, aminoAcids);
             }
-            if (!aminoAcids.isEmpty()) aminoAcidPattern.addPTMSite(0, aminoAcids);
         }
         else {
+            int pos = 0, siteIndex = -startIndex;
+            while (pos < aminoAcidPatternAsString.length()){
+                if (aminoAcidPatternAsString.charAt(pos) == '['){
+                    int end = aminoAcidPatternAsString.indexOf("]", pos + 1);
+                    ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                    for (int i = pos + 1; i < end; ++i){
+                        AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
+                        aminoAcids.add(aminoAcidPatternAsString.charAt(i));
+                    }
+                    aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
+                    pos = end + 1;
+                }
+                else {
+                    ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                    AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(pos));
+                    aminoAcids.add(aminoAcidPatternAsString.charAt(pos));
+                    aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
+                    ++pos;
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            /*
+            
             Matcher matcher = Pattern.compile("\\[([^\\]]+)").matcher(aminoAcidPatternAsString);
             int pos = -1, siteIndex = -startIndex, numSites = 0, numAAs = 0;
             while (matcher.find(pos + 1)){
@@ -167,6 +196,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             if (numAAs + numSites * 2 != aminoAcidPatternAsString.length()){
                 throw new IllegalArgumentException("Not all parts are in between square brackets.");
             }
+            */
         }
         return aminoAcidPattern;
         
@@ -269,7 +299,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param target the index of the amino acid of interest in the pattern.
      */
     public void setTarget(Integer target) {
-        if (!residueTargeted.containsKey(target)){
+        if (residueTargeted.size() > 0 && !residueTargeted.containsKey(target)){
             throw new IllegalArgumentException("Target number exceeds residue site for index shifting.");
         }
         

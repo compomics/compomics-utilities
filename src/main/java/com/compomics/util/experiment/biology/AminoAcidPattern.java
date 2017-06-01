@@ -12,14 +12,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * An amino acid pattern is a sequence of amino acids. For example for trypsin:
- * Target R or K not followed by P. IMPORTANT: the index for the target residue is by default 0
+ * Target R or K not followed by P. IMPORTANT: the index for the target residue
+ * is by default 0
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynsk
  */
 public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
@@ -50,8 +51,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * Creates a blank pattern. All maps are null.
      */
     public AminoAcidPattern() {
-        residueTargeted = new HashMap<Integer, ArrayList<Character>>();
-        targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
         length = 0;
     }
 
@@ -114,55 +113,53 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * Parses the amino acid pattern from the given string as created by the
      * toString() method.
      *
-     * @param aminoAcidPatternAsString the amino acid pattern as created by the toString() method
+     * @param aminoAcidPatternAsString the amino acid pattern as created by the
+     * toString() method
      * @param startIndex the start index of the pattern
-     * 
      *
      * @return the amino acid pattern
      */
     public static AminoAcidPattern getAminoAcidPatternFromString(String aminoAcidPatternAsString, int startIndex) {
+
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
-        
+
         // check if pattern contains brackets
         int cntOpenBrackets = 0, lastIndex = 0;
-        while((lastIndex = aminoAcidPatternAsString.indexOf("[", lastIndex)) != -1) {
+        while ((lastIndex = aminoAcidPatternAsString.indexOf("[", lastIndex)) != -1) {
             lastIndex += "[".length();
             cntOpenBrackets++;
         }
         int cntCloseBrackets = 0;
         lastIndex = 0;
-        while((lastIndex = aminoAcidPatternAsString.indexOf("]", lastIndex)) != -1) {
+        while ((lastIndex = aminoAcidPatternAsString.indexOf("]", lastIndex)) != -1) {
             lastIndex += "]".length();
             cntCloseBrackets++;
         }
-        
-        if (cntOpenBrackets != cntCloseBrackets){
+
+        if (cntOpenBrackets != cntCloseBrackets) {
             throw new IllegalArgumentException("Number of opening and closing brackets unequal");
         }
-        
-        
-        if (cntOpenBrackets == 0){
-            for (int i = 0; i < aminoAcidPatternAsString.length(); ++i){
+
+        if (cntOpenBrackets == 0) {
+            for (int i = 0; i < aminoAcidPatternAsString.length(); ++i) {
                 ArrayList<Character> aminoAcids = new ArrayList<Character>();
                 AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                 aminoAcids.add(aminoAcidPatternAsString.charAt(i));
                 aminoAcidPattern.addPTMSite(i, aminoAcids);
             }
-        }
-        else {
+        } else {
             int pos = 0, siteIndex = -startIndex;
-            while (pos < aminoAcidPatternAsString.length()){
-                if (aminoAcidPatternAsString.charAt(pos) == '['){
+            while (pos < aminoAcidPatternAsString.length()) {
+                if (aminoAcidPatternAsString.charAt(pos) == '[') {
                     int end = aminoAcidPatternAsString.indexOf("]", pos + 1);
                     ArrayList<Character> aminoAcids = new ArrayList<Character>();
-                    for (int i = pos + 1; i < end; ++i){
+                    for (int i = pos + 1; i < end; ++i) {
                         AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                         aminoAcids.add(aminoAcidPatternAsString.charAt(i));
                     }
                     aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
                     pos = end + 1;
-                }
-                else {
+                } else {
                     ArrayList<Character> aminoAcids = new ArrayList<Character>();
                     AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(pos));
                     aminoAcids.add(aminoAcidPatternAsString.charAt(pos));
@@ -170,12 +167,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     ++pos;
                 }
             }
-        
+
         }
-        
+
         return aminoAcidPattern;
     }
-        
 
     /**
      * Returns the map of targeted amino acids. Null if not set.
@@ -213,6 +209,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
 
+        if (residueTargeted == null) {
+            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+        }
+
         if (residueTargeted.size() < fromRow || fromRow < 0 || toRow < 0) {
             throw new IllegalArgumentException("Illegal row index: " + fromRow);
         }
@@ -244,12 +244,17 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param target the index of the amino acid of interest in the pattern.
      */
     public void setTarget(Integer target) {
-        if (residueTargeted.size() > 0 && !residueTargeted.containsKey(target)){
-            throw new IllegalArgumentException("Target number exceeds residue site for index shifting.");
+        
+        if (residueTargeted == null) {
+            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
         }
         
+        if (residueTargeted.size() > 0 && !residueTargeted.containsKey(target)) {
+            throw new IllegalArgumentException("Target number exceeds residue site for index shifting.");
+        }
+
         HashMap<Integer, ArrayList<Character>> residueTargetedTmp = new HashMap<Integer, ArrayList<Character>>();
-        for (HashMap.Entry<Integer, ArrayList<Character>> entry : residueTargeted.entrySet()){
+        for (HashMap.Entry<Integer, ArrayList<Character>> entry : residueTargeted.entrySet()) {
             residueTargetedTmp.put(entry.getKey() - target, entry.getValue());
         }
         residueTargeted = residueTargetedTmp;
@@ -265,10 +270,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public ArrayList<Character> getAminoAcidsAtTarget() {
         return getTargetedAA(0);
     }
-    
+
     /**
      * Returns a set containing the amino acids at target.
-     * 
+     *
      * @return a set containing the amino acids at target
      */
     public HashSet<Character> getAminoAcidsAtTargetSet() {
@@ -1027,17 +1032,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the length of the pattern in amino acids
      */
     public int length() {
-        return residueTargeted.size();
-        /*
-        if (length == -1) {
-            if (residueTargeted == null || residueTargeted.isEmpty()) {
-                length = 0;
-            } else {
-                length = Collections.max(residueTargeted.keySet()) + 1;
-            }
+        if (residueTargeted == null) {
+            return 0;
         }
-        return length;
-        */
+        return residueTargeted.size();
     }
 
     /**
@@ -1271,14 +1269,15 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param modificationMatch the modification match to remove
      */
     public void removeModificationMatch(int localisation, ModificationMatch modificationMatch) {
-        ArrayList<ModificationMatch> modificationMatches = targetModifications.get(localisation);
-        if (modificationMatches != null) {
-            modificationMatches.remove(modificationMatch);
-            if (modificationMatches.isEmpty()) {
-                targetModifications.remove(localisation);
+        if (targetModifications != null) {
+            ArrayList<ModificationMatch> modificationMatches = targetModifications.get(localisation);
+            if (modificationMatches != null) {
+                modificationMatches.remove(modificationMatch);
+                if (modificationMatches.isEmpty()) {
+                    targetModifications.remove(localisation);
+                }
             }
         }
-
     }
 
     /**
@@ -1343,6 +1342,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param PTMSite valid amino acids for this site
      */
     public void addPTMSite(int localization, ArrayList<Character> PTMSite) {
+        if (residueTargeted == null) {
+            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+        }
         residueTargeted.put(localization, PTMSite);
     }
 
@@ -1749,7 +1751,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (target > -1) {
             newPattern.setTarget(length() - target - 1);
         }
-        */
+         */
         return newPattern;
     }
 

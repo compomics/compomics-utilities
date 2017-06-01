@@ -24,7 +24,7 @@ public class EnsemblVersion {
         if (ensemblGenomeDivision != null) {
             return 35;
         } else {
-            return 88;
+            return 89;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released

@@ -516,7 +516,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/AtomChainDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Help - Atom Composition", 500, 10);
+                "Atom Composition - Help", 500, 10);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

@@ -64,6 +64,10 @@ public class ToolFactory {
      * The command line argument for the species type.
      */
     public static final String speciesTypeOption = "-species_type";
+    /**
+     * The command line argument for the PeptideShaker project name.
+     */
+    public static final String projectNameOption = "-project_name";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
@@ -250,7 +254,7 @@ public class ToolFactory {
      * @throws InterruptedException if a threading issue occurs
      */
     public static void startSearchGUI(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null, null, null, null, null);
+        startSearchGUI(parent, null, null, null, null, null, null, null);
     }
 
     /**
@@ -263,6 +267,7 @@ public class ToolFactory {
      * @param outputFolder outputFolder the output folder (can be null)
      * @param species the species (can be null)
      * @param speciesType the species type (can be null)
+     * @param projectName the PeptideShaker project name
      *
      * @throws IOException if an exception occurs while reading or writing a
      * file
@@ -270,7 +275,7 @@ public class ToolFactory {
      * user preferences
      * @throws InterruptedException if a threading issue occurs
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType)
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType, String projectName)
             throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -311,6 +316,10 @@ public class ToolFactory {
                     if (speciesType != null) {
                         args.add(speciesTypeOption);
                         args.add(speciesType);
+                    }
+                    if (projectName != null) {
+                        args.add(projectNameOption);
+                        args.add(projectName);
                     }
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
                 }

@@ -954,7 +954,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
-        GenePreferencesDialog genePreferencesDialog = new GenePreferencesDialog(this, genePreferences, searchParameters, editable);
+        GenePreferencesDialog genePreferencesDialog = new GenePreferencesDialog(this, parentFrame, genePreferences, searchParameters, editable);
         if (!genePreferencesDialog.isCanceled()) {
             genePreferences = genePreferencesDialog.getGenePreferences();
             updateGUI();

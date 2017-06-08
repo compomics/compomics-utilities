@@ -373,7 +373,6 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         ptmsCheck.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         ptmsCheck.setIconTextGap(10);
         ptmsCheck.setMargin(new java.awt.Insets(2, 0, 2, 2));
-        ptmsCheck.setOpaque(false);
 
         missedCleavagesLabel.setText("Missed Cleavages");
 
@@ -523,7 +522,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(okButton)

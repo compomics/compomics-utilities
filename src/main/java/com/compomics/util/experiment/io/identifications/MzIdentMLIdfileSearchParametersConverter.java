@@ -178,6 +178,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
                     digestionPreferences.addEnzyme(utilitiesEnzyme);
                     digestionPreferences.setSpecificity(enzymeName, specificity);
                     digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
+                    digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.enzyme);
                 }
             }
         } else {

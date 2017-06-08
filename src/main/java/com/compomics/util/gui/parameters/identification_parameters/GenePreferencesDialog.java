@@ -4,7 +4,9 @@ import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.GenePreferences;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Vector;
@@ -20,6 +22,10 @@ import javax.swing.SwingConstants;
  */
 public class GenePreferencesDialog extends javax.swing.JDialog {
 
+    /**
+     * The parent frame.
+     */
+    private java.awt.Frame parentFrame;
     /**
      * True of the dialog was canceled by the user.
      */
@@ -48,20 +54,21 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
     /**
      * Creates a new GenePreferencesDialog with a frame as owner.
      *
-     * @param parent the parent frame
+     * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GenePreferencesDialog(JFrame parent, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
-        super(parent, true);
+    public GenePreferencesDialog(JFrame parentFrame, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
+        super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
         initComponents();
         setUpGui();
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
 
@@ -69,13 +76,15 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
      * Creates a new GenePreferencesDialog with a dialog as owner.
      *
      * @param owner the dialog owner
+     * @param parentFrame a parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GenePreferencesDialog(JDialog owner, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GenePreferencesDialog(JDialog owner, java.awt.Frame parentFrame, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
         super(owner, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
@@ -211,9 +220,10 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
         autoUpdateCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        helpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Gene Mappings");
+        setTitle("Gene Annotation");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -248,7 +258,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(speciesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(useMappingCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(useMappingCmb, 0, 364, Short.MAX_VALUE)
                     .addComponent(autoUpdateCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -284,17 +294,40 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
             }
         });
 
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.setFocusable(false);
+        helpJButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpJButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(mappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(mappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(90, 361, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(helpJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)))
@@ -309,9 +342,10 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(mappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(okButton)
-                    .addComponent(cancelButton))
+                    .addComponent(cancelButton)
+                    .addComponent(helpJButton))
                 .addContainerGap())
         );
 
@@ -358,11 +392,44 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
         cancelButtonActionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+            "Gene Annotation - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox autoUpdateCmb;
     private javax.swing.JLabel autoUpdateLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton helpJButton;
     private javax.swing.JPanel mappingPanel;
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox speciesCmb;

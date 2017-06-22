@@ -493,7 +493,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
-                } else if (aFASTAHeader.startsWith(" M. tub.")) {
+                } else if (aFASTAHeader.startsWith("M. tub.")) {
                     // M. Tuberculosis header.
                     // We need to find two elements:
                     //   - the accession String (retrieved as the first pipe-delimited String).

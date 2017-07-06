@@ -166,7 +166,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         selectedAnnotationTypes = new HashMap<String, Color>();
 
         // set the title including version number
-        this.setTitle(this.getTitle() + " " + getVersion() + " - Demo");
+        this.setTitle(this.getTitle() + " " + Util.getVersion() + " - Demo");
 
         // insert the text in the information tab
         insertInformationTabText();
@@ -3495,12 +3495,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
     }
-
-    /**
-     * Retrieves the version number set in the pom file.
-     *
-     * @return the version number of compomics-utilities
-     */
+    /*
     public String getVersion() {
 
         java.util.Properties p = new java.util.Properties();
@@ -3514,6 +3509,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         return p.getProperty("compomics-utilities.version");
     }
+    */
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;

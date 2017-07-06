@@ -77,7 +77,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
                 return false;
             }
 
-            if (value < 800) {
+            if (value < 10) {
                 JOptionPane.showMessageDialog(this,
                         "The memory limit has to be bigger than 800 MB.",
                         "Input Error", JOptionPane.WARNING_MESSAGE);

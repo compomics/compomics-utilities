@@ -88,6 +88,26 @@ public class Util {
         }
         return returnVal;
     }
+    
+
+    /**
+     * Retrieves the version number set in the pom file.
+     *
+     * @return the version number of compomics-utilities
+     */
+    public static String getVersion() {
+
+        java.util.Properties p = new java.util.Properties();
+
+        try {
+            InputStream is = Util.class.getClassLoader().getResourceAsStream("compomics-utilities.properties");
+            p.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return p.getProperty("compomics-utilities.version");
+    }
 
     /**
      * Removes characters from a string.

@@ -2,13 +2,19 @@ package com.compomics.util.db;
 
 import com.compomics.util.Util;
 import com.compomics.util.waiting.WaitingHandler;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import java.io.*;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.Semaphore;
 import javax.sql.rowset.serial.SerialBlob;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * A database which can easily be used to store objects.
@@ -34,32 +40,10 @@ public class ObjectsDB implements Serializable {
      */
     private Connection dbConnection;
     /**
-     * The maximal length of a table name.
-     */
-    public static final int TABLE_NAME_MAX_LENGTH = 128;
-    /**
      * The maximal length of a varchar. Note: 32672 is the max length for a
      * varchar.
      */
     public static final int VARCHAR_MAX_LENGTH = 32672;
-    /**
-     * The maximum key length before using the key correction for long keys.
-     */
-    public static final int MAX_KEY_LENGTH = 1000;
-    /**
-     * List of keys too long to create a table.
-     */
-    private ArrayList<String> longTableNames = new ArrayList<String>();
-    /**
-     * Map of the keys too long to be stored in the database indexed by table
-     * name.
-     */
-    private HashMap<String, ArrayList<String>> longKeysMap = new HashMap<String, ArrayList<String>>();
-    /**
-     * Tables that have already been used. Will be null for projects older than
-     * 4.7.0.
-     */
-    private HashSet<String> usedTables = new HashSet<String>();
     /**
      * Number of tables where the content should be stored in memory.
      */
@@ -144,16 +128,15 @@ public class ObjectsDB implements Serializable {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private static boolean debugInteractions = false;
+    private static boolean debugInteractions = false;    
     /**
-     * If true, SQLite is used as the database, if false Derby is used.
+     * OrientDB database connection
      */
-    private boolean useSQLite = false;
+    OObjectDatabaseTx db = null;
     /**
-     * The identifier used to register the derby connection in the DerbyUtil
-     * class.
-     */
-    public static final String derbyConnectionID = "objectsDB";
+     * Set of already registered classes in orient db
+    **/
+    private HashSet<String> registeredClasses = new HashSet<String>();
 
     /**
      * Constructor.
@@ -176,8 +159,27 @@ public class ObjectsDB implements Serializable {
     public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = dbName;
         objectsCache.addDb(this);
-        establishConnection(folder, deleteOldDatabase, objectsCache);
+        establishConnection(folder, dbName, deleteOldDatabase, objectsCache);
     }
+    
+    
+    public long createLongKey(String key){
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(StandardCharsets.UTF_8.encode(key));
+            String md5Key = String.format("%032x", new BigInteger(1, md5.digest()));
+            long longKey = 0;
+            for (int i = 0; i < 32; ++i){
+                longKey |= md5Key.charAt(i) << ((i * 11) % 63);
+            }
+            return longKey;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
 
     /**
      * Returns the database name.
@@ -217,6 +219,7 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred
      */
+    /*
     public void addTable(String tableName) throws SQLException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting table, table: " + tableName);
@@ -236,6 +239,7 @@ public class ObjectsDB implements Serializable {
         }
         dbMutex.release();
     }
+    */
 
     /**
      * Indicates whether the database contains the given table.
@@ -250,6 +254,7 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred
      */
+    /*
     public boolean hasTable(String tableName) throws SQLException, InterruptedException {
 
         if (tableName.startsWith("\"") && tableName.endsWith("\"")) {
@@ -265,6 +270,7 @@ public class ObjectsDB implements Serializable {
 
         return false;
     }
+    */
 
     /**
      * Returns a list of tables present in the database. Note: this includes
@@ -277,6 +283,7 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred
      */
+    /*
     public ArrayList<String> getTables() throws SQLException, InterruptedException {
 
         dbMutex.acquire();
@@ -296,6 +303,7 @@ public class ObjectsDB implements Serializable {
 
         return result;
     }
+    */
 
     /**
      * Stores an object in the desired table. When multiple objects are to be
@@ -317,11 +325,12 @@ public class ObjectsDB implements Serializable {
     public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
-
+        long longKey = createLongKey(correctedKey);
+        
         if (inCache) {
-            objectsCache.addObject(dbName, tableName, correctedKey, object, true, true);
+            objectsCache.addObject(dbName, tableName, longKey, object, true, true);
         } else {
-            insertObject(tableName, objectKey, correctedKey, object, inCache);
+            insertObject(tableName, objectKey, longKey, object, inCache);
         }
     }
 
@@ -343,14 +352,12 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public void insertObject(String tableName, String objectKey, String correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String tableName, long objectKey, long correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + tableName + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
         }
-        if (usedTables != null) {
-            usedTables.add(tableName);
-        }
+        
         dbMutex.acquire();
         PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
@@ -415,6 +422,9 @@ public class ObjectsDB implements Serializable {
 
             for (String objectKey : objects.keySet()) {
 
+                if (debugInteractions) {
+                    System.out.println(System.currentTimeMillis() + " Inserting batch of objects, table: " + tableName + ", key: " + objectKey);
+                }
                 String correctedKey = correctKey(tableName, objectKey);
 
                 if (debugContent) {
@@ -722,7 +732,9 @@ public class ObjectsDB implements Serializable {
         HashSet<String> keysToQuery = new HashSet<String>(keys);
 
         HashSet<String> queue = contentQueue.get(tableName);
-
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " getting " + keys.size() + " objects, table: " + tableName);
+        }
         if (queue != null) {
             queueMutex.acquire();
             queue = contentQueue.get(tableName);
@@ -916,6 +928,9 @@ public class ObjectsDB implements Serializable {
         String correctedKey = correctKey(tableName, objectKey);
 
         Object object = null;
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " Retrieving object, table: " + tableName + ", key: " + objectKey);
+        }
 
         if (objectsCache != null) {
             object = objectsCache.getObject(dbName, tableName, correctedKey);
@@ -1539,8 +1554,9 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void establishConnection(String aDbFolder, String aDbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
+        /*
         File parentFolder = new File(aDbFolder);
         if (!parentFolder.exists()) {
             parentFolder.mkdirs();
@@ -1628,6 +1644,19 @@ public class ObjectsDB implements Serializable {
                 e.printStackTrace();
             }
         }
+        dbMutex.release();
+        */
+        dbMutex.acquire();
+        
+        
+        String connectionString = "plocal:" + aDbFolder + "/" + aDbName;
+        db = new OObjectDatabaseTx(connectionString);
+        if (db.exists()) {
+                db = new OObjectDatabaseTx(connectionString).open("admin", "admin");
+        } else {
+                db.create();
+        }
+        
         dbMutex.release();
 
         // test the connection by logging the connection in the database

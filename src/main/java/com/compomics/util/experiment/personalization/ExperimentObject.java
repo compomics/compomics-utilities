@@ -19,6 +19,10 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      * Map containing user refinement parameters.
      */
     private HashMap<String, UrParameter> urParams = null;
+    /**
+     * Unique key for database
+     */
+    private long dbKey = -1;
 
     /**
      * Adds a user refinement parameter.
@@ -70,5 +74,13 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      */
     public void clearParametersMap() {
         urParams = null;
+    }
+    
+    public long getKey(){
+        return dbKey;
+    }
+    
+    public void setKey(long longKey){
+        dbKey = longKey;
     }
 }

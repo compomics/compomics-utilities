@@ -37,7 +37,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.8;
+    private double memoryShare = 0.11;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
@@ -596,7 +596,8 @@ public class ObjectsCache {
         while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
                 || (automatedMemoryManagement && !memoryCheck())) {
             int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
-            if (toRemove <= 1) {
+            if (toRemove == 0) break;
+            else if (toRemove == 1) {
                 loadedObjectKeysMutex.acquire();
                 String objectKey = loadedObjectsKeys.take();
                 loadedObjectKeysMutex.release();

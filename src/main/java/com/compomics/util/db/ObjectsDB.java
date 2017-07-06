@@ -1,5 +1,6 @@
 package com.compomics.util.db;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.Util;
 import com.compomics.util.waiting.WaitingHandler;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
@@ -352,13 +353,15 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public void insertObject(String tableName, long objectKey, long correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String tableName, String objectKey, long correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
         }
         
+        /*
         dbMutex.acquire();
+        
         PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         try {
             ps.setString(1, correctedKey);
@@ -382,6 +385,17 @@ public class ObjectsDB implements Serializable {
         tablesContentCache.remove(tableName);
 
         dbMutex.release();
+        */
+        ((IdObject)object).setId(correctedKey);
+        String objectClassName = object.getClass().getName();
+        if (!registeredClasses.contains(objectClassName)){
+            registeredClasses.add(objectClassName);
+            db.getEntityManager().registerEntityClasses(object.getClass().getPackage().getName());
+        }
+        
+        dbMutex.acquire();
+        db.save(object);
+        dbMutex.release();
     }
 
     /**
@@ -403,6 +417,27 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Preparing table insertion: " + tableName);
         }
+        
+        dbMutex.acquire();
+        
+        for (String objectKey : objects.keySet()) {
+            String correctedKey = correctKey(tableName, objectKey);
+            long longKey = createLongKey(correctedKey);
+            Object object = objects.get(objectKey);
+            ((IdObject)object).setId(longKey);
+            String objectClassName = object.getClass().getName();
+            if (!registeredClasses.contains(objectClassName)){
+                registeredClasses.add(objectClassName);
+                db.getEntityManager().registerEntityClasses(object.getClass().getPackage().getName());
+            }
+            
+            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
+                db.save(object);
+            }
+        }
+        
+        dbMutex.release();
+        /*
         if (usedTables != null) {
             usedTables.add(tableName);
         }
@@ -569,6 +604,7 @@ public class ObjectsDB implements Serializable {
         dbConnection.setAutoCommit(true);
 
         dbMutex.release();
+        */
     }
 
     /**

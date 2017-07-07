@@ -108,10 +108,11 @@ public class IdentificationDB implements Serializable {
     public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = name;
         objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectCache);
+        /*
         if (deleteOldDatabase) {
             objectsDB.addTable(proteinTableName);
             objectsDB.addTable(peptideTableName);
-        }
+        }*/
     }
 
     /**
@@ -712,9 +713,9 @@ public class IdentificationDB implements Serializable {
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
-                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
-            }
+            //if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
+            //}
         }
     }
 
@@ -783,9 +784,9 @@ public class IdentificationDB implements Serializable {
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
-                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
-            }
+            //if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
+            //}
         }
     }
 
@@ -1270,7 +1271,7 @@ public class IdentificationDB implements Serializable {
      */
     public synchronized void checkTable(Collection<String> tableList, String tableName) throws SQLException, IOException, InterruptedException {
         if (!tableList.contains(tableName)) {
-            objectsDB.addTable(tableName);
+            //objectsDB.addTable(tableName);
             tableList.add(tableName);
         }
     }
@@ -1303,7 +1304,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getAssumptionTable(String spectrumKey) {
         String tableName = Spectrum.getSpectrumFile(spectrumKey) + assumptionsTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1316,7 +1317,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getRawAssumptionTable(String spectrumKey) {
         String tableName = Spectrum.getSpectrumFile(spectrumKey) + rawAssumptionsTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1328,7 +1329,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getSpectrumMatchTable(String spectrumKey) {
         String tableName = Spectrum.getSpectrumFile(spectrumKey) + psmTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1342,7 +1343,7 @@ public class IdentificationDB implements Serializable {
     public String getSpectrumParameterTable(String spectrumKey, UrParameter urParameter) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String tableName = urParameter.getParameterKey() + "_" + fileName + psmParametersTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1354,7 +1355,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getPeptideParameterTable(UrParameter urParameter) {
         String tableName = urParameter.getParameterKey() + peptideParametersTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1366,7 +1367,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getProteinParameterTable(UrParameter urParameter) {
         String tableName = urParameter.getParameterKey() + proteinParametersTableSuffix;
-        tableName = objectsDB.correctTableName(tableName);
+        //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -1388,7 +1389,7 @@ public class IdentificationDB implements Serializable {
      * while interacting with the database
      */
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);
+        objectsDB.establishConnection(dbFolder, "TODO", deleteOldDatabase, objectsCache);
         objectsCache.addDb(objectsDB);
     }
     

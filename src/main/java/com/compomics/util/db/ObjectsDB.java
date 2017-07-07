@@ -3,6 +3,7 @@ package com.compomics.util.db;
 import com.compomics.util.IdObject;
 import com.compomics.util.Util;
 import com.compomics.util.waiting.WaitingHandler;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import java.io.*;
 import java.math.BigInteger;
@@ -13,6 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import javax.sql.rowset.serial.SerialBlob;
 import org.apache.commons.codec.binary.Hex;
@@ -36,10 +38,6 @@ public class ObjectsDB implements Serializable {
      * The path to the database.
      */
     private String path;
-    /**
-     * The connection, shall not be accessed outside this class.
-     */
-    private Connection dbConnection;
     /**
      * The maximal length of a varchar. Note: 32672 is the max length for a
      * varchar.
@@ -387,6 +385,7 @@ public class ObjectsDB implements Serializable {
         dbMutex.release();
         */
         ((IdObject)object).setId(correctedKey);
+        ((IdObject)object).setTable(tableName);
         String objectClassName = object.getClass().getName();
         if (!registeredClasses.contains(objectClassName)){
             registeredClasses.add(objectClassName);
@@ -425,6 +424,7 @@ public class ObjectsDB implements Serializable {
             long longKey = createLongKey(correctedKey);
             Object object = objects.get(objectKey);
             ((IdObject)object).setId(longKey);
+            ((IdObject)object).setTable(tableName);
             String objectClassName = object.getClass().getName();
             if (!registeredClasses.contains(objectClassName)){
                 registeredClasses.add(objectClassName);
@@ -627,6 +627,16 @@ public class ObjectsDB implements Serializable {
      */
     public void loadObjects(String tableName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
+        dbMutex.acquire();
+        String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "'";
+        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
+        for (Object object : objects) {
+            objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
+        }
+        objectsCache.updateCache();
+        dbMutex.release();
+        
+        /*
         if (usedTables == null || usedTables.contains(tableName)) {
             if (!loading && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
 
@@ -742,6 +752,7 @@ public class ObjectsDB implements Serializable {
                 loadObjects(tableName, waitingHandler, displayProgress);
             }
         }
+        */
     }
 
     /**
@@ -764,9 +775,7 @@ public class ObjectsDB implements Serializable {
      * while interacting with the database
      */
     public void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
         HashSet<String> keysToQuery = new HashSet<String>(keys);
-
         HashSet<String> queue = contentQueue.get(tableName);
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " getting " + keys.size() + " objects, table: " + tableName);
@@ -805,7 +814,22 @@ public class ObjectsDB implements Serializable {
      * while interacting with the database
      */
     private synchronized void loadObjects(String tableName, HashSet<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
+        dbMutex.acquire();
+        for (String key : keys){
+            String correctedKey = correctKey(tableName, key);
+            long longKey = createLongKey(correctedKey);
+            
+            String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
+            List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
+            for (Object object : objects) {
+                objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
+            }
+            objectsCache.updateCache();
+        }
+        dbMutex.release();
+        
+        
+        /*
         if (usedTables == null || usedTables.contains(tableName)) {
             if (!loading && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
 
@@ -911,6 +935,7 @@ public class ObjectsDB implements Serializable {
                 queueMutex.release();
             }
         }
+        */
     }
 
     /**
@@ -974,11 +999,9 @@ public class ObjectsDB implements Serializable {
 
         if (!useDB || object != null) {
             return object;
-        } else if (usedTables == null || usedTables.contains(tableName)) {
-            return retrieveObject(tableName, objectKey, correctedKey, useDB, useCache);
-        } else {
-            return null;
-        }
+        } 
+        
+        return retrieveObject(tableName, objectKey, correctedKey, useDB, useCache);
     }
 
     /**
@@ -1007,6 +1030,7 @@ public class ObjectsDB implements Serializable {
     private Object retrieveObject(String tableName, String objectKey, String correctedKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         Object object = null;
+        long longKey = createLongKey(correctedKey);
 
         if (objectsCache != null) {
             object = objectsCache.getObject(dbName, tableName, correctedKey);
@@ -1016,10 +1040,21 @@ public class ObjectsDB implements Serializable {
             System.out.println(System.currentTimeMillis() + " Retrieving object, table: " + tableName + ", key: " + objectKey);
         }
 
-        if (dbConnection == null || usedTables != null && !usedTables.contains(tableName)) {
-            return object;
+        dbMutex.acquire();
+        String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
+        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
+        for (Object obj : objects) {
+            if (useCache) {
+                if (!objectsCache.inCache(dbName, tableName, objectKey)) {
+                    objectsCache.addObject(dbName, tableName, objectKey, obj, false, true);
+                }
+            }
+            objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
+            objectsCache.updateCache();
+            dbMutex.release();
         }
-
+        
+        /*
         dbMutex.acquire();
 
         long start = System.currentTimeMillis();
@@ -1094,14 +1129,10 @@ public class ObjectsDB implements Serializable {
         }
 
         dbMutex.release();
+        */
 
-        if (useCache) {
-            if (!objectsCache.inCache(dbName, tableName, objectKey)) {
-                objectsCache.addObject(dbName, tableName, objectKey, object, false, true);
-            }
-        }
-
-        return object;
+        
+        return null;
     }
 
     /**
@@ -1129,9 +1160,10 @@ public class ObjectsDB implements Serializable {
             }
         }
 
+        /*
         if (usedTables != null && !usedTables.contains(tableName)) {
             return false;
-        }
+        }*/
 
         return savedInDB(tableName, objectKey, correctedKey);
     }
@@ -1154,6 +1186,22 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Checking db content, table: " + tableName + ", key: " + objectKey);
         }
+        
+        long longKey = createLongKey(correctedKey);
+        
+        dbMutex.acquire();
+        String sql = "SELECT id from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
+        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
+        for (Object obj : objects) {
+            dbMutex.release();
+            return true;
+        }
+        dbMutex.release();
+        return false;
+        
+        
+        
+        /*
         dbMutex.acquire();
         Statement stmt = dbConnection.createStatement();
         boolean result = false;
@@ -1170,6 +1218,7 @@ public class ObjectsDB implements Serializable {
         dbMutex.release();
 
         return result;
+        */
     }
 
     /**
@@ -1507,7 +1556,8 @@ public class ObjectsDB implements Serializable {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
-        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path);
+        return true;
+        // TODO: check for orientDB
     }
 
     /**
@@ -1518,7 +1568,13 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public void close() throws SQLException, InterruptedException {
+        
+        
+        dbMutex.acquire();
+        if (db != null) db.close();
+        dbMutex.release();
 
+        /*
         // Make sure that previous queries are done
         dbMutex.acquire();
         while (dbMutex.getQueueLength() > 0) {
@@ -1572,6 +1628,7 @@ public class ObjectsDB implements Serializable {
         dbConnection = null;
 
         dbMutex.release();
+        */
     }
 
     /**
@@ -1683,8 +1740,19 @@ public class ObjectsDB implements Serializable {
         dbMutex.release();
         */
         dbMutex.acquire();
-        
-        
+        File parentFolder = new File(aDbFolder);
+        if (!parentFolder.exists()) {
+            parentFolder.mkdirs();
+        }
+        File dbFolder = new File(aDbFolder, dbName);
+        path = dbFolder.getAbsolutePath();
+        if (dbFolder.exists() && deleteOldDatabase) {
+
+            close();
+
+            DerbyUtil.closeConnection();
+            boolean deleted = Util.deleteDir(dbFolder);
+        }
         String connectionString = "plocal:" + aDbFolder + "/" + aDbName;
         db = new OObjectDatabaseTx(connectionString);
         if (db.exists()) {
@@ -1710,6 +1778,7 @@ public class ObjectsDB implements Serializable {
      *
      * @return the corrected table name
      */
+    /*
     public String correctTableName(String tableName) {
         tableName = "\"" + tableName + "\"";
         if (longTableNames.contains(tableName)) {
@@ -1724,6 +1793,7 @@ public class ObjectsDB implements Serializable {
         }
         return tableName;
     }
+    */
 
     /**
      * Indexes the long keys by a number.

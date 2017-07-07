@@ -115,10 +115,11 @@ public class ProteinTreeComponentsFactory {
 
         objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
 
+        /*
         if (!exists) {
             objectsDB.addTable(nodeTable);
             objectsDB.addTable(parametersTable);
-        }
+        }*/
 
         return exists;
     }

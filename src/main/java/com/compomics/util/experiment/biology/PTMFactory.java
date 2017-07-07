@@ -3398,8 +3398,21 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Citrullination of R";
         ptm = new PTM(PTM.MODAA, ptmName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
         
+        // S-nitrosylation of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        ptmName = "S-nitrosylation";
+        ptm = new PTM(PTM.MODAA, ptmName, "nitrosyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
     }
 }

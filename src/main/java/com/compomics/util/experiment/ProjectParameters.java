@@ -6,6 +6,7 @@
 package com.compomics.util.experiment;
 
 import com.compomics.util.IdObject;
+import com.compomics.util.IdObject;
 import java.util.Date;
 import java.util.HashMap;
 

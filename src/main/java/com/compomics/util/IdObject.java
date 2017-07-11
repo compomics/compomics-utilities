@@ -15,10 +15,6 @@ public class IdObject {
      * unique identifier
      */
     private long id;
-    /**
-     * table for keeping current database scheme
-     */
-    private String table;
     
     public IdObject(){};
     
@@ -28,13 +24,5 @@ public class IdObject {
     
     public long getId(){
         return id;
-    }
-    
-    public void setTable(String table){
-        this.table = table;
-    }
-    
-    public String getTable(){
-        return table;
     }
 }

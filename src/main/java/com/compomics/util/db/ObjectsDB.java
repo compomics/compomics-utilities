@@ -3,11 +3,12 @@ package com.compomics.util.db;
 import com.compomics.util.IdObject;
 import com.compomics.util.Util;
 import com.compomics.util.waiting.WaitingHandler;
+import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.*;
@@ -16,8 +17,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import javax.sql.rowset.serial.SerialBlob;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * A database which can easily be used to store objects.
@@ -38,20 +37,6 @@ public class ObjectsDB implements Serializable {
      * The path to the database.
      */
     private String path;
-    /**
-     * The maximal length of a varchar. Note: 32672 is the max length for a
-     * varchar.
-     */
-    public static final int VARCHAR_MAX_LENGTH = 32672;
-    /**
-     * Number of tables where the content should be stored in memory.
-     */
-    private int tablesContentCacheSize = 4;
-    /**
-     * Cache for the content of the tables. Will be null for projects older than
-     * 4.10.1.
-     */
-    private HashMap<String, HashSet<String>> tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
     /**
      * The table where to save the long keys. Note: needs to keep the same value
      * for backward compatibility
@@ -100,19 +85,11 @@ public class ObjectsDB implements Serializable {
     /**
      * A queue of entire tables to load.
      */
-    private ArrayList<String> tableQueue = new ArrayList<String>();
+    private final ArrayList<String> tableQueue = new ArrayList<String>();
     /**
      * A queue of table components to load.
      */
-    private HashMap<String, HashSet<String>> contentQueue = new HashMap<String, HashSet<String>>();
-    /**
-     * A queue of tables of content to load.
-     */
-    private ArrayList<String> contentTableQueue = new ArrayList<String>();
-    /**
-     * Mutex for the edition of the queue.
-     */
-    private Semaphore queueMutex = new Semaphore(1);
+    private final HashMap<String, HashSet<String>> contentQueue = new HashMap<String, HashSet<String>>();
     /**
      * Debug, if true will output a table containing statistics on the speed of
      * the objects I/O.
@@ -135,16 +112,18 @@ public class ObjectsDB implements Serializable {
     /**
      * Set of already registered classes in orient db
     **/
-    private HashSet<String> registeredClasses = new HashSet<String>();
-
+    private final HashSet<String> registeredClasses = new HashSet<String>();
+    /**
+     * HashMap to map hash IDs of entries into DB ids
+     */
+    private final HashMap<Long, ORID> idMap = new HashMap<Long, ORID>();
+    
+    
     /**
      * Constructor.
      *
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
-     * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache a cache to store objects without interacting with the
-     * database
      *
      * @throws SQLException exception thrown whenever a problem occurred when
      * establishing the connection to the database
@@ -155,10 +134,29 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        this.dbName = dbName;
-        objectsCache.addDb(this);
-        establishConnection(folder, dbName, deleteOldDatabase, objectsCache);
+    public ObjectsDB(String folder, String dbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        establishConnection(folder, dbName);
+        objectsCache = new ObjectsCache(this);
+        
+    }
+    
+    public HashMap<Long, ORID> getIdMap(){
+        return idMap;
+    }
+    
+    
+    public Semaphore getDbMutex(){
+        return dbMutex;
+    }
+    
+    
+    public HashSet<String> getRegisteredClasses(){
+        return registeredClasses;
+    }
+    
+    
+    public OObjectDatabaseTx getDB(){
+        return db;
     }
     
     
@@ -205,110 +203,14 @@ public class ObjectsDB implements Serializable {
      */
     public void setObjectCache(ObjectsCache objectCache) {
         this.objectsCache = objectCache;
-        objectCache.addDb(this);
     }
-
-    /**
-     * Adds the desired table in the database.
-     *
-     * @param tableName the name of the table
-     *
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with the database
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred
-     */
-    /*
-    public void addTable(String tableName) throws SQLException, InterruptedException {
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting table, table: " + tableName);
-        }
-        Statement stmt = dbConnection.createStatement();
-        dbMutex.acquire();
-        try {
-            stmt.execute("CREATE table " + tableName + " ("
-                    + "NAME VARCHAR(" + VARCHAR_MAX_LENGTH + ") PRIMARY KEY,"
-                    + "MATCH_BLOB blob"
-                    + ")");
-        } catch (SQLException e) {
-            System.out.println("An error occurred while creating table " + tableName);
-            throw (e);
-        } finally {
-            stmt.close();
-        }
-        dbMutex.release();
-    }
-    */
-
-    /**
-     * Indicates whether the database contains the given table.
-     *
-     * @param tableName the name of the table of interest
-     *
-     * @return a boolean indicating whether the database contains the given
-     * table
-     *
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with the database
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred
-     */
-    /*
-    public boolean hasTable(String tableName) throws SQLException, InterruptedException {
-
-        if (tableName.startsWith("\"") && tableName.endsWith("\"")) {
-            tableName = tableName.substring(1, tableName.length() - 1);
-        }
-
-        ArrayList<String> tables = getTables();
-        for (String tempTable : tables) {
-            if (tempTable.equalsIgnoreCase(tableName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-    */
-
-    /**
-     * Returns a list of tables present in the database. Note: this includes
-     * system tables.
-     *
-     * @return a list of tables present in the database
-     *
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with the database
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred
-     */
-    /*
-    public ArrayList<String> getTables() throws SQLException, InterruptedException {
-
-        dbMutex.acquire();
-        DatabaseMetaData dmd = dbConnection.getMetaData();
-        ArrayList<String> result = new ArrayList<String>();
-        ResultSet rs = dmd.getTables(null, null, null, null); //@TODO: not sure to which extend this is Derby dependent...
-
-        try {
-            while (rs.next()) {
-                String tempDbName = (String) rs.getObject("TABLE_NAME");
-                result.add(tempDbName);
-            }
-        } finally {
-            rs.close();
-        }
-        dbMutex.release();
-
-        return result;
-    }
-    */
+    
+    
 
     /**
      * Stores an object in the desired table. When multiple objects are to be
      * inserted, use insertObjects instead.
      *
-     * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store
      * @param inCache boolean indicating whether the method shall try to put the
@@ -321,86 +223,32 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
-
-        String correctedKey = correctKey(tableName, objectKey);
-        long longKey = createLongKey(correctedKey);
-        
-        if (inCache) {
-            objectsCache.addObject(dbName, tableName, longKey, object, true, true);
-        } else {
-            insertObject(tableName, objectKey, longKey, object, inCache);
-        }
-    }
-
-    /**
-     * Stores an object in the desired table. When multiple objects are to be
-     * inserted, use insertObjects instead.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param correctedKey the corrected key
-     * @param object the object to store
-     * @param inCache boolean indicating whether the method shall try to put the
-     * object in cache or not
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred while interacting with the database
-     */
-    public void insertObject(String tableName, String objectKey, long correctedKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
         }
         
-        /*
-        dbMutex.acquire();
+        //dbMutex.acquire();        
         
-        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-        try {
-            ps.setString(1, correctedKey);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                try {
-                    oos.writeObject(object);
-                } finally {
-                    oos.close();
-                }
-            } finally {
-                bos.close();
-            }
-            ps.setBytes(2, bos.toByteArray());
-            ps.executeUpdate();
-        } finally {
-            ps.close();
-        }
-
-        tablesContentCache.remove(tableName);
-
-        dbMutex.release();
-        */
-        ((IdObject)object).setId(correctedKey);
-        ((IdObject)object).setTable(tableName);
-        String objectClassName = object.getClass().getName();
-        if (!registeredClasses.contains(objectClassName)){
-            registeredClasses.add(objectClassName);
-            db.getEntityManager().registerEntityClasses(object.getClass().getPackage().getName());
-        }
-        
-        dbMutex.acquire();
-        db.save(object);
-        dbMutex.release();
+        long longKey = createLongKey(objectKey);
+        ((IdObject)object).setId(longKey);
+        objectsCache.addObject(longKey, object, true);
     }
+    
+    /**
+     * Returns an iterator of all objects of a given class
+     * @param className the class name
+     * @return the iterator
+     */
+    public OObjectIteratorClass<?> getObjectsIterator(String className){
+        return db.browseClass(className);
+    }
+    
 
     /**
      * Inserts a set of objects in the given table.
      *
-     * @param tableName the name of the table
      * @param objects map of the objects (object key &gt; object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
@@ -412,353 +260,31 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred
      */
-    public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Preparing table insertion: " + tableName);
-        }
+    public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
         
-        dbMutex.acquire();
         
         for (String objectKey : objects.keySet()) {
-            String correctedKey = correctKey(tableName, objectKey);
-            long longKey = createLongKey(correctedKey);
             Object object = objects.get(objectKey);
-            ((IdObject)object).setId(longKey);
-            ((IdObject)object).setTable(tableName);
-            String objectClassName = object.getClass().getName();
-            if (!registeredClasses.contains(objectClassName)){
-                registeredClasses.add(objectClassName);
-                db.getEntityManager().registerEntityClasses(object.getClass().getPackage().getName());
+            if (debugInteractions) {
+                System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
             }
+            
+            long longKey = createLongKey(objectKey);
+            ((IdObject)object).setId(longKey);
+            
+            objectsCache.addObject(longKey, object, true);
             
             if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
                 db.save(object);
             }
         }
-        
-        dbMutex.release();
-        /*
-        if (usedTables != null) {
-            usedTables.add(tableName);
-        }
-
-        dbMutex.acquire();
-
-        dbConnection.setAutoCommit(false);
-
-        HashSet<String> tableContent = getTableContentFromDBNoMutex(tableName);
-
-        HashSet<String> addedKeys = new HashSet<String>(objects.size());
-        HashMap<String, String> updateKeys = new HashMap<String, String>(objects.size());
-
-        PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-        try {
-            int rowCounter = 0;
-
-            for (String objectKey : objects.keySet()) {
-
-                if (debugInteractions) {
-                    System.out.println(System.currentTimeMillis() + " Inserting batch of objects, table: " + tableName + ", key: " + objectKey);
-                }
-                String correctedKey = correctKey(tableName, objectKey);
-
-                if (debugContent) {
-                    if (debugInteractions) {
-                        System.out.println(System.currentTimeMillis() + " Inserting batch of objects, table: " + tableName + ", key: " + objectKey);
-                    }
-                    File debugObjectFile = new File(debugFolder, "debugMatch");
-                    FileOutputStream fos = new FileOutputStream(debugObjectFile);
-                    BufferedOutputStream debugBos = new BufferedOutputStream(fos);
-                    ObjectOutputStream debugOos = new ObjectOutputStream(debugBos);
-                    debugOos.writeObject(objects.get(objectKey));
-                    debugOos.close();
-                    debugBos.close();
-                    fos.close();
-                    long size = debugObjectFile.length();
-
-                    debugContentWriter.write(tableName + "\t" + objectKey + "\t" + size + "\n");
-                    debugContentWriter.flush();
-                }
-
-                if (tableContent.contains(correctedKey)) {
-                    updateKeys.put(objectKey, correctedKey);
-                } else {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    try {
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        try {
-
-                            oos.writeObject(objects.get(objectKey));
-                            insertStatement.setString(1, correctedKey);
-                            insertStatement.setBytes(2, bos.toByteArray());
-                            insertStatement.addBatch();
-
-                            if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
-                                insertStatement.executeBatch();
-                                insertStatement.clearParameters();
-                                dbConnection.commit();
-                                insertStatement.close();
-                                insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-                                rowCounter = 0;
-                            }
-                        } finally {
-                            oos.close();
-                        }
-                    } finally {
-                        bos.close();
-                    }
-
-                    addedKeys.add(correctedKey);
-
-                    if (waitingHandler != null) {
-                        waitingHandler.increaseSecondaryProgressCounter();
-                        if (waitingHandler.isRunCanceled()) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                insertStatement.executeBatch();
-                insertStatement.clearParameters();
-                dbConnection.commit();
-            }
-
-            tableContent.addAll(addedKeys);
-
-            // close the statement
-        } finally {
-            insertStatement.close();
-        }
-
-        PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
-        try {
-            int rowCounter = 0;
-
-            for (String objectKey : updateKeys.keySet()) {
-
-                String correctedKey = updateKeys.get(objectKey);
-
-                if (debugContent) {
-                    if (debugInteractions) {
-                        System.out.println(System.currentTimeMillis() + " Updating batch of objects, table: " + tableName + ", key: " + objectKey);
-                    }
-                    File debugObjectFile = new File(debugFolder, "debugMatch");
-                    FileOutputStream fos = new FileOutputStream(debugObjectFile);
-                    BufferedOutputStream debugBos = new BufferedOutputStream(fos);
-                    ObjectOutputStream debugOos = new ObjectOutputStream(debugBos);
-                    debugOos.writeObject(objects.get(objectKey));
-                    debugOos.close();
-                    debugBos.close();
-                    fos.close();
-                    long size = debugObjectFile.length();
-
-                    debugContentWriter.write(tableName + "\t" + objectKey + "\t" + size + "\n");
-                    debugContentWriter.flush();
-                }
-
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                try {
-                    ObjectOutputStream oos = new ObjectOutputStream(bos);
-                    try {
-                        oos.writeObject(objects.get(objectKey));
-
-                        updateStatement.setString(2, correctedKey);
-                        updateStatement.setBytes(1, bos.toByteArray());
-                        updateStatement.addBatch();
-
-                        if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
-                            updateStatement.executeBatch();
-                            updateStatement.clearParameters();
-                            dbConnection.commit();
-                            updateStatement.close();
-                            updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
-                            rowCounter = 0;
-                        }
-                    } finally {
-                        oos.close();
-                    }
-                } finally {
-                    bos.close();
-                }
-
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                }
-            }
-
-            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                updateStatement.executeBatch();
-                updateStatement.clearParameters();
-                dbConnection.commit();
-            }
-
-            // close the statement
-        } finally {
-            updateStatement.close();
-        }
-        dbConnection.setAutoCommit(true);
-
-        dbMutex.release();
-        */
     }
-
-    /**
-     * Loads all objects from a table in the cache.
-     *
-     * @param tableName the table name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    public void loadObjects(String tableName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
-        dbMutex.acquire();
-        String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "'";
-        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
-        for (Object object : objects) {
-            objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
-        }
-        objectsCache.updateCache();
-        dbMutex.release();
-        
-        /*
-        if (usedTables == null || usedTables.contains(tableName)) {
-            if (!loading && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
-
-                if (debugInteractions) {
-                    System.out.println(System.currentTimeMillis() + " getting table objects, table: " + tableName);
-                }
-                ResultSet results;
-                if (waitingHandler != null && displayProgress) {
-                    waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-
-                    // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar.
-                    dbMutex.acquire();
-                    Statement rowCountStatement = dbConnection.createStatement();
-                    Integer numberOfRows = null;
-                    try {
-                        results = rowCountStatement.executeQuery("select count(*) from " + tableName);
-                        results.next();
-                        numberOfRows = results.getInt(1);
-                    } finally {
-                        rowCountStatement.close();
-                    }
-                    dbMutex.release();
-
-                    if (numberOfRows != null) {
-                        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                        waitingHandler.setSecondaryProgressCounter(0);
-                        waitingHandler.setMaxSecondaryProgressCounter(numberOfRows);
-                    }
-                }
-
-                HashMap<String, Object> objectsFromDb = new HashMap<String, Object>();
-
-                dbMutex.acquire();
-                loading = true;
-
-                try {
-                    Statement stmt = dbConnection.createStatement();
-                    try {
-                        results = stmt.executeQuery("select * from " + tableName);
-
-                        try {
-                            while (results.next()) {
-
-                                if (waitingHandler != null) {
-                                    if (waitingHandler.isRunCanceled()) {
-                                        break;
-                                    }
-                                    if (displayProgress) {
-                                        waitingHandler.increaseSecondaryProgressCounter();
-                                    }
-                                }
-
-                                String key = results.getString(1);
-
-                                if (!objectsCache.inCache(dbName, tableName, key)) {
-
-                                    Blob tempBlob;
-
-                                    if (useSQLite) {
-                                        byte[] bytes = results.getBytes(2);
-                                        tempBlob = new SerialBlob(bytes);
-                                    } else {
-                                        tempBlob = results.getBlob(2);
-                                    }
-
-                                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-                                    try {
-                                        ObjectInputStream in = new ObjectInputStream(bis);
-                                        try {
-                                            Object object = in.readObject();
-                                            objectsFromDb.put(key, object);
-                                        } finally {
-                                            in.close();
-                                        }
-                                    } finally {
-                                        bis.close();
-                                    }
-                                }
-                            }
-
-                            tableQueue.remove(tableName);
-
-                        } finally {
-                            results.close();
-                        }
-                    } finally {
-                        stmt.close();
-                    }
-
-                } finally {
-                    loading = false;
-                }
-                dbMutex.release();
-
-                for (String key : objectsFromDb.keySet()) {
-                    if (!objectsCache.inCache(dbName, tableName, key)) {
-                        Object object = objectsFromDb.get(key);
-                        objectsCache.addObject(dbName, tableName, key, object, false, false);
-                    }
-                }
-                objectsCache.updateCache();
-
-            } else {
-
-                if (!tableQueue.contains(tableName)) {
-                    tableQueue.add(tableName);
-                }
-
-                while (loading) {
-                    wait(11);
-                }
-
-                loadObjects(tableName, waitingHandler, displayProgress);
-            }
-        }
-        */
-    }
+    
+    
 
     /**
      * Loads some objects from a table in the cache.
      *
-     * @param tableName the table name
      * @param keys the keys of the objects to load
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
@@ -774,178 +300,84 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        HashSet<String> keysToQuery = new HashSet<String>(keys);
-        HashSet<String> queue = contentQueue.get(tableName);
+    public void loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " getting " + keys.size() + " objects, table: " + tableName);
+            System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
-        if (queue != null) {
-            queueMutex.acquire();
-            queue = contentQueue.get(tableName);
-            if (queue != null) {
-                keysToQuery.addAll(queue);
-                contentTableQueue.remove(tableName);
-                contentQueue.remove(tableName);
-            }
-            queueMutex.release();
-        }
-
-        loadObjects(tableName, keysToQuery, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads some objects from a table in the cache.
-     *
-     * @param tableName the table name
-     * @param keys the keys of the objects to load
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    private synchronized void loadObjects(String tableName, HashSet<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        
+        
         dbMutex.acquire();
-        for (String key : keys){
-            String correctedKey = correctKey(tableName, key);
-            long longKey = createLongKey(correctedKey);
+        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        for (String objectKey : keys){
+            if (waitingHandler.isRunCanceled()) break;
+            long longKey = createLongKey(objectKey);
+            ORID orid = idMap.get(longKey);
+            if (orid != null){
+                Object obj = db.load(orid);
+                if (!idMap.containsKey(longKey)){
+                    idMap.put(longKey, db.getIdentity(obj));
+                }
+                allObjects.put(longKey, obj);
+            }
             
-            String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
-            List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
-            for (Object object : objects) {
-                objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
-            }
-            objectsCache.updateCache();
         }
         dbMutex.release();
-        
-        
-        /*
-        if (usedTables == null || usedTables.contains(tableName)) {
-            if (!loading && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
-
-                if (debugInteractions) {
-                    System.out.println(System.currentTimeMillis() + " getting " + keys.size() + " objects, table: " + tableName);
-                }
-
-                ArrayList<String> toLoad = new ArrayList<String>(keys.size());
-
-                for (String key : keys) {
-                    String correctedKey = correctKey(tableName, key);
-                    if (objectsCache != null && !objectsCache.inCache(dbName, tableName, correctedKey)) {
-                        toLoad.add(correctedKey);
-                    }
-                }
-
-                if (!toLoad.isEmpty()) {
-
-                    HashMap<String, Object> objectsFromDb = new HashMap<String, Object>(toLoad.size());
-
-                    dbMutex.acquire();
-                    loading = true;
-
-                    try {
-                        Statement stmt = dbConnection.createStatement();
-                        //Statement stmt = dbConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); // @TODO: test if this is faster
-                        //stmt.setFetchSize(toLoad.size()); // @TODO: test if this is faster
-
-                        try {
-                            ResultSet results = stmt.executeQuery("select * from " + tableName);
-
-                            try {
-                                int found = 0;
-
-                                while (results.next() && found < toLoad.size()) {
-                                    String key = results.getString(1);
-                                    if (toLoad.contains(key)) {
-                                        found++;
-                                        Blob tempBlob;
-
-                                        if (useSQLite) {
-                                            byte[] bytes = results.getBytes(2);
-                                            tempBlob = new SerialBlob(bytes);
-                                        } else {
-                                            tempBlob = results.getBlob(2);
-                                        }
-
-                                        BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-                                        try {
-                                            ObjectInputStream in = new ObjectInputStream(bis);
-                                            try {
-                                                Object object = in.readObject();
-                                                objectsFromDb.put(key, object);
-                                            } finally {
-                                                in.close();
-                                            }
-                                        } finally {
-                                            bis.close();
-                                        }
-                                        if (waitingHandler != null && displayProgress) {
-                                            waitingHandler.increaseSecondaryProgressCounter();
-                                        }
-                                    }
-                                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                        break;
-                                    }
-                                }
-                            } finally {
-                                results.close();
-                            }
-                        } finally {
-                            stmt.close();
-                        }
-
-                    } finally {
-                        loading = false;
-                    }
-                    dbMutex.release();
-
-                    for (String key : objectsFromDb.keySet()) {
-                        if (!objectsCache.inCache(dbName, tableName, key)) {
-                            Object object = objectsFromDb.get(key);
-                            objectsCache.addObject(dbName, tableName, key, object, false, false);
-                        }
-                    }
-                    objectsCache.updateCache();
-                }
-            } else {
-
-                queueMutex.acquire();
-                HashSet<String> queue = contentQueue.get(tableName);
-                if (queue == null) {
-                    contentTableQueue.add(tableName);
-                    contentQueue.put(tableName, keys);
-                } else if (keys == queue) {
-                    while (loading) {
-                        wait(7);
-                    }
-                    loadObjects(tableName, keys, waitingHandler, displayProgress);
-                } else {
-                    queue.addAll(keys);
-                }
-                queueMutex.release();
-            }
+        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            objectsCache.addObjects(allObjects, false);
         }
-        */
     }
+    
+    
+
+    /**
+     * Loads some objects from a table in the cache.
+     *
+     * @param className the class name of the objects to be load
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public void loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " loading all " + className + " objects");
+        }
+        
+        
+        dbMutex.acquire();
+        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        for (Object obj : db.browseClass(className)){
+            if (waitingHandler.isRunCanceled()) break;
+            long longKey = ((IdObject)obj).getId();
+            if (!idMap.containsKey(longKey)){
+                idMap.put(longKey, db.getIdentity(obj));
+            }
+            allObjects.put(longKey, obj);
+            
+        }
+        dbMutex.release();
+        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            objectsCache.addObjects(allObjects, false);
+        }
+    }
+
+    
 
     /**
      * Retrieves an object from the desired table. The key should be unique
      * otherwise the first object will be returned. Returns null if the key is
-     * not found. The retrieved object is saved in cache.
+     * not found.
      *
-     * @param tableName the name of the table
      * @param objectKey the object key
-     * @param useDB if useDB is false, null will be returned if the object is
      *
      * @return the object stored in the table
      *
@@ -958,239 +390,69 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return retrieveObject(tableName, objectKey, useDB, true);
-    }
-
-    /**
-     * Retrieves an object from the desired table. The key should be unique
-     * otherwise the first object will be returned. Returns null if the key is
-     * not found.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the object key
-     * @param useDB if useDB is false, null will be returned if the object is
-     * not in the cache
-     * @param useCache if true the retrieved object will be saved in cache
-     *
-     * @return the object stored in the table
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
-        String correctedKey = correctKey(tableName, objectKey);
-
+    public Object retrieveObject(String objectKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         Object object = null;
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Retrieving object, table: " + tableName + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Retrieving object, key: " + objectKey);
         }
-
-        if (objectsCache != null) {
-            object = objectsCache.getObject(dbName, tableName, correctedKey);
-        }
-
-        if (!useDB || object != null) {
-            return object;
-        } 
         
-        return retrieveObject(tableName, objectKey, correctedKey, useDB, useCache);
+        long longKey = createLongKey(objectKey);
+        object = objectsCache.getObject(longKey);
+        
+        if (object == null){
+            dbMutex.acquire();
+            object = retrieveObject(objectKey);
+            dbMutex.release();        
+            objectsCache.addObject(longKey, object, false);
+        }
+        return object;
     }
+    
+    
 
     /**
-     * Retrieves an object from the desired table. The key should be unique
-     * otherwise the first object will be returned. Returns null if the key is
-     * not found.
+     * Indicates whether an object is loaded.
      *
-     * @param tableName the name of the table
      * @param objectKey the object key
-     * @param correctedKey the corrected object key
-     * @param useDB if useDB is false, null will be returned if the object is
-     * not in the cache
-     * @param useCache if true the retrieved object will be saved in cache
      *
-     * @return the object stored in the table.
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    private Object retrieveObject(String tableName, String objectKey, String correctedKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
-        Object object = null;
-        long longKey = createLongKey(correctedKey);
-
-        if (objectsCache != null) {
-            object = objectsCache.getObject(dbName, tableName, correctedKey);
-        }
-
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Retrieving object, table: " + tableName + ", key: " + objectKey);
-        }
-
-        dbMutex.acquire();
-        String sql = "SELECT * from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
-        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
-        for (Object obj : objects) {
-            if (useCache) {
-                if (!objectsCache.inCache(dbName, tableName, objectKey)) {
-                    objectsCache.addObject(dbName, tableName, objectKey, obj, false, true);
-                }
-            }
-            objectsCache.addObject(dbName, tableName, ((IdObject)object).getId(), object, false, false);
-            objectsCache.updateCache();
-            dbMutex.release();
-        }
-        
-        /*
-        dbMutex.acquire();
-
-        long start = System.currentTimeMillis();
-
-        Statement stmt = dbConnection.createStatement();
-
-        try {
-            ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + correctedKey + "'");
-            try {
-
-                if (results.next()) {
-
-                    Blob tempBlob;
-
-                    if (useSQLite) {
-                        byte[] bytes = results.getBytes(1);
-                        tempBlob = new SerialBlob(bytes);
-                    } else {
-                        tempBlob = results.getBlob(1);
-                    }
-
-                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-                    try {
-                        ObjectInputStream in = new ObjectInputStream(bis);
-                        try {
-                            object = in.readObject();
-                        } finally {
-                            in.close();
-                        }
-                    } finally {
-                        bis.close();
-                    }
-
-                    if (debugSpeed) {
-                        long loaded = System.currentTimeMillis();
-
-                        File debugObjectFile = new File(debugFolder, "debugMatch");
-                        FileOutputStream fos = new FileOutputStream(debugObjectFile);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(object);
-                        oos.close();
-                        bos.close();
-                        fos.close();
-
-                        long written = System.currentTimeMillis();
-
-                        FileInputStream fis = new FileInputStream(debugObjectFile);
-                        bis = new BufferedInputStream(fis);
-                        ObjectInputStream in = new ObjectInputStream(bis);
-                        Object match = in.readObject();
-                        fis.close();
-                        bis.close();
-                        in.close();
-                        long read = System.currentTimeMillis();
-
-                        long size = debugObjectFile.length();
-
-                        long queryTime = loaded - start;
-                        long serializationTime = written - loaded;
-                        long deserializationTime = read - written;
-
-                        debugSpeedWriter.write(tableName + "\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
-                    }
-                }
-
-            } finally {
-                results.close();
-            }
-        } finally {
-            stmt.close();
-        }
-
-        dbMutex.release();
-        */
-
-        
-        return null;
-    }
-
-    /**
-     * Indicates whether an object is loaded in the given table.
-     *
-     * @param tableName the table name
-     * @param objectKey the object key
-     * @param cache a boolean indicating whether the cache should be searched as
-     * well
-     *
-     * @return a boolean indicating whether an object is loaded in the given
-     * table
+     * @return a boolean indicating whether an object is loaded
      *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean inDB(String tableName, String objectKey, boolean cache) throws SQLException, InterruptedException {
+    public boolean inDB(String objectKey) throws SQLException, InterruptedException {
 
-        String correctedKey = correctKey(tableName, objectKey);
+        long longKey = createLongKey(objectKey);
 
-        if (cache) {
-            if (objectsCache.inCache(dbName, tableName, correctedKey)) {
-                return true;
-            }
+        if (objectsCache.inCache(longKey)) {
+            return true;
         }
 
-        /*
-        if (usedTables != null && !usedTables.contains(tableName)) {
-            return false;
-        }*/
-
-        return savedInDB(tableName, objectKey, correctedKey);
+        return savedInDB(objectKey);
     }
 
     /**
-     * Indicates whether an object is saved in the given table.
+     * Indicates whether an object is saved.
      *
-     * @param tableName the table name
      * @param objectKey the object key
      *
-     * @return a boolean indicating whether an object is loaded in the given
-     * table
+     * @return a boolean indicating whether an object is saved
      *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      * @throws InterruptedException exception thrown if a threading error occurs
      */
-    private boolean savedInDB(String tableName, String objectKey, String correctedKey) throws SQLException, InterruptedException {
+    private boolean savedInDB(String objectKey) throws SQLException, InterruptedException {
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Checking db content, table: " + tableName + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
         
-        long longKey = createLongKey(correctedKey);
+        long longKey = createLongKey(objectKey);
         
         dbMutex.acquire();
-        String sql = "SELECT id from (SELECT expand(classes) from metadata:schema) where table = '" + tableName + "' and id = '" + longKey + "'";
+        String sql = "SELECT id from (SELECT expand(classes) from metadata:schema) where id = '" + longKey + "'";
         List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
         for (Object obj : objects) {
             dbMutex.release();
@@ -1198,142 +460,14 @@ public class ObjectsDB implements Serializable {
         }
         dbMutex.release();
         return false;
-        
-        
-        
-        /*
-        dbMutex.acquire();
-        Statement stmt = dbConnection.createStatement();
-        boolean result = false;
-        try {
-            ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + correctedKey + "'");
-            try {
-                result = results.next();
-            } finally {
-                results.close();
-            }
-        } finally {
-            stmt.close();
-        }
-        dbMutex.release();
-
-        return result;
-        */
     }
-
-    /**
-     * Returns an arraylist with the content of a table.
-     *
-     * @param tableName the name of the table to get the content for
-     *
-     * @return an arraylist with the content of the table
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     */
-    public HashSet<String> getTableContent(String tableName) throws SQLException, InterruptedException {
-
-        HashSet<String> tableContent;
-        if (tablesContentCache != null) {
-            tableContent = tablesContentCache.get(tableName);
-            if (tableContent != null) {
-                return tableContent;
-            }
-        }
-        return getTableContentFromDB(tableName);
-    }
-
-    /**
-     * Returns the content of a table from the database.
-     *
-     * @param tableName the name of the table to get the content for
-     *
-     * @return an arraylist with the content of the table
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     */
-    private HashSet<String> getTableContentFromDB(String tableName) throws SQLException, InterruptedException {
-
-        dbMutex.acquire();
-
-        HashSet<String> result = getTableContentFromDBNoMutex(tableName);
-
-        dbMutex.release();
-
-        return result;
-    }
-
-    /**
-     * Returns the content of a table from the database without using the mutex.
-     *
-     * @param tableName the name of the table to get the content for
-     *
-     * @return an arraylist with the content of the table
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     */
-    private HashSet<String> getTableContentFromDBNoMutex(String tableName) throws SQLException, InterruptedException {
-
-        HashSet<String> tableContent;
-        if (tablesContentCache != null) {
-            tableContent = tablesContentCache.get(tableName);
-            if (tableContent != null) {
-                return tableContent;
-            }
-        }
-
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Checking db content, table: " + tableName);
-        }
-
-        tableContent = new HashSet<String>();
-        Statement stmt = dbConnection.createStatement();
-
-        try {
-            ResultSet results = stmt.executeQuery("select * from " + tableName);
-            try {
-                while (results.next()) {
-                    String key = results.getString(1);
-                    if (key.startsWith(LONG_KEY_PREFIX)) {
-                        key = getOriginalKey(tableName, key);
-                    }
-                    tableContent.add(key);
-                }
-            } finally {
-                results.close();
-            }
-        } finally {
-            stmt.close();
-        }
-
-        if (tablesContentCache != null) {
-            if (tablesContentCache.size() == tablesContentCacheSize) {
-                String keyToRemove = null;
-                for (String key : tablesContentCache.keySet()) {
-                    if (!key.equals(tableName)) {
-                        keyToRemove = key;
-                        break;
-                    }
-                }
-                if (keyToRemove != null) {
-                    tablesContentCache.remove(keyToRemove);
-                }
-            }
-            tablesContentCache.put(tableName, tableContent);
-        }
-
-        return tableContent;
-    }
+    
+    
+    
 
     /**
      * Deletes an object from the desired table.
      *
-     * @param tableName the name of the table
      * @param objectKey the object key
      *
      * @throws SQLException exception thrown whenever an error occurred while
@@ -1342,213 +476,45 @@ public class ObjectsDB implements Serializable {
      * interrogating the database
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void deleteObject(String tableName, String objectKey) throws SQLException, IOException, InterruptedException {
+    public void deleteObject(String objectKey) throws SQLException, IOException, InterruptedException {
 
-        String correctedKey = correctKey(tableName, objectKey);
-
-        // remove from the cache
-        objectsCache.removeObject(dbName, tableName, correctedKey);
-
-        // delete from database
-        dbMutex.acquire();
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Removing object, table: " + tableName + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Removing object, key: " + objectKey);
         }
-        if (usedTables == null || usedTables.contains(tableName)) {
-            Statement stmt = dbConnection.createStatement();
-            try {
-                stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'"); // @TODO: what if the accession contains (') ..? - a single quotation mark is the escape character for a single quotation mark
-            } catch (SQLSyntaxErrorException e) {
-                System.out.println("SQL Exception. SQL call: " + "delete from " + tableName + " where NAME='" + correctedKey + "'");
-                throw e;
-            } finally {
-                stmt.close();
-            }
-        }
-        dbMutex.release();
-    }
-
-    /**
-     * Updates an object in the cache or in the tables if not in cache.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param object the object to store
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException, InterruptedException {
-        updateObject(tableName, objectKey, object, true);
-    }
-
-    /**
-     * Updates an object in the cache or in the tables if not in cache or if
-     * cache is wrong.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param object the object to store
-     * @param cache a boolean indicating whether the method should look in the
-     * cache
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
-
-        String correctedKey = correctKey(tableName, objectKey);
-
-        boolean cacheUpdated = false;
-
-        if (cache) {
-            cacheUpdated = objectsCache.updateObject(dbName, tableName, correctedKey, object);
-        }
-
-        if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
-            updateObjectInDb(tableName, objectKey, correctedKey, object, cache);
-        }
-    }
-
-    /**
-     * Updates an object in the cache or in the tables if not in cache or if
-     * cache is wrong.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param object the object to store
-     * @param cache a boolean indicating whether the method should look in the
-     * cache
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    private void updateObjectInDb(String tableName, String objectKey, String correctedKey, Object object, boolean cache) throws SQLException, IOException, InterruptedException {
-
-        boolean cacheUpdated = false;
-
-        if (cache) {
-            cacheUpdated = objectsCache.updateObject(dbName, tableName, correctedKey, object);
-        }
-
-        if (!cacheUpdated && (usedTables == null || usedTables.contains(tableName))) {
-
+        
+        long longKey = createLongKey(objectKey);
+        ORID orid = idMap.get(longKey);
+        if (orid != null){
+            objectsCache.deleteObject(longKey);
             dbMutex.acquire();
-
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " Updating object, table: " + tableName + ", key: " + objectKey);
-            }
-            PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'");
-            try {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                try {
-                    ObjectOutputStream oos = new ObjectOutputStream(bos);
-                    try {
-                        oos.writeObject(object);
-                    } finally {
-                        oos.close();
-                    }
-                } finally {
-                    bos.close();
-                }
-                ps.setBytes(1, bos.toByteArray());
-                ps.executeUpdate();
-            } finally {
-                ps.close();
-            }
-
+            db.delete(orid);
             dbMutex.release();
         }
     }
 
-    /**
-     * Saves the current date to the CONNECTION_LOG_TABLE.
-     *
-     * @throws SQLException exception thrown if an error occurs while
-     * interacting with the database.
-     * @throws IOException exception thrown if an error occurs while reading or
-     * writing a file.
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database.
-     */
-    private synchronized void logConnection() throws SQLException, IOException, InterruptedException {
-        if (!hasTable(CONNECTION_LOG_TABLE)) {
-            addTable(CONNECTION_LOG_TABLE);
-        }
-        java.util.Date date = new java.util.Date();
-        String key = date + "_" + System.currentTimeMillis();
-        insertObject(CONNECTION_LOG_TABLE, key, date, false);
-        wait(1);
-    }
 
     /**
-     * Loads the attributes from the database.
+     * Updates an object in the cache or in the tables if not in cache or if
+     * cache is wrong.
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database.
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database.
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database.
+     * @param objectKey the key of the object
+     * @param object the object to store
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * storing the object
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    private void loadAttributes() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (hasTable(DB_ATTRIBUTES)) {
-            longTableNames = (ArrayList<String>) retrieveObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, true, false);
-            longKeysMap = (HashMap<String, ArrayList<String>>) retrieveObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, true, false);
-            usedTables = (HashSet<String>) retrieveObject(DB_ATTRIBUTES, USED_TABLES_TABLE, true, false);
-        }
+    public void updateObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
+
+        long longKey = createLongKey(objectKey);
+        boolean cacheUpdated = objectsCache.updateObject(longKey, object);
     }
 
-    /**
-     * Saves the attributes in the database.
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database.
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database.
-     */
-    private void saveAttributes() throws SQLException, IOException, InterruptedException {
+    
 
-        if (!hasTable(DB_ATTRIBUTES)) {
-            addTable(DB_ATTRIBUTES);
-        }
 
-        // Long table names
-        if (inDB(DB_ATTRIBUTES, LONG_TABLE_NAMES, false)) {
-            updateObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, longTableNames, false);
-        } else {
-            insertObject(DB_ATTRIBUTES, LONG_TABLE_NAMES, longTableNames, false);
-        }
-
-        // Long keys
-        if (inDB(DB_ATTRIBUTES, LONG_KEY_PREFIX, false)) {
-            updateObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, longKeysMap, false);
-        } else {
-            insertObject(DB_ATTRIBUTES, LONG_KEY_PREFIX, longKeysMap, false);
-        }
-
-        // used tables
-        if (usedTables != null) {
-            if (inDB(DB_ATTRIBUTES, USED_TABLES_TABLE, false)) {
-                updateObject(DB_ATTRIBUTES, USED_TABLES_TABLE, usedTables, false);
-            } else {
-                insertObject(DB_ATTRIBUTES, USED_TABLES_TABLE, usedTables, false);
-            }
-        }
-    }
 
     /**
      * Indicates whether the connection to the DB is active.
@@ -1574,69 +540,13 @@ public class ObjectsDB implements Serializable {
         if (db != null) db.close();
         dbMutex.release();
 
-        /*
-        // Make sure that previous queries are done
-        dbMutex.acquire();
-        while (dbMutex.getQueueLength() > 0) {
-            dbMutex.release();
-            wait(5);
-            dbMutex.acquire();
-        }
-        dbMutex.release();
-
-        if (dbConnection != null) {
-            // try to save the long key indexes
-            try {
-                saveAttributes();
-            } catch (Exception e) {
-                if (dbConnection != null) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        dbMutex.acquire();
-        objectsCache = null;
-
-        try {
-            if (dbConnection != null && isConnectionActive()) {
-                dbConnection.close();
-                DerbyUtil.removeActiveConnection(derbyConnectionID, path);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (debugSpeed && debugSpeedWriter != null) {
-            try {
-                debugSpeedWriter.close();
-                debugSpeedWriter = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (debugContent && debugContentWriter != null) {
-            try {
-                debugContentWriter.close();
-                debugContentWriter = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        dbConnection = null;
-
-        dbMutex.release();
-        */
     }
 
     /**
      * Establishes connection to the database.
      *
      * @param aDbFolder the folder where the database is located
-     * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache the objects cache
+     * @param aDbName the name of the database
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection to the database
@@ -1647,98 +557,8 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public void establishConnection(String aDbFolder, String aDbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void establishConnection(String aDbFolder, String aDbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        /*
-        File parentFolder = new File(aDbFolder);
-        if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
-        }
-        File dbFolder = new File(aDbFolder, dbName);
-        path = dbFolder.getAbsolutePath();
-
-        // close the old connection and delete the db folder
-        if (dbFolder.exists() && deleteOldDatabase) {
-
-            close();
-
-            DerbyUtil.closeConnection();
-            boolean deleted = Util.deleteDir(dbFolder);
-            //TODO: Restore connections?
-
-            if (!deleted) {
-                System.out.println("Failed to delete db folder: " + dbFolder.getPath());
-            }
-        }
-
-        if (dbMutex == null) { // Backward compatibility fix for projects made with a utilities version older than 4.10.1
-            dbMutex = new Semaphore(1);
-            queueMutex = new Semaphore(1);
-            tablesContentCacheSize = 4;
-            tablesContentCache = new HashMap<String, HashSet<String>>(tablesContentCacheSize);
-        }
-        dbMutex.acquire();
-
-        if (useSQLite) {
-            try {
-                Class.forName("org.sqlite.JDBC");
-                dbConnection = DriverManager.getConnection("jdbc:sqlite:" + path); // @TODO: another instance of SQLite may have already booted the database. We need to check this first?
-            } catch (SQLException e) {
-                // try using Derby instead
-                useSQLite = false;
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (!useSQLite) {
-            if (isConnectionActive()) {
-                throw new IllegalArgumentException("Impossible to establish a Derby connection in " + path + ", connection to the folder already active.");
-            }
-            String url = "jdbc:derby:" + path + ";create=true";
-            dbConnection = DriverManager.getConnection(url);
-            DerbyUtil.addActiveConnection(derbyConnectionID, path);
-        }
-
-        // special fix for if derby breaks down and restarts in read only mode
-        if (dbConnection != null) {
-            dbConnection.setReadOnly(false);
-        }
-
-        this.objectsCache = objectsCache;
-
-        // debug test speed
-        if (debugSpeed) {
-            try {
-                debugFolder = new File(aDbFolder);
-                debugSpeedWriter = new BufferedWriter(new FileWriter(new File(parentFolder, "dbSpeed.txt")));
-                debugSpeedWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        // debug test content
-        if (debugContent) {
-            try {
-                debugFolder = new File(aDbFolder);
-
-                String tempFileName = "dbContent.txt";
-
-                int counter = 1;
-
-                // make sure that we don't overwrite the old files
-                while (new File(parentFolder, tempFileName).exists()) {
-                    tempFileName = "dbContent" + counter++ + ".txt";
-                }
-
-                debugContentWriter = new BufferedWriter(new FileWriter(new File(parentFolder, tempFileName)));
-                debugContentWriter.write("Table\tkey\tsize\n");
-                debugContentWriter.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        dbMutex.release();
-        */
         dbMutex.acquire();
         File parentFolder = new File(aDbFolder);
         if (!parentFolder.exists()) {
@@ -1746,7 +566,7 @@ public class ObjectsDB implements Serializable {
         }
         File dbFolder = new File(aDbFolder, dbName);
         path = dbFolder.getAbsolutePath();
-        if (dbFolder.exists() && deleteOldDatabase) {
+        if (dbFolder.exists()) {
 
             close();
 
@@ -1762,90 +582,11 @@ public class ObjectsDB implements Serializable {
         }
         
         dbMutex.release();
-
-        // test the connection by logging the connection in the database
-        logConnection();
-
-        // try to load the attributes
-        loadAttributes();
+        
+        // TODO: load project parameters
     }
-
-    /**
-     * Surrounds the table name with quotation marks such that spaces etc are
-     * allowed.
-     *
-     * @param tableName the table name
-     *
-     * @return the corrected table name
-     */
-    /*
-    public String correctTableName(String tableName) {
-        tableName = "\"" + tableName + "\"";
-        if (longTableNames.contains(tableName)) {
-            tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
-        } else if (tableName.length() >= TABLE_NAME_MAX_LENGTH) {
-            int index = longTableNames.size();
-            longTableNames.add(tableName);
-            tableName = "\"" + index + "\"";
-        }
-        if (tableName.length() >= TABLE_NAME_MAX_LENGTH && !tableName.startsWith(LONG_KEY_PREFIX)) {
-            throw new IllegalArgumentException("Table name " + tableName + " is too long to be stored in the database.");
-        }
-        return tableName;
-    }
-    */
-
-    /**
-     * Indexes the long keys by a number.
-     *
-     * @param tableName the table name
-     * @param key the key of the object to be stored
-     *
-     * @return the corrected table name
-     */
-    public String correctKey(String tableName, String key) {
-
-        // @TODO: escape special characters:
-        //String correctedKey = key.replaceAll("[^\\dA-Za-z ]", "");
-        String correctedKey = key;
-        if (longKeysMap != null && !correctedKey.startsWith(LONG_KEY_PREFIX)) {
-            if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
-                correctedKey = LONG_KEY_PREFIX + longKeysMap.get(tableName).indexOf(key);
-            } else if (key.length() >= MAX_KEY_LENGTH) { // @TODO: find the optimal value
-                if (!longKeysMap.containsKey(tableName)) {
-                    longKeysMap.put(tableName, new ArrayList<String>());
-                }
-                int index = longKeysMap.get(tableName).size();
-                longKeysMap.get(tableName).add(key);
-                correctedKey = LONG_KEY_PREFIX + index;
-            }
-        }
-
-        if (correctedKey.length() >= MAX_KEY_LENGTH && !correctedKey.startsWith(LONG_KEY_PREFIX)) {
-            throw new IllegalArgumentException("Object key " + correctedKey + " is too long to be stored in the database.");
-        }
-
-        return correctedKey;
-    }
-
-    /**
-     * Returns the original key of the corrected long key.
-     *
-     * @param tableName the table
-     * @param correctedKey the corrected key, should be prefix + number
-     *
-     * @return the original long key
-     */
-    public String getOriginalKey(String tableName, String correctedKey) {
-
-        String subKey = correctedKey.substring(LONG_KEY_PREFIX.length());
-        try {
-            Integer index = new Integer(subKey);
-            return longKeysMap.get(tableName).get(index);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("An error occurred when getting the original key of " + correctedKey + ".");
-        }
-    }
+    
+    
 
     /**
      * Returns the path to the database.

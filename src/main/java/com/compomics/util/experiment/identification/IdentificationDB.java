@@ -94,7 +94,6 @@ public class IdentificationDB implements Serializable {
      * @param folder the folder where to put the database
      * @param name the database name
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -105,9 +104,9 @@ public class IdentificationDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public IdentificationDB(String folder, String name, boolean deleteOldDatabase) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = name;
-        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectCache);
+        objectsDB = new ObjectsDB(folder, dbName);
         /*
         if (deleteOldDatabase) {
             objectsDB.addTable(proteinTableName);
@@ -128,8 +127,7 @@ public class IdentificationDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean spectrumMatchLoaded(String spectrumKey) throws SQLException, InterruptedException {
-        String tableName = getSpectrumMatchTable(spectrumKey);
-        return objectsDB.inDB(tableName, spectrumKey, true);
+        return objectsDB.inDB(spectrumKey);
     }
 
     /**
@@ -145,7 +143,7 @@ public class IdentificationDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean peptideMatchLoaded(String peptideKey) throws SQLException, InterruptedException {
-        return objectsDB.inDB(peptideTableName, peptideKey, true);
+        return objectsDB.inDB(peptideKey);
     }
 
     /**
@@ -161,7 +159,7 @@ public class IdentificationDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean proteinMatchLoaded(String proteinKey) throws SQLException, InterruptedException {
-        return objectsDB.inDB(proteinTableName, proteinKey, true);
+        return objectsDB.inDB(proteinKey);
     }
 
     /**
@@ -176,7 +174,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
-        objectsDB.updateObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
+        objectsDB.updateObject(proteinMatch.getKey(), proteinMatch);
     }
 
     /**
@@ -191,7 +189,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException {
-        objectsDB.updateObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
+        objectsDB.updateObject(peptideMatch.getKey(), peptideMatch);
     }
 
     /**
@@ -207,8 +205,7 @@ public class IdentificationDB implements Serializable {
      */
     public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
         String key = spectrumMatch.getKey();
-        String tableName = getSpectrumMatchTable(key);
-        objectsDB.updateObject(tableName, key, spectrumMatch);
+        objectsDB.updateObject(key, spectrumMatch);
     }
 
     /**
@@ -224,8 +221,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap) throws SQLException, IOException, InterruptedException {
-        String tableName = getAssumptionTable(spectrumKey);
-        objectsDB.updateObject(tableName, spectrumKey, assumptionsMap);
+        objectsDB.updateObject(spectrumKey, assumptionsMap);
     }
 
     /**
@@ -241,8 +237,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptionsMap) throws SQLException, IOException, InterruptedException {
-        String tableName = getRawAssumptionTable(spectrumKey);
-        objectsDB.updateObject(tableName, spectrumKey, rawAssumptionsMap);
+        objectsDB.updateObject(spectrumKey, rawAssumptionsMap);
     }
 
     /**
@@ -280,8 +275,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateProteinParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        String tableName = getProteinParameterTable(urParameter);
-        objectsDB.updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(key, urParameter);
     }
 
     /**
@@ -296,8 +290,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updatePeptideParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(key, urParameter);
     }
 
     /**
@@ -312,8 +305,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void updateSpectrumParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        String tableName = getSpectrumParameterTable(key, urParameter);
-        objectsDB.updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(key, urParameter);
     }
 
     /**
@@ -327,10 +319,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removeProteinMatch(String key) throws SQLException, IOException, InterruptedException {
-        objectsDB.deleteObject(proteinTableName, key);
-        for (String proteinParameterTable : proteinParametersTables) {
-            objectsDB.deleteObject(proteinParameterTable, key);
-        }
+        objectsDB.deleteObject(key);
     }
 
     /**
@@ -344,10 +333,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removePeptideMatch(String key) throws SQLException, IOException, InterruptedException {
-        objectsDB.deleteObject(peptideTableName, key);
-        for (String peptideParameterTable : peptideParametersTables) {
-            objectsDB.deleteObject(peptideParameterTable, key);
-        }
+        objectsDB.deleteObject(key);
     }
 
     /**
@@ -361,12 +347,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removeSpectrumMatch(String key) throws SQLException, IOException, InterruptedException {
-        for (String psmTable : psmTables) {
-            objectsDB.deleteObject(psmTable, key);
-        }
-        for (String psmParameterTable : psmParametersTables) {
-            objectsDB.deleteObject(psmParameterTable, key);
-        }
+        objectsDB.deleteObject(key);
     }
 
     /**
@@ -381,9 +362,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removeAssumptions(String key) throws SQLException, IOException, InterruptedException {
-        for (String table : assumptionsTables) {
-            objectsDB.deleteObject(table, key);
-        }
+        objectsDB.deleteObject(key);
     }
 
     /**
@@ -398,9 +377,7 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removeRawAssumptions(String key) throws SQLException, IOException, InterruptedException {
-        for (String table : rawAssumptionsTables) {
-            objectsDB.deleteObject(table, key);
-        }
+        objectsDB.deleteObject(key);
     }
 
     /**
@@ -434,7 +411,7 @@ public class IdentificationDB implements Serializable {
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getAssumptionTable(key);
         checkTable(assumptionsTables, tableName);
-        return (HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>) objectsDB.retrieveObject(tableName, key, useDB);
+        return (HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>) objectsDB.retrieveObject(key);
     }
 
     /**
@@ -649,7 +626,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Loads all assumptions of the given file in the cache of the database.
+     * Returns an iterator forall assumptions of the database.
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
@@ -666,128 +643,10 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void getAssumptionsIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getAssumptionTable(testKey);
-        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads all assumptions of the given spectra in the cache of the database.
-     *
-     * @param spectrumKeys the key of the spectra
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading issue occurred when interacting with the database
-     */
-    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null && displayProgress) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setSecondaryProgressCounter(0);
-            waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
-        }
-        HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
-        for (String spectrumKey : spectrumKeys) {
-            String tableName = getAssumptionTable(spectrumKey);
-            if (!sortedKeys.containsKey(tableName)) {
-                sortedKeys.put(tableName, new ArrayList<String>());
-            }
-            sortedKeys.get(tableName).add(spectrumKey);
-            if (waitingHandler != null) {
-                if (displayProgress) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                }
-                if (waitingHandler.isRunCanceled()) {
-                    break;
-                }
-            }
-        }
-        for (String tableName : sortedKeys.keySet()) {
-            //if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
-            //}
-        }
-    }
-
-    /**
-     * Loads all raw assumptions of the given file in the cache of the database.
-     *
-     * @param fileName the file name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading issue occurred when interacting with the database
-     */
-    public void loadRawAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        String testKey = Spectrum.getSpectrumKey(fileName, "test");
-        String tableName = getRawAssumptionTable(testKey);
-        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads all raw assumptions of the given spectra in the cache of the database.
-     *
-     * @param spectrumKeys the key of the spectra
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading issue occurred when interacting with the database
-     */
-    public void loadRawAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null && displayProgress) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setSecondaryProgressCounter(0);
-            waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
-        }
-        HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
-        for (String spectrumKey : spectrumKeys) {
-            String tableName = getRawAssumptionTable(spectrumKey);
-            if (!sortedKeys.containsKey(tableName)) {
-                sortedKeys.put(tableName, new ArrayList<String>());
-            }
-            sortedKeys.get(tableName).add(spectrumKey);
-            if (waitingHandler != null) {
-                if (displayProgress) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                }
-                if (waitingHandler.isRunCanceled()) {
-                    break;
-                }
-            }
-        }
-        for (String tableName : sortedKeys.keySet()) {
-            //if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
-            //}
-        }
+        objectsDB.getAssumptionsIterator();
     }
 
     /**
@@ -1317,18 +1176,6 @@ public class IdentificationDB implements Serializable {
      */
     public String getRawAssumptionTable(String spectrumKey) {
         String tableName = Spectrum.getSpectrumFile(spectrumKey) + rawAssumptionsTableSuffix;
-        //tableName = objectsDB.correctTableName(tableName);
-        return tableName;
-    }
-
-    /**
-     * Returns the PSM table name associated with the given spectrum key.
-     *
-     * @param spectrumKey the given spectrum key
-     * @return the table name of the given spectrum
-     */
-    public String getSpectrumMatchTable(String spectrumKey) {
-        String tableName = Spectrum.getSpectrumFile(spectrumKey) + psmTableSuffix;
         //tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }

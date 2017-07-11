@@ -38,10 +38,6 @@ public class ProteinTreeComponentsFactory {
      */
     private ObjectsDB objectsDB;
     /**
-     * The cache of the objectsDB.
-     */
-    private ObjectsCache objectsCache = new ObjectsCache();
-    /**
      * The splitter in the key between database name and database version.
      */
     public static final String folderSeparator = "_cus_";
@@ -66,9 +62,6 @@ public class ProteinTreeComponentsFactory {
      * Constructor.
      */
     private ProteinTreeComponentsFactory() throws IOException {
-        objectsCache.setAutomatedMemoryManagement(false); // Change this to true if large objects are stored
-        objectsCache.setCacheSize(1000);
-        objectsCache.setBatchSize(100); // @TODO: why 100 and not higher?
     }
 
     /**
@@ -113,7 +106,7 @@ public class ProteinTreeComponentsFactory {
             }
         }
 
-        objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
+        objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false);
 
         /*
         if (!exists) {
@@ -168,10 +161,6 @@ public class ProteinTreeComponentsFactory {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public void close() throws IOException, SQLException, InterruptedException {
-        if (objectsDB != null) {
-            objectsDB.close();
-            objectsCache = new ObjectsCache();
-        }
     }
 
     /**
@@ -215,7 +204,7 @@ public class ProteinTreeComponentsFactory {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException, InterruptedException {
-        objectsDB.insertObject(nodeTable, tag, node, false);
+        objectsDB.insertObject(tag, node, false);
     }
 
     /**
@@ -231,7 +220,7 @@ public class ProteinTreeComponentsFactory {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public void saveNodes(HashMap<String, Object> nodes, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
-        objectsDB.insertObjects(nodeTable, nodes, waitingHandler);
+        objectsDB.insertObjects(nodes, waitingHandler);
     }
 
     /**
@@ -249,7 +238,7 @@ public class ProteinTreeComponentsFactory {
         if (tagsInTree != null && !tagsInTree.contains(tag)) {
             return null;
         }
-        Node result = (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
+        Node result = (Node) objectsDB.retrieveObject(tag, true, false);
         if (tagsInTree != null && result == null) {
             throw new IllegalArgumentException(tag + " not found in database.");
         }
@@ -268,7 +257,7 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException if an SQLException occurs
      */
     public void loadNodes(ArrayList<String> tags, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(nodeTable, tags, waitingHandler, false);
+        objectsDB.loadObjects(tags, waitingHandler, false);
     }
 
     /**

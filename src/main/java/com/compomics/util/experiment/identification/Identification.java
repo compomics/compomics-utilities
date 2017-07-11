@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsCache;
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
@@ -15,6 +16,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
+import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.*;
 import java.sql.SQLException;
 
@@ -45,7 +47,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * List of all imported PSMs indexed by mgf file name.
      */
-    protected HashMap<String, HashSet<String>> spectrumIdentificationMap = new HashMap<String, HashSet<String>>();
+    protected HashSet<String> spectrumIdentificationMap = new HashSet<String>();
     /**
      * A map linking protein accessions to all their protein matches keys.
      */
@@ -70,6 +72,20 @@ public abstract class Identification extends ExperimentObject {
      * The ordered list of spectrum file names.
      */
     private ArrayList<String> orderedSpectrumFileNames;
+    /**
+     * The database which will contain the objects.
+     */
+    private final ObjectsDB objectsDB;
+    
+    
+    /**
+     * Constructor
+     * @param objectsDB the database for storing all objects on disk when memory is too low
+     */
+    public Identification(ObjectsDB objectsDB) {
+        this.objectsDB = objectsDB;
+    }
+    
 
     /**
      * Returns the ordered list of spectrum file names.
@@ -113,7 +129,7 @@ public abstract class Identification extends ExperimentObject {
      * @return the mgf files used in the spectrum identification map
      */
     public ArrayList<String> getSpectrumFiles() {
-        return new ArrayList<String>(spectrumIdentificationMap.keySet());
+        return orderedSpectrumFileNames;
     }
 
     /**
@@ -122,17 +138,35 @@ public abstract class Identification extends ExperimentObject {
      * @return the number of spectrum identifications
      */
     public int getSpectrumIdentificationSize() {
-        int result = 0;
-        for (String spectrumFile : spectrumIdentificationMap.keySet()) {
-            result += spectrumIdentificationMap.get(spectrumFile).size();
-        }
-        return result;
+        return spectrumIdentificationMap.size();
     }
 
     /**
-     * Loads all spectrum matches of the file in the cache of the database.
+     * Returns an iterator of all objects of a given class
      *
-     * @param fileName the file name
+     * @param className the class name of a given class
+     * @return the iterator
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public OObjectIteratorClass<?> getIterator(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.getObjectsIterator(className);
+    }
+    
+    
+    
+
+    /**
+     * Loads all spectrum matches of the class in cache.
+     *
+     * @param className the class name
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -147,76 +181,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadAssumptions(fileName, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads the assumptions of the spectrum matches indicated by the given keys
-     * in the cache of the database.
-     *
-     * @param spectrumKeys the spectrum keys
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadAssumptions(spectrumKeys, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads the raw assumptions of the spectrum matches indicated by the given
-     * keys in the cache of the database.
-     *
-     * @param fileName the file name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadRawAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadRawAssumptions(fileName, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads all spectrum matches of the file in cache.
-     *
-     * @param fileName the file name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(fileName, waitingHandler, displayProgress);
+    public void loadObjcts(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
 
     /**
@@ -238,7 +204,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler, displayProgress);
+        objectsDB.loadObjects(spectrumKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -881,12 +847,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void removeSpectrumMatch(String matchKey) throws SQLException, IOException, InterruptedException {
-
-        String fileName = Spectrum.getSpectrumFile(matchKey);
-        HashSet<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
-        if (spectrumKeys != null) {
-            spectrumKeys.remove(matchKey);
-        }
+        spectrumIdentificationMap.remove(matchKey);
         identificationDB.removeSpectrumMatch(matchKey);
     }
 
@@ -950,9 +911,7 @@ public abstract class Identification extends ExperimentObject {
         }
 
         if (matchKey.lastIndexOf(Spectrum.SPECTRUM_KEY_SPLITTER) != -1) {
-            String fileName = Spectrum.getSpectrumFile(matchKey);
-            HashSet<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
-            if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
+            if (spectrumIdentificationMap.contains(matchKey)) {
                 return true;
             }
         }
@@ -1256,16 +1215,7 @@ public abstract class Identification extends ExperimentObject {
      * @return the corresponding list of spectrum matches keys. See
      * Spectrum.getKey() for more details.
      */
-    public HashSet<String> getSpectrumIdentification(String spectrumFile) {
-        return spectrumIdentificationMap.get(spectrumFile);
-    }
-
-    /**
-     * Returns the keys of all identified spectra indexed by the spectrum file.
-     *
-     * @return the keys of all identified spectra indexed by the spectrum file
-     */
-    public HashMap<String, HashSet<String>> getSpectrumIdentificationMap() {
+    public HashSet<String> getSpectrumIdentification() {
         return spectrumIdentificationMap;
     }
 
@@ -1405,28 +1355,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void addSpectrumMatch(SpectrumMatch newMatch)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-
-        String spectrumKey = newMatch.getKey();
-        String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
-        HashSet<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
-
-        if (spectrumKeys == null) {
-            spectrumKeys = getSpectrumKeysSynchronized(spectrumFile);
-        }
-
-        // check if the spectrum has been seen before
-        boolean newSpectrum = !spectrumKeys.contains(spectrumKey);
-
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = newMatch.getAssumptionsMap();
-        if (assumptions != null) {
-            addAssumptions(spectrumKey, assumptions, newSpectrum);
-            newMatch.removeAssumptions();
-        }
-
-        if (newSpectrum) {
-            addKeyToSetSynchronized(spectrumKeys, spectrumKey);
-            identificationDB.addSpectrumMatch(newMatch);
-        }
+        identificationDB.addSpectrumMatch(newMatch);
     }
 
     /**
@@ -1439,23 +1368,7 @@ public abstract class Identification extends ExperimentObject {
         spectrumKeys.add(spectrumKey);
     }
 
-    /**
-     * Checks whether the spectrumIdentificationMap contains spectrum keys for
-     * this file. If yes, returns the corresponding set. If no, adds a new set
-     * to the map and returns it.
-     *
-     * @param spectrumFile the name of the file
-     *
-     * @return the set of spectrum keys for this file
-     */
-    private synchronized HashSet<String> getSpectrumKeysSynchronized(String spectrumFile) {
-        HashSet<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
-        if (spectrumKeys == null) {
-            spectrumKeys = new HashSet<String>(1000);
-            spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
-        }
-        return spectrumKeys;
-    }
+    
 
     /**
      * Creates the peptides and protein instances based on the spectrum matches.
@@ -1482,14 +1395,12 @@ public abstract class Identification extends ExperimentObject {
             waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        for (String spectrumFile : spectrumIdentificationMap.keySet()) {
-            for (String spectrumMatchKey : spectrumIdentificationMap.get(spectrumFile)) {
-                buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                    if (waitingHandler.isRunCanceled()) {
-                        return;
-                    }
+        for (String spectrumMatchKey : spectrumIdentificationMap) {
+            buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressCounter();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
                 }
             }
         }
@@ -1657,9 +1568,7 @@ public abstract class Identification extends ExperimentObject {
         } else if (peptideIdentification.contains(matchKey)) {
             return MatchType.Peptide;
         } else {
-            String fileName = Spectrum.getSpectrumFile(matchKey);
-            HashSet<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
-            if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
+            if (spectrumIdentificationMap.contains(matchKey)) {
                 return MatchType.Spectrum;
             }
         }
@@ -1787,7 +1696,6 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Returns a PSM iterator.
      *
-     * @param spectrumFile the file to iterate
      * @param spectrumKeys specific keys to iterate
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
@@ -1795,8 +1703,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
-        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters, loadAssumptions, waitingHandler);
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumKeys, this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -1810,7 +1718,7 @@ public abstract class Identification extends ExperimentObject {
      * @return a PSM iterator
      */
     public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
-        return new PsmIterator(spectrumFile, this, psmParameters, loadAssumptions, waitingHandler);
+        return new PsmIterator(this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -1823,21 +1731,7 @@ public abstract class Identification extends ExperimentObject {
      * @return a PSM iterator
      */
     public PsmIterator getPsmIterator(String spectrumFile, boolean loadAssumptions, WaitingHandler waitingHandler) {
-        return new PsmIterator(spectrumFile, this, loadAssumptions, waitingHandler);
-    }
-
-    /**
-     * Returns a PSM iterator.
-     *
-     * @param spectrumKeys specific keys to iterate
-     * @param psmParameters the parameters to load along with the matches
-     * @param loadAssumptions if true the assumptions will be loaded as well
-     * @param waitingHandler the waiting handler
-     *
-     * @return a PSM iterator
-     */
-    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
-        return new PsmIterator(spectrumKeys, this, psmParameters, loadAssumptions, waitingHandler);
+        return new PsmIterator(this, loadAssumptions, waitingHandler);
     }
 
     /**

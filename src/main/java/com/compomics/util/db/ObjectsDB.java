@@ -135,7 +135,7 @@ public class ObjectsDB implements Serializable {
      * threading error occurred while establishing the connection
      */
     public ObjectsDB(String folder, String dbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        establishConnection(folder, dbName);
+        establishConnection(folder, dbName, false);
         objectsCache = new ObjectsCache(this);
         
     }
@@ -286,6 +286,7 @@ public class ObjectsDB implements Serializable {
      * Loads some objects from a table in the cache.
      *
      * @param keys the keys of the objects to load
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -300,13 +301,13 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadObjects(ArrayList<String> keys, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
         
-        
         dbMutex.acquire();
+        db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         for (String objectKey : keys){
             if (waitingHandler.isRunCanceled()) break;
@@ -330,9 +331,10 @@ public class ObjectsDB implements Serializable {
     
 
     /**
-     * Loads some objects from a table in the cache.
+     * Loads all objects from a given class.
      *
-     * @param className the class name of the objects to be load
+     * @param className the class name of the objects to be retrieved
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -347,14 +349,194 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " loading all " + className + " objects");
+            System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
+        }
+        
+        
+        dbMutex.acquire();
+        db.setLazyLoading(lazyLoading);
+        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        for (Object obj : db.browseClass(className)){
+            if (waitingHandler.isRunCanceled()) break;
+            long longKey = ((IdObject)obj).getId();
+            if (!idMap.containsKey(longKey)){
+                idMap.put(longKey, db.getIdentity(obj));
+            }
+            allObjects.put(longKey, obj);
+            
+        }
+        dbMutex.release();
+        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            objectsCache.addObjects(allObjects, false);
+        }
+    }
+    
+    
+    /**
+     * Loads some objects from a table in the cache.
+     *
+     * @param iterator the iterator
+     * @param num number of objects that have to be retrieved in a batch
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public void loadObjects(OObjectIteratorClass<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " loading " + num + " objects");
+        }
+        
+        dbMutex.acquire();
+        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        int i = 0;
+        while(i < num && iterator.hasNext()){
+            if (waitingHandler.isRunCanceled()) break;
+            Object obj = iterator.next();
+            long longKey = ((IdObject)obj).getId();
+            ORID orid = idMap.get(longKey);
+            if (orid != null){
+                if (!idMap.containsKey(longKey)){
+                    idMap.put(longKey, db.getIdentity(obj));
+                }
+            }
+            allObjects.put(longKey, obj);
+            
+        }
+        dbMutex.release();
+        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            objectsCache.addObjects(allObjects, false);
+        }
+    }
+    
+    
+
+    /**
+     * Returns the number of instances of a given class stored in the db
+     *
+     * @param className the class name of the objects to be load
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     * @return the number of objects
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public int getNumber(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " query number of " + className + " objects");
+        }
+        
+        int num = 0;
+        dbMutex.acquire();
+        num = (int)db.countClass(className);
+        dbMutex.release();
+        return num;
+    }
+    
+    
+    
+    /**
+     * retrieves some objects from the database or cache.
+     *
+     * @param keys the keys of the objects to load
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     * @return a list of objcets
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public ArrayList<Object> retrieveObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
+        }
+        
+        dbMutex.acquire();
+        ArrayList<Object> retrievingObjects = new ArrayList<Object>();
+        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        for (String objectKey : keys){
+            if (waitingHandler.isRunCanceled()) break;
+            long longKey = createLongKey(objectKey);
+            Object obj = objectsCache.getObject(longKey);
+            if (obj == null){
+                
+                ORID orid = idMap.get(longKey);
+                if (orid != null){
+                    obj = db.load(orid);
+                    if (!idMap.containsKey(longKey)){
+                        idMap.put(longKey, db.getIdentity(obj));
+                    }
+                    allObjects.put(longKey, obj);
+                }
+            
+            }
+            retrievingObjects.add(obj);
+        }
+        dbMutex.release();
+        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            objectsCache.addObjects(allObjects, false);
+        }
+        return retrievingObjects;
+    }
+    
+    
+
+    /**
+     * Retrieves all objects from a given class.
+     *
+     * @param className the class name of the objects to be retrieved
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     * @return the list of objects
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public ArrayList<Object> retrieveObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
         
         
         dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        ArrayList<Object> retrievingObjects = new ArrayList<Object>();
         for (Object obj : db.browseClass(className)){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
@@ -405,6 +587,7 @@ public class ObjectsDB implements Serializable {
             dbMutex.release();        
             objectsCache.addObject(longKey, object, false);
         }
+        
         return object;
     }
     
@@ -547,6 +730,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param aDbFolder the folder where the database is located
      * @param aDbName the name of the database
+     * @param deleteOldDatabase flag for deleting old database
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection to the database
@@ -557,7 +741,7 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public void establishConnection(String aDbFolder, String aDbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void establishConnection(String aDbFolder, String aDbName, boolean deleteOldDatabase) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         dbMutex.acquire();
         File parentFolder = new File(aDbFolder);
@@ -566,9 +750,9 @@ public class ObjectsDB implements Serializable {
         }
         File dbFolder = new File(aDbFolder, dbName);
         path = dbFolder.getAbsolutePath();
-        if (dbFolder.exists()) {
+        if (dbFolder.exists() && deleteOldDatabase) {
 
-            close();
+            db.close();
 
             DerbyUtil.closeConnection();
             boolean deleted = Util.deleteDir(dbFolder);

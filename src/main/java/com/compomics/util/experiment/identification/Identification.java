@@ -61,10 +61,6 @@ public abstract class Identification extends ExperimentObject {
      */
     protected String dbDirectory;
     /**
-     * The identificationDB object interacting with the database.
-     */
-    private IdentificationDB identificationDB;
-    /**
      * The reference of the identification.
      */
     protected String reference;
@@ -140,7 +136,28 @@ public abstract class Identification extends ExperimentObject {
     public int getSpectrumIdentificationSize() {
         return spectrumIdentificationMap.size();
     }
+    
 
+    /**
+     * Returns the number of objects of a given class
+     *
+     * @param className the class name of a given class
+     * @return the number of objects
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public int getNumber(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.getNumber(className);
+    }
+    
+    
     /**
      * Returns an iterator of all objects of a given class
      *
@@ -159,6 +176,189 @@ public abstract class Identification extends ExperimentObject {
     public OObjectIteratorClass<?> getIterator(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.getObjectsIterator(className);
     }
+    
+
+
+    /**
+     * Loads all objects of the class in cache.
+     *
+     * @param className the class name
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadObjcts(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(className, lazyLoading, waitingHandler, displayProgress);
+    }
+    
+    
+    /**
+     * Loads all objects of given keys in cache.
+     *
+     * @param keyList the list of keys of given objects
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadObjcts(ArrayList<String> keyList, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(keyList, lazyLoading, waitingHandler, displayProgress);
+    }
+    
+    
+    /**
+     * Loads all spectrum matches of given keys in cache.
+     *
+     * @param iterator the iterator
+     * @param num number of objects that have to be retrieved in a batch
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadObjcts(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(iterator, num, lazyLoading, waitingHandler, displayProgress);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    /**
+     * Returns an array of all objects of a given list of keys
+     *
+     * @param keyList the key list
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     * @return list of objects
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public ArrayList<Object> retrieveObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+    }
+    
+    
+    
+    /**
+     * Returns an array of all objects of a given class
+     *
+     * @param className the class name
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     * @return list of objects
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public ArrayList<Object> retrieveObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -184,11 +384,12 @@ public abstract class Identification extends ExperimentObject {
     public void loadObjcts(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
+    
 
     /**
-     * Loads the spectrum matches corresponding to the given keys in cache.
+     * Loads all spectrum matches of the class in cache.
      *
-     * @param spectrumKeys the spectrum keys
+     * @param className the class name
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -203,8 +404,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(spectrumKeys, waitingHandler, displayProgress);
+    public void loadObjcts(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
 
     /**
@@ -1624,7 +1825,7 @@ public abstract class Identification extends ExperimentObject {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
-        return identificationDB.isConnectionActive();
+        return objectsDB.isConnectionActive();
     }
 
     /**
@@ -1659,10 +1860,11 @@ public abstract class Identification extends ExperimentObject {
      */
     public HashSet<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         HashSet<String> proteinMatches = new HashSet<String>();
-        if (peptide.getParentProteinsNoRemapping() == null) {
+        ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();
+        if (parentProteins == null) {
             throw new IllegalArgumentException("Proteins are not mapped for peptide " + peptide.getKey() + ".");
         }
-        for (String accession : peptide.getParentProteinsNoRemapping()) {
+        for (String accession : parentProteins) {
             HashSet<String> keys = proteinMap.get(accession);
             if (keys != null) {
                 for (String key : keys) {
@@ -1750,14 +1952,14 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Returns a PSM iterator iterating all PSMs in a file.
      *
-     * @param psmParameters the parameters to load along with the matches
-     * @param loadAssumptions if true the assumptions will be loaded as well
-     * @param waitingHandler the waiting handler
-     *
      * @return a PSM iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public PsmIterator getPsmIterator(boolean loadAssumptions, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
-        return new PsmIterator(this, psmParameters, loadAssumptions, waitingHandler);
+    public PsmIterator getPsmIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(this);
     }
 
     /**
@@ -1834,16 +2036,5 @@ public abstract class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides,
             ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
-    }
-
-    /**
-     * Returns the identification database object used to interact with the
-     * back-end database.
-     *
-     * @return the identification database object used to interact with the
-     * back-end database
-     */
-    public IdentificationDB getIdentificationDB() {
-        return identificationDB;
     }
 }

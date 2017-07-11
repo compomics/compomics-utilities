@@ -45,6 +45,7 @@ public class ObjectsCache {
 
     /**
      * Constructor.
+     * @param objectsDB the object database
      */
     public ObjectsCache(ObjectsDB objectsDB) {
         this.objectsDB = objectsDB;

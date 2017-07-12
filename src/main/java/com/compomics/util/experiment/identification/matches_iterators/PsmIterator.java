@@ -28,6 +28,8 @@ public class PsmIterator {
     private final int batchSize = 1024;
     private WaitingHandler waitingHandler;
     private boolean displayProgress;
+    private ArrayList<Long> currentKeys;
+    private int currentIndex;
     
     
     /**
@@ -73,6 +75,7 @@ public class PsmIterator {
             iterator = identification.getIterator(SpectrumMatch.class.getSimpleName());
         }
         index = 0;
+        currentIndex = 0;
         this.lazyLoading = lazyLoading;
         this.identification = identification;
         this.waitingHandler = waitingHandler;
@@ -114,13 +117,11 @@ public class PsmIterator {
             }
             else {
                 identification.loadObjects(iterator, batchSize, lazyLoading, waitingHandler, displayProgress);
-                
             }
+            currentIndex = 0;
         }
             
-            
-            
-        if (spectrumMatches == null) return (SpectrumMatch)it.next();
-        return (SpectrumMatch)spectrumMatches.get(index++);
+        index++;
+        return (SpectrumMatch)identification.retrieveObject(currentKeys.get(currentIndex++));
     }
 }

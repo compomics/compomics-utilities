@@ -188,6 +188,7 @@ public abstract class Identification extends ExperimentObject {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -198,8 +199,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadObjcts(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(className, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(className, lazyLoading, waitingHandler, displayProgress);
     }
     
     
@@ -212,6 +213,7 @@ public abstract class Identification extends ExperimentObject {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -222,8 +224,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadObjcts(ArrayList<String> keyList, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(keyList, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(ArrayList<String> keyList, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(keyList, lazyLoading, waitingHandler, displayProgress);
     }
     
     
@@ -237,6 +239,7 @@ public abstract class Identification extends ExperimentObject {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -247,40 +250,51 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadObjcts(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(iterator, num, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(iterator, num, lazyLoading, waitingHandler, displayProgress);
     }
     
     
+    /**
+     * Returns an array of all objects of a given list of keys
+     *
+     * @param longKey the hash key
+     * @return the objects
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public Object retrieveObject(long longKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.retrieveObject(longKey);
+    }
     
     
+    /**
+     * Returns an array of all objects of a given list of keys
+     *
+     * @param key the key
+     * @return the objects
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public Object retrieveObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.retrieveObject(key);
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     /**
      * Returns an array of all objects of a given list of keys
      *
@@ -303,7 +317,6 @@ public abstract class Identification extends ExperimentObject {
     public ArrayList<Object> retrieveObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
     }
-    
     
     
     /**
@@ -330,131 +343,50 @@ public abstract class Identification extends ExperimentObject {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     /**
-     * Loads all spectrum matches of the class in cache.
+     * Updates an object in the database.
      *
-     * @param className the class name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
+     * @param obj the object
      *
      * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
+     * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
+     * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void loadObjcts(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(className, waitingHandler, displayProgress);
+    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
+        identificationDB.updateProteinMatch(proteinMatch);
     }
     
-
-    /**
-     * Loads all spectrum matches of the class in cache.
-     *
-     * @param className the class name
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadObjcts(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(className, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads all spectrum match parameters of the given type in the cache of the
-     * database
-     *
-     * @param fileName the file name
-     * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler, displayProgress);
-    }
-
-    /**
-     * Loads all desired spectrum match parameters in the cache of the database.
-     *
-     * @param spectrumKeys the key of the spectrum match of the parameters to be
-     * loaded
-     * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler, displayProgress);
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Loads the desired peptide matches of the given type in the cache of the
@@ -819,182 +751,6 @@ public abstract class Identification extends ExperimentObject {
      */
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         identificationDB.addProteinMatchParameter(key, urParameter);
-    }
-
-    /**
-     * Updates a spectrum match parameter in the database.
-     *
-     * @param key the spectrum key
-     * @param urParameter the match parameter
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateSpectrumParameter(key, urParameter);
-    }
-
-    /**
-     * Updates a peptide match parameter in the database.
-     *
-     * @param key the peptide key
-     * @param urParameter the match parameter
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updatePeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        identificationDB.updatePeptideParameter(key, urParameter);
-    }
-
-    /**
-     * Updates a protein match parameter in the database.
-     *
-     * @param key the protein key
-     * @param urParameter the match parameter
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateProteinParameter(key, urParameter);
-    }
-
-    /**
-     * Updates the assumptions of a spectrum.
-     *
-     * @param spectrumKey the key of the spectrum
-     * @param assumptions the assumptions
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateAssumptions(spectrumKey, assumptions);
-    }
-
-    /**
-     * Updates the raw assumptions of a spectrum.
-     *
-     * @param spectrumKey the key of the spectrum
-     * @param assumptions the assumptions
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateRawAssumptions(spectrumKey, assumptions);
-    }
-
-    /**
-     * Updates a spectrum match in the database.
-     *
-     * @param spectrumMatch the match
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateSpectrumMatch(spectrumMatch);
-    }
-
-    /**
-     * Updates a peptide match in the database.
-     *
-     * @param peptideMatch the match
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException {
-        identificationDB.updatePeptideMatch(peptideMatch);
-    }
-
-    /**
-     * Updates a peptide match where the key was changed.
-     *
-     * @param oldKey the old peptide key
-     * @param newKey the new peptide key
-     * @param peptideMatch the new peptide match
-     *
-     * @throws SQLException exception thrown whenever an SQL error occurred
-     * while interacting with the database
-     * @throws IOException exception thrown whenever an IO issue occurred while
-     * interacting with the database
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     * @throws java.lang.ClassNotFoundException exception thrown whenever a
-     * casting issue occurred while interacting with the database
-     */
-    public void updatePeptideMatch(String oldKey, String newKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
-        for (String paramterTable : identificationDB.getPeptideParametersTables()) {
-            UrParameter parameter = (UrParameter) identificationDB.getObject(paramterTable, oldKey, true);
-            if (parameter != null) {
-                addPeptideMatchParameter(newKey, parameter);
-            }
-        }
-        removePeptideMatch(oldKey);
-        peptideMatch.setKey(newKey);
-        peptideIdentification.remove(oldKey);
-        peptideIdentification.add(newKey);
-        identificationDB.addPeptideMatch(peptideMatch);
-        for (String accession : peptideMatch.getTheoreticPeptide().getParentProteinsNoRemapping()) {
-            HashSet<String> proteinGroups = proteinMap.get(accession);
-            if (proteinGroups != null) {
-                for (String proteinKey : proteinGroups) {
-                    ProteinMatch proteinMatch = getProteinMatch(proteinKey);
-                    ArrayList<String> oldPeptideMatches = proteinMatch.getPeptideMatchesKeys();
-                    ArrayList<String> newPeptideMatches = new ArrayList<String>(oldPeptideMatches.size());
-                    boolean found = false;
-                    for (String peptideMatchKey : oldPeptideMatches) {
-                        if (peptideMatchKey.equals(oldKey)) {
-                            found = true;
-                        } else {
-                            newPeptideMatches.add(peptideMatchKey);
-                        }
-                    }
-                    if (found) {
-                        newPeptideMatches.add(newKey);
-                        proteinMatch.setPeptideKeys(newPeptideMatches);
-                    }
-                    updateProteinMatch(proteinMatch);
-                }
-            }
-        }
-    }
-
-    /**
-     * Updates a protein match in the database.
-     *
-     * @param proteinMatch the match
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
-        identificationDB.updateProteinMatch(proteinMatch);
     }
 
     /**

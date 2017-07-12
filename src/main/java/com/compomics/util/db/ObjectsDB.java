@@ -291,6 +291,7 @@ public class ObjectsDB implements Serializable {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -301,7 +302,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(ArrayList<String> keys, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(ArrayList<String> keys, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
@@ -309,9 +310,11 @@ public class ObjectsDB implements Serializable {
         dbMutex.acquire();
         db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        ArrayList<Long> hashedKeys = new ArrayList<Long>();
         for (String objectKey : keys){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
+            hashedKeys.add(longKey);
             ORID orid = idMap.get(longKey);
             if (orid != null){
                 Object obj = db.load(orid);
@@ -326,6 +329,8 @@ public class ObjectsDB implements Serializable {
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects, false);
         }
+        
+        return hashedKeys;
     }
     
     
@@ -339,6 +344,7 @@ public class ObjectsDB implements Serializable {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -349,7 +355,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
@@ -358,9 +364,11 @@ public class ObjectsDB implements Serializable {
         dbMutex.acquire();
         db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        ArrayList<Long> hashedKeys = new ArrayList<Long>();
         for (Object obj : db.browseClass(className)){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
+            hashedKeys.add(longKey);
             if (!idMap.containsKey(longKey)){
                 idMap.put(longKey, db.getIdentity(obj));
             }
@@ -371,6 +379,7 @@ public class ObjectsDB implements Serializable {
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects, false);
         }
+        return hashedKeys;
     }
     
     
@@ -379,10 +388,12 @@ public class ObjectsDB implements Serializable {
      *
      * @param iterator the iterator
      * @param num number of objects that have to be retrieved in a batch
+     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @return returns the list of hashed keys
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -393,18 +404,20 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void loadObjects(OObjectIteratorClass<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + num + " objects");
         }
         
         dbMutex.acquire();
+        db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
-        int i = 0;
-        while(i < num && iterator.hasNext()){
+        ArrayList<Long> hashedKeys = new ArrayList<Long>();
+        while(num > 0 && iterator.hasNext()){
             if (waitingHandler.isRunCanceled()) break;
             Object obj = iterator.next();
             long longKey = ((IdObject)obj).getId();
+            hashedKeys.add(longKey);
             ORID orid = idMap.get(longKey);
             if (orid != null){
                 if (!idMap.containsKey(longKey)){
@@ -412,12 +425,70 @@ public class ObjectsDB implements Serializable {
                 }
             }
             allObjects.put(longKey, obj);
-            
+            num--;
         }
         dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects, false);
         }
+        return hashedKeys;
+    }
+    
+    
+    /**
+     * retrieves some objects from the database or cache.
+     *
+     * @param longKey the keys of the object to load
+     * @return the retrived objcets
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public Object retrieveObject(long longKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving one objects with key: " + longKey);
+        }
+        
+        dbMutex.acquire();
+        Object obj = objectsCache.getObject(longKey);
+        if (obj == null){
+            ORID orid = idMap.get(longKey);
+            if (orid != null){
+                obj = db.load(orid);
+                if (!idMap.containsKey(longKey)){
+                    idMap.put(longKey, db.getIdentity(obj));
+                }
+            }
+        }
+        dbMutex.release();
+        objectsCache.addObject(longKey, obj, false);
+        return obj;
+    }
+    
+    
+    /**
+     * retrieves some objects from the database or cache.
+     *
+     * @param key the keys of the object to load
+     * @return the retrieved objcets
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public Object retrieveObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return retrieveObject(createLongKey(key));
     }
     
     
@@ -426,10 +497,6 @@ public class ObjectsDB implements Serializable {
      * Returns the number of instances of a given class stored in the db
      *
      * @param className the class name of the objects to be load
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
      * @return the number of objects
      *
      * @throws SQLException exception thrown whenever an error occurs while
@@ -544,51 +611,14 @@ public class ObjectsDB implements Serializable {
                 idMap.put(longKey, db.getIdentity(obj));
             }
             allObjects.put(longKey, obj);
+            retrievingObjects.add(obj);
             
         }
         dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects, false);
         }
-    }
-
-    
-
-    /**
-     * Retrieves an object from the desired table. The key should be unique
-     * otherwise the first object will be returned. Returns null if the key is
-     * not found.
-     *
-     * @param objectKey the object key
-     *
-     * @return the object stored in the table
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    public Object retrieveObject(String objectKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        Object object = null;
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Retrieving object, key: " + objectKey);
-        }
-        
-        long longKey = createLongKey(objectKey);
-        object = objectsCache.getObject(longKey);
-        
-        if (object == null){
-            dbMutex.acquire();
-            object = retrieveObject(objectKey);
-            dbMutex.release();        
-            objectsCache.addObject(longKey, object, false);
-        }
-        
-        return object;
+        return retrievingObjects;
     }
     
     
@@ -674,27 +704,6 @@ public class ObjectsDB implements Serializable {
             dbMutex.release();
         }
     }
-
-
-    /**
-     * Updates an object in the cache or in the tables if not in cache or if
-     * cache is wrong.
-     *
-     * @param objectKey the key of the object
-     * @param object the object to store
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void updateObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
-
-        long longKey = createLongKey(objectKey);
-        boolean cacheUpdated = objectsCache.updateObject(longKey, object);
-    }
-
     
 
 

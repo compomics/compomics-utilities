@@ -1,5 +1,6 @@
 package com.compomics.util.db;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -119,7 +120,6 @@ public class ObjectsCache {
             CacheEntry entry = loadedObjects.get(objectKey);
             boolean result = false;
             if (entry != null) {
-                entry.setModified(true);
                 entry.setObject(object);
                 result = true;
             }
@@ -301,7 +301,7 @@ public class ObjectsCache {
                     }
                     entry.setObject(objectsDB.getDB().save(entry.getObject()));
                 }
-                else if (entry.isModified()){
+                else if (((IdObject)obj).getModified()){
                     objectsDB.getDB().save(entry.getObject());
                 }
                 
@@ -400,28 +400,6 @@ public class ObjectsCache {
          */
         public CacheEntry(Object object, boolean modified) {
             this.object = object;
-            this.modified = modified;
-        }
-
-        /**
-         * Indicates whether the object is modified when compared to the version
-         * in the database.
-         *
-         * @return a boolean indicating whether the object is modified when
-         * compared to the version in the database
-         */
-        public boolean isModified() {
-            return modified;
-        }
-
-        /**
-         * Sets whether the object is modified when compared to the version in
-         * the database.
-         *
-         * @param modified a boolean indicating whether the object is modified
-         * when compared to the version in the database
-         */
-        public void setModified(boolean modified) {
             this.modified = modified;
         }
 

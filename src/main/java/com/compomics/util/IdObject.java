@@ -15,8 +15,12 @@ public class IdObject {
      * unique identifier
      */
     private long id;
+    /**
+     * modify for storing in the db
+     */
+    private boolean modified = true;
     
-    public IdObject(){};
+    public IdObject(){}
     
     public void setId(long id){
         this.id = id;
@@ -24,5 +28,13 @@ public class IdObject {
     
     public long getId(){
         return id;
+    }
+    
+    public boolean getModified(){
+        return modified;
+    }
+    
+    public void setModified(boolean modified){
+        this.modified = modified;
     }
 }

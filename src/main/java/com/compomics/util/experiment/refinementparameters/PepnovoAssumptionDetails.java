@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.refinementparameters;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
@@ -8,7 +9,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
  *
  * @author Marc Vaudel
  */
-public class PepnovoAssumptionDetails implements UrParameter {
+public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
 
     /**
      * The PepNovo rank score.

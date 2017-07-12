@@ -1,7 +1,6 @@
 package com.compomics.util.db;
 
 import com.compomics.util.IdObject;
-import com.compomics.util.Util;
 import com.compomics.util.waiting.WaitingHandler;
 import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
@@ -53,7 +52,7 @@ public class ObjectsDB implements Serializable {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private static boolean debugInteractions = false;    
+    private static boolean debugInteractions = true;    
     /**
      * OrientDB database connection
      */
@@ -116,7 +115,7 @@ public class ObjectsDB implements Serializable {
             String md5Key = String.format("%032x", new BigInteger(1, md5.digest()));
             long longKey = 0;
             for (int i = 0; i < 32; ++i){
-                longKey |= md5Key.charAt(i) << ((i * 11) % 63);
+                longKey |= ((long)(md5Key.charAt(i) - '0')) << ((i * 11) % 63);
             }
             return longKey;
         }
@@ -173,10 +172,8 @@ public class ObjectsDB implements Serializable {
     public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
         }
-        
-        //dbMutex.acquire();        
         
         long longKey = createLongKey(objectKey);
         ((IdObject)object).setId(longKey);
@@ -401,7 +398,7 @@ public class ObjectsDB implements Serializable {
      */
     public Object retrieveObject(long longKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " retrieving one objects with key: " + longKey);
+            System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
         }
         
         dbMutex.acquire();
@@ -414,9 +411,9 @@ public class ObjectsDB implements Serializable {
                     idMap.put(longKey, db.getIdentity(obj));
                 }
             }
+            objectsCache.addObject(longKey, obj, false);
         }
         dbMutex.release();
-        objectsCache.addObject(longKey, obj, false);
         return obj;
     }
     
@@ -437,6 +434,9 @@ public class ObjectsDB implements Serializable {
      * while interacting with the database
      */
     public Object retrieveObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving one objects with key: " + key);
+        }
         return retrieveObject(createLongKey(key));
     }
     
@@ -763,6 +763,7 @@ public class ObjectsDB implements Serializable {
     public void establishConnection(String aDbFolder, String aDbName, boolean deleteOldDatabase) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         dbMutex.acquire();
+        /*
         File parentFolder = new File(aDbFolder);
         if (!parentFolder.exists()) {
             parentFolder.mkdirs();
@@ -775,7 +776,7 @@ public class ObjectsDB implements Serializable {
 
             DerbyUtil.closeConnection();
             boolean deleted = Util.deleteDir(dbFolder);
-        }
+        }*/
         String connectionString = "plocal:" + aDbFolder + "/" + aDbName;
         db = new OObjectDatabaseTx(connectionString);
         if (db.exists()) {

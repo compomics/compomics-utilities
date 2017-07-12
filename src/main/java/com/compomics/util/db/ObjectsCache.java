@@ -98,7 +98,7 @@ public class ObjectsCache {
     public Object getObject(Long objectKey) throws InterruptedException {
         Object object;
         loadedObjectMutex.acquire();
-        object = loadedObjects.get(objectKey);
+        object = loadedObjects.get(objectKey).getObject();
         loadedObjectMutex.release();
         return object;
     }

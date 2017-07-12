@@ -41,9 +41,13 @@ public class IdentificationDBTest extends TestCase {
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {
 
+                System.out.println(objectsDB.createLongKey("PEPTIDE"));
+                
+                String parametersKey = "pepnovo_assumption_details";
                 String spectrumKey = "spectrum_file_cus_spectrum_title";
                 String peptideKey = "PEPTIDE";
                 String proteinKey = "test_protein";
+                Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
                 SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
                 ArrayList<String> testProteins = new ArrayList<String>();
                 testProteins.add("test protein1");
@@ -104,8 +108,8 @@ public class IdentificationDBTest extends TestCase {
                 double testScore = 12.3;
                 PepnovoAssumptionDetails testParameter = new PepnovoAssumptionDetails();
                 testParameter.setRankScore(testScore);
-                idDB.addObject(spectrumKey, testParameter);
-                testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(spectrumKey);
+                idDB.addObject(parametersKey, testParameter);
+                testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(parametersKey);
                 Assert.assertTrue(testParameter.getRankScore()== testScore);
 
             } finally {

@@ -20,15 +20,45 @@ public class PsmIterator {
      * Iterator for spectrum matches
      */
     private OObjectIteratorClass<?> iterator = null;
+    /**
+     * the identification
+     */
     private Identification identification = null;
+    /**
+     * list of potential keys for the iterator, if empty all instances of the class are being iterated
+     */
     private ArrayList<String> keys = null;
+    /**
+     * current absolute index
+     */
     private int index;
+    /**
+     * absolute number of the objects in the iterator
+     */
     private int num;
+    /**
+     * flag for lazy loading from the database
+     */
     private boolean lazyLoading;
+    /**
+     * batch size for loading from the db
+     */
     private final int batchSize = 1024;
+    /**
+     * waiting handler
+     */
     private WaitingHandler waitingHandler;
+    /**
+     * display progress
+     */
     private boolean displayProgress;
-    private ArrayList<Long> currentKeys;
+    /**
+     * list of current keys within the batch
+     */
+    private ArrayList<Long> currentKeys = null;
+    /** 
+     * batch index
+     */
     private int currentIndex;
     
     
@@ -54,7 +84,7 @@ public class PsmIterator {
      * Constructor.
      *
      * @param keys the keys of the objects
-     * @param identification the identification where to get the matches from
+     * @param identification the identification where to get the matchesloadPs from
      * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process

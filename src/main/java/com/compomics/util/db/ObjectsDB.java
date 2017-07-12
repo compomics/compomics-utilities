@@ -38,42 +38,9 @@ public class ObjectsDB implements Serializable {
      */
     private String path;
     /**
-     * The table where to save the long keys. Note: needs to keep the same value
-     * for backward compatibility
-     */
-    public static final String DB_ATTRIBUTES = "long_key_table";
-    /**
-     * Suffix used for long keys.
-     */
-    public static final String LONG_KEY_PREFIX = "long_key_";
-    /**
-     * Name for the long table names.
-     */
-    public static final String LONG_TABLE_NAMES = "long_tables";
-    /**
-     * The table where to save the long keys.
-     */
-    public static final String USED_TABLES_TABLE = "used_tables_table";
-    /**
-     * The name of the table to use to log connections.
-     */
-    public static final String CONNECTION_LOG_TABLE = "connection_log_table";
-    /**
      * The cache to be used for the objects.
      */
     private ObjectsCache objectsCache;
-    /**
-     * The writer used to send the output to file.
-     */
-    private BufferedWriter debugSpeedWriter;
-    /**
-     * The writer used to send the output to file.
-     */
-    private BufferedWriter debugContentWriter;
-    /**
-     * The debug folder.
-     */
-    private File debugFolder;
     /**
      * A boolean indicating whether the database is being queried.
      */
@@ -81,25 +48,7 @@ public class ObjectsDB implements Serializable {
     /**
      * Mutex for the interaction with the database.
      */
-    private Semaphore dbMutex = new Semaphore(1);
-    /**
-     * A queue of entire tables to load.
-     */
-    private final ArrayList<String> tableQueue = new ArrayList<String>();
-    /**
-     * A queue of table components to load.
-     */
-    private final HashMap<String, HashSet<String>> contentQueue = new HashMap<String, HashSet<String>>();
-    /**
-     * Debug, if true will output a table containing statistics on the speed of
-     * the objects I/O.
-     */
-    private boolean debugSpeed = false;
-    /**
-     * Debug, if true will output a table containing details on the objects
-     * stored.
-     */
-    private boolean debugContent = false;
+    private final Semaphore dbMutex = new Semaphore(1);
     /**
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.

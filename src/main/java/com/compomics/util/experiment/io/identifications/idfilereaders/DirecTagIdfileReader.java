@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -467,14 +466,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             while (index + 2 < modElements.length) {
                 dynamicModsResidues.put(modElements[index + 1].charAt(0), modElements[index].charAt(0));
                 index += 3;
-            }
-        }
-
-        int tagMapKeyLength = 3;
-        if (sequenceMatchingPreferences != null) {
-            if (sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
-                SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
             }
         }
 

@@ -1,6 +1,5 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
 import com.compomics.util.io.SerializationUtils;
 import java.awt.Color;
 import java.io.*;
@@ -751,19 +750,6 @@ public class UtilitiesUserPreferences implements Serializable {
             favoriteDBs = new ArrayList<File>();
         }
         favoriteDBs.add(0, dbFile);
-    }
-
-    /**
-     * Returns the protein tree folder.
-     *
-     * @return the protein tree folder
-     */
-    public File getProteinTreeFolder() {
-        if (proteinTreeFolder == null) {
-            // if not set, set to default
-            proteinTreeFolder = new File(ProteinTreeComponentsFactory.getDefaultDbFolderPath());
-        }
-        return proteinTreeFolder;
     }
 
     /**

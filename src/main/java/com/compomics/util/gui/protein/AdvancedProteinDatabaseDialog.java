@@ -40,7 +40,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      */
     private void initGUI() {
         userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        dbFolder = userPreferences.getProteinTreeFolder();
+        dbFolder = new File(System.getProperty("user.home") + "/.compomics/proteins/indexes/");
         updateText();
     }
 

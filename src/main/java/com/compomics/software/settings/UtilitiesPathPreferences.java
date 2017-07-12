@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.pride.PrideObjectsFactory;
 import java.io.BufferedReader;
@@ -188,9 +187,6 @@ public class UtilitiesPathPreferences {
      */
     public static void setPathPreference(UtilitiesPathKey utilitiesPathKey, String path) {
         switch (utilitiesPathKey) {
-            case fastaIndexesKey:
-                ProteinTreeComponentsFactory.setDefaultDbFolderPath(path);
-                return;
             case geneMappingKey:
                 GeneFactory.setGeneMappingFolder(path);
                 return;
@@ -223,8 +219,6 @@ public class UtilitiesPathPreferences {
      */
     public static String getPathPreference(UtilitiesPathKey utilitiesPathKey) {
         switch (utilitiesPathKey) {
-            case fastaIndexesKey:
-                return ProteinTreeComponentsFactory.getDefaultDbFolderPath();
             case geneMappingKey:
                 return GeneFactory.getGeneMappingFolder().getAbsolutePath();
             case prideAnnotationKey:
@@ -334,15 +328,8 @@ public class UtilitiesPathPreferences {
     public static void writePathToFile(BufferedWriter bw, UtilitiesPathKey pathKey) throws IOException {
 
         bw.write(pathKey.id + UtilitiesPathPreferences.separator);
-
+        String toWrite = "";
         switch (pathKey) {
-            case fastaIndexesKey:
-                String toWrite = ProteinTreeComponentsFactory.getDefaultDbFolderPath();
-                if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
-                }
-                bw.write(toWrite);
-                break;
             case geneMappingKey:
                 toWrite = GeneFactory.getGeneMappingFolder().getAbsolutePath();
                 if (toWrite == null) {

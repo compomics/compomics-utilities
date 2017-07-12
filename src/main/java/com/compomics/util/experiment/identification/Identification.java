@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.matches_iterators.MatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.PsmIterator;
@@ -726,6 +727,7 @@ public abstract class Identification extends ExperimentObject {
         }
         return proteinMatches;
     }
+    
 
     /**
      * Indicates whether a peptide is found in a single protein match.
@@ -747,80 +749,109 @@ public abstract class Identification extends ExperimentObject {
         return getProteinMatches(peptide).size() == 1;
     }
     
-
+    
     /**
-     * Returns a peptide matches iterator.
+     * Returns a psm iterator for a given key list.
+     *
+     * @param spectrumKeys the keys of the spectra to iterate
+     * @param lazyLoading flag for lazy loading from the database
+     * @param waitingHandler the waiting handler
+     *
+     * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
+     */
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(spectrumKeys, this, lazyLoading, waitingHandler, false);
+    }
+    
+    
+    /**
+     * Returns a psm iterator for all SpectrumMatches.
+     *
+     * @param lazyLoading flag for lazy loading from the database
+     * @param waitingHandler the waiting handler
+     *
+     * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
+     */
+    public PsmIterator getPsmIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(this, lazyLoading, waitingHandler, false);
+    }
+    
+    
+    /**
+     * Returns a peptide matches iterator for a given key list.
      *
      * @param peptideKeys the keys of the peptides to iterate
-     * @param peptideParameters the peptide parameters to load along with the
-     * matches
-     * @param loadPsms if true PSMs of the peptides will be loaded as well
-     * @param psmParameters the PSM parameters to load along with the PSMs
+     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters,
-            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
-        return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters, waitingHandler);
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PeptideMatchesIterator(peptideKeys, this, lazyLoading, waitingHandler, false);
     }
-
+    
+    
     /**
-     * Returns a peptide matches iterator iterating all peptides.
+     * Returns a peptide matches iterator for all PeptideMatches.
      *
-     * @param peptideParameters the peptide parameters to load along with the
-     * matches
-     * @param loadPsms if true PSMs of the peptides will be loaded as well
-     * @param psmParameters the PSM parameters to load along with the PSMs
+     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters,
-            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
-        return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters, waitingHandler);
+    public PeptideMatchesIterator getPeptideMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PeptideMatchesIterator(this, lazyLoading, waitingHandler, false);
     }
-
+    
+    
     /**
-     * Returns a protein matches iterator.
+     * Returns a protein matches iterator for a given key list.
      *
-     * @param proteinKeys the keys of the proteins to iterate
-     * @param proteinParameters the protein parameters to load along with the
-     * matches
-     * @param loadPeptides if true the peptides corresponding to these proteins
-     * will be batch loaded along with the proteins
-     * @param peptideParameters the parameters to load along with the peptide
-     * matches
-     * @param loadPsms if true the PSMs of the peptides will be batch loaded
-     * along with the matches
-     * @param psmParameters the parameters to load along with the matches
+     * @param proteinKeys the keys of the peptides to iterate
+     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
-     * @return a protein matches iterator
+     * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides,
-            ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
-        return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new ProteinMatchesIterator(proteinKeys, this, lazyLoading, waitingHandler, false);
     }
-
+    
+    
     /**
-     * Returns a protein matches iterator iterating all protein matches.
+     * Returns a protein matches iterator for all PeptideMatches.
      *
-     * @param proteinParameters the protein parameters to load along with the
-     * matches
-     * @param loadPeptides if true the peptides corresponding to these proteins
-     * will be batch loaded along with the proteins
-     * @param peptideParameters the parameters to load along with the peptide
-     * matches
-     * @param loadPsms if true the PSMs of the peptides will be batch loaded
-     * along with the matches
-     * @param psmParameters the parameters to load along with the matches
+     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
-     * @return a protein matches iterator
+     * @return a peptide matches iterator
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides,
-            ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
-        return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
+    public ProteinMatchesIterator getProteinMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new ProteinMatchesIterator(this, lazyLoading, waitingHandler, false);
     }
+    
 }

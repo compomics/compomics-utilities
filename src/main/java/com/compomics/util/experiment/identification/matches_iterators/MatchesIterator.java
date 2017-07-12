@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.matches_iterators;
 
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.waiting.WaitingHandler;
 import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.IOException;

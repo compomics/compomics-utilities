@@ -302,6 +302,7 @@ public class ObjectsCache {
                     entry.setObject(objectsDB.getDB().save(entry.getObject()));
                 }
                 else if (((IdObject)obj).getModified()){
+                    ((IdObject)obj).setModified(false);
                     objectsDB.getDB().save(entry.getObject());
                 }
                 

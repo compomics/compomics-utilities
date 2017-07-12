@@ -120,6 +120,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void addTheoreticProtein(String proteinAccession) {
         theoreticProtein.add(proteinAccession);
+        setModified(true);
     }
 
     /**
@@ -138,6 +139,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setMainMatch(String mainMatch) {
         this.mainMatch = mainMatch;
+        setModified(true);
     }
 
     /**
@@ -157,6 +159,7 @@ public class ProteinMatch extends IdentificationMatch {
     public void addPeptideMatchKey(String peptideMatchKey) {
         if (!peptideMatchesKeys.contains(peptideMatchKey)) {
             peptideMatchesKeys.add(peptideMatchKey);
+            setModified(true);
         }
     }
 
@@ -167,6 +170,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
         peptideMatchesKeys = peptideMatchKeys;
+        setModified(true);
     }
 
     /**

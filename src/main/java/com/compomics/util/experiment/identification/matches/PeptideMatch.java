@@ -50,6 +50,7 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setKey(String newKey) {
         this.matchKey = newKey;
+        setModified(true);
     }
 
     /**
@@ -79,6 +80,7 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setTheoreticPeptide(Peptide theoreticPeptide) {
         this.theoreticPeptide = theoreticPeptide;
+        setModified(true);
     }
 
     /**
@@ -98,6 +100,7 @@ public class PeptideMatch extends IdentificationMatch {
     public void addSpectrumMatchKey(String spectrumMatchKey) {
         if (!spectrumMatchesKeys.contains(spectrumMatchKey)) {
             spectrumMatchesKeys.add(spectrumMatchKey);
+            setModified(true);
         } else {
             throw new IllegalArgumentException("Trying to add two times the same spectrum match (" + spectrumMatchKey + ") to the same peptide match (" + getKey() + ").");
         }

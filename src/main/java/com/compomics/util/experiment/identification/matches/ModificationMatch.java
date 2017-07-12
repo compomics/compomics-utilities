@@ -76,6 +76,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setTheoreticPtm(String ptm) {
         this.theoreticPtm = ptm;
+        setModified(true);
     }
 
     /**
@@ -94,6 +95,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setModificationSite(int site) {
         this.modifiedSite = site;
+        setModified(true);
     }
 
     /**
@@ -115,6 +117,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setConfident(boolean confident) {
         this.confident = confident;
+        setModified(true);
     }
 
     /**
@@ -136,6 +139,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setInferred(boolean inferred) {
         this.inferred = inferred;
+        setModified(true);
     }
 
     /**

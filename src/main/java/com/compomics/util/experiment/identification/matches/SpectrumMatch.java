@@ -102,6 +102,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
         this.bestPeptideAssumption = bestAssumption;
+        setModified(true);
     }
 
     /**
@@ -120,6 +121,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestTagAssumption(TagAssumption bestTagAsssumption) {
         this.bestTagAsssumption = bestTagAsssumption;
+        setModified(true);
     }
 
     @Override
@@ -176,6 +178,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removeAssumptions() {
         assumptionsMap = null;
+        setModified(true);
     }
 
     /**
@@ -202,6 +205,7 @@ public class SpectrumMatch extends IdentificationMatch {
             advocateMap.put(score, assumptionList);
         }
         assumptionList.add(otherAssumption);
+        setModified(true);
     }
 
     @Override
@@ -217,6 +221,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setKey(String newKey) {
         this.spectrumKey = newKey;
+        setModified(true);
     }
 
     /**
@@ -236,6 +241,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setSpectrumNumber(Integer spectrumNumber) {
         this.spectrumNumber = spectrumNumber;
+        setModified(true);
     }
 
     /**
@@ -264,6 +270,7 @@ public class SpectrumMatch extends IdentificationMatch {
             for (int se : seToRemove) {
                 assumptionsMap.remove(se);
             }
+            setModified(true);
         }
     }
 

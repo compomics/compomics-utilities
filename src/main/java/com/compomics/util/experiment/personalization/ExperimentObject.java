@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.personalization;
 
+import com.compomics.util.IdObject;
 import java.util.HashMap;
 import java.io.Serializable;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
  *
  * @author Marc Vaudel
  */
-public abstract class ExperimentObject implements Serializable, Cloneable {
+public abstract class ExperimentObject extends IdObject implements Serializable, Cloneable {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

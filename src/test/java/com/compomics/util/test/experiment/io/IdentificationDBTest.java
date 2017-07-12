@@ -3,11 +3,13 @@ package com.compomics.util.test.experiment.io;
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsCache;
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.IdentificationDB;
+import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.identification.identifications.Ms2Identification;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -33,12 +35,10 @@ public class IdentificationDBTest extends TestCase {
 
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(1, path.indexOf("/target/"));
-        path += "/src/test/resources/experiment/testDB";
+        path += "/src/test/resources/experiment/";
         try {
-            ObjectsCache cache = new ObjectsCache();
-            cache.setAutomatedMemoryManagement(false);
-            cache.setCacheSize(0);
-            IdentificationDB idDB = new IdentificationDB(path, "testId", true, cache);
+            ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB");
+            Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {
 
                 String spectrumKey = "spectrum_file_cus_spectrum_title";
@@ -51,17 +51,17 @@ public class IdentificationDBTest extends TestCase {
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 peptide.setParentProteins(testProteins);
                 testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
-                idDB.addSpectrumMatch(testSpectrumMatch);
+                idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
                 peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 peptide.setParentProteins(testProteins);
                 PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey());
-                idDB.addPeptideMatch(testPeptideMatch);
+                idDB.addObject(testPeptideMatch.getKey(), testPeptideMatch);
 
                 ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);
-                idDB.addProteinMatch(testProteinMatch);
+                idDB.addObject(testProteinMatch.getKey(), testProteinMatch);
 
-                testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
+                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
                 Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
                 HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
@@ -80,9 +80,8 @@ public class IdentificationDBTest extends TestCase {
                 ArrayList<String> proteins = new ArrayList<String>();
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
-                idDB.updateMatch(testSpectrumMatch);
 
-                testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
+                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
                 assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
@@ -96,17 +95,17 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 1);
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(proteinKey));
 
-                testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
+                testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
 
-                testProteinMatch = idDB.getProteinMatch(proteinKey, true);
+                testProteinMatch = (ProteinMatch)idDB.retrieveObject(proteinKey);
                 Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
                 double testScore = 12.3;
                 PepnovoAssumptionDetails testParameter = new PepnovoAssumptionDetails();
                 testParameter.setRankScore(testScore);
-                idDB.addSpectrumMatchParameter(spectrumKey, testParameter);
-                testParameter = (PepnovoAssumptionDetails) idDB.getSpectrumMatchParameter(spectrumKey, testParameter, true);
+                idDB.addObject(spectrumKey, testParameter);
+                testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(spectrumKey);
                 Assert.assertTrue(testParameter.getRankScore()== testScore);
 
             } finally {

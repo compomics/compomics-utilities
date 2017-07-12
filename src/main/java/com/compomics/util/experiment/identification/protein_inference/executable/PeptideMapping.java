@@ -13,7 +13,6 @@ import com.compomics.util.experiment.identification.protein_inference.PeptideMap
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.preferences.IdentificationParameters;
@@ -105,14 +104,8 @@ public class PeptideMapping {
         if (peptideMapperType == PeptideMapperType.fm_index) {
             peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } else {
-            try {
-                peptideMapper = new ProteinTree(1000, 1000);
-                ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
-                ((ProteinTree) peptideMapper).initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
-            } catch (Exception e) {
-                System.err.println("Error: could not set up index");
-                System.exit(-1);
-            }
+            System.err.println("No other peptide mapping supported than FM index, please change settings in setting file.");
+            System.exit(-1);
         }
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
         System.err.println();
@@ -255,15 +248,6 @@ public class PeptideMapping {
                 writer.close();
             } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
-                System.exit(-1);
-            }
-        }
-
-        if (peptideMapperType == PeptideMapperType.tree) {
-            try {
-                ((ProteinTree) peptideMapper).close();
-            } catch (Exception e) {
-                System.err.println("Error: could not close index");
                 System.exit(-1);
             }
         }

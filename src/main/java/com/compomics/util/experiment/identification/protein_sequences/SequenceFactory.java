@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Protein;
@@ -9,7 +10,6 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.IdentificationParameters;
@@ -99,17 +99,17 @@ public class SequenceFactory {
      * statistics.
      */
     public static int minProteinCount = 1000; // @TODO: use a better metric
-
     /**
      * Constructor.
      */
     private SequenceFactory() {
     }
-
+    
     /**
      * Static method returning the instance of the factory.
      *
      * @return the instance of the factory
+     * @throws java.lang.Exception
      */
     public static SequenceFactory getInstance() {
         if (instance == null) {
@@ -1447,33 +1447,6 @@ public class SequenceFactory {
             switch (peptideMapperType) {
                 case fm_index:
                     defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress, peptideVariantsPreferences, searchParameters);
-                    break;
-                case tree:
-
-                    UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-                    int memoryPreference = userPreferences.getMemoryPreference();
-                    int memoryAllocated = 3 * memoryPreference / 4;
-                    int cacheSize = 250000;
-                    if (memoryPreference < 2500) {
-                        cacheSize = 5000;
-                    } else if (memoryPreference < 10000) {
-                        cacheSize = 25000;
-                    }
-
-                    ProteinTree defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
-
-                    int tagLength = 3;
-                    defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, exceptionHandler, true, displayProgress, nThreads);
-                    emptyCache();
-
-                    int treeSize = memoryPreference / 4;
-                    defaultProteinTree.setMemoryAllocation(treeSize);
-
-                    // close and delete the database if the process was canceled
-                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                        defaultProteinTree.deleteDb();
-                    }
-                    defaultPeptideMapper = defaultProteinTree;
                     break;
                 default:
                     throw new UnsupportedOperationException("Peptide mapper type " + peptideMapperType + " not supported.");

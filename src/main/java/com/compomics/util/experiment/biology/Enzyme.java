@@ -24,7 +24,7 @@ public class Enzyme extends ExperimentObject {
     
      * @deprecated use the name as identifier.
      */
-    private int id;
+    private int enzymeId;
     /*
      * The enzyme name.
      */
@@ -111,8 +111,8 @@ public class Enzyme extends ExperimentObject {
      *
      * @return the enzyme number
      */
-    public int getId() {
-        return id;
+    public int getEnzymeId() {
+        return enzymeId;
     }
     
     /**
@@ -487,7 +487,7 @@ public class Enzyme extends ExperimentObject {
         if (otherEnzyme == null) {
             return false;
         }
-        if (this.getId() != otherEnzyme.getId()) {
+        if (this.getEnzymeId() != otherEnzyme.getEnzymeId()) {
             return false;
         }
         if (!this.getName().equalsIgnoreCase(otherEnzyme.getName())) {
@@ -576,7 +576,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the enzyme is unspecific
      */
     public boolean isUnspecific() {
-        return id == 17;
+        return enzymeId == 17;
     }
 
     /**

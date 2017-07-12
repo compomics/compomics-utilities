@@ -5,8 +5,8 @@ import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
@@ -322,7 +322,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * deduced from tag assumptions. The original tag assumption is added to the
      * peptide match as refinement parameter
      *
-     * @param proteinTree the protein tree to use to map tags to peptides
+     * @param peptideMapper the selected peptide mapper
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the MS2 mass tolerance to use
      * @param scoreInAscendingOrder boolean indicating whether the tag score is
@@ -339,7 +339,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
+    public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -366,7 +366,7 @@ public class SpectrumMatch extends IdentificationMatch {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         ArrayList<PeptideProteinMapping> proteinMapping
-                                = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
+                                = peptideMapper.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
                         for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping, sequenceMatchingPreferences)) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());

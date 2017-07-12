@@ -1,5 +1,7 @@
 package com.compomics.util.general;
 
+import com.compomics.util.IdObject;
+
 /**
  * Convenience class allowing the boxing of an object.
  *
@@ -7,7 +9,7 @@ package com.compomics.util.general;
  *
  * @param <K> the type of object to box
  */
-public class BoxedObject<K> {
+public class BoxedObject<K> extends IdObject {
 
     /**
      * The object to box.
@@ -45,5 +47,6 @@ public class BoxedObject<K> {
      */
     public void setObject(K object) {
         this.object = object;
+        setModified(true);
     }
 }

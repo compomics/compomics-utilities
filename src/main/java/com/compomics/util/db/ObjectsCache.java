@@ -130,16 +130,19 @@ public class ObjectsCache {
     }
     
     /**
-     * Deletes object from the cache
+     * Removes an object from the cache
      *
      * @param objectKey the key of the object
      *
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void deleteObject(long objectKey) throws InterruptedException {
+    public void removeObject(long objectKey) throws InterruptedException {
         if (!readOnly) {
             loadedObjectMutex.acquire();
-            if (loadedObjects.containsKey(objectKey)) loadedObjects.remove(objectKey);
+            if (loadedObjects.containsKey(objectKey)){
+                loadedObjects.remove(objectKey);
+                objectQueue.removeFirstOccurrence(objectKey);
+            }
             loadedObjectMutex.release();
         }
     }

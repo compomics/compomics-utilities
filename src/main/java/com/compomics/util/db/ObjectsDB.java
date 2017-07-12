@@ -213,8 +213,6 @@ public class ObjectsDB implements Serializable {
      *
      * @param objectKey the key of the object
      * @param object the object to store
-     * @param inCache boolean indicating whether the method shall try to put the
-     * object in cache or not
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
@@ -223,7 +221,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public void insertObject(String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
@@ -252,6 +250,8 @@ public class ObjectsDB implements Serializable {
      * @param objects map of the objects (object key &gt; object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -260,7 +260,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred
      */
-    public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException, InterruptedException {
+    public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, InterruptedException {
         
         
         for (String objectKey : objects.keySet()) {
@@ -622,6 +622,98 @@ public class ObjectsDB implements Serializable {
     }
     
     
+    
+
+    /**
+     * Removing an object from.
+     *
+     * @param keys the object key
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public void removeObject(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
+        }
+        
+        dbMutex.acquire();
+        
+        for (String key : keys){
+            if (waitingHandler.isRunCanceled()) break;
+            long longKey = createLongKey(key);
+            objectsCache.removeObject(longKey);
+            dbMutex.acquire();
+            ORID orid = idMap.get(longKey);
+            if (orid != null){
+                db.delete(orid);
+            }
+        }
+        dbMutex.release();
+    }
+    
+    
+    
+
+    /**
+     * Removing an object from.
+     *
+     * @param key the object key
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
+     */
+    public void removeObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " removing object: " + key);
+        }
+        
+        
+        long longKey = createLongKey(key);
+        objectsCache.removeObject(longKey);
+        dbMutex.acquire();
+        ORID orid = idMap.get(longKey);
+        if (orid != null){
+            db.delete(orid);
+        }
+        dbMutex.release();
+    }
+    
+    
+    
+
+    /**
+     * Indicates whether an object is loaded.
+     *
+     * @param objectKey the object key
+     *
+     * @return a boolean indicating whether an object is loaded
+     *
+     * @throws SQLException exception thrown whenever an exception occurred
+     * while interrogating the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     */
+    public boolean inCache(String objectKey) throws SQLException, InterruptedException {
+        return objectsCache.inCache(createLongKey(objectKey));
+    }
+    
+    
 
     /**
      * Indicates whether an object is loaded.
@@ -673,38 +765,7 @@ public class ObjectsDB implements Serializable {
         }
         dbMutex.release();
         return false;
-    }
-    
-    
-    
-
-    /**
-     * Deletes an object from the desired table.
-     *
-     * @param objectKey the object key
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public void deleteObject(String objectKey) throws SQLException, IOException, InterruptedException {
-
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Removing object, key: " + objectKey);
-        }
-        
-        long longKey = createLongKey(objectKey);
-        ORID orid = idMap.get(longKey);
-        if (orid != null){
-            objectsCache.deleteObject(longKey);
-            dbMutex.acquire();
-            db.delete(orid);
-            dbMutex.release();
-        }
-    }
-    
+    }   
 
 
 

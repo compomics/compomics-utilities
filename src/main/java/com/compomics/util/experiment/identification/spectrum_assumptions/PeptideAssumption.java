@@ -85,6 +85,10 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     public Peptide getPeptide() {
         return peptide;
     }
+    
+    public void setPeptide(Peptide peptide){
+        this.peptide = peptide;
+    }
 
     @Override
     public double getTheoreticMass() {

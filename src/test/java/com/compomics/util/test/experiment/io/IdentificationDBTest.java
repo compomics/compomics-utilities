@@ -9,12 +9,14 @@ import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.identifications.Ms2Identification;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
+import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
 import com.orientechnologies.orient.core.db.record.ORecordLazyList;
@@ -48,10 +50,13 @@ public class IdentificationDBTest extends TestCase {
             objectsDB.registerClass(ModificationMatch.class);
             
             objectsDB.registerClass(ProteinMatch.class);
-            //objectsDB.registerClass(PeptideAssumption.class);
-            //objectsDB.registerClass(SpectrumMatch.class);
-            //objectsDB.registerClass(Charge.class);
-            //objectsDB.registerClass(SpectrumIdentificationAssumption.class);
+            
+            objectsDB.registerClass(SpectrumMatch.class);
+            objectsDB.registerClass(SpectrumIdentificationAssumption.class);
+            objectsDB.registerClass(PeptideAssumption.class);
+            objectsDB.registerClass(TagAssumption.class);
+            objectsDB.registerClass(Charge.class);
+            objectsDB.registerClass(Tag.class);
 
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {                
@@ -67,11 +72,11 @@ public class IdentificationDBTest extends TestCase {
                 testProteins.add("test protein2");
                 
                 
-                //SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
-                //testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
-                //idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
-
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+                testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
+                idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
+
                 peptide.setParentProteins(testProteins);
                 PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey());
                 idDB.addObject(testPeptideMatch.getKey(), testPeptideMatch);

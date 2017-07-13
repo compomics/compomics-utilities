@@ -141,6 +141,10 @@ public class ModificationMatch extends ExperimentObject {
         this.inferred = inferred;
         setModified(true);
     }
+    
+    public void setVariable(boolean variable){
+        this.variable = variable;
+    }
 
     /**
      * Indicates whether this modification match is the same of another one. The

@@ -58,6 +58,10 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     public Tag getTag() {
         return tag;
     }
+    
+    public void setTag(Tag tag){
+        this.tag = tag;
+    }
 
     @Override
     public double getTheoreticMass() {

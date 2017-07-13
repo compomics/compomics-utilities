@@ -30,7 +30,7 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * The index of the matched spectrum.
      */
-    private String spectrumKey;
+    private String key;
     /**
      * Map of the identification algorithm assumption: advocate number &gt;
      * score &gt; assumptions.
@@ -52,36 +52,48 @@ public class SpectrumMatch extends IdentificationMatch {
      * The spectrum number in the mgf file. Will be used in case the spectrum
      * title does not match.
      */
-    private Integer spectrumNumber = null;
+    private int spectrumNumber = 0;
 
     /**
      * Constructor for the spectrum match.
      */
     public SpectrumMatch() {
     }
-
-    /**
-     * Constructor for the spectrum match.
-     *
-     * @param spectrumKey the matched spectrumKey
-     * @param assumption the matching assumption
-     */
-    public SpectrumMatch(String spectrumKey, SpectrumIdentificationAssumption assumption) {
-        int advocateId = assumption.getAdvocate();
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
-        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
-        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
-        assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
-        this.spectrumKey = spectrumKey;
+    
+    public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize){
+        this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
     }
 
     /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumKey the matched spectrum key
+     * @param key the matched spectrumKey
+     * @param assumption the matching assumption
      */
-    public SpectrumMatch(String spectrumKey) {
-        this.spectrumKey = spectrumKey;
+    public SpectrumMatch(String key, SpectrumIdentificationAssumption assumption) {
+        int advocateId = assumption.getAdvocate();
+        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
+        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
+        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
+        assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
+        this.key = key;
+    }
+    
+    public int getTagAssumptionMapKeySize(){
+        return tagAssumptionsMapKeySize;
+    }
+    
+    public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap){
+        this.assumptionsMap = assumptionsMap;
+    }
+
+    /**
+     * Constructor for the spectrum match.
+     *
+     * @param key the matched spectrum key
+     */
+    public SpectrumMatch(String key) {
+        this.key = key;
         assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
     }
 
@@ -103,6 +115,8 @@ public class SpectrumMatch extends IdentificationMatch {
         this.bestPeptideAssumption = bestAssumption;
         setModified(true);
     }
+    
+    
 
     /**
      * Getter for the best tag assumption.
@@ -125,7 +139,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        return spectrumKey;
+        return key;
     }
 
     /**
@@ -150,11 +164,11 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public ArrayList<SpectrumIdentificationAssumption> getAllAssumptions() {
-        if (assumptionsMap == null) {
+        if (getAssumptionsMap() == null) {
             return null;
         }
         ArrayList<SpectrumIdentificationAssumption> result = new ArrayList<SpectrumIdentificationAssumption>();
-        for (HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> seMap : assumptionsMap.values()) {
+        for (HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> seMap : getAssumptionsMap().values()) {
             for (double eValue : seMap.keySet()) {
                 result.addAll(seMap.get(eValue));
             }
@@ -205,10 +219,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * Replaces the new key. The key of the PSM should always be the same as the
      * spectrum key it links to.
      *
-     * @param newKey the new key
+     * @param key the new key
      */
-    public void setKey(String newKey) {
-        this.spectrumKey = newKey;
+    public void setKey(String key) {
+        this.key = key;
         setModified(true);
     }
 
@@ -218,7 +232,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return the spectrum number in the spectrum file
      */
-    public Integer getSpectrumNumber() {
+    public int getSpectrumNumber() {
         return spectrumNumber;
     }
 
@@ -227,7 +241,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param spectrumNumber the spectrum number in the spectrum file
      */
-    public void setSpectrumNumber(Integer spectrumNumber) {
+    public void setSpectrumNumber(int spectrumNumber) {
         this.spectrumNumber = spectrumNumber;
         setModified(true);
     }
@@ -323,7 +337,7 @@ public class SpectrumMatch extends IdentificationMatch {
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
+        SpectrumMatch spectrumMatch = new SpectrumMatch(key);
 
         for (int advocateId : assumptionsMap.keySet()) {
 

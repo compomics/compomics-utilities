@@ -45,6 +45,22 @@ public class Charge extends ExperimentObject {
         this.value = value;
     }
     
+    public int getSign(){
+        return sign;
+    }
+    
+    public void setSign(int sign){
+        this.sign = sign;
+    }
+    
+    public int getValue(){
+        return value;
+    }
+    
+    public void setValue(int value){
+        this.value = value;
+    }
+    
     public Charge(){}
 
     /**

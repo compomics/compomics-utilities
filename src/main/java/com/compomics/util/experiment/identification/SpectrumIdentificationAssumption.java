@@ -64,10 +64,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * Set the rank of the PeptideAssumption.
      *
-     * @param aRank the rank of the PeptideAssumptio
+     * @param rank the rank of the PeptideAssumptio
      */
-    public void setRank(int aRank) {
-        rank = aRank;
+    public void setRank(int rank) {
+        rank = rank;
     }
 
     /**
@@ -77,6 +77,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public int getAdvocate() {
         return advocate;
+    }
+    
+    public void setAdvocate(int advocate){
+        this.advocate = advocate;
     }
 
     /**
@@ -105,6 +109,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public String getIdentificationFile() {
         return identificationFile;
+    }
+    
+    public void setIdentificationFile(String identificationFile){
+        this.identificationFile = identificationFile;
     }
 
     /**

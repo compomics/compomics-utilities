@@ -96,6 +96,10 @@ public class Tag extends ExperimentObject {
     public ArrayList<TagComponent> getContent() {
         return content;
     }
+    
+    public void setContent(ArrayList<TagComponent> content){
+        this.content = content;
+    }
 
     /**
      * Adds a mass gap to the tag.

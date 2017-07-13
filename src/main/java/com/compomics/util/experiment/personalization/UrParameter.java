@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.personalization;
 
-import java.io.Serializable;
 
 /**
  * This interface is used to reference refinement parameters.
  * 
  * @author Marc Vaudel
  */
-public interface UrParameter extends Serializable {
+public interface UrParameter {
 
     /**
      * The version UID for Serialization/Deserialization compatibility

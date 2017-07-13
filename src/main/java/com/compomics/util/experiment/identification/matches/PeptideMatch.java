@@ -22,7 +22,7 @@ public class PeptideMatch extends IdentificationMatch {
     /**
      * The key of the match.
      */
-    private String matchKey;
+    private String key;
     /**
      * All spectrum matches indexed by spectrum id. See Spectrum class.
      */
@@ -30,17 +30,19 @@ public class PeptideMatch extends IdentificationMatch {
     /**
      * Is the peptide match a decoy hit?
      */
-    private Boolean isDecoy = null;
+    private boolean isDecoy = false;
+    
 
     /**
      * Constructor for the peptide match.
      */
     public PeptideMatch() {
+        System.out.println("naked");
     }
 
     @Override
     public String getKey() {
-        return matchKey;
+        return key;
     }
     
     /**
@@ -49,7 +51,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param newKey a new key for the match
      */
     public void setKey(String newKey) {
-        this.matchKey = newKey;
+        this.key = newKey;
         setModified(true);
     }
 
@@ -61,7 +63,8 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public PeptideMatch(Peptide peptide, String matchKey) {
         theoreticPeptide = peptide;
-        this.matchKey = matchKey;
+        this.key = matchKey;
+        System.out.println("closed");
     }
 
     /**

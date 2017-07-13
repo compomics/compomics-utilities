@@ -47,7 +47,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The peptide mass.
      */
-    private Double mass = null;
+    private double mass = 0;
     /**
      * The parent proteins.
      */
@@ -151,8 +151,8 @@ public class Peptide extends ExperimentObject {
      *
      * @return the peptide mass
      */
-    public Double getMass() {
-        if (mass == null) {
+    public double getMass() {
+        if (mass == 0) {
             estimateTheoreticMass();
         }
         return mass;
@@ -174,7 +174,7 @@ public class Peptide extends ExperimentObject {
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         this.modifications = modificationMatches;
-        mass = null;
+        mass = 0;
         key = null;
         matchingKey = null;
     }
@@ -184,7 +184,7 @@ public class Peptide extends ExperimentObject {
      */
     public void clearModificationMatches() {
         modifications.clear();
-        mass = null;
+        mass = 0;
         key = null;
         matchingKey = null;
     }
@@ -199,7 +199,7 @@ public class Peptide extends ExperimentObject {
             modifications = new ArrayList<ModificationMatch>(1);
         }
         modifications.add(modificationMatch);
-        mass = null;
+        mass = 0;
         key = null;
         matchingKey = null;
     }
@@ -1757,7 +1757,7 @@ public class Peptide extends ExperimentObject {
      */
     public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
 
-        if (mass == null) {
+        if (mass == 0) {
 
             Double tempMass = Atom.H.getMonoisotopicMass();
             char[] sequenceAsCharArray = sequence.toCharArray();

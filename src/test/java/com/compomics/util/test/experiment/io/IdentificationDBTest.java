@@ -1,9 +1,11 @@
 package com.compomics.util.test.experiment.io;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
@@ -12,6 +14,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
 import com.orientechnologies.orient.core.db.record.ORecordLazyList;
@@ -38,12 +41,17 @@ public class IdentificationDBTest extends TestCase {
         path += "/src/test/resources/experiment/";
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB");
-            objectsDB.registerClass(Peptide.class);
             objectsDB.registerClass(PeptideMatch.class);
-            objectsDB.registerClass(PeptideAssumption.class);
-            objectsDB.registerClass(SpectrumMatch.class);
-            objectsDB.registerClass(ProteinMatch.class);
-            objectsDB.registerClass(Charge.class);
+            objectsDB.registerClass(Peptide.class);
+            objectsDB.registerClass(VariantMatch.class);
+            objectsDB.registerClass(Variant.class);
+            objectsDB.registerClass(ModificationMatch.class);
+            //objectsDB.registerClass(PeptideAssumption.class);
+            //objectsDB.registerClass(SpectrumMatch.class);
+            //objectsDB.registerClass(ProteinMatch.class);
+            //objectsDB.registerClass(Charge.class);
+            //objectsDB.registerClass(SpectrumIdentificationAssumption.class);
+
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {
 
@@ -54,10 +62,24 @@ public class IdentificationDBTest extends TestCase {
                 String peptideKey = "PEPTIDE";
                 String proteinKey = "test_protein";
                 Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
-                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+                
+                
                 ArrayList<String> testProteins = new ArrayList<String>();
                 testProteins.add("test protein1");
                 testProteins.add("test protein2");
+                Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+                peptide.setParentProteins(testProteins);
+                PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey());
+                idDB.addObject(testPeptideMatch.getKey(), testPeptideMatch);
+                
+                idDB.clearCache();
+                
+                testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
+                System.out.println("Key: " + testPeptideMatch.getKey());
+                Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
+                
+                /*
+                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 peptide.setParentProteins(testProteins);
                 testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
@@ -122,7 +144,7 @@ public class IdentificationDBTest extends TestCase {
                 idDB.addObject(parametersKey, testParameter);
                 testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(parametersKey);
                 Assert.assertTrue(testParameter.getRankScore()== testScore);
-
+*/
             } finally {
                 idDB.close();
             }

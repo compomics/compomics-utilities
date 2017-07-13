@@ -18,7 +18,7 @@
         <logging.level.default>DEBUG</logging.level.default>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <orientdb.version>2.0.4</orientdb.version>
+        <orientdb.version>2.2.18</orientdb.version>
     </properties>
 
 

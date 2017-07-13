@@ -16,7 +16,7 @@ public abstract class MatchesIterator {
     /**
      * Iterator for spectrum matches
      */
-    private OObjectIteratorClass<?> iterator = null;
+    //private OObjectIteratorClass<?> iterator = null;
     /**
      * the identification
      */
@@ -111,7 +111,7 @@ public abstract class MatchesIterator {
         }
         else {
             num = identification.getNumber(className);
-            iterator = identification.getIterator(className);
+            //iterator = identification.getIterator(className);
         }
         index = 0;
         currentIndex = 0;
@@ -155,7 +155,7 @@ public abstract class MatchesIterator {
                 identification.loadObjects(subKeyList, lazyLoading, waitingHandler, displayProgress);
             }
             else {
-                identification.loadObjects(iterator, batchSize, lazyLoading, waitingHandler, displayProgress);
+                //identification.loadObjects(iterator, batchSize, lazyLoading, waitingHandler, displayProgress);
             }
             currentIndex = 0;
         }

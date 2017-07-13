@@ -96,9 +96,9 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public Object getObject(Long objectKey) throws InterruptedException {
-        Object object;
+        Object object = null;
         loadedObjectMutex.acquire();
-        object = loadedObjects.get(objectKey).getObject();
+        if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey).getObject();
         loadedObjectMutex.release();
         return object;
     }
@@ -314,11 +314,14 @@ public class ObjectsCache {
                 CacheEntry entry = loadedObjects.get(key);
                 Object obj = entry.getObject();
                 if (!objectsDB.getIdMap().containsKey(key)){
+                    ((IdObject)obj).setModified(false);
                     System.out.println("storing " + obj.getClass().getSimpleName());
-                    entry.setObject(objectsDB.getDB().save(entry.getObject()));
+                    obj = objectsDB.getDB().save(obj);
+                    entry.setObject(obj);
+                    objectsDB.getIdMap().put(key, objectsDB.getDB().getIdentity(obj));
                 }
                 else if (((IdObject)obj).getModified()){
-                System.out.println("here2");
+                System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                     objectsDB.getDB().save(entry.getObject());
                 }

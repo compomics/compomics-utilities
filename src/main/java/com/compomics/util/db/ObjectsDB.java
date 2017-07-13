@@ -22,7 +22,7 @@ import org.apache.commons.io.FileUtils;
  *
  * @author Marc Vaudel
  */
-public class ObjectsDB implements Serializable {
+public class ObjectsDB {
 
     /**
      * The version UID for serialization/deserialization compatibility.
@@ -436,7 +436,7 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
         }
-        
+                
         Object obj = objectsCache.getObject(longKey);
         dbMutex.acquire();
         if (obj == null){

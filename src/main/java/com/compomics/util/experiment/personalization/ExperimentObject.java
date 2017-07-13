@@ -20,6 +20,8 @@ public abstract class ExperimentObject extends IdObject {
      */
     private HashMap<String, UrParameter> urParams = null;
 
+    
+    
     /**
      * Adds a user refinement parameter.
      *

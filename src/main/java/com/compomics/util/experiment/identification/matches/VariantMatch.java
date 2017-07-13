@@ -62,4 +62,15 @@ public class VariantMatch {
         return proteinAccession;
     }
     
+    public void setProteinAccession(String proteinAccession){
+        this.proteinAccession = proteinAccession;
+    }
+    
+    public void setSite(int site){
+        this.site = site;
+    }
+    
+    public void setVariant(Variant variant){
+        this.variant = variant;
+    }
 }

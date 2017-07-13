@@ -55,7 +55,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The modifications carried by the peptide.
      */
-    private ArrayList<ModificationMatch> modifications = null;
+    private ArrayList<ModificationMatch> modificationMatches = null;
     /**
      * The variants observed when mapping this peptide to the database.
      */
@@ -83,18 +83,51 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide() {
     }
+    
+    
+    public void setMass(double mass){
+        this.mass = mass;
+    }
+    
+    public void setKey(String key){
+        this.key = key;
+    }
+    
+    public ArrayList<String> getParentProteins(){
+        return parentProteins;
+    }
+    
+    public void setMatchingKey(String matchingKey){
+        this.matchingKey = matchingKey;
+    }
+    
+    public void setSequenceWithLowerCasePtms(String sequenceWithLowerCasePtms){
+        this.sequenceWithLowerCasePtms = sequenceWithLowerCasePtms;
+    }
+    
+    public void setVariants(ArrayList<VariantMatch> variants){
+        this.variants = variants;
+    }
+    
+    public ArrayList<VariantMatch> getVariants(){
+        return variants;
+    }
+    
+    public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap){
+        this.variantsMap = variantsMap;
+    }
 
     /**
      * Constructor.
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
-     * @param modifications the PTM of this peptide
+     * @param modificationMatches the PTM of this peptide
      * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, boolean sanityCheck) {
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modificationMatches, boolean sanityCheck) {
         this.sequence = aSequence;
-        if (modifications != null) {
-            this.modifications = new ArrayList<ModificationMatch>(modifications);
+        if (modificationMatches != null) {
+            this.modificationMatches = new ArrayList<ModificationMatch>(modificationMatches);
         }
         if (sanityCheck) {
             sanityCheck();
@@ -117,8 +150,8 @@ public class Peptide extends ExperimentObject {
      */
     private void sanityCheck() {
         sequence = sequence.replaceAll("[#*$%&]", "");
-        if (modifications != null) {
-            for (ModificationMatch mod : modifications) {
+        if (modificationMatches != null) {
+            for (ModificationMatch mod : modificationMatches) {
                 if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
                     throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
                 }
@@ -139,7 +172,7 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants, boolean sanityCheck) {
         this.sequence = aSequence;
-        this.modifications = new ArrayList<ModificationMatch>(modifications);
+        this.modificationMatches = new ArrayList<ModificationMatch>(modifications);
         this.variants = new ArrayList<VariantMatch>(variants);
         if (sanityCheck) {
             sanityCheck();
@@ -164,7 +197,7 @@ public class Peptide extends ExperimentObject {
      * @return the modifications matches as found by the search engine
      */
     public ArrayList<ModificationMatch> getModificationMatches() {
-        return modifications;
+        return modificationMatches;
     }
 
     /**
@@ -173,7 +206,7 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatches the new modification matches
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
-        this.modifications = modificationMatches;
+        this.modificationMatches = modificationMatches;
         mass = 0;
         key = null;
         matchingKey = null;
@@ -183,7 +216,7 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported modification matches.
      */
     public void clearModificationMatches() {
-        modifications.clear();
+        modificationMatches.clear();
         mass = 0;
         key = null;
         matchingKey = null;
@@ -195,10 +228,10 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
-        if (modifications == null) {
-            modifications = new ArrayList<ModificationMatch>(1);
+        if (modificationMatches == null) {
+            modificationMatches = new ArrayList<ModificationMatch>(1);
         }
-        modifications.add(modificationMatch);
+        modificationMatches.add(modificationMatch);
         mass = 0;
         key = null;
         matchingKey = null;
@@ -267,14 +300,14 @@ public class Peptide extends ExperimentObject {
      * @return the variants in a map
      */
     public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
-        if (variantsMap == null) {
-            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(variants.size());
+        if (getVariantsMap() == null) {
+            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(getVariants().size());
             for (VariantMatch variantMatch : variants) {
                 String proteinAccession = variantMatch.getProteinAccession();
-                HashMap<Integer, ArrayList<Variant>> proteinVariants = variantsMap.get(proteinAccession);
+                HashMap<Integer, ArrayList<Variant>> proteinVariants = getVariantsMap().get(proteinAccession);
                 if (proteinVariants == null) {
                     proteinVariants = new HashMap<Integer, ArrayList<Variant>>(2);
-                    variantsMap.put(proteinAccession, proteinVariants);
+                    getVariantsMap().put(proteinAccession, proteinVariants);
                 }
                 int site = variantMatch.getSite();
                 ArrayList<Variant> variantsAtSite = proteinVariants.get(site);
@@ -303,6 +336,10 @@ public class Peptide extends ExperimentObject {
     public String getSequence() {
         return sequence;
     }
+    
+    public void setSequence(String sequence){
+        this.sequence = sequence;
+    }
 
     /**
      * Returns the peptide sequence as a String where the modified residues are
@@ -321,9 +358,9 @@ public class Peptide extends ExperimentObject {
             for (int i = 0; i < sequence.length(); i++) {
 
                 boolean modified = false;
-                if (modifications != null) {
-                    for (int j = 0; j < modifications.size() && !modified; j++) {
-                        if (modifications.get(j).getModificationSite() == (i + 1)) {
+                if (modificationMatches != null) {
+                    for (int j = 0; j < modificationMatches.size() && !modified; j++) {
+                        if (modificationMatches.get(j).getModificationSite() == (i + 1)) {
                             modified = true;
                         }
                     }
@@ -472,8 +509,8 @@ public class Peptide extends ExperimentObject {
      */
     public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        if (parentProteins == null) {
-            ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
+        if (getParentProteins() == null) {
+            ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(getSequence(), sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
             for (PeptideProteinMapping peptideProteinMapping : proteinMapping) {
                 accessionsFound.add(peptideProteinMapping.getProteinAccession());
@@ -509,6 +546,10 @@ public class Peptide extends ExperimentObject {
     public void clearParentProteins() {
         parentProteins = null;
     }
+    
+    public String getMatchingKey(){
+        return matchingKey;
+    }
 
     /**
      * Returns a unique key for the peptide when considering the given matching
@@ -523,7 +564,7 @@ public class Peptide extends ExperimentObject {
     public String getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (matchingKey == null) {
             String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
-            matchingKey = getKey(matchingSequence, modifications);
+            matchingKey = getKey(matchingSequence, modificationMatches);
         }
         return matchingKey;
     }
@@ -549,7 +590,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getKey() {
         if (key == null) {
-            key = getKey(sequence, modifications);
+            key = getKey(getSequence(), getModificationMatches());
         }
         return key;
     }
@@ -604,7 +645,7 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether a peptide carries modifications
      */
     public boolean isModified() {
-        return modifications != null && !modifications.isEmpty();
+        return modificationMatches != null && !modificationMatches.isEmpty();
     }
 
     /**
@@ -655,8 +696,8 @@ public class Peptide extends ExperimentObject {
      */
     public int getNVariableModifications(double modificationMass) {
         int n = 0;
-        if (modifications != null) {
-            for (ModificationMatch modificationMatch : modifications) {
+        if (modificationMatches != null) {
+            for (ModificationMatch modificationMatch : modificationMatches) {
                 if (modificationMatch.isVariable()) {
                     PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
                     if (ptm.getMass() == modificationMass) {
@@ -674,8 +715,8 @@ public class Peptide extends ExperimentObject {
      * @return the number of modifications carried by this peptide
      */
     public int getNModifications() {
-        if (modifications != null) {
-            return modifications.size();
+        if (modificationMatches != null) {
+            return modificationMatches.size();
         } else {
             return 0;
         }
@@ -1364,7 +1405,7 @@ public class Peptide extends ExperimentObject {
         HashMap<Double, ArrayList<Integer>> ptmToPositionsMap1 = new HashMap<Double, ArrayList<Integer>>();
         HashMap<Double, ArrayList<Integer>> ptmToPositionsMap2 = new HashMap<Double, ArrayList<Integer>>();
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        for (ModificationMatch modificationMatch : modifications) {
+        for (ModificationMatch modificationMatch : modificationMatches) {
             String modName = modificationMatch.getTheoreticPtm();
             if (ptms.contains(modName)) {
                 double tempMass = ptmFactory.getPTM(modName).getMass();
@@ -1429,7 +1470,7 @@ public class Peptide extends ExperimentObject {
         }
 
         ArrayList<String> ptms = new ArrayList<String>();
-        for (ModificationMatch modificationMatch : modifications) {
+        for (ModificationMatch modificationMatch : modificationMatches) {
             String modName = modificationMatch.getTheoreticPtm();
             if (!ptms.contains(modName)) {
                 ptms.add(modName);
@@ -1458,8 +1499,8 @@ public class Peptide extends ExperimentObject {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        if (modifications != null) {
-            for (ModificationMatch modificationMatch : modifications) {
+        if (modificationMatches != null) {
+            for (ModificationMatch modificationMatch : modificationMatches) {
                 if (modificationMatch.getModificationSite() == 1) {
                     PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                     if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
@@ -1486,10 +1527,10 @@ public class Peptide extends ExperimentObject {
         String cTerm = "COOH";
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        if (modifications != null) {
-            for (int i = 0; i < modifications.size(); i++) {
-                if (modifications.get(i).getModificationSite() == sequence.length()) {
-                    PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
+        if (modificationMatches != null) {
+            for (int i = 0; i < modificationMatches.size(); i++) {
+                if (modificationMatches.get(i).getModificationSite() == sequence.length()) {
+                    PTM ptm = ptmFactory.getPTM(modificationMatches.get(i).getTheoreticPtm());
                     if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
                         cTerm = ptm.getShortName();
                     }
@@ -1522,8 +1563,8 @@ public class Peptide extends ExperimentObject {
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
-        if (modifications != null) {
-            for (ModificationMatch modMatch : modifications) {
+        if (modificationMatches != null) {
+            for (ModificationMatch modMatch : modificationMatches) {
                 String modName = modMatch.getTheoreticPtm();
                 int modSite = modMatch.getModificationSite();
                 if (modMatch.isVariable()) {
@@ -1702,18 +1743,18 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
 
-        if (modifications == null) {
+        if (modificationMatches == null) {
             return new ArrayList<Integer>(0);
         }
 
-        ArrayList<Integer> modifiedResidues = new ArrayList<Integer>(modifications.size());
+        ArrayList<Integer> modifiedResidues = new ArrayList<Integer>(modificationMatches.size());
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (int i = 0; i < sequence.length(); i++) {
-            for (int j = 0; j < modifications.size(); j++) {
-                PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && (modifications.get(j).isVariable() || !excludeFixed)) {
-                    if (modifications.get(j).getModificationSite() == (i + 1)) {
+            for (int j = 0; j < modificationMatches.size(); j++) {
+                PTM ptm = ptmFactory.getPTM(modificationMatches.get(j).getTheoreticPtm());
+                if (ptm.getType() == PTM.MODAA && (modificationMatches.get(j).isVariable() || !excludeFixed)) {
+                    if (modificationMatches.get(j).getModificationSite() == (i + 1)) {
                         modifiedResidues.add(i + 1);
                     }
                 }
@@ -1731,12 +1772,12 @@ public class Peptide extends ExperimentObject {
      */
     public HashMap<Integer, ArrayList<String>> getIndexedFixedModifications() {
 
-        if (modifications == null) {
+        if (modificationMatches == null) {
             return new HashMap<Integer, ArrayList<String>>(0);
         }
 
-        HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>(modifications.size());
-        for (ModificationMatch modificationMatch : modifications) {
+        HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>(modificationMatches.size());
+        for (ModificationMatch modificationMatch : modificationMatches) {
             if (!modificationMatch.isVariable()) {
                 int aa = modificationMatch.getModificationSite();
                 if (!result.containsKey(aa)) {
@@ -1773,9 +1814,9 @@ public class Peptide extends ExperimentObject {
 
             tempMass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
-            if (modifications != null) {
+            if (modificationMatches != null) {
                 PTMFactory ptmFactory = PTMFactory.getInstance();
-                for (ModificationMatch ptmMatch : modifications) {
+                for (ModificationMatch ptmMatch : modificationMatches) {
                     tempMass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
                 }
             }

@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -62,6 +61,10 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch() {
     }
+    
+    public void setTheoreticProtein(ArrayList<String> theoreticProtein){
+        this.theoreticProtein = theoreticProtein;
+    }
 
     /**
      * Constructor for the protein match.
@@ -109,7 +112,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return the accessions of the possible theoretic proteins
      */
-    public ArrayList<String> getTheoreticProteinsAccessions() {
+    public ArrayList<String> getTheoreticProtein() {
         return theoreticProtein;
     }
 
@@ -168,7 +171,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKeys the peptide match keys
      */
-    public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
+    public void setPeptideMatchesKeys(ArrayList<String> peptideMatchKeys) {
         peptideMatchesKeys = peptideMatchKeys;
         setModified(true);
     }
@@ -218,9 +221,9 @@ public class ProteinMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        Collections.sort(theoreticProtein);
+        Collections.sort(getTheoreticProtein());
         StringBuilder result = new StringBuilder();
-        for (String accession : theoreticProtein) {
+        for (String accession : getTheoreticProtein()) {
             if (result.length() != 0) {
                 result.append(PROTEIN_KEY_SPLITTER);
             }
@@ -371,7 +374,7 @@ public class ProteinMatch extends IdentificationMatch {
         if (getKey().equals(proteinMatch.getKey())) {
             return false;
         }
-        for (String accession : proteinMatch.getTheoreticProteinsAccessions()) {
+        for (String accession : proteinMatch.getTheoreticProtein()) {
             if (!theoreticProtein.contains(accession)) {
                 return false;
             }

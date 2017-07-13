@@ -46,17 +46,15 @@ public class IdentificationDBTest extends TestCase {
             objectsDB.registerClass(VariantMatch.class);
             objectsDB.registerClass(Variant.class);
             objectsDB.registerClass(ModificationMatch.class);
+            
+            objectsDB.registerClass(ProteinMatch.class);
             //objectsDB.registerClass(PeptideAssumption.class);
             //objectsDB.registerClass(SpectrumMatch.class);
-            //objectsDB.registerClass(ProteinMatch.class);
             //objectsDB.registerClass(Charge.class);
             //objectsDB.registerClass(SpectrumIdentificationAssumption.class);
 
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
-            try {
-
-                System.out.println(objectsDB.createLongKey("PEPTIDE"));
-                
+            try {                
                 String parametersKey = "pepnovo_assumption_details";
                 String spectrumKey = "spectrum_file_cus_spectrum_title";
                 String peptideKey = "PEPTIDE";
@@ -67,35 +65,28 @@ public class IdentificationDBTest extends TestCase {
                 ArrayList<String> testProteins = new ArrayList<String>();
                 testProteins.add("test protein1");
                 testProteins.add("test protein2");
-                Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
-                peptide.setParentProteins(testProteins);
-                PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey());
-                idDB.addObject(testPeptideMatch.getKey(), testPeptideMatch);
                 
-                idDB.clearCache();
                 
-                testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
-                System.out.println("Key: " + testPeptideMatch.getKey());
-                Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
-                
-                /*
-                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
-                Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
-                peptide.setParentProteins(testProteins);
-                testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
-                idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
+                //SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+                //testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
+                //idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
-                peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+                Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 peptide.setParentProteins(testProteins);
                 PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey());
                 idDB.addObject(testPeptideMatch.getKey(), testPeptideMatch);
 
                 ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);
                 idDB.addObject(testProteinMatch.getKey(), testProteinMatch);
+                
+                
+                
+                idDB.clearCache();
 
-                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
-                Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
+                //testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                //Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
+                /*
                 HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
@@ -112,30 +103,27 @@ public class IdentificationDBTest extends TestCase {
                 ArrayList<String> proteins = new ArrayList<String>();
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
-                
-            System.out.println("huhu");
-                idDB.clearCache();
-            System.out.println("huhu");
 
-                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
-                assumptionsMap = testSpectrumMatch.getAssumptionsMap();
+                //testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                //assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
                 mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
                 Assert.assertTrue(mascotScores.size() == 1);
                 bestScore = mascotScores.get(0);
                 Assert.assertTrue(bestScore == 0.1);
-            System.out.println("huhu");
                 bestAssumptions = mascotAssumptions.get(bestScore);
                 bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
                 bestPeptide = bestAssumption.getPeptide();
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 1);
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(proteinKey));
+*/
 
                 testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
 
                 testProteinMatch = (ProteinMatch)idDB.retrieveObject(proteinKey);
+                System.out.println("----> " + testProteinMatch.getKey());
                 Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
                 double testScore = 12.3;
@@ -144,7 +132,6 @@ public class IdentificationDBTest extends TestCase {
                 idDB.addObject(parametersKey, testParameter);
                 testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(parametersKey);
                 Assert.assertTrue(testParameter.getRankScore()== testScore);
-*/
             } finally {
                 idDB.close();
             }

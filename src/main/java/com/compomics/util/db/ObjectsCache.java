@@ -285,7 +285,6 @@ public class ObjectsCache {
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
-            System.out.println("dadafoo");
             loadedObjectMutex.acquire();
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
@@ -293,7 +292,6 @@ public class ObjectsCache {
             }
             
             ListIterator<Long> listIterator = objectQueue.listIterator();
-            System.out.println("foo " + numLastEntries);
             for (int i = 0; i < numLastEntries; ++i){
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -315,13 +313,11 @@ public class ObjectsCache {
                 Object obj = entry.getObject();
                 if (!objectsDB.getIdMap().containsKey(key)){
                     ((IdObject)obj).setModified(false);
-                    System.out.println("storing " + obj.getClass().getSimpleName());
                     obj = objectsDB.getDB().save(obj);
                     entry.setObject(obj);
                     objectsDB.getIdMap().put(key, objectsDB.getDB().getIdentity(obj));
                 }
                 else if (((IdObject)obj).getModified()){
-                System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                     objectsDB.getDB().save(entry.getObject());
                 }

@@ -32,12 +32,18 @@ public class PeptideMatch extends IdentificationMatch {
      */
     private boolean isDecoy = false;
     
+    public boolean getIsDecoy(){
+        return isDecoy;
+    }
+    
+    public void setIsDecoy(boolean isDecoy){
+        this.isDecoy = isDecoy;
+    }
 
     /**
      * Constructor for the peptide match.
      */
     public PeptideMatch() {
-        System.out.println("naked");
     }
 
     @Override
@@ -64,7 +70,6 @@ public class PeptideMatch extends IdentificationMatch {
     public PeptideMatch(Peptide peptide, String matchKey) {
         theoreticPeptide = peptide;
         this.key = matchKey;
-        System.out.println("closed");
     }
 
     /**
@@ -93,6 +98,15 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public ArrayList<String> getSpectrumMatchesKeys() {
         return spectrumMatchesKeys;
+    }
+    
+    /**
+     * Sets the spectrum matches keys.
+     * 
+     * @param spectrumMatchesKeys the keys
+     */
+    public void setSpectrumMatchesKeys(ArrayList<String> spectrumMatchesKeys){
+        this.spectrumMatchesKeys = spectrumMatchesKeys;
     }
 
     /**

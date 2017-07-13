@@ -73,4 +73,12 @@ public abstract class ExperimentObject extends IdObject {
     public void clearParametersMap() {
         urParams = null;
     }
+    
+    public void setUrParams(HashMap<String, UrParameter> urParams){
+        this.urParams = urParams;
+    }
+    
+    public HashMap<String, UrParameter> getUrParams(){
+        return urParams;
+    }
 }

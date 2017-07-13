@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Protein;
@@ -15,7 +14,6 @@ import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.io.*;
 import java.sql.SQLException;
@@ -109,7 +107,6 @@ public class SequenceFactory {
      * Static method returning the instance of the factory.
      *
      * @return the instance of the factory
-     * @throws java.lang.Exception
      */
     public static SequenceFactory getInstance() {
         if (instance == null) {

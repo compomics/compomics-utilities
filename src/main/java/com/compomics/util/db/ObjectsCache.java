@@ -34,7 +34,7 @@ public class ObjectsCache {
     /**
      * Mutex for the edition of the object keys list.
      */
-    private Semaphore loadedObjectMutex = new Semaphore(1);
+    private final Semaphore loadedObjectMutex = new Semaphore(1);
     /**
      * Indicates whether the cache is read only.
      */
@@ -93,7 +93,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      *
      * @return the object of interest, null if not present in the cache
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public Object getObject(Long objectKey) throws InterruptedException {
         Object object;
@@ -217,6 +217,25 @@ public class ObjectsCache {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
     }
 
+    
+    /**
+     * Clears the cache and dumps everything into the database.
+     * 
+     *
+     * @throws IOException if an IOException occurs while writing to the
+     * database
+     * @throws SQLException if an SQLException occurs while writing to the
+     * database
+     * @throws java.lang.InterruptedException if a threading error occurs
+     * writing to the database
+     */
+    public void clearCache() throws IOException, SQLException, InterruptedException {
+        if (!readOnly) {
+            saveObjects(loadedObjects.size());
+        }
+    }
+    
+
     /**
      * Saves an entry in the database if modified and clears it from the cache.
      *
@@ -266,6 +285,7 @@ public class ObjectsCache {
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
+            System.out.println("dadafoo");
             loadedObjectMutex.acquire();
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
@@ -273,8 +293,7 @@ public class ObjectsCache {
             }
             
             ListIterator<Long> listIterator = objectQueue.listIterator();
-            
-            objectsDB.getDbMutex().acquire();
+            System.out.println("foo " + numLastEntries);
             for (int i = 0; i < numLastEntries; ++i){
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -294,24 +313,18 @@ public class ObjectsCache {
                 
                 CacheEntry entry = loadedObjects.get(key);
                 Object obj = entry.getObject();
-                
                 if (!objectsDB.getIdMap().containsKey(key)){
-                    // Check if record already in db
-                    String objectClassName = obj.getClass().getName();
-                    if (!objectsDB.getRegisteredClasses().contains(objectClassName)){
-                        objectsDB.getRegisteredClasses().add(objectClassName);
-                        objectsDB.getDB().getEntityManager().registerEntityClasses(obj.getClass().getPackage().getName());
-                    }
+                    System.out.println("storing " + obj.getClass().getSimpleName());
                     entry.setObject(objectsDB.getDB().save(entry.getObject()));
                 }
                 else if (((IdObject)obj).getModified()){
+                System.out.println("here2");
                     ((IdObject)obj).setModified(false);
                     objectsDB.getDB().save(entry.getObject());
                 }
                 
-                loadedObjects.remove(key);
+                if (clearEntries) loadedObjects.remove(key);
             }
-            objectsDB.getDbMutex().release();
             loadedObjectMutex.release();
             
             

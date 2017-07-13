@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 import org.apache.commons.math.MathException;
 
 /**
@@ -104,10 +103,6 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private Double minMz;
     /**
-     * Mutex for the setting of the attributes in cache.
-     */
-    private Semaphore mutex = new Semaphore(1);
-    /**
      * Cache for the intensity limit.
      */
     private Double intensityLimit = null;
@@ -195,7 +190,6 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double[][] getJFreePeakList() throws InterruptedException {
         if (jFreePeakList == null) {
-            mutex.acquire();
             if (jFreePeakList == null) {
                 double[] mz = new double[peakList.size()];
                 double[] intensity = new double[peakList.size()];
@@ -214,7 +208,6 @@ public abstract class Spectrum extends ExperimentObject {
                 jFreePeakList[4] = intensity;
                 jFreePeakList[5] = intensity;
             }
-            mutex.release();
         }
         return jFreePeakList;
     }
@@ -340,7 +333,6 @@ public abstract class Spectrum extends ExperimentObject {
         if (peakListAsString == null) {
 
             double[] mzValues = getOrderedMzValues();
-            mutex.acquire();
 
             StringBuilder sb = new StringBuilder();
             sb.append("[");
@@ -363,7 +355,6 @@ public abstract class Spectrum extends ExperimentObject {
             sb.append("]");
 
             peakListAsString = sb.toString();
-            mutex.release();
         }
 
         return peakListAsString;
@@ -409,7 +400,6 @@ public abstract class Spectrum extends ExperimentObject {
     public double[] getMzValuesAsArray() throws InterruptedException {
 
         if (mzValuesAsArray == null) {
-            mutex.acquire();
             if (mzValuesAsArray == null) {
                 mzValuesAsArray = new double[peakList.size()];
                 int counter = 0;
@@ -417,7 +407,6 @@ public abstract class Spectrum extends ExperimentObject {
                     mzValuesAsArray[counter++] = currentMz;
                 }
             }
-            mutex.release();
         }
 
         return mzValuesAsArray;
@@ -435,10 +424,8 @@ public abstract class Spectrum extends ExperimentObject {
         if (mzValuesOrderedAsArray == null) {
             getMzValuesAsArray();
             if (mzValuesOrderedAsArray == null) {
-                mutex.acquire();
                 mzValuesOrderedAsArray = mzValuesAsArray.clone();
                 Arrays.sort(mzValuesOrderedAsArray);
-                mutex.release();
             }
         }
         return mzValuesOrderedAsArray;
@@ -465,7 +452,6 @@ public abstract class Spectrum extends ExperimentObject {
     public double[] getIntensityValuesAsArray() throws InterruptedException {
 
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakList.size())) {
-            mutex.acquire();
             if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakList.size())) {
                 intensityValuesAsArray = new double[peakList.size()];
                 int counter = 0;
@@ -473,7 +459,6 @@ public abstract class Spectrum extends ExperimentObject {
                     intensityValuesAsArray[counter++] = currentPeak.intensity;
                 }
             }
-            mutex.release();
         }
 
         return intensityValuesAsArray;
@@ -491,8 +476,6 @@ public abstract class Spectrum extends ExperimentObject {
     public double[] getIntensityValuesNormalizedAsArray() throws InterruptedException {
 
         if (intensityValuesNormaizedAsArray == null) {
-
-            mutex.acquire();
 
             if (intensityValuesNormaizedAsArray == null) {
 
@@ -514,8 +497,6 @@ public abstract class Spectrum extends ExperimentObject {
                     }
                 }
             }
-
-            mutex.release();
         }
 
         return intensityValuesNormaizedAsArray;
@@ -535,8 +516,6 @@ public abstract class Spectrum extends ExperimentObject {
         if (mzAndIntensityAsArray == null) {
 
             double[] orderedMzValues = getOrderedMzValues();
-            mutex.acquire();
-
             if (mzAndIntensityAsArray == null) {
 
                 mzAndIntensityAsArray = new double[2][peakList.size()];
@@ -549,8 +528,6 @@ public abstract class Spectrum extends ExperimentObject {
                     counter++;
                 }
             }
-
-            mutex.release();
         }
 
         return mzAndIntensityAsArray;
@@ -568,8 +545,6 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (totalIntensity == null) {
 
-            mutex.acquire();
-
             if (totalIntensity == null) {
 
                 totalIntensity = 0.0;
@@ -578,8 +553,6 @@ public abstract class Spectrum extends ExperimentObject {
                     totalIntensity += currentPeak.intensity;
                 }
             }
-
-            mutex.release();
         }
 
         return totalIntensity;
@@ -597,8 +570,6 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (maxIntensity == null) {
 
-            mutex.acquire();
-
             if (maxIntensity == null) {
 
                 maxIntensity = 0.0;
@@ -609,8 +580,6 @@ public abstract class Spectrum extends ExperimentObject {
                     }
                 }
             }
-
-            mutex.release();
         }
 
         return maxIntensity;
@@ -628,7 +597,6 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (maxMz == null) {
 
-            mutex.acquire();
             if (maxMz == null) {
 
                 if (peakList.keySet().isEmpty()) {
@@ -637,8 +605,6 @@ public abstract class Spectrum extends ExperimentObject {
                     maxMz = Collections.max(peakList.keySet());
                 }
             }
-
-            mutex.release();
         }
 
         return maxMz;
@@ -656,8 +622,6 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (minMz == null) {
 
-            mutex.acquire();
-
             if (minMz == null) {
                 if (peakList.keySet().isEmpty()) {
                     minMz = 0.0;
@@ -665,8 +629,6 @@ public abstract class Spectrum extends ExperimentObject {
                     minMz = Collections.min(peakList.keySet());
                 }
             }
-
-            mutex.release();
         }
 
         return minMz;
@@ -846,8 +808,6 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (intensityPeakMap == null) {
 
-            mutex.acquire();
-
             if (intensityPeakMap == null) {
 
                 intensityPeakMap = new HashMap<Double, ArrayList<Peak>>(peakList.size());
@@ -865,8 +825,6 @@ public abstract class Spectrum extends ExperimentObject {
                     peaksAtIntensity.add(peak);
                 }
             }
-
-            mutex.release();
         }
 
         return intensityPeakMap;
@@ -925,11 +883,9 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public SimpleNoiseDistribution getIntensityLogDistribution() throws InterruptedException, MathException {
         if (binnedCumulativeFunction == null) {
-            mutex.acquire();
             if (binnedCumulativeFunction == null) {
                 binnedCumulativeFunction = new SimpleNoiseDistribution(peakList);
             }
-            mutex.release();
         }
         return binnedCumulativeFunction;
     }

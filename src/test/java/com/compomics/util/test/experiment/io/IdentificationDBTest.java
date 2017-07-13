@@ -2,11 +2,9 @@ package com.compomics.util.test.experiment.io;
 
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
-import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.identifications.Ms2Identification;
@@ -16,6 +14,7 @@ import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
+import com.orientechnologies.orient.core.db.record.ORecordLazyList;
 import junit.framework.Assert;
 
 import java.io.File;
@@ -23,6 +22,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 import junit.framework.TestCase;
 
 /**
@@ -38,6 +38,12 @@ public class IdentificationDBTest extends TestCase {
         path += "/src/test/resources/experiment/";
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB");
+            objectsDB.registerClass(Peptide.class);
+            objectsDB.registerClass(PeptideMatch.class);
+            objectsDB.registerClass(PeptideAssumption.class);
+            objectsDB.registerClass(SpectrumMatch.class);
+            objectsDB.registerClass(ProteinMatch.class);
+            objectsDB.registerClass(Charge.class);
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {
 
@@ -84,6 +90,10 @@ public class IdentificationDBTest extends TestCase {
                 ArrayList<String> proteins = new ArrayList<String>();
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
+                
+            System.out.println("huhu");
+                idDB.clearCache();
+            System.out.println("huhu");
 
                 testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
                 assumptionsMap = testSpectrumMatch.getAssumptionsMap();
@@ -93,6 +103,7 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(mascotScores.size() == 1);
                 bestScore = mascotScores.get(0);
                 Assert.assertTrue(bestScore == 0.1);
+            System.out.println("huhu");
                 bestAssumptions = mascotAssumptions.get(bestScore);
                 bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
                 bestPeptide = bestAssumption.getPeptide();

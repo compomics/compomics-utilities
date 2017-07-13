@@ -74,6 +74,8 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         this.peptide = aPeptide;
         super.identificationCharge = identificationCharge;
     }
+    
+    public PeptideAssumption(){}
 
     /**
      * Get the theoretic peptide.
@@ -85,7 +87,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     }
 
     @Override
-    public Double getTheoreticMass() {
+    public double getTheoreticMass() {
         return peptide.getMass();
     }
 }

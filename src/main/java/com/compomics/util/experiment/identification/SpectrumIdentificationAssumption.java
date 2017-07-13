@@ -34,7 +34,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * The (advocate specific) score used to rank this assumption.
      */
-    protected Double score;
+    protected double score;
     /**
      * The identification file.
      */
@@ -42,7 +42,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * The raw score as provided by the identification algorithm.
      */
-    protected Double rawScore;
+    protected double rawScore;
     /**
      * The individual amino acid scores. Null if not set.
      */
@@ -80,7 +80,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the score
      */
-    public Double getScore() {
+    public double getScore() {
         return score;
     }
 
@@ -126,14 +126,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the theoretic mass of the given assumption
      */
-    public abstract Double getTheoreticMass();
+    public abstract double getTheoreticMass();
 
     /**
      * Returns the theoretic m/z.
      *
      * @return the theoretic m/z
      */
-    public Double getTheoreticMz() {
+    public double getTheoreticMz() {
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
     }
 
@@ -151,7 +151,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * 
      * @return the precursor mass error (in ppm or Da)
      */
-    public Double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+    public double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 
@@ -183,7 +183,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the raw score as provided by the identification algorithm
      */
-    public Double getRawScore() {
+    public double getRawScore() {
         return rawScore;
     }
 
@@ -192,7 +192,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param rawScore the raw score as provided by the identification algorithm
      */
-    public void setRawScore(Double rawScore) {
+    public void setRawScore(double rawScore) {
         this.rawScore = rawScore;
     }
 

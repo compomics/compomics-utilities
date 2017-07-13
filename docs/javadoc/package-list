@@ -43,7 +43,6 @@ com.compomics.util.experiment.identification.peptide_fragmentation.models
 com.compomics.util.experiment.identification.protein_inference
 com.compomics.util.experiment.identification.protein_inference.executable
 com.compomics.util.experiment.identification.protein_inference.fm_index
-com.compomics.util.experiment.identification.protein_inference.proteintree
 com.compomics.util.experiment.identification.protein_sequences
 com.compomics.util.experiment.identification.protein_sequences.digestion
 com.compomics.util.experiment.identification.protein_sequences.digestion.iterators

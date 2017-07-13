@@ -44,6 +44,8 @@ public class Charge extends ExperimentObject {
         this.sign = sign;
         this.value = value;
     }
+    
+    public Charge(){}
 
     /**
      * Returns a string representing the charge. For example 2+.

@@ -24,10 +24,15 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the matches database
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with the matches database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a match from the database
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while retrieving the match
      */
     public PeptideMatchesIterator(Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this(null, identification, lazyLoading, waitingHandler, displayProgress);
@@ -43,10 +48,15 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the matches database
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with the matches database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a match from the database
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while retrieving the match
      */
     public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         super(keys, PeptideMatch.class.getSimpleName(), identification, lazyLoading, waitingHandler, displayProgress);

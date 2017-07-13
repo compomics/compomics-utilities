@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * This class models a peptide.
@@ -53,10 +52,6 @@ public class Peptide extends ExperimentObject {
      * The parent proteins.
      */
     private ArrayList<String> parentProteins = null;
-    /**
-     * Semaphore for the parent proteins.
-     */
-    private Semaphore proteinsMutex;
     /**
      * The modifications carried by the peptide.
      */
@@ -104,7 +99,6 @@ public class Peptide extends ExperimentObject {
         if (sanityCheck) {
             sanityCheck();
         }
-        proteinsMutex = new Semaphore(1);
     }
 
     /**
@@ -150,7 +144,6 @@ public class Peptide extends ExperimentObject {
         if (sanityCheck) {
             sanityCheck();
         }
-        proteinsMutex = new Semaphore(1);
     }
 
     /**
@@ -479,7 +472,6 @@ public class Peptide extends ExperimentObject {
      */
     public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        proteinsMutex.acquire();
         if (parentProteins == null) {
             ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
@@ -489,7 +481,6 @@ public class Peptide extends ExperimentObject {
             parentProteins = new ArrayList<String>(accessionsFound);
             Collections.sort(parentProteins);
         }
-        proteinsMutex.release();
     }
 
     /**
@@ -517,7 +508,6 @@ public class Peptide extends ExperimentObject {
      */
     public void clearParentProteins() {
         parentProteins = null;
-        proteinsMutex = new Semaphore(1);
     }
 
     /**

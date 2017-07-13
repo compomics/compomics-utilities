@@ -389,9 +389,46 @@ public abstract class Identification extends ExperimentObject {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws java.lang.ClassNotFoundException if class not found
      */
     public void removeObject(String key) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         objectsDB.removeObject(key);
+    }
+    
+    
+    
+    /**
+     * Clears the cache and dumps everything into the database.
+     * 
+     *
+     * @throws IOException if an IOException occurs while writing to the
+     * database
+     * @throws SQLException if an SQLException occurs while writing to the
+     * database
+     * @throws java.lang.InterruptedException if a threading error occurs
+     * writing to the database
+     */
+    public void clearCache() throws IOException, SQLException, InterruptedException {
+        objectsDB.clearCache();
+    }
+    
+    
+
+    /**
+     * Checks if database contains a certain object.
+     * 
+     * @param key the key of the object
+     * @return true if database contains a certain object otherwise false
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws java.lang.ClassNotFoundException if class not found
+     */
+    public boolean contains(String key) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+        return objectsDB.inDB(key);
     }
     
 
@@ -409,6 +446,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws java.lang.ClassNotFoundException if class not found
      */
     public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         objectsDB.removeObjects(keys, waitingHandler, displayProgress);
@@ -663,8 +701,10 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
      * @throws InterruptedException exception thrown if a threading error occurs
+     * @throws java.io.IOException exception thrown whenever an error occurred while
+     * reading the object in the database
      */
-    public void close() throws SQLException, InterruptedException {
+    public void close() throws SQLException, InterruptedException, IOException {
         objectsDB.close();
     }
     
@@ -755,10 +795,15 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PsmIterator(spectrumKeys, this, lazyLoading, waitingHandler, false);
@@ -772,10 +817,14 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public PsmIterator getPsmIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PsmIterator(this, lazyLoading, waitingHandler, false);
@@ -790,10 +839,14 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideMatchesIterator(peptideKeys, this, lazyLoading, waitingHandler, false);
@@ -807,10 +860,14 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideMatchesIterator(this, lazyLoading, waitingHandler, false);
@@ -825,10 +882,14 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new ProteinMatchesIterator(proteinKeys, this, lazyLoading, waitingHandler, false);
@@ -842,10 +903,14 @@ public abstract class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public ProteinMatchesIterator getProteinMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new ProteinMatchesIterator(this, lazyLoading, waitingHandler, false);

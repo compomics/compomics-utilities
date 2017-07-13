@@ -13,9 +13,9 @@ import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import org.apache.commons.io.FileUtils;
 
 /**
  * A database which can easily be used to store objects.
@@ -58,13 +58,14 @@ public class ObjectsDB implements Serializable {
      */
     OObjectDatabaseTx db = null;
     /**
-     * Set of already registered classes in orient db
-    **/
-    private final HashSet<String> registeredClasses = new HashSet<String>();
-    /**
      * HashMap to map hash IDs of entries into DB ids
      */
     private final HashMap<Long, ORID> idMap = new HashMap<Long, ORID>();
+    /**
+     * path of the database folder
+     */
+    private String dbFolder = null;
+    
     
     
     /**
@@ -83,7 +84,40 @@ public class ObjectsDB implements Serializable {
      * threading error occurred while establishing the connection
      */
     public ObjectsDB(String folder, String dbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        establishConnection(folder, dbName, false);
+        this(folder, dbName, true);
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param folder absolute path of the folder where to establish the database
+     * @param dbName name of the database
+     * @param overwrite overwriting old database
+     *
+     * @throws SQLException exception thrown whenever a problem occurred when
+     * establishing the connection to the database
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading error occurred while establishing the connection
+     */
+    public ObjectsDB(String folder, String dbName, boolean overwrite) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        File f = new File("/" + folder + "/" + dbName);
+        
+        if (!f.exists()){
+            if (!f.mkdirs()){
+                throw new IOException("cannot create database folder");
+            }
+        }
+        else if (overwrite) {
+            FileUtils.deleteDirectory(f);
+            f.mkdirs();
+        }
+        dbFolder = f.getAbsolutePath();
+        
+        establishConnection();
         objectsCache = new ObjectsCache(this);
         
     }
@@ -97,9 +131,11 @@ public class ObjectsDB implements Serializable {
         return dbMutex;
     }
     
-    
-    public HashSet<String> getRegisteredClasses(){
-        return registeredClasses;
+    public void registerClass(Class<?> cls){
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " registering " + cls.getSimpleName() + " class");
+        }
+        db.getEntityManager().registerEntityClasses(cls, false);
     }
     
     
@@ -401,8 +437,8 @@ public class ObjectsDB implements Serializable {
             System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
         }
         
-        dbMutex.acquire();
         Object obj = objectsCache.getObject(longKey);
+        dbMutex.acquire();
         if (obj == null){
             ORID orid = idMap.get(longKey);
             if (orid != null){
@@ -469,6 +505,21 @@ public class ObjectsDB implements Serializable {
         return num;
     }
     
+    
+    /**
+     * Clears the cache and dumps everything into the database.
+     * 
+     *
+     * @throws IOException if an IOException occurs while writing to the
+     * database
+     * @throws SQLException if an SQLException occurs while writing to the
+     * database
+     * @throws java.lang.InterruptedException if a threading error occurs
+     * writing to the database
+     */
+    public void clearCache() throws IOException, SQLException, InterruptedException {
+        objectsCache.clearCache();
+    }
     
     
     /**
@@ -734,12 +785,15 @@ public class ObjectsDB implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
      * @throws InterruptedException exception thrown if a threading error occurs
+     * @throws java.io.IOException exception thrown whenever an error occurred while
+     * writing the object
      */
-    public void close() throws SQLException, InterruptedException {
+    public void close() throws SQLException, InterruptedException, IOException {
         
         
         dbMutex.acquire();
         if (db != null) db.close();
+        FileUtils.deleteDirectory(new File(dbFolder));
         dbMutex.release();
 
     }
@@ -760,24 +814,13 @@ public class ObjectsDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public void establishConnection(String aDbFolder, String aDbName, boolean deleteOldDatabase) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         dbMutex.acquire();
-        /*
-        File parentFolder = new File(aDbFolder);
-        if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
+        String connectionString = "plocal:" + dbFolder;
+        if (debugInteractions){
+            System.out.println("Establishing DB at: " + connectionString);
         }
-        File dbFolder = new File(aDbFolder, dbName);
-        path = dbFolder.getAbsolutePath();
-        if (dbFolder.exists() && deleteOldDatabase) {
-
-            db.close();
-
-            DerbyUtil.closeConnection();
-            boolean deleted = Util.deleteDir(dbFolder);
-        }*/
-        String connectionString = "plocal:" + aDbFolder + "/" + aDbName;
         db = new OObjectDatabaseTx(connectionString);
         if (db.exists()) {
                 db = new OObjectDatabaseTx(connectionString).open("admin", "admin");

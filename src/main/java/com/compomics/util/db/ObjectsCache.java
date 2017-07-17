@@ -312,12 +312,14 @@ public class ObjectsCache {
                 CacheEntry entry = loadedObjects.get(key);
                 Object obj = entry.getObject();
                 if (!objectsDB.getIdMap().containsKey(key)){
+                    System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                     obj = objectsDB.getDB().save(obj);
                     entry.setObject(obj);
                     objectsDB.getIdMap().put(key, objectsDB.getDB().getIdentity(obj));
                 }
                 else if (((IdObject)obj).getModified()){
+                    System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                     objectsDB.getDB().save(entry.getObject());
                 }

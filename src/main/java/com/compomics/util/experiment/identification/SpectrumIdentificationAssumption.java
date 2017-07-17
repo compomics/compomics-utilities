@@ -67,7 +67,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param rank the rank of the PeptideAssumptio
      */
     public void setRank(int rank) {
-        rank = rank;
+        this.rank = rank;
     }
 
     /**
@@ -216,7 +216,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the amino acid scores
      */
     public ArrayList<double[]> getAminoAcidScores() {
-        return aminoAcidScores;
+        //return aminoAcidScores;
+        return null;
     }
 
     /**
@@ -227,6 +228,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param aminoAcidScores the amino acid scores
      */
     public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
-        this.aminoAcidScores = aminoAcidScores;
+        //this.aminoAcidScores = aminoAcidScores;
     }
 }

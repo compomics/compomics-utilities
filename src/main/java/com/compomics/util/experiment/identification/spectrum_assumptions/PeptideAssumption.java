@@ -19,7 +19,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     /**
      * The theoretic peptide.
      */
-    private Peptide peptide;
+    //private Peptide peptide;
 
     /**
      * Constructor for a peptide assumption.
@@ -35,7 +35,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param identificationFile the identification file
      */
     public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
-        this.peptide = aPeptide;
+        //this.peptide = aPeptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
@@ -55,7 +55,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * be known from the SearchEngine class)
      */
     public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score) {
-        this.peptide = aPeptide;
+        //this.peptide = aPeptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
@@ -70,8 +70,8 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param identificationCharge the charge used by the search engine for
      * identification
      */
-    public PeptideAssumption(Peptide aPeptide, Charge identificationCharge) {
-        this.peptide = aPeptide;
+    public PeptideAssumption(Peptide peptide, Charge identificationCharge) {
+        //this.peptide = peptide;
         super.identificationCharge = identificationCharge;
     }
     
@@ -83,15 +83,17 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        return peptide;
+        //return peptide;
+        return null;
     }
     
     public void setPeptide(Peptide peptide){
-        this.peptide = peptide;
+        //this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        return peptide.getMass();
+        //return peptide.getMass();
+        return 0;
     }
 }

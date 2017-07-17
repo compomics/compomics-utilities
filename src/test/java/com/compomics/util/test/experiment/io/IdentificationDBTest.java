@@ -1,15 +1,17 @@
 package com.compomics.util.test.experiment.io;
 
-import com.compomics.util.IdObject;
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.IdentificationMatch;
+import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.identifications.Ms2Identification;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
@@ -18,16 +20,14 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
-import com.orientechnologies.orient.core.db.record.ORecordLazyList;
 import junit.framework.Assert;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 import junit.framework.TestCase;
 
 /**
@@ -52,11 +52,12 @@ public class IdentificationDBTest extends TestCase {
             objectsDB.registerClass(ProteinMatch.class);
             
             objectsDB.registerClass(SpectrumMatch.class);
-            objectsDB.registerClass(SpectrumIdentificationAssumption.class);
+            objectsDB.registerClass(IdentificationMatch.class);
             objectsDB.registerClass(PeptideAssumption.class);
             objectsDB.registerClass(TagAssumption.class);
             objectsDB.registerClass(Charge.class);
             objectsDB.registerClass(Tag.class);
+            objectsDB.registerClass(TagComponent.class);
 
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {                
@@ -128,7 +129,6 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
 
                 testProteinMatch = (ProteinMatch)idDB.retrieveObject(proteinKey);
-                System.out.println("----> " + testProteinMatch.getKey());
                 Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
                 double testScore = 12.3;

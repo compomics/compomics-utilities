@@ -1621,7 +1621,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public Double getMass() {
+    public double getMass() {
         double mass = 0;
 
         for (int i = 0; i < length(); i++) {

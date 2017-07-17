@@ -22,7 +22,7 @@ public interface TagComponent {
      *
      * @return the mass of the tag component
      */
-    public Double getMass();
+    public double getMass();
 
     /**
      * Indicates whether another component is the same as the component of

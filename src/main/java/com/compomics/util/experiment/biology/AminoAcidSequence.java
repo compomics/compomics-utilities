@@ -1077,7 +1077,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     @Override
-    public Double getMass() {
+    public double getMass() {
         setSequenceStringBuilder(false);
         double mass = 0;
         for (int i = 0; i < length(); i++) {

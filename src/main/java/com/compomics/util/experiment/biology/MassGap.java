@@ -51,7 +51,7 @@ public class MassGap extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public Double getMass() {
+    public double getMass() {
         return value;
     }
 

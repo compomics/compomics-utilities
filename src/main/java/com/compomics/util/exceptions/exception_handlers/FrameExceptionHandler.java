@@ -41,7 +41,7 @@ public class FrameExceptionHandler extends ExceptionHandler {
             if (getExceptionType(e).equals("Protein not found")) {
                 JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
                         e.getLocalizedMessage() + "<br>"
-                        + "Please see the <a href=\"http://compomics.github.io/searchgui/wiki/databasehelp.html\">Database help page</a>.<br>"
+                        + "Please see the <a href=\"http://compomics.github.io/projects/searchgui/wiki/databasehelp.html\">Database help page</a>.<br>"
                         + "This message will appear only once."),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else if (getExceptionType(e).equals("Serialization")) {

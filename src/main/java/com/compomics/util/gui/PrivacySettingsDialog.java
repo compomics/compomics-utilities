@@ -221,7 +221,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/PrivacySettingsHelp.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 normalIcon,
-                "Privacy Settings Help", 500, 100);
+                "Privacy Settings - Help", 500, 100);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 

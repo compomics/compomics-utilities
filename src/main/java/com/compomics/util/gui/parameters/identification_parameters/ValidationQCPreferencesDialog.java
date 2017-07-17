@@ -2,8 +2,10 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.ValidationQCPreferences;
 import java.awt.Dialog;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +17,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
 
+    /**
+     * The parent frame.
+     */
+    private java.awt.Frame parentFrame;
     /**
      * A parent handling the edition of filters.
      */
@@ -47,16 +53,17 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     /**
      * Creates a new ValidationQCPreferencesDialog with a frame as owner.
      *
-     * @param parent the parent frame
+     * @param parentFrame the parent frame
      * @param validationQCPreferencesDialogParent a parent handling the edition
      * of filters
      * @param validationQCPreferences the validation QC preferences
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ValidationQCPreferencesDialog(java.awt.Frame parent, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
-        super(parent, true);
+    public ValidationQCPreferencesDialog(java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
+        super(parentFrame, true);
         initComponents();
 
+        this.parentFrame = parentFrame;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
 
@@ -89,7 +96,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
 
         setUpGUI(validationQCPreferences);
 
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
 
@@ -97,16 +104,17 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * Creates a new ValidationQCPreferencesDialog with a dialog as owner.
      *
      * @param owner the dialog owner
-     * @param parent the parent frame
+     * @param parentFrame the parent frame
      * @param validationQCPreferencesDialogParent a parent handling the edition
      * of filters
      * @param validationQCPreferences the validation QC preferences
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ValidationQCPreferencesDialog(Dialog owner, java.awt.Frame parent, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
+    public ValidationQCPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
         super(owner, true);
         initComponents();
 
+        this.parentFrame = parentFrame;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
 
@@ -211,6 +219,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         helpLbl = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        helpJButton = new javax.swing.JButton();
 
         addPsmFilterMenuItem.setText("Add Filter");
         addPsmFilterMenuItem.setToolTipText("Add a new filter");
@@ -291,7 +300,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         proteinPopupMenu.add(removeProteinFilterMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Validation QC Filters (beta)");
+        setTitle("Quality Control (beta)");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -305,7 +314,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
 
         dbCheck.setText("Hits obtained on small databases (<" + SequenceFactory.minProteinCount + " protein sequences)");
         dbCheck.setIconTextGap(15);
-        dbCheck.setOpaque(false);
         dbCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dbCheckActionPerformed(evt);
@@ -314,7 +322,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
 
         nTargetCheck.setText("Datasets with a low number of target hits");
         nTargetCheck.setIconTextGap(15);
-        nTargetCheck.setOpaque(false);
         nTargetCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nTargetCheckActionPerformed(evt);
@@ -325,7 +332,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
 
         confidenceCheck.setText("Hits near the confidence threshold (margin= 1 x resolution)");
         confidenceCheck.setIconTextGap(15);
-        confidenceCheck.setOpaque(false);
         confidenceCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 confidenceCheckActionPerformed(evt);
@@ -365,7 +371,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         proteinFiltersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Filters"));
         proteinFiltersPanel.setOpaque(false);
 
-        proteinScrollPane.setOpaque(false);
         proteinScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 proteinScrollPaneMouseReleased(evt);
@@ -400,7 +405,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         peptideFiltersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Peptide Filters"));
         peptideFiltersPanel.setOpaque(false);
 
-        peptideScrollPane.setOpaque(false);
         peptideScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 peptideScrollPaneMouseReleased(evt);
@@ -421,7 +425,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             peptideFiltersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(peptideFiltersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(peptideScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+                .addComponent(peptideScrollPane)
                 .addContainerGap())
         );
         peptideFiltersPanelLayout.setVerticalGroup(
@@ -435,7 +439,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         psmFiltersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PSM Filters"));
         psmFiltersPanel.setOpaque(false);
 
-        psmScrollPane.setOpaque(false);
         psmScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 psmScrollPaneMouseReleased(evt);
@@ -484,6 +487,28 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             }
         });
 
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.setFocusable(false);
+        helpJButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpJButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout validationQCPreferencesDialogPanelLayout = new javax.swing.GroupLayout(validationQCPreferencesDialogPanel);
         validationQCPreferencesDialogPanel.setLayout(validationQCPreferencesDialogPanelLayout);
         validationQCPreferencesDialogPanelLayout.setHorizontalGroup(
@@ -492,16 +517,18 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(validationQCPreferencesDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(validationQCPreferencesDialogPanelLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(10, 10, 10)
+                        .addComponent(helpJButton)
+                        .addGap(18, 18, 18)
                         .addComponent(helpLbl)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addComponent(generalSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peptideFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(psmFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(proteinFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(proteinFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(peptideFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         validationQCPreferencesDialogPanelLayout.setVerticalGroup(
@@ -516,10 +543,11 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(psmFiltersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(validationQCPreferencesDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
+                .addGroup(validationQCPreferencesDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(helpJButton)
+                    .addComponent(helpLbl)
                     .addComponent(okButton)
-                    .addComponent(helpLbl))
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -808,6 +836,38 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         userInput = true;
     }//GEN-LAST:event_confidenceCheckActionPerformed
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/QualityControlPreferences.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+            "Quality Control - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPeptideFilterMenuItem;
     private javax.swing.JMenuItem addProteinFilterMenuItem;
@@ -819,6 +879,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private javax.swing.JMenuItem editProteinFilterMenuItem;
     private javax.swing.JMenuItem editPsmFilterMenuItem;
     private javax.swing.JPanel generalSettingsPanel;
+    private javax.swing.JButton helpJButton;
     private javax.swing.JLabel helpLbl;
     private javax.swing.JLabel markDoubtfulLabel;
     private javax.swing.JCheckBox nTargetCheck;

@@ -2,8 +2,10 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import java.awt.Dialog;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +26,10 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
  */
 public class PsmScoringSettingsDialog extends javax.swing.JDialog {
 
+    /**
+     * The parent frame.
+     */
+    private java.awt.Frame parentFrame;
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -64,6 +70,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -83,6 +90,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
         super(owner, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         populateGUI(psmScoringPreferences);
@@ -219,6 +227,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         };
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        helpJButton = new javax.swing.JButton();
 
         addJMenuItem.setText("Add");
         addJMenuItem.setEnabled(false);
@@ -239,7 +248,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         psmScoresPopupMenu.add(removeJMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("PSM Scoring Settings");
+        setTitle("PSM Scoring");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -267,7 +276,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
             scoresSelectionJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(scoresSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(psmScoresJScrollPane)
+                .addComponent(psmScoresJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                 .addContainerGap())
         );
         scoresSelectionJPanelLayout.setVerticalGroup(
@@ -292,6 +301,28 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
             }
         });
 
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.setFocusable(false);
+        helpJButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpJButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -300,7 +331,9 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 489, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(helpJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
@@ -313,9 +346,10 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(scoresSelectionJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(helpJButton)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -416,10 +450,43 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         spectrumMatchingScores.remove(advocateIndex);
     }//GEN-LAST:event_removeJMenuItemActionPerformed
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/PsmScoringPreferences.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+            "PSM Scoring - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addJMenuItem;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton helpJButton;
     private javax.swing.JButton okButton;
     private javax.swing.JScrollPane psmScoresJScrollPane;
     private javax.swing.JTable psmScoresJTable;

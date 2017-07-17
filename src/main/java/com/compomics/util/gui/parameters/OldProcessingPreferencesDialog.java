@@ -634,7 +634,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(this, getClass().getResource("/helpFiles/ProcessingPreferences.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                null, "Processing Preference Help");
+                null, "Processing - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

@@ -22,9 +22,9 @@ public class EnsemblVersion {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
         if (ensemblGenomeDivision != null) {
-            return 34;
+            return 36;
         } else {
-            return 87;
+            return 89;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released
@@ -91,7 +91,7 @@ public class EnsemblVersion {
 //            case metazoa:
 //                return "metazoa_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
             case fungi:
-                return "fungi_mart";
+                return "fungal_mart";
             case plants:
                 return "plants_mart";
             case protists:

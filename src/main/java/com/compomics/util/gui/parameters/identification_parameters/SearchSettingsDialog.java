@@ -190,7 +190,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         formComponentResized(null);
         setLocationRelativeTo(parentFrame);
 
-        String dialogTitle = "Search Settings";
+        String dialogTitle = "Spectrum Matching";
         if (settingsName != null && settingsName.length() > 0) {
             dialogTitle += " - " + settingsName;
         }
@@ -255,7 +255,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         formComponentResized(null);
         setLocationRelativeTo(owner);
 
-        String dialogTitle = "Search Settings";
+        String dialogTitle = "Spectrum Matching";
         if (settingsName != null && settingsName.length() > 0) {
             dialogTitle += " - " + settingsName;
         }
@@ -463,7 +463,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         openDialogHelpJButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Search Settings");
+        setTitle("Spectrum Matching");
         setMinimumSize(new java.awt.Dimension(700, 650));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -1635,7 +1635,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/SearchSettingsDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 normalIcon,
-                "Search Settings Help", 500, 100);
+                "Spectrum Matching - Help", 500, 100);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButton1ActionPerformed
 

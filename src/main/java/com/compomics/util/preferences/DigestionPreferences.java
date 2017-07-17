@@ -377,7 +377,7 @@ public class DigestionPreferences implements Serializable {
         String newLine = System.getProperty("line.separator");
         if (!defaultPreferences.isSameAs(this)) {
             stringBuilder.append("Digestion: ");
-            switch (cleavagePreference) {
+            switch (cleavagePreference) { // @TODO: can be null..?
                 case wholeProtein:
                     stringBuilder.append("Whole Protein").append(newLine);
                     break;

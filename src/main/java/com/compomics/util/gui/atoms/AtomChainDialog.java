@@ -119,14 +119,12 @@ public class AtomChainDialog extends javax.swing.JDialog {
                     ArrayList<Integer> tempList = new ArrayList<Integer>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                } else {
-                    if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                                atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                        ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
-                        tempList.add(tempAtom.getIsotope());
-                        atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                    }
+                } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
+                            atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                    ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
+                    tempList.add(tempAtom.getIsotope());
+                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 }
             }
         }
@@ -141,14 +139,12 @@ public class AtomChainDialog extends javax.swing.JDialog {
                     ArrayList<Integer> tempList = new ArrayList<Integer>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                } else {
-                    if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                                -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                        ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
-                        tempList.add(tempAtom.getIsotope());
-                        atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                    }
+                } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
+                            -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                    ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
+                    tempList.add(tempAtom.getIsotope());
+                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 }
             }
         }
@@ -220,11 +216,17 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 }
             }
 
-            if (atomChainRemoved.size() > 0) {
-                compositionTxt.setText(atomChainAdded.toString() + " - " + atomChainRemoved.toString());
-            } else {
-                compositionTxt.setText(atomChainAdded.toString());
+            String addition = "";
+            if (atomChainAdded.size() > 0) {
+                addition = atomChainAdded.toString();
             }
+            String deletion = "";
+            if (atomChainRemoved.size() > 0) {
+                deletion = "-" + atomChainRemoved.toString();
+            }
+            String temp = addition + " " + deletion;
+            compositionTxt.setText(temp.trim());
+
             massTxt.setText(Util.roundDouble(atomChainAdded.getMass() - atomChainRemoved.getMass(), 6) + " Da");
         }
     }
@@ -516,7 +518,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/AtomChainDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Help - Atom Composition", 500, 10);
+                "Atom Composition - Help", 500, 10);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

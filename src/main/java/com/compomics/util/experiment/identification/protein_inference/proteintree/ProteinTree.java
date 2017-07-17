@@ -373,10 +373,10 @@ public class ProteinTree implements PeptideMapper {
 
             if (waitingHandler != null && waitingHandler.isReport()) {
                 waitingHandler.appendReport(report, true, true);
-                waitingHandler.appendReport("    See http://compomics.github.io/compomics-utilities/wiki/proteininference.html.", true, true);
+                waitingHandler.appendReport("    See http://compomics.github.io/projects/compomics-utilities/wiki/proteininference.html.", true, true);
             } else {
                 System.out.println(report);
-                System.out.println("    See http://compomics.github.io/compomics-utilities/wiki/proteininference.html.");
+                System.out.println("    See http://compomics.github.io/projects/compomics-utilities/wiki/proteininference.html.");
             }
         }
 

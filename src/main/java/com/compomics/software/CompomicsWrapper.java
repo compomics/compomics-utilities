@@ -119,10 +119,8 @@ public class CompomicsWrapper {
                     } else {
                         throw new FileNotFoundException(folder.getAbsolutePath() + " not found!");
                     }
-                } else {
-                    if (!new File(folder.getAbsolutePath(), "JavaOptions.txt").exists()) {
-                        copyDefaultJavaOptionsFile(folder);
-                    }
+                } else if (!new File(folder.getAbsolutePath(), "JavaOptions.txt").exists()) {
+                    copyDefaultJavaOptionsFile(folder);
                 }
                 File debugOutput = new File(folder, "startup.log");
                 FileWriter fw = new FileWriter(debugOutput);
@@ -343,7 +341,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("Failed to create the Java virtual machine.<br><br>"
                                         + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                        + "Then go to <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
+                                        + "Then go to <a href=\"http://compomics.github.io/projects/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
@@ -362,7 +360,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("An error occurred when starting the tool.<br><br>"
                                         + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                        + "Then go to <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
+                                        + "Then go to <a href=\"http://compomics.github.io/projects/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
                     }
 
@@ -473,7 +471,7 @@ public class CompomicsWrapper {
             // html content 
             JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
                     + toolName + " works best with Java 64 bit.<br><br>"
-                    + "See <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java Troubleshooting</a> for more details."
+                    + "See <a href=\"http://compomics.github.io/projects/compomics-utilities/wiki/javatroubleshooting.html\">Java Troubleshooting</a> for more details."
                     + "</body></html>");
 
             // handle link events 
@@ -563,11 +561,14 @@ public class CompomicsWrapper {
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
-                            
-                            // incrementing the counter for a PeptideShaker update 
-                            if (toolName.equals("PeptideShaker")) Util.sendGAUpdate("UA-36198780-1", "update", "peptide-shaker");
-                            else if (toolName.equals("SearchGUI")) Util.sendGAUpdate("UA-36198780-2", "update", "searchgui");
-                            
+
+                            // incrementing the counter for a PeptideShaker or SearchGUI update 
+                            if (toolName.equals("PeptideShaker")) {
+                                Util.sendGAUpdate("UA-36198780-1", "update", "peptide-shaker");
+                            } else if (toolName.equals("SearchGUI")) {
+                                Util.sendGAUpdate("UA-36198780-2", "update", "searchgui");
+                            }
+
                             if (exitJavaOnCancel) {
                                 System.exit(0);
                             }
@@ -911,11 +912,9 @@ public class CompomicsWrapper {
                         && (new File(tempLocation, "java.exe").exists() || new File(tempLocation, "java").exists())) {
                     javaHome = tempLocation;
                     usingStandardJavaHome = false;
-                } else {
-                    if (firstTry) {
-                        JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
-                                + "Using default Java home.", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
-                    }
+                } else if (firstTry) {
+                    JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
+                            + "Using default Java home.", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
                 }
 
                 b.close();

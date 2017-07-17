@@ -5,7 +5,6 @@ import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
@@ -813,9 +812,14 @@ public class SequenceFactory {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
 
+                // check accessions for quotation marks
+                if (accession.lastIndexOf("'") != -1 || accession.lastIndexOf("\"") != -1) {
+                    throw new IllegalArgumentException("Accession numbers cannot contain quotation marks: \'" + accession + "\'!\nPlease check your FASTA file.");
+                }
+
                 // check if the accession number is unique
                 if (indexes.containsKey(accession)) {
-                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check your FASTA file.");
                 }
 
                 indexes.put(accession, index);

@@ -59,7 +59,7 @@ public class MgfReader {
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
+
             if (line.startsWith("BEGIN IONS")) {
                 // reset the spectrum details
                 insideSpectrum = true;
@@ -238,7 +238,7 @@ public class MgfReader {
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
+
             if (line.equals("BEGIN IONS")) {
                 insideSpectrum = true;
                 chargeTagFound = false;
@@ -252,7 +252,7 @@ public class MgfReader {
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
-                
+
                 title = line.substring(line.indexOf('=') + 1);
 
                 try {
@@ -691,7 +691,7 @@ public class MgfReader {
                                         }
                                         bw.write(i + "+");
                                     }
-                                    
+
                                     bw.write(lineBreak);
                                     chargeFound = true;
 
@@ -700,7 +700,7 @@ public class MgfReader {
                                 }
                             }
                         }
-                        
+
                         bw.write(line);
                         bw.write(lineBreak);
                     }
@@ -971,6 +971,11 @@ public class MgfReader {
 
             while ((line = readBufferedRandomAccessFile.getNextLine()) != null) {
 
+                // fix for lines ending with \r
+                if (line.endsWith("\r")) {
+                    line = line.replace("\r", "");
+                }
+
                 if (line.startsWith("BEGIN IONS")) {
 
                     spectrumCounter++;
@@ -1059,7 +1064,7 @@ public class MgfReader {
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
+
             if (line.startsWith("BEGIN IONS")) {
                 insideSpectrum = true;
                 spectrum = new HashMap<Double, Peak>();
@@ -1222,12 +1227,12 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
-            
+
             // fix for lines ending with \r
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
+
             if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1);
                 try {

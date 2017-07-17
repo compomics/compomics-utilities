@@ -129,7 +129,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Ion Type"/>
+                <TitledBorder title="Ion Types"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -197,42 +197,36 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="a-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="bBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="b-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="c-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="xBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="x-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="yBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="y-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="zBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="z-ion"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="precursorBox">
@@ -240,7 +234,6 @@
                 <Property name="text" type="java.lang.String" value="Precursor"/>
                 <Property name="toolTipText" type="java.lang.String" value="Precursor ions"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="immoniumBox">
@@ -248,7 +241,6 @@
                 <Property name="text" type="java.lang.String" value="Immonium"/>
                 <Property name="toolTipText" type="java.lang.String" value="Immonium ions"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="reporterBox">
@@ -256,7 +248,6 @@
                 <Property name="text" type="java.lang.String" value="Reporter"/>
                 <Property name="toolTipText" type="java.lang.String" value="Report ions"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="relatedBox">
@@ -264,7 +255,6 @@
                 <Property name="text" type="java.lang.String" value="Related"/>
                 <Property name="toolTipText" type="java.lang.String" value="Related ions"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -432,7 +422,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="High Resolution"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="intensityThresholdCmb">

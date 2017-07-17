@@ -167,11 +167,13 @@ public class PtmDialog extends javax.swing.JDialog {
         reporterIonTableToolTips = new ArrayList<String>();
         reporterIonTableToolTips.add(null);
         reporterIonTableToolTips.add("Reporter Ion Name");
+        reporterIonTableToolTips.add("Reporter Ion Composition");
         reporterIonTableToolTips.add("Reporter Ion Mass (m/z)");
 
         neutralLossesTableToolTips = new ArrayList<String>();
         neutralLossesTableToolTips.add(null);
         neutralLossesTableToolTips.add("Neutral Loss Name");
+        neutralLossesTableToolTips.add("Neutral Loss Composition");
         neutralLossesTableToolTips.add("Neutral Loss Mass");
         neutralLossesTableToolTips.add("Fixed Neutral Loss");
 
@@ -209,7 +211,7 @@ public class PtmDialog extends javax.swing.JDialog {
             }
             String deletion = "";
             if (atomChainRemoved != null) {
-                deletion = atomChainRemoved.toString();
+                deletion = "-" + atomChainRemoved.toString();
             }
             String temp = addition + " " + deletion;
             compositionTxt.setText(temp.trim());
@@ -1164,7 +1166,7 @@ public class PtmDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(this, getClass().getResource("/helpFiles/PtmDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                null, "Modification Help");
+                null, "New Modification - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 
@@ -1368,7 +1370,17 @@ public class PtmDialog extends javax.swing.JDialog {
             if (!atomChainDialog.isCanceled()) {
                 atomChainAdded = atomChainDialog.getAtomChainAdded();
                 atomChainRemoved = atomChainDialog.getAtomChainRemoved();
-                compositionTxt.setText((atomChainAdded.toString() + " " + atomChainRemoved.toString()).trim());
+                
+                String addition = "";
+                if (atomChainAdded.size() > 0) {
+                    addition = atomChainAdded.toString();
+                }
+                String deletion = "";
+                if (atomChainRemoved.size() > 0) {
+                    deletion = "-" + atomChainRemoved.toString();
+                }
+                String temp = addition + " " + deletion;
+                compositionTxt.setText(temp.trim());
             }
 
             validateInput(false);

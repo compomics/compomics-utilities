@@ -995,7 +995,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/ModificationEditor.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Help - Modifications", 500, 10);
+                "Modifications - Help", 500, 10);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_modificationsHelpJButtonActionPerformed
 

@@ -55,7 +55,7 @@ The [Computational Omics and Systems Biology Group](http://www.compomics.com) de
 
 ## Using compomics-utilities ##
 
-For example code and demos showing how the **compomics-utilities** library can be used in your project see [Examples](https://github.com/compomics/compomics-utilities/wiki/Examples). Also check the [JavaDoc](http://genesis.ugent.be/maven2/com/compomics/utilities/javadoc/).
+For example code and demos showing how the **compomics-utilities** library can be used in your project see [Examples](https://github.com/compomics/compomics-utilities/wiki/Examples). Also check the [JavaDoc](http://compomics.github.io/compomics-utilities/javadoc/).
 
 [Go to top of page](#compomics-utilities)
 
@@ -67,7 +67,7 @@ We strongly recommend [Maven](http://maven.apache.org) when using compomics-util
 
 All compomics-utilities builds are available [here](http://genesis.ugent.be/maven2/com/compomics/utilities/).
 
-See also the [JavaDoc](http://genesis.ugent.be/maven2/com/compomics/utilities/javadoc/).
+See also the [JavaDoc](http://compomics.github.io/compomics-utilities/javadoc/).
 
 If you for some reason cannot use Maven and need a complete build of compomics-utilities, please let us know and we will send you the latest build as a zip file.
 

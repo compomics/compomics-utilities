@@ -61,7 +61,7 @@ public class TestHeader extends TestCase {
         final String halobacterium = ">OE1007R (OE1007R) [del] Predicted orf (overlaps another ORF)";
         final String chlamydia = ">C.tr_L2_353 [492222 - 493658] | Chlamydia trachomatis LGV2";
         final String chlamydia2 = ">C_trachomatis_L2_1 [1 - 1014]| Porphobilinogen Synthase [Chlamydia trachomatis D/UW-3/CX]";
-        final String mycobacterium = "> M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
+        final String mycobacterium = ">M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
         final String drosophila = ">CG11023-PA pep:known chromosome:DROM3B:2L:7529:9491:1 gene:CG11023 transcript:CG11023-RA";
         final String sgd = ">YHR159W YHR159W SGDID:S000001202, Chr VIII from 417552-419066, Uncharacterized ORF, \"Putative protein of unknown function; green fluorescent protein (GFP)-fusion protein localizes to the cytoplasm; potential Cdc28p substrate\"";
         final String generic = ">NP0002A (NP0002A) hypothetical protein";
@@ -193,7 +193,7 @@ public class TestHeader extends TestCase {
 
         // The mycobacterium tuberculosis header.
         h = Header.parseFromFASTA(mycobacterium);
-        Assert.assertEquals(" M. tub.H37Rv", h.getID());
+        Assert.assertEquals("M. tub.H37Rv", h.getID());
         Assert.assertEquals("Rv1963c", h.getAccession());
         Assert.assertEquals("Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R", h.getDescription());
         Assert.assertTrue(h.getForeignAccession() == null);
@@ -495,7 +495,7 @@ public class TestHeader extends TestCase {
         final String halobacterium = ">OE1007R (OE1007R) [del] Predicted orf (overlaps another ORF)";
         final String chlamydia = ">C.tr_L2_353 [492222 - 493658] | Chlamydia trachomatis LGV2";
         final String chlamydia2 = ">C_trachomatis_L2_1 [1 - 1014]| Porphobilinogen Synthase [Chlamydia trachomatis D/UW-3/CX]";
-        final String mycobacterium = "> M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
+        final String mycobacterium = ">M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
         final String drosophila = ">CG11023-PA pep:known chromosome:DROM3B:2L:7529:9491:1 gene:CG11023 transcript:CG11023-RA";
         final String sgd = ">YHR159W YHR159W SGDID:S000001202, Chr VIII from 417552-419066, Uncharacterized ORF, \"Putative protein of unknown function; green fluorescent protein (GFP)-fusion protein localizes to the cytoplasm; potential Cdc28p substrate\"";
         final String spFASTA90 = ">P19084|11S3_HELAN 11S globulin seed storage protein G3 precursor (Helianthinin G3) [Contains: 11S globulin seed storage protein G3 acidic chain; 11S globulin seed storage protein G3 basic chain] - Helianthus annuus (Common sunflower)";
@@ -519,7 +519,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals("OE1007R", Header.parseFromFASTA(halobacterium).getCoreHeader());
         Assert.assertEquals("C.tr_L2_353", Header.parseFromFASTA(chlamydia).getCoreHeader());
         Assert.assertEquals("C_trachomatis_L2_1", Header.parseFromFASTA(chlamydia2).getCoreHeader());
-        Assert.assertEquals(" M. tub.H37Rv|Rv1963c", Header.parseFromFASTA(mycobacterium).getCoreHeader());
+        Assert.assertEquals("M. tub.H37Rv|Rv1963c", Header.parseFromFASTA(mycobacterium).getCoreHeader());
         Assert.assertEquals("CG11023-PA", Header.parseFromFASTA(drosophila).getCoreHeader());
         Assert.assertEquals("YHR159W", Header.parseFromFASTA(sgd).getCoreHeader());
         Assert.assertEquals("AT1G08520.1", Header.parseFromFASTA(tair).getCoreHeader());
@@ -1105,7 +1105,7 @@ public class TestHeader extends TestCase {
         final String halobacterium = ">OE1007R (OE1007R) [del] Predicted orf (overlaps another ORF)";
         final String chlamydia = ">C.tr_L2_353 [492222 - 493658] | Chlamydia trachomatis LGV2";
         final String chlamydia2 = ">C_trachomatis_L2_1 [1 - 1014]| Porphobilinogen Synthase [Chlamydia trachomatis D/UW-3/CX]";
-        final String mycobacterium = "> M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
+        final String mycobacterium = ">M. tub.H37Rv|Rv1963c|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R";
         final String drosophila = ">CG11023-PA pep:known chromosome:DROM3B:2L:7529:9491:1 gene:CG11023 transcript:CG11023-RA";
         final String sgd = ">YHR159W YHR159W SGDID:S000001202, Chr VIII from 417552-419066, Uncharacterized ORF, \"Putative protein of unknown function; green fluorescent protein (GFP)-fusion protein localizes to the cytoplasm; potential Cdc28p substrate\"";
         final String spFASTA90 = ">P19084|11S3_HELAN 11S globulin seed storage protein G3 precursor (Helianthinin G3) [Contains: 11S globulin seed storage protein G3 acidic chain; 11S globulin seed storage protein G3 basic chain] - Helianthus annuus (Common sunflower)";
@@ -1223,9 +1223,9 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(49, h9bis.getEndLocation());
 
         h10.setLocation(42, 49);
-        Assert.assertEquals(" M. tub.H37Rv|Rv1963c (42-49)", h10.getCoreHeader());
-        Assert.assertEquals("> M. tub.H37Rv|Rv1963c (42-49)|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R", h10.getAbbreviatedFASTAHeader());
-        Assert.assertEquals("> M. tub.H37Rv|Rv1963c (42-49)|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R", h10.toString());
+        Assert.assertEquals("M. tub.H37Rv|Rv1963c (42-49)", h10.getCoreHeader());
+        Assert.assertEquals(">M. tub.H37Rv|Rv1963c (42-49)|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R", h10.getAbbreviatedFASTAHeader());
+        Assert.assertEquals(">M. tub.H37Rv|Rv1963c (42-49)|Mce3R: 406 aa - PROBABLE TRANSCRIPTIONAL REPRESSOR (PROBABLY TETR-FAMILY) MCE3R", h10.toString());
         Assert.assertEquals(42, h10.getStartLocation());
         Assert.assertEquals(49, h10.getEndLocation());
 

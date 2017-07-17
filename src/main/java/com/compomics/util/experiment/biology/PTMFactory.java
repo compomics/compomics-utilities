@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.0.json";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.1.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -1686,6 +1686,18 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
+        // Dimethylation of K 2H4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "Dimethylation of K 2H(4)";
+        ptm = new PTM(PTM.MODAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
         // Dimethylation of K 2H6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
@@ -1696,6 +1708,19 @@ public class PTMFactory implements Serializable {
         ptmName = "Dimethylation of K 2H(6)";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291", "Dimethyl:2H(6)", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+         // Dimethylation of K 2H(6) 13C(2)
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "Dimethylation of K 2H(6) 13C(2)";
+        ptm = new PTM(PTM.MODAA, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1733,19 +1758,6 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = null;
         ptmName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
         ptm = new PTM(PTM.MODNP, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-
-        // Dimethylation of K 2H(6) 13C(2)
-        atomChainAdded = new AtomChain();
-        atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
-        atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
-        atomChainRemoved = new AtomChain();
-        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Dimethylation of K 2H(6) 13C(2)";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -3386,8 +3398,21 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         ptmName = "Citrullination of R";
         ptm = new PTM(PTM.MODAA, ptmName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
         
+        // S-nitrosylation of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        ptmName = "S-nitrosylation";
+        ptm = new PTM(PTM.MODAA, ptmName, "nitrosyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
     }
 }

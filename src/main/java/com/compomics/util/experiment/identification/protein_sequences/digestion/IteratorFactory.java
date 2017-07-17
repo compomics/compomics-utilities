@@ -60,7 +60,7 @@ public class IteratorFactory {
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
-    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, Double massMin, Double massMax) throws InterruptedException {
+    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, double massMin, double massMax) throws InterruptedException {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
                 if (AminoAcidSequence.hasCombination(sequence)) {

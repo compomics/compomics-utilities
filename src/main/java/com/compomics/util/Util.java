@@ -61,17 +61,17 @@ public class Util {
         }
         return result;
     }
-    
+
     /**
-     * Function for sending event requests to Google analytics
-     * @param UA Tracking ID
+     * Function for sending event requests to Google analytics.
+     *
+     * @param UA tracking ID
      * @param action the action
      * @param label the label
-     * @return
+     * @return true if the update was successful
      */
-    public static boolean sendGAUpdate(String UA, String action, String label)
-    {
-        //the plain java way
+    public static boolean sendGAUpdate(String UA, String action, String label) {
+        // the plain java way
         boolean returnVal = true;
         String COLLECT_URL = "http://www.google-analytics.com/collect";
         String POST = "v=1&tid=" + UA + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
@@ -83,14 +83,12 @@ public class Util {
             connection.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.writeBytes(POST);
-            int response = connection.getResponseCode();
-
+            connection.getResponseCode();
         } catch (IOException ex) {
             returnVal = false;
         }
         return returnVal;
     }
-    
 
     /**
      * Removes characters from a string.
@@ -1083,10 +1081,10 @@ public class Util {
 
     /**
      * Simple method to merge two character arrays.
-     * 
+     *
      * @param array1 a character array
      * @param array2 a character array
-     * 
+     *
      * @return a concatenation of array1 and array2
      */
     public static char[] mergeCharArrays(char[] array1, char[] array2) {

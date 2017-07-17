@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
@@ -388,7 +387,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, double massMin, double massMax) {
         return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), indexOnProtein, massMin, massMax);
     }
 
@@ -405,7 +404,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, double massMin, double massMax) {
         return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
     }
 
@@ -424,7 +423,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, double massMin, double massMax, BoxedObject<Boolean> smallMass) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
 
         char nTermAaChar = peptideSequence[0];
         String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
@@ -437,7 +436,7 @@ public class ProteinIteratorUtils {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
             peptideMass += aminoAcid.getMonoisotopicMass();
 
-            if (peptideMass + minCtermMass > massMax) {
+            if (massMax != null && peptideMass + minCtermMass > massMax) {
                 smallMass.setObject(Boolean.FALSE);
                 return null;
             }

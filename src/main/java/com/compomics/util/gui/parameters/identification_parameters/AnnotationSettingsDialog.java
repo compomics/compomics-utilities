@@ -405,52 +405,42 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        ionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Ion Type"));
+        ionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Ion Types"));
         ionsPanel.setOpaque(false);
 
         aBox.setText("a-ion");
         aBox.setIconTextGap(10);
-        aBox.setOpaque(false);
 
         bBox.setText("b-ion");
         bBox.setIconTextGap(10);
-        bBox.setOpaque(false);
 
         cBox.setText("c-ion");
         cBox.setIconTextGap(10);
-        cBox.setOpaque(false);
 
         xBox.setText("x-ion");
         xBox.setIconTextGap(10);
-        xBox.setOpaque(false);
 
         yBox.setText("y-ion");
         yBox.setIconTextGap(10);
-        yBox.setOpaque(false);
 
         zBox.setText("z-ion");
         zBox.setIconTextGap(10);
-        zBox.setOpaque(false);
 
         precursorBox.setText("Precursor");
         precursorBox.setToolTipText("Precursor ions");
         precursorBox.setIconTextGap(10);
-        precursorBox.setOpaque(false);
 
         immoniumBox.setText("Immonium");
         immoniumBox.setToolTipText("Immonium ions");
         immoniumBox.setIconTextGap(10);
-        immoniumBox.setOpaque(false);
 
         reporterBox.setText("Reporter");
         reporterBox.setToolTipText("Report ions");
         reporterBox.setIconTextGap(10);
-        reporterBox.setOpaque(false);
 
         relatedBox.setText("Related");
         relatedBox.setToolTipText("Related ions");
         relatedBox.setIconTextGap(10);
-        relatedBox.setOpaque(false);
 
         javax.swing.GroupLayout ionsPanelLayout = new javax.swing.GroupLayout(ionsPanel);
         ionsPanel.setLayout(ionsPanelLayout);
@@ -548,7 +538,6 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         highResolutionBox.setSelected(true);
         highResolutionBox.setText("High Resolution");
         highResolutionBox.setIconTextGap(10);
-        highResolutionBox.setOpaque(false);
 
         intensityThresholdCmb.setModel(new DefaultComboBoxModel(AnnotationSettings.IntensityThresholdType.values()));
 
@@ -564,7 +553,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(peakMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(intensitySpinner)
-                    .addComponent(accuracySpinner))
+                    .addComponent(accuracySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 67, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(peakMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fragmentIonAccuracyTypeLabel)
@@ -661,7 +650,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/AnnotationPreferences.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                "PeptideShaker - Help");
+                "Spectrum Annotation - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_annotationPreferencesHelpJButtonActionPerformed
 

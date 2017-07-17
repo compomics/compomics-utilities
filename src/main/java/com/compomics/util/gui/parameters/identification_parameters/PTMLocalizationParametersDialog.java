@@ -1,9 +1,11 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.PTMScoringPreferences;
 import java.awt.Dialog;
+import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -16,6 +18,10 @@ import javax.swing.SwingConstants;
  */
 public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
 
+    /**
+     * The parent frame.
+     */
+    private java.awt.Frame parentFrame;
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -35,6 +41,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -54,6 +61,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(owner, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -224,9 +232,10 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         siteAlignmentPanel = new javax.swing.JPanel();
         alignOnConfidentLbl = new javax.swing.JLabel();
         alignOnConfidentCmb = new javax.swing.JComboBox();
+        helpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("PTM Scoring");
+        setTitle("PTM Localization");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -354,6 +363,28 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.setFocusable(false);
+        helpJButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        helpJButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -363,7 +394,9 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(helpJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
@@ -377,10 +410,11 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                 .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(helpJButton)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -467,11 +501,44 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         canceled = true;
     }//GEN-LAST:event_formWindowClosing
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/PtmLocalizationPreferences.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+            "PTM Localization - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox alignOnConfidentCmb;
     private javax.swing.JLabel alignOnConfidentLbl;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton helpJButton;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JComboBox neutralLossesCmb;
     private javax.swing.JLabel neutralLossesLabel;

@@ -15,8 +15,14 @@ public class AtomImpl implements Serializable {
     static final long serialVersionUID = 3269643086590455656L;
     /**
      * The reference atom.
+     * 
+     * @deprecated use the atom name instead.
      */
     private Atom atom;
+    /**
+     * The reference atom symbol.
+     */
+    private String atomSymbol;
     /**
      * The isotope, 0 for monoisotope.
      */
@@ -25,11 +31,22 @@ public class AtomImpl implements Serializable {
     /**
      * Constructor.
      *
+     * @param atomSymbol the symbol of the atom
+     * @param isotope the isotope, 0 for monoisotope
+     */
+    public AtomImpl(String atomSymbol, Integer isotope) {
+        this.atomSymbol = atomSymbol;
+        this.isotope = isotope;
+    }
+
+    /**
+     * Constructor.
+     *
      * @param atom the reference atom
      * @param isotope the isotope, 0 for monoisotope
      */
     public AtomImpl(Atom atom, Integer isotope) {
-        this.atom = atom;
+        this.atomSymbol = atom.getLetter();
         this.isotope = isotope;
     }
 
@@ -39,6 +56,7 @@ public class AtomImpl implements Serializable {
      * @return the mass of the atom
      */
     public Double getMass() {
+        Atom atom = Atom.getAtom(atomSymbol);
         return atom.getIsotopeMass(isotope);
     }
     
@@ -50,6 +68,7 @@ public class AtomImpl implements Serializable {
      * @return the isotope number
      */
     public Integer getIsotopeNumber(Integer roundedMass) {
+        Atom atom = Atom.getAtom(atomSymbol);
         for (Integer isotopeNumber : atom.getImplementedIsotopes()) {
             Double isotopeMass = atom.getIsotopeMass(isotopeNumber);
             Integer isotopeRoundedMass = (int) Math.round(isotopeMass);
@@ -62,6 +81,7 @@ public class AtomImpl implements Serializable {
 
     @Override
     public String toString() {
+        Atom atom = Atom.getAtom(atomSymbol);
         if (isotope == 0) {
             return atom.getLetter();
         } else {
@@ -84,21 +104,24 @@ public class AtomImpl implements Serializable {
     }
 
     /**
-     * Returns the atom.
-     *
-     * @return the atom
+     * Returns the atom symbol as specified in the Atom class.
+     * 
+     * @return the atom symbol
      */
-    public Atom getAtom() {
-        return atom;
+    public String getAtomSymbol() {
+        if (atomSymbol == null) {
+            atomSymbol = atom.getLetter();
+        }
+        return atomSymbol;
     }
 
     /**
-     * Sets the atom.
+     * Sets the atom symbol as specified in the Atom class.
      * 
-     * @param atom the atom
+     * @param atomSymbol the atom symbol
      */
-    public void setAtom(Atom atom) {
-        this.atom = atom;
+    public void setAtomSymbol(String atomSymbol) {
+        this.atomSymbol = atomSymbol;
     }
 
     /**

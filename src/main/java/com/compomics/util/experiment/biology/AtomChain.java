@@ -228,21 +228,21 @@ public class AtomChain implements Serializable {
             HashMap<String, Integer> composition = new HashMap<String, Integer>(atomChain.size());
             HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<String, HashMap<Integer, String>>(atomChain.size());
 
-            for (AtomImpl atom : atomChain) {
-                String atomName = atom.toString();
-                Integer occurrence = composition.get(atomName);
+            for (AtomImpl atomImpl : atomChain) {
+                String atomImplName = atomImpl.toString();
+                Integer occurrence = composition.get(atomImplName);
                 if (occurrence == null) {
                     occurrence = 0;
                 }
-                composition.put(atomName, occurrence + 1);
-                String atomLetter = atom.getAtom().getLetter();
-                HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomLetter);
+                composition.put(atomImplName, occurrence + 1);
+                String atomSymbol = atomImpl.getAtomSymbol();
+                HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomSymbol);
                 if (atomIsotopes == null) {
                     atomIsotopes = new HashMap<Integer, String>(1);
-                    isotopeMap.put(atomLetter, atomIsotopes);
+                    isotopeMap.put(atomSymbol, atomIsotopes);
                 }
-                Integer isotope = atom.getIsotope();
-                atomIsotopes.put(isotope, atomName);
+                Integer isotope = atomImpl.getIsotope();
+                atomIsotopes.put(isotope, atomImplName);
             }
 
             StringBuilder compositionAsString = new StringBuilder(composition.size());
@@ -353,7 +353,7 @@ public class AtomChain implements Serializable {
     public AtomChain clone() {
         AtomChain result = new AtomChain();
         for (AtomImpl atom : atomChain) {
-            result.append(new AtomImpl(atom.getAtom(), atom.getIsotope()));
+            result.append(new AtomImpl(atom.getAtomSymbol(), atom.getIsotope()));
         }
         return result;
     }

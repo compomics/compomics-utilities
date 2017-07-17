@@ -1,6 +1,7 @@
 com.compomics.cli.enzymes
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
+com.compomics.scripts_marc
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli

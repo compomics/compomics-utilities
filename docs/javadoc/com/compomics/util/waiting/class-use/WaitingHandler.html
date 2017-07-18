@@ -359,8 +359,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads some objects from a table in the cache.</div>
@@ -368,9 +367,8 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-com.orientechnologies.orient.object.iterator.OObjectIteratorClass-int-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;&nbsp;iterator,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.Iterator-int-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;iterator,
            int&nbsp;num,
-           boolean&nbsp;lazyLoading,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads some objects from a table in the cache.</div>
@@ -378,8 +376,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.String-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.String-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all objects from a given class.</div>
@@ -589,53 +586,46 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideKeys,
-                         boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-boolean-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(boolean&nbsp;lazyLoading,
-                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinKeys,
-                         boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-boolean-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(boolean&nbsp;lazyLoading,
-                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumKeys,
-              boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumKeys,
               <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a psm iterator for a given key list.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-boolean-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(boolean&nbsp;lazyLoading,
-              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all objects of given keys in cache.</div>
@@ -643,9 +633,8 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-com.orientechnologies.orient.object.iterator.OObjectIteratorClass-int-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;&nbsp;iterator,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.Iterator-int-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;iterator,
            int&nbsp;num,
-           boolean&nbsp;lazyLoading,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all spectrum matches of given keys in cache.</div>
@@ -653,8 +642,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.lang.String-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.lang.String-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all objects of the class in cache.</div>
@@ -698,70 +686,62 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.String-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
                <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-               boolean&nbsp;lazyLoading,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.lang.String-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
                <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-               boolean&nbsp;lazyLoading,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                       <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                      boolean&nbsp;lazyLoading,
                       <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                       boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                      boolean&nbsp;lazyLoading,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                       <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                       boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                       <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                      boolean&nbsp;lazyLoading,
                       <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                       boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                      boolean&nbsp;lazyLoading,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                       <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                       boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-           boolean&nbsp;lazyLoading,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>

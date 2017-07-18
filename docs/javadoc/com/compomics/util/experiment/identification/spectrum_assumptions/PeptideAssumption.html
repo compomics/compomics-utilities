@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -100,6 +100,9 @@ var activeTableTab = "activeTableTab";
 <li><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
 <li><a href="../../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a></li>
 <li>
 <ul class="inheritance">
@@ -119,13 +122,11 @@ var activeTableTab = "activeTableTab";
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Cloneable.html?is-external=true" title="class or interface in java.lang">Cloneable</a></dd>
-</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">PeptideAssumption</span>
@@ -134,8 +135,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel, Harald Barsnes</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../serialized-form.html#com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -170,14 +169,17 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.Charge-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption--">PeptideAssumption</a></span>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.Charge-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                  <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge)</code>
 <div class="block">Constructor for a simple peptide assumption containing only the
  information necessary for spectrum annotation.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                  int&nbsp;rank,
                  int&nbsp;advocate,
                  <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
@@ -185,8 +187,8 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <div class="block">Constructor for a peptide assumption.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-java.lang.String-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-java.lang.String-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                  int&nbsp;rank,
                  int&nbsp;advocate,
                  <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
@@ -217,10 +219,14 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a></code></td>
+<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#getTheoreticMass--">getTheoreticMass</a></span>()</code>
 <div class="block">Returns the theoretic mass of the given assumption.</div>
 </td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#setPeptide-com.compomics.util.experiment.biology.Peptide-">setPeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -228,14 +234,14 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.experiment.identification.<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a></h3>
-<code><a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAdvocate--">getAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAminoAcidScores--">getAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getDeltaMass-double-boolean-int-int-">getDeltaMass</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationCharge--">getIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationFile--">getIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIsotopeNumber-double-int-int-">getIsotopeNumber</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getPrecursorMatch-com.compomics.util.experiment.massspectrometry.Peak-">getPrecursorMatch</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRank--">getRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRawScore--">getRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getScore--">getScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getTheoreticMz--">getTheoreticMz</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAminoAcidScores-java.util.ArrayList-">setAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationCharge-com.compomics.util.experiment.massspectrometry.Charge-">setIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRank-int-">setRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRawScore-java.lang.Double-">setRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setScore-double-">setScore</a></code></li>
+<code><a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAdvocate--">getAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAminoAcidScores--">getAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getDeltaMass-double-boolean-int-int-">getDeltaMass</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationCharge--">getIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationFile--">getIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIsotopeNumber-double-int-int-">getIsotopeNumber</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getPrecursorMatch-com.compomics.util.experiment.massspectrometry.Peak-">getPrecursorMatch</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRank--">getRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRawScore--">getRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getScore--">getScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getTheoreticMz--">getTheoreticMz</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAdvocate-int-">setAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAminoAcidScores-java.util.ArrayList-">setAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationCharge-com.compomics.util.experiment.massspectrometry.Charge-">setIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationFile-java.lang.String-">setIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRank-int-">setRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRawScore-double-">setRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setScore-double-">setScore</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
-<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a></code></li>
+<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.IdObject">
@@ -245,11 +251,18 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <code><a href="../../../../../../com/compomics/util/IdObject.html#getId--">getId</a>, <a href="../../../../../../com/compomics/util/IdObject.html#getModified--">getModified</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setId-long-">setId</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setModified-boolean-">setModified</a></code></li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
+<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -271,7 +284,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                          int&nbsp;rank,
                          int&nbsp;advocate,
                          <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
@@ -280,7 +293,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <div class="block">Constructor for a peptide assumption.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aPeptide</code> - the theoretic peptide</dd>
+<dd><code>peptide</code> - the theoretic peptide</dd>
 <dd><code>rank</code> - the identification rank</dd>
 <dd><code>advocate</code> - the advocate used</dd>
 <dd><code>identificationCharge</code> - the charge used by the search engine for
@@ -298,7 +311,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                          int&nbsp;rank,
                          int&nbsp;advocate,
                          <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
@@ -306,7 +319,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <div class="block">Constructor for a peptide assumption.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aPeptide</code> - the theoretic peptide</dd>
+<dd><code>peptide</code> - the theoretic peptide</dd>
 <dd><code>rank</code> - the identification rank</dd>
 <dd><code>advocate</code> - the advocate used</dd>
 <dd><code>identificationCharge</code> - the charge used by the search engine for
@@ -319,19 +332,28 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <a name="PeptideAssumption-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.Charge-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;aPeptide,
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                          <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge)</pre>
 <div class="block">Constructor for a simple peptide assumption containing only the
  information necessary for spectrum annotation.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aPeptide</code> - the theoretic peptide</dd>
+<dd><code>peptide</code> - the theoretic peptide</dd>
 <dd><code>identificationCharge</code> - the charge used by the search engine for
  identification</dd>
 </dl>
+</li>
+</ul>
+<a name="PeptideAssumption--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PeptideAssumption</h4>
+<pre>public&nbsp;PeptideAssumption()</pre>
 </li>
 </ul>
 </li>
@@ -356,13 +378,22 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
+<a name="setPeptide-com.compomics.util.experiment.biology.Peptide-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setPeptide</h4>
+<pre>public&nbsp;void&nbsp;setPeptide(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</pre>
+</li>
+</ul>
 <a name="getTheoreticMass--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getTheoreticMass</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getTheoreticMass()</pre>
+<pre>public&nbsp;double&nbsp;getTheoreticMass()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getTheoreticMass--">SpectrumIdentificationAssumption</a></code></span></div>
 <div class="block">Returns the theoretic mass of the given assumption.</div>
 <dl>

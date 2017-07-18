@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class MgfIndex extends ExperimentObject {
+public class MgfIndex extends ExperimentObject implements Serializable {
 
     /**
      * The map of all indexes: spectrum title &gt; index in the file.

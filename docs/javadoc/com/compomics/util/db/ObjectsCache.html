@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -172,12 +172,18 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#clearCache--">clearCache</a></span>()</code>
+<div class="block">Clears the cache and dumps everything into the database.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#getCacheSize--">getCacheSize</a></span>()</code>
 <div class="block">Returns the cache size in number of objects.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#getMemoryShare--">getMemoryShare</a></span>()</code>
 <div class="block">Returns the share of heap size which can be used before emptying the
@@ -185,58 +191,58 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
  as long as more than 99% of the heap size is used.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#getObject-java.lang.Long-">getObject</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&nbsp;objectKey)</code>
 <div class="block">Returns the objects if present in the cache.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#inCache-long-">inCache</a></span>(long&nbsp;longKey)</code>
 <div class="block">Check if key in cache</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#isEmpty--">isEmpty</a></span>()</code>
 <div class="block">Indicates whether the cache is empty.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#memoryCheck--">memoryCheck</a></span>()</code>
 <div class="block">Indicates whether the memory used by the application is lower than 99% of
  the heap size.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#removeObject-long-">removeObject</a></span>(long&nbsp;objectKey)</code>
 <div class="block">Removes an object from the cache</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#saveCache-com.compomics.util.waiting.WaitingHandler-boolean-">saveCache</a></span>(<a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
          boolean&nbsp;emptyCache)</code>
 <div class="block">Saves the cache content in the database.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#saveObjects-int-">saveObjects</a></span>(int&nbsp;numLastEntries)</code>
 <div class="block">Saves an entry in the database if modified and clears it from the cache.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-">saveObjects</a></span>(int&nbsp;numLastEntries,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Saves an entry in the database if modified and clears it from the cache.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-boolean-">saveObjects</a></span>(int&nbsp;numLastEntries,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -244,25 +250,25 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Saves an entry in the database if modified.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#setMemoryShare-double-">setMemoryShare</a></span>(double&nbsp;memoryShare)</code>
 <div class="block">Sets the share of heap size which can be used before emptying the cache.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#setReadOnly-boolean-">setReadOnly</a></span>(boolean&nbsp;readOnly)</code>
 <div class="block">Sets the cache in read only.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#updateCache--">updateCache</a></span>()</code>
 <div class="block">Updates the cache according to the memory settings.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsCache.html#updateObject-long-java.lang.Object-">updateObject</a></span>(long&nbsp;objectKey,
             <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)</code>
@@ -490,6 +496,28 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the memory used by the application
  is lower than 99% of the heap</dd>
+</dl>
+</li>
+</ul>
+<a name="clearCache--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearCache</h4>
+<pre>public&nbsp;void&nbsp;clearCache()
+                throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
+                       <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
+                       <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<div class="block">Clears the cache and dumps everything into the database.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs while writing to the
+ database</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs while writing to the
+ database</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if a threading error occurs
+ writing to the database</dd>
 </dl>
 </li>
 </ul>

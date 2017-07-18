@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -100,6 +100,9 @@ var activeTableTab = "activeTableTab";
 <li><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
 <li><a href="../../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a></li>
 <li>
 <ul class="inheritance">
@@ -119,13 +122,11 @@ var activeTableTab = "activeTableTab";
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Cloneable.html?is-external=true" title="class or interface in java.lang">Cloneable</a></dd>
-</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">SpectrumMatch</span>
@@ -134,8 +135,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../serialized-form.html#com.compomics.util.experiment.identification.matches.SpectrumMatch">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -175,12 +174,12 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-">SpectrumMatch</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-">SpectrumMatch</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Constructor for the spectrum match.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-">SpectrumMatch</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-">SpectrumMatch</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
              <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;assumption)</code>
 <div class="block">Constructor for the spectrum match.</div>
 </td>
@@ -259,60 +258,72 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a></code></td>
+<td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getSpectrumNumber--">getSpectrumNumber</a></span>()</code>
 <div class="block">Returns the spectrum number in the spectrum file.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getTagAssumptionMapKeySize--">getTagAssumptionMapKeySize</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.MatchType.html" title="enum in com.compomics.util.experiment.identification">IdentificationMatch.MatchType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getType--">getType</a></span>()</code>
 <div class="block">Returns the type of match.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#hasAssumption--">hasAssumption</a></span>()</code>
 <div class="block">Indicates whether the spectrum match contains a peptide assumption from a
  search engine.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#hasAssumption-int-">hasAssumption</a></span>(int&nbsp;advocateId)</code>
 <div class="block">Indicates whether the spectrum match contains a peptide assumption for
  the given advocate (for example a search engine, see the Advocate class)</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#removeAssumption-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-">removeAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;assumption)</code>
 <div class="block">Removes an assumption from the mapping.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setAssumptionMap-java.util.HashMap-">setAssumptionMap</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&gt;&gt;&gt;&nbsp;assumptionsMap)</code>&nbsp;</td>
+</tr>
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setBestPeptideAssumption-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption-">setBestPeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">PeptideAssumption</a>&nbsp;bestAssumption)</code>
 <div class="block">Setter for the best peptide assumption.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setBestTagAssumption-com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption-">setBestTagAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a>&nbsp;bestTagAsssumption)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setBestTagAssumption-com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption-">setBestTagAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a>&nbsp;bestTagAssumption)</code>
 <div class="block">Setter for the best tag assumption.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setKey-java.lang.String-">setKey</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newKey)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setKey-java.lang.String-">setKey</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Replaces the new key.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setSpectrumNumber-java.lang.Integer-">setSpectrumNumber</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;spectrumNumber)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setSpectrumNumber-int-">setSpectrumNumber</a></span>(int&nbsp;spectrumNumber)</code>
 <div class="block">Sets the spectrum number in the spectrum file. 1 is the first spectrum.</div>
 </td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setTagAssumptionMapKeySize-int-">setTagAssumptionMapKeySize</a></span>(int&nbsp;tagAssumptionsMapKeySize)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -320,7 +331,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
-<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a></code></li>
+<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.IdObject">
@@ -330,11 +341,18 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <code><a href="../../../../../../com/compomics/util/IdObject.html#getId--">getId</a>, <a href="../../../../../../com/compomics/util/IdObject.html#getModified--">getModified</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setId-long-">setId</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setModified-boolean-">setModified</a></code></li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
+<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -366,12 +384,12 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>SpectrumMatch</h4>
-<pre>public&nbsp;SpectrumMatch(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey,
+<pre>public&nbsp;SpectrumMatch(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
                      <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;assumption)</pre>
 <div class="block">Constructor for the spectrum match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumKey</code> - the matched spectrumKey</dd>
+<dd><code>key</code> - the matched spectrumKey</dd>
 <dd><code>assumption</code> - the matching assumption</dd>
 </dl>
 </li>
@@ -382,11 +400,11 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SpectrumMatch</h4>
-<pre>public&nbsp;SpectrumMatch(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</pre>
+<pre>public&nbsp;SpectrumMatch(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Constructor for the spectrum match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumKey</code> - the matched spectrum key</dd>
+<dd><code>key</code> - the matched spectrum key</dd>
 </dl>
 </li>
 </ul>
@@ -398,6 +416,33 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="setTagAssumptionMapKeySize-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTagAssumptionMapKeySize</h4>
+<pre>public&nbsp;void&nbsp;setTagAssumptionMapKeySize(int&nbsp;tagAssumptionsMapKeySize)</pre>
+</li>
+</ul>
+<a name="getTagAssumptionMapKeySize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTagAssumptionMapKeySize</h4>
+<pre>public&nbsp;int&nbsp;getTagAssumptionMapKeySize()</pre>
+</li>
+</ul>
+<a name="setAssumptionMap-java.util.HashMap-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setAssumptionMap</h4>
+<pre>public&nbsp;void&nbsp;setAssumptionMap(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&gt;&gt;&gt;&nbsp;assumptionsMap)</pre>
+</li>
+</ul>
 <a name="getBestPeptideAssumption--">
 <!--   -->
 </a>
@@ -446,11 +491,11 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>setBestTagAssumption</h4>
-<pre>public&nbsp;void&nbsp;setBestTagAssumption(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a>&nbsp;bestTagAsssumption)</pre>
+<pre>public&nbsp;void&nbsp;setBestTagAssumption(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a>&nbsp;bestTagAssumption)</pre>
 <div class="block">Setter for the best tag assumption.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>bestTagAsssumption</code> - the best tag assumption for the spectrum</dd>
+<dd><code>bestTagAssumption</code> - the best tag assumption for the spectrum</dd>
 </dl>
 </li>
 </ul>
@@ -560,12 +605,12 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>setKey</h4>
-<pre>public&nbsp;void&nbsp;setKey(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newKey)</pre>
+<pre>public&nbsp;void&nbsp;setKey(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Replaces the new key. The key of the PSM should always be the same as the
  spectrum key it links to.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>newKey</code> - the new key</dd>
+<dd><code>key</code> - the new key</dd>
 </dl>
 </li>
 </ul>
@@ -575,7 +620,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>getSpectrumNumber</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;getSpectrumNumber()</pre>
+<pre>public&nbsp;int&nbsp;getSpectrumNumber()</pre>
 <div class="block">Returns the spectrum number in the spectrum file. Returns null if not
  implemented (versions older than 3.4.17). 1 is the first spectrum.</div>
 <dl>
@@ -584,13 +629,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="setSpectrumNumber-java.lang.Integer-">
+<a name="setSpectrumNumber-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setSpectrumNumber</h4>
-<pre>public&nbsp;void&nbsp;setSpectrumNumber(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;spectrumNumber)</pre>
+<pre>public&nbsp;void&nbsp;setSpectrumNumber(int&nbsp;spectrumNumber)</pre>
 <div class="block">Sets the spectrum number in the spectrum file. 1 is the first spectrum.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

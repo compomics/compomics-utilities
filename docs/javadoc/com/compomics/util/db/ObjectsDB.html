@@ -107,21 +107,14 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
-</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ObjectsDB</span>
-extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></pre>
+extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">A database which can easily be used to store objects.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../serialized-form.html#com.compomics.util.db.ObjectsDB">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -146,6 +139,13 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <div class="block">Constructor.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#ObjectsDB-java.lang.String-java.lang.String-boolean-">ObjectsDB</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;folder,
+         <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;dbName,
+         boolean&nbsp;overwrite)</code>
+<div class="block">Constructor.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -163,67 +163,67 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#clearCache--">clearCache</a></span>()</code>
+<div class="block">Clears the cache and dumps everything into the database.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#close--">close</a></span>()</code>
 <div class="block">Closes the db connection.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#createLongKey-java.lang.String-">createLongKey</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#establishConnection-java.lang.String-java.lang.String-boolean-">establishConnection</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aDbFolder,
-                   <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aDbName,
-                   boolean&nbsp;deleteOldDatabase)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#establishConnection--">establishConnection</a></span>()</code>
 <div class="block">Establishes connection to the database.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>com.orientechnologies.orient.object.db.OObjectDatabaseTx</code></td>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>javax.jdo.PersistenceManager</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDB--">getDB</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Semaphore.html?is-external=true" title="class or interface in java.util.concurrent">Semaphore</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDbMutex--">getDbMutex</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,com.orientechnologies.orient.core.id.ORID&gt;</code></td>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getIdMap--">getIdMap</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getName--">getName</a></span>()</code>
 <div class="block">Returns the database name.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getNumber-java.lang.String-">getNumber</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className)</code>
 <div class="block">Returns the number of instances of a given class stored in the db</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/compomics/util/db/ObjectsCache.html" title="class in com.compomics.util.db">ObjectsCache</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getObjectsCache--">getObjectsCache</a></span>()</code>
 <div class="block">Returns the cache used by this database.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;</code></td>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getObjectsIterator-java.lang.String-">getObjectsIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className)</code>
 <div class="block">Returns an iterator of all objects of a given class</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getPath--">getPath</a></span>()</code>
 <div class="block">Returns the path to the database.</div>
 </td>
-</tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getRegisteredClasses--">getRegisteredClasses</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -260,8 +260,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads some objects from a table in the cache.</div>
@@ -269,9 +268,8 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-com.orientechnologies.orient.object.iterator.OObjectIteratorClass-int-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;&nbsp;iterator,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.Iterator-int-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;iterator,
            int&nbsp;num,
-           boolean&nbsp;lazyLoading,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads some objects from a table in the cache.</div>
@@ -279,8 +277,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.String-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
-           boolean&nbsp;lazyLoading,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.String-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all objects from a given class.</div>
@@ -365,7 +362,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <a name="ObjectsDB-java.lang.String-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>ObjectsDB</h4>
 <pre>public&nbsp;ObjectsDB(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;folder,
@@ -379,6 +376,37 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>folder</code> - absolute path of the folder where to establish the database</dd>
 <dd><code>dbName</code> - name of the database</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever a problem occurred when
+ establishing the connection to the database</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred
+ while reading or writing a file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an
+ error occurred while deserializing a file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever a
+ threading error occurred while establishing the connection</dd>
+</dl>
+</li>
+</ul>
+<a name="ObjectsDB-java.lang.String-java.lang.String-boolean-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>ObjectsDB</h4>
+<pre>public&nbsp;ObjectsDB(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;folder,
+                 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;dbName,
+                 boolean&nbsp;overwrite)
+          throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
+                 <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
+                 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
+                 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<div class="block">Constructor.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>folder</code> - absolute path of the folder where to establish the database</dd>
+<dd><code>dbName</code> - name of the database</dd>
+<dd><code>overwrite</code> - overwriting old database</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever a problem occurred when
  establishing the connection to the database</dd>
@@ -405,7 +433,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <ul class="blockList">
 <li class="blockList">
 <h4>getIdMap</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,com.orientechnologies.orient.core.id.ORID&gt;&nbsp;getIdMap()</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;getIdMap()</pre>
 </li>
 </ul>
 <a name="getDbMutex--">
@@ -417,22 +445,13 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Semaphore.html?is-external=true" title="class or interface in java.util.concurrent">Semaphore</a>&nbsp;getDbMutex()</pre>
 </li>
 </ul>
-<a name="getRegisteredClasses--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRegisteredClasses</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getRegisteredClasses()</pre>
-</li>
-</ul>
 <a name="getDB--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getDB</h4>
-<pre>public&nbsp;com.orientechnologies.orient.object.db.OObjectDatabaseTx&nbsp;getDB()</pre>
+<pre>public&nbsp;javax.jdo.PersistenceManager&nbsp;getDB()</pre>
 </li>
 </ul>
 <a name="createLongKey-java.lang.String-">
@@ -519,7 +538,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <ul class="blockList">
 <li class="blockList">
 <h4>getObjectsIterator</h4>
-<pre>public&nbsp;com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;&nbsp;getObjectsIterator(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;getObjectsIterator(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className)</pre>
 <div class="block">Returns an iterator of all objects of a given class</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -559,14 +578,13 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="loadObjects-java.util.ArrayList-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">
+<a name="loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loadObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
-                                   boolean&nbsp;lazyLoading,
                                    <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                                    boolean&nbsp;displayProgress)
                             throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
@@ -577,7 +595,6 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>keys</code> - the keys of the objects to load</dd>
-<dd><code>lazyLoading</code> - indicates wheather the iterator should load data lazy from the db</dd>
 <dd><code>waitingHandler</code> - the waiting handler allowing displaying progress
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
@@ -596,14 +613,13 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="loadObjects-java.lang.String-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">
+<a name="loadObjects-java.lang.String-com.compomics.util.waiting.WaitingHandler-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loadObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
-                                   boolean&nbsp;lazyLoading,
                                    <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                                    boolean&nbsp;displayProgress)
                             throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
@@ -614,7 +630,6 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>className</code> - the class name of the objects to be retrieved</dd>
-<dd><code>lazyLoading</code> - indicates wheather the iterator should load data lazy from the db</dd>
 <dd><code>waitingHandler</code> - the waiting handler allowing displaying progress
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
@@ -633,15 +648,14 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="loadObjects-com.orientechnologies.orient.object.iterator.OObjectIteratorClass-int-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">
+<a name="loadObjects-java.util.Iterator-int-com.compomics.util.waiting.WaitingHandler-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loadObjects</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(com.orientechnologies.orient.object.iterator.OObjectIteratorClass&lt;?&gt;&nbsp;iterator,
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;iterator,
                                    int&nbsp;num,
-                                   boolean&nbsp;lazyLoading,
                                    <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                                    boolean&nbsp;displayProgress)
                             throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
@@ -653,7 +667,6 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>iterator</code> - the iterator</dd>
 <dd><code>num</code> - number of objects that have to be retrieved in a batch</dd>
-<dd><code>lazyLoading</code> - indicates wheather the iterator should load data lazy from the db</dd>
 <dd><code>waitingHandler</code> - the waiting handler allowing displaying progress
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
@@ -756,6 +769,28 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
  occurred while deserializing a file from the database</dd>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
  while interacting with the database</dd>
+</dl>
+</li>
+</ul>
+<a name="clearCache--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearCache</h4>
+<pre>public&nbsp;void&nbsp;clearCache()
+                throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
+                       <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
+                       <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<div class="block">Clears the cache and dumps everything into the database.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs while writing to the
+ database</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs while writing to the
+ database</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if a threading error occurs
+ writing to the database</dd>
 </dl>
 </li>
 </ul>
@@ -955,35 +990,32 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <h4>close</h4>
 <pre>public&nbsp;void&nbsp;close()
            throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                  <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                  <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
+                  <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Closes the db connection.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
  closing the database connection</dd>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
+ writing the object</dd>
 </dl>
 </li>
 </ul>
-<a name="establishConnection-java.lang.String-java.lang.String-boolean-">
+<a name="establishConnection--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>establishConnection</h4>
-<pre>public&nbsp;void&nbsp;establishConnection(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aDbFolder,
-                                <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aDbName,
-                                boolean&nbsp;deleteOldDatabase)
+<pre>public&nbsp;void&nbsp;establishConnection()
                          throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
                                 <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
                                 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
                                 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Establishes connection to the database.</div>
 <dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aDbFolder</code> - the folder where the database is located</dd>
-<dd><code>aDbName</code> - the name of the database</dd>
-<dd><code>deleteOldDatabase</code> - flag for deleting old database</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
  establishing the connection to the database</dd>

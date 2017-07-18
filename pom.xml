@@ -402,7 +402,7 @@
             <version>2.2</version>
         </dependency>
         
-        <!-- OrientDB as the new backend -->
+        <!-- ZooDB as the new backend -->
         <dependency>
             <groupId>org.zoodb</groupId>
             <artifactId>zoodb</artifactId>

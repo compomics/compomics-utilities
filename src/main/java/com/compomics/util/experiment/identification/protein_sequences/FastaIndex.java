@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.protein_sequences;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Header.DatabaseType;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class FastaIndex extends ExperimentObject {
+public class FastaIndex extends ExperimentObject implements Serializable {
 
     /**
      * The indexes of the inspected FASTA file.

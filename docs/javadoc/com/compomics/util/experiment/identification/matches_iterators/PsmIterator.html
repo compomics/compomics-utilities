@@ -139,17 +139,15 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-           boolean&nbsp;lazyLoading,
            <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-           boolean&nbsp;lazyLoading,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
            <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Constructor.</div>
@@ -205,14 +203,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PsmIterator-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">
+<a name="PsmIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>PsmIterator</h4>
 <pre>public&nbsp;PsmIterator(<a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                   boolean&nbsp;lazyLoading,
                    <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                    boolean&nbsp;displayProgress)
             throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
@@ -223,7 +220,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>identification</code> - the identification where to get the matches from</dd>
-<dd><code>lazyLoading</code> - indicates wheather the iterator should load data lazy from the db</dd>
 <dd><code>waitingHandler</code> - the waiting handler allowing displaying progress
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
@@ -240,7 +236,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-boolean-com.compomics.util.waiting.WaitingHandler-boolean-">
+<a name="PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -248,7 +244,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <h4>PsmIterator</h4>
 <pre>public&nbsp;PsmIterator(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                    <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
-                   boolean&nbsp;lazyLoading,
                    <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                    boolean&nbsp;displayProgress)
             throws <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
@@ -260,7 +255,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>keys</code> - the keys of the objects</dd>
 <dd><code>identification</code> - the identification where to get the matchesloadPs from</dd>
-<dd><code>lazyLoading</code> - indicates wheather the iterator should load data lazy from the db</dd>
 <dd><code>waitingHandler</code> - the waiting handler allowing displaying progress
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this

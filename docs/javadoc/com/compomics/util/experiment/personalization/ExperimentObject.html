@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -100,6 +100,9 @@ var activeTableTab = "activeTableTab";
 <li><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
 <li><a href="../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a></li>
 <li>
 <ul class="inheritance">
@@ -109,13 +112,11 @@ var activeTableTab = "activeTableTab";
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Cloneable.html?is-external=true" title="class or interface in java.lang">Cloneable</a></dd>
-</dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
 <dd><a href="../../../../../com/compomics/util/experiment/biology/AminoAcidPattern.html" title="class in com.compomics.util.experiment.biology">AminoAcidPattern</a>, <a href="../../../../../com/compomics/util/experiment/biology/AminoAcidSequence.html" title="class in com.compomics.util.experiment.biology">AminoAcidSequence</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/AndromedaIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">AndromedaIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/biology/Atom.html" title="class in com.compomics.util.experiment.biology">Atom</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/DirecTagIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">DirecTagIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/biology/Enzyme.html" title="class in com.compomics.util.experiment.biology">Enzyme</a>, <a href="../../../../../com/compomics/util/experiment/identification/protein_sequences/FastaIndex.html" title="class in com.compomics.util.experiment.identification.protein_sequences">FastaIndex</a>, <a href="../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>, <a href="../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>, <a href="../../../../../com/compomics/util/experiment/identification/IdentificationMethod.html" title="class in com.compomics.util.experiment.identification">IdentificationMethod</a>, <a href="../../../../../com/compomics/util/experiment/biology/Ion.html" title="class in com.compomics.util.experiment.biology">Ion</a>, <a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>, <a href="../../../../../com/compomics/util/experiment/biology/MassGap.html" title="class in com.compomics.util.experiment.biology">MassGap</a>, <a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MgfIndex.html" title="class in com.compomics.util.experiment.io.massspectrometry">MgfIndex</a>, <a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/MsAmandaIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">MsAmandaIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/MsExperiment.html" title="class in com.compomics.util.experiment">MsExperiment</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/MzIdentMLIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">MzIdentMLIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/MzIdentMLIdfileSearchParametersConverter.html" title="class in com.compomics.util.experiment.io.identifications">MzIdentMLIdfileSearchParametersConverter</a>, <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/NovorIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">NovorIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/PepNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">PepNovoIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/PNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">PNovoIdfileReader</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/Precursor.html" title="class in com.compomics.util.experiment.massspectrometry">Precursor</a>, <a href="../../../../../com/compomics/util/experiment/biology/Protein.html" title="class in com.compomics.util.experiment.biology">Protein</a>, <a href="../../../../../com/compomics/util/experiment/ProteomicAnalysis.html" title="class in com.compomics.util.experiment">ProteomicAnalysis</a>, <a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a>, <a href="../../../../../com/compomics/util/experiment/quantification/Quantification.html" title="class in com.compomics.util.experiment.quantification">Quantification</a>, <a href="../../../../../com/compomics/util/experiment/quantification/reporterion/ReporterMethodFactory.html" title="class in com.compomics.util.experiment.quantification.reporterion">ReporterMethodFactory</a>, <a href="../../../../../com/compomics/util/experiment/biology/Sample.html" title="class in com.compomics.util.experiment.biology">Sample</a>, <a href="../../../../../com/compomics/util/experiment/SampleAnalysisSet.html" title="class in com.compomics.util.experiment">SampleAnalysisSet</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html" title="class in com.compomics.util.experiment.massspectrometry">Spectrum</a>, <a href="../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>, <a href="../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>, <a href="../../../../../com/compomics/util/experiment/io/identifications/idfilereaders/TideIdfileReader.html" title="class in com.compomics.util.experiment.io.identifications.idfilereaders">TideIdfileReader</a></dd>
@@ -123,15 +124,12 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public abstract class <span class="typeNameLabel">ExperimentObject</span>
-extends <a href="../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a>
-implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Cloneable.html?is-external=true" title="class or interface in java.lang">Cloneable</a></pre>
+extends <a href="../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a></pre>
 <div class="block">This abstract class provides customization facilities. Tool dependent
  parameters can be added to classes extending this class.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../serialized-form.html#com.compomics.util.experiment.personalization.ExperimentObject">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -187,10 +185,18 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../../com/compomics/util/experiment/personalization/UrParameter.html" title="interface in com.compomics.util.experiment.personalization">UrParameter</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;paramterKey)</code>
 <div class="block">Removes a user parameter from the user parameters map.</div>
 </td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../../com/compomics/util/experiment/personalization/UrParameter.html" title="interface in com.compomics.util.experiment.personalization">UrParameter</a>&gt;&nbsp;urParams)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -201,11 +207,18 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <code><a href="../../../../../com/compomics/util/IdObject.html#getId--">getId</a>, <a href="../../../../../com/compomics/util/IdObject.html#getModified--">getModified</a>, <a href="../../../../../com/compomics/util/IdObject.html#setId-long-">setId</a>, <a href="../../../../../com/compomics/util/IdObject.html#setModified-boolean-">setModified</a></code></li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
+<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -285,11 +298,29 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <a name="clearParametersMap--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>clearParametersMap</h4>
 <pre>public&nbsp;void&nbsp;clearParametersMap()</pre>
 <div class="block">Clears the loaded parameters.</div>
+</li>
+</ul>
+<a name="setUrParams-java.util.HashMap-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setUrParams</h4>
+<pre>public&nbsp;void&nbsp;setUrParams(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../../com/compomics/util/experiment/personalization/UrParameter.html" title="interface in com.compomics.util.experiment.personalization">UrParameter</a>&gt;&nbsp;urParams)</pre>
+</li>
+</ul>
+<a name="getUrParams--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getUrParams</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../../com/compomics/util/experiment/personalization/UrParameter.html" title="interface in com.compomics.util.experiment.personalization">UrParameter</a>&gt;&nbsp;getUrParams()</pre>
 </li>
 </ul>
 </li>

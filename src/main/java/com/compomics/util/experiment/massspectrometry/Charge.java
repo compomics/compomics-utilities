@@ -46,18 +46,24 @@ public class Charge extends ExperimentObject {
     }
     
     public int getSign(){
+        zooActivateRead();
         return sign;
     }
     
     public void setSign(int sign){
+        zooActivateWrite();
+        setModified(true);
         this.sign = sign;
     }
     
     public int getValue(){
+        zooActivateRead();
         return value;
     }
     
     public void setValue(int value){
+        zooActivateWrite();
+        setModified(true);
         this.value = value;
     }
     

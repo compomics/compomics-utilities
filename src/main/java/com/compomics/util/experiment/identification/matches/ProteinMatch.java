@@ -65,6 +65,11 @@ public class ProteinMatch extends IdentificationMatch {
     public void setTheoreticProtein(ArrayList<String> theoreticProtein){
         this.theoreticProtein = theoreticProtein;
     }
+    
+    public int getCacheSize(){
+        zooActivateRead();
+        return cacheSize;
+    }
 
     /**
      * Constructor for the protein match.
@@ -113,6 +118,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the accessions of the possible theoretic proteins
      */
     public ArrayList<String> getTheoreticProtein() {
+        zooActivateRead();
         return theoreticProtein;
     }
 
@@ -132,6 +138,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the main match accession after protein inference
      */
     public String getMainMatch() {
+        zooActivateRead();
         return mainMatch;
     }
 
@@ -141,8 +148,9 @@ public class ProteinMatch extends IdentificationMatch {
      * @param mainMatch the main match
      */
     public void setMainMatch(String mainMatch) {
-        this.mainMatch = mainMatch;
+        zooActivateWrite();
         setModified(true);
+        this.mainMatch = mainMatch;
     }
 
     /**
@@ -151,7 +159,18 @@ public class ProteinMatch extends IdentificationMatch {
      * @return subordinated peptide keys
      */
     public ArrayList<String> getPeptideMatchesKeys() {
+        zooActivateRead();
         return peptideMatchesKeys;
+    }
+    
+    public HashMap<String, String[]> getProteinGroupCache(){
+        zooActivateRead();
+        return proteinGroupCache;
+    }
+    
+    public int getSizeOfProteinsInCache(){
+        zooActivateRead();
+        return sizeOfProteinsInCache;
     }
 
     /**
@@ -172,8 +191,9 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKeys the peptide match keys
      */
     public void setPeptideMatchesKeys(ArrayList<String> peptideMatchKeys) {
-        peptideMatchesKeys = peptideMatchKeys;
+        zooActivateWrite();
         setModified(true);
+        peptideMatchesKeys = peptideMatchKeys;
     }
 
     /**

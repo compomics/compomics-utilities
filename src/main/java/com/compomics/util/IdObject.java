@@ -5,12 +5,15 @@
  */
 package com.compomics.util;
 
+
+import org.zoodb.api.impl.ZooPC;
+
 /**
  * All classes that are stored in the backend need a unique identifier,
  * all further classes inherit from this
  * @author dominik.kopczynski
  */
-public class IdObject {
+public class IdObject extends ZooPC {
     /**
      * unique identifier
      */
@@ -23,18 +26,22 @@ public class IdObject {
     public IdObject(){}
     
     public void setId(long id){
+        zooActivateWrite();
         this.id = id;
     }
     
     public long getId(){
+        zooActivateRead();
         return id;
     }
     
     public boolean getModified(){
+        zooActivateRead();
         return modified;
     }
     
     public void setModified(boolean modified){
+        zooActivateWrite();
         this.modified = modified;
     }
 }

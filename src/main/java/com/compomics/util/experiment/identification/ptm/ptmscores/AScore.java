@@ -90,7 +90,7 @@ public class AScore {
         int nPTM = 0;
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (modMatch.isVariable()) {
+                if (modMatch.getVariable()) {
                     for (PTM ptm : ptms) {
                         if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
                             nPTM++;

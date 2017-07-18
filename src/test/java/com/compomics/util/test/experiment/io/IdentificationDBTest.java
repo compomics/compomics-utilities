@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import junit.framework.TestCase;
 
 /**
@@ -42,22 +43,25 @@ public class IdentificationDBTest extends TestCase {
         path = path.substring(1, path.indexOf("/target/"));
         path += "/src/test/resources/experiment/";
         try {
-            ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB");
+            ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", true);
+            
+            
+            
+            /*
             objectsDB.registerClass(PeptideMatch.class);
             objectsDB.registerClass(Peptide.class);
             objectsDB.registerClass(VariantMatch.class);
             objectsDB.registerClass(Variant.class);
             objectsDB.registerClass(ModificationMatch.class);
-            
             objectsDB.registerClass(ProteinMatch.class);
-            
             objectsDB.registerClass(SpectrumMatch.class);
-            objectsDB.registerClass(IdentificationMatch.class);
-            objectsDB.registerClass(PeptideAssumption.class);
-            objectsDB.registerClass(TagAssumption.class);
             objectsDB.registerClass(Charge.class);
             objectsDB.registerClass(Tag.class);
             objectsDB.registerClass(TagComponent.class);
+            objectsDB.registerClass(IdentificationMatch.class);
+            objectsDB.registerClass(PeptideAssumption.class);
+            objectsDB.registerClass(TagAssumption.class);
+            */
 
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {                
@@ -87,12 +91,13 @@ public class IdentificationDBTest extends TestCase {
                 
                 
                 
+                
                 idDB.clearCache();
 
-                //testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
-                //Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
+                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
-                /*
+                
                 HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
@@ -110,8 +115,8 @@ public class IdentificationDBTest extends TestCase {
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
 
-                //testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
-                //assumptionsMap = testSpectrumMatch.getAssumptionsMap();
+                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
                 mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
@@ -123,7 +128,7 @@ public class IdentificationDBTest extends TestCase {
                 bestPeptide = bestAssumption.getPeptide();
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 1);
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(proteinKey));
-*/
+
 
                 testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));

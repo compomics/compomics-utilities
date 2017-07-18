@@ -61,6 +61,8 @@ public class SpectrumMatch extends IdentificationMatch {
     }
     
     public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize){
+        zooActivateWrite();
+        setModified(true);
         this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
     }
 
@@ -80,10 +82,14 @@ public class SpectrumMatch extends IdentificationMatch {
     }
     
     public int getTagAssumptionMapKeySize(){
+        zooActivateRead();
         return tagAssumptionsMapKeySize;
     }
     
     public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap){
+        
+        zooActivateWrite();
+        setModified(true);
         this.assumptionsMap = assumptionsMap;
     }
 
@@ -103,6 +109,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best peptide assumption for the spectrum
      */
     public PeptideAssumption getBestPeptideAssumption() {
+        zooActivateRead();
         return bestPeptideAssumption;
     }
 
@@ -112,8 +119,9 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestAssumption the best peptide assumption for the spectrum
      */
     public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
-        this.bestPeptideAssumption = bestAssumption;
+        zooActivateWrite();
         setModified(true);
+        this.bestPeptideAssumption = bestAssumption;
     }
     
     
@@ -124,6 +132,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best tag assumption for the spectrum
      */
     public TagAssumption getBestTagAssumption() {
+        zooActivateRead();
         return bestTagAssumption;
     }
 
@@ -133,12 +142,14 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestTagAssumption the best tag assumption for the spectrum
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
-        this.bestTagAssumption = bestTagAssumption;
+        zooActivateWrite();
         setModified(true);
+        this.bestTagAssumption = bestTagAssumption;
     }
 
     @Override
     public String getKey() {
+        zooActivateRead();
         return key;
     }
 
@@ -183,6 +194,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the assumptions map
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
+        zooActivateRead();
         return assumptionsMap;
     }
 
@@ -206,7 +218,7 @@ public class SpectrumMatch extends IdentificationMatch {
             assumptionList = new ArrayList<SpectrumIdentificationAssumption>();
             advocateMap.put(score, assumptionList);
         }
-        //assumptionList.add(otherAssumption);
+        assumptionList.add(otherAssumption);
         setModified(true);
     }
 
@@ -222,8 +234,9 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param key the new key
      */
     public void setKey(String key) {
-        this.key = key;
+        zooActivateWrite();
         setModified(true);
+        this.key = key;
     }
 
     /**
@@ -233,6 +246,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the spectrum number in the spectrum file
      */
     public int getSpectrumNumber() {
+        zooActivateRead();
         return spectrumNumber;
     }
 
@@ -242,6 +256,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param spectrumNumber the spectrum number in the spectrum file
      */
     public void setSpectrumNumber(int spectrumNumber) {
+        zooActivateWrite();
         this.spectrumNumber = spectrumNumber;
         setModified(true);
     }
@@ -252,7 +267,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param assumption the peptide assumption to remove
      */
     public void removeAssumption(SpectrumIdentificationAssumption assumption) {
-        /*
         ArrayList<Integer> seToRemove = new ArrayList<Integer>();
         for (int se : assumptionsMap.keySet()) {
             ArrayList<Double> eValueToRemove = new ArrayList<Double>();
@@ -273,7 +287,6 @@ public class SpectrumMatch extends IdentificationMatch {
             assumptionsMap.remove(se);
         }
         setModified(true);
-        */
     }
 
     /**
@@ -284,13 +297,13 @@ public class SpectrumMatch extends IdentificationMatch {
      * assumption
      */
     public boolean hasAssumption() {
-        /*for (int se : assumptionsMap.keySet()) {
+        for (int se : assumptionsMap.keySet()) {
             for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptionsMap.get(se).values()) {
                 if (!assumptionsAtScore.isEmpty()) {
                     return true;
                 }
             }
-        }*/
+        }
         return false;
     }
 
@@ -303,13 +316,13 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide assumption for the given advocate
      */
     public boolean hasAssumption(int advocateId) {
-        /*if (assumptionsMap.containsKey(advocateId)) {
+        if (assumptionsMap.containsKey(advocateId)) {
             for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptionsMap.get(advocateId).values()) {
                 if (!assumptionsAtEvalue.isEmpty()) {
                     return true;
                 }
             }
-        }*/
+        }
         return false;
     }
 
@@ -338,7 +351,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        /*
+        
         SpectrumMatch spectrumMatch = new SpectrumMatch(key);
 
         for (int advocateId : assumptionsMap.keySet()) {
@@ -372,7 +385,5 @@ public class SpectrumMatch extends IdentificationMatch {
         }
 
         return spectrumMatch;
-        */
-        return null;
     }
 }

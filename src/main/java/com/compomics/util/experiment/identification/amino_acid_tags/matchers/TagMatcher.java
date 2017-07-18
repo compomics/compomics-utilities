@@ -477,7 +477,7 @@ public class TagMatcher {
                 if (modificationsAtIndex != null) {
                     for (Integer i : modificationsAtIndex.keySet()) {
                         for (ModificationMatch modificationMatch : modificationsAtIndex.get(i)) {
-                            modificationMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), nTermSegment.length() + i));
+                            modificationMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), nTermSegment.length() + i));
                         }
                     }
                 }

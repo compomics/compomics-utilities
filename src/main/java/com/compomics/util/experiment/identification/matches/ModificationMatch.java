@@ -56,7 +56,7 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @return a boolean indicating if the modification is variable
      */
-    public boolean isVariable() {
+    public boolean getVariable() {
         return variable;
     }
 
@@ -66,6 +66,7 @@ public class ModificationMatch extends ExperimentObject {
      * @return the theoretic PTM name
      */
     public String getTheoreticPtm() {
+        zooActivateRead();
         return theoreticPtm;
     }
 
@@ -75,6 +76,7 @@ public class ModificationMatch extends ExperimentObject {
      * @param ptm the theoretic PTM name
      */
     public void setTheoreticPtm(String ptm) {
+        zooActivateWrite();
         this.theoreticPtm = ptm;
         setModified(true);
     }
@@ -85,6 +87,7 @@ public class ModificationMatch extends ExperimentObject {
      * @return the index of the modification in the sequence
      */
     public int getModificationSite() {
+        zooActivateRead();
         return modifiedSite;
     }
 
@@ -94,6 +97,7 @@ public class ModificationMatch extends ExperimentObject {
      * @param site the index of the modification in the sequence
      */
     public void setModificationSite(int site) {
+        zooActivateWrite();
         this.modifiedSite = site;
         setModified(true);
     }
@@ -105,7 +109,8 @@ public class ModificationMatch extends ExperimentObject {
      * @return a boolean indicating whether the modification is confidently
      * localized on the sequence
      */
-    public boolean isConfident() {
+    public boolean getConfident() {
+        zooActivateRead();
         return confident;
     }
 
@@ -116,6 +121,7 @@ public class ModificationMatch extends ExperimentObject {
      * confidently localized on the sequence
      */
     public void setConfident(boolean confident) {
+        zooActivateWrite();
         this.confident = confident;
         setModified(true);
     }
@@ -127,7 +133,8 @@ public class ModificationMatch extends ExperimentObject {
      * @return a boolean indicating whether the modification is inferred from
      * another peptide
      */
-    public boolean isInferred() {
+    public boolean getInferred() {
+        zooActivateRead();
         return inferred;
     }
 
@@ -138,12 +145,15 @@ public class ModificationMatch extends ExperimentObject {
      * from another peptide
      */
     public void setInferred(boolean inferred) {
+        zooActivateWrite();
         this.inferred = inferred;
         setModified(true);
     }
     
     public void setVariable(boolean variable){
+        zooActivateWrite();
         this.variable = variable;
+        setModified(true);
     }
 
     /**
@@ -160,7 +170,7 @@ public class ModificationMatch extends ExperimentObject {
         if (!theoreticPtm.equals(anotherModificationMatch.getTheoreticPtm())) {
             return false;
         }
-        return variable == anotherModificationMatch.isVariable();
+        return variable == anotherModificationMatch.getVariable();
     }
     
     /**

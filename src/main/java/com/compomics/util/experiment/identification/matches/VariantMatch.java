@@ -1,13 +1,15 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.variants.Variant;
+import org.zoodb.api.impl.ZooPC;
 
 /**
  * Class capturing the information on a variant.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
-public class VariantMatch {
+public class VariantMatch extends ZooPC {
     
     /**
      * The variant.
@@ -41,6 +43,7 @@ public class VariantMatch {
      * @return the variant
      */
     public Variant getVariant() {
+        zooActivateRead();
         return variant;
     }
 
@@ -50,6 +53,7 @@ public class VariantMatch {
      * @return the site on the peptide
      */
     public int getSite() {
+        zooActivateRead();
         return site;
     }
 
@@ -59,18 +63,22 @@ public class VariantMatch {
      * @return the protein accession where this variant was found
      */
     public String getProteinAccession() {
+        zooActivateRead();
         return proteinAccession;
     }
     
     public void setProteinAccession(String proteinAccession){
+        zooActivateWrite();
         this.proteinAccession = proteinAccession;
     }
     
     public void setSite(int site){
+        zooActivateWrite();
         this.site = site;
     }
     
     public void setVariant(Variant variant){
+        zooActivateWrite();
         this.variant = variant;
     }
 }

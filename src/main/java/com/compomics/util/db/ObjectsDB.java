@@ -107,7 +107,7 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public ObjectsDB(String folder, String dbName, boolean overwrite) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        File f = new File("/" + folder + "/" + dbName);
+        File f = new File("/" + folder);
         dbFolder = f.getAbsolutePath();
         
         if (!f.exists()){
@@ -116,9 +116,10 @@ public class ObjectsDB {
             }
         }
         else if (overwrite) {
-            ZooHelper.removeDb(dbName);
+            ZooHelper.removeDb(dbFolder + "/" + dbName);
             f.mkdirs();
         }
+        dbFolder += "/" + dbName;
         
         establishConnection();
         objectsCache = new ObjectsCache(this);
@@ -812,7 +813,7 @@ public class ObjectsDB {
 
         dbMutex.acquire();
         
-        PersistenceManager pm = ZooJdoHelper.openOrCreateDB(dbFolder);
+        pm = ZooJdoHelper.openOrCreateDB(dbFolder);
         pm.currentTransaction().begin();
         
         dbMutex.release();

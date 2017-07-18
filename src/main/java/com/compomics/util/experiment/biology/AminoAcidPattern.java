@@ -1142,7 +1142,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
                 int newIndex = i + patternLength;
                 for (ModificationMatch oldModificationMatch : modificationMatches.get(i)) {
-                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.isVariable(), newIndex);
+                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.getVariable(), newIndex);
                     addModificationMatch(newIndex, newModificationMatch);
                 }
             }
@@ -1392,8 +1392,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int modSite : targetModifications.keySet()) {
                 for (ModificationMatch modificationMatch : targetModifications.get(modSite)) {
                     String modName = modificationMatch.getTheoreticPtm();
-                    if (modificationMatch.isVariable()) {
-                        if (modificationMatch.isConfident()) {
+                    if (modificationMatch.getVariable()) {
+                        if (modificationMatch.getConfident()) {
                             if (!mainModificationSites.containsKey(modSite)) {
                                 mainModificationSites.put(modSite, new ArrayList<String>());
                             }
@@ -1689,7 +1689,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     ArrayList<ModificationMatch> modificationMatches = targetModifications.get(i);
                     ArrayList<ModificationMatch> newMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
                     for (ModificationMatch modificationMatch : modificationMatches) {
-                        newMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), index));
+                        newMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), index));
                     }
                     aminoAcidPattern.addModificationMatches(index, newMatches);
                 }
@@ -1735,11 +1735,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int i : targetModifications.keySet()) {
                 int reversed = length() - i + 1;
                 for (ModificationMatch modificationMatch : targetModifications.get(i)) {
-                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), reversed);
-                    if (modificationMatch.isConfident()) {
+                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), reversed);
+                    if (modificationMatch.getConfident()) {
                         newMatch.setConfident(true);
                     }
-                    if (modificationMatch.isInferred()) {
+                    if (modificationMatch.getInferred()) {
                         newMatch.setInferred(true);
                     }
                     newPattern.addModificationMatch(reversed, newMatch);

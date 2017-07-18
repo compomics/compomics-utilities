@@ -59,7 +59,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The variants observed when mapping this peptide to the database.
      */
-    private ArrayList<VariantMatch> variants = null;
+    private ArrayList<VariantMatch> variantMatches = null;
     /**
      * The variants in a map indexed by protein.
      */
@@ -86,34 +86,42 @@ public class Peptide extends ExperimentObject {
     
     
     public void setMass(double mass){
+        zooActivateWrite();
         this.mass = mass;
     }
     
     public void setKey(String key){
+        zooActivateWrite();
         this.key = key;
     }
     
     public ArrayList<String> getParentProteins(){
+        zooActivateRead();
         return parentProteins;
     }
     
     public void setMatchingKey(String matchingKey){
+        zooActivateWrite();
         this.matchingKey = matchingKey;
     }
     
     public void setSequenceWithLowerCasePtms(String sequenceWithLowerCasePtms){
+        zooActivateWrite();
         this.sequenceWithLowerCasePtms = sequenceWithLowerCasePtms;
     }
     
-    public void setVariants(ArrayList<VariantMatch> variants){
-        this.variants = variants;
+    public void setVariants(ArrayList<VariantMatch> variantMatches){
+        zooActivateWrite();
+        this.variantMatches = variantMatches;
     }
     
     public ArrayList<VariantMatch> getVariants(){
-        return variants;
+        zooActivateRead();
+        return variantMatches;
     }
     
     public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap){
+        zooActivateWrite();
         this.variantsMap = variantsMap;
     }
 
@@ -173,7 +181,7 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants, boolean sanityCheck) {
         this.sequence = aSequence;
         this.modificationMatches = new ArrayList<ModificationMatch>(modifications);
-        this.variants = new ArrayList<VariantMatch>(variants);
+        this.variantMatches = new ArrayList<VariantMatch>(variants);
         if (sanityCheck) {
             sanityCheck();
         }
@@ -185,6 +193,7 @@ public class Peptide extends ExperimentObject {
      * @return the peptide mass
      */
     public double getMass() {
+        zooActivateRead();
         if (mass == 0) {
             estimateTheoreticMass();
         }
@@ -197,6 +206,7 @@ public class Peptide extends ExperimentObject {
      * @return the modifications matches as found by the search engine
      */
     public ArrayList<ModificationMatch> getModificationMatches() {
+        zooActivateRead();
         return modificationMatches;
     }
 
@@ -206,6 +216,7 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatches the new modification matches
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
+        zooActivateWrite();
         this.modificationMatches = modificationMatches;
         mass = 0;
         key = null;
@@ -243,7 +254,8 @@ public class Peptide extends ExperimentObject {
      * @return the variants matches as found by the search engine
      */
     public ArrayList<VariantMatch> getVariantMatches() {
-        return variants;
+        zooActivateRead();
+        return variantMatches;
     }
 
     /**
@@ -252,15 +264,16 @@ public class Peptide extends ExperimentObject {
      * @param variants the new variant matches
      */
     public void setVariantMatches(ArrayList<VariantMatch> variants) {
-        this.variants = variants;
+        zooActivateWrite();
+        this.variantMatches = variants;
     }
 
     /**
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
-        if (variants != null) {
-            variants.clear();
+        if (variantMatches != null) {
+            variantMatches.clear();
             variantsMap = null;
         }
     }
@@ -271,10 +284,10 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatch(VariantMatch variantMatch) {
-        if (variants == null) {
-            variants = new ArrayList<VariantMatch>(1);
+        if (variantMatches == null) {
+            variantMatches = new ArrayList<VariantMatch>(1);
         }
-        variants.add(variantMatch);
+        variantMatches.add(variantMatch);
         variantsMap = null;
     }
 
@@ -284,11 +297,11 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatches(Collection<VariantMatch> variantMatch) {
-        if (variants == null) {
-            variants = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
+        if (variantMatches == null) {
+            variantMatches = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
         if (variantMatch != null) {
-            variants.addAll(variantMatch);
+            variantMatches.addAll(variantMatch);
         }
         variantsMap = null;
     }
@@ -300,14 +313,15 @@ public class Peptide extends ExperimentObject {
      * @return the variants in a map
      */
     public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
-        if (getVariantsMap() == null) {
-            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(getVariants().size());
-            for (VariantMatch variantMatch : variants) {
+        zooActivateRead();
+        if (variantsMap == null) {
+            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(variantMatches.size());
+            for (VariantMatch variantMatch : variantMatches) {
                 String proteinAccession = variantMatch.getProteinAccession();
-                HashMap<Integer, ArrayList<Variant>> proteinVariants = getVariantsMap().get(proteinAccession);
+                HashMap<Integer, ArrayList<Variant>> proteinVariants = variantsMap.get(proteinAccession);
                 if (proteinVariants == null) {
                     proteinVariants = new HashMap<Integer, ArrayList<Variant>>(2);
-                    getVariantsMap().put(proteinAccession, proteinVariants);
+                    variantsMap.put(proteinAccession, proteinVariants);
                 }
                 int site = variantMatch.getSite();
                 ArrayList<Variant> variantsAtSite = proteinVariants.get(site);
@@ -334,10 +348,12 @@ public class Peptide extends ExperimentObject {
      * @return the peptide sequence
      */
     public String getSequence() {
+        zooActivateRead();
         return sequence;
     }
     
     public void setSequence(String sequence){
+        zooActivateRead();
         this.sequence = sequence;
     }
 
@@ -348,6 +364,7 @@ public class Peptide extends ExperimentObject {
      * @return the peptide sequence with the modified residues in lowercase
      */
     public String getSequenceWithLowerCasePtms() {
+        zooActivateRead();
 
         if (sequenceWithLowerCasePtms != null) {
             return sequenceWithLowerCasePtms;
@@ -451,6 +468,7 @@ public class Peptide extends ExperimentObject {
      * interacting with an SQL database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, boolean remap) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+        
         if (!remap || parentProteins != null) { // avoid building the index if not necessary
             return parentProteins;
         }
@@ -526,6 +544,7 @@ public class Peptide extends ExperimentObject {
      * @return an ArrayList containing the parent proteins
      */
     public ArrayList<String> getParentProteinsNoRemapping() {
+        zooActivateRead();
         return parentProteins;
     }
 
@@ -537,6 +556,7 @@ public class Peptide extends ExperimentObject {
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
+        zooActivateRead();
         this.parentProteins = parentProteins;
     }
 
@@ -548,6 +568,7 @@ public class Peptide extends ExperimentObject {
     }
     
     public String getMatchingKey(){
+        zooActivateRead();
         return matchingKey;
     }
 
@@ -589,6 +610,7 @@ public class Peptide extends ExperimentObject {
      * @return the key of the peptide
      */
     public String getKey() {
+        zooActivateRead();
         if (key == null) {
             key = getKey(getSequence(), getModificationMatches());
         }
@@ -611,11 +633,11 @@ public class Peptide extends ExperimentObject {
         int size = sequence.length();
         ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
         for (ModificationMatch mod : modificationMatches) {
-            if (mod.isVariable()) {
+            if (mod.getVariable()) {
                 String ptmName = mod.getTheoreticPtm();
                 if (ptmName != null) {
                     PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                    if (mod.isConfident() || mod.isInferred()) {
+                    if (mod.getConfident() || mod.getInferred()) {
                         StringBuilder tempModKey = new StringBuilder();
                         tempModKey.append(ptm.getMassAsString()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
                         tempModifications.add(tempModKey.toString());
@@ -698,7 +720,7 @@ public class Peptide extends ExperimentObject {
         int n = 0;
         if (modificationMatches != null) {
             for (ModificationMatch modificationMatch : modificationMatches) {
-                if (modificationMatch.isVariable()) {
+                if (modificationMatch.getVariable()) {
                     PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
                     if (ptm.getMass() == modificationMass) {
                         n++;
@@ -1567,8 +1589,8 @@ public class Peptide extends ExperimentObject {
             for (ModificationMatch modMatch : modificationMatches) {
                 String modName = modMatch.getTheoreticPtm();
                 int modSite = modMatch.getModificationSite();
-                if (modMatch.isVariable()) {
-                    if (modMatch.isConfident()) {
+                if (modMatch.getVariable()) {
+                    if (modMatch.getConfident()) {
                         if (!confidentModificationSites.containsKey(modSite)) {
                             confidentModificationSites.put(modSite, new ArrayList<String>(1));
                         }
@@ -1688,7 +1710,7 @@ public class Peptide extends ExperimentObject {
         HashMap<String, ArrayList<Integer>> modMap = new HashMap<String, ArrayList<Integer>>();
         if (peptide.isModified()) {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if ((variablePtms && modificationMatch.isVariable()) || (!variablePtms && !modificationMatch.isVariable())) {
+                if ((variablePtms && modificationMatch.getVariable()) || (!variablePtms && !modificationMatch.getVariable())) {
                     if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
                         modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
                     }
@@ -1753,7 +1775,7 @@ public class Peptide extends ExperimentObject {
         for (int i = 0; i < sequence.length(); i++) {
             for (int j = 0; j < modificationMatches.size(); j++) {
                 PTM ptm = ptmFactory.getPTM(modificationMatches.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && (modificationMatches.get(j).isVariable() || !excludeFixed)) {
+                if (ptm.getType() == PTM.MODAA && (modificationMatches.get(j).getVariable() || !excludeFixed)) {
                     if (modificationMatches.get(j).getModificationSite() == (i + 1)) {
                         modifiedResidues.add(i + 1);
                     }
@@ -1778,7 +1800,7 @@ public class Peptide extends ExperimentObject {
 
         HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>(modificationMatches.size());
         for (ModificationMatch modificationMatch : modificationMatches) {
-            if (!modificationMatch.isVariable()) {
+            if (!modificationMatch.getVariable()) {
                 int aa = modificationMatch.getModificationSite();
                 if (!result.containsKey(aa)) {
                     result.put(aa, new ArrayList<String>());

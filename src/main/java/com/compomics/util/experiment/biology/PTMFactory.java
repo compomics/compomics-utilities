@@ -505,7 +505,7 @@ public class PTMFactory implements Serializable {
         if (peptide.isModified()) {
             ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>(peptide.getNModifications());
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (!modMatch.isVariable()) {
+                if (!modMatch.getVariable()) {
                     toRemove.add(modMatch);
                 }
             }
@@ -612,7 +612,7 @@ public class PTMFactory implements Serializable {
                 for (int aa : aminoAcidPattern.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
-                        if (!modMatch.isVariable()) {
+                        if (!modMatch.getVariable()) {
                             toRemove.add(modMatch);
                         }
                     }
@@ -665,7 +665,7 @@ public class PTMFactory implements Serializable {
                 for (int aa : aminoAcidSequence.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
-                        if (!modMatch.isVariable()) {
+                        if (!modMatch.getVariable()) {
                             toRemove.add(modMatch);
                         }
                     }

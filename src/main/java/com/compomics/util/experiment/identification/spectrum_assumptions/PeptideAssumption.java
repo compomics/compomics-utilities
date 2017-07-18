@@ -19,12 +19,12 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     /**
      * The theoretic peptide.
      */
-    //private Peptide peptide;
+    private Peptide peptide;
 
     /**
      * Constructor for a peptide assumption.
      *
-     * @param aPeptide the theoretic peptide
+     * @param peptide the theoretic peptide
      * @param rank the identification rank
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
@@ -34,8 +34,8 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * class)
      * @param identificationFile the identification file
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
-        //this.peptide = aPeptide;
+    public PeptideAssumption(Peptide peptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
+        this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
@@ -46,7 +46,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     /**
      * Constructor for a peptide assumption.
      *
-     * @param aPeptide the theoretic peptide
+     * @param peptide the theoretic peptide
      * @param rank the identification rank
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
@@ -54,8 +54,8 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param score the score (whether the score is ascending or descending can
      * be known from the SearchEngine class)
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score) {
-        //this.peptide = aPeptide;
+    public PeptideAssumption(Peptide peptide, int rank, int advocate, Charge identificationCharge, double score) {
+        this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
@@ -66,12 +66,12 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * Constructor for a simple peptide assumption containing only the
      * information necessary for spectrum annotation.
      *
-     * @param aPeptide the theoretic peptide
+     * @param peptide the theoretic peptide
      * @param identificationCharge the charge used by the search engine for
      * identification
      */
     public PeptideAssumption(Peptide peptide, Charge identificationCharge) {
-        //this.peptide = peptide;
+        this.peptide = peptide;
         super.identificationCharge = identificationCharge;
     }
     
@@ -83,17 +83,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        //return peptide;
-        return null;
+        zooActivateRead();
+        return peptide;
     }
     
     public void setPeptide(Peptide peptide){
-        //this.peptide = peptide;
+        zooActivateWrite();
+        setModified(true);
+        this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        //return peptide.getMass();
-        return 0;
+        return peptide.getMass();
     }
 }

@@ -56,10 +56,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the tag of this assumption
      */
     public Tag getTag() {
+        zooActivateRead();
         return tag;
     }
     
     public void setTag(Tag tag){
+        zooActivateWrite();
+        setModified(true);
         this.tag = tag;
     }
 

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.apache.commons.math.util.FastMath;
  *
  * @author Marc Vaudel
  */
-public class SpectrumIndex implements UrParameter {
+public class SpectrumIndex extends IdObject implements UrParameter {
 
     /**
      * The precursor mass tolerance.
@@ -56,6 +57,26 @@ public class SpectrumIndex implements UrParameter {
      */
     public SpectrumIndex() {
 
+    }
+    
+    public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
+        zooActivateRead();
+        return peaksMap;
+    }
+    
+    public boolean getPpm(){
+        zooActivateRead();
+        return ppm;
+    }
+    
+    public double getPrecursorToleance(){
+        zooActivateRead();
+        return precursorTolerance;
+    }
+    
+    public double getScalingFactor(){
+        zooActivateRead();
+        return scalingFactor;
     }
 
     /**
@@ -247,6 +268,7 @@ public class SpectrumIndex implements UrParameter {
      * @return binMax the highest bin
      */
     public Integer getBinMax() {
+        zooActivateRead();
         return binMax;
     }
 
@@ -256,6 +278,7 @@ public class SpectrumIndex implements UrParameter {
      * @return binMin the lowest bin
      */
     public Integer getBinMin() {
+        zooActivateRead();
         return binMin;
     }
 
@@ -265,11 +288,54 @@ public class SpectrumIndex implements UrParameter {
      * @return the total intensity of the peaks above the intensity threshold
      */
     public Double getTotalIntensity() {
+        zooActivateRead();
         return totalIntensity;
     }
 
     @Override
     public String getParameterKey() {
         return "SpectrumIndex";
+    }
+    
+    public void setBinMax(Integer binMax){
+        zooActivateRead();
+        setModified(true);
+        this.binMax = binMax;
+    }
+    
+    public void setBinMin(Integer binMin){
+        zooActivateRead();
+        setModified(true);
+        this.binMin = binMin;
+    }
+    
+    public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
+        zooActivateRead();
+        setModified(true);
+        this.peaksMap = peaksMap;
+    }
+    
+    public void setPpm(boolean ppm){
+        zooActivateRead();
+        setModified(true);
+        this.ppm = ppm;
+    }
+    
+    public void setPrecursorTolerance(double precursorTolerance){
+        zooActivateRead();
+        setModified(true);
+        this.precursorTolerance = precursorTolerance;
+    }
+    
+    public void setScalingFactor(double scalingFactor){
+        zooActivateRead();
+        setModified(true);
+        this.scalingFactor = scalingFactor;
+    }
+    
+    public void setTotalIntensity(Double totalIntensity){
+        zooActivateRead();
+        setModified(true);
+        this.totalIntensity = totalIntensity;
     }
 }

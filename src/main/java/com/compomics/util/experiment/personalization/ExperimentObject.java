@@ -75,10 +75,12 @@ public abstract class ExperimentObject extends IdObject {
     }
     
     public void setUrParams(HashMap<String, UrParameter> urParams){
+        zooActivateWrite();
         this.urParams = urParams;
     }
     
     public HashMap<String, UrParameter> getUrParams(){
+        zooActivateRead();
         return urParams;
     }
 }

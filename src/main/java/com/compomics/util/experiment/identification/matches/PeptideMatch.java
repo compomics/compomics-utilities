@@ -33,10 +33,12 @@ public class PeptideMatch extends IdentificationMatch {
     private boolean isDecoy = false;
     
     public boolean getIsDecoy(){
+        zooActivateRead();
         return isDecoy;
     }
     
     public void setIsDecoy(boolean isDecoy){
+        zooActivateWrite();
         this.isDecoy = isDecoy;
     }
 
@@ -48,6 +50,7 @@ public class PeptideMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
+        zooActivateRead();
         return key;
     }
     
@@ -57,6 +60,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param newKey a new key for the match
      */
     public void setKey(String newKey) {
+        zooActivateWrite();
         this.key = newKey;
         setModified(true);
     }
@@ -78,6 +82,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the theoretic peptide
      */
     public Peptide getTheoreticPeptide() {
+        zooActivateRead();
         return theoreticPeptide;
     }
 
@@ -87,6 +92,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param theoreticPeptide a theoretic peptide
      */
     public void setTheoreticPeptide(Peptide theoreticPeptide) {
+        zooActivateWrite();
         this.theoreticPeptide = theoreticPeptide;
         setModified(true);
     }
@@ -97,6 +103,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the keys of all spectrum matches
      */
     public ArrayList<String> getSpectrumMatchesKeys() {
+        zooActivateRead();
         return spectrumMatchesKeys;
     }
     
@@ -106,6 +113,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchesKeys the keys
      */
     public void setSpectrumMatchesKeys(ArrayList<String> spectrumMatchesKeys){
+        zooActivateWrite();
         this.spectrumMatchesKeys = spectrumMatchesKeys;
     }
 
@@ -129,6 +137,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
+        zooActivateRead();
         return spectrumMatchesKeys.size();
     }
 

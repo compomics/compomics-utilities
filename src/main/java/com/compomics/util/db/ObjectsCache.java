@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.concurrent.Semaphore;
+import javax.jdo.PersistenceManager;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -292,6 +293,7 @@ public class ObjectsCache {
             }
             
             ListIterator<Long> listIterator = objectQueue.listIterator();
+            PersistenceManager pm = objectsDB.getDB();
             for (int i = 0; i < numLastEntries; ++i){
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -314,18 +316,20 @@ public class ObjectsCache {
                 if (!objectsDB.getIdMap().containsKey(key)){
                     System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
-                    obj = objectsDB.getDB().save(obj);
-                    entry.setObject(obj);
-                    objectsDB.getIdMap().put(key, objectsDB.getDB().getIdentity(obj));
+                    pm.makePersistent(obj);
+                    Long zooid = (Long)pm.getObjectId(obj);
+                    ((IdObject)obj).setId(zooid);
+                    objectsDB.getIdMap().put(key, zooid);
                 }
                 else if (((IdObject)obj).getModified()){
                     System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
-                    objectsDB.getDB().save(entry.getObject());
                 }
                 
                 if (clearEntries) loadedObjects.remove(key);
             }
+            pm.currentTransaction().commit();
+            pm.currentTransaction().begin();
             loadedObjectMutex.release();
             
             

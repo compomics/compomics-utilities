@@ -4064,7 +4064,7 @@ public class FMIndex implements PeptideMapper {
                             modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                         }
                     } else {
-                        modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.isVariable(), content.length - currentContent.modification.getModificationSite() + 1));
+                        modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.getVariable(), content.length - currentContent.modification.getModificationSite() + 1));
                     }
                 }
 
@@ -4084,7 +4084,7 @@ public class FMIndex implements PeptideMapper {
             }
 
             for (ModificationMatch modificationMatch : currentContent.modifications) {
-                modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+                modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
             }
 
             String peptide = currentPeptide + currentContent.peptideSequence;
@@ -4180,7 +4180,7 @@ public class FMIndex implements PeptideMapper {
 
                             ArrayList<ModificationMatch> newModifications = new ArrayList<ModificationMatch>();
                             for (ModificationMatch m : currentModifications){
-                                newModifications.add(new ModificationMatch(m.getTheoreticPtm(), m.isVariable(), m.getModificationSite()));
+                                newModifications.add(new ModificationMatch(m.getTheoreticPtm(), m.getVariable(), m.getModificationSite()));
                             }
 
                             for (int i = 0; i < uniquePermutations[0].length; ++i){
@@ -4447,7 +4447,7 @@ public class FMIndex implements PeptideMapper {
                                 modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
                             }
                         } else {
-                            modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.isVariable(), currentContent.modification.getModificationSite() + content.length - currentContent.length + 1));
+                            modifications.add(new ModificationMatch(currentContent.modification.getTheoreticPtm(), currentContent.modification.getVariable(), currentContent.modification.getModificationSite() + content.length - currentContent.length + 1));
                         }
                     }
 
@@ -4458,7 +4458,7 @@ public class FMIndex implements PeptideMapper {
                 int rightIndex = content.right;
 
                 for (ModificationMatch modificationMatch : currentContent.modifications) {
-                    modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+                    modifications.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
                 }
 
                 String peptide = currentPeptide + currentContent.peptideSequence;

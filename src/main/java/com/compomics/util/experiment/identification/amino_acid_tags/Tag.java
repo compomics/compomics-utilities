@@ -94,10 +94,13 @@ public class Tag extends ExperimentObject {
      * @return the content of this tag as a list
      */
     public ArrayList<TagComponent> getContent() {
+        zooActivateRead();
         return content;
     }
     
     public void setContent(ArrayList<TagComponent> content){
+        zooActivateWrite();
+        setModified(true);
         this.content = content;
     }
 
@@ -674,7 +677,7 @@ public class Tag extends ExperimentObject {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                 for (int i = 1; i <= aminoAcidPattern.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
-                        if (modificationMatch.isVariable()) {
+                        if (modificationMatch.getVariable()) {
                             if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
                                 modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
                             }
@@ -687,7 +690,7 @@ public class Tag extends ExperimentObject {
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 for (int i = 1; i <= aminoAcidSequence.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i)) {
-                        if (modificationMatch.isVariable()) {
+                        if (modificationMatch.getVariable()) {
                             if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
                                 modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
                             }

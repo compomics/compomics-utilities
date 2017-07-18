@@ -223,7 +223,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 if (previousModificationMatches != null) {
                                     for (ModificationMatch modificationMatch : previousModificationMatches) {
                                         newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
-                                                modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                                                modificationMatch.getVariable(), modificationMatch.getModificationSite()));
                                     }
                                 }
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),

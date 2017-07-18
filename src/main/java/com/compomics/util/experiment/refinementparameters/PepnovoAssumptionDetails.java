@@ -32,6 +32,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @return the PepNovo rank score
      */
     public double getRankScore() {
+        zooActivateRead();
         return rankScore;
     }
 
@@ -41,6 +42,8 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
+        zooActivateWrite();
+        setModified(true);
         this.rankScore = rankScore;
     }
 
@@ -50,6 +53,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @return the PepNovo mH
      */
     public double getMH() {
+        zooActivateRead();
         return mH;
     }
 
@@ -59,6 +63,8 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @param mH the PepNovo mH
      */
     public void setMH(double mH) {
+        zooActivateWrite();
+        setModified(true);
         this.mH = mH;
     }
 

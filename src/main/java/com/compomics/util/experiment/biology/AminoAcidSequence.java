@@ -618,8 +618,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             for (int modSite : modifications.keySet()) {
                 for (ModificationMatch modificationMatch : modifications.get(modSite)) {
                     String modName = modificationMatch.getTheoreticPtm();
-                    if (modificationMatch.isVariable()) {
-                        if (modificationMatch.isConfident()) {
+                    if (modificationMatch.getVariable()) {
+                        if (modificationMatch.getConfident()) {
                             if (!confidentModificationSites.containsKey(modSite)) {
                                 confidentModificationSites.put(modSite, new ArrayList<String>());
                             }
@@ -935,11 +935,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             for (int i : modifications.keySet()) {
                 int reversed = length() - i + 1;
                 for (ModificationMatch modificationMatch : modifications.get(i)) {
-                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), reversed);
-                    if (modificationMatch.isConfident()) {
+                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), reversed);
+                    if (modificationMatch.getConfident()) {
                         newMatch.setConfident(true);
                     }
-                    if (modificationMatch.isInferred()) {
+                    if (modificationMatch.getInferred()) {
                         newMatch.setInferred(true);
                     }
                     newSequence.addModificationMatch(reversed, newMatch);

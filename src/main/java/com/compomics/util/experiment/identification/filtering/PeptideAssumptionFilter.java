@@ -267,7 +267,7 @@ public class PeptideAssumptionFilter implements Serializable {
         HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>(peptide.getNModifications());
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (modMatch.isVariable()) {
+                if (modMatch.getVariable()) {
                     String modName = modMatch.getTheoreticPtm();
                     PTM ptm = ptmFactory.getPTM(modName);
                     double mass = ptm.getMass();

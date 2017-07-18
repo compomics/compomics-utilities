@@ -211,7 +211,7 @@ public class PtmDialog extends javax.swing.JDialog {
             }
             String deletion = "";
             if (atomChainRemoved != null) {
-                deletion = atomChainRemoved.toString();
+                deletion = "-" + atomChainRemoved.toString();
             }
             String temp = addition + " " + deletion;
             compositionTxt.setText(temp.trim());
@@ -1370,7 +1370,17 @@ public class PtmDialog extends javax.swing.JDialog {
             if (!atomChainDialog.isCanceled()) {
                 atomChainAdded = atomChainDialog.getAtomChainAdded();
                 atomChainRemoved = atomChainDialog.getAtomChainRemoved();
-                compositionTxt.setText((atomChainAdded.toString() + " " + atomChainRemoved.toString()).trim());
+                
+                String addition = "";
+                if (atomChainAdded.size() > 0) {
+                    addition = atomChainAdded.toString();
+                }
+                String deletion = "";
+                if (atomChainRemoved.size() > 0) {
+                    deletion = "-" + atomChainRemoved.toString();
+                }
+                String temp = addition + " " + deletion;
+                compositionTxt.setText(temp.trim());
             }
 
             validateInput(false);

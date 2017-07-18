@@ -2,10 +2,10 @@ package com.compomics.util.experiment.identification.matches_iterators;
 
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.waiting.WaitingHandler;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * An abstract iterator class.
@@ -16,7 +16,7 @@ public abstract class MatchesIterator {
     /**
      * Iterator for spectrum matches
      */
-    //private OObjectIteratorClass<?> iterator = null;
+    private Iterator<?> iterator = null;
     /**
      * the identification
      */
@@ -33,10 +33,6 @@ public abstract class MatchesIterator {
      * absolute number of the objects in the iterator
      */
     private int num;
-    /**
-     * flag for lazy loading from the database
-     */
-    private boolean lazyLoading;
     /**
      * batch size for loading from the db
      */
@@ -64,7 +60,6 @@ public abstract class MatchesIterator {
      *
      * @param className the class name
      * @param identification the identification where to get the matches from
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -79,8 +74,8 @@ public abstract class MatchesIterator {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public MatchesIterator(String className, Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        this(null, className, identification, lazyLoading, waitingHandler, displayProgress);
+    public MatchesIterator(String className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        this(null, className, identification, waitingHandler, displayProgress);
     }
     
     /**
@@ -89,7 +84,6 @@ public abstract class MatchesIterator {
      * @param keys the keys of the objects
      * @param className the className
      * @param identification the identification where to get the matchesloadPs from
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -104,18 +98,17 @@ public abstract class MatchesIterator {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public MatchesIterator(ArrayList<String> keys, String className, Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public MatchesIterator(ArrayList<String> keys, String className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (keys != null){
             num = keys.size();
             this.keys = keys;
         }
         else {
             num = identification.getNumber(className);
-            //iterator = identification.getIterator(className);
+            iterator = identification.getIterator(className);
         }
         index = 0;
         currentIndex = 0;
-        this.lazyLoading = lazyLoading;
         this.identification = identification;
         this.waitingHandler = waitingHandler;
         this.displayProgress = displayProgress;
@@ -151,16 +144,22 @@ public abstract class MatchesIterator {
         // loading data from db
         if (index % batchSize == 0) {
             if (keys != null){
-                ArrayList<String> subKeyList = (ArrayList<String>)keys.subList(index, index + batchSize);
-                identification.loadObjects(subKeyList, lazyLoading, waitingHandler, displayProgress);
+                ArrayList<String> subKeys = (ArrayList<String>)keys.subList(index, index + batchSize);
+                currentKeys = identification.loadObjects(subKeys, waitingHandler, displayProgress);
+                currentIndex = 0;
             }
             else {
-                //identification.loadObjects(iterator, batchSize, lazyLoading, waitingHandler, displayProgress);
+                currentKeys = identification.loadObjects(iterator, batchSize, waitingHandler, displayProgress);
             }
             currentIndex = 0;
         }
             
         index++;
-        return identification.retrieveObject(currentKeys.get(currentIndex++));
+        if (keys == null){
+            return iterator.next();
+        }
+        else {
+            return identification.retrieveObject(currentKeys.get(currentIndex++));
+        }
     }
 }

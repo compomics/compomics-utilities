@@ -13,7 +13,6 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.*;
 import java.sql.SQLException;
 
@@ -21,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import javax.jdo.Extent;
 
 /**
  * This class contains identification results.
@@ -170,7 +171,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public OObjectIteratorClass<?> getIterator(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public Iterator<?> getIterator(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.getObjectsIterator(className);
     }
     
@@ -180,7 +181,6 @@ public abstract class Identification extends ExperimentObject {
      * Loads all objects of the class in cache.
      *
      * @param className the class name
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -196,8 +196,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return objectsDB.loadObjects(className, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
     
     
@@ -205,7 +205,6 @@ public abstract class Identification extends ExperimentObject {
      * Loads all objects of given keys in cache.
      *
      * @param keyList the list of keys of given objects
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -221,8 +220,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(ArrayList<String> keyList, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return objectsDB.loadObjects(keyList, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
     }
     
     
@@ -231,7 +230,6 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param iterator the iterator
      * @param num number of objects that have to be retrieved in a batch
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -247,8 +245,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return objectsDB.loadObjects(iterator, num, lazyLoading, waitingHandler, displayProgress);
+    public ArrayList<Long> loadObjects(Iterator<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.loadObjects(iterator, num, waitingHandler, displayProgress);
     }
     
     
@@ -791,7 +789,6 @@ public abstract class Identification extends ExperimentObject {
      * Returns a psm iterator for a given key list.
      *
      * @param spectrumKeys the keys of the spectra to iterate
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -805,15 +802,14 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new PsmIterator(spectrumKeys, this, lazyLoading, waitingHandler, false);
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(spectrumKeys, this, waitingHandler, false);
     }
     
     
     /**
      * Returns a psm iterator for all SpectrumMatches.
      *
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -826,8 +822,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public PsmIterator getPsmIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new PsmIterator(this, lazyLoading, waitingHandler, false);
+    public PsmIterator getPsmIterator(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(this, waitingHandler, false);
     }
     
     
@@ -835,7 +831,6 @@ public abstract class Identification extends ExperimentObject {
      * Returns a peptide matches iterator for a given key list.
      *
      * @param peptideKeys the keys of the peptides to iterate
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -848,15 +843,14 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new PeptideMatchesIterator(peptideKeys, this, lazyLoading, waitingHandler, false);
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PeptideMatchesIterator(peptideKeys, this, waitingHandler, false);
     }
     
     
     /**
      * Returns a peptide matches iterator for all PeptideMatches.
      *
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -869,8 +863,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new PeptideMatchesIterator(this, lazyLoading, waitingHandler, false);
+    public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PeptideMatchesIterator(this, waitingHandler, false);
     }
     
     
@@ -878,7 +872,6 @@ public abstract class Identification extends ExperimentObject {
      * Returns a protein matches iterator for a given key list.
      *
      * @param proteinKeys the keys of the peptides to iterate
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -891,15 +884,14 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new ProteinMatchesIterator(proteinKeys, this, lazyLoading, waitingHandler, false);
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new ProteinMatchesIterator(proteinKeys, this, waitingHandler, false);
     }
     
     
     /**
      * Returns a protein matches iterator for all PeptideMatches.
      *
-     * @param lazyLoading flag for lazy loading from the database
      * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
@@ -912,8 +904,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(boolean lazyLoading, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return new ProteinMatchesIterator(this, lazyLoading, waitingHandler, false);
+    public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new ProteinMatchesIterator(this, waitingHandler, false);
     }
     
 }

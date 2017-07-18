@@ -2,20 +2,23 @@ package com.compomics.util.db;
 
 import com.compomics.util.IdObject;
 import com.compomics.util.waiting.WaitingHandler;
-import com.orientechnologies.orient.core.id.ORID;
-import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.concurrent.Semaphore;
-import org.apache.commons.io.FileUtils;
+
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+
+import org.zoodb.jdo.ZooJdoHelper;
+import org.zoodb.tools.ZooHelper;
 
 /**
  * A database which can easily be used to store objects.
@@ -56,11 +59,11 @@ public class ObjectsDB {
     /**
      * OrientDB database connection
      */
-    OObjectDatabaseTx db = null;
+    PersistenceManager pm = null;
     /**
      * HashMap to map hash IDs of entries into DB ids
      */
-    private final HashMap<Long, ORID> idMap = new HashMap<Long, ORID>();
+    private final HashMap<Long, Long> idMap = new HashMap<Long, Long>();
     /**
      * path of the database folder
      */
@@ -105,6 +108,7 @@ public class ObjectsDB {
      */
     public ObjectsDB(String folder, String dbName, boolean overwrite) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         File f = new File("/" + folder + "/" + dbName);
+        dbFolder = f.getAbsolutePath();
         
         if (!f.exists()){
             if (!f.mkdirs()){
@@ -112,17 +116,16 @@ public class ObjectsDB {
             }
         }
         else if (overwrite) {
-            FileUtils.deleteDirectory(f);
+            ZooHelper.removeDb(dbName);
             f.mkdirs();
         }
-        dbFolder = f.getAbsolutePath();
         
         establishConnection();
         objectsCache = new ObjectsCache(this);
         
     }
     
-    public HashMap<Long, ORID> getIdMap(){
+    public HashMap<Long, Long> getIdMap(){
         return idMap;
     }
     
@@ -131,16 +134,9 @@ public class ObjectsDB {
         return dbMutex;
     }
     
-    public void registerClass(Class<?> cls){
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " registering " + cls.getSimpleName() + " class");
-        }
-        db.getEntityManager().registerEntityClasses(cls, false);
-    }
     
-    
-    public OObjectDatabaseTx getDB(){
-        return db;
+    public PersistenceManager getDB(){
+        return pm;
     }
     
     
@@ -221,8 +217,8 @@ public class ObjectsDB {
      * @param className the class name
      * @return the iterator
      */
-    public OObjectIteratorClass<?> getObjectsIterator(String className){
-        return db.browseClass(className);
+    public Iterator<?> getObjectsIterator(String className){
+        return pm.getExtent(className.getClass()).iterator();
     }
     
 
@@ -257,7 +253,9 @@ public class ObjectsDB {
             objectsCache.addObject(longKey, object, true);
             
             if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                db.save(object);
+                pm.makePersistent(object);
+                pm.currentTransaction().commit();
+                pm.currentTransaction().begin();
             }
         }
     }
@@ -268,7 +266,6 @@ public class ObjectsDB {
      * Loads some objects from a table in the cache.
      *
      * @param keys the keys of the objects to load
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -284,24 +281,23 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(ArrayList<String> keys, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
         
         dbMutex.acquire();
-        db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
         for (String objectKey : keys){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
             hashedKeys.add(longKey);
-            ORID orid = idMap.get(longKey);
-            if (orid != null){
-                Object obj = db.load(orid);
+            Long zooid = idMap.get(longKey);
+            if (zooid != null){
+                Object obj = pm.getObjectById(zooid);
                 if (!idMap.containsKey(longKey)){
-                    idMap.put(longKey, db.getIdentity(obj));
+                    idMap.put(longKey, (Long)pm.getObjectId(obj));
                 }
                 allObjects.put(longKey, obj);
             }
@@ -321,7 +317,6 @@ public class ObjectsDB {
      * Loads all objects from a given class.
      *
      * @param className the class name of the objects to be retrieved
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -337,22 +332,21 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(String className, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
         
         
         dbMutex.acquire();
-        db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
-        for (Object obj : db.browseClass(className)){
+        for (Object obj : pm.getExtent(className.getClass())){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
             hashedKeys.add(longKey);
             if (!idMap.containsKey(longKey)){
-                idMap.put(longKey, db.getIdentity(obj));
+                idMap.put(longKey, (Long)pm.getObjectId(obj));
             }
             allObjects.put(longKey, obj);
             
@@ -370,7 +364,6 @@ public class ObjectsDB {
      *
      * @param iterator the iterator
      * @param num number of objects that have to be retrieved in a batch
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -386,13 +379,12 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(OObjectIteratorClass<?> iterator, int num, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(Iterator<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + num + " objects");
         }
         
         dbMutex.acquire();
-        db.setLazyLoading(lazyLoading);
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
         while(num > 0 && iterator.hasNext()){
@@ -400,10 +392,10 @@ public class ObjectsDB {
             Object obj = iterator.next();
             long longKey = ((IdObject)obj).getId();
             hashedKeys.add(longKey);
-            ORID orid = idMap.get(longKey);
-            if (orid != null){
+            Long zooid = idMap.get(longKey);
+            if (zooid != null){
                 if (!idMap.containsKey(longKey)){
-                    idMap.put(longKey, db.getIdentity(obj));
+                    idMap.put(longKey, (Long)pm.getObjectId(obj));
                 }
             }
             allObjects.put(longKey, obj);
@@ -440,11 +432,11 @@ public class ObjectsDB {
         Object obj = objectsCache.getObject(longKey);
         dbMutex.acquire();
         if (obj == null){
-            ORID orid = idMap.get(longKey);
-            if (orid != null){
-                obj = db.load(orid);
+            Long zooid = idMap.get(longKey);
+            if (zooid != null){
+                obj = pm.getObjectById(zooid);
                 if (!idMap.containsKey(longKey)){
-                    idMap.put(longKey, db.getIdentity(obj));
+                    idMap.put(longKey, (Long)pm.getObjectId(obj));
                 }
             }
             objectsCache.addObject(longKey, obj, false);
@@ -500,7 +492,8 @@ public class ObjectsDB {
         
         int num = 0;
         dbMutex.acquire();
-        num = (int)db.countClass(className);
+        Query q = pm.newQuery(className.getClass());
+        num = ((Collection<?>) q.execute()).size();
         dbMutex.release();
         return num;
     }
@@ -555,11 +548,11 @@ public class ObjectsDB {
             Object obj = objectsCache.getObject(longKey);
             if (obj == null){
                 
-                ORID orid = idMap.get(longKey);
-                if (orid != null){
-                    obj = db.load(orid);
+                Long zooid = idMap.get(longKey);
+                if (zooid != null){
+                    obj = pm.getObjectById(zooid);
                     if (!idMap.containsKey(longKey)){
-                        idMap.put(longKey, db.getIdentity(obj));
+                        idMap.put(longKey, (Long)pm.getObjectId(obj));
                     }
                     allObjects.put(longKey, obj);
                 }
@@ -604,11 +597,11 @@ public class ObjectsDB {
         dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Object> retrievingObjects = new ArrayList<Object>();
-        for (Object obj : db.browseClass(className)){
+        for (Object obj : pm.getExtent(className.getClass())){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
             if (!idMap.containsKey(longKey)){
-                idMap.put(longKey, db.getIdentity(obj));
+                idMap.put(longKey, (Long)pm.getObjectId(obj));
             }
             allObjects.put(longKey, obj);
             retrievingObjects.add(obj);
@@ -654,9 +647,10 @@ public class ObjectsDB {
             long longKey = createLongKey(key);
             objectsCache.removeObject(longKey);
             dbMutex.acquire();
-            ORID orid = idMap.get(longKey);
-            if (orid != null){
-                db.delete(orid);
+            Long zooid = idMap.get(longKey);
+            if (zooid != null){
+                pm.deletePersistent(pm.getObjectById((zooid)));
+                idMap.remove(longKey);
             }
         }
         dbMutex.release();
@@ -688,9 +682,10 @@ public class ObjectsDB {
         long longKey = createLongKey(key);
         objectsCache.removeObject(longKey);
         dbMutex.acquire();
-        ORID orid = idMap.get(longKey);
-        if (orid != null){
-            db.delete(orid);
+        Long zooid = idMap.get(longKey);
+        if (zooid != null){
+            pm.deletePersistent(pm.getObjectById((zooid)));
+            idMap.remove(longKey);
         }
         dbMutex.release();
     }
@@ -757,9 +752,8 @@ public class ObjectsDB {
         long longKey = createLongKey(objectKey);
         
         dbMutex.acquire();
-        String sql = "SELECT id from (SELECT expand(classes) from metadata:schema) where id = '" + longKey + "'";
-        List<Object> objects = db.query(new OSQLSynchQuery<Object>(sql));
-        for (Object obj : objects) {
+        Query q = pm.newQuery(IdObject.class, "id == " + longKey);
+        if( ((Collection<?>) q.execute()).size() > 0){
             dbMutex.release();
             return true;
         }
@@ -792,18 +786,18 @@ public class ObjectsDB {
         
         
         dbMutex.acquire();
-        if (db != null) db.close();
-        FileUtils.deleteDirectory(new File(dbFolder));
+        pm.currentTransaction().commit();
+        if (pm.currentTransaction().isActive()) {
+            pm.currentTransaction().rollback();
+        }
+        pm.close();
+        pm.getPersistenceManagerFactory().close();
         dbMutex.release();
 
     }
 
     /**
      * Establishes connection to the database.
-     *
-     * @param aDbFolder the folder where the database is located
-     * @param aDbName the name of the database
-     * @param deleteOldDatabase flag for deleting old database
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection to the database
@@ -817,16 +811,9 @@ public class ObjectsDB {
     public void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         dbMutex.acquire();
-        String connectionString = "plocal:" + dbFolder;
-        if (debugInteractions){
-            System.out.println("Establishing DB at: " + connectionString);
-        }
-        db = new OObjectDatabaseTx(connectionString);
-        if (db.exists()) {
-                db = new OObjectDatabaseTx(connectionString).open("admin", "admin");
-        } else {
-                db.create();
-        }
+        
+        PersistenceManager pm = ZooJdoHelper.openOrCreateDB(dbFolder);
+        pm.currentTransaction().begin();
         
         dbMutex.release();
         

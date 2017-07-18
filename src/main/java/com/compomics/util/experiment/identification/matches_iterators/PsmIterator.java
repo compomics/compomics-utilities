@@ -19,7 +19,6 @@ public class PsmIterator extends MatchesIterator {
      * Constructor.
      *
      * @param identification the identification where to get the matches from
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -34,8 +33,8 @@ public class PsmIterator extends MatchesIterator {
      * @throws InterruptedException exception thrown whenever a threading issue
      * occurred while retrieving the match
      */
-    public PsmIterator(Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        this(null, identification, lazyLoading, waitingHandler, displayProgress);
+    public PsmIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        this(null, identification, waitingHandler, displayProgress);
     }
     
     /**
@@ -43,7 +42,6 @@ public class PsmIterator extends MatchesIterator {
      *
      * @param keys the keys of the objects
      * @param identification the identification where to get the matchesloadPs from
-     * @param lazyLoading indicates wheather the iterator should load data lazy from the db
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
@@ -58,8 +56,8 @@ public class PsmIterator extends MatchesIterator {
      * @throws InterruptedException exception thrown whenever a threading issue
      * occurred while retrieving the match
      */
-    public PsmIterator(ArrayList<String> keys, Identification identification, boolean lazyLoading, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        super(keys, SpectrumMatch.class.getSimpleName(), identification, lazyLoading, waitingHandler, displayProgress);
+    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        super(keys, SpectrumMatch.class.getSimpleName(), identification, waitingHandler, displayProgress);
     }
     
 

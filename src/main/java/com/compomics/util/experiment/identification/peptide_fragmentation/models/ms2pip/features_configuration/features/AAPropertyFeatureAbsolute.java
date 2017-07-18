@@ -27,7 +27,7 @@ public class AAPropertyFeatureAbsolute extends AAPropertyFeature {
     
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override

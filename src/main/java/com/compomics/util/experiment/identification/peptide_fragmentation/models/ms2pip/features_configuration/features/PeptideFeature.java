@@ -71,7 +71,7 @@ public class PeptideFeature implements Ms2pipFeature {
 
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override

@@ -119,15 +119,12 @@ public class FeaturesGenerator {
     private int[] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge, int ionIndex) {
 
         // Get the properties needed for peptides, ions, and amino acids
-        AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class
-        );
-        AminoAcid.Property[] forwardIonProperties = getAaProperties(ForwardIonAminoAcidFeature.class
-        );
-        AminoAcid.Property[] complementaryIonProperties = getAaProperties(ComplementaryIonAminoAcidFeature.class
-        );
+        AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
+        AminoAcid.Property[] forwardIonProperties = getAaProperties(ForwardIonAminoAcidFeature.class);
+        AminoAcid.Property[] complementaryIonProperties = getAaProperties(ComplementaryIonAminoAcidFeature.class);
         AminoAcid.Property[] individualAaProperties = getAaProperties(AAPropertyFeatureAbsolute.class,
-                 AAPropertyFeatureRelative.class,
-                 AAPropertyRelationshipFeature.class
+                AAPropertyFeatureRelative.class,
+                AAPropertyRelationshipFeature.class
         );
 
         // Get the properties along the peptide sequence
@@ -164,7 +161,7 @@ public class FeaturesGenerator {
     private AminoAcid.Property[] getAaProperties(Class... categories) {
         HashSet<Integer> indexes = new HashSet<Integer>(4);
         for (Class category : categories) {
-            Ms2pipFeature[] features = featuresMap.getFeatures(category.getName());
+            Ms2pipFeature[] features = featuresMap.getFeatures(category.getSimpleName());
             for (Ms2pipFeature ms2pipFeature : features) {
                 if (ms2pipFeature instanceof SingleAAPropertyFeature) {
                     SingleAAPropertyFeature singleAAPropertyFeature = (SingleAAPropertyFeature) ms2pipFeature;
@@ -241,7 +238,7 @@ public class FeaturesGenerator {
                 ModificationFeature modificationFeature = (ModificationFeature) ms2pipFeature;
                 return getModificationFeature(modificationFeature, peptideAttributes, aaIndex);
             default:
-                throw new UnsupportedOperationException("Feature " + ms2pipFeature.getClass().getName() + " not implemented.");
+                throw new UnsupportedOperationException("Feature " + ms2pipFeature.getClass().getSimpleName() + " not implemented.");
         }
 
     }

@@ -70,6 +70,6 @@ public abstract class IonFeature implements Ms2pipFeature {
 
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 }

@@ -26,7 +26,7 @@ public class AAIdentityFeatureAbsolute extends AAIdentityFeature {
     
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override

@@ -106,7 +106,7 @@ public class AAPropertyRelationshipFeature implements Ms2pipFeature, MultipleAAP
     
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override

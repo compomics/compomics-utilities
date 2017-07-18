@@ -27,7 +27,7 @@ public class ForwardIonAminoAcidFeature extends AASequenceFeature {
 
     @Override
     public String getCategory() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override

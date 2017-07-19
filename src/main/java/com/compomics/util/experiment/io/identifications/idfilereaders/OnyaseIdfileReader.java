@@ -184,7 +184,7 @@ public class OnyaseIdfileReader implements IdfileReader {
                 String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
                 if (spectrumMatch == null) {
-                    spectrumMatch = new SpectrumMatch(spectrumKey);
+                    spectrumMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                     spectrumMatchesMap.put(spectrumKey, spectrumMatch);
                 }
                 String sequence = lineSplit[3];

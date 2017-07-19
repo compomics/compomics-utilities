@@ -246,7 +246,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         result.add(currentMatch);
                     }
 
-                    currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
+                    currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                     currentMatch.setSpectrumNumber(scanNumber);
                     currentSpectrumTitle = spectrumTitle;
                 }

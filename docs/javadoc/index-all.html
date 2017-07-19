@@ -8329,7 +8329,7 @@
 <div class="block">Returns the e-value threshold to use consider a spectrum for the
  iterative search. 0.0 means all.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getIterator-java.lang.String-">getIterator(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getIterator-java.lang.String-java.lang.String-">getIterator(String, String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns an iterator of all objects of a given class</div>
 </dd>
@@ -10340,7 +10340,13 @@
 <dd>
 <div class="block">Returns the cache used by this database.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getObjectsDB--">getObjectsDB()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/ObjectsDB.html#getObjectsIterator-java.lang.String-">getObjectsIterator(String)</a></span> - Method in class com.compomics.util.db.<a href="com/compomics/util/db/ObjectsDB.html" title="class in com.compomics.util.db">ObjectsDB</a></dt>
+<dd>
+<div class="block">Returns an iterator of all objects of a given class</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/ObjectsDB.html#getObjectsIterator-java.lang.String-java.lang.String-">getObjectsIterator(String, String)</a></span> - Method in class com.compomics.util.db.<a href="com/compomics/util/db/ObjectsDB.html" title="class in com.compomics.util.db">ObjectsDB</a></dt>
 <dd>
 <div class="block">Returns an iterator of all objects of a given class</div>
 </dd>
@@ -10516,6 +10522,8 @@
 <dd>
 <div class="block">Returns a parameter line corresponding to the given parameter name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/IdentificationMatch.html#getParameters--">getParameters()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/CommandLineParser.html#getParameters--">getParameters()</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/CommandLineParser.html" title="class in com.compomics.util.general">CommandLineParser</a></dt>
 <dd>
 <div class="block">This method will report on all parameters that have been found, or return
@@ -11715,6 +11723,10 @@
 <div class="block">Returns a psm iterator for a given key list.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-">getPsmIterator(WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>
+<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getPsmIterator(WaitingHandler, String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </dd>
@@ -17643,7 +17655,7 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator(ArrayList&lt;String&gt;, String, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">MatchesIterator</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">MatchesIterator(ArrayList&lt;String&gt;, String, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">MatchesIterator</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -20324,6 +20336,10 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">PsmIterator(ArrayList&lt;String&gt;, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring"><span class="typeNameLink">PsmScore</span></a> - Enum in <a href="com/compomics/util/experiment/identification/psm_scoring/package-summary.html">com.compomics.util.experiment.identification.psm_scoring</a></dt>
 <dd>
 <div class="block">Enum listing the PSM scores implemented in compomics utilities.</div>
@@ -22895,7 +22911,7 @@
 <dd>
 <div class="block">Sets a new key for the match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setKey-java.lang.String-">setKey(String)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setKey-java.lang.String-java.lang.String-">setKey(String, String)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
 <div class="block">Replaces the new key.</div>
 </dd>
@@ -23797,6 +23813,8 @@
 <dd>
 <div class="block">Sets the value for a given parameter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/IdentificationMatch.html#setParameters-com.compomics.util.experiment.personalization.UrParameter-">setParameters(UrParameter)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/preferences/IdentificationParameters.html#setParametersFromSearch-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">setParametersFromSearch(SearchParameters)</a></span> - Method in class com.compomics.util.preferences.<a href="com/compomics/util/preferences/IdentificationParameters.html" title="class in com.compomics.util.preferences">IdentificationParameters</a></dt>
 <dd>
 <div class="block">Sets identification parameters based on given search parameters.</div>
@@ -24176,6 +24194,8 @@
 <dd>
 <div class="block">Sets the PepNovo rank score.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#setRawAssumptionMap-java.util.HashMap-">setRawAssumptionMap(HashMap&lt;Integer, HashMap&lt;Double, ArrayList&lt;SpectrumIdentificationAssumption&gt;&gt;&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/Header.html#setRawHeader-java.lang.String-">setRawHeader(String)</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/Header.html" title="class in com.compomics.util.protein">Header</a></dt>
 <dd>
 <div class="block">Sets the entire header.</div>
@@ -25398,11 +25418,11 @@
 <dd>
 <div class="block">Constructor for the spectrum match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-">SpectrumMatch(String, SpectrumIdentificationAssumption)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-java.lang.String-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-">SpectrumMatch(String, String, SpectrumIdentificationAssumption)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
 <div class="block">Constructor for the spectrum match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-">SpectrumMatch(String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-java.lang.String-">SpectrumMatch(String, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
 <div class="block">Constructor for the spectrum match.</div>
 </dd>

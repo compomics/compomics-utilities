@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
  * This is an abstract class for an identification match.

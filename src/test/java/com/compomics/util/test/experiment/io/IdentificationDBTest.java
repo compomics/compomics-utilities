@@ -20,6 +20,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
 import junit.framework.Assert;
@@ -66,7 +67,9 @@ public class IdentificationDBTest extends TestCase {
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
             try {                
                 String parametersKey = "pepnovo_assumption_details";
-                String spectrumKey = "spectrum_file_cus_spectrum_title";
+                String spectrumFile = "spectrum_file";
+                String spectrumTitle = "spectrum_title";
+                String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
                 String peptideKey = "PEPTIDE";
                 String proteinKey = "test_protein";
                 Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
@@ -78,7 +81,7 @@ public class IdentificationDBTest extends TestCase {
                 
                 
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
-                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
                 testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
                 idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 

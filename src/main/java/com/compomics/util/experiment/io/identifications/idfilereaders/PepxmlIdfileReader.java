@@ -502,8 +502,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             }
         }
 
-        String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
-        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
+        SpectrumMatch spectrumMatch = new SpectrumMatch(inputFileName, spectrumTitle);
         spectrumMatch.setSpectrumNumber(index);
 
         return spectrumMatch;

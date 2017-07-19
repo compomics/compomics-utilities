@@ -224,7 +224,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                         result.add(currentMatch);
                     }
 
-                    currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, spectrumTitle));
+                    currentMatch = new SpectrumMatch(fileName, spectrumTitle);
                     currentSpectrumTitle = spectrumTitle;
                 }
 

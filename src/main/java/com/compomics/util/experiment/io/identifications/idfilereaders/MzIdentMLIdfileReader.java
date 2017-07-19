@@ -298,7 +298,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     String spectrumFileName = new File(spectraData.getLocation()).getName();
 
                     // set up the yet empty spectrum match
-                    SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
+                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
 
                     // set spectrum index, used if title is not provided
                     if (spectrumIndex != null) {
@@ -1029,7 +1029,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
 
         // set up the yet empty spectrum match
-        SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, "temp"));
+        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, "temp");
 
         // set spectrum index, used if title is not provided
         if (spectrumIndex != null) {
@@ -1254,7 +1254,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-            currentMatch.setKey(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle)); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
+            currentMatch.setKey(spectrumFileName, spectrumTitle); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
         }
 
         result.add(currentMatch);

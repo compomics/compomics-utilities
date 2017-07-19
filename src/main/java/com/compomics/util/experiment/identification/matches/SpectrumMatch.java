@@ -8,6 +8,7 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssu
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,12 +31,21 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * The index of the matched spectrum.
      */
-    private String key;
+    private String spectrumFile;
+    /**
+     * The index of the matched spectrum.
+     */
+    private String spectrumTitle;
     /**
      * Map of the identification algorithm assumption: advocate number &gt;
      * score &gt; assumptions.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = null;
+    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = null;
+    /**
+     * Map of the identification algorithm assumption: advocate number &gt;
+     * score &gt; assumptions.
+     */
+    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>();
     /**
      * The size of the keys used for the tag assumptions map.
      */
@@ -65,20 +75,23 @@ public class SpectrumMatch extends IdentificationMatch {
         setModified(true);
         this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
     }
-
+    
     /**
      * Constructor for the spectrum match.
      *
-     * @param key the matched spectrumKey
+     * @param spectrumFile the matched spectrum file name
+     * @param spectrumTitle the matched spectrum title
      * @param assumption the matching assumption
      */
-    public SpectrumMatch(String key, SpectrumIdentificationAssumption assumption) {
+    public SpectrumMatch(String spectrumFile, String spectrumTitle, SpectrumIdentificationAssumption assumption) {
         int advocateId = assumption.getAdvocate();
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
-        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
-        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
-        assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
-        this.key = key;
+        assumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
+        assumptions.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
+        assumptions.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
+        assumptions.get(advocateId).get(assumption.getScore()).add(assumption);
+        
+        this.spectrumFile = spectrumFile;
+        this.spectrumTitle = spectrumTitle;
     }
     
     public int getTagAssumptionMapKeySize(){
@@ -90,17 +103,26 @@ public class SpectrumMatch extends IdentificationMatch {
         
         zooActivateWrite();
         setModified(true);
-        this.assumptionsMap = assumptionsMap;
+        this.assumptions = assumptionsMap;
+    }
+    
+    public void setRawAssumptions(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptions){
+        
+        zooActivateWrite();
+        setModified(true);
+        this.rawAssumptions = rawAssumptions;
     }
 
     /**
      * Constructor for the spectrum match.
      *
-     * @param key the matched spectrum key
+     * @param spectrumFile the matched spectrum file name
+     * @param spectrumTitle the matched spectrum title
      */
-    public SpectrumMatch(String key) {
-        this.key = key;
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
+    public SpectrumMatch(String spectrumFile, String spectrumTitle) {
+        this.spectrumFile = spectrumFile;
+        this.spectrumTitle = spectrumTitle;
+        assumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
     }
 
     /**
@@ -149,8 +171,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        zooActivateRead();
-        return key;
+        return Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
     }
 
     /**
@@ -162,10 +183,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
-        if (assumptionsMap == null) {
+        if (assumptions == null) {
             return null;
         }
-        return assumptionsMap.get(advocateId);
+        return assumptions.get(advocateId);
     }
 
     /**
@@ -195,7 +216,18 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
         zooActivateRead();
-        return assumptionsMap;
+        return assumptions;
+    }
+
+    /**
+     * Returns the raw assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
+     *
+     * @return the assumptions map
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getRawAssumptions() {
+        zooActivateRead();
+        return rawAssumptions;
     }
 
     /**
@@ -207,10 +239,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * get better
      */
     public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptionsMap.get(otherAdvocateId);
+        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptions.get(otherAdvocateId);
         if (advocateMap == null) {
             advocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>();
-            assumptionsMap.put(otherAdvocateId, advocateMap);
+            assumptions.put(otherAdvocateId, advocateMap);
         }
         Double score = otherAssumption.getScore();
         ArrayList<SpectrumIdentificationAssumption> assumptionList = advocateMap.get(score);
@@ -231,12 +263,12 @@ public class SpectrumMatch extends IdentificationMatch {
      * Replaces the new key. The key of the PSM should always be the same as the
      * spectrum key it links to.
      *
-     * @param key the new key
+     * @param spectrumFile the spectrum file
+     * @param spectrumTitle the spectrum tile
      */
-    public void setKey(String key) {
-        zooActivateWrite();
-        setModified(true);
-        this.key = key;
+    public void setKey(String spectrumFile, String spectrumTitle) {
+        this.spectrumFile = spectrumFile;
+        this.spectrumTitle = spectrumTitle;
     }
 
     /**
@@ -268,23 +300,23 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removeAssumption(SpectrumIdentificationAssumption assumption) {
         ArrayList<Integer> seToRemove = new ArrayList<Integer>();
-        for (int se : assumptionsMap.keySet()) {
+        for (int se : assumptions.keySet()) {
             ArrayList<Double> eValueToRemove = new ArrayList<Double>();
-            for (double eValue : assumptionsMap.get(se).keySet()) {
-                assumptionsMap.get(se).get(eValue).remove(assumption);
-                if (assumptionsMap.get(se).get(eValue).isEmpty()) {
+            for (double eValue : assumptions.get(se).keySet()) {
+                assumptions.get(se).get(eValue).remove(assumption);
+                if (assumptions.get(se).get(eValue).isEmpty()) {
                     eValueToRemove.add(eValue);
                 }
             }
             for (double eValue : eValueToRemove) {
-                assumptionsMap.get(se).remove(eValue);
+                assumptions.get(se).remove(eValue);
             }
-            if (assumptionsMap.get(se).isEmpty()) {
+            if (assumptions.get(se).isEmpty()) {
                 seToRemove.add(se);
             }
         }
         for (int se : seToRemove) {
-            assumptionsMap.remove(se);
+            assumptions.remove(se);
         }
         setModified(true);
     }
@@ -297,8 +329,8 @@ public class SpectrumMatch extends IdentificationMatch {
      * assumption
      */
     public boolean hasAssumption() {
-        for (int se : assumptionsMap.keySet()) {
-            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptionsMap.get(se).values()) {
+        for (int se : assumptions.keySet()) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptions.get(se).values()) {
                 if (!assumptionsAtScore.isEmpty()) {
                     return true;
                 }
@@ -316,8 +348,8 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide assumption for the given advocate
      */
     public boolean hasAssumption(int advocateId) {
-        if (assumptionsMap.containsKey(advocateId)) {
-            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptionsMap.get(advocateId).values()) {
+        if (assumptions.containsKey(advocateId)) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptions.get(advocateId).values()) {
                 if (!assumptionsAtEvalue.isEmpty()) {
                     return true;
                 }
@@ -352,12 +384,12 @@ public class SpectrumMatch extends IdentificationMatch {
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         
-        SpectrumMatch spectrumMatch = new SpectrumMatch(key);
+        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
 
-        for (int advocateId : assumptionsMap.keySet()) {
+        for (int advocateId : assumptions.keySet()) {
 
             int rank = 1;
-            ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
+            ArrayList<Double> scores = new ArrayList<Double>(assumptions.get(advocateId).keySet());
 
             if (scoreInAscendingOrder) {
                 Collections.sort(scores);
@@ -366,7 +398,7 @@ public class SpectrumMatch extends IdentificationMatch {
             }
 
             for (double score : scores) {
-                ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptionsMap.get(advocateId).get(score);
+                ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptions.get(advocateId).get(score);
                 for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;

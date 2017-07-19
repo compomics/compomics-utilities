@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.jdo.Extent;
 
 /**
  * This class contains identification results.
@@ -80,7 +79,10 @@ public abstract class Identification extends ExperimentObject {
         this.objectsDB = objectsDB;
     }
     
-
+    public ObjectsDB getObjectsDB(){
+        return objectsDB;
+    }
+    
     /**
      * Returns the ordered list of spectrum file names.
      *
@@ -160,6 +162,7 @@ public abstract class Identification extends ExperimentObject {
      * Returns an iterator of all objects of a given class
      *
      * @param className the class name of a given class
+     * @param filters filters for the class
      * @return the iterator
      *
      * @throws SQLException exception thrown whenever an error occurred while
@@ -171,8 +174,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public Iterator<?> getIterator(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return objectsDB.getObjectsIterator(className);
+    public Iterator<?> getIterator(String className, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return filters == null ? objectsDB.getObjectsIterator(className) : objectsDB.getObjectsIterator(className, filters);
     }
     
 
@@ -824,6 +827,27 @@ public abstract class Identification extends ExperimentObject {
      */
     public PsmIterator getPsmIterator(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PsmIterator(this, waitingHandler, false);
+    }
+    
+    
+    /**
+     * Returns a psm iterator for all SpectrumMatches.
+     *
+     * @param waitingHandler the waiting handler
+     * @param filters filters for the class
+     *
+     * @return a peptide matches iterator
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public PsmIterator getPsmIterator(WaitingHandler waitingHandler, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return new PsmIterator(null, this, waitingHandler, false, filters);
     }
     
     

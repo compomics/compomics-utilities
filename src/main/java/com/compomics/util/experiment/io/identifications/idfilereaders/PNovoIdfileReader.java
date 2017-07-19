@@ -147,7 +147,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
             // remove any html from the title
             String decodedTitle = URLDecoder.decode(title, "utf-8");
-            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle));
+            SpectrumMatch currentMatch = new SpectrumMatch(getMgfFileName(), decodedTitle);
 
             int cpt = 1;
             bufferedRandomAccessFile.seek(index.get(title));

@@ -108,7 +108,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     spectrumMatch = spectrumMatchesMap.get(spectrumKey);
                     rank = 0; // the rank is here per charge
                     if (spectrumMatch == null) {
-                        spectrumMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFile, title));
+                        spectrumMatch = new SpectrumMatch(mgfFile, title);
                         result.add(spectrumMatch);
                         spectrumMatchesMap.put(spectrumKey, spectrumMatch);
                     }

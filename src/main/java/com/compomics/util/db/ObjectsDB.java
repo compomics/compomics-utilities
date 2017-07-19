@@ -16,6 +16,7 @@ import java.util.concurrent.Semaphore;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import org.zoodb.internal.util.SynchronizedROCollection;
 
 import org.zoodb.jdo.ZooJdoHelper;
 import org.zoodb.tools.ZooHelper;
@@ -220,6 +221,17 @@ public class ObjectsDB {
      */
     public Iterator<?> getObjectsIterator(String className){
         return pm.getExtent(className.getClass()).iterator();
+    }
+    
+    /**
+     * Returns an iterator of all objects of a given class
+     * @param className the class name
+     * @param filters filters for the class
+     * @return the iterator
+     */
+    public Iterator<?> getObjectsIterator(String className, String filters){
+        Query q = pm.newQuery(className.getClass(), filters);
+        return ((SynchronizedROCollection<?>)q.execute()).iterator();
     }
     
 

@@ -76,6 +76,7 @@ public abstract class ExperimentObject extends IdObject {
     
     public void setUrParams(HashMap<String, UrParameter> urParams){
         zooActivateWrite();
+        setModified(true);
         this.urParams = urParams;
     }
     

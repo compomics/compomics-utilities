@@ -270,6 +270,28 @@ public class SpectrumMatch extends IdentificationMatch {
         this.spectrumFile = spectrumFile;
         this.spectrumTitle = spectrumTitle;
     }
+    
+    public void setSpectrumFile(String spectrumFile){
+        zooActivateWrite();
+        setModified(true);
+        this.spectrumFile = spectrumFile;
+    }
+    
+    public void setSpectrumTitle(String spectrumTitle){
+        zooActivateWrite();
+        setModified(true);
+        this.spectrumTitle = spectrumTitle;
+    }
+    
+    public String getSpectrumFile(){
+        zooActivateRead();
+        return spectrumFile;
+    }
+    
+    public String getSpectrumTitle(){
+        zooActivateRead();
+        return spectrumTitle;
+    }
 
     /**
      * Returns the spectrum number in the spectrum file. Returns null if not

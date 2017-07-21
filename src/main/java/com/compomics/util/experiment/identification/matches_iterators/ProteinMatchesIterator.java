@@ -57,7 +57,7 @@ public class ProteinMatchesIterator extends MatchesIterator {
      * occurred while retrieving the match
      */
     public ProteinMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        super(keys, ProteinMatch.class.getSimpleName(), identification, waitingHandler, displayProgress, null);
+        super(keys, ProteinMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
 

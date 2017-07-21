@@ -53,10 +53,6 @@ public class UtilitiesPathPreferences {
          */
         enzymeFactoryKey("enzyme_configuration", "File containing the supported enzymes.", "", true),
         /**
-         * Folder containing the indexes of the protein sequences databases.
-         */
-        fastaIndexesKey("fasta_indexes", "Folder containing the indexes of the protein sequences databases.", "fasta_indexes", true),
-        /**
          * Folder containing the gene mapping files.
          */
         geneMappingKey("gene_mapping", "Folder containing the gene mapping files.", "gene_mapping", true),

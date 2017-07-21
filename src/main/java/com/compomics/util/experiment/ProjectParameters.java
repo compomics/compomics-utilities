@@ -6,6 +6,7 @@
 package com.compomics.util.experiment;
 
 import com.compomics.util.IdObject;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -14,13 +15,23 @@ import java.util.HashMap;
  * @author Dominik Kopczynski
  */
 public class ProjectParameters extends IdObject {
-    Date creationTime = new Date();
-    String projectUniqueName = "";
-    HashMap<String, String> stringParameters = new HashMap<String, String>();
-    HashMap<String, Integer> integerParameters = new HashMap<String, Integer>();
-    HashMap<String, Double> numericParameters = new HashMap<String, Double>();
+    private Date creationTime = null;
+    private String projectUniqueName = "";
+    private HashMap<String, String> stringParameters = new HashMap<String, String>();
+    private HashMap<String, Integer> integerParameters = new HashMap<String, Integer>();
+    private HashMap<String, Double> numericParameters = new HashMap<String, Double>();
     
-    public ProjectParameters(){}
+    public static String nameForDatabase = "Project_parameters_object";
+    
+    public ProjectParameters(){
+        projectUniqueName = "undefined project";
+        creationTime = new Date();
+    }
+    
+    public ProjectParameters(String projectUniqueName){
+        this.projectUniqueName = projectUniqueName;
+        creationTime = new Date();
+    }
     
     public Date getCreationTime(){
         return creationTime;

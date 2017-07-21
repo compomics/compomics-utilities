@@ -56,7 +56,7 @@ public class ObjectsDB {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private static boolean debugInteractions = true;    
+    private static boolean debugInteractions = false;    
     /**
      * OrientDB database connection
      */
@@ -68,7 +68,11 @@ public class ObjectsDB {
     /**
      * path of the database folder
      */
-    private String dbFolder = null;
+    private File dbFolder = null;
+    /**
+     * the actual db file
+     */
+    private File dbFile = null;
     
     
     
@@ -108,19 +112,22 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public ObjectsDB(String folder, String dbName, boolean overwrite) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        File f = new File("/" + folder);
-        dbFolder = f.getAbsolutePath();
+        if (debugInteractions){
+            System.out.println(System.currentTimeMillis() + " Creating database");
+        }
         
-        if (!f.exists()){
-            if (!f.mkdirs()){
+        dbFolder = new File("/" + folder);
+        
+        if (!dbFolder.exists()){
+            if (!dbFolder.mkdirs()){
                 throw new IOException("cannot create database folder");
             }
         }
-        else if (overwrite) {
-            ZooHelper.removeDb(dbFolder + "/" + dbName);
-            f.mkdirs();
+        
+        dbFile = new File(dbFolder, dbName);
+        if (dbFile.exists() && overwrite) {
+            ZooHelper.removeDb(dbFile.getAbsolutePath());
         }
-        dbFolder += "/" + dbName;
         
         establishConnection();
         objectsCache = new ObjectsCache(this);
@@ -131,6 +138,13 @@ public class ObjectsDB {
         return idMap;
     }
     
+    public File getDbFile(){
+        return dbFile;
+    }
+    
+    public File getDbFolder(){
+        return dbFolder;
+    }
     
     public Semaphore getDbMutex(){
         return dbMutex;
@@ -219,8 +233,8 @@ public class ObjectsDB {
      * @param className the class name
      * @return the iterator
      */
-    public Iterator<?> getObjectsIterator(String className){
-        return pm.getExtent(className.getClass()).iterator();
+    public Iterator<?> getObjectsIterator(Class className){
+        return pm.getExtent(className).iterator();
     }
     
     /**
@@ -229,8 +243,8 @@ public class ObjectsDB {
      * @param filters filters for the class
      * @return the iterator
      */
-    public Iterator<?> getObjectsIterator(String className, String filters){
-        Query q = pm.newQuery(className.getClass(), filters);
+    public Iterator<?> getObjectsIterator(Class className, String filters){
+        Query q = pm.newQuery(className, filters);
         return ((SynchronizedROCollection<?>)q.execute()).iterator();
     }
     
@@ -345,7 +359,7 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
@@ -354,7 +368,7 @@ public class ObjectsDB {
         dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
-        for (Object obj : pm.getExtent(className.getClass())){
+        for (Object obj : pm.getExtent(className)){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
             hashedKeys.add(longKey);
@@ -498,14 +512,14 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public int getNumber(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " query number of " + className + " objects");
         }
         
         int num = 0;
         dbMutex.acquire();
-        Query q = pm.newQuery(className.getClass());
+        Query q = pm.newQuery(className);
         num = ((Collection<?>) q.execute()).size();
         dbMutex.release();
         return num;
@@ -601,7 +615,7 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
@@ -610,7 +624,7 @@ public class ObjectsDB {
         dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Object> retrievingObjects = new ArrayList<Object>();
-        for (Object obj : pm.getExtent(className.getClass())){
+        for (Object obj : pm.getExtent(className)){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = ((IdObject)obj).getId();
             if (!idMap.containsKey(longKey)){
@@ -822,15 +836,15 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
+        if (debugInteractions){
+            System.out.println(System.currentTimeMillis() + " Establishing database");
+        }
         dbMutex.acquire();
         
-        pm = ZooJdoHelper.openOrCreateDB(dbFolder);
+        pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
         pm.currentTransaction().begin();
         
         dbMutex.release();
-        
-        // TODO: load project parameters
     }
     
     

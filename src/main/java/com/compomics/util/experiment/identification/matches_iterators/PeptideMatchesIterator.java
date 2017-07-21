@@ -57,7 +57,7 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * occurred while retrieving the match
      */
     public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        super(keys, PeptideMatch.class.getSimpleName(), identification, waitingHandler, displayProgress, null);
+        super(keys, PeptideMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
 

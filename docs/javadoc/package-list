@@ -53,7 +53,6 @@ com.compomics.util.experiment.identification.ptm.ptmscores
 com.compomics.util.experiment.identification.spectrum_annotation
 com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators
 com.compomics.util.experiment.identification.spectrum_assumptions
-com.compomics.util.experiment.io
 com.compomics.util.experiment.io.identifications
 com.compomics.util.experiment.io.identifications.idfilereaders
 com.compomics.util.experiment.io.massspectrometry

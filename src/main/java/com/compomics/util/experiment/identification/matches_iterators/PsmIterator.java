@@ -57,7 +57,7 @@ public class PsmIterator extends MatchesIterator {
      * occurred while retrieving the match
      */
     public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        super(keys, SpectrumMatch.class.getSimpleName(), identification, waitingHandler, displayProgress, null);
+        super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
     /**
@@ -81,7 +81,7 @@ public class PsmIterator extends MatchesIterator {
      * occurred while retrieving the match
      */
     public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        super(keys, SpectrumMatch.class.getSimpleName(), identification, waitingHandler, displayProgress, filters);
+        super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, filters);
     }
     
 

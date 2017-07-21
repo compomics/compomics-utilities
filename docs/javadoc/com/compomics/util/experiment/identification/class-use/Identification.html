@@ -83,18 +83,12 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment">com.compomics.util.experiment</a></td>
-<td class="colLast">
-<div class="block">Gene factory classes.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.identifications">com.compomics.util.experiment.identification.identifications</a></td>
 <td class="colLast">
 <div class="block">Experiment classes related to MS//MS identifications.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.matches_iterators">com.compomics.util.experiment.identification.matches_iterators</a></td>
 <td class="colLast">
 <div class="block">Identification match iterators.</div>
@@ -105,42 +99,6 @@
 </li>
 <li class="blockList">
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a> in <a href="../../../../../../com/compomics/util/experiment/package-summary.html">com.compomics.util.experiment</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../com/compomics/util/experiment/package-summary.html">com.compomics.util.experiment</a> that return <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ProteomicAnalysis.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/ProteomicAnalysis.html#getIdentification-int-">getIdentification</a></span>(int&nbsp;identificationMethod)</code>
-<div class="block">Returns identification results obtained with an identification method.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../com/compomics/util/experiment/package-summary.html">com.compomics.util.experiment</a> with parameters of type <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ProteomicAnalysis.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/ProteomicAnalysis.html#addIdentificationResults-int-com.compomics.util.experiment.identification.Identification-">addIdentificationResults</a></span>(int&nbsp;identificationMethod,
-                        <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identificationResults)</code>
-<div class="block">Adds identification results obtained with an identification method.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
 <li class="blockList"><a name="com.compomics.util.experiment.identification.identifications">
 <!--   -->
 </a>
@@ -172,8 +130,8 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
-               <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.Class-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+               <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress,
@@ -182,7 +140,7 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.lang.String-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;className,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.lang.Class-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">MatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress)</code>

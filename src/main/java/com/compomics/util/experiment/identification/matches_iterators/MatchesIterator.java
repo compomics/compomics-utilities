@@ -74,7 +74,7 @@ public abstract class MatchesIterator {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public MatchesIterator(String className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this(null, className, identification, waitingHandler, displayProgress, null);
     }
     
@@ -98,7 +98,7 @@ public abstract class MatchesIterator {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public MatchesIterator(ArrayList<String> keys, String className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public MatchesIterator(ArrayList<String> keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (keys != null){
             num = keys.size();
             this.keys = keys;

@@ -42,10 +42,6 @@ public abstract class Identification extends ExperimentObject {
      */
     protected HashSet<String> peptideIdentification = new HashSet<String>();
     /**
-     * List of all imported PSMs indexed by mgf file name.
-     */
-    protected HashSet<String> spectrumIdentificationMap = new HashSet<String>();
-    /**
      * A map linking protein accessions to all their protein matches keys.
      */
     protected HashMap<String, HashSet<String>> proteinMap = new HashMap<String, HashSet<String>>();
@@ -62,13 +58,13 @@ public abstract class Identification extends ExperimentObject {
      */
     protected String reference;
     /**
-     * The ordered list of spectrum file names.
-     */
-    private ArrayList<String> orderedSpectrumFileNames;
-    /**
      * The database which will contain the objects.
      */
     private final ObjectsDB objectsDB;
+    /**
+     * Map mapping spectra per file.
+     */
+    private HashMap<String, ArrayList<String>> spectraPerFile = null;
     
     
     /**
@@ -90,13 +86,11 @@ public abstract class Identification extends ExperimentObject {
      */
     public ArrayList<String> getOrderedSpectrumFileNames() {
 
-        if (orderedSpectrumFileNames == null) {
-            orderedSpectrumFileNames = getSpectrumFiles();
-            // default alphabetical ordering
-            Collections.sort(orderedSpectrumFileNames);
-        }
+        ArrayList<String> spectrumFiles = getSpectrumFiles();
+        // default alphabetical ordering
+        Collections.sort(spectrumFiles);
 
-        return orderedSpectrumFileNames;
+        return spectrumFiles;
     }
 
     /**
@@ -125,16 +119,53 @@ public abstract class Identification extends ExperimentObject {
      * @return the mgf files used in the spectrum identification map
      */
     public ArrayList<String> getSpectrumFiles() {
-        return orderedSpectrumFileNames;
+        if (spectraPerFile == null) fillSpectraPerFile();
+        return new ArrayList<String>(spectraPerFile.keySet());
     }
+    
+    
+    /**
+     * Fills the spectra per file map
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     * */
+    public void fillSpectraPerFile() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        spectraPerFile = new HashMap<String, ArrayList<String>>(getNumber(SpectrumMatch.class));
+        PsmIterator psmIterator = getPsmIterator(null);
+        while (psmIterator.hasNext()){
+            SpectrumMatch spectrumMatch = psmIterator.next();
+            String key = spectrumMatch.getSpectrumFile();
+            String title = spectrumMatch.getSpectrumTitle();
+            if (!spectraPerFile.containsKey(key)) spectraPerFile.put(key, new ArrayList<String>());
+            spectraPerFile.get(key).add(title);
+        }
+    }
+      
+    
 
     /**
      * Returns the number of spectrum identifications.
      *
      * @return the number of spectrum identifications
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public int getSpectrumIdentificationSize() {
-        return spectrumIdentificationMap.size();
+    public int getSpectrumIdentificationSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getNumber(SpectrumMatch.class);
     }
     
 
@@ -153,7 +184,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public int getNumber(String className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.getNumber(className);
     }
     
@@ -174,7 +205,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public Iterator<?> getIterator(String className, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public Iterator<?> getIterator(Class className, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return filters == null ? objectsDB.getObjectsIterator(className) : objectsDB.getObjectsIterator(className, filters);
     }
     
@@ -199,7 +230,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
     
@@ -336,7 +367,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(String className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
     }
     
@@ -723,13 +754,11 @@ public abstract class Identification extends ExperimentObject {
      * Returns the default reference for an identification.
      *
      * @param experimentReference the experiment reference
-     * @param sampleReference the sample reference
-     * @param replicateNumber the replicate number
      *
      * @return the default reference
      */
-    public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
-        return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_id");
+    public static String getDefaultReference(String experimentReference) {
+        return Util.removeForbiddenCharacters(experimentReference + "_id");
     }
 
     /**

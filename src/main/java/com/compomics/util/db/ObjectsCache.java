@@ -23,7 +23,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.11;
+    private double memoryShare = 0.8;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */

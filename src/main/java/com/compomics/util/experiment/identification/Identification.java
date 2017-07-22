@@ -9,7 +9,6 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.PsmIterator;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -21,6 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class contains identification results.
@@ -65,6 +66,10 @@ public abstract class Identification extends ExperimentObject {
      * Map mapping spectra per file.
      */
     private HashMap<String, ArrayList<String>> spectraPerFile = null;
+    /**
+     * Ordered list of spectrum file names
+     */
+    private ArrayList<String> orderedSpectrumFileNames = null;
     
     
     /**
@@ -85,14 +90,22 @@ public abstract class Identification extends ExperimentObject {
      * @return the ordered list of spectrum file names
      */
     public ArrayList<String> getOrderedSpectrumFileNames() {
-
-        ArrayList<String> spectrumFiles = getSpectrumFiles();
+        if (orderedSpectrumFileNames == null){
+            try {
+                orderedSpectrumFileNames = getSpectrumFiles();
+            }
+            catch (Exception E){
+                E.printStackTrace();
+            }
+        }
         // default alphabetical ordering
-        Collections.sort(spectrumFiles);
+        Collections.sort(orderedSpectrumFileNames);
 
-        return spectrumFiles;
+        return orderedSpectrumFileNames;
     }
 
+    
+    
     /**
      * Set the ordered list of spectrum file names. Note that the list provided
      * has to be the same size as the number of spectrum files used.
@@ -103,7 +116,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void setOrderedListOfSpectrumFileNames(ArrayList<String> orderedSpectrumFileNames) throws IllegalArgumentException {
 
-        if (this.orderedSpectrumFileNames.size() != orderedSpectrumFileNames.size()) {
+        if (this.orderedSpectrumFileNames != null && this.orderedSpectrumFileNames.size() != orderedSpectrumFileNames.size()) {
             throw new IllegalArgumentException("The length of the ordered file names as to be the same as the number of spectrum files. "
                     + orderedSpectrumFileNames.size() + "!=" + this.orderedSpectrumFileNames.size());
         }
@@ -119,7 +132,19 @@ public abstract class Identification extends ExperimentObject {
      * @return the mgf files used in the spectrum identification map
      */
     public ArrayList<String> getSpectrumFiles() {
-        if (spectraPerFile == null) fillSpectraPerFile();
+        if (spectraPerFile == null){
+            try {
+                fillSpectraPerFile();
+            } catch (SQLException ex) {
+                Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return new ArrayList<String>(spectraPerFile.keySet());
     }
     
@@ -154,18 +179,23 @@ public abstract class Identification extends ExperimentObject {
      * Returns the number of spectrum identifications.
      *
      * @return the number of spectrum identifications
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
      */
-    public int getSpectrumIdentificationSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return getNumber(SpectrumMatch.class);
+    public int getSpectrumIdentificationSize() {
+        int num = 0;
+        
+        try {
+            num = getNumber(SpectrumMatch.class);
+        } catch (SQLException ex) {
+            Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return num;
     }
     
 
@@ -508,7 +538,17 @@ public abstract class Identification extends ExperimentObject {
         if (matchKey == null || matchKey.length() == 0) {
             return false;
         }
+        boolean exists = false;
+        try {
+            exists = objectsDB.inDB(matchKey);
+        }
+        catch (Exception E){
+            E.printStackTrace();
+        }
+        
+        return exists;
 
+        /*
         if (matchKey.lastIndexOf(Spectrum.SPECTRUM_KEY_SPLITTER) != -1) {
             if (spectrumIdentificationMap.contains(matchKey)) {
                 return true;
@@ -516,6 +556,7 @@ public abstract class Identification extends ExperimentObject {
         }
 
         return proteinIdentification.contains(matchKey) || peptideIdentification.contains(matchKey);
+        */
     }
 
 
@@ -599,7 +640,11 @@ public abstract class Identification extends ExperimentObject {
      * Spectrum.getKey() for more details.
      */
     public HashSet<String> getSpectrumIdentification() {
-        return spectrumIdentificationMap;
+        HashSet<String> allKeys = new HashSet<String>();
+        for (String fileName : spectraPerFile.keySet()){
+            allKeys.addAll(spectraPerFile.get(fileName));
+        }
+        return allKeys;
     }
     
 
@@ -628,12 +673,15 @@ public abstract class Identification extends ExperimentObject {
             waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        for (String spectrumMatchKey : spectrumIdentificationMap) {
-            buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
+        for (String fileName : spectraPerFile.keySet()){
+            ArrayList<String> spectrumMatchKeys = spectraPerFile.get(fileName);
+            for (String spectrumMatchKey : spectrumMatchKeys) {
+                buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                    if (waitingHandler.isRunCanceled()) {
+                        return;
+                    }
                 }
             }
         }

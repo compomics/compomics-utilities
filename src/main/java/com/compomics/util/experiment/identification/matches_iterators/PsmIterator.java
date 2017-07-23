@@ -102,6 +102,7 @@ public class PsmIterator extends MatchesIterator {
      * occurred while retrieving the match
      */
     public SpectrumMatch next() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        
         return (SpectrumMatch)nextObject();
     }
 }

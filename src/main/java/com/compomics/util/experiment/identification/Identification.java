@@ -215,6 +215,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.dropToDB();
         return objectsDB.getNumber(className);
     }
     

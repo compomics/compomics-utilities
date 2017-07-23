@@ -457,8 +457,8 @@ public class ObjectsDB {
         }
                 
         Object obj = objectsCache.getObject(longKey);
-        dbMutex.acquire();
         if (obj == null){
+            dbMutex.acquire();
             Long zooid = idMap.get(longKey);
             if (zooid != null){
                 obj = pm.getObjectById(zooid);
@@ -467,8 +467,8 @@ public class ObjectsDB {
                 }
             }
             objectsCache.addObject(longKey, obj, false);
+            dbMutex.release();
         }
-        dbMutex.release();
         return obj;
     }
     
@@ -539,6 +539,10 @@ public class ObjectsDB {
      */
     public void clearCache() throws IOException, SQLException, InterruptedException {
         objectsCache.clearCache();
+    }
+    
+    public void dropToDB() throws IOException, SQLException, InterruptedException {
+        objectsCache.saveCache(null, false);
     }
     
     

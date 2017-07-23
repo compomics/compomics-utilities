@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.identification.matches_iterators;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.experiment.identification.Identification;
+import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,11 +30,11 @@ public abstract class MatchesIterator {
     /**
      * current absolute index
      */
-    private int index;
+    private int index = 0;
     /**
      * absolute number of the objects in the iterator
      */
-    private int num;
+    private int num = 0;
     /**
      * batch size for loading from the db
      */
@@ -54,6 +56,7 @@ public abstract class MatchesIterator {
      */
     private int currentIndex;
     
+    private ArrayList<String> wa = null;
     
     /**
      * Constructor.
@@ -106,6 +109,13 @@ public abstract class MatchesIterator {
         else {
             num = identification.getNumber(className);
             iterator = identification.getIterator(className, filters);
+            wa = new ArrayList<String>(num);
+            while (iterator.hasNext()){
+                IdObject ido = (IdObject)iterator.next();
+                wa.add(((IdentificationMatch)ido).getKey());
+                
+            }
+            num = wa.size();
         }
         index = 0;
         currentIndex = 0;
@@ -142,24 +152,28 @@ public abstract class MatchesIterator {
      */
     public synchronized Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         // loading data from db
-        if (index % batchSize == 0) {
+        if (currentIndex >= batchSize) {
             if (keys != null){
                 ArrayList<String> subKeys = (ArrayList<String>)keys.subList(index, index + batchSize);
                 currentKeys = identification.loadObjects(subKeys, waitingHandler, displayProgress);
-                currentIndex = 0;
             }
             else {
-                currentKeys = identification.loadObjects(iterator, batchSize, waitingHandler, displayProgress);
+                //currentKeys = identification.loadObjects(iterator, batchSize, waitingHandler, displayProgress);
             }
             currentIndex = 0;
         }
+        if (index >= num) return null;
             
-        index++;
+        Object obj;
         if (keys == null){
-            return iterator.next();
+            //return iterator.next();
+            obj = identification.retrieveObject(wa.get(index));
         }
         else {
-            return identification.retrieveObject(currentKeys.get(currentIndex++));
+            obj = identification.retrieveObject(currentKeys.get(currentIndex));
         }
+        index++;
+        currentIndex++;
+        return obj;
     }
 }

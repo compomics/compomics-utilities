@@ -28,6 +28,8 @@ public abstract class ExperimentObject extends IdObject {
      * @param parameter The parameter
      */
     public void addUrParam(UrParameter parameter) {
+        zooActivateWrite();
+        setModified(true);
         if (urParams == null) {
             createParamsMap();
         }
@@ -61,6 +63,7 @@ public abstract class ExperimentObject extends IdObject {
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
+        zooActivateRead();
         if (urParams == null) {
             return null;
         }

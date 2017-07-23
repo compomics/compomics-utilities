@@ -1337,6 +1337,7 @@ public class Peptide extends ExperimentObject {
      * sequence
      */
     public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        zooActivateRead();
         AminoAcidSequence pattern = new AminoAcidSequence(anotherPeptide.getSequence());
         return pattern.matches(sequence, sequenceMatchingPreferences);
     }

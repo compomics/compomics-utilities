@@ -286,6 +286,7 @@ public class ObjectsCache {
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
+            System.out.println("go in");
             loadedObjectMutex.acquire();
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
@@ -314,7 +315,6 @@ public class ObjectsCache {
                 CacheEntry entry = loadedObjects.get(key);
                 Object obj = entry.getObject();
                 if (!objectsDB.getIdMap().containsKey(key)){
-                    System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                     pm.makePersistent(obj);
                     Long zooid = (Long)pm.getObjectId(obj);
@@ -322,7 +322,6 @@ public class ObjectsCache {
                     objectsDB.getIdMap().put(key, zooid);
                 }
                 else if (((IdObject)obj).getModified()){
-                    System.out.println("storing " + obj.getClass().getSimpleName());
                     ((IdObject)obj).setModified(false);
                 }
                 
@@ -331,8 +330,7 @@ public class ObjectsCache {
             pm.currentTransaction().commit();
             pm.currentTransaction().begin();
             loadedObjectMutex.release();
-            
-            
+            System.out.println("go out with " + loadedObjects.size() + " objects");
         }
     }
 

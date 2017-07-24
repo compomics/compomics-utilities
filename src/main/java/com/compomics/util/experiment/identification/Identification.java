@@ -215,7 +215,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.dropToDB();
+        objectsDB.dumpToDB();
         return objectsDB.getNumber(className);
     }
     
@@ -455,6 +455,22 @@ public abstract class Identification extends ExperimentObject {
      * @throws java.lang.ClassNotFoundException if class not found
      */
     public void removeObject(String key) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+        if (objectsDB.retrieveObject(key) instanceof ProteinMatch){
+            if (proteinIdentification.contains(key)) {
+                for (String protein : ProteinMatch.getAccessions(key)) {
+                    HashSet<String> proteinKeys = proteinMap.get(protein);
+                    if (proteinKeys != null) {
+                        proteinKeys.remove(key);
+                        if (proteinKeys.isEmpty()) {
+                            proteinMap.remove(protein);
+                        }
+                    }
+                }
+            }
+
+            proteinIdentification.remove(key);
+        }
+        
         objectsDB.removeObject(key);
     }
     
@@ -674,15 +690,13 @@ public abstract class Identification extends ExperimentObject {
             waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        for (String fileName : spectraPerFile.keySet()){
-            ArrayList<String> spectrumMatchKeys = spectraPerFile.get(fileName);
-            for (String spectrumMatchKey : spectrumMatchKeys) {
-                buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                    if (waitingHandler.isRunCanceled()) {
-                        return;
-                    }
+        PsmIterator psmIterator = getPsmIterator(waitingHandler);
+        while (psmIterator.hasNext()){
+            buildPeptidesAndProteins(psmIterator.next(), sequenceMatchingPreferences);
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressCounter();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
                 }
             }
         }
@@ -696,7 +710,7 @@ public abstract class Identification extends ExperimentObject {
      * assigned using the default protein tree and the given matching
      * parameters.
      *
-     * @param spectrumMatchKey the key of the spectrum match to add
+     * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws SQLException exception thrown whenever an error occurred while
@@ -708,12 +722,12 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void buildPeptidesAndProteins(String spectrumMatchKey, SequenceMatchingPreferences sequenceMatchingPreferences) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingPreferences sequenceMatchingPreferences) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        SpectrumMatch spectrumMatch = (SpectrumMatch)retrieveObject(spectrumMatchKey);
         if (spectrumMatch == null) {
-            throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
+            throw new IllegalArgumentException("Spectrum match not found.");
         }
+        String spectrumMatchKey = spectrumMatch.getKey();
         if (spectrumMatch.getBestPeptideAssumption() != null) {
             Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
             if (peptide.getParentProteinsNoRemapping() == null) {

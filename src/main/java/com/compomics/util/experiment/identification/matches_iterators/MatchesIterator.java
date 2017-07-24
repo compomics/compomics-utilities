@@ -7,6 +7,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.Iterator;
 
 /**
@@ -57,6 +58,9 @@ public abstract class MatchesIterator {
     private int currentIndex;
     
     private ArrayList<String> wa = null;
+    
+    
+    private final Semaphore nextMutex = new Semaphore(1);
     
     /**
      * Constructor.
@@ -117,6 +121,7 @@ public abstract class MatchesIterator {
             }
             num = wa.size();
         }
+        
         index = 0;
         currentIndex = 0;
         this.identification = identification;
@@ -152,6 +157,7 @@ public abstract class MatchesIterator {
      */
     public synchronized Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         // loading data from db
+        /*
         if (currentIndex >= batchSize) {
             if (keys != null){
                 ArrayList<String> subKeys = (ArrayList<String>)keys.subList(index, index + batchSize);
@@ -162,18 +168,21 @@ public abstract class MatchesIterator {
             }
             currentIndex = 0;
         }
+        */
+
         if (index >= num) return null;
-            
+        nextMutex.acquire();
         Object obj;
         if (keys == null){
             //return iterator.next();
             obj = identification.retrieveObject(wa.get(index));
         }
         else {
-            obj = identification.retrieveObject(currentKeys.get(currentIndex));
+            obj = identification.retrieveObject(keys.get(index));
         }
         index++;
-        currentIndex++;
+        //currentIndex++;
+        nextMutex.release();
         return obj;
     }
 }

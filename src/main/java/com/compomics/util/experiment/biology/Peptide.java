@@ -87,11 +87,13 @@ public class Peptide extends ExperimentObject {
     
     public void setMass(double mass){
         zooActivateWrite();
+        setModified(true);
         this.mass = mass;
     }
     
     public void setKey(String key){
         zooActivateWrite();
+        setModified(true);
         this.key = key;
     }
     
@@ -112,6 +114,7 @@ public class Peptide extends ExperimentObject {
     
     public void setVariants(ArrayList<VariantMatch> variantMatches){
         zooActivateWrite();
+        setModified(true);
         this.variantMatches = variantMatches;
     }
     
@@ -122,6 +125,7 @@ public class Peptide extends ExperimentObject {
     
     public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap){
         zooActivateWrite();
+        setModified(true);
         this.variantsMap = variantsMap;
     }
 
@@ -157,6 +161,7 @@ public class Peptide extends ExperimentObject {
      * for forbidden characters.
      */
     private void sanityCheck() {
+        zooActivateRead();
         sequence = sequence.replaceAll("[#*$%&]", "");
         if (modificationMatches != null) {
             for (ModificationMatch mod : modificationMatches) {
@@ -217,6 +222,7 @@ public class Peptide extends ExperimentObject {
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         zooActivateWrite();
+        setModified(true);
         this.modificationMatches = modificationMatches;
         mass = 0;
         key = null;
@@ -227,6 +233,8 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported modification matches.
      */
     public void clearModificationMatches() {
+        zooActivateWrite();
+        setModified(true);
         modificationMatches.clear();
         mass = 0;
         key = null;
@@ -239,6 +247,8 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
+        zooActivateWrite();
+        setModified(true);
         if (modificationMatches == null) {
             modificationMatches = new ArrayList<ModificationMatch>(1);
         }
@@ -272,6 +282,8 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
+        zooActivateWrite();
+        setModified(true);
         if (variantMatches != null) {
             variantMatches.clear();
             variantsMap = null;
@@ -284,6 +296,8 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatch(VariantMatch variantMatch) {
+        zooActivateWrite();
+        setModified(true);
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(1);
         }
@@ -297,6 +311,8 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatches(Collection<VariantMatch> variantMatch) {
+        zooActivateWrite();
+        setModified(true);
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
@@ -339,6 +355,8 @@ public class Peptide extends ExperimentObject {
      * Clears the map saved in cache.
      */
     public void clearVariantsMap() {
+        zooActivateWrite();
+        setModified(true);
         variantsMap = null;
     }
 
@@ -353,7 +371,8 @@ public class Peptide extends ExperimentObject {
     }
     
     public void setSequence(String sequence){
-        zooActivateRead();
+        zooActivateWrite();
+        setModified(true);
         this.sequence = sequence;
     }
 
@@ -403,6 +422,7 @@ public class Peptide extends ExperimentObject {
      * @return the amount of missed cleavages
      */
     public int getNMissedCleavages(Enzyme enzyme) {
+        zooActivateRead();
         return enzyme.getNmissedCleavages(sequence);
     }
 
@@ -414,6 +434,7 @@ public class Peptide extends ExperimentObject {
      * @return the amount of missed cleavages
      */
     public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
+        zooActivateRead();
         Integer peptideMinMissedCleavages = null;
         if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
             for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
@@ -445,6 +466,7 @@ public class Peptide extends ExperimentObject {
      * interacting with an SQL database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        zooActivateRead();
         return getParentProteins(sequenceMatchingPreferences, true);
     }
 
@@ -468,6 +490,7 @@ public class Peptide extends ExperimentObject {
      * interacting with an SQL database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, boolean remap) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+        zooActivateRead();
         
         if (!remap || parentProteins != null) { // avoid building the index if not necessary
             return parentProteins;
@@ -502,6 +525,7 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
+        zooActivateRead();
         if (parentProteins == null) {
             mapParentProteins(sequenceMatchingPreferences, peptideMapper);
         }
@@ -527,6 +551,7 @@ public class Peptide extends ExperimentObject {
      */
     public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
+        zooActivateRead();
         if (getParentProteins() == null) {
             ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(getSequence(), sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
@@ -556,7 +581,8 @@ public class Peptide extends ExperimentObject {
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
-        zooActivateRead();
+        zooActivateWrite();
+        setModified(true);
         this.parentProteins = parentProteins;
     }
 
@@ -564,6 +590,8 @@ public class Peptide extends ExperimentObject {
      * Clears the parent proteins list.
      */
     public void clearParentProteins() {
+        zooActivateWrite();
+        setModified(true);
         parentProteins = null;
     }
     
@@ -583,6 +611,7 @@ public class Peptide extends ExperimentObject {
      * @return a key unique to the given matching type
      */
     public String getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences) {
+        zooActivateRead();
         if (matchingKey == null) {
             String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
             matchingKey = getKey(matchingSequence, modificationMatches);
@@ -594,6 +623,8 @@ public class Peptide extends ExperimentObject {
      * Resets the internal cache of the keys.
      */
     public void resetKeysCaches() {
+        zooActivateWrite();
+        setModified(true);
         matchingKey = null;
         key = null;
     }
@@ -667,6 +698,7 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether a peptide carries modifications
      */
     public boolean isModified() {
+        zooActivateRead();
         return modificationMatches != null && !modificationMatches.isEmpty();
     }
 
@@ -717,6 +749,7 @@ public class Peptide extends ExperimentObject {
      * @return the number of occurrences of this modification
      */
     public int getNVariableModifications(double modificationMass) {
+        zooActivateRead();
         int n = 0;
         if (modificationMatches != null) {
             for (ModificationMatch modificationMatch : modificationMatches) {
@@ -737,6 +770,7 @@ public class Peptide extends ExperimentObject {
      * @return the number of modifications carried by this peptide
      */
     public int getNModifications() {
+        zooActivateRead();
         if (modificationMatches != null) {
             return modificationMatches.size();
         } else {
@@ -836,6 +870,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<String> isNterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
+        zooActivateRead();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
 
@@ -878,6 +913,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<String> isCterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
+        zooActivateRead();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
 
@@ -920,6 +956,7 @@ public class Peptide extends ExperimentObject {
     public boolean isModifiable(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
+        zooActivateRead();
         AminoAcidPattern pattern = ptm.getPattern();
 
         switch (ptm.getType()) {
@@ -1037,6 +1074,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
             PtmSettings modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
+        zooActivateRead();
         ArrayList<Integer> sites = new ArrayList<Integer>();
 
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
@@ -1078,6 +1116,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
+        zooActivateRead();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>(1);
 
         switch (ptm.getType()) {
@@ -1206,6 +1245,7 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<Integer> getPotentialModificationSitesNoCombination(PTM ptm, String proteinSequence, Integer indexOnProtein) {
 
+        zooActivateRead();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>(1);
 
         switch (ptm.getType()) {
@@ -1323,6 +1363,7 @@ public class Peptide extends ExperimentObject {
      * sequence and modification status.
      */
     public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        zooActivateRead();
         return isSameSequence(anotherPeptide, sequenceMatchingPreferences) && isSameModificationStatus(anotherPeptide);
     }
 
@@ -1354,6 +1395,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean isSameModificationStatus(Peptide anotherPeptide) {
 
+        zooActivateRead();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1417,6 +1459,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> ptms) {
 
+        zooActivateRead();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1484,6 +1527,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean sameModificationsAs(Peptide anotherPeptide) {
 
+        zooActivateRead();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1518,6 +1562,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getNTerminal() {
 
+        zooActivateRead();
         String nTerm = "NH2";
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -1547,6 +1592,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getCTerminal() {
 
+        zooActivateRead();
         String cTerm = "COOH";
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
@@ -1586,6 +1632,7 @@ public class Peptide extends ExperimentObject {
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
+        zooActivateRead();
         if (modificationMatches != null) {
             for (ModificationMatch modMatch : modificationMatches) {
                 String modName = modMatch.getTheoreticPtm();
@@ -1629,6 +1676,7 @@ public class Peptide extends ExperimentObject {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+        zooActivateRead();
         return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
     }
 
@@ -1765,6 +1813,7 @@ public class Peptide extends ExperimentObject {
      * @return the indexes of the modified residues
      */
     public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
+        zooActivateRead();
 
         if (modificationMatches == null) {
             return new ArrayList<Integer>(0);
@@ -1794,6 +1843,7 @@ public class Peptide extends ExperimentObject {
      * @return an indexed map of all fixed modifications amino acid
      */
     public HashMap<Integer, ArrayList<String>> getIndexedFixedModifications() {
+        zooActivateRead();
 
         if (modificationMatches == null) {
             return new HashMap<Integer, ArrayList<String>>(0);
@@ -1820,6 +1870,7 @@ public class Peptide extends ExperimentObject {
      * amino acids
      */
     public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
+        zooActivateRead();
 
         if (mass == 0) {
 
@@ -1873,6 +1924,7 @@ public class Peptide extends ExperimentObject {
      * @return the sequence of this peptide as AminoAcidSequence
      */
     public AminoAcidSequence getSequenceAsAminoAcidSequence() {
+        zooActivateRead();
         return getSequenceAsAminoAcidSequence(sequence);
     }
 
@@ -1903,6 +1955,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
+        zooActivateRead();
         if (parentProteins == null) {
             getParentProteins(sequenceMatchingPreferences);
         }

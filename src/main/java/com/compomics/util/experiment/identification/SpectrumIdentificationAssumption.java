@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * Spectrum identification assumption made by an identification algorithm.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
@@ -58,6 +59,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification rank
      */
     public int getRank() {
+        zooActivateRead();
         return rank;
     }
 
@@ -67,6 +69,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param rank the rank of the PeptideAssumptio
      */
     public void setRank(int rank) {
+        zooActivateWrite();
+        setModified(true);
         this.rank = rank;
     }
 
@@ -76,10 +80,13 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the advocate index
      */
     public int getAdvocate() {
+        zooActivateRead();
         return advocate;
     }
     
     public void setAdvocate(int advocate){
+        zooActivateWrite();
+        setModified(true);
         this.advocate = advocate;
     }
 
@@ -89,6 +96,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the score
      */
     public double getScore() {
+        zooActivateRead();
         return score;
     }
 
@@ -99,6 +107,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param score the score
      */
     public void setScore(double score) {
+        zooActivateWrite();
+        setModified(true);
         this.score = score;
     }
 
@@ -108,10 +118,13 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification file
      */
     public String getIdentificationFile() {
+        zooActivateRead();
         return identificationFile;
     }
     
     public void setIdentificationFile(String identificationFile){
+        zooActivateWrite();
+        setModified(true);
         this.identificationFile = identificationFile;
     }
 
@@ -121,6 +134,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the charge used for identification
      */
     public Charge getIdentificationCharge() {
+        zooActivateRead();
         return identificationCharge;
     }
 
@@ -130,6 +144,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param identificationCharge the identification charge
      */
     public void setIdentificationCharge(Charge identificationCharge) {
+        zooActivateWrite();
+        setModified(true);
         this.identificationCharge = identificationCharge;
     }
 
@@ -146,6 +162,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the theoretic m/z
      */
     public double getTheoreticMz() {
+        zooActivateRead();
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
     }
 
@@ -164,6 +181,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the precursor mass error (in ppm or Da)
      */
     public double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+        zooActivateRead();
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 
@@ -177,6 +195,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the precursor isotope number according to the number of protons
      */
     public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) {
+        zooActivateRead();
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber(minIsotope, maxIsotope);
     }
 
@@ -187,6 +206,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the ion match
      */
     public IonMatch getPrecursorMatch(Peak precursorPeak) {
+        zooActivateRead();
         return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge().value);
     }
 
@@ -196,6 +216,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the raw score as provided by the identification algorithm
      */
     public double getRawScore() {
+        zooActivateRead();
         return rawScore;
     }
 
@@ -205,6 +226,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param rawScore the raw score as provided by the identification algorithm
      */
     public void setRawScore(double rawScore) {
+        zooActivateWrite();
+        setModified(true);
         this.rawScore = rawScore;
     }
 
@@ -216,8 +239,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the amino acid scores
      */
     public ArrayList<double[]> getAminoAcidScores() {
-        //return aminoAcidScores;
-        return null;
+        zooActivateRead();
+        return aminoAcidScores;
     }
 
     /**
@@ -228,6 +251,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param aminoAcidScores the amino acid scores
      */
     public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
-        //this.aminoAcidScores = aminoAcidScores;
+        zooActivateWrite();
+        setModified(true);
+        this.aminoAcidScores = aminoAcidScores;
     }
 }

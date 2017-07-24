@@ -42,6 +42,8 @@ public abstract class ExperimentObject extends IdObject {
      * @param paramterKey the key of the parameter
      */
     public void removeUrParam(String paramterKey) {
+        zooActivateWrite();
+        setModified(true);
         if (urParams != null) {
             urParams.remove(paramterKey);
         }
@@ -51,6 +53,8 @@ public abstract class ExperimentObject extends IdObject {
      * Creates the parameters map unless done by another thread already.
      */
     private synchronized void createParamsMap() {
+        zooActivateWrite();
+        setModified(true);
         if (urParams == null) {
             urParams = new HashMap<String, UrParameter>(1);
         }
@@ -74,6 +78,8 @@ public abstract class ExperimentObject extends IdObject {
      * Clears the loaded parameters.
      */
     public void clearParametersMap() {
+        zooActivateWrite();
+        setModified(true);
         urParams = null;
     }
     

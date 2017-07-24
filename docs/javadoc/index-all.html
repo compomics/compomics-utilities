@@ -1600,7 +1600,7 @@
 <dd>
 <div class="block">Creates the peptides and protein instances based on the spectrum matches.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-">buildPeptidesAndProteins(String, SequenceMatchingPreferences)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.preferences.SequenceMatchingPreferences-">buildPeptidesAndProteins(SpectrumMatch, SequenceMatchingPreferences)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match.</div>
@@ -3878,6 +3878,8 @@
 <div class="block">This method drops a dotted line from the specified total height to the
  top of the indicated point.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/ObjectsDB.html#dropToDB--">dropToDB()</a></span> - Method in class com.compomics.util.db.<a href="com/compomics/util/db/ObjectsDB.html" title="class in com.compomics.util.db">ObjectsDB</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/filefilters/FileFilterUtils.html#dta">dta</a></span> - Static variable in class com.compomics.util.io.filefilters.<a href="com/compomics/util/io/filefilters/FileFilterUtils.html" title="class in com.compomics.util.io.filefilters">FileFilterUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/filefilters/FileFilterUtils.html#DTA">DTA</a></span> - Static variable in class com.compomics.util.io.filefilters.<a href="com/compomics/util/io/filefilters/FileFilterUtils.html" title="class in com.compomics.util.io.filefilters">FileFilterUtils</a></dt>
@@ -4603,6 +4605,10 @@
 <dt><a href="com/compomics/util/pride/prideobjects/webservice/file/FileType.html" title="enum in com.compomics.util.pride.prideobjects.webservice.file"><span class="typeNameLink">FileType</span></a> - Enum in <a href="com/compomics/util/pride/prideobjects/webservice/file/package-summary.html">com.compomics.util.pride.prideobjects.webservice.file</a></dt>
 <dd>
 <div class="block">An enum of the possible file types for the PRIDE file type options.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#fillSpectraPerFile--">fillSpectraPerFile()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>
+<div class="block">Fills the spectra per file map</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering"><span class="typeNameLink">Filter</span></a> - Interface in <a href="com/compomics/util/experiment/filtering/package-summary.html">com.compomics.util.experiment.filtering</a></dt>
 <dd>
@@ -25289,10 +25295,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#SpectrumIdentificationAssumption--">SpectrumIdentificationAssumption()</a></span> - Constructor for class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#spectrumIdentificationMap">spectrumIdentificationMap</a></span> - Variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">List of all imported PSMs indexed by mgf file name.</div>
-</dd>
 <dt><a href="com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes"><span class="typeNameLink">SpectrumIndex</span></a> - Class in <a href="com/compomics/util/experiment/massspectrometry/indexes/package-summary.html">com.compomics.util.experiment.massspectrometry.indexes</a></dt>
 <dd>
 <div class="block">This map stores the fragment ions indexed by mass.</div>

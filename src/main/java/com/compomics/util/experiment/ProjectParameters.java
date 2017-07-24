@@ -6,7 +6,6 @@
 package com.compomics.util.experiment;
 
 import com.compomics.util.IdObject;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -34,42 +33,56 @@ public class ProjectParameters extends IdObject {
     }
     
     public Date getCreationTime(){
+        zooActivateRead();
         return creationTime;
     }
     
     public void setCreationTime(Date creationTime){
+        zooActivateWrite();
+        setModified(true);
         this.creationTime = creationTime;
     }
     
     public String getProjectUniqueName(){
+        zooActivateRead();
         return projectUniqueName;
     }
     
     public void getProjectUniqueName(String projectUniqueName){
+        zooActivateRead();
         this.projectUniqueName = projectUniqueName;
     }
     
     public void setStringParameter(String key, String parameter){
+        zooActivateWrite();
+        setModified(true);
         stringParameters.put(key, parameter);
     }
     
     public String getStringParameter(String key){
+        zooActivateRead();
         return stringParameters.get(key);
     }
     
     public void setIntegerParameter(String key, Integer parameter){
+        zooActivateWrite();
+        setModified(true);
         integerParameters.put(key, parameter);
     }
     
     public int getIntegerParameter(String key){
+        zooActivateRead();
         return integerParameters.get(key);
     }
     
     public void setNumericParameter(String key, Double parameter){
+        zooActivateWrite();
+        setModified(true);
         numericParameters.put(key, parameter);
     }
     
     public double getNumericParameter(String key){
+        zooActivateRead();
         return numericParameters.get(key);
     }
 }

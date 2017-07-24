@@ -3,6 +3,7 @@ package com.compomics.util.test.experiment.io;
 import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.experiment.ProjectParameters;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -61,6 +62,7 @@ public class IdentificationDBTest extends TestCase {
                 String parametersKey = "pepnovo_assumption_details";
                 String spectrumFile = "spectrum_file";
                 String spectrumTitle = "spectrum_title";
+                String projectParametersTitle = "project_parameters_title";
                 String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
                 String peptideKey = "PEPTIDE";
                 String proteinKey = "test_protein";
@@ -85,9 +87,20 @@ public class IdentificationDBTest extends TestCase {
                 idDB.addObject(testProteinMatch.getKey(), testProteinMatch);
                 
                 
+                ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
+                idDB.addObject(ProjectParameters.nameForDatabase, projectParameters);
                 
-                
+                idDB.getObjectsDB().dumpToDB();
                 idDB.clearCache();
+                idDB.close();
+                
+                objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
+                idDB = new Ms2Identification("the reference", objectsDB);
+                
+                ProjectParameters retrieve = (ProjectParameters)idDB.retrieveObject(ProjectParameters.nameForDatabase);
+                Assert.assertTrue(retrieve != null);
+                Assert.assertTrue(retrieve.getProjectUniqueName().equals(projectParametersTitle));
+                
 
                 testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
                 Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
@@ -137,8 +150,10 @@ public class IdentificationDBTest extends TestCase {
                 idDB.addObject(parametersKey, testParameter);
                 testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(parametersKey);
                 Assert.assertTrue(testParameter.getRankScore()== testScore);
-            } finally {
                 idDB.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
         } finally {
             File dbFolder = new File(path);

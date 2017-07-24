@@ -138,12 +138,12 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Setter for the best peptide assumption.
      *
-     * @param bestAssumption the best peptide assumption for the spectrum
+     * @param bestPeptideAssumption the best peptide assumption for the spectrum
      */
-    public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
+    public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
         zooActivateWrite();
         setModified(true);
-        this.bestPeptideAssumption = bestAssumption;
+        this.bestPeptideAssumption = bestPeptideAssumption;
     }
     
     

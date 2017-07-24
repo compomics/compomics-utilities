@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
-import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.zoodb.internal.util.SynchronizedROCollection;
@@ -73,7 +72,6 @@ public class ObjectsDB {
      * the actual db file
      */
     private File dbFile = null;
-    
     
     
     /**
@@ -219,11 +217,12 @@ public class ObjectsDB {
      */
     public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
 
+        long longKey = createLongKey(objectKey);
+        
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey + "  /  " + longKey);
         }
         
-        long longKey = createLongKey(objectKey);
         ((IdObject)object).setId(longKey);
         objectsCache.addObject(longKey, object, true);
     }
@@ -317,7 +316,7 @@ public class ObjectsDB {
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
         for (String objectKey : keys){
-            if (waitingHandler.isRunCanceled()) break;
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
             hashedKeys.add(longKey);
             Long zooid = idMap.get(longKey);
@@ -541,7 +540,7 @@ public class ObjectsDB {
         objectsCache.clearCache();
     }
     
-    public void dropToDB() throws IOException, SQLException, InterruptedException {
+    public void dumpToDB() throws IOException, SQLException, InterruptedException {
         objectsCache.saveCache(null, false);
     }
     
@@ -815,6 +814,7 @@ public class ObjectsDB {
      */
     public void close() throws SQLException, InterruptedException, IOException {
         
+        objectsCache.saveCache(null, false);
         
         dbMutex.acquire();
         pm.currentTransaction().commit();
@@ -841,14 +841,25 @@ public class ObjectsDB {
      */
     public void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions){
-            System.out.println(System.currentTimeMillis() + " Establishing database");
+            System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
         }
         dbMutex.acquire();
+        idMap.clear();
         
         pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
         pm.currentTransaction().begin();
         
         dbMutex.release();
+        
+        if (getNumber(IdObject.class) > 0){
+            Iterator<IdObject> idIterator = pm.getExtent(IdObject.class).iterator();
+            while (idIterator.hasNext()){
+                IdObject idObj = idIterator.next();
+                long id = idObj.getId();
+                long zooId = (Long)pm.getObjectId(idObj);
+                idMap.put(id, zooId);
+            }
+        }
     }
     
     

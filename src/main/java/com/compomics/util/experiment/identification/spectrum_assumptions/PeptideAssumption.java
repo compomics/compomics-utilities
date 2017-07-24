@@ -95,6 +95,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
 
     @Override
     public double getTheoreticMass() {
+        zooActivateRead();
         return peptide.getMass();
     }
 }

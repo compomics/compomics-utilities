@@ -52,6 +52,12 @@ public class ModificationMatch extends ExperimentObject {
     }
 
     /**
+     * Default constructor for a modification match.
+     */
+    public ModificationMatch() {
+    }
+
+    /**
      * Returns a boolean indicating if the modification is variable.
      *
      * @return a boolean indicating if the modification is variable

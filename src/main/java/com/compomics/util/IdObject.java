@@ -6,6 +6,7 @@
 package com.compomics.util;
 
 
+import java.io.Serializable;
 import org.zoodb.api.impl.ZooPC;
 
 /**
@@ -13,7 +14,10 @@ import org.zoodb.api.impl.ZooPC;
  * all further classes inherit from this
  * @author dominik.kopczynski
  */
-public class IdObject extends ZooPC {
+public class IdObject extends ZooPC implements Serializable {
+    
+    private static final long serialVersionUID = -7906158551970915613l;
+    
     /**
      * unique identifier
      */
@@ -22,12 +26,26 @@ public class IdObject extends ZooPC {
      * modify for storing in the db
      */
     private boolean modified = true;
+    /** 
+     * flag if object is a first level object or not
+     */
+    private boolean firstLevel = false;
     
     public IdObject(){}
     
     public void setId(long id){
         zooActivateWrite();
         this.id = id;
+    }
+    
+    public boolean getFirstLevel(){
+        zooActivateRead();
+        return firstLevel;
+    }
+    
+    public void setFirstLevel(boolean firstLevel){
+        zooActivateWrite();
+        this.firstLevel = firstLevel;
     }
     
     public long getId(){

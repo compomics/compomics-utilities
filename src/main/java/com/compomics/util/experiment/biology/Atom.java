@@ -13,6 +13,7 @@ import com.compomics.util.experiment.biology.atoms.Selenium;
 import com.compomics.util.experiment.biology.atoms.Sodium;
 import com.compomics.util.experiment.biology.atoms.Sulfur;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +23,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class Atom extends ExperimentObject {
+public abstract class Atom extends ExperimentObject implements Serializable {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

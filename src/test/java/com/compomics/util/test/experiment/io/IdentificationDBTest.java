@@ -1,7 +1,6 @@
 package com.compomics.util.test.experiment.io;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.ProjectParameters;
 import com.compomics.util.experiment.biology.Peptide;
@@ -157,7 +156,6 @@ public class IdentificationDBTest extends TestCase {
             }
         } finally {
             File dbFolder = new File(path);
-            DerbyUtil.closeConnection();
             Util.deleteDir(dbFolder);
         }
     }

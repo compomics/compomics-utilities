@@ -155,7 +155,7 @@ public abstract class MatchesIterator {
      * @throws InterruptedException exception thrown whenever a threading issue
      * occurred while retrieving the match
      */
-    public synchronized Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         // loading data from db
         /*
         if (currentIndex >= batchSize) {
@@ -170,18 +170,19 @@ public abstract class MatchesIterator {
         }
         */
 
-        if (index >= num) return null;
         nextMutex.acquire();
-        Object obj;
-        if (keys == null){
-            //return iterator.next();
-            obj = identification.retrieveObject(wa.get(index));
+        Object obj = null;
+        if (index < num){
+            if (keys == null){
+                //return iterator.next();
+                obj = identification.retrieveObject(wa.get(index));
+            }
+            else {
+                obj = identification.retrieveObject(keys.get(index));
+            }
+            index++;
+            //currentIndex++;
         }
-        else {
-            obj = identification.retrieveObject(keys.get(index));
-        }
-        index++;
-        //currentIndex++;
         nextMutex.release();
         return obj;
     }

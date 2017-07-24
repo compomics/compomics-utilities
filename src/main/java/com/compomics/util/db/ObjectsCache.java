@@ -290,6 +290,7 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             loadedObjectMutex.acquire();
+            System.out.println("storing");
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
                 waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
@@ -320,7 +321,6 @@ public class ObjectsCache {
                     ((IdObject)obj).setModified(false);
                     pm.makePersistent(obj);
                     Long zooid = (Long)pm.getObjectId(obj);
-                    ((IdObject)obj).setId(key);
                     objectsDB.getIdMap().put(key, zooid);
                 }
                 else if (((IdObject)obj).getModified()){

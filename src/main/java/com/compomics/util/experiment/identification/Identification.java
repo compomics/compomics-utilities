@@ -798,8 +798,10 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException exception thrown if a threading error occurs
      * @throws java.io.IOException exception thrown whenever an error occurred while
      * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
      */
-    public void close() throws SQLException, InterruptedException, IOException {
+    public void close() throws SQLException, InterruptedException, IOException, ClassNotFoundException {
         objectsDB.close();
     }
     

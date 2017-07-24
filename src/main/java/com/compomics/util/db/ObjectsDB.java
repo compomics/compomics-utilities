@@ -73,6 +73,8 @@ public class ObjectsDB {
      */
     private File dbFile = null;
     
+    private boolean connectionActive = false;
+    
     
     /**
      * Constructor.
@@ -224,6 +226,7 @@ public class ObjectsDB {
         }
         
         ((IdObject)object).setId(longKey);
+        ((IdObject)object).setFirstLevel(true);
         objectsCache.addObject(longKey, object, true);
     }
     
@@ -275,6 +278,7 @@ public class ObjectsDB {
             
             long longKey = createLongKey(objectKey);
             ((IdObject)object).setId(longKey);
+            ((IdObject)object).setFirstLevel(true);
             
             objectsCache.addObject(longKey, object, true);
             
@@ -799,8 +803,7 @@ public class ObjectsDB {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
-        return true;
-        // TODO: check for orientDB
+        return connectionActive;
     }
 
     /**
@@ -811,22 +814,44 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      * @throws java.io.IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
      */
-    public void close() throws SQLException, InterruptedException, IOException {
+    public void close() throws SQLException, InterruptedException, IOException, ClassNotFoundException {
+        close(true);
+    }
+
+    /**
+     * Closes the db connection.
+     *
+     * @param clearing clearing all database structures
+     * @throws SQLException exception thrown whenever an error occurred while
+     * closing the database connection
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * @throws java.io.IOException exception thrown whenever an error occurred while
+     * writing the object
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
+     */
+    public void close(boolean clearing) throws SQLException, InterruptedException, IOException, ClassNotFoundException {
         
-        objectsCache.saveCache(null, false);
+        objectsCache.saveCache(null, clearing);
+        
+        System.out.println("stored items: " + getNumber(IdObject.class));
         
         dbMutex.acquire();
+        connectionActive = false;
         pm.currentTransaction().commit();
         if (pm.currentTransaction().isActive()) {
             pm.currentTransaction().rollback();
         }
         pm.close();
         pm.getPersistenceManagerFactory().close();
+        if (clearing) idMap.clear();
         dbMutex.release();
 
     }
-
+    
     /**
      * Establishes connection to the database.
      *
@@ -840,6 +865,24 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        establishConnection(true);
+        
+    }
+
+    /**
+     * Establishes connection to the database.
+     *
+     * @param loading load all objects from database
+     * @throws SQLException exception thrown whenever an error occurred while
+     * establishing the connection to the database
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading error occurred while establishing the connection
+     */
+    public void establishConnection(boolean loading) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (debugInteractions){
             System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
         }
@@ -848,16 +891,17 @@ public class ObjectsDB {
         
         pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
         pm.currentTransaction().begin();
+        connectionActive = true;
         
         dbMutex.release();
         
-        if (getNumber(IdObject.class) > 0){
-            Iterator<IdObject> idIterator = pm.getExtent(IdObject.class).iterator();
-            while (idIterator.hasNext()){
-                IdObject idObj = idIterator.next();
+        if (loading){
+            Query q = pm.newQuery(IdObject.class, "firstLevel == true");
+            for (Object obj : (Collection<?>) q.execute()){
+                IdObject idObj = (IdObject)obj;
                 long id = idObj.getId();
                 long zooId = (Long)pm.getObjectId(idObj);
-                idMap.put(id, zooId);
+                idMap.put(id, zooId);                
             }
         }
     }

@@ -2,6 +2,7 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -9,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class NeutralLoss extends ExperimentObject {
+public class NeutralLoss extends ExperimentObject implements Serializable {
 
     /**
      * Serial number for backward compatibility.

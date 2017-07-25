@@ -34,30 +34,17 @@ public class IdentificationDBTest extends TestCase {
 
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(1, path.indexOf("/target/"));
-        path += "/src/test/resources/experiment/";
+        path += "/src/test/resources/experiment/identificationDB";
+        File dbFolder = new File(path);
+        if (!dbFolder.exists()) {
+            dbFolder.mkdir();
+        }
+
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", true);
-            
-            
-            
-            /*
-            objectsDB.registerClass(PeptideMatch.class);
-            objectsDB.registerClass(Peptide.class);
-            objectsDB.registerClass(VariantMatch.class);
-            objectsDB.registerClass(Variant.class);
-            objectsDB.registerClass(ModificationMatch.class);
-            objectsDB.registerClass(ProteinMatch.class);
-            objectsDB.registerClass(SpectrumMatch.class);
-            objectsDB.registerClass(Charge.class);
-            objectsDB.registerClass(Tag.class);
-            objectsDB.registerClass(TagComponent.class);
-            objectsDB.registerClass(IdentificationMatch.class);
-            objectsDB.registerClass(PeptideAssumption.class);
-            objectsDB.registerClass(TagAssumption.class);
-            */
 
             Ms2Identification idDB = new Ms2Identification("the reference", objectsDB);
-            try {                
+            try {
                 String parametersKey = "pepnovo_assumption_details";
                 String spectrumFile = "spectrum_file";
                 String spectrumTitle = "spectrum_title";
@@ -66,13 +53,11 @@ public class IdentificationDBTest extends TestCase {
                 String peptideKey = "PEPTIDE";
                 String proteinKey = "test_protein";
                 Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
-                
-                
+
                 ArrayList<String> testProteins = new ArrayList<String>();
                 testProteins.add("test protein1");
                 testProteins.add("test protein2");
-                
-                
+
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
                 testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
@@ -84,27 +69,24 @@ public class IdentificationDBTest extends TestCase {
 
                 ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);
                 idDB.addObject(testProteinMatch.getKey(), testProteinMatch);
-                
-                
+
                 ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
                 idDB.addObject(ProjectParameters.nameForDatabase, projectParameters);
-                
+
                 idDB.getObjectsDB().dumpToDB();
                 idDB.clearCache();
                 idDB.close();
-                
+
                 objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
                 idDB = new Ms2Identification("the reference", objectsDB);
-                
-                ProjectParameters retrieve = (ProjectParameters)idDB.retrieveObject(ProjectParameters.nameForDatabase);
+
+                ProjectParameters retrieve = (ProjectParameters) idDB.retrieveObject(ProjectParameters.nameForDatabase);
                 Assert.assertTrue(retrieve != null);
                 Assert.assertTrue(retrieve.getProjectUniqueName().equals(projectParametersTitle));
-                
 
-                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                testSpectrumMatch = (SpectrumMatch) idDB.retrieveObject(spectrumKey);
                 Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
-                
                 HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
@@ -122,7 +104,7 @@ public class IdentificationDBTest extends TestCase {
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
 
-                testSpectrumMatch = (SpectrumMatch)idDB.retrieveObject(spectrumKey);
+                testSpectrumMatch = (SpectrumMatch) idDB.retrieveObject(spectrumKey);
                 assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
@@ -136,11 +118,10 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 1);
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(proteinKey));
 
-
-                testPeptideMatch = (PeptideMatch)idDB.retrieveObject(peptideKey);
+                testPeptideMatch = (PeptideMatch) idDB.retrieveObject(peptideKey);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
 
-                testProteinMatch = (ProteinMatch)idDB.retrieveObject(proteinKey);
+                testProteinMatch = (ProteinMatch) idDB.retrieveObject(proteinKey);
                 Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
                 double testScore = 12.3;
@@ -148,14 +129,12 @@ public class IdentificationDBTest extends TestCase {
                 testParameter.setRankScore(testScore);
                 idDB.addObject(parametersKey, testParameter);
                 testParameter = (PepnovoAssumptionDetails) idDB.retrieveObject(parametersKey);
-                Assert.assertTrue(testParameter.getRankScore()== testScore);
+                Assert.assertTrue(testParameter.getRankScore() == testScore);
                 idDB.close();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } finally {
-            File dbFolder = new File(path);
             Util.deleteDir(dbFolder);
         }
     }

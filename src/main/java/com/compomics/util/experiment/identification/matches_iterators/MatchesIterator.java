@@ -37,10 +37,6 @@ public abstract class MatchesIterator {
      */
     private int num = 0;
     /**
-     * batch size for loading from the db
-     */
-    private final int batchSize = 1024;
-    /**
      * waiting handler
      */
     private WaitingHandler waitingHandler;
@@ -49,15 +45,9 @@ public abstract class MatchesIterator {
      */
     private boolean displayProgress;
     /**
-     * list of current keys within the batch
+     * list of long keys to iterate
      */
-    private ArrayList<Long> currentKeys = null;
-    /** 
-     * batch index
-     */
-    private int currentIndex;
-    
-    private ArrayList<String> wa = null;
+    private ArrayList<Long> longKeys = null;
     
     
     private final Semaphore nextMutex = new Semaphore(1);
@@ -112,18 +102,21 @@ public abstract class MatchesIterator {
         }
         else {
             num = identification.getNumber(className);
-            iterator = identification.getIterator(className, filters);
-            wa = new ArrayList<String>(num);
-            while (iterator.hasNext()){
-                IdObject ido = (IdObject)iterator.next();
-                wa.add(((IdentificationMatch)ido).getKey());
-                
+            if (filters == null){
+                longKeys = new ArrayList<Long>(identification.getClassObjects(className));
             }
-            num = wa.size();
+            else {
+                iterator = identification.getIterator(className, filters);
+                longKeys = new ArrayList<Long>(num);
+                while (iterator.hasNext()){
+                    longKeys.add(((IdObject)iterator.next()).getId());
+                }
+            }
+            num = longKeys.size();
+            System.out.println("get It " + className.getSimpleName() + " / " + num);
         }
         
         index = 0;
-        currentIndex = 0;
         this.identification = identification;
         this.waitingHandler = waitingHandler;
         this.displayProgress = displayProgress;
@@ -156,32 +149,17 @@ public abstract class MatchesIterator {
      * occurred while retrieving the match
      */
     public Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        // loading data from db
-        /*
-        if (currentIndex >= batchSize) {
-            if (keys != null){
-                ArrayList<String> subKeys = (ArrayList<String>)keys.subList(index, index + batchSize);
-                currentKeys = identification.loadObjects(subKeys, waitingHandler, displayProgress);
-            }
-            else {
-                //currentKeys = identification.loadObjects(iterator, batchSize, waitingHandler, displayProgress);
-            }
-            currentIndex = 0;
-        }
-        */
 
         nextMutex.acquire();
         Object obj = null;
         if (index < num){
             if (keys == null){
-                //return iterator.next();
-                obj = identification.retrieveObject(wa.get(index));
+                obj = identification.retrieveObject(longKeys.get(index));
             }
             else {
                 obj = identification.retrieveObject(keys.get(index));
             }
             index++;
-            //currentIndex++;
         }
         nextMutex.release();
         return obj;

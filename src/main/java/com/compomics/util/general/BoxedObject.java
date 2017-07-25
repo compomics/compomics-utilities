@@ -37,6 +37,7 @@ public class BoxedObject<K> extends IdObject {
      * @return the boxed object
      */
     public K getObject() {
+        zooActivateRead();
         return object;
     }
 
@@ -46,7 +47,7 @@ public class BoxedObject<K> extends IdObject {
      * @param object the boxed object
      */
     public void setObject(K object) {
+        zooActivateWrite();
         this.object = object;
-        setModified(true);
     }
 }

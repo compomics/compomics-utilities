@@ -89,7 +89,6 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     
     public void setPeptide(Peptide peptide){
         zooActivateWrite();
-        setModified(true);
         this.peptide = peptide;
     }
 

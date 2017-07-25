@@ -184,7 +184,7 @@ public abstract class Identification extends ExperimentObject {
         int num = 0;
         
         try {
-            num = getNumber(SpectrumMatch.class);
+            num = objectsDB.getNumber(SpectrumMatch.class);
         } catch (SQLException ex) {
             Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -215,7 +215,6 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.dumpToDB();
         return objectsDB.getNumber(className);
     }
     
@@ -237,10 +236,13 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public Iterator<?> getIterator(Class className, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return filters == null ? objectsDB.getObjectsIterator(className) : objectsDB.getObjectsIterator(className, filters);
+        return objectsDB.getObjectsIterator(className, filters);
     }
     
-
+    
+    public HashSet<Long> getClassObjects(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.getClassObjects(className);
+    }
 
     /**
      * Loads all objects of the class in cache.
@@ -310,9 +312,10 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
+    /*
     public ArrayList<Long> loadObjects(Iterator<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.loadObjects(iterator, num, waitingHandler, displayProgress);
-    }
+    }*/
     
     
     /**

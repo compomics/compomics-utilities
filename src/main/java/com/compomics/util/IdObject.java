@@ -23,9 +23,9 @@ public class IdObject extends ZooPC implements Serializable {
      */
     private long id;
     /**
-     * modify for storing in the db
+     * indecates if the object is already stored in the db
      */
-    private boolean modified = true;
+    private boolean storedInDB = false;
     /** 
      * flag if object is a first level object or not
      */
@@ -53,13 +53,14 @@ public class IdObject extends ZooPC implements Serializable {
         return id;
     }
     
-    public boolean getModified(){
+    public boolean getStoredInDB(){
         zooActivateRead();
-        return modified;
+        return storedInDB;
     }
     
-    public void setModified(boolean modified){
+    
+    public void setStoredInDB(boolean storedInDB){
         zooActivateWrite();
-        this.modified = modified;
+        this.storedInDB = storedInDB;
     }
 }

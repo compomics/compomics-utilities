@@ -87,13 +87,11 @@ public class Peptide extends ExperimentObject {
     
     public void setMass(double mass){
         zooActivateWrite();
-        setModified(true);
         this.mass = mass;
     }
     
     public void setKey(String key){
         zooActivateWrite();
-        setModified(true);
         this.key = key;
     }
     
@@ -114,7 +112,6 @@ public class Peptide extends ExperimentObject {
     
     public void setVariants(ArrayList<VariantMatch> variantMatches){
         zooActivateWrite();
-        setModified(true);
         this.variantMatches = variantMatches;
     }
     
@@ -125,7 +122,6 @@ public class Peptide extends ExperimentObject {
     
     public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap){
         zooActivateWrite();
-        setModified(true);
         this.variantsMap = variantsMap;
     }
 
@@ -222,7 +218,6 @@ public class Peptide extends ExperimentObject {
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         zooActivateWrite();
-        setModified(true);
         this.modificationMatches = modificationMatches;
         mass = 0;
         key = null;
@@ -234,7 +229,6 @@ public class Peptide extends ExperimentObject {
      */
     public void clearModificationMatches() {
         zooActivateWrite();
-        setModified(true);
         modificationMatches.clear();
         mass = 0;
         key = null;
@@ -248,7 +242,6 @@ public class Peptide extends ExperimentObject {
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
         zooActivateWrite();
-        setModified(true);
         if (modificationMatches == null) {
             modificationMatches = new ArrayList<ModificationMatch>(1);
         }
@@ -283,7 +276,6 @@ public class Peptide extends ExperimentObject {
      */
     public void clearVariantMatches() {
         zooActivateWrite();
-        setModified(true);
         if (variantMatches != null) {
             variantMatches.clear();
             variantsMap = null;
@@ -297,7 +289,6 @@ public class Peptide extends ExperimentObject {
      */
     public void addVariantMatch(VariantMatch variantMatch) {
         zooActivateWrite();
-        setModified(true);
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(1);
         }
@@ -312,7 +303,6 @@ public class Peptide extends ExperimentObject {
      */
     public void addVariantMatches(Collection<VariantMatch> variantMatch) {
         zooActivateWrite();
-        setModified(true);
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
@@ -356,7 +346,6 @@ public class Peptide extends ExperimentObject {
      */
     public void clearVariantsMap() {
         zooActivateWrite();
-        setModified(true);
         variantsMap = null;
     }
 
@@ -372,7 +361,6 @@ public class Peptide extends ExperimentObject {
     
     public void setSequence(String sequence){
         zooActivateWrite();
-        setModified(true);
         this.sequence = sequence;
     }
 
@@ -582,7 +570,6 @@ public class Peptide extends ExperimentObject {
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
         zooActivateWrite();
-        setModified(true);
         this.parentProteins = parentProteins;
     }
 
@@ -591,7 +578,6 @@ public class Peptide extends ExperimentObject {
      */
     public void clearParentProteins() {
         zooActivateWrite();
-        setModified(true);
         parentProteins = null;
     }
     
@@ -624,7 +610,6 @@ public class Peptide extends ExperimentObject {
      */
     public void resetKeysCaches() {
         zooActivateWrite();
-        setModified(true);
         matchingKey = null;
         key = null;
     }

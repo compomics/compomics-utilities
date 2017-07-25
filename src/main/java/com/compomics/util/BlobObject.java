@@ -44,7 +44,6 @@ public class BlobObject extends IdObject {
     
     public void setBlob(byte[] blob){
         zooActivateWrite();
-        setModified(true);
         this.blob = blob;
     }
     

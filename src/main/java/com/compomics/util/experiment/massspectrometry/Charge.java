@@ -52,7 +52,6 @@ public class Charge extends ExperimentObject {
     
     public void setSign(int sign){
         zooActivateWrite();
-        setModified(true);
         this.sign = sign;
     }
     
@@ -63,7 +62,6 @@ public class Charge extends ExperimentObject {
     
     public void setValue(int value){
         zooActivateWrite();
-        setModified(true);
         this.value = value;
     }
     
@@ -75,6 +73,7 @@ public class Charge extends ExperimentObject {
      * @return charge as a string
      */
     public String toString() {
+        zooActivateRead();
         switch (sign) {
             case PLUS:
                 return value + "+";
@@ -93,6 +92,7 @@ public class Charge extends ExperimentObject {
      */
     public String getChargeAsFormattedString() {
 
+        zooActivateRead();
         String temp = "";
 
         for (int i = 0; i < value; i++) {
@@ -112,6 +112,7 @@ public class Charge extends ExperimentObject {
 
     @Override
     public int hashCode() {
+        zooActivateRead();
         int hash = 7;
         hash = 97 * hash + this.sign;
         hash = 97 * hash + this.value;
@@ -120,6 +121,7 @@ public class Charge extends ExperimentObject {
 
     @Override
     public boolean equals(Object obj) {
+        zooActivateRead();
         if (obj == null) {
             return false;
         }

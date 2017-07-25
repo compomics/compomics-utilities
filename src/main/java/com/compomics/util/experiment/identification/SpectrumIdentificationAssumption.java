@@ -70,7 +70,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setRank(int rank) {
         zooActivateWrite();
-        setModified(true);
         this.rank = rank;
     }
 
@@ -86,7 +85,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     
     public void setAdvocate(int advocate){
         zooActivateWrite();
-        setModified(true);
         this.advocate = advocate;
     }
 
@@ -108,7 +106,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setScore(double score) {
         zooActivateWrite();
-        setModified(true);
         this.score = score;
     }
 
@@ -124,7 +121,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     
     public void setIdentificationFile(String identificationFile){
         zooActivateWrite();
-        setModified(true);
         this.identificationFile = identificationFile;
     }
 
@@ -145,7 +141,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setIdentificationCharge(Charge identificationCharge) {
         zooActivateWrite();
-        setModified(true);
         this.identificationCharge = identificationCharge;
     }
 
@@ -227,7 +222,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setRawScore(double rawScore) {
         zooActivateWrite();
-        setModified(true);
         this.rawScore = rawScore;
     }
 
@@ -252,7 +246,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
         zooActivateWrite();
-        setModified(true);
         this.aminoAcidScores = aminoAcidScores;
     }
 }

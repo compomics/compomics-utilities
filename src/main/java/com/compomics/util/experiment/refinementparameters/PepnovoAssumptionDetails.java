@@ -43,7 +43,6 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      */
     public void setRankScore(double rankScore) {
         zooActivateWrite();
-        setModified(true);
         this.rankScore = rankScore;
     }
 
@@ -64,7 +63,6 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      */
     public void setMH(double mH) {
         zooActivateWrite();
-        setModified(true);
         this.mH = mH;
     }
 

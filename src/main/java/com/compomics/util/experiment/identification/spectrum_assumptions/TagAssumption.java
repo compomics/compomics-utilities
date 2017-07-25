@@ -62,12 +62,12 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     
     public void setTag(Tag tag){
         zooActivateWrite();
-        setModified(true);
         this.tag = tag;
     }
 
     @Override
     public double getTheoreticMass() {
+        zooActivateRead();
         return tag.getMass();
     }
 
@@ -81,6 +81,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMass(boolean includeCTermGap, boolean includeNTermGap) {
+        zooActivateRead();
         return tag.getMass(includeCTermGap, includeNTermGap);
     }
 
@@ -94,6 +95,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
+        zooActivateRead();
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
     }
 
@@ -111,6 +113,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * by accounting for other charges and isotopes
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
+        zooActivateRead();
         ArrayList<TagAssumption> results = new ArrayList<TagAssumption>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
@@ -148,11 +151,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * of this tag
      */
     public TagAssumption reverse(boolean yIon) {
+        zooActivateRead();
         return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, score);
     }
 
     @Override
     public String toString() {
+        zooActivateRead();
         return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";
     }
 

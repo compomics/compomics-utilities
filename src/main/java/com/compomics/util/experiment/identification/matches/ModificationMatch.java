@@ -84,7 +84,6 @@ public class ModificationMatch extends ExperimentObject {
     public void setTheoreticPtm(String ptm) {
         zooActivateWrite();
         this.theoreticPtm = ptm;
-        setModified(true);
     }
 
     /**
@@ -105,7 +104,6 @@ public class ModificationMatch extends ExperimentObject {
     public void setModificationSite(int site) {
         zooActivateWrite();
         this.modifiedSite = site;
-        setModified(true);
     }
 
     /**
@@ -129,7 +127,6 @@ public class ModificationMatch extends ExperimentObject {
     public void setConfident(boolean confident) {
         zooActivateWrite();
         this.confident = confident;
-        setModified(true);
     }
 
     /**
@@ -153,13 +150,11 @@ public class ModificationMatch extends ExperimentObject {
     public void setInferred(boolean inferred) {
         zooActivateWrite();
         this.inferred = inferred;
-        setModified(true);
     }
     
     public void setVariable(boolean variable){
         zooActivateWrite();
         this.variable = variable;
-        setModified(true);
     }
 
     /**

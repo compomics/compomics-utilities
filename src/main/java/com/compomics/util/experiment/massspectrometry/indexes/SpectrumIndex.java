@@ -124,6 +124,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     public int getBin(double mz) {
+        zooActivateRead();
         if (ppm) {
             return getBinPpm(mz);
         } else {
@@ -140,6 +141,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     private int getBinAbsolute(double mz) {
+        zooActivateRead();
         int bin = (int) (mz / precursorTolerance);
         return bin;
     }
@@ -153,6 +155,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     private int getBinPpm(double mz) {
+        zooActivateRead();
         int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
         return bin;
     }
@@ -166,6 +169,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the peaks matching the given m/z
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
+        zooActivateRead();
         int bin0;
         if (ppm) {
             bin0 = getBinPpm(mz);
@@ -224,6 +228,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
+        zooActivateRead();
         return new ArrayList<Integer>(peaksMap.keySet());
     }
 
@@ -233,6 +238,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bins in the map
      */
     public Set<Integer> getRawBins() {
+        zooActivateRead();
         return peaksMap.keySet();
     }
 
@@ -244,6 +250,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the peaks at the given bin
      */
     public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
+        zooActivateRead();
         return peaksMap.get(bin);
     }
 
@@ -255,6 +262,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the mass associated with the given bin
      */
     public Double getMass(int bin) {
+        zooActivateRead();
         if (ppm) {
             return FastMath.exp((scalingFactor * bin) + mzAnchorLog);
         } else {
@@ -298,44 +306,37 @@ public class SpectrumIndex extends IdObject implements UrParameter {
     }
     
     public void setBinMax(Integer binMax){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.binMax = binMax;
     }
     
     public void setBinMin(Integer binMin){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.binMin = binMin;
     }
     
     public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.peaksMap = peaksMap;
     }
     
     public void setPpm(boolean ppm){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.ppm = ppm;
     }
     
     public void setPrecursorTolerance(double precursorTolerance){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.precursorTolerance = precursorTolerance;
     }
     
     public void setScalingFactor(double scalingFactor){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.scalingFactor = scalingFactor;
     }
     
     public void setTotalIntensity(Double totalIntensity){
-        zooActivateRead();
-        setModified(true);
+        zooActivateWrite();
         this.totalIntensity = totalIntensity;
     }
 }

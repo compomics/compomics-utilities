@@ -72,7 +72,6 @@ public class SpectrumMatch extends IdentificationMatch {
     
     public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize){
         zooActivateWrite();
-        setModified(true);
         this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
     }
     
@@ -100,16 +99,12 @@ public class SpectrumMatch extends IdentificationMatch {
     }
     
     public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap){
-        
         zooActivateWrite();
-        setModified(true);
         this.assumptions = assumptionsMap;
     }
     
     public void setRawAssumptions(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptions){
-        
         zooActivateWrite();
-        setModified(true);
         this.rawAssumptions = rawAssumptions;
     }
 
@@ -142,7 +137,6 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
         zooActivateWrite();
-        setModified(true);
         this.bestPeptideAssumption = bestPeptideAssumption;
     }
     
@@ -165,7 +159,6 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
         zooActivateWrite();
-        setModified(true);
         this.bestTagAssumption = bestTagAssumption;
     }
 
@@ -251,7 +244,6 @@ public class SpectrumMatch extends IdentificationMatch {
             advocateMap.put(score, assumptionList);
         }
         assumptionList.add(otherAssumption);
-        setModified(true);
     }
 
     @Override
@@ -273,13 +265,11 @@ public class SpectrumMatch extends IdentificationMatch {
     
     public void setSpectrumFile(String spectrumFile){
         zooActivateWrite();
-        setModified(true);
         this.spectrumFile = spectrumFile;
     }
     
     public void setSpectrumTitle(String spectrumTitle){
         zooActivateWrite();
-        setModified(true);
         this.spectrumTitle = spectrumTitle;
     }
     
@@ -312,7 +302,6 @@ public class SpectrumMatch extends IdentificationMatch {
     public void setSpectrumNumber(int spectrumNumber) {
         zooActivateWrite();
         this.spectrumNumber = spectrumNumber;
-        setModified(true);
     }
 
     /**
@@ -340,7 +329,6 @@ public class SpectrumMatch extends IdentificationMatch {
         for (int se : seToRemove) {
             assumptions.remove(se);
         }
-        setModified(true);
     }
 
     /**

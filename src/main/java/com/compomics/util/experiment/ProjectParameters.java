@@ -39,7 +39,6 @@ public class ProjectParameters extends IdObject {
     
     public void setCreationTime(Date creationTime){
         zooActivateWrite();
-        setModified(true);
         this.creationTime = creationTime;
     }
     
@@ -55,7 +54,6 @@ public class ProjectParameters extends IdObject {
     
     public void setStringParameter(String key, String parameter){
         zooActivateWrite();
-        setModified(true);
         stringParameters.put(key, parameter);
     }
     
@@ -66,7 +64,6 @@ public class ProjectParameters extends IdObject {
     
     public void setIntegerParameter(String key, Integer parameter){
         zooActivateWrite();
-        setModified(true);
         integerParameters.put(key, parameter);
     }
     
@@ -77,7 +74,6 @@ public class ProjectParameters extends IdObject {
     
     public void setNumericParameter(String key, Double parameter){
         zooActivateWrite();
-        setModified(true);
         numericParameters.put(key, parameter);
     }
     

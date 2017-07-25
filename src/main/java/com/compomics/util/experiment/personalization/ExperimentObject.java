@@ -29,7 +29,6 @@ public abstract class ExperimentObject extends IdObject {
      */
     public void addUrParam(UrParameter parameter) {
         zooActivateWrite();
-        setModified(true);
         if (urParams == null) {
             createParamsMap();
         }
@@ -43,7 +42,6 @@ public abstract class ExperimentObject extends IdObject {
      */
     public void removeUrParam(String paramterKey) {
         zooActivateWrite();
-        setModified(true);
         if (urParams != null) {
             urParams.remove(paramterKey);
         }
@@ -54,7 +52,6 @@ public abstract class ExperimentObject extends IdObject {
      */
     private synchronized void createParamsMap() {
         zooActivateWrite();
-        setModified(true);
         if (urParams == null) {
             urParams = new HashMap<String, UrParameter>(1);
         }
@@ -79,13 +76,11 @@ public abstract class ExperimentObject extends IdObject {
      */
     public void clearParametersMap() {
         zooActivateWrite();
-        setModified(true);
         urParams = null;
     }
     
     public void setUrParams(HashMap<String, UrParameter> urParams){
         zooActivateWrite();
-        setModified(true);
         this.urParams = urParams;
     }
     

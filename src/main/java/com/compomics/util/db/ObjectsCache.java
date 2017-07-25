@@ -134,18 +134,22 @@ public class ObjectsCache {
      * Removes an object from the cache
      *
      * @param objectKey the key of the object
+     * @return the class name of the object
      *
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void removeObject(long objectKey) throws InterruptedException {
+    public String removeObject(long objectKey) throws InterruptedException {
+        String className = null;
         if (!readOnly) {
             loadedObjectMutex.acquire();
             if (loadedObjects.containsKey(objectKey)){
+                className = loadedObjects.get(objectKey).getObject().getClass().getSimpleName();
                 loadedObjects.remove(objectKey);
                 objectQueue.removeFirstOccurrence(objectKey);
             }
             loadedObjectMutex.release();
         }
+        return className;
     }
 
     /**
@@ -290,7 +294,6 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {
             loadedObjectMutex.acquire();
-            System.out.println("storing");
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
                 waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
@@ -317,14 +320,11 @@ public class ObjectsCache {
                 
                 CacheEntry entry = loadedObjects.get(key);
                 Object obj = entry.getObject();
-                if (!objectsDB.getIdMap().containsKey(key)){
-                    ((IdObject)obj).setModified(false);
+                if (!((IdObject)obj).getStoredInDB()){
+                    ((IdObject)obj).setStoredInDB(true);
                     pm.makePersistent(obj);
                     Long zooid = (Long)pm.getObjectId(obj);
                     objectsDB.getIdMap().put(key, zooid);
-                }
-                else if (((IdObject)obj).getModified()){
-                    ((IdObject)obj).setModified(false);
                 }
                 
                 if (clearEntries) loadedObjects.remove(key);

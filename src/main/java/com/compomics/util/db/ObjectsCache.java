@@ -27,7 +27,7 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, CacheEntry> loadedObjects = new HashMap<Long, CacheEntry>();
+    private final HashMap<Long, Object> loadedObjects = new HashMap<Long, Object>();
     /**
      * Linked list to manage a queue for old entries
      */
@@ -99,35 +99,9 @@ public class ObjectsCache {
     public Object getObject(Long objectKey) throws InterruptedException {
         Object object = null;
         loadedObjectMutex.acquire();
-        if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey).getObject();
+        if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey);
         loadedObjectMutex.release();
         return object;
-    }
-
-    /**
-     * Sets that a match has been modified and returns true in case of success.
-     *
-     * @param objectKey the key of the object
-     * @param object the object
-     *
-     * @return returns a boolean indicating that the entry was in cache and has
-     * been updated. False otherwise.
-     *
-     * @throws java.lang.InterruptedException if the thread is interrupted
-     */
-    public boolean updateObject(long objectKey, Object object) throws InterruptedException {
-        if (!readOnly) {
-            loadedObjectMutex.acquire();
-            CacheEntry entry = loadedObjects.get(objectKey);
-            boolean result = false;
-            if (entry != null) {
-                entry.setObject(object);
-                result = true;
-            }
-            loadedObjectMutex.release();
-            return result;
-        }
-        return false;
     }
     
     /**
@@ -143,7 +117,7 @@ public class ObjectsCache {
         if (!readOnly) {
             loadedObjectMutex.acquire();
             if (loadedObjects.containsKey(objectKey)){
-                className = loadedObjects.get(objectKey).getObject().getClass().getSimpleName();
+                className = loadedObjects.get(objectKey).getClass().getSimpleName();
                 loadedObjects.remove(objectKey);
                 objectQueue.removeFirstOccurrence(objectKey);
             }
@@ -159,7 +133,6 @@ public class ObjectsCache {
      *
      * @param objectKey the key of the object
      * @param object the object to store in the cache
-     * @param modifiedOrNew true if the object is modified or new
      *
      * @throws IOException if an IOException occurs while writing to the
      * database
@@ -168,12 +141,12 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if a threading error occurs
      * writing to the database
      */
-    public void addObject(Long objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
+    public void addObject(Long objectKey, Object object) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {            
             
             loadedObjectMutex.acquire();
             if (!loadedObjects.containsKey(objectKey)){
-                loadedObjects.put(objectKey, new CacheEntry(object, modifiedOrNew));
+                loadedObjects.put(objectKey, object);
                 objectQueue.add(objectKey);
             }
             loadedObjectMutex.release();
@@ -187,7 +160,6 @@ public class ObjectsCache {
      * will be silently overwritten.
      *
      * @param objects the key / objects to store in the cache
-     * @param modifiedOrNew true if the object is modified or new
      *
      * @throws IOException if an IOException occurs while writing to the
      * database
@@ -196,18 +168,14 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if a threading error occurs
      * writing to the database
      */
-    public void addObjects(HashMap<Long, Object> objects, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
+    public void addObjects(HashMap<Long, Object> objects) throws IOException, SQLException, InterruptedException {
         if (!readOnly) {            
             
             loadedObjectMutex.acquire();
-            for (Long objectKey : objects.keySet()){
-                if (!loadedObjects.containsKey(objectKey)){
-                    loadedObjects.put(objectKey, new CacheEntry(objects.get(objectKey), modifiedOrNew));
-                    objectQueue.add(objectKey);
-                }
-                loadedObjectMutex.release();
-                updateCache();
-            }
+            loadedObjects.putAll(objects);
+            objectQueue.addAll(objects.keySet());
+            loadedObjectMutex.release();
+            updateCache();
         }
     }
 
@@ -318,8 +286,7 @@ public class ObjectsCache {
                     key = listIterator.next();
                 }
                 
-                CacheEntry entry = loadedObjects.get(key);
-                Object obj = entry.getObject();
+                Object obj = loadedObjects.get(key);
                 if (!((IdObject)obj).getStoredInDB()){
                     ((IdObject)obj).setStoredInDB(true);
                     pm.makePersistent(obj);
@@ -395,51 +362,5 @@ public class ObjectsCache {
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
-    }
-
-    /**
-     * Class representing a cache entry.
-     */
-    private class CacheEntry {
-
-        /**
-         * The object of this entry.
-         */
-        private Object object;
-        /**
-         * A boolean indicating whether this entry is modified when compared to
-         * the version of the database. Only modified entries will be saved when
-         * the cache is emptied.
-         */
-        private boolean modified;
-
-        /**
-         * Constructor.
-         *
-         * @param object the object of the entry
-         * @param modified boolean indicating whether the entry is modified
-         */
-        public CacheEntry(Object object, boolean modified) {
-            this.object = object;
-            this.modified = modified;
-        }
-
-        /**
-         * Returns the object of this entry.
-         *
-         * @return the object contained by this entry
-         */
-        public Object getObject() {
-            return object;
-        }
-
-        /**
-         * Sets the object of this cache entry.
-         *
-         * @param object the object for this entry
-         */
-        public void setObject(Object object) {
-            this.object = object;
-        }
     }
 }

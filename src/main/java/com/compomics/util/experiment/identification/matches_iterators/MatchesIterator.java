@@ -7,6 +7,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.Semaphore;
 import java.util.Iterator;
 
@@ -101,13 +102,12 @@ public abstract class MatchesIterator {
             this.keys = keys;
         }
         else {
-            num = identification.getNumber(className);
             if (filters == null){
                 longKeys = new ArrayList<Long>(identification.getClassObjects(className));
             }
             else {
                 iterator = identification.getIterator(className, filters);
-                longKeys = new ArrayList<Long>(num);
+                longKeys = new ArrayList<Long>(identification.getNumber(className));
                 while (iterator.hasNext()){
                     longKeys.add(((IdObject)iterator.next()).getId());
                 }

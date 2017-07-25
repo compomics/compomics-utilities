@@ -222,6 +222,7 @@ public class ObjectsDB {
      */
     public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
 
+        dbMutex.acquire();
         long longKey = createLongKey(objectKey);
         
         if (debugInteractions) {
@@ -238,7 +239,8 @@ public class ObjectsDB {
             classCounter.get(object.getClass().getSimpleName()).add(longKey);
             
         }
-        objectsCache.addObject(longKey, object, true);
+        objectsCache.addObject(longKey, object);
+        dbMutex.release();
     }
     
     /**
@@ -289,6 +291,7 @@ public class ObjectsDB {
     public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, InterruptedException {
         
         
+        dbMutex.acquire();
         for (String objectKey : objects.keySet()) {
             Object object = objects.get(objectKey);
             if (debugInteractions) {
@@ -306,7 +309,7 @@ public class ObjectsDB {
                 classCounter.get(object.getClass().getSimpleName()).add(longKey);
 
             }
-            objectsCache.addObject(longKey, object, true);
+            objectsCache.addObject(longKey, object);
             
             if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
                 pm.makePersistent(object);
@@ -314,6 +317,7 @@ public class ObjectsDB {
                 pm.currentTransaction().begin();
             }
         }
+        dbMutex.release();
     }
     
     
@@ -350,15 +354,18 @@ public class ObjectsDB {
             long longKey = createLongKey(objectKey);
             hashedKeys.add(longKey);
             Long zooid = idMap.get(longKey);
-            if (zooid != null && zooid != 0){
+            if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0){
                 Object obj = pm.getObjectById(zooid);
                 allObjects.put(longKey, obj);
             }
             
         }
         dbMutex.release();
+        if (hashedKeys.size() != keys.size()){
+            throw new InterruptedException("Array sizes in function do not match, " + keys.size() + " vs. " + hashedKeys.size());
+        }
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
-            objectsCache.addObjects(allObjects, false);
+            objectsCache.addObjects(allObjects);
         }
         
         return hashedKeys;
@@ -397,14 +404,14 @@ public class ObjectsDB {
         for (Long longKey : hashedKeys){
             if (waitingHandler.isRunCanceled()) break;
             Long zooid = idMap.get(longKey);
-            if (zooid != null && zooid != 0){
+            if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0){
                 allObjects.put(longKey, pm.getObjectById(zooid));
             }
             
         }
         dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
-            objectsCache.addObjects(allObjects, false);
+            objectsCache.addObjects(allObjects);
         }
         return new ArrayList<Long>(hashedKeys);
     }
@@ -491,7 +498,7 @@ public class ObjectsDB {
                     idMap.put(longKey, (Long)pm.getObjectId(obj));
                 }
             }
-            objectsCache.addObject(longKey, obj, false);
+            objectsCache.addObject(longKey, obj);
             dbMutex.release();
         }
         return obj;
@@ -538,9 +545,9 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " query number of " + className + " objects");
-        }
+        //if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
+        //}
         
         for (String clsName : classCounter.keySet()){
             System.out.println(clsName + ": " + classCounter.get(clsName).size());
@@ -619,7 +626,7 @@ public class ObjectsDB {
         }
         dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
-            objectsCache.addObjects(allObjects, false);
+            objectsCache.addObjects(allObjects);
         }
         return retrievingObjects;
     }
@@ -666,7 +673,7 @@ public class ObjectsDB {
         }
         dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
-            objectsCache.addObjects(allObjects, false);
+            objectsCache.addObjects(allObjects);
         }
         return retrievingObjects;
     }

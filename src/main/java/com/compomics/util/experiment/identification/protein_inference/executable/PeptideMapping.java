@@ -1,12 +1,9 @@
 package com.compomics.util.experiment.identification.protein_inference.executable;
 
-import com.compomics.util.exceptions.ExceptionHandler;
-import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
@@ -207,12 +204,10 @@ public class PeptideMapping {
                 ArrayList<String> variableModifications = searchParameters.getPtmSettings().getVariableModifications();
                 ArrayList<String> fixedModifications = searchParameters.getPtmSettings().getFixedModifications();
 
-                TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
-
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), tagMatcher, sequenceMatchingPreferences, searchParameters.getFragmentIonAccuracyInDaltons());
+                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), sequenceMatchingPreferences, searchParameters.getFragmentIonAccuracyInDaltons());
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                     for (int j = 0; j < peptideProteinMappings.size(); ++j) {
                         tagIndexes.add(i);

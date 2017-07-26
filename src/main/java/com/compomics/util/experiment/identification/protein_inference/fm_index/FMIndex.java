@@ -12,7 +12,6 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -3797,15 +3796,14 @@ public class FMIndex implements PeptideMapper {
      */
     
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences);
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        return getProteinMapping(tag, sequenceMatchingPreferences);
     }
 
     /**
      * Mapping tags against the proteome.
      *
      * @param tag information about the identified peptide
-     * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @return the protein mapping
      *
@@ -3815,16 +3813,16 @@ public class FMIndex implements PeptideMapper {
      * @throws SQLException thrown if an SQLException occurs
      */
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             for (int i = 0; i < indexParts; ++i){
-                allMatches.addAll(getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, i));
+                allMatches.addAll(getProteinMappingWithVariants(tag, sequenceMatchingPreferences, i));
             }
             return allMatches;
         } else {
             for (int i = 0; i < indexParts; ++i){
-                allMatches.addAll(getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, i));
+                allMatches.addAll(getProteinMappingWithoutVariants(tag, sequenceMatchingPreferences, i));
             }
             return allMatches;
         }
@@ -3834,7 +3832,6 @@ public class FMIndex implements PeptideMapper {
      * Mapping tags against proteome without variants.
      *
      * @param tag the tag
-     * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param indexPart the index part
      * @return the protein mapping
@@ -3844,7 +3841,7 @@ public class FMIndex implements PeptideMapper {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
@@ -4226,7 +4223,6 @@ public class FMIndex implements PeptideMapper {
      * Mapping tags against proteome with variants.
      *
      * @param tag the tag
-     * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param indexPart the index part
      * @return the protein mapping
@@ -4236,7 +4232,7 @@ public class FMIndex implements PeptideMapper {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);

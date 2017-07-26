@@ -1,12 +1,10 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
-import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -367,7 +365,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param massTolerance the MS2 mass tolerance to use
      * @param scoreInAscendingOrder boolean indicating whether the tag score is
      * in the ascending order; ie the higher the score, the better the match.
-     * @param tagMatcher the tag matcher to use
      * @param ascendingScore indicates whether the score is ascending when hits
      * get better
      *
@@ -379,7 +376,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
+    public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         zooActivateRead();
@@ -403,7 +400,7 @@ public class SpectrumMatch extends IdentificationMatch {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         ArrayList<PeptideProteinMapping> proteinMapping
-                                = peptideMapper.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
+                                = peptideMapper.getProteinMapping(tagAssumption.getTag(), sequenceMatchingPreferences, massTolerance);
                         for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping, sequenceMatchingPreferences)) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());

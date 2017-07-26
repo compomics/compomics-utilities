@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -47,7 +46,6 @@ public interface PeptideMapper {
      * @param tag the tag to look for in the tree. Must contain a consecutive
      * amino acid sequence of longer or equal size than the initialTagSize of
      * the tree
-     * @param tagMatcher the tag matcher to use
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the MS2 m/z tolerance
      *
@@ -62,7 +60,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Returns the protein mappings for the given peptide sequence. Peptide
@@ -72,7 +70,6 @@ public interface PeptideMapper {
      * @param tag the tag to look for in the tree. Must contain a consecutive
      * amino acid sequence of longer or equal size than the initialTagSize of
      * the tree
-     * @param tagMatcher the tag matcher to use
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the protein mapping for the given peptide sequence
@@ -86,7 +83,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Empties all caches.

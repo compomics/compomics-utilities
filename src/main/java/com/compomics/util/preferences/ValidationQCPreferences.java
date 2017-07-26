@@ -61,19 +61,19 @@ public class ValidationQCPreferences implements Serializable {
         this.firstDecoy = validationQCPreferences.isFirstDecoy();
         this.confidenceMargin = validationQCPreferences.getConfidenceMargin();
         if (validationQCPreferences.getPsmFilters() != null) {
-            psmFilters = new ArrayList<Filter>(validationQCPreferences.getPsmFilters().size());
+            psmFilters = new ArrayList<>(validationQCPreferences.getPsmFilters().size());
             for (Filter filter : validationQCPreferences.getPsmFilters()) {
                 psmFilters.add(filter.clone());
             }
         }
         if (validationQCPreferences.getPeptideFilters() != null) {
-            peptideFilters = new ArrayList<Filter>(validationQCPreferences.getPeptideFilters().size());
+            peptideFilters = new ArrayList<>(validationQCPreferences.getPeptideFilters().size());
             for (Filter filter : validationQCPreferences.getPeptideFilters()) {
                 peptideFilters.add(filter.clone());
             }
         }
         if (validationQCPreferences.getProteinFilters() != null) {
-            proteinFilters = new ArrayList<Filter>(validationQCPreferences.getProteinFilters().size());
+            proteinFilters = new ArrayList<>(validationQCPreferences.getProteinFilters().size());
             for (Filter filter : validationQCPreferences.getProteinFilters()) {
                 proteinFilters.add(filter.clone());
             }

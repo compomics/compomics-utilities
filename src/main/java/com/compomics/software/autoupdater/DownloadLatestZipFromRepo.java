@@ -372,7 +372,7 @@ public class DownloadLatestZipFromRepo {
     private static Process launchJar(MavenJarFile downloadedFile, String[] args) throws NullPointerException, IOException {
         Process jar;
         ProcessBuilder p;
-        List<String> processToRun = new ArrayList<String>();
+        List<String> processToRun = new ArrayList<>();
         try {
             processToRun.add("java");
             processToRun.add("-jar");

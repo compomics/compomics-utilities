@@ -27,11 +27,11 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, Object> loadedObjects = new HashMap<Long, Object>();
+    private final HashMap<Long, Object> loadedObjects = new HashMap<>();
     /**
      * Linked list to manage a queue for old entries
      */
-    private final LinkedList<Long> objectQueue = new LinkedList<Long>();
+    private final LinkedList<Long> objectQueue = new LinkedList<>();
     /**
      * Mutex for the edition of the object keys list.
      */

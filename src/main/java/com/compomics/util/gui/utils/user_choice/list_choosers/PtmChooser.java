@@ -24,7 +24,7 @@ public class PtmChooser extends ListChooser {
     /**
      * List of PTMs to display.
      */
-    private ArrayList<String> ptmList = new ArrayList<String>();
+    private ArrayList<String> ptmList = new ArrayList<>();
 
     /**
      * Constructor. Null values will be replaced by default.

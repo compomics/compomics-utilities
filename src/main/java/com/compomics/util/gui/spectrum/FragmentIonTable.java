@@ -55,7 +55,7 @@ public class FragmentIonTable extends JTable {
     /**
      * The table tooltips.
      */
-    private ArrayList<String> tooltips = new ArrayList<String>();
+    private ArrayList<String> tooltips = new ArrayList<>();
     /**
      * The current peptide.
      */
@@ -197,8 +197,8 @@ public class FragmentIonTable extends JTable {
 
         // set up the column headers, types and tooltips
         Vector columnHeaders = new Vector();
-        ArrayList<Class> tempColumnTypes = new ArrayList<Class>();
-        tooltips = new ArrayList<String>();
+        ArrayList<Class> tempColumnTypes = new ArrayList<>();
+        tooltips = new ArrayList<>();
 
         columnHeaders.add(" ");
         tempColumnTypes.add(java.lang.Integer.class);
@@ -456,22 +456,22 @@ public class FragmentIonTable extends JTable {
         }
 
         // @TODO: implement a better way to handle charge
-        ArrayList<Integer> aIonsSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsDoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsH2OSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsH2ODoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsNH3SinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> bIonsNH3DoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> cIonsSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsDoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsH2OSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsH2ODoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsNH3SinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> yIonsNH3DoublyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> xIonsSinglyCharged = new ArrayList<Integer>();
-        ArrayList<Integer> zIonsSinglyCharged = new ArrayList<Integer>();
+        ArrayList<Integer> aIonsSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsDoublyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsH2OSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsH2ODoublyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsNH3SinglyCharged = new ArrayList<>();
+        ArrayList<Integer> bIonsNH3DoublyCharged = new ArrayList<>();
+        ArrayList<Integer> cIonsSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsDoublyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsH2OSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsH2ODoublyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsNH3SinglyCharged = new ArrayList<>();
+        ArrayList<Integer> yIonsNH3DoublyCharged = new ArrayList<>();
+        ArrayList<Integer> xIonsSinglyCharged = new ArrayList<>();
+        ArrayList<Integer> zIonsSinglyCharged = new ArrayList<>();
 
         // highlight the detected ions
         for (int i = 0; i < allAnnotations.size(); i++) {
@@ -641,7 +641,7 @@ public class FragmentIonTable extends JTable {
      */
     private void insertBarCharts() throws InterruptedException {
 
-        HashMap<String, ArrayList<Double>> values = new HashMap<String, ArrayList<Double>>();
+        HashMap<String, ArrayList<Double>> values = new HashMap<>();
 
         double maxIntensity = 0.0;
 
@@ -1030,7 +1030,7 @@ public class FragmentIonTable extends JTable {
         if (values.containsKey(key)) {
             values.get(key).add(peakIntensity);
         } else {
-            ArrayList<Double> tempArray = new ArrayList<Double>();
+            ArrayList<Double> tempArray = new ArrayList<>();
             tempArray.add(peakIntensity);
             values.put(key, tempArray);
         }

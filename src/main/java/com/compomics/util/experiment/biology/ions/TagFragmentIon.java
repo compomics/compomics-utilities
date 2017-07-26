@@ -306,7 +306,7 @@ public class TagFragmentIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
+        ArrayList<Integer> possibleTypes = new ArrayList<>();
         possibleTypes.add(A_ION);
         possibleTypes.add(B_ION);
         possibleTypes.add(C_ION);

@@ -264,7 +264,7 @@ public class PeptideAssumptionFilter implements Serializable {
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         // get the variable ptms and the number of times they occur
-        HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>(peptide.getNModifications());
+        HashMap<Double, Integer> modMatches = new HashMap<>(peptide.getNModifications());
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                 if (modMatch.getVariable()) {

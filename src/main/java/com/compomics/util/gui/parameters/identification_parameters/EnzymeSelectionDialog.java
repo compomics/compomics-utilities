@@ -302,7 +302,7 @@ public class EnzymeSelectionDialog extends javax.swing.JDialog {
      */
     private String[] loadEnzymes() {
 
-        ArrayList<String> tempEnzymes = new ArrayList<String>();
+        ArrayList<String> tempEnzymes = new ArrayList<>();
 
         for (int i = 0; i < enzymeFactory.getEnzymes().size(); i++) {
             tempEnzymes.add(enzymeFactory.getEnzymes().get(i).getName());

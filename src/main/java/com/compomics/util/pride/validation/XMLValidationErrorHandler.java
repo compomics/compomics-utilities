@@ -83,7 +83,7 @@ public class XMLValidationErrorHandler implements ErrorHandler {
      */
     private void initialiseErrorMessages() {
         if (errorMessages == null) {
-            errorMessages = new ArrayList<String>();
+            errorMessages = new ArrayList<>();
         }
     }
 

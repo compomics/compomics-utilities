@@ -81,8 +81,8 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
         this.nMissedCleavages = nMissedCleavages;
         this.massMin = massMin;
         this.massMax = massMax;
-        this.peptideStartMap = new HashMap<Integer, Integer>(nMissedCleavages + 1);
-        this.result = new ArrayList<PeptideWithPosition>(nMissedCleavages + 1);
+        this.peptideStartMap = new HashMap<>(nMissedCleavages + 1);
+        this.result = new ArrayList<>(nMissedCleavages + 1);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
 
         result.clear();
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
-        BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
+        BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
         if (peptide != null
                 && (massMin == null || peptide.getMass() >= massMin)
@@ -132,7 +132,7 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
 
         if (nMissedCleavages > 0) {
             if (smallMass.getObject()) {
-                HashMap<Integer, Integer> newPeptideStartMap = new HashMap<Integer, Integer>(peptideStartMap.size());
+                HashMap<Integer, Integer> newPeptideStartMap = new HashMap<>(peptideStartMap.size());
                 newPeptideStartMap.put(initialIndex, 0);
                 for (int peptideStart : peptideStartMap.keySet()) {
                     newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, peptideStart, sequenceIndex);

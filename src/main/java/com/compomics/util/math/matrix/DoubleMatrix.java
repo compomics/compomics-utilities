@@ -17,17 +17,17 @@ public class DoubleMatrix {
     private ArrayList<ArrayList<Double>> content;
 
     public DoubleMatrix() {
-        content = new ArrayList<ArrayList<Double>>();
+        content = new ArrayList<>();
     }
 
     public DoubleMatrix(int nColumns) {
-        content = new ArrayList<ArrayList<Double>>(nColumns);
+        content = new ArrayList<>(nColumns);
     }
 
     public DoubleMatrix(DoubleMatrix matrix) {
         nLines = matrix.getNLines();
         for (ArrayList<Double> column : matrix.getColumns()) {
-            ArrayList<Double> newColumn = new ArrayList<Double>(column);
+            ArrayList<Double> newColumn = new ArrayList<>(column);
             content.add(newColumn);
         }
     }
@@ -111,11 +111,11 @@ public class DoubleMatrix {
     }
 
     public ArrayList<ArrayList<Double>> getColumns() {
-        return new ArrayList<ArrayList<Double>>(content);
+        return new ArrayList<>(content);
     }
 
     public ArrayList<ArrayList<Double>> getLines() {
-        ArrayList<ArrayList<Double>> lines = new ArrayList<ArrayList<Double>>(nLines);
+        ArrayList<ArrayList<Double>> lines = new ArrayList<>(nLines);
         for (int i = 0; i < nLines; i++) {
             lines.add(getLine(i));
         }
@@ -126,7 +126,7 @@ public class DoubleMatrix {
         if (lineIndex < 0 || lineIndex >= nLines) {
             throw new IllegalArgumentException("Invalid index " + lineIndex + " for matrix of size " + nLines + ".");
         }
-        ArrayList<Double> result = new ArrayList<Double>(nLines);
+        ArrayList<Double> result = new ArrayList<>(nLines);
         for (ArrayList<Double> column : content) {
             result.add(column.get(lineIndex));
         }
@@ -180,7 +180,7 @@ public class DoubleMatrix {
     public static DoubleMatrix getIdentityMatrix(int n) {
         DoubleMatrix identityMatrix = new DoubleMatrix(n);
         for (int i = 0; i < n; i++) {
-            ArrayList<Double> column = new ArrayList<Double>(n);
+            ArrayList<Double> column = new ArrayList<>(n);
             for (int j = 0; j < n; j++) {
                 if (i == j) {
                     column.add(1.0);
@@ -217,7 +217,7 @@ public class DoubleMatrix {
         DoubleMatrix subMatrix = new DoubleMatrix(columnStop + 1 - columnStart);
         for (int i = columnStart; i <= columnStop; i++) {
             ArrayList<Double> column = getColumn(i);
-            ArrayList<Double> subColumn = new ArrayList<Double>(column.subList(lineStart, lineStop + 1));
+            ArrayList<Double> subColumn = new ArrayList<>(column.subList(lineStart, lineStop + 1));
             subMatrix.addColumn(subColumn);
         }
         return subMatrix;
@@ -228,7 +228,7 @@ public class DoubleMatrix {
             throw new IllegalArgumentException("Attempting to appennd columns with different number of lines.");
         }
         for (ArrayList<Double> column : columns.getColumns()) {
-            ArrayList<Double> newColumn = new ArrayList<Double>(column);
+            ArrayList<Double> newColumn = new ArrayList<>(column);
             addColumn(newColumn);
         }
     }
@@ -238,7 +238,7 @@ public class DoubleMatrix {
             throw new IllegalArgumentException("Attempting to appennd lines with different number of columns.");
         }
         for (ArrayList<Double> line : lines.getLines()) {
-            ArrayList<Double> newLine = new ArrayList<Double>(line);
+            ArrayList<Double> newLine = new ArrayList<>(line);
             addLine(newLine);
         }
     }

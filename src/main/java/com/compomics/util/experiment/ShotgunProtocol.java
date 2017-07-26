@@ -167,7 +167,7 @@ public class ShotgunProtocol implements Serializable {
      */
     public void addLabel(String ptmName, boolean complete) {
         if (labellingPtms == null) {
-            labellingPtms = new HashMap<String, Boolean>(1);
+            labellingPtms = new HashMap<>(1);
         }
         labellingPtms.put(ptmName, complete);
     }

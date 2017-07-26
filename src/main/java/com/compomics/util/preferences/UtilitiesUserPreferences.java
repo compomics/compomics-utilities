@@ -731,7 +731,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * Removes the db files which do not exist anymore.
      */
     public void checkDbFiles() {
-        ArrayList<File> checkedFiles = new ArrayList<File>();
+        ArrayList<File> checkedFiles = new ArrayList<>();
         for (File dbFile : favoriteDBs) {
             if (dbFile.exists()) {
                 checkedFiles.add(dbFile);
@@ -747,7 +747,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void addFavoriteDB(File dbFile) {
         if (favoriteDBs == null) {
-            favoriteDBs = new ArrayList<File>();
+            favoriteDBs = new ArrayList<>();
         }
         favoriteDBs.add(0, dbFile);
     }
@@ -769,7 +769,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public HashMap<Long, ArrayList<Long>> getProteinTreeImportTime() {
         if (proteinTreeImportTime == null) {
-            proteinTreeImportTime = new HashMap<Long, ArrayList<Long>>();
+            proteinTreeImportTime = new HashMap<>();
         }
         return proteinTreeImportTime;
     }
@@ -783,7 +783,7 @@ public class UtilitiesUserPreferences implements Serializable {
     public void addProteinTreeImportTime(long fileSize, long importTime) {
         ArrayList<Long> importTimes = getProteinTreeImportTime().get(fileSize);
         if (importTimes == null) {
-            importTimes = new ArrayList<Long>();
+            importTimes = new ArrayList<>();
             proteinTreeImportTime.put(fileSize, importTimes);
         }
         importTimes.add(importTime);
@@ -805,7 +805,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public ArrayList<String> getReadTweets() {
         if (readTweets == null) {
-            readTweets = new ArrayList<String>();
+            readTweets = new ArrayList<>();
         }
         return readTweets;
     }
@@ -826,7 +826,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public ArrayList<String> getDisplayedTips() {
         if (displayedTips == null) {
-            displayedTips = new ArrayList<String>();
+            displayedTips = new ArrayList<>();
         }
         return displayedTips;
     }

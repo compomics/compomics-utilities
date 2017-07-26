@@ -47,27 +47,27 @@ public class TagMatcher {
      * Map of the masses of the fixed modifications at specific amino acids:
      * targeted amino acid &gt; list of modifications.
      */
-    private HashMap<Character, Double> fixedAaModificationsMasses = new HashMap<Character, Double>(1);
+    private HashMap<Character, Double> fixedAaModificationsMasses = new HashMap<>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
      * peptide N-terminus: targeted amino acid &gt; list of modifications.
      */
-    private HashMap<Character, Double> fixedAaModificationsPeptideNtermMasses = new HashMap<Character, Double>(1);
+    private HashMap<Character, Double> fixedAaModificationsPeptideNtermMasses = new HashMap<>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
      * protein N-terminus: targeted amino acid &gt; list of modifications.
      */
-    private HashMap<Character, Double> fixedAaModificationsProteinNtermMasses = new HashMap<Character, Double>(1);
+    private HashMap<Character, Double> fixedAaModificationsProteinNtermMasses = new HashMap<>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
      * peptide C-terminus: targeted amino acid &gt; list of modifications.
      */
-    private HashMap<Character, Double> fixedAaModificationsPeptideCtermMasses = new HashMap<Character, Double>(1);
+    private HashMap<Character, Double> fixedAaModificationsPeptideCtermMasses = new HashMap<>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
      * protein C-terminus: targeted amino acid &gt; list of modifications.
      */
-    private HashMap<Character, Double> fixedAaModificationsProteinCtermMasses = new HashMap<Character, Double>(1);
+    private HashMap<Character, Double> fixedAaModificationsProteinCtermMasses = new HashMap<>(1);
     /**
      * Map of variable N-terminal peptide modifications: modification name &gt;
      * mass.
@@ -92,27 +92,27 @@ public class TagMatcher {
      * Map of the variable modifications at specific amino acid: possible target
      * &gt; list of modifications.
      */
-    private HashMap<Character, HashMap<String, Double>> variableAaModifications = new HashMap<Character, HashMap<String, Double>>(1);
+    private HashMap<Character, HashMap<String, Double>> variableAaModifications = new HashMap<>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
      * N-terminus: possible target &gt; list of modifications.
      */
-    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtPeptideNterm = new HashMap<Character, HashMap<String, Double>>(1);
+    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtPeptideNterm = new HashMap<>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
      * N-terminus: possible target &gt; list of modifications.
      */
-    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtProteinNterm = new HashMap<Character, HashMap<String, Double>>(1);
+    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtProteinNterm = new HashMap<>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
      * C-terminus: possible target &gt; list of modifications.
      */
-    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtPeptideCterm = new HashMap<Character, HashMap<String, Double>>(1);
+    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtPeptideCterm = new HashMap<>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
      * C-terminus: possible target &gt; list of modifications.
      */
-    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtProteinCterm = new HashMap<Character, HashMap<String, Double>>(1);
+    private HashMap<Character, HashMap<String, Double>> variableAaModificationsAtProteinCterm = new HashMap<>(1);
     /**
      * Smallest variable modification mass to account for when sequencing to the
      * N-terminus.
@@ -149,14 +149,14 @@ public class TagMatcher {
      * Protein accession &gt; Starting index on protein &gt; end index on
      * protein &gt; Mass &gt; sequence segment.
      */
-    private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> nTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
+    private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> nTermCache = new HashMap<>();
     /**
      * The sequence segments cache for C-term sequencing.
      *
      * Protein accession &gt; Starting index on protein &gt; end index on
      * protein &gt; Mass &gt; sequence segment.
      */
-    private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> cTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
+    private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> cTermCache = new HashMap<>();
     /**
      * The sequence matching preferences
      */
@@ -261,7 +261,7 @@ public class TagMatcher {
             PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
             if (ptm.getType() == PTM.MODNP) {
                 if (variableNTermPeptideModifications == null) {
-                    variableNTermPeptideModifications = new HashMap<String, Double>(1);
+                    variableNTermPeptideModifications = new HashMap<>(1);
                 }
                 variableNTermPeptideModifications.put(modificationName, ptm.getMass());
                 if (ptm.getMass() < minNtermMod) {
@@ -272,7 +272,7 @@ public class TagMatcher {
                 }
             } else if (ptm.getType() == PTM.MODCP) {
                 if (variableCTermPeptideModifications == null) {
-                    variableCTermPeptideModifications = new HashMap<String, Double>(1);
+                    variableCTermPeptideModifications = new HashMap<>(1);
                 }
                 variableCTermPeptideModifications.put(modificationName, ptm.getMass());
                 if (ptm.getMass() < minCtermMod) {
@@ -283,19 +283,19 @@ public class TagMatcher {
                 }
             } else if (ptm.getType() == PTM.MODN) {
                 if (variableNTermProteinModifications == null) {
-                    variableNTermProteinModifications = new HashMap<String, Double>(1);
+                    variableNTermProteinModifications = new HashMap<>(1);
                 }
                 variableNTermProteinModifications.put(modificationName, ptm.getMass());
             } else if (ptm.getType() == PTM.MODC) {
                 if (variableCTermProteinModifications == null) {
-                    variableCTermProteinModifications = new HashMap<String, Double>(1);
+                    variableCTermProteinModifications = new HashMap<>(1);
                 }
                 variableCTermProteinModifications.put(modificationName, ptm.getMass());
             } else if (ptm.getType() == PTM.MODAA) {
                 for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
                     HashMap<String, Double> ptmMap = variableAaModifications.get(aa);
                     if (ptmMap == null) {
-                        ptmMap = new HashMap<String, Double>(1);
+                        ptmMap = new HashMap<>(1);
                         variableAaModifications.put(aa, ptmMap);
                     }
                     ptmMap.put(modificationName, ptm.getMass());
@@ -304,7 +304,7 @@ public class TagMatcher {
                 for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
                     HashMap<String, Double> ptmMap = variableAaModificationsAtProteinNterm.get(aa);
                     if (ptmMap == null) {
-                        ptmMap = new HashMap<String, Double>(1);
+                        ptmMap = new HashMap<>(1);
                         variableAaModificationsAtProteinNterm.put(aa, ptmMap);
                     }
                     ptmMap.put(modificationName, ptm.getMass());
@@ -313,7 +313,7 @@ public class TagMatcher {
                 for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
                     HashMap<String, Double> ptmMap = variableAaModificationsAtPeptideNterm.get(aa);
                     if (ptmMap == null) {
-                        ptmMap = new HashMap<String, Double>(1);
+                        ptmMap = new HashMap<>(1);
                         variableAaModificationsAtPeptideNterm.put(aa, ptmMap);
                     }
                     ptmMap.put(modificationName, ptm.getMass());
@@ -328,7 +328,7 @@ public class TagMatcher {
                 for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
                     HashMap<String, Double> ptmMap = variableAaModificationsAtProteinNterm.get(aa);
                     if (ptmMap == null) {
-                        ptmMap = new HashMap<String, Double>(1);
+                        ptmMap = new HashMap<>(1);
                         variableAaModificationsAtProteinNterm.put(aa, ptmMap);
                     }
                     ptmMap.put(modificationName, ptm.getMass());
@@ -337,7 +337,7 @@ public class TagMatcher {
                 for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
                     HashMap<String, Double> ptmMap = variableAaModificationsAtPeptideNterm.get(aa);
                     if (ptmMap == null) {
-                        ptmMap = new HashMap<String, Double>(1);
+                        ptmMap = new HashMap<>(1);
                         variableAaModificationsAtPeptideNterm.put(aa, ptmMap);
                     }
                     ptmMap.put(modificationName, ptm.getMass());
@@ -398,7 +398,7 @@ public class TagMatcher {
         String seedSequence = sequence.substring(tagIndex, tagIndex + componentAtIndexLength);
 
         // Check tag components to the N-term
-        ArrayList<SequenceSegment> nTermPossibleSequences = new ArrayList<SequenceSegment>(1);
+        ArrayList<SequenceSegment> nTermPossibleSequences = new ArrayList<>(1);
         nTermPossibleSequences.add(new SequenceSegment(tagIndex, true));
 
         for (int i = componentIndex - 1; i >= 0; i--) {
@@ -408,12 +408,12 @@ public class TagMatcher {
             nTermPossibleSequences = mapTagComponent(accession, sequence, tagComponent, nTermPossibleSequences, massTolerance, useCache && i == componentIndex - 1, true, i == 0);
 
             if (nTermPossibleSequences.isEmpty()) {
-                return new ArrayList<PeptideProteinMapping>(0);
+                return new ArrayList<>(0);
             }
         }
 
         // Check tag components to the C-term
-        ArrayList<SequenceSegment> cTermPossibleSequences = new ArrayList<SequenceSegment>(1);
+        ArrayList<SequenceSegment> cTermPossibleSequences = new ArrayList<>(1);
         cTermPossibleSequences.add(new SequenceSegment(tagIndex + componentAtIndexLength - 1, false));
 
         for (int i = componentIndex + 1; i < content.size(); i++) {
@@ -423,7 +423,7 @@ public class TagMatcher {
             cTermPossibleSequences = mapTagComponent(accession, sequence, tagComponent, cTermPossibleSequences, massTolerance, useCache && i == componentIndex + 1, false, i == content.size() - 1);
 
             if (cTermPossibleSequences.isEmpty()) {
-                return new ArrayList<PeptideProteinMapping>(0);
+                return new ArrayList<>(0);
             }
 
         }
@@ -451,7 +451,7 @@ public class TagMatcher {
      */
     public ArrayList<PeptideProteinMapping> buildPeptides(String accession, String sequence, ArrayList<SequenceSegment> nTermPossibleSequences, String seedSequence, ArrayList<SequenceSegment> cTermPossibleSequences, HashMap<Integer, ArrayList<ModificationMatch>> modificationsAtIndex, int mutationsAtIndex) {
 
-        ArrayList<PeptideProteinMapping> result = new ArrayList<PeptideProteinMapping>(nTermPossibleSequences.size() * cTermPossibleSequences.size());
+        ArrayList<PeptideProteinMapping> result = new ArrayList<>(nTermPossibleSequences.size() * cTermPossibleSequences.size());
 
         for (SequenceSegment nTermSegment : nTermPossibleSequences) {
 
@@ -463,7 +463,7 @@ public class TagMatcher {
 
                 StringBuilder peptideSequence = new StringBuilder(nTermSegment.length() + seedSequence.length() + cTermSegment.length());
                 peptideSequence.append(nTermSequence);
-                ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>(1);
+                ArrayList<ModificationMatch> modificationMatches = new ArrayList<>(1);
                 HashMap<Integer, String> nTermModifications = nTermSegment.getModificationMatches();
 
                 if (nTermModifications != null) {
@@ -590,7 +590,7 @@ public class TagMatcher {
 
             double massGap = tagComponent.getMass();
 
-            ArrayList<SequenceSegment> newSequences = new ArrayList<SequenceSegment>(1);
+            ArrayList<SequenceSegment> newSequences = new ArrayList<>(1);
 
             for (int i = 0; i < terminalPreviousSequences.size(); i++) {
 
@@ -598,7 +598,7 @@ public class TagMatcher {
                 int aaIndex = terminalSequence.getTerminalIndex();
                 Integer currentIndex = aaIndex;
                 ArrayList<SequenceSegment> possibleSequences = null;
-                ArrayList<SequenceSegment> validSequences = new ArrayList<SequenceSegment>(1);
+                ArrayList<SequenceSegment> validSequences = new ArrayList<>(1);
 
                 HashMap<Integer, ArrayList<SequenceSegment>> indexCache = getIndexCache(accession, currentIndex, nTerminus);
 
@@ -728,13 +728,13 @@ public class TagMatcher {
      * @return a cache for the given protein
      */
     private HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> addProteinCache(String accession, Integer currentIndex, boolean nTerminus) {
-        HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> proteinCache = new HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>();
+        HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> proteinCache = new HashMap<>();
         if (nTerminus) {
             nTermCache.put(accession, proteinCache);
         } else {
             cTermCache.put(accession, proteinCache);
         }
-        HashMap<Integer, ArrayList<SequenceSegment>> indexCache = new HashMap<Integer, ArrayList<SequenceSegment>>(1);
+        HashMap<Integer, ArrayList<SequenceSegment>> indexCache = new HashMap<>(1);
         proteinCache.put(currentIndex, indexCache);
         return proteinCache;
     }
@@ -764,7 +764,7 @@ public class TagMatcher {
      * @return a cache for the given index
      */
     private HashMap<Integer, ArrayList<SequenceSegment>> addIndexCache(HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> proteinCache, Integer currentIndex) {
-        HashMap<Integer, ArrayList<SequenceSegment>> indexCache = new HashMap<Integer, ArrayList<SequenceSegment>>(1);
+        HashMap<Integer, ArrayList<SequenceSegment>> indexCache = new HashMap<>(1);
         proteinCache.put(currentIndex, indexCache);
         return indexCache;
     }
@@ -842,7 +842,7 @@ public class TagMatcher {
 
         if (possibleSequences == null) {
 
-            possibleSequences = new ArrayList<SequenceSegment>(2);
+            possibleSequences = new ArrayList<>(2);
             SequenceSegment sequenceSegment = new SequenceSegment(aaIndex, nTerminus);
             possibleSequences.add(sequenceSegment);
             sequenceSegment.appendTerminus(aminoAcid);
@@ -893,7 +893,7 @@ public class TagMatcher {
 
         } else {
 
-            ArrayList<SequenceSegment> newPossibleSequences = new ArrayList<SequenceSegment>(possibleSequences.size());
+            ArrayList<SequenceSegment> newPossibleSequences = new ArrayList<>(possibleSequences.size());
 
             for (int i = 0; i < possibleSequences.size(); i++) {
                 SequenceSegment sequenceSegment = possibleSequences.get(i);

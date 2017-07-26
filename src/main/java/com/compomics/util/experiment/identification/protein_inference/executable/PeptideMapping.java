@@ -116,7 +116,7 @@ public class PeptideMapping {
         }
 
         if (args[0].equals("-p")) {
-            ArrayList<String> peptides = new ArrayList<String>();
+            ArrayList<String> peptides = new ArrayList<>();
             try {
                 String line = "";
                 BufferedReader br = new BufferedReader(new FileReader(args[2]));
@@ -135,7 +135,7 @@ public class PeptideMapping {
             waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
             waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(peptides.size());
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
+            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
 
             // starting the mapping
             try {
@@ -168,8 +168,8 @@ public class PeptideMapping {
                 System.exit(-1);
             }
         } else {
-            ArrayList<Tag> tags = new ArrayList<Tag>();
-            ArrayList<Integer> tagIndexes = new ArrayList<Integer>();
+            ArrayList<Tag> tags = new ArrayList<>();
+            ArrayList<Integer> tagIndexes = new ArrayList<>();
             try {
                 String line = "";
                 BufferedReader br = new BufferedReader(new FileReader(args[2]));
@@ -199,7 +199,7 @@ public class PeptideMapping {
             waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
             waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(tags.size());
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<PeptideProteinMapping>();
+            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
 
             // starting the mapping
             try {

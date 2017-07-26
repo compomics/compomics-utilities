@@ -120,7 +120,7 @@ public class MSnSpectrum extends Spectrum {
         results.append("BEGIN IONS").append(lineBreak);
 
         if (additionalTags != null) {
-            ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
+            ArrayList<String> additionalTagsKeys = new ArrayList<>(additionalTags.keySet());
             Collections.sort(additionalTagsKeys);
             for (String tag : additionalTagsKeys) {
                 String attribute = additionalTags.get(tag);
@@ -158,7 +158,7 @@ public class MSnSpectrum extends Spectrum {
         }
 
         // add the values to a tree map to get them sorted in mz    
-        TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
+        TreeMap<Double, Double> sortedPeakList = new TreeMap<>();
 
         for (Peak peak : peakList.values()) {
             sortedPeakList.put(peak.mz, peak.intensity);

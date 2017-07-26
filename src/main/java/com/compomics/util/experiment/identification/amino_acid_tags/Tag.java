@@ -31,7 +31,7 @@ public class Tag extends ExperimentObject {
     /**
      * The content of the tag.
      */
-    private ArrayList<TagComponent> content = new ArrayList<TagComponent>();
+    private ArrayList<TagComponent> content = new ArrayList<>();
 
     /**
      * Constructor for an empty tag.
@@ -548,7 +548,7 @@ public class Tag extends ExperimentObject {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         zooActivateRead();
-        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        ArrayList<Integer> possibleSites = new ArrayList<>();
         AminoAcidPattern ptmPattern = ptm.getPattern(); 
         int patternLength = ptmPattern.length(); // @TODO: what if pattern is null..?
 
@@ -584,7 +584,7 @@ public class Tag extends ExperimentObject {
             case PTM.MODCAA:
             case PTM.MODCPAA:
                 if (content.isEmpty()) {
-                    return new ArrayList<Integer>();
+                    return new ArrayList<>();
                 }
                 TagComponent component = content.get(content.size() - 1);
                 if (component instanceof AminoAcidPattern) {
@@ -606,7 +606,7 @@ public class Tag extends ExperimentObject {
             case PTM.MODNAA:
             case PTM.MODNPAA:
                 if (content.isEmpty()) {
-                    return new ArrayList<Integer>();
+                    return new ArrayList<>();
                 }
                 component = content.get(0);
                 if (component instanceof AminoAcidPattern) {
@@ -685,7 +685,7 @@ public class Tag extends ExperimentObject {
      * @return the peptide modifications as a string
      */
     public static String getTagModificationsAsString(Tag tag) {
-        HashMap<String, ArrayList<Integer>> modMap = new HashMap<String, ArrayList<Integer>>();
+        HashMap<String, ArrayList<Integer>> modMap = new HashMap<>();
         int offset = 0;
         for (TagComponent tagComponent : tag.getContent()) {
             if (tagComponent instanceof MassGap) {
@@ -696,7 +696,7 @@ public class Tag extends ExperimentObject {
                     for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
                         if (modificationMatch.getVariable()) {
                             if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
-                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
+                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<>());
                             }
                             modMap.get(modificationMatch.getTheoreticPtm()).add(i + offset);
                         }
@@ -709,7 +709,7 @@ public class Tag extends ExperimentObject {
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i)) {
                         if (modificationMatch.getVariable()) {
                             if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
-                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
+                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<>());
                             }
                             modMap.get(modificationMatch.getTheoreticPtm()).add(i + offset);
                         }
@@ -723,7 +723,7 @@ public class Tag extends ExperimentObject {
 
         StringBuilder result = new StringBuilder();
         boolean first = true, first2;
-        ArrayList<String> mods = new ArrayList<String>(modMap.keySet());
+        ArrayList<String> mods = new ArrayList<>(modMap.keySet());
         Collections.sort(mods);
         for (String mod : mods) {
             if (first) {

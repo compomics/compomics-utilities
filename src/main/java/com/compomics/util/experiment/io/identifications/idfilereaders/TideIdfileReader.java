@@ -113,7 +113,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(tideTsvFile, "r", 1024 * 100);
 
@@ -252,7 +252,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 }
 
                 // get the modifications
-                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<ModificationMatch>();
+                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
                 String unmodifiedPeptideSequence = "";
 
                 // check if the peptide is modified
@@ -288,7 +288,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;
                     if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                     }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -333,8 +333,8 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put(softwareName, versions); // @TODO: check!!
         return result;

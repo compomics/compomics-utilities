@@ -24,27 +24,27 @@ public class PtmSettings implements Serializable {
     /**
      * List of the expected fixed modifications.
      */
-    private ArrayList<String> fixedModifications = new ArrayList<String>();
+    private ArrayList<String> fixedModifications = new ArrayList<>();
     /**
      * List of the expected variable modifications.
      */
-    private ArrayList<String> variableModifications = new ArrayList<String>();
+    private ArrayList<String> variableModifications = new ArrayList<>();
     /**
      * List of variable modifications searched during the second pass search.
      */
-    private ArrayList<String> refinementVariableModifications = new ArrayList<String>();
+    private ArrayList<String> refinementVariableModifications = new ArrayList<>();
     /**
      * List of variable modifications searched during the second pass search.
      */
-    private ArrayList<String> refinementFixedModifications = new ArrayList<String>();
+    private ArrayList<String> refinementFixedModifications = new ArrayList<>();
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<String, Color>();
+    private HashMap<String, Color> colors = new HashMap<>();
     /**
      * Back-up mapping of the PTMs for portability.
      */
-    private HashMap<String, PTM> backUp = new HashMap<String, PTM>();
+    private HashMap<String, PTM> backUp = new HashMap<>();
 
     /**
      * Constructor.
@@ -132,7 +132,7 @@ public class PtmSettings implements Serializable {
      * @return a list of all searched modifications
      */
     public ArrayList<String> getAllModifications() {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         result.addAll(fixedModifications);
         result.addAll(variableModifications);
         for (String ptmName : refinementFixedModifications) {
@@ -156,7 +156,7 @@ public class PtmSettings implements Serializable {
      * @return a list of all searched modifications but the fixed ones
      */
     public ArrayList<String> getAllNotFixedModifications() {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         result.addAll(variableModifications);
         for (String ptmName : refinementVariableModifications) {
             if (!result.contains(ptmName)) {
@@ -366,7 +366,7 @@ public class PtmSettings implements Serializable {
      */
     public ArrayList<String> getSimilarNotFixedModifications(Double ptmMass) {
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        ArrayList<String> ptms = new ArrayList<String>();
+        ArrayList<String> ptms = new ArrayList<>();
         for (String ptmName : getAllNotFixedModifications()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
             if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) { // @TODO: should compare against the accuracy

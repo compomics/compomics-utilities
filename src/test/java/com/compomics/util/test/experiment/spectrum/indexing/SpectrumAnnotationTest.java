@@ -19,7 +19,7 @@ public class SpectrumAnnotationTest extends TestCase {
      */
     public void testFindPeak() {
         
-        HashMap<Double, Peak> peakList = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> peakList = new HashMap<>();
         peakList.put(1012.5, new Peak(1012.5, 12345));
         peakList.put(1012.8, new Peak(1012.8, 54321));
         

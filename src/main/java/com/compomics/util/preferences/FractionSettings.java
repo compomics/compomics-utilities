@@ -26,7 +26,7 @@ public class FractionSettings implements Serializable {
      * The list of fraction molecular weights. The key is the fraction file
      * path.
      */
-    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<String, XYDataPoint>();
+    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<>();
 
     /**
      * Constructor.

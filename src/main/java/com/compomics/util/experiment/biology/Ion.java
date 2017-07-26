@@ -221,7 +221,7 @@ public abstract class Ion extends ExperimentObject {
         if (neutralLosses == null) {
             return "";
         }
-        ArrayList<String> names = new ArrayList<String>(neutralLosses.length);
+        ArrayList<String> names = new ArrayList<>(neutralLosses.length);
         for (NeutralLoss neutralLoss : neutralLosses) {
             names.add(neutralLoss.name);
         }
@@ -304,7 +304,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the implemented ion types
      */
     public static ArrayList<IonType> getImplementedIonTypes() {
-        ArrayList<IonType> result = new ArrayList<IonType>();
+        ArrayList<IonType> result = new ArrayList<>();
         result.add(IonType.ELEMENTARY_ION);
         result.add(IonType.GLYCAN);
         result.add(IonType.IMMONIUM_ION);

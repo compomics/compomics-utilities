@@ -44,7 +44,7 @@ public class PtmtableContent {
      * Constructor.
      */
     public PtmtableContent() {
-        map = new HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>>();
+        map = new HashMap<>();
     }
 
     /**
@@ -57,13 +57,13 @@ public class PtmtableContent {
      */
     public void addIntensity(int nMod, Integer peptideFragmentIonType, int aa, double intensity) {
         if (!map.containsKey(nMod)) {
-            map.put(nMod, new HashMap<Integer, HashMap<Integer, ArrayList<Double>>>());
+            map.put(nMod, new HashMap<>());
         }
         if (!map.get(nMod).containsKey(peptideFragmentIonType)) {
-            map.get(nMod).put(peptideFragmentIonType, new HashMap<Integer, ArrayList<Double>>());
+            map.get(nMod).put(peptideFragmentIonType, new HashMap<>());
         }
         if (!map.get(nMod).get(peptideFragmentIonType).containsKey(aa)) {
-            map.get(nMod).get(peptideFragmentIonType).put(aa, new ArrayList<Double>());
+            map.get(nMod).get(peptideFragmentIonType).put(aa, new ArrayList<>());
         }
         map.get(nMod).get(peptideFragmentIonType).get(aa).add(intensity);
         totalIntensity += intensity;
@@ -86,7 +86,7 @@ public class PtmtableContent {
                 && map.get(nMod).get(peptideFragmentIonType).containsKey(aa)) {
             return map.get(nMod).get(peptideFragmentIonType).get(aa);
         } else {
-            return new ArrayList<Double>();
+            return new ArrayList<>();
         }
     }
 
@@ -187,7 +187,7 @@ public class PtmtableContent {
             for (int nPTM : map.keySet()) {
                 for (Integer peptideFragmentIonType : map.get(nPTM).keySet()) {
                     for (int nAA : map.get(nPTM).get(peptideFragmentIonType).keySet()) {
-                        tempIntensities = new ArrayList<Double>();
+                        tempIntensities = new ArrayList<>();
                         for (double intensity : getIntensities(nPTM, peptideFragmentIonType, nAA)) {
                             tempIntensities.add(intensity / normalization);
                         }
@@ -223,7 +223,7 @@ public class PtmtableContent {
             AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
 
         //@TODO: use Peptide.getNoModPeptide instead
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>());
 
         if (peptide.isModified()) {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
@@ -236,7 +236,7 @@ public class PtmtableContent {
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons
                 = spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
-        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
+        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>();
 
         for (int i = 0; i <= nPTM; i++) {
 
@@ -252,7 +252,7 @@ public class PtmtableContent {
                                 && peptideFragmentIon.isSameAs(noModIon)) {
                             PeptideFragmentIon noModFragmentIon = (PeptideFragmentIon) noModIon;
                             if (!map.containsKey(noModFragmentIon)) {
-                                map.put(noModFragmentIon, new ArrayList<IonMatch>());
+                                map.put(noModFragmentIon, new ArrayList<>());
                             }
                             map.get(noModFragmentIon).add(ionMatch);
                             break;
@@ -289,7 +289,7 @@ public class PtmtableContent {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 
-        ArrayList<PTM> ptms = new ArrayList<PTM>(1);
+        ArrayList<PTM> ptms = new ArrayList<>(1);
         ptms.add(ptm);
         Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
 

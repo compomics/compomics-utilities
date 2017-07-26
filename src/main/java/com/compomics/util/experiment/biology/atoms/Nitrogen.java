@@ -15,7 +15,7 @@ public class Nitrogen extends Atom {
      */
     public Nitrogen() {
         monoisotopicMass = 14.0030740048;
-        isotopeMap = new HashMap<Integer, Double>(16);
+        isotopeMap = new HashMap<>(16);
         isotopeMap.put(-4, 10.04165);
         isotopeMap.put(-3, 11.02609);
         isotopeMap.put(-2, 12.0186132);
@@ -32,7 +32,7 @@ public class Nitrogen extends Atom {
         isotopeMap.put(9, 23.04122);
         isotopeMap.put(10, 24.05104);
         isotopeMap.put(11, 25.06066);
-        representativeComposition = new HashMap<Integer, Double>(2);
+        representativeComposition = new HashMap<>(2);
         representativeComposition.put(0, 0.99636);
         representativeComposition.put(1, 0.00364);
         this.name = "Nitrogen";

@@ -413,7 +413,7 @@ public class Protein extends ExperimentObject {
     public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
 
         ArrayList<Integer> startIndexes = getPeptideStart(peptide, sequenceMatchingPreferences);
-        HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
+        HashMap<Integer, String[]> result = new HashMap<>();
 
         for (int startIndex : startIndexes) {
 

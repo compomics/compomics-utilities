@@ -35,7 +35,7 @@ public class EnzymeFactory {
      * The factory constructor.
      */
     private EnzymeFactory() {
-        enzymes = new HashMap<String, Enzyme>();
+        enzymes = new HashMap<>();
     }
 
     /**
@@ -146,7 +146,7 @@ public class EnzymeFactory {
      * @return The enzymes as ArrayList
      */
     public ArrayList<Enzyme> getEnzymes() {
-        return new ArrayList<Enzyme>(enzymes.values());
+        return new ArrayList<>(enzymes.values());
     }
 
     /**
@@ -282,7 +282,7 @@ public class EnzymeFactory {
         
         // note that enzyme names cannot contain comma as this is used by
         // some of the search engines to separate multiple enzymes!
-        ArrayList<Enzyme> enzymes = new ArrayList<Enzyme>();
+        ArrayList<Enzyme> enzymes = new ArrayList<>();
 
         Enzyme enzyme = new Enzyme("Trypsin");
         enzyme.addAminoAcidBefore('R');

@@ -58,8 +58,8 @@ public class MutationFactory {
         }
         // Create mutations
         if (mutations == null) {
-            mutations = new ArrayList<Mutation>();
-            mutationMap = new HashMap<String, Mutation>();
+            mutations = new ArrayList<>();
+            mutationMap = new HashMap<>();
             for (AminoAcid aa1 : aminoAcids) {
                 for (AminoAcid aa2 : aminoAcids) {
                     if (!aa1.equals(aa2)) {
@@ -91,7 +91,7 @@ public class MutationFactory {
      * This method creates the 20 essential amino acids.
      */
     private static void createAminoAcids() {
-        aminoAcids = new ArrayList<AminoAcid>();
+        aminoAcids = new ArrayList<>();
         aminoAcids.add(AminoAcid.A);
         aminoAcids.add(AminoAcid.C);
         aminoAcids.add(AminoAcid.D);

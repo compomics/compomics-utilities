@@ -122,7 +122,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 writer.newLine();
                 writer.write(indent + indent + "<reagentList>");
                 writer.newLine();
-                ArrayList<String> reagentNames = new ArrayList<String>(reporterMethod.getReagentsSortedByMass());
+                ArrayList<String> reagentNames = new ArrayList<>(reporterMethod.getReagentsSortedByMass());
 
                 for (String reagentName : reagentNames) {
                     Reagent reagent = reporterMethod.getReagent(reagentName);
@@ -170,8 +170,8 @@ public class ReporterMethodFactory extends ExperimentObject {
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
 
-        methodsNames = new ArrayList<String>();
-        methods = new HashMap<String, ReporterMethod>();
+        methodsNames = new ArrayList<>();
+        methods = new HashMap<>();
 
         // create the pull parser
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
@@ -226,7 +226,7 @@ public class ReporterMethodFactory extends ExperimentObject {
         String name = parser.getText().trim();
 
         // list of reagents
-        ArrayList<Reagent> reagents = new ArrayList<Reagent>();
+        ArrayList<Reagent> reagents = new ArrayList<>();
 
         // iterate the reagents
         while (type != XmlPullParser.END_TAG || !parser.getName().equals("reagentList")) {

@@ -220,7 +220,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) {
 
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        ArrayList<IonMatch> result = new ArrayList<>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
@@ -228,7 +228,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         }
         setTag(tag, specificAnnotationSettings.getPrecursorCharge());
 
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
 
         // we have to keep the precursor charges separate from the fragment ion charges
         for (int i = 1; i <= precursorCharge; i++) {

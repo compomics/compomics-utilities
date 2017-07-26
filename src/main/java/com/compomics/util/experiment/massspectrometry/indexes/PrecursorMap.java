@@ -23,7 +23,7 @@ public class PrecursorMap {
     /**
      * Map of the precursors by bin and m/z.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>> precursorsMap = new HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>>();
+    private HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>> precursorsMap = new HashMap<>();
     /**
      * An m/z anchor to determine the bins in ppm
      */
@@ -71,12 +71,12 @@ public class PrecursorMap {
             Integer bin = getBin(mz);
             HashMap<Double, ArrayList<PrecursorWithTitle>> precursorsInBin = precursorsMap.get(bin);
             if (precursorsInBin == null) {
-                precursorsInBin = new HashMap<Double, ArrayList<PrecursorWithTitle>>(2);
+                precursorsInBin = new HashMap<>(2);
                 precursorsMap.put(bin, precursorsInBin);
             }
             ArrayList<PrecursorWithTitle> precursorsAtMz = precursorsInBin.get(mz);
             if (precursorsAtMz == null) {
-                precursorsAtMz = new ArrayList<PrecursorWithTitle>(1);
+                precursorsAtMz = new ArrayList<>(1);
                 precursorsInBin.put(mz, precursorsAtMz);
             }
             precursorsAtMz.add(precursorWithTitle);
@@ -135,7 +135,7 @@ public class PrecursorMap {
     public ArrayList<PrecursorWithTitle> getMatchingSpectra(double referenceMz) {
         
         int bin0 = getBin(referenceMz);
-        ArrayList<PrecursorWithTitle> result = new ArrayList<PrecursorWithTitle>(0);
+        ArrayList<PrecursorWithTitle> result = new ArrayList<>(0);
         HashMap<Double, ArrayList<PrecursorWithTitle>> binContent = precursorsMap.get(bin0 - 1);
         if (binContent != null) {
             for (Double precursorMz : binContent.keySet()) {
@@ -187,7 +187,7 @@ public class PrecursorMap {
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
-        return new ArrayList<Integer>(precursorsMap.keySet());
+        return new ArrayList<>(precursorsMap.keySet());
     }
 
     /**

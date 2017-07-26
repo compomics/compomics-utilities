@@ -34,11 +34,11 @@ public class ProteinIteratorUtils {
     /**
      * The fixed protein N-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedProteinNtermModificationsAtAa = new HashMap<Character, String>(0);
+    private HashMap<Character, String> fixedProteinNtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed protein C-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedProteinCtermModificationsAtAa = new HashMap<Character, String>(0);
+    private HashMap<Character, String> fixedProteinCtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed peptide N-term modification.
      */
@@ -50,20 +50,20 @@ public class ProteinIteratorUtils {
     /**
      * The fixed peptide N-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedPeptideNtermModificationsAtAa = new HashMap<Character, String>(0);
+    private HashMap<Character, String> fixedPeptideNtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed peptide C-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedPeptideCtermModificationsAtAa = new HashMap<Character, String>(0);
+    private HashMap<Character, String> fixedPeptideCtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedModificationsAtAa = new HashMap<Character, String>(0);
+    private HashMap<Character, String> fixedModificationsAtAa = new HashMap<>(0);
     /**
      * Map of modifications at specific amino acids (termini or not) targeting a
      * pattern of amino acids.
      */
-    private HashMap<String, AminoAcidPattern> modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+    private HashMap<String, AminoAcidPattern> modificationPatternMap = new HashMap<>(1);
     /**
      * Convenience map of the amino acid masses.
      */
@@ -100,7 +100,7 @@ public class ProteinIteratorUtils {
      * @param fixedModifications the list of fixed modifications to consider.
      */
     private void fillPtmMaps(ArrayList<String> fixedModifications) {
-        modificationsMasses = new HashMap<String, Double>(fixedModifications.size());
+        modificationsMasses = new HashMap<>(fixedModifications.size());
         modificationsMasses.put(null, 0.0);
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String ptmName : fixedModifications) {
@@ -153,7 +153,7 @@ public class ProteinIteratorUtils {
                     }
                     if (ptmPattern.length() > 1) {
                         if (modificationPatternMap == null) {
-                            modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+                            modificationPatternMap = new HashMap<>(1);
                         }
                         modificationPatternMap.put(ptmName, ptmPattern);
                     }
@@ -170,7 +170,7 @@ public class ProteinIteratorUtils {
                     }
                     if (ptmPattern.length() > 1) {
                         if (modificationPatternMap == null) {
-                            modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+                            modificationPatternMap = new HashMap<>(1);
                         }
                         modificationPatternMap.put(ptmName, ptmPattern);
                     }
@@ -191,7 +191,7 @@ public class ProteinIteratorUtils {
                     }
                     if (ptmPattern.length() > 1) {
                         if (modificationPatternMap == null) {
-                            modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+                            modificationPatternMap = new HashMap<>(1);
                         }
                         modificationPatternMap.put(ptmName, ptmPattern);
                     }
@@ -208,7 +208,7 @@ public class ProteinIteratorUtils {
                     }
                     if (ptmPattern.length() > 1) {
                         if (modificationPatternMap == null) {
-                            modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+                            modificationPatternMap = new HashMap<>(1);
                         }
                         modificationPatternMap.put(ptmName, ptmPattern);
                     }
@@ -229,7 +229,7 @@ public class ProteinIteratorUtils {
                     }
                     if (ptmPattern.length() > 1) {
                         if (modificationPatternMap == null) {
-                            modificationPatternMap = new HashMap<String, AminoAcidPattern>(1);
+                            modificationPatternMap = new HashMap<>(1);
                         }
                         modificationPatternMap.put(ptmName, ptmPattern);
                     }
@@ -405,7 +405,7 @@ public class ProteinIteratorUtils {
      * @return a peptide from the given sequence
      */
     public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
-        return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
+        return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<>(Boolean.TRUE));
     }
 
     /**
@@ -427,7 +427,7 @@ public class ProteinIteratorUtils {
 
         char nTermAaChar = peptideSequence[0];
         String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
-        HashMap<Integer, String> peptideModifications = new HashMap<Integer, String>(1);
+        HashMap<Integer, String> peptideModifications = new HashMap<>(1);
         double peptideMass = modificationsMasses.get(nTermModification);
 
         for (int i = 0; i < peptideSequence.length; i++) {

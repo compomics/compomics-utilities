@@ -35,12 +35,12 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
     /**
      * The protein accessions of this match.
      */
-    private ArrayList<String> proteinAccessions = new ArrayList<String>();
+    private ArrayList<String> proteinAccessions = new ArrayList<>();
     /**
      * The protein accession column in the table. Only used if more than one
      * accession.
      */
-    private ArrayList<String> proteinAccessionColumn = new ArrayList<String>();
+    private ArrayList<String> proteinAccessionColumn = new ArrayList<>();
     /**
      * The GO term descriptions attached to this protein match.
      */
@@ -72,19 +72,19 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         this.geneMaps = geneMaps;
-        proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
+        proteinAccessions = new ArrayList<>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
         goTable.setModel(new GOTableModel());
         if (geneMaps != null) {
-            goTermDescriptions = new ArrayList<String>();
+            goTermDescriptions = new ArrayList<>();
 
             if (proteinAccessions.size() == 1) {
-                goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
+                goTermDescriptions = new ArrayList<>(geneMaps.getGoNamesForProtein(proteinMatchKey));
                 Collections.sort(goTermDescriptions);
             } else {
                 for (String accession : proteinAccessions) {
 
                     HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
-                    ArrayList<String> tempGoNameAccessionsArray = new ArrayList<String>();
+                    ArrayList<String> tempGoNameAccessionsArray = new ArrayList<>();
                     tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
                     Collections.sort(tempGoNameAccessionsArray);
 
@@ -96,7 +96,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                 }
             }
         } else {
-            goTermDescriptions = new ArrayList<String>(0);
+            goTermDescriptions = new ArrayList<>(0);
         }
         setUpGUI();
         setLocationRelativeTo(parent);
@@ -151,7 +151,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         goTableScrollPane.getViewport().setOpaque(false);
 
         String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
-        ArrayList<String> geneNames = new ArrayList<String>();
+        ArrayList<String> geneNames = new ArrayList<>();
         for (String accession : proteinAccessions) {
             if (title.isEmpty()) {
                 title += "Gene details for ";
@@ -164,7 +164,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             geneNames.add(geneName);
         }
 
-        ArrayList<String> chromosomes = new ArrayList<String>();
+        ArrayList<String> chromosomes = new ArrayList<>();
 
         for (String geneName : geneNames) {
             if (!geneIdsTxt.equals("")) {

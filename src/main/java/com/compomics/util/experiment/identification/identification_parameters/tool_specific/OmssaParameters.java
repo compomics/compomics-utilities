@@ -191,11 +191,11 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      * ID numbers of ion series to apply no product ions at proline rule at.
      * NOTE: not implemented for now.
      */
-    private ArrayList<Integer> noProlineRuleSeries = new ArrayList<Integer>();
+    private ArrayList<Integer> noProlineRuleSeries = new ArrayList<>();
     /**
      * Map of the OMSSA indexes used for user modifications in this search.
      */
-    private HashMap<Integer, String> ptmIndexes = new HashMap<Integer, String>();
+    private HashMap<Integer, String> ptmIndexes = new HashMap<>();
 
     /**
      * Constructor.
@@ -1042,7 +1042,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     public static HashMap<String, Integer> getOMSSAIndexes(File modificationsFile) throws XmlPullParserException, FileNotFoundException, IOException {
 
-        HashMap<String, Integer> indexes = new HashMap<String, Integer>();
+        HashMap<String, Integer> indexes = new HashMap<>();
 
         // Create the pull parser.
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);

@@ -99,7 +99,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             progressUnit = 1;
         }
 
-        index = new HashMap<String, Long>();
+        index = new HashMap<>();
 
         String line;
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
@@ -135,7 +135,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<>();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -215,7 +215,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         Double pNovoScore = new Double(lineComponents[2]);
         String pNovoSequence = lineComponents[1];
         String peptideSequence = "";
-        ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
+        ArrayList<ModificationMatch> modificationMatches = new ArrayList<>();
 
         PNovoParameters pNovoParameters = (PNovoParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex());
 
@@ -247,8 +247,8 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add("unknown"); // @TODO: add version number
         result.put("pNovo+", versions);
         return result;

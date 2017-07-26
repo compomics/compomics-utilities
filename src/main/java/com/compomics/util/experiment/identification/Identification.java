@@ -37,15 +37,15 @@ public abstract class Identification extends ExperimentObject {
     /**
      * List of the keys of all imported proteins.
      */
-    protected HashSet<String> proteinIdentification = new HashSet<String>();
+    protected HashSet<String> proteinIdentification = new HashSet<>();
     /**
      * List of the keys of all imported peptides.
      */
-    protected HashSet<String> peptideIdentification = new HashSet<String>();
+    protected HashSet<String> peptideIdentification = new HashSet<>();
     /**
      * A map linking protein accessions to all their protein matches keys.
      */
-    protected HashMap<String, HashSet<String>> proteinMap = new HashMap<String, HashSet<String>>();
+    protected HashMap<String, HashSet<String>> proteinMap = new HashMap<>();
     /**
      * The method used.
      */
@@ -145,7 +145,7 @@ public abstract class Identification extends ExperimentObject {
                 Logger.getLogger(Identification.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return new ArrayList<String>(spectraPerFile.keySet());
+        return new ArrayList<>(spectraPerFile.keySet());
     }
     
     
@@ -162,13 +162,13 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      * */
     public void fillSpectraPerFile() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        spectraPerFile = new HashMap<String, ArrayList<String>>(getNumber(SpectrumMatch.class));
+        spectraPerFile = new HashMap<>(getNumber(SpectrumMatch.class));
         PsmIterator psmIterator = getPsmIterator(null);
         while (psmIterator.hasNext()){
             SpectrumMatch spectrumMatch = psmIterator.next();
             String key = spectrumMatch.getSpectrumFile();
             String title = spectrumMatch.getSpectrumTitle();
-            if (!spectraPerFile.containsKey(key)) spectraPerFile.put(key, new ArrayList<String>());
+            if (!spectraPerFile.containsKey(key)) spectraPerFile.put(key, new ArrayList<>());
             spectraPerFile.get(key).add(title);
         }
     }
@@ -643,7 +643,7 @@ public abstract class Identification extends ExperimentObject {
      * Spectrum.getKey() for more details.
      */
     public HashSet<String> getSpectrumIdentification() {
-        HashSet<String> allKeys = new HashSet<String>();
+        HashSet<String> allKeys = new HashSet<>();
         for (String fileName : spectraPerFile.keySet()){
             allKeys.addAll(spectraPerFile.get(fileName));
         }
@@ -754,7 +754,7 @@ public abstract class Identification extends ExperimentObject {
                 proteinIdentification.add(proteinKey);
                 for (String protein : peptide.getParentProteinsNoRemapping()) {
                     if (!proteinMap.containsKey(protein)) {
-                        proteinMap.put(protein, new HashSet<String>());
+                        proteinMap.put(protein, new HashSet<>());
                     }
                     if (!proteinMap.get(protein).contains(proteinKey)) {
                         proteinMap.get(protein).add(proteinKey);
@@ -830,7 +830,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public HashSet<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        HashSet<String> proteinMatches = new HashSet<String>();
+        HashSet<String> proteinMatches = new HashSet<>();
         ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();
         if (parentProteins == null) {
             throw new IllegalArgumentException("Proteins are not mapped for peptide " + peptide.getKey() + ".");

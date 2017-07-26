@@ -15,9 +15,9 @@ public class Iodine extends Atom {
      */
     public Iodine() {
         monoisotopicMass = 126.904473;
-        isotopeMap = new HashMap<Integer, Double>(1);
+        isotopeMap = new HashMap<>(1);
         isotopeMap.put(0, monoisotopicMass);
-        representativeComposition = new HashMap<Integer, Double>(1);
+        representativeComposition = new HashMap<>(1);
         representativeComposition.put(0, 1.0);
 
         this.name = "Iodine";

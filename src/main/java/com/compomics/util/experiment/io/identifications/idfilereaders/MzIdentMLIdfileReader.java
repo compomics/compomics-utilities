@@ -64,11 +64,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * List of software used to create this file according to the file.
      */
-    private HashMap<String, ArrayList<String>> tempSoftwareVersions = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> tempSoftwareVersions = new HashMap<>();
     /**
      * The list of software according to the scores found.
      */
-    private HashMap<String, ArrayList<String>> softwareVersions = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> softwareVersions = new HashMap<>();
     /**
      * The mzIdentML file.
      */
@@ -178,7 +178,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     if (Advocate.getAdvocate(softwareName) != null) {
                         ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
                         if (versions == null) {
-                            versions = new ArrayList<String>();
+                            versions = new ArrayList<>();
                             versions.add(version);
                             tempSoftwareVersions.put(softwareName, versions);
                         } else if (!versions.contains(version)) {
@@ -191,7 +191,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             softwareVersions.putAll(tempSoftwareVersions);
 
             // get the list of fixed modifications
-            fixedModifications = new ArrayList<SearchModification>();
+            fixedModifications = new ArrayList<>();
             SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
             ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
             if (modifications != null) {
@@ -223,7 +223,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
 
         if (useCustomParser) {
 
@@ -317,7 +317,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         String peptideSequence = mzIdentMLPeptide.getPeptideSequence();
 
                         // get the modifications
-                        ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<ModificationMatch>();
+                        ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
                         for (Modification modification : mzIdentMLPeptide.getModification()) {
 
                             String accession = modification.getCvParam().get(0).getAccession(); // note: only the first ptm cv term is used
@@ -419,7 +419,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                                     newModificationMatches = null;
                             if (previousModificationMatches != null) {
-                                newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                                newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                             }
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -476,7 +476,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @return a map of the score accession to score value of the given scores
      */
     private HashMap<String, Double> getAccessionToEValue(SpectrumIdentificationItem spectrumIdentItem) {
-        HashMap<String, Double> result = new HashMap<String, Double>();
+        HashMap<String, Double> result = new HashMap<>();
         for (CvParam cvParam : spectrumIdentItem.getCvParam()) {
             String accession = cvParam.getAccession();
             if (cvParam.getValue() != null) {
@@ -543,7 +543,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private LinkedList<SpectrumMatch> parseFile(WaitingHandler waitingHandler) {
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
 
         try {
             // create the pull parser
@@ -560,10 +560,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             // start the parsing
             int type = parser.next();
 
-            tempPeptideMap = new HashMap<String, PeptideCustom>();
-            tempPeptideEvidenceMap = new HashMap<String, String>();
-            spectrumFileNameMap = new HashMap<String, String>();
-            fixedModificationsCustomParser = new ArrayList<SearchModificationCustom>();
+            tempPeptideMap = new HashMap<>();
+            tempPeptideEvidenceMap = new HashMap<>();
+            spectrumFileNameMap = new HashMap<>();
+            fixedModificationsCustomParser = new ArrayList<>();
 
             // reset the software versions to keep only the advocates which were used for scoring
             softwareVersions.clear();
@@ -647,7 +647,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             type = parser.next();
         }
 
-        ArrayList<SearchModificationCustom> modifications = new ArrayList<SearchModificationCustom>();
+        ArrayList<SearchModificationCustom> modifications = new ArrayList<>();
 
         while (type != XmlPullParser.END_TAG && parser.getName() != null && parser.getName().equals("Modification")) {
 
@@ -748,7 +748,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
 
                 if (versions == null) {
-                    versions = new ArrayList<String>();
+                    versions = new ArrayList<>();
                     versions.add(softwareVersion);
                     tempSoftwareVersions.put(softwareName, versions);
                 } else if (!versions.contains(softwareVersion)) {
@@ -866,8 +866,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 String residues = null;
                 Double massDelta = null;
                 boolean fixed = false;
-                ArrayList<String> modRuleCvTerms = new ArrayList<String>();
-                ArrayList<String> ptmCvTerms = new ArrayList<String>();
+                ArrayList<String> modRuleCvTerms = new ArrayList<>();
+                ArrayList<String> ptmCvTerms = new ArrayList<>();
 
                 for (int i = 0; i < parser.getAttributeCount(); i++) {
                     String attributeName = parser.getAttributeName(i);
@@ -1108,7 +1108,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 type = parser.next();
             }
 
-            HashMap<String, Double> eValueMap = new HashMap<String, Double>();
+            HashMap<String, Double> eValueMap = new HashMap<>();
 
             while (parser.getName() != null && (parser.getName().equals("cvParam") || parser.getName().equals("userParam"))) {
 
@@ -1170,7 +1170,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             PeptideCustom tempPeptide = tempPeptideMap.get(peptideRef);
 
             // create a new peptide
-            ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
+            ArrayList<ModificationMatch> modMatches = new ArrayList<>();
             for (SearchModificationCustom tempMod : tempPeptide.getModifications()) {
                 if (isVariableModification(tempMod, tempPeptide.getPeptideSequence())) {
                     // correct for terminal modifications
@@ -1199,7 +1199,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                         newModificationMatches = null;
                 if (previousModificationMatches != null) {
-                    newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                    newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                 }
                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -1303,7 +1303,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             if (!softwareVersions.containsKey(name)) {
                 ArrayList<String> versions = tempSoftwareVersions.get(name);
                 if (versions == null) {
-                    versions = new ArrayList<String>();
+                    versions = new ArrayList<>();
                 }
                 softwareVersions.put(name, versions);
             }

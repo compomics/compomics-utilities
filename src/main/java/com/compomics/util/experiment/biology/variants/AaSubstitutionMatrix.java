@@ -29,12 +29,12 @@ public class AaSubstitutionMatrix implements Serializable {
      * Map of the possible amino acid substitutions: original aa &gt;
      * substituted aa.
      */
-    private final HashMap<Character, HashSet<Character>> substitutions = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> substitutions = new HashMap<>(26);
     /**
      * Reverse map of the possible amino acid substitution: substituted aa &gt;
      * original aa.
      */
-    private final HashMap<Character, HashSet<Character>> reverseMap = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> reverseMap = new HashMap<>(26);
     /**
      * Empty substitution matrix.
      */
@@ -91,13 +91,13 @@ public class AaSubstitutionMatrix implements Serializable {
     public void addSubstitution(Character originalAa, Character substitutionAa) {
         HashSet<Character> substitutedAas = substitutions.get(originalAa);
         if (substitutedAas == null) {
-            substitutedAas = new HashSet<Character>();
+            substitutedAas = new HashSet<>();
             substitutions.put(originalAa, substitutedAas);
         }
         substitutedAas.add(substitutionAa);
         HashSet<Character> originalAas = reverseMap.get(originalAa);
         if (originalAas == null) {
-            originalAas = new HashSet<Character>();
+            originalAas = new HashSet<>();
             reverseMap.put(substitutionAa, originalAas);
         }
         originalAas.add(originalAa);
@@ -134,7 +134,7 @@ public class AaSubstitutionMatrix implements Serializable {
      * @return the amino acids where a substitution has been registered
      */
     public HashSet<Character> getOriginalAminoAcids() {
-        return new HashSet<Character>(substitutions.keySet());
+        return new HashSet<>(substitutions.keySet());
     }
 
     /**
@@ -143,7 +143,7 @@ public class AaSubstitutionMatrix implements Serializable {
      * @return the possible substituted amino acids
      */
     public HashSet<Character> getSubstitutionAminoAcids() {
-        return new HashSet<Character>(substitutions.keySet());
+        return new HashSet<>(substitutions.keySet());
     }
 
     /**

@@ -68,7 +68,7 @@ public class FeedBack {
      * @return the corresponding warning
      */
     public static FeedBack getWarning(String title, String message) {
-        return new FeedBack(FeedBackType.WARNING, title, new ArrayList<String>(), message);
+        return new FeedBack(FeedBackType.WARNING, title, new ArrayList<>(), message);
     }
 
     /**
@@ -91,7 +91,7 @@ public class FeedBack {
      * @return the corresponding tip
      */
     public static FeedBack getTip(String title, String message) {
-        return getTip(title, message, new ArrayList<String>());
+        return getTip(title, message, new ArrayList<>());
     }
 
     /**
@@ -114,7 +114,7 @@ public class FeedBack {
      * @return the corresponding feed
      */
     public static FeedBack getFeed(String title, String message) {
-        return getFeed(title, message, new ArrayList<String>());
+        return getFeed(title, message, new ArrayList<>());
     }
 
     /**

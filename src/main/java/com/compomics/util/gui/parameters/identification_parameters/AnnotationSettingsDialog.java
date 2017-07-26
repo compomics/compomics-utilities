@@ -150,7 +150,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      */
     private void populateGui(AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
 
-        neutralLossesMap = new HashMap<NeutralLoss, Boolean>(possibleNeutralLosses.size()); // @TODO: should not use NeutralLoss as key?
+        neutralLossesMap = new HashMap<>(possibleNeutralLosses.size()); // @TODO: should not use NeutralLoss as key?
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
         for (NeutralLoss possibleNeutralLoss : possibleNeutralLosses) {
             boolean found = false;
@@ -724,12 +724,12 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         /**
          * Name to neutral loss map.
          */
-        private HashMap<String, NeutralLoss> namesMap = new HashMap<String, NeutralLoss>();
+        private HashMap<String, NeutralLoss> namesMap = new HashMap<>();
 
         /**
          * List of the names of the neutral losses to display.
          */
-        private ArrayList<String> namesList = new ArrayList<String>();
+        private ArrayList<String> namesList = new ArrayList<>();
 
         /**
          * Constructor.
@@ -746,7 +746,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
                     namesMap.put(neutralLoss.name, neutralLoss);
                 }
-                namesList = new ArrayList<String>(namesMap.keySet());
+                namesList = new ArrayList<>(namesMap.keySet());
                 Collections.sort(namesList);
             }
         }

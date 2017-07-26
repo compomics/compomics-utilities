@@ -15,7 +15,7 @@ public class Fluorine extends Atom {
      */
     public Fluorine() {
         monoisotopicMass = 18.99840322;
-        isotopeMap = new HashMap<Integer, Double>(18);
+        isotopeMap = new HashMap<>(18);
         isotopeMap.put(-5, 14.03506);
         isotopeMap.put(-4, 15.01801);
         isotopeMap.put(-3, 16.011466);
@@ -34,7 +34,7 @@ public class Fluorine extends Atom {
         isotopeMap.put(10, 29.04326);
         isotopeMap.put(10, 30.05250);
         isotopeMap.put(10, 31.06043);
-        representativeComposition = new HashMap<Integer, Double>(2);
+        representativeComposition = new HashMap<>(2);
         representativeComposition.put(0, 1.0);
 
         this.name = "Fluorine";

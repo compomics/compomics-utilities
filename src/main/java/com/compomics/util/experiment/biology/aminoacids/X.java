@@ -32,7 +32,7 @@ public class X extends AminoAcid {
 
     @Override
     public String[] getStandardGeneticCode() {
-        ArrayList<String> uniqueCodes = new ArrayList<String>();
+        ArrayList<String> uniqueCodes = new ArrayList<>();
         for (char aa : getSubAminoAcids()) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             for (String code : aminoAcid.getStandardGeneticCode()) {

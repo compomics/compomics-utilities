@@ -545,8 +545,8 @@ public class SpectrumPanel extends GraphicsPanel {
     private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
         if (dataSetCounter == 0) {
-            iXAxisData = new ArrayList<double[]>();
-            iYAxisData = new ArrayList<double[]>();
+            iXAxisData = new ArrayList<>();
+            iYAxisData = new ArrayList<>();
         }
 
         iDataPointAndLineColor.add(dataPointAndLineColor);
@@ -831,10 +831,10 @@ public class SpectrumPanel extends GraphicsPanel {
      */
     public static void setIonColor(Ion ion, Color color) {
         if (!colorMap.containsKey(ion.getType())) {
-            colorMap.put(ion.getType(), new HashMap<Integer, HashMap<String, Color>>());
+            colorMap.put(ion.getType(), new HashMap<>());
         }
         if (!colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
-            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<String, Color>());
+            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<>());
         }
         colorMap.get(ion.getType()).get(ion.getSubType()).put(ion.getNeutralLossesAsString(), color);
     }
@@ -1530,8 +1530,8 @@ public class SpectrumPanel extends GraphicsPanel {
         int rewindIon = aRewindIon;
         int deNovoCharge = aDeNovoCharge;
         // @TODO: include multiple ions
-        HashMap<Integer, IonMatch> forwardMap = new HashMap<Integer, IonMatch>();
-        HashMap<Integer, IonMatch> rewindMap = new HashMap<Integer, IonMatch>();
+        HashMap<Integer, IonMatch> forwardMap = new HashMap<>();
+        HashMap<Integer, IonMatch> rewindMap = new HashMap<>();
         for (IonMatch ionMatch : annotations) {
             if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
                     && !ionMatch.ion.hasNeutralLosses()
@@ -1620,7 +1620,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
         }
 
-        ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
+        ArrayList<TagComponent> reversedTag = new ArrayList<>(tag.getContent());
         Collections.reverse(reversedTag);
 
         // add reverse annotation

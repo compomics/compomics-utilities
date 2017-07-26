@@ -38,7 +38,7 @@ public class MS2MzFidelityScore {
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
                 spectrum, peptide);
-        ArrayList<Double> mzDeviations = new ArrayList<Double>(matches.size());
+        ArrayList<Double> mzDeviations = new ArrayList<>(matches.size());
         for (IonMatch ionMatch : matches) {
             double mzError = ionMatch.getAbsoluteError();
             mzDeviations.add(mzError);

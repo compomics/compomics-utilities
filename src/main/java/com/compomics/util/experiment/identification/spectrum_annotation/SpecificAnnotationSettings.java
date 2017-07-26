@@ -26,7 +26,7 @@ public class SpecificAnnotationSettings {
     /**
      * The types of ions to annotate.
      */
-    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
+    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<>();
     /**
      * If true neutral losses will be automatically deduced from the spectrum
      * identification assumption.
@@ -39,7 +39,7 @@ public class SpecificAnnotationSettings {
     /**
      * The fragment charge to be searched for.
      */
-    private ArrayList<Integer> selectedCharges = new ArrayList<Integer>();
+    private ArrayList<Integer> selectedCharges = new ArrayList<>();
     /**
      * Fragment ion accuracy used for peak matching.
      */
@@ -104,7 +104,7 @@ public class SpecificAnnotationSettings {
      */
     public HashSet<Integer> getFragmentIonTypes() {
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-            return new HashSet<Integer>(0);
+            return new HashSet<>(0);
         } else {
             return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION);
         }
@@ -134,7 +134,7 @@ public class SpecificAnnotationSettings {
      */
     public void addIonType(Ion.IonType ionType, int subType) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
+            selectedIonsMap.put(ionType, new HashSet<>());
         }
         this.selectedIonsMap.get(ionType).add(subType);
     }
@@ -146,7 +146,7 @@ public class SpecificAnnotationSettings {
      */
     public void addIonType(Ion.IonType ionType) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
+            selectedIonsMap.put(ionType, new HashSet<>());
         }
         for (int subType : Ion.getPossibleSubtypes(ionType)) {
             this.selectedIonsMap.get(ionType).add(subType);
@@ -220,7 +220,7 @@ public class SpecificAnnotationSettings {
      */
     public void addSelectedCharge(int selectedCharge) {
         if (!selectedCharges.contains(selectedCharge)) {
-            selectedCharges = new ArrayList<Integer>(selectedCharges);
+            selectedCharges = new ArrayList<>(selectedCharges);
             selectedCharges.add(selectedCharge);
         }
     }
@@ -304,11 +304,11 @@ public class SpecificAnnotationSettings {
         clone.setFragmentIonPpm(isFragmentIonPpm());
         clone.setNeutralLossesAuto(isNeutralLossesAuto());
         clone.setNeutralLossesMap(getNeutralLossesMap().clone());
-        clone.setSelectedCharges(new ArrayList<Integer>(getSelectedCharges()));
+        clone.setSelectedCharges(new ArrayList<>(getSelectedCharges()));
         HashMap<Ion.IonType, HashSet<Integer>> currentIonsMap = getIonTypes(),
-                newMap = new HashMap<Ion.IonType, HashSet<Integer>>(currentIonsMap.size());
+                newMap = new HashMap<>(currentIonsMap.size());
         for (Ion.IonType ionType : currentIonsMap.keySet()) {
-            newMap.put(ionType, new HashSet<Integer>(currentIonsMap.get(ionType)));
+            newMap.put(ionType, new HashSet<>(currentIonsMap.get(ionType)));
         }
         clone.setSelectedIonsMap(newMap);
         return clone;

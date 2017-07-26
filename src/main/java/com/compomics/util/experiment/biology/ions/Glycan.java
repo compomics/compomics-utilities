@@ -41,7 +41,7 @@ public class Glycan extends Ion {
     /**
      * Masses of this glycan.
      */
-    private HashMap<Integer, Double> theoreticMasses = new HashMap<Integer, Double>();
+    private HashMap<Integer, Double> theoreticMasses = new HashMap<>();
 
     /**
      * Constructor for a glycan.

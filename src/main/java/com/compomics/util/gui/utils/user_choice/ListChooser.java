@@ -27,7 +27,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
     /**
      * Table column header tooltips.
      */
-    private ArrayList<String> tableToolTips = new ArrayList<String>();
+    private ArrayList<String> tableToolTips = new ArrayList<>();
 
     /**
      * Constructor. Null values will be replaced by default.
@@ -141,7 +141,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @return the items selected by the user in a list
      */
     public ArrayList<String> getSelectedItems() {
-        ArrayList<String> result = new ArrayList<String>(itemsTable.getSelectedRowCount());
+        ArrayList<String> result = new ArrayList<>(itemsTable.getSelectedRowCount());
         for (int row : itemsTable.getSelectedRows()) {
             result.add(items.get(row));
         }

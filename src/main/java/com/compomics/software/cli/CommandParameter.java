@@ -149,7 +149,7 @@ public class CommandParameter {
      * @return true of the input is in the list
      */
     public static boolean isSequenceMatchingType(String argType, String arg) {
-        List<String> supportedInput = new ArrayList<String>(SequenceMatchingPreferences.MatchingType.values().length);
+        List<String> supportedInput = new ArrayList<>(SequenceMatchingPreferences.MatchingType.values().length);
         for (SequenceMatchingPreferences.MatchingType tempMatchType : SequenceMatchingPreferences.MatchingType.values()) {
             supportedInput.add("" + tempMatchType.index);
         }
@@ -275,7 +275,7 @@ public class CommandParameter {
         if (formats != null) {
             String extension = Util.getExtension(input);
             if (!formats.contains(extension)) {
-                ArrayList<String> sortedFormats = new ArrayList<String>(formats);
+                ArrayList<String> sortedFormats = new ArrayList<>(formats);
                 Collections.sort(sortedFormats);
                 StringBuilder supportedExtensions = new StringBuilder();
                 for (String format : sortedFormats) {

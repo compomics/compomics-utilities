@@ -348,7 +348,7 @@ public class KMeansClustering {
      */
     public ArrayList<String> getClusterMembers(int clusterIndex) {
 
-        ArrayList<String> clusterMembers = new ArrayList<String>();
+        ArrayList<String> clusterMembers = new ArrayList<>();
 
         for (int sampleIndex = 0; sampleIndex < NUM_SAMPLES; sampleIndex++) {
             if (clusters[sampleIndex] == clusterIndex) {
@@ -368,12 +368,12 @@ public class KMeansClustering {
      */
     public HashMap<String, ArrayList<Double>> getClusterMembersData(int clusterIndex) {
 
-        HashMap<String, ArrayList<Double>> clusterMembers = new HashMap<String, ArrayList<Double>>();
+        HashMap<String, ArrayList<Double>> clusterMembers = new HashMap<>();
 
         for (int sampleIndex = 0; sampleIndex < NUM_SAMPLES; sampleIndex++) {
             if (clusters[sampleIndex] == clusterIndex) {
 
-                ArrayList<Double> values = new ArrayList<Double>();
+                ArrayList<Double> values = new ArrayList<>();
 
                 for (int valueNumber = 0; valueNumber < NUM_VALUES; valueNumber++) {
                     values.add(SAMPLES[sampleIndex][valueNumber]);
@@ -402,8 +402,8 @@ public class KMeansClustering {
 
             String line = br.readLine();
 
-            ArrayList<String> sampleIds = new ArrayList<String>();
-            ArrayList<ArrayList<Double>> sampleDataAsArray = new ArrayList<ArrayList<Double>>();
+            ArrayList<String> sampleIds = new ArrayList<>();
+            ArrayList<ArrayList<Double>> sampleDataAsArray = new ArrayList<>();
             int numSamples = 0;
             int numValues = 0;
 
@@ -412,7 +412,7 @@ public class KMeansClustering {
                 String[] values = line.split("\\t");
                 sampleIds.add(values[0]);
 
-                ArrayList<Double> tempData = new ArrayList<Double>();
+                ArrayList<Double> tempData = new ArrayList<>();
                 for (int i = 1; i < values.length; i++) {
                     tempData.add(Double.parseDouble(values[i]));
                 }

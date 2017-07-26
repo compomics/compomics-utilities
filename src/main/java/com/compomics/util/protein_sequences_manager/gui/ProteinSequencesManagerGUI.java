@@ -146,11 +146,11 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
                 if (!progressDialog.isRunCanceled()) {
                     setUpTable();
                     ArrayList<String> databaseNames = proteinSequencesManager.getDatabaseNames();
-                    selectedVersion = new HashMap<String, String>(databaseNames.size());
-                    reviewedSelection = new HashMap<String, String>(databaseNames.size());
-                    isoformsSelection = new HashMap<String, String>(databaseNames.size());
-                    contaminantsSelection = new HashMap<String, String>(databaseNames.size());
-                    decoySelection = new HashMap<String, String>(databaseNames.size());
+                    selectedVersion = new HashMap<>(databaseNames.size());
+                    reviewedSelection = new HashMap<>(databaseNames.size());
+                    isoformsSelection = new HashMap<>(databaseNames.size());
+                    contaminantsSelection = new HashMap<>(databaseNames.size());
+                    decoySelection = new HashMap<>(databaseNames.size());
                     updateGUI();
                 } else {
                     close();
@@ -733,11 +733,11 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
             DefaultCellEditor yesNo = new DefaultCellEditor(comboBox);
 
             ArrayList<String> databaseNames = proteinSequencesManager.getDatabaseNames();
-            cellEditorsMap = new HashMap<Integer, HashMap<Integer, DefaultCellEditor>>(databaseNames.size());
+            cellEditorsMap = new HashMap<>(databaseNames.size());
             for (int row = 0; row < databaseNames.size(); row++) {
                 String databaseName = databaseNames.get(row);
                 SequenceInputType sequenceInputType = proteinSequencesManager.getInputType(databaseName);
-                HashMap<Integer, DefaultCellEditor> rowCellEditors = new HashMap<Integer, DefaultCellEditor>(5);
+                HashMap<Integer, DefaultCellEditor> rowCellEditors = new HashMap<>(5);
                 // Version column
                 comboBox = new JComboBox(proteinSequencesManager.getVersionsForDb(databaseName).toArray());
                 DefaultCellEditor version = new DefaultCellEditor(comboBox);

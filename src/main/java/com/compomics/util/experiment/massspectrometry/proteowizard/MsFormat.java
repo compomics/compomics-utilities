@@ -136,7 +136,7 @@ public enum MsFormat {
      */
     public static Vector<MsFormat> getDataFormats(Boolean raw, Boolean outputFormat) {
 
-        Vector<MsFormat> rawFormats = new Vector<MsFormat>();
+        Vector<MsFormat> rawFormats = new Vector<>();
 
         for (MsFormat format : MsFormat.values()) {
             

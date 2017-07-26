@@ -120,7 +120,7 @@ public class PrecursorIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
+        ArrayList<Integer> possibleTypes = new ArrayList<>();
         possibleTypes.add(PRECURSOR);
         return possibleTypes;
     }

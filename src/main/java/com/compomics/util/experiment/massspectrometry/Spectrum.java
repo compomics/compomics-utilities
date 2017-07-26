@@ -229,7 +229,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public synchronized void addPeak(Peak aPeak) {
         if (peakList == null) {
-            peakList = new HashMap<Double, Peak>();
+            peakList = new HashMap<>();
         }
         this.peakList.put(aPeak.mz, aPeak);
         resetSavedData();
@@ -245,7 +245,7 @@ public abstract class Spectrum extends ExperimentObject {
         if (peakList != null) {
             this.peakList.clear();
         } else {
-            peakList = new HashMap<Double, Peak>();
+            peakList = new HashMap<>();
         }
 
         for (Peak p : peaks) {
@@ -646,7 +646,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public ArrayList<Double> getPeaksAboveIntensityThreshold(double threshold) {
 
-        ArrayList<Double> peakIntensities = new ArrayList<Double>();
+        ArrayList<Double> peakIntensities = new ArrayList<>();
 
         for (Peak currentPeak : peakList.values()) {
             if (currentPeak.intensity > threshold) {
@@ -683,7 +683,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the intensity limit
      */
     private double estimateIntneistyLimit(double intensityFraction) {
-        ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
+        ArrayList<Double> intensities = new ArrayList<>(peakList.size());
 
         for (Peak peak : peakList.values()) {
             double mz = peak.mz;
@@ -709,8 +709,8 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) {
 
-        HashMap<Double, Peak> result = new HashMap<Double, Peak>(peakList.size());
-        ArrayList<Double> keys = new ArrayList<Double>(mzCorrections.keySet());
+        HashMap<Double, Peak> result = new HashMap<>(peakList.size());
+        ArrayList<Double> keys = new ArrayList<>(mzCorrections.keySet());
         Collections.sort(keys);
 
         for (Peak peak : peakList.values()) {
@@ -764,7 +764,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return a peak list which does not contain the peak matched
      */
     public HashMap<Double, Peak> getDesignaledPeakList(ArrayList<IonMatch> matches) {
-        HashMap<Double, Peak> result = new HashMap<Double, Peak>(peakList);
+        HashMap<Double, Peak> result = new HashMap<>(peakList);
         for (IonMatch ionMatch : matches) {
             result.remove(ionMatch.peak.mz);
         }
@@ -785,7 +785,7 @@ public abstract class Spectrum extends ExperimentObject {
      * interrupted
      */
     public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) throws InterruptedException {
-        HashMap<Double, Peak> result = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> result = new HashMap<>();
         for (double mz : getOrderedMzValues()) {
             if (mz >= mzMin && mz < mzMax) {
                 result.put(mz, peakList.get(mz));
@@ -811,7 +811,7 @@ public abstract class Spectrum extends ExperimentObject {
 
             if (intensityPeakMap == null) {
 
-                intensityPeakMap = new HashMap<Double, ArrayList<Peak>>(peakList.size());
+                intensityPeakMap = new HashMap<>(peakList.size());
 
                 for (Peak peak : peakList.values()) {
 
@@ -819,7 +819,7 @@ public abstract class Spectrum extends ExperimentObject {
                     ArrayList<Peak> peaksAtIntensity = intensityPeakMap.get(intensity);
 
                     if (peaksAtIntensity == null) {
-                        peaksAtIntensity = new ArrayList<Peak>();
+                        peaksAtIntensity = new ArrayList<>();
                         intensityPeakMap.put(intensity, peaksAtIntensity);
                     }
 

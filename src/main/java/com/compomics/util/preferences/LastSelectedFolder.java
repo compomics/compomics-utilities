@@ -53,7 +53,7 @@ public class LastSelectedFolder implements Serializable {
                 useCase = defaultUseCase;
             }
             if (lastSelectedFolder == null) {
-                lastSelectedFolder = new HashMap<String, String>(1);
+                lastSelectedFolder = new HashMap<>(1);
             }
             lastSelectedFolder.put(useCase, folderPath);
         }

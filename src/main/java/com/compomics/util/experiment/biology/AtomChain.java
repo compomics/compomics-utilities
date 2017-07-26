@@ -45,7 +45,7 @@ public class AtomChain implements Serializable {
      * Creates an empty atom chain.
      */
     public AtomChain() {
-        atomChain = new ArrayList<AtomImpl>(4);
+        atomChain = new ArrayList<>(4);
     }
 
     /**
@@ -225,8 +225,8 @@ public class AtomChain implements Serializable {
     private synchronized String getStringValue(boolean includeSpaces) {
 
         if (stringValue1 == null) {
-            HashMap<String, Integer> composition = new HashMap<String, Integer>(atomChain.size());
-            HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<String, HashMap<Integer, String>>(atomChain.size());
+            HashMap<String, Integer> composition = new HashMap<>(atomChain.size());
+            HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<>(atomChain.size());
 
             for (AtomImpl atom : atomChain) {
                 String atomName = atom.toString();
@@ -238,7 +238,7 @@ public class AtomChain implements Serializable {
                 String atomLetter = atom.getAtom().getLetter();
                 HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomLetter);
                 if (atomIsotopes == null) {
-                    atomIsotopes = new HashMap<Integer, String>(1);
+                    atomIsotopes = new HashMap<>(1);
                     isotopeMap.put(atomLetter, atomIsotopes);
                 }
                 Integer isotope = atom.getIsotope();
@@ -247,12 +247,12 @@ public class AtomChain implements Serializable {
 
             StringBuilder compositionAsString = new StringBuilder(composition.size());
 
-            ArrayList<String> atomNames = new ArrayList<String>(isotopeMap.keySet());
+            ArrayList<String> atomNames = new ArrayList<>(isotopeMap.keySet());
             Collections.sort(atomNames);
 
             for (String atomLetter : atomNames) {
                 HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomLetter);
-                ArrayList<Integer> isotopes = new ArrayList<Integer>(atomIsotopes.keySet());
+                ArrayList<Integer> isotopes = new ArrayList<>(atomIsotopes.keySet());
                 Collections.sort(isotopes);
                 for (Integer isotope : isotopes) {
                     String atomName = atomIsotopes.get(isotope);
@@ -298,7 +298,7 @@ public class AtomChain implements Serializable {
      * @param isotope the isotope
      */
     public void remove(Atom atom, Integer isotope) {
-        ArrayList<AtomImpl> newAtomChain = new ArrayList<AtomImpl>(atomChain.size());
+        ArrayList<AtomImpl> newAtomChain = new ArrayList<>(atomChain.size());
         AtomImpl atom1 = new AtomImpl(atom, isotope);
         for (AtomImpl atom2 : atomChain) {
             if (!atom1.isSameAs(atom2)) {

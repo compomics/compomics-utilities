@@ -41,7 +41,7 @@ public class SimpleNoiseDistribution {
      */
     public SimpleNoiseDistribution(HashMap<Double, Peak> peakList) throws MathException {
 
-        ArrayList<Double> intensitiesLog = new ArrayList<Double>(peakList.size());
+        ArrayList<Double> intensitiesLog = new ArrayList<>(peakList.size());
         for (Peak peak : peakList.values()) {
             double log = FastMath.log10(peak.intensity);
             intensitiesLog.add(log);

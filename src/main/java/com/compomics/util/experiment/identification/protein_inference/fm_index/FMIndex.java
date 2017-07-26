@@ -59,27 +59,27 @@ public class FMIndex implements PeptideMapper {
     /**
      * Sampled suffix array.
      */
-    private final ArrayList<int[]> suffixArraysPrimary = new ArrayList<int[]>();
+    private final ArrayList<int[]> suffixArraysPrimary = new ArrayList<>();
     /**
      * Wavelet tree for storing the burrows wheeler transform.
      */
-    public ArrayList<WaveletTree> occurrenceTablesPrimary = new ArrayList<WaveletTree>();
+    public ArrayList<WaveletTree> occurrenceTablesPrimary = new ArrayList<>();
     /**
      * Wavelet tree for storing the burrows wheeler transform reversed.
      */
-    public ArrayList<WaveletTree> occurrenceTablesReversed = new ArrayList<WaveletTree>();
+    public ArrayList<WaveletTree> occurrenceTablesReversed = new ArrayList<>();
     /**
      * Less table for doing an update step according to the LF step.
      */
-    public ArrayList<int[]> lessTablesPrimary = new ArrayList<int[]>();
+    public ArrayList<int[]> lessTablesPrimary = new ArrayList<>();
     /**
      * Less table for doing an update step according to the LF step reversed.
      */
-    public ArrayList<int[]> lessTablesReversed = new ArrayList<int[]>();
+    public ArrayList<int[]> lessTablesReversed = new ArrayList<>();
     /**
      * Length of the indexed string (all concatenated protein sequences).
      */
-    public ArrayList<Integer> indexStringLengths = new ArrayList<Integer>();
+    public ArrayList<Integer> indexStringLengths = new ArrayList<>();
     /**
      * Every 2^samplingShift suffix array entry will be sampled.
      */
@@ -95,11 +95,11 @@ public class FMIndex implements PeptideMapper {
     /**
      * Storing the starting positions of the protein sequences.
      */
-    private final ArrayList<int[]> boundaries = new ArrayList<int[]>();
+    private final ArrayList<int[]> boundaries = new ArrayList<>();
     /**
      * List of all accession IDs in the FASTA file.
      */
-    private final ArrayList<String[]> accessions = new ArrayList<String[]>();
+    private final ArrayList<String[]> accessions = new ArrayList<>();
     /**
      * List of all amino acid masses.
      */
@@ -251,11 +251,11 @@ public class FMIndex implements PeptideMapper {
     /**
      * List for patterns of complex PTMs.
      */
-    ArrayList<Long[]> PTMPatterns = new ArrayList<Long[]>();
+    ArrayList<Long[]> PTMPatterns = new ArrayList<>();
     /**
      * Mapping dictionary PTM name -> (PTMPattern index, relative starting position, pattern length).
      */
-    HashMap<String, Integer[]> PTMPatternNames = new HashMap<String, Integer[]>();
+    HashMap<String, Integer[]> PTMPatternNames = new HashMap<>();
     /**
      * Longest PTM pattern.
      */
@@ -518,7 +518,7 @@ public class FMIndex implements PeptideMapper {
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         
-        TreeSet<Character> aaGroups = new TreeSet<Character>();
+        TreeSet<Character> aaGroups = new TreeSet<>();
         aaGroups.add('B');
         aaGroups.add('J');
         aaGroups.add('X');
@@ -578,8 +578,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODC:
                         if (vmodc == null) {
-                            vmodc = new ArrayList<String>();
-                            vmodcMass = new ArrayList<Double>();
+                            vmodc = new ArrayList<>();
+                            vmodcMass = new ArrayList<>();
                             hasCTermDirectionPTM = true;
                             hasPTMatTerminus = true;
                         }
@@ -592,11 +592,11 @@ public class FMIndex implements PeptideMapper {
                         if (vmodcaa == null) {
                             vmodcaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodcaa[i] = new ArrayList<String>();
+                                vmodcaa[i] = new ArrayList<>();
                             }
                             vmodcaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodcaaMass[i] = new ArrayList<Double>();
+                                vmodcaaMass[i] = new ArrayList<>();
                             }
                             hasCTermDirectionPTM = true;
                             hasPTMatTerminus = true;
@@ -614,8 +614,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODCP:
                         if (vmodcp == null) {
-                            vmodcp = new ArrayList<String>();
-                            vmodcpMass = new ArrayList<Double>();
+                            vmodcp = new ArrayList<>();
+                            vmodcpMass = new ArrayList<>();
                             hasCTermDirectionPTM = true;
                         }
                         vmodcp.add(modification);
@@ -627,11 +627,11 @@ public class FMIndex implements PeptideMapper {
                         if (vmodcpaa == null) {
                             vmodcpaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodcpaa[i] = new ArrayList<String>();
+                                vmodcpaa[i] = new ArrayList<>();
                             }
                             vmodcpaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodcpaaMass[i] = new ArrayList<Double>();
+                                vmodcpaaMass[i] = new ArrayList<>();
                             }
                             hasCTermDirectionPTM = true;
                         }
@@ -648,8 +648,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODN:
                         if (vmodn == null) {
-                            vmodn = new ArrayList<String>();
-                            vmodnMass = new ArrayList<Double>();
+                            vmodn = new ArrayList<>();
+                            vmodnMass = new ArrayList<>();
                             hasNTermDirectionPTM = true;
                             hasPTMatTerminus = true;
                         }
@@ -662,11 +662,11 @@ public class FMIndex implements PeptideMapper {
                         if (vmodnaa == null) {
                             vmodnaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodnaa[i] = new ArrayList<String>();
+                                vmodnaa[i] = new ArrayList<>();
                             }
                             vmodnaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodnaaMass[i] = new ArrayList<Double>();
+                                vmodnaaMass[i] = new ArrayList<>();
                             }
                             hasNTermDirectionPTM = true;
                             hasPTMatTerminus = true;
@@ -684,8 +684,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODNP:
                         if (vmodnp == null) {
-                            vmodnp = new ArrayList<String>();
-                            vmodnpMass = new ArrayList<Double>();
+                            vmodnp = new ArrayList<>();
+                            vmodnpMass = new ArrayList<>();
                             hasNTermDirectionPTM = true;
                         }
                         vmodnp.add(modification);
@@ -697,11 +697,11 @@ public class FMIndex implements PeptideMapper {
                         if (vmodnpaa == null) {
                             vmodnpaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodnpaa[i] = new ArrayList<String>();
+                                vmodnpaa[i] = new ArrayList<>();
                             }
                             vmodnpaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                vmodnpaaMass[i] = new ArrayList<Double>();
+                                vmodnpaaMass[i] = new ArrayList<>();
                             }
                             hasNTermDirectionPTM = true;
                         }
@@ -752,8 +752,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODC:
                         if (fmodc == null) {
-                            fmodc = new ArrayList<String>();
-                            fmodcMass = new ArrayList<Double>();
+                            fmodc = new ArrayList<>();
+                            fmodcMass = new ArrayList<>();
                             hasCTermDirectionPTM = true;
                             hasPTMatTerminus = true;
                             hasFixedPTM_CatTerminus = true;
@@ -767,11 +767,11 @@ public class FMIndex implements PeptideMapper {
                         if (fmodcaa == null) {
                             fmodcaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodcaa[i] = new ArrayList<String>();
+                                fmodcaa[i] = new ArrayList<>();
                             }
                             fmodcaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodcaaMass[i] = new ArrayList<Double>();
+                                fmodcaaMass[i] = new ArrayList<>();
                             }
                             hasCTermDirectionPTM = true;
                             hasPTMatTerminus = true;
@@ -790,8 +790,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODCP:
                         if (fmodcp == null) {
-                            fmodcp = new ArrayList<String>();
-                            fmodcpMass = new ArrayList<Double>();
+                            fmodcp = new ArrayList<>();
+                            fmodcpMass = new ArrayList<>();
                             hasCTermDirectionPTM = true;
                         }
                         fmodcp.add(modification);
@@ -803,11 +803,11 @@ public class FMIndex implements PeptideMapper {
                         if (fmodcpaa == null) {
                             fmodcpaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodcpaa[i] = new ArrayList<String>();
+                                fmodcpaa[i] = new ArrayList<>();
                             }
                             fmodcpaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodcpaaMass[i] = new ArrayList<Double>();
+                                fmodcpaaMass[i] = new ArrayList<>();
                             }
                             hasCTermDirectionPTM = true;
                         }
@@ -824,8 +824,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODN:
                         if (fmodn == null) {
-                            fmodn = new ArrayList<String>();
-                            fmodnMass = new ArrayList<Double>();
+                            fmodn = new ArrayList<>();
+                            fmodnMass = new ArrayList<>();
                             hasNTermDirectionPTM = true;
                             hasPTMatTerminus = true;
                             hasFixedPTM_NatTerminus = true;
@@ -839,11 +839,11 @@ public class FMIndex implements PeptideMapper {
                         if (fmodnaa == null) {
                             fmodnaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodnaa[i] = new ArrayList<String>();
+                                fmodnaa[i] = new ArrayList<>();
                             }
                             fmodnaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodnaaMass[i] = new ArrayList<Double>();
+                                fmodnaaMass[i] = new ArrayList<>();
                             }
                             hasNTermDirectionPTM = true;
                             hasPTMatTerminus = true;
@@ -862,8 +862,8 @@ public class FMIndex implements PeptideMapper {
 
                     case PTM.MODNP:
                         if (fmodnp == null) {
-                            fmodnp = new ArrayList<String>();
-                            fmodnpMass = new ArrayList<Double>();
+                            fmodnp = new ArrayList<>();
+                            fmodnpMass = new ArrayList<>();
                             hasNTermDirectionPTM = true;
                         }
                         fmodnp.add(modification);
@@ -875,11 +875,11 @@ public class FMIndex implements PeptideMapper {
                         if (fmodnpaa == null) {
                             fmodnpaa = (ArrayList<String>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodnpaa[i] = new ArrayList<String>();
+                                fmodnpaa[i] = new ArrayList<>();
                             }
                             fmodnpaaMass = (ArrayList<Double>[]) new ArrayList[128];
                             for (int i = 0; i < 128; ++i) {
-                                fmodnpaaMass[i] = new ArrayList<Double>();
+                                fmodnpaaMass[i] = new ArrayList<>();
                             }
                             hasNTermDirectionPTM = true;
                         }
@@ -926,7 +926,7 @@ public class FMIndex implements PeptideMapper {
             }
         }
 
-        ArrayList<Integer> aaMassVector = new ArrayList<Integer>();
+        ArrayList<Integer> aaMassVector = new ArrayList<>();
         for (int i = 0; i < aaMasses.length; ++i) {
             if (aaMasses[i] > 0) aaMassVector.add(i);
         }
@@ -951,8 +951,8 @@ public class FMIndex implements PeptideMapper {
         }
 
         // reading all proteins in a first pass to get information about number and total length
-        ArrayList<Integer> tmpLengths = new ArrayList<Integer>();
-        ArrayList<Integer> tmpProteins = new ArrayList<Integer>();
+        ArrayList<Integer> tmpLengths = new ArrayList<>();
+        ArrayList<Integer> tmpProteins = new ArrayList<>();
         long ticker = indexChunkSize;
         try {
             int indexStringLength = 1;
@@ -1010,7 +1010,7 @@ public class FMIndex implements PeptideMapper {
                 Xlookup[i][j] = 0L;
             }
         }
-        massIndexMaps = new ArrayList<MassIndexMap>(1000000);
+        massIndexMaps = new ArrayList<>(1000000);
         
         recursiveMassFilling(0., 0, 0, null);
         
@@ -1020,7 +1020,7 @@ public class FMIndex implements PeptideMapper {
            } 
         });
         cache = (HashMap<String, CacheElement>[])new HashMap[indexParts];
-        for (int indexPart = 0; indexPart < indexParts; ++indexPart) cache[indexPart] = new HashMap<String, CacheElement>();
+        for (int indexPart = 0; indexPart < indexParts; ++indexPart) cache[indexPart] = new HashMap<>();
     }
 
     /**
@@ -1216,7 +1216,7 @@ public class FMIndex implements PeptideMapper {
      * @return a list of all possible amino acids per position in the peptide
      */
     private ArrayList<String> createPeptideCombinations(String peptide, SequenceMatchingPreferences seqMatchPref) {
-        ArrayList<String> combinations = new ArrayList<String>();
+        ArrayList<String> combinations = new ArrayList<>();
 
         SequenceMatchingPreferences.MatchingType sequenceMatchingType = seqMatchPref.getSequenceMatchingType();
         if (sequenceMatchingType == SequenceMatchingPreferences.MatchingType.string) {
@@ -1361,7 +1361,7 @@ public class FMIndex implements PeptideMapper {
      */
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref) {
-        ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             if (genericVariantMatching) {
                 for (int i = 0; i < indexParts; ++i){
@@ -1393,7 +1393,7 @@ public class FMIndex implements PeptideMapper {
     public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
 
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
@@ -1404,7 +1404,7 @@ public class FMIndex implements PeptideMapper {
 
         int countX = 0;
         for (int i = 0; i <= lenPeptide; ++i) {
-            backwardList[i] = new ArrayList<MatrixContent>(10);
+            backwardList[i] = new ArrayList<>(10);
             if (i < lenPeptide && pep_rev.charAt(i) == 'X') {
                 ++countX;
             }
@@ -1481,7 +1481,7 @@ public class FMIndex implements PeptideMapper {
     public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
@@ -1491,7 +1491,7 @@ public class FMIndex implements PeptideMapper {
 
         for (int k = 0; k <= maxNumberVariants; ++k) {
             for (int j = 0; j <= lenPeptide; ++j) {
-                backwardMatrix[k][j] = new ArrayList<MatrixContent>(10);
+                backwardMatrix[k][j] = new ArrayList<>(10);
             }
         }
         int countX = 0;
@@ -1603,7 +1603,7 @@ public class FMIndex implements PeptideMapper {
 
                         if (newPeptide) {
 
-                            ArrayList<VariantMatch> variants = new ArrayList<VariantMatch>();
+                            ArrayList<VariantMatch> variants = new ArrayList<>();
                             // adding variants and adjusting modification sites
                             for (int l = 0, length = 0; l < allVariants.length(); ++l) {
                                 int edit = allVariants.charAt(l);
@@ -1647,7 +1647,7 @@ public class FMIndex implements PeptideMapper {
     public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
 
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
@@ -1659,7 +1659,7 @@ public class FMIndex implements PeptideMapper {
 
         for (int k = 0; k <= numErrors; ++k) {
             for (int j = 0; j <= lenPeptide; ++j) {
-                backwardMatrix[k][j] = new LinkedList<MatrixContent>();
+                backwardMatrix[k][j] = new LinkedList<>();
             }
         }
         int countX = 0;
@@ -1776,7 +1776,7 @@ public class FMIndex implements PeptideMapper {
 
                         if (newPeptide) {
 
-                            ArrayList<VariantMatch> variants = new ArrayList<VariantMatch>();
+                            ArrayList<VariantMatch> variants = new ArrayList<>();
                             // adding variants and adjusting modification sites
                             for (int l = 0, length = 0; l < allVariants.length(); ++l) {
                                 int edit = allVariants.charAt(l);
@@ -3816,7 +3816,7 @@ public class FMIndex implements PeptideMapper {
      */
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             for (int i = 0; i < indexParts; ++i){
                 allMatches.addAll(getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, i));
@@ -3850,7 +3850,7 @@ public class FMIndex implements PeptideMapper {
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         int[] lessTableReversed = lessTablesReversed.get(indexPart);
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
         // copying tags into own data structure
@@ -3927,13 +3927,13 @@ public class FMIndex implements PeptideMapper {
 
         LinkedList<MatrixContent>[] matrixReversed = (LinkedList<MatrixContent>[]) new LinkedList[combinationsReversed.length + 1];
         LinkedList<MatrixContent>[] matrix = (LinkedList<MatrixContent>[]) new LinkedList[combinations.length + 1];
-        ArrayList<MatrixContent> cachePrimary = new ArrayList<MatrixContent>();
+        ArrayList<MatrixContent> cachePrimary = new ArrayList<>();
 
         for (int i = 0; i <= combinationsReversed.length; ++i) {
-            matrixReversed[i] = new LinkedList<MatrixContent>();
+            matrixReversed[i] = new LinkedList<>();
         }
         for (int i = 0; i <= combinations.length; ++i) {
-            matrix[i] = new LinkedList<MatrixContent>();
+            matrix[i] = new LinkedList<>();
         }
 
         if (cached != null) {
@@ -3970,9 +3970,9 @@ public class FMIndex implements PeptideMapper {
 
                 int leftIndexFront = 0;
                 int rightIndexFront = indexStringLengths.get(indexPart) - 1;
-                ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-                ArrayList<int[]> Xcomponents = new ArrayList<int[]>();
-                HashMap<Integer, Double> XmassDiffs = new HashMap<Integer, Double>();
+                ArrayList<ModificationMatch> modifications = new ArrayList<>();
+                ArrayList<int[]> Xcomponents = new ArrayList<>();
+                HashMap<Integer, Double> XmassDiffs = new HashMap<>();
                 
                 while (currentContent.previousContent != null) {
                     final int aminoAcid = currentContent.character;
@@ -4041,9 +4041,9 @@ public class FMIndex implements PeptideMapper {
             MatrixContent currentContent = content;
             String currentPeptide = "";
             String currentPeptideSearch = "";
-            ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-            ArrayList<int[]> Xcomponents = new ArrayList<int[]>();
-            HashMap<Integer, Double> XmassDiffs = new HashMap<Integer, Double>();
+            ArrayList<ModificationMatch> modifications = new ArrayList<>();
+            ArrayList<int[]> Xcomponents = new ArrayList<>();
+            HashMap<Integer, Double> XmassDiffs = new HashMap<>();
                 
             while (currentContent.previousContent != null) {
                 if (currentContent.character != '\0') {
@@ -4124,36 +4124,36 @@ public class FMIndex implements PeptideMapper {
             }
             else {
                 // substituting all Xs if present into their corresponding amino acids
-                ArrayList< ArrayList<Integer> > Xsets = new ArrayList< ArrayList<Integer> >();
-                ArrayList< int[] > Xorigins = new ArrayList< int[] >();
+                ArrayList< ArrayList<Integer> > Xsets = new ArrayList<  >();
+                ArrayList< int[] > Xorigins = new ArrayList<  >();
                 
                 int nTag = -1, nComponent = -1;
                 
                 for (int i = 0; i < Xcomponents.size(); ++i){
                     if (nTag != Xcomponents.get(i)[0] || nComponent != Xcomponents.get(i)[1]){
                         Xorigins.add(new int[]{Xcomponents.get(i)[0], Xcomponents.get(i)[1]});
-                        Xsets.add(new ArrayList<Integer>() );
+                        Xsets.add(new ArrayList<>() );
                         nTag = Xcomponents.get(i)[0];
                         nComponent = Xcomponents.get(i)[1];
                     }
                     Xsets.get(Xsets.size() - 1).add(Xcomponents.get(i)[2]);
                 }
-                LinkedList<String> substitutedPeptides = new LinkedList<String>();
-                LinkedList<String> substitutedPeptidesTmp = new LinkedList<String>();
+                LinkedList<String> substitutedPeptides = new LinkedList<>();
+                LinkedList<String> substitutedPeptidesTmp = new LinkedList<>();
                 substitutedPeptides.add(peptide);
-                LinkedList< ArrayList<ModificationMatch> > substitutedModifications = new LinkedList< ArrayList<ModificationMatch> >();
-                LinkedList< ArrayList<ModificationMatch> > substitutedModificationsTmp = new LinkedList< ArrayList<ModificationMatch> >();
+                LinkedList< ArrayList<ModificationMatch> > substitutedModifications = new LinkedList<  >();
+                LinkedList< ArrayList<ModificationMatch> > substitutedModificationsTmp = new LinkedList<  >();
                 substitutedModifications.add(modifications);
                 
                 for (int k = 0; k < Xsets.size(); ++k){
                     ArrayList<Integer> Xpositions = Xsets.get(k);
                     int len = Xpositions.size();
-                    HashMap<String, int[][] > uniqueSubstitutions = new HashMap<String, int[][] >();
+                    HashMap<String, int[][] > uniqueSubstitutions = new HashMap< >();
                     
                     
                     // find amino acids that correspond to the number of Xs and mass gap caused by all Xs
                     int[] Xranges = computeMappingRanges(XmassDiffs.get(Xorigins.get(k)[0] * 1024 + Xorigins.get(k)[1]));
-                    ArrayList< int[] > possibleAAs = new ArrayList< int[] >();
+                    ArrayList< int[] > possibleAAs = new ArrayList<  >();
                     for (int i = Xranges[0]; i <= Xranges[1]; ++i){
                         if (massIndexMaps.get(i).indexes.length == len){
                             possibleAAs.add(massIndexMaps.get(i).indexes);
@@ -4178,7 +4178,7 @@ public class FMIndex implements PeptideMapper {
                         char[] pepChars = pep.toCharArray();
                         for (int[][] uniquePermutations : uniqueSubstitutions.values()){
 
-                            ArrayList<ModificationMatch> newModifications = new ArrayList<ModificationMatch>();
+                            ArrayList<ModificationMatch> newModifications = new ArrayList<>();
                             for (ModificationMatch m : currentModifications){
                                 newModifications.add(new ModificationMatch(m.getTheoreticPtm(), m.getVariable(), m.getModificationSite()));
                             }
@@ -4242,7 +4242,7 @@ public class FMIndex implements PeptideMapper {
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         int[] lessTableReversed = lessTablesReversed.get(indexPart);
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
-        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<PeptideProteinMapping>();
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
 
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
@@ -4323,15 +4323,15 @@ public class FMIndex implements PeptideMapper {
 
         LinkedList<MatrixContent>[][] matrixReversed = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors][combinationsReversed.length + 1];
         LinkedList<MatrixContent>[][] matrix = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors][combinations.length + 1];
-        ArrayList<MatrixContent> cachePrimary = new ArrayList<MatrixContent>();
+        ArrayList<MatrixContent> cachePrimary = new ArrayList<>();
 
         // initializing both matrices
         for (int k = 0; k < numErrors; ++k) {
             for (int j = 0; j <= combinationsReversed.length; ++j) {
-                matrixReversed[k][j] = new LinkedList<MatrixContent>();
+                matrixReversed[k][j] = new LinkedList<>();
             }
             for (int j = 0; j <= combinations.length; ++j) {
-                matrix[k][j] = new LinkedList<MatrixContent>();
+                matrix[k][j] = new LinkedList<>();
             }
         }
 
@@ -4360,7 +4360,7 @@ public class FMIndex implements PeptideMapper {
                     String currentPeptide = "";
                     int leftIndexFront = 0;
                     int rightIndexFront = indexStringLengths.get(indexPart) - 1;
-                    ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+                    ArrayList<ModificationMatch> modifications = new ArrayList<>();
                     String allVariants = "";
 
                     while (currentContent.previousContent != null) {
@@ -4431,7 +4431,7 @@ public class FMIndex implements PeptideMapper {
             for (MatrixContent content : matrix[k][combinations.length]) {
                 MatrixContent currentContent = content;
                 String currentPeptide = "";
-                ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+                ArrayList<ModificationMatch> modifications = new ArrayList<>();
                 String allVariants = "";
 
                 while (currentContent.previousContent != null) {
@@ -4463,7 +4463,7 @@ public class FMIndex implements PeptideMapper {
 
                 String peptide = currentPeptide + currentContent.peptideSequence;
                 allVariants += currentContent.allVariants;
-                ArrayList<VariantMatch> variants = new ArrayList<VariantMatch>();
+                ArrayList<VariantMatch> variants = new ArrayList<>();
 
                 if (turned) {
                     leftIndex = 0;
@@ -4683,7 +4683,7 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
 
-        ArrayList<MatrixContent> cacheContentPrimary = new ArrayList<MatrixContent>();
+        ArrayList<MatrixContent> cacheContentPrimary = new ArrayList<>();
         for (MatrixContent matrixContent : cachedPrimary) {
             cacheContentPrimary.add(new MatrixContent(matrixContent));
         }

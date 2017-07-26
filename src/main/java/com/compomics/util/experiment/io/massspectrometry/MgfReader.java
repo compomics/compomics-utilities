@@ -42,13 +42,13 @@ public class MgfReader {
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
         String line;
-        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<>();
         double precursorMz = 0;
         double precursorIntensity = 0;
         double rt = -1.0;
         double rt1 = -1.0;
         double rt2 = -1.0;
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        ArrayList<Charge> precursorCharges = new ArrayList<>();
         String scanNumber = "";
         String spectrumTitle = "";
         boolean insideSpectrum = false;
@@ -166,7 +166,7 @@ public class MgfReader {
      */
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
-        ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
+        ArrayList<MSnSpectrum> spectra = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         try {
             MSnSpectrum spectrum;
@@ -206,11 +206,11 @@ public class MgfReader {
      */
     public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        HashMap<String, Long> indexes = new HashMap<String, Long>();
-        HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
-        HashMap<Integer, Double> precursorMzMap = new HashMap<Integer, Double>();
-        LinkedHashSet<String> spectrumTitles = new LinkedHashSet<String>();
-        HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
+        HashMap<String, Long> indexes = new HashMap<>();
+        HashMap<String, Integer> spectrumIndexes = new HashMap<>();
+        HashMap<Integer, Double> precursorMzMap = new HashMap<>();
+        LinkedHashSet<String> spectrumTitles = new LinkedHashSet<>();
+        HashMap<String, Integer> duplicateTitles = new HashMap<>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long currentIndex = 0;
         String title = null;
@@ -380,7 +380,7 @@ public class MgfReader {
         }
 
         // convert the spectrum titles to an arraylist
-        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<String>(); // @TODO: is there a faster way of doing this?
+        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<>(); // @TODO: is there a faster way of doing this?
         for (String temp : spectrumTitles) {
             spectrumTitlesAsArrayList.add(temp);
         }
@@ -404,7 +404,7 @@ public class MgfReader {
      */
     public static void removeDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        ArrayList<String> spectrumTitles = new ArrayList<>();
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
 
         if (waitingHandler != null) {
@@ -514,7 +514,7 @@ public class MgfReader {
      */
     public static void addMissingSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        ArrayList<String> spectrumTitles = new ArrayList<>();
 
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
 
@@ -861,7 +861,7 @@ public class MgfReader {
      */
     public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        ArrayList<String> spectrumTitles = new ArrayList<>();
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
 
         FileWriter fw = new FileWriter(tempSpectrumFile);
@@ -954,7 +954,7 @@ public class MgfReader {
             }
 
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
-            ArrayList<File> splittedFiles = new ArrayList<File>();
+            ArrayList<File> splittedFiles = new ArrayList<>();
 
             int fileCounter = 1, spectrumCounter = 0;
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -1009,7 +1009,7 @@ public class MgfReader {
             readBufferedRandomAccessFile.close();
 
             // index the new files
-            ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
+            ArrayList<MgfIndex> mgfIndexes = new ArrayList<>();
             for (int i = 0; i < splittedFiles.size(); i++) {
                 File newFile = splittedFiles.get(i);
 
@@ -1052,9 +1052,9 @@ public class MgfReader {
         // @TODO get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        ArrayList<Charge> precursorCharges = new ArrayList<>();
         String scanNumber = "", spectrumTitle = "";
-        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<>();
         String line;
         boolean insideSpectrum = false;
 
@@ -1067,7 +1067,7 @@ public class MgfReader {
 
             if (line.startsWith("BEGIN IONS")) {
                 insideSpectrum = true;
-                spectrum = new HashMap<Double, Peak>();
+                spectrum = new HashMap<>();
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
@@ -1163,10 +1163,10 @@ public class MgfReader {
      */
     private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
 
-        ArrayList<Charge> result = new ArrayList<Charge>(1);
+        ArrayList<Charge> result = new ArrayList<>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] chargesAnd = tempLine.split(" and ");
-        ArrayList<String> chargesAsString = new ArrayList<String>();
+        ArrayList<String> chargesAsString = new ArrayList<>();
 
         for (String charge : chargesAnd) {
             for (String charge2 : charge.split(",")) {
@@ -1224,7 +1224,7 @@ public class MgfReader {
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
+        ArrayList<Charge> precursorCharges = new ArrayList<>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
@@ -1305,18 +1305,18 @@ public class MgfReader {
 
         Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
         MgfIndex mgfIndex = getIndexMap(mgfFile);
-        HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<Double, ArrayList<String>>();
+        HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<>();
         BufferedRandomAccessFile mgfRFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
 
         for (String title : mgfIndex.getSpectrumTitles()) {
             Precursor precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
             if (!spectrumTitleMap.containsKey(precursor.getMz())) {
-                spectrumTitleMap.put(precursor.getMz(), new ArrayList<String>());
+                spectrumTitleMap.put(precursor.getMz(), new ArrayList<>());
             }
             spectrumTitleMap.get(precursor.getMz()).add(title);
         }
 
-        ArrayList<Double> masses = new ArrayList<Double>(spectrumTitleMap.keySet());
+        ArrayList<Double> masses = new ArrayList<>(spectrumTitleMap.keySet());
         Collections.sort(masses);
 
         for (double mz : masses) {
@@ -1330,7 +1330,7 @@ public class MgfReader {
                 aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0).value + "\n"); //@TODO what if many/no charge is present?
                 aplWriter.write("header=" + spectrum.getSpectrumTitle() + "\n");
                 HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
-                ArrayList<Double> fragmentMasses = new ArrayList<Double>(peakMap.keySet());
+                ArrayList<Double> fragmentMasses = new ArrayList<>(peakMap.keySet());
                 Collections.sort(fragmentMasses);
 
                 for (double fragmentMass : fragmentMasses) {

@@ -427,7 +427,7 @@ public class UtilitiesPathPreferences {
      * loading the path configuration
      */
     public static ArrayList<PathKey> getErrorKeys() throws IOException {
-        ArrayList<PathKey> result = new ArrayList<PathKey>();
+        ArrayList<PathKey> result = new ArrayList<>();
         for (UtilitiesPathPreferences.UtilitiesPathKey utilitiesPathKey : UtilitiesPathPreferences.UtilitiesPathKey.values()) {
             String folder = UtilitiesPathPreferences.getPathPreference(utilitiesPathKey);
             if (folder != null && !testPath(folder)) {

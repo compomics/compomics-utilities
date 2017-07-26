@@ -118,21 +118,21 @@ public class SpeciesFactory {
      */
     public static String getSpeciesDescription(HashMap<String, Integer> speciesOccurrence) {
 
-        HashMap<Integer, ArrayList<String>> occurrenceToSpecies = new HashMap<Integer, ArrayList<String>>(speciesOccurrence.size());
+        HashMap<Integer, ArrayList<String>> occurrenceToSpecies = new HashMap<>(speciesOccurrence.size());
         double total = 0.0;
         for (String taxonomy : speciesOccurrence.keySet()) {
             Integer occurrence = speciesOccurrence.get(taxonomy);
             total += occurrence;
             ArrayList<String> species = occurrenceToSpecies.get(occurrence);
             if (species == null) {
-                species = new ArrayList<String>(1);
+                species = new ArrayList<>(1);
                 occurrenceToSpecies.put(occurrence, species);
             }
             species.add(taxonomy);
         }
 
         StringBuilder description = new StringBuilder();
-        ArrayList<Integer> occurrences = new ArrayList<Integer>(occurrenceToSpecies.keySet());
+        ArrayList<Integer> occurrences = new ArrayList<>(occurrenceToSpecies.keySet());
         Collections.sort(occurrences, Collections.reverseOrder());
         for (Integer occurrence : occurrences) {
             ArrayList<String> species = occurrenceToSpecies.get(occurrence);
@@ -344,12 +344,12 @@ public class SpeciesFactory {
      * @return a map of the species in Ensembl
      */
     public HashMap<String, HashSet<Integer>> getEnsembleSpecies() {
-        HashMap<String, HashSet<Integer>> speciesMap = new HashMap<String, HashSet<Integer>>(EnsemblGenomeDivision.values().length + 1);
+        HashMap<String, HashSet<Integer>> speciesMap = new HashMap<>(EnsemblGenomeDivision.values().length + 1);
         for (Integer taxon : ensemblGenomesSpecies.getTaxons()) {
             String divisionName = ensemblGenomesSpecies.getDivision(taxon).ensemblType;
             HashSet<Integer> taxons = speciesMap.get(divisionName);
             if (taxons == null) {
-                taxons = new HashSet<Integer>();
+                taxons = new HashSet<>();
                 speciesMap.put(divisionName, taxons);
             }
             taxons.add(taxon);

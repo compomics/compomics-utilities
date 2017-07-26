@@ -78,8 +78,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
-        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<String, SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter(100);
@@ -120,7 +120,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;
                     if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                     }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -154,7 +154,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         String[] temp = line.trim().split("\t");
 
         String[] temp1 = temp[4].split(",");
-        ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
+        ArrayList<ModificationMatch> modMatches = new ArrayList<>();
 
         for (int aa = 0; aa < temp1.length; aa++) {
             String mod = temp1[aa];
@@ -180,8 +180,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add("1.5.3.4");
         result.put("Andromeda", versions);
         return result;

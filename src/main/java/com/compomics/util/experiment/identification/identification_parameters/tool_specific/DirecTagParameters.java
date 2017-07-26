@@ -178,7 +178,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
     /**
      * The variable PTMs in the order used.
      */
-    private ArrayList<String> variablePtms = new ArrayList<String>();
+    private ArrayList<String> variablePtms = new ArrayList<>();
 
     /**
      * Constructor.

@@ -26,11 +26,11 @@ public class PtmSiteMapping {
      * @return a map of the doublets created.
      */
     public static HashMap<Integer, Integer> align(Collection<Integer> serie1, Collection<Integer> serie2) {
-        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> result = new HashMap<>();
         if (serie1 == null || serie1.isEmpty()) {
             return result;
         }
-        ArrayList<Integer> sortedSerie1 = new ArrayList<Integer>(serie1);
+        ArrayList<Integer> sortedSerie1 = new ArrayList<>(serie1);
         Collections.sort(sortedSerie1);
         if (serie2 == null || serie2.isEmpty()) {
             for (int index : serie1) {
@@ -38,7 +38,7 @@ public class PtmSiteMapping {
             }
             return result;
         }
-        ArrayList<Integer> sortedSerie2 = new ArrayList<Integer>(serie2);
+        ArrayList<Integer> sortedSerie2 = new ArrayList<>(serie2);
         Collections.sort(sortedSerie2);
         int lastj = 0;
         int firsti = 0;
@@ -88,7 +88,7 @@ public class PtmSiteMapping {
      * @return a map of the doublets created.
      */
     public static HashMap<Integer, Integer> alignAll(Collection<Integer> serie1, Collection<Integer> serie2) {
-        HashMap<Integer, Integer> tempResult, result = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> tempResult, result = new HashMap<>();
         if (serie1 == null || serie1.isEmpty()) {
             return result;
         }
@@ -101,8 +101,8 @@ public class PtmSiteMapping {
         int diff = Math.max(serie1.size() - serie2.size(), 0);
         int nNull = diff + 1;
         while (nNull > diff) {
-            ArrayList<Integer> tempSerie1 = new ArrayList<Integer>();
-            ArrayList<Integer> tempSerie2 = new ArrayList<Integer>(serie2);
+            ArrayList<Integer> tempSerie1 = new ArrayList<>();
+            ArrayList<Integer> tempSerie2 = new ArrayList<>(serie2);
             Integer i2;
             for (int i1 : serie1) {
                 i2 = result.get(i1);
@@ -144,14 +144,14 @@ public class PtmSiteMapping {
      */
     public static HashMap<Integer, Integer> alignAll(HashMap<Integer, ArrayList<Integer>> input) {
 
-        HashMap<Integer, Integer> tempResult, result = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> tempResult, result = new HashMap<>();
         if (input == null || input.isEmpty()) {
             return result;
         }
 
-        HashMap<Integer, ArrayList<Integer>> inputCopy = new HashMap<Integer, ArrayList<Integer>>();
+        HashMap<Integer, ArrayList<Integer>> inputCopy = new HashMap<>();
         for (int i1 : input.keySet()) {
-            inputCopy.put(i1, new ArrayList<Integer>());
+            inputCopy.put(i1, new ArrayList<>());
             for (int i2 : input.get(i1)) {
                 inputCopy.get(i1).add(i2);
             }
@@ -159,13 +159,13 @@ public class PtmSiteMapping {
 
         while (!inputCopy.isEmpty()) {
 
-            HashMap<Integer, ArrayList<Integer>> sizesMap = new HashMap<Integer, ArrayList<Integer>>();
+            HashMap<Integer, ArrayList<Integer>> sizesMap = new HashMap<>();
 
             for (int i : inputCopy.keySet()) {
                 if (inputCopy.get(i) != null && !inputCopy.get(i).isEmpty()) {
                     int size = inputCopy.get(i).size();
                     if (!sizesMap.containsKey(size)) {
-                        sizesMap.put(size, new ArrayList<Integer>());
+                        sizesMap.put(size, new ArrayList<>());
                     }
                     sizesMap.get(size).add(i);
                 } else {
@@ -173,10 +173,10 @@ public class PtmSiteMapping {
                 }
             }
 
-            ArrayList<Integer> sizes = new ArrayList<Integer>(sizesMap.keySet());
+            ArrayList<Integer> sizes = new ArrayList<>(sizesMap.keySet());
             Collections.sort(sizes);
             int size = sizes.get(0);
-            ArrayList<Integer> serie1 = new ArrayList<Integer>();
+            ArrayList<Integer> serie1 = new ArrayList<>();
             int i1temp = sizesMap.get(size).get(0);
             ArrayList<Integer> serie2 = inputCopy.get(i1temp);
 
@@ -190,7 +190,7 @@ public class PtmSiteMapping {
             result.putAll(tempResult);
 
             for (int i1 : inputCopy.keySet()) {
-                ArrayList<Integer> toRemove2 = new ArrayList<Integer>();
+                ArrayList<Integer> toRemove2 = new ArrayList<>();
                 for (int i2 : inputCopy.get(i1)) {
                     if (tempResult.containsValue(i2)) {
                         toRemove2.add(i2);
@@ -206,7 +206,7 @@ public class PtmSiteMapping {
                 sizesMap.get(size).remove(i1);
             }
 
-            ArrayList<Integer> toRemove1 = new ArrayList<Integer>();
+            ArrayList<Integer> toRemove1 = new ArrayList<>();
             for (int i1 : inputCopy.keySet()) {
                 if (inputCopy.get(i1).isEmpty()) {
                     toRemove1.add(i1);

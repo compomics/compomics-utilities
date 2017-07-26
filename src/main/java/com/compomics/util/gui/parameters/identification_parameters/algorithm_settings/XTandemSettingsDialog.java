@@ -136,7 +136,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         spectrumSynthesisCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputResultsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        modificationTableToolTips = new ArrayList<String>();
+        modificationTableToolTips = new ArrayList<>();
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");

@@ -89,7 +89,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * and 84.1% percentiles.
      */
     public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistribution(ArrayList<Double> input) {
-        ArrayList<Double> sortedInput = new ArrayList<Double>(input);
+        ArrayList<Double> sortedInput = new ArrayList<>(input);
         Collections.sort(sortedInput);
         return getRobustNonSymmetricalNormalDistributionFromSortedList(sortedInput);
     }

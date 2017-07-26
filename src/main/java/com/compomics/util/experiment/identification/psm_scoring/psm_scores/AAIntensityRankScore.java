@@ -72,9 +72,9 @@ public class AAIntensityRankScore {
 
         int percentile = spectrum.getNPeaks() / nBins;
         HashMap<Double, ArrayList<Peak>> intensityMap = spectrum.getIntensityMap();
-        ArrayList<Double> intensities = new ArrayList<Double>(intensityMap.keySet());
+        ArrayList<Double> intensities = new ArrayList<>(intensityMap.keySet());
         Collections.sort(intensities, Collections.reverseOrder());
-        ArrayList<Double> thresholds = new ArrayList<Double>(100);
+        ArrayList<Double> thresholds = new ArrayList<>(100);
         int count = 0;
         for (double intensity : intensities) {
             if (++count == percentile) {
@@ -83,7 +83,7 @@ public class AAIntensityRankScore {
             }
         }
 
-        HashMap<Integer, Double> aaPercentile = new HashMap<Integer, Double>(sequenceLength);
+        HashMap<Integer, Double> aaPercentile = new HashMap<>(sequenceLength);
         for (int aa : aaIntensities.keySet()) {
             double intensity = aaIntensities.get(aa);
             double rank = nBins;
@@ -100,7 +100,7 @@ public class AAIntensityRankScore {
             aaPercentile.put(aa, rank);
         }
 
-        ArrayList<Double> ranks = new ArrayList<Double>(aaPercentile.values());
+        ArrayList<Double> ranks = new ArrayList<>(aaPercentile.values());
         return BasicMathFunctions.mean(ranks);
     }
 }

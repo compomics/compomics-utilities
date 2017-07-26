@@ -15,17 +15,17 @@ public class NormalizationFactors implements Serializable {
      * List of protein level normalization factors. The key should be the same
      * as for the sample assignment.
      */
-    private HashMap<String, Double> proteinNormalizationFactors = new HashMap<String, Double>();
+    private HashMap<String, Double> proteinNormalizationFactors = new HashMap<>();
     /**
      * List of peptide level normalization factors. The key should be the same
      * as for the sample assignment.
      */
-    private HashMap<String, Double> peptideNormalizationFactors = new HashMap<String, Double>();
+    private HashMap<String, Double> peptideNormalizationFactors = new HashMap<>();
     /**
      * List of PSM level normalization factors. The key should be the same as
      * for the sample assignment.
      */
-    private HashMap<String, Double> psmNormalizationFactors = new HashMap<String, Double>();
+    private HashMap<String, Double> psmNormalizationFactors = new HashMap<>();
 
     /**
      * Constructor.

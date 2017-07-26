@@ -106,7 +106,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
 
         // set the species
         Vector availableSpecies = new Vector();
-        speciesMap = new HashMap<String, Integer>();
+        speciesMap = new HashMap<>();
 
         File fastaFile = searchParameters.getFastaFile();
 

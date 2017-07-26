@@ -46,8 +46,8 @@ public class ProbabilityFilter {
         Double medianY = BasicMathFunctions.median(y);
         Double quantileY1 = BasicMathFunctions.percentile(y, 0.25);
         Double quantileY2 = BasicMathFunctions.percentile(y, 0.75);
-        ArrayList<Double> slopes = new ArrayList<Double>(n);
-        HashMap<Integer, Double> slopesMap = new HashMap<Integer, Double>(n);
+        ArrayList<Double> slopes = new ArrayList<>(n);
+        HashMap<Integer, Double> slopesMap = new HashMap<>(n);
         Double x0 = x.get(0);
         boolean newX = false;
 
@@ -73,8 +73,8 @@ public class ProbabilityFilter {
         }
 
         Double medianSlope = BasicMathFunctions.median(slopes);
-        ArrayList<Double> deviationsSquare = new ArrayList<Double>(n);
-        HashMap<Integer, Double> deviationsSquareMap = new HashMap<Integer, Double>(n);
+        ArrayList<Double> deviationsSquare = new ArrayList<>(n);
+        HashMap<Integer, Double> deviationsSquareMap = new HashMap<>(n);
 
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
@@ -98,8 +98,8 @@ public class ProbabilityFilter {
         double threshold = 1 - p;
         Double deviationMax = slopeDistribution.getMaxValueForProbability(threshold);
         Double deviationMin = slopeDistribution.getMinValueForProbability(threshold);
-        ArrayList<Double> filteredX = new ArrayList<Double>(x.size());
-        ArrayList<Double> filteredY = new ArrayList<Double>(y.size());
+        ArrayList<Double> filteredX = new ArrayList<>(x.size());
+        ArrayList<Double> filteredY = new ArrayList<>(y.size());
 
         for (int i = 0; i < slopes.size(); i++) {
             Double deviation = slopes.get(i);
@@ -109,7 +109,7 @@ public class ProbabilityFilter {
             }
         }
 
-        ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>(2);
+        ArrayList<ArrayList<Double>> result = new ArrayList<>(2);
         result.add(filteredX);
         result.add(filteredY);
 

@@ -27,12 +27,12 @@ public class MutationMatrix implements Serializable {
     /**
      * Map of the possible amino acid mutations: original aa &gt; mutated aa.
      */
-    private final HashMap<Character, HashSet<Character>> mutations = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> mutations = new HashMap<>(26);
     /**
      * Map of the possible amino acid mutations: original aa &gt; delta mass
      * (mutated - original) &gt; mutated aa.
      */
-    private final HashMap<Character, HashMap<Double, HashSet<Character>>> mutationsMasses = new HashMap<Character, HashMap<Double, HashSet<Character>>>(26);
+    private final HashMap<Character, HashMap<Double, HashSet<Character>>> mutationsMasses = new HashMap<>(26);
     /**
      * The minimum difference between an original amino acid and the mutated version.
      */
@@ -45,7 +45,7 @@ public class MutationMatrix implements Serializable {
      * Reverse map of the possible amino acid mutations: mutated aa &gt;
      * original aa.
      */
-    private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<>(26);
     /**
      * Mutation matrix allowing for a single base mutation.
      */
@@ -93,13 +93,13 @@ public class MutationMatrix implements Serializable {
     public void addMutation(Character originalAa, Character mutatedAa) {
         HashSet<Character> mutatedAas = mutations.get(originalAa);
         if (mutatedAas == null) {
-            mutatedAas = new HashSet<Character>();
+            mutatedAas = new HashSet<>();
             mutations.put(originalAa, mutatedAas);
         }
         mutatedAas.add(mutatedAa);
         HashMap<Double, HashSet<Character>> deltaMasses = mutationsMasses.get(originalAa);
         if (deltaMasses == null) {
-            deltaMasses = new HashMap<Double, HashSet<Character>>(1);
+            deltaMasses = new HashMap<>(1);
             mutationsMasses.put(originalAa, deltaMasses);
         }
         double deltaMass = AminoAcid.getAminoAcid(mutatedAa).getMonoisotopicMass() - AminoAcid.getAminoAcid(originalAa).getMonoisotopicMass();
@@ -111,13 +111,13 @@ public class MutationMatrix implements Serializable {
         }
         mutatedAas = deltaMasses.get(deltaMass);
         if (mutatedAas == null) {
-            mutatedAas = new HashSet<Character>();
+            mutatedAas = new HashSet<>();
             deltaMasses.put(deltaMass, mutatedAas);
         }
         mutatedAas.add(mutatedAa);
         HashSet<Character> originalAas = mutationsReverse.get(originalAa);
         if (originalAas == null) {
-            originalAas = new HashSet<Character>();
+            originalAas = new HashSet<>();
             mutationsReverse.put(mutatedAa, originalAas);
         }
         originalAas.add(originalAa);

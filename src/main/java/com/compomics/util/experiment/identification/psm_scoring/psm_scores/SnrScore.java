@@ -68,12 +68,12 @@ public class SnrScore {
      * occurs when calculating logs
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
-        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<Double, ArrayList<IonMatch>>(ionMatchesList.size());
+        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
             if (peakMatches == null) {
-                peakMatches = new ArrayList<IonMatch>(1);
+                peakMatches = new ArrayList<>(1);
                 ionMatches.put(mz, peakMatches);
             }
             peakMatches.add(ionMatch);

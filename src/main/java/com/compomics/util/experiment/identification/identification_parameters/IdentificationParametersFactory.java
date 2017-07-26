@@ -36,7 +36,7 @@ public class IdentificationParametersFactory {
     /**
      * A map of the parsed parameters indexed by their name.
      */
-    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<String, IdentificationParameters>();
+    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
 
     /**
      * Constructor for the factory.
@@ -67,7 +67,7 @@ public class IdentificationParametersFactory {
      * @return an ordered list of the names of the implemented parameters
      */
     public ArrayList<String> getParametersList() {
-        ArrayList<String> names = new ArrayList<String>(identificationParametersMap.keySet());
+        ArrayList<String> names = new ArrayList<>(identificationParametersMap.keySet());
         Collections.sort(names);
         return names;
     }

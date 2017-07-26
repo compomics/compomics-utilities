@@ -139,7 +139,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             } else {
 
                 Iterator<DatabaseType> iterator = fastaIndex.getDatabaseTypes().keySet().iterator();
-                TreeMap<Integer, ArrayList<DatabaseType>> sortedDatabaseTypes = new TreeMap<Integer, ArrayList<DatabaseType>>();
+                TreeMap<Integer, ArrayList<DatabaseType>> sortedDatabaseTypes = new TreeMap<>();
 
                 while (iterator.hasNext()) {
                     DatabaseType tempDatabaseType = iterator.next();
@@ -147,7 +147,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                     ArrayList<DatabaseType> tempList = sortedDatabaseTypes.get(counter);
                     if (tempList == null) {
-                        tempList = new ArrayList<DatabaseType>();
+                        tempList = new ArrayList<>();
                     }
                     tempList.add(tempDatabaseType);
                     sortedDatabaseTypes.put(counter, tempList);
@@ -189,7 +189,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
             if (!sequenceFactory.getAccessions().isEmpty()) {
                 accessionsSpinner.setEnabled(true);
-                List<String> accessionsAsList = new ArrayList<String>();
+                List<String> accessionsAsList = new ArrayList<>();
                 for (String anAcession : sequenceFactory.getAccessions()) {
                     accessionsAsList.add(anAcession);
                 }

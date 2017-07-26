@@ -18,7 +18,7 @@ public class Patient {
      * The patient information as a map. See the PatientInformation class for
      * how to annotate the key.
      */
-    private HashMap<String, Comparable> patientInformationMap = new HashMap<String, Comparable>();
+    private HashMap<String, Comparable> patientInformationMap = new HashMap<>();
 
     /**
      * Constructor,

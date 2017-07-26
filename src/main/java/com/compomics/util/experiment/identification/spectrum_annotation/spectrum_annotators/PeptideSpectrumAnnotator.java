@@ -139,7 +139,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, 
             HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) {
 
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        ArrayList<IonMatch> result = new ArrayList<>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
@@ -147,7 +147,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         }
         setPeptide(peptide, possiblePeptideFragments, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
 
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
 
         // possible charges for the precursor
         for (int i = 1; i <= precursorCharge; i++) {
@@ -201,7 +201,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationSettings,
             SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
 
-        HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
+        HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<>();
         ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
 
         for (IonMatch ionMatch : matches) {
@@ -216,7 +216,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     number = peptide.getSequence().length() + 1 - ((PeptideFragmentIon) ion).getNumber();
                 }
                 if (!matchesMap.containsKey(number)) {
-                    matchesMap.put(number, new ArrayList<IonMatch>());
+                    matchesMap.put(number, new ArrayList<>());
                 }
                 matchesMap.get(number).add(ionMatch);
             }

@@ -34,7 +34,7 @@ public class MDScore {
      */
     public static Double getMDScore(ArrayList<SpectrumIdentificationAssumption> mascotAssumptions, Peptide peptideCandidate, ArrayList<String> ptms, SequenceMatchingPreferences sequenceMatchingPreferences, Integer rounding) {
 
-        HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
+        HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<>();
         Double firstScore = null, secondScore = null;
 
         if (mascotAssumptions != null) {
@@ -44,7 +44,7 @@ public class MDScore {
                     if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate, sequenceMatchingPreferences)) {
                         Double score = peptideAssumption.getRawScore();
                         if (!mascotAssumptionsMap.containsKey(score)) {
-                            mascotAssumptionsMap.put(score, new ArrayList<Peptide>());
+                            mascotAssumptionsMap.put(score, new ArrayList<>());
                         }
                         mascotAssumptionsMap.get(score).add(peptideAssumption.getPeptide());
                     }
@@ -53,7 +53,7 @@ public class MDScore {
                 }
             }
 
-            ArrayList<Double> scores = new ArrayList<Double>(mascotAssumptionsMap.keySet());
+            ArrayList<Double> scores = new ArrayList<>(mascotAssumptionsMap.keySet());
             Collections.sort(scores, Collections.reverseOrder());
 
             for (double score : scores) {

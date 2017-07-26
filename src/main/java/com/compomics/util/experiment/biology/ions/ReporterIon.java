@@ -336,7 +336,7 @@ public class ReporterIon extends Ion {
      */
     public static void addReporterIon(ReporterIon reporterIon) {
         if (implementedIons == null) {
-            implementedIons = new HashMap<String, ReporterIon>();
+            implementedIons = new HashMap<>();
         }
         implementedIons.put(reporterIon.name, reporterIon);
         sortedImplementedIonsNames = null;
@@ -532,7 +532,7 @@ public class ReporterIon extends Ion {
      */
     public static ArrayList<String> getSortedImplementedIons() {
         if (sortedImplementedIonsNames == null) {
-            ArrayList<String> tempList = new ArrayList<String>(getImplementedIons());
+            ArrayList<String> tempList = new ArrayList<>(getImplementedIons());
             Collections.sort(tempList);
             sortedImplementedIonsNames = tempList;
         }
@@ -546,7 +546,7 @@ public class ReporterIon extends Ion {
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
         if (possibleSubtypes == null) {
-            ArrayList<Integer> tempList = new ArrayList<Integer>(implementedIons.size());
+            ArrayList<Integer> tempList = new ArrayList<>(implementedIons.size());
             for (int i = 0; i < implementedIons.size(); i++) {
                 tempList.add(i);
             }

@@ -32,8 +32,8 @@ public class GeneMapping {
      * Constructor.
      */
     public GeneMapping() {
-        geneNameToChromosome = new HashMap<String, String>();
-        geneNameToAccession = new HashMap<String, String>();
+        geneNameToChromosome = new HashMap<>();
+        geneNameToAccession = new HashMap<>();
     }
 
     /**

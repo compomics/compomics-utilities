@@ -130,7 +130,7 @@ public class PeptideDraft {
      * @return a new peptide draft
      */
     public PeptideDraft clone() {
-        PeptideDraft newPeptideDraft = new PeptideDraft(Arrays.copyOf(sequence, sequence.length), nTermModification, cTermModification, new HashMap<Integer, String>(fixedAaModifications), mass, missedCleavages);
+        PeptideDraft newPeptideDraft = new PeptideDraft(Arrays.copyOf(sequence, sequence.length), nTermModification, cTermModification, new HashMap<>(fixedAaModifications), mass, missedCleavages);
         return newPeptideDraft;
     }
 
@@ -292,7 +292,7 @@ public class PeptideDraft {
      * @return the peptide built from the peptide draft
      */
     public Peptide getPeptide(Double massMin, Double massMax) {
-        return getPeptide(massMin, massMax, new BoxedObject<Boolean>(Boolean.FALSE));
+        return getPeptide(massMin, massMax, new BoxedObject<>(Boolean.FALSE));
     }
 
     /**
@@ -319,14 +319,14 @@ public class PeptideDraft {
                 ArrayList<ModificationMatch> modificationMatches = null;
 
                 if (nTermModification != null) {
-                    modificationMatches = new ArrayList<ModificationMatch>(fixedAaModifications.size());
+                    modificationMatches = new ArrayList<>(fixedAaModifications.size());
                     modificationMatches.add(new ModificationMatch(nTermModification, false, 1));
                 }
 
                 if (cTermModification != null) {
 
                     if (modificationMatches == null) {
-                        modificationMatches = new ArrayList<ModificationMatch>(fixedAaModifications.size());
+                        modificationMatches = new ArrayList<>(fixedAaModifications.size());
                     }
 
                     modificationMatches.add(new ModificationMatch(cTermModification, false, length()));
@@ -335,7 +335,7 @@ public class PeptideDraft {
                 for (Integer site : fixedAaModifications.keySet()) {
 
                     if (modificationMatches == null) {
-                        modificationMatches = new ArrayList<ModificationMatch>(fixedAaModifications.size());
+                        modificationMatches = new ArrayList<>(fixedAaModifications.size());
                     }
 
                     String modificationName = fixedAaModifications.get(site);

@@ -46,9 +46,9 @@ public class UniprotTaxonomy {
      * Constructor.
      */
     public UniprotTaxonomy() {
-        nameToIdMap = new HashMap<String, Integer>();
-        idToNameMap = new HashMap<Integer, String>();
-        idToCommonNameMap = new HashMap<Integer, String>();
+        nameToIdMap = new HashMap<>();
+        idToNameMap = new HashMap<>();
+        idToCommonNameMap = new HashMap<>();
     }
 
     /**

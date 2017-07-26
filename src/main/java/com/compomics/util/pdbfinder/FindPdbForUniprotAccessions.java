@@ -36,7 +36,7 @@ public class FindPdbForUniprotAccessions {
     /**
      * The PDB parameters.
      */
-    private Vector<PdbParameter> iPdbs = new Vector<PdbParameter>();
+    private Vector<PdbParameter> iPdbs = new Vector<>();
     /**
      * The DAS reader.
      */

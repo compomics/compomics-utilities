@@ -30,7 +30,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The matching protein(s) accessions.
      */
-    private ArrayList<String> theoreticProtein = new ArrayList<String>();
+    private ArrayList<String> theoreticProtein = new ArrayList<>();
     /**
      * The accession of the retained protein after protein inference resolution.
      */
@@ -38,7 +38,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The corresponding peptide match keys.
      */
-    private ArrayList<String> peptideMatchesKeys = new ArrayList<String>();
+    private ArrayList<String> peptideMatchesKeys = new ArrayList<>();
     /**
      * The splitter in the key between protein accessions.
      */
@@ -272,8 +272,8 @@ public class ProteinMatch extends IdentificationMatch {
         if (accessions == null) {
             throw new IllegalArgumentException("Proteins not set for peptide " + peptide.getKey() + ".");
         }
-        HashSet<String> uniqueAccessions = new HashSet<String>(accessions);
-        accessions = new ArrayList<String>(uniqueAccessions);
+        HashSet<String> uniqueAccessions = new HashSet<>(accessions);
+        accessions = new ArrayList<>(uniqueAccessions);
         Collections.sort(accessions);
         StringBuilder key = new StringBuilder(accessions.size() * 6);
         for (String accession : accessions) {
@@ -356,7 +356,7 @@ public class ProteinMatch extends IdentificationMatch {
     public static ArrayList<String> getOtherProteins(String group1, String group2) {
         String[] group1Proteins = getAccessions(group1);
         List<String> group2Proteins = Arrays.asList(getAccessions(group2));
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for (String sharedAccession : group1Proteins) {
             if (!group2Proteins.contains(sharedAccession)) {
                 result.add(sharedAccession);
@@ -376,7 +376,7 @@ public class ProteinMatch extends IdentificationMatch {
     public static ArrayList<String> getCommonProteins(String group1, String group2) {
         String[] group1Proteins = getAccessions(group1);
         List<String> group2Proteins = Arrays.asList(getAccessions(group2));
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for (String sharedAccession : group1Proteins) {
             if (group2Proteins.contains(sharedAccession)) {
                 result.add(sharedAccession);

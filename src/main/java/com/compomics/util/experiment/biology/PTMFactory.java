@@ -45,19 +45,19 @@ public class PTMFactory implements Serializable {
     /**
      * A map linking indexes with modifications.
      */
-    private HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
+    private HashMap<String, PTM> ptmMap = new HashMap<>();
     /**
      * List of the indexes of default modifications.
      */
-    private ArrayList<String> defaultMods = new ArrayList<String>();
+    private ArrayList<String> defaultMods = new ArrayList<>();
     /**
      * List of the indexes of user modifications.
      */
-    private ArrayList<String> userMods = new ArrayList<String>();
+    private ArrayList<String> userMods = new ArrayList<>();
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> userColors = new HashMap<String, Color>();
+    private HashMap<String, Color> userColors = new HashMap<>();
     /**
      * Unknown modification to be returned when the modification is not found.
      */
@@ -338,7 +338,7 @@ public class PTMFactory implements Serializable {
      * @return the names of all imported PTMs
      */
     public ArrayList<String> getPTMs() {
-        return new ArrayList<String>(ptmMap.keySet());
+        return new ArrayList<>(ptmMap.keySet());
     }
 
     /**
@@ -363,7 +363,7 @@ public class PTMFactory implements Serializable {
      */
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
         PtmSettings modificationProfile = searchParameters.getPtmSettings();
-        ArrayList<String> toCheck = new ArrayList<String>();
+        ArrayList<String> toCheck = new ArrayList<>();
         for (String modification : modificationProfile.getBackedUpPtms()) {
             if (containsPTM(modification)) {
                 PTM oldPTM = getPTM(modification);
@@ -424,7 +424,7 @@ public class PTMFactory implements Serializable {
             double modificationMass, double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
-        HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> mapping = new HashMap<>();
 
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = getPTM(ptmName);
@@ -432,7 +432,7 @@ public class PTMFactory implements Serializable {
                 for (int site : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
                     ArrayList<String> modifications = mapping.get(site);
                     if (modifications == null) {
-                        modifications = new ArrayList<String>();
+                        modifications = new ArrayList<>();
                         mapping.put(site, modifications);
                     }
                     modifications.add(ptmName);
@@ -503,7 +503,7 @@ public class PTMFactory implements Serializable {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (peptide.isModified()) {
-            ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>(peptide.getNModifications());
+            ArrayList<ModificationMatch> toRemove = new ArrayList<>(peptide.getNModifications());
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                 if (!modMatch.getVariable()) {
                     toRemove.add(modMatch);
@@ -513,7 +513,7 @@ public class PTMFactory implements Serializable {
                 peptide.getModificationMatches().remove(modMatch);
             }
         }
-        HashMap<Integer, Double> taken = new HashMap<Integer, Double>(peptide.getNModifications());
+        HashMap<Integer, Double> taken = new HashMap<>(peptide.getNModifications());
 
         for (String fixedModification : modificationProfile.getFixedModifications()) {
             PTM ptm = getPTM(fixedModification);
@@ -607,7 +607,7 @@ public class PTMFactory implements Serializable {
             if (tagComponent instanceof AminoAcidPattern) {
                 
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+                ArrayList<ModificationMatch> toRemove = new ArrayList<>();
                 
                 for (int aa : aminoAcidPattern.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
@@ -660,7 +660,7 @@ public class PTMFactory implements Serializable {
               
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 
-                ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+                ArrayList<ModificationMatch> toRemove = new ArrayList<>();
                 
                 for (int aa : aminoAcidSequence.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(aa);

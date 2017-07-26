@@ -130,22 +130,22 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
 
         // get all implemented scores
         PsmScore[] psmScores = PsmScore.values();
-        scoresNames = new ArrayList<String>(psmScores.length);
+        scoresNames = new ArrayList<>(psmScores.length);
         for (PsmScore psmScore : psmScores) {
             scoresNames.add(psmScore.name);
         }
 
         // get scores for each algorithm
         Set<Integer> advocates = psmScoringPreferences.getAdvocates();
-        spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(advocates.size());
+        spectrumMatchingScores = new HashMap<>(advocates.size());
         for (Integer advocate : advocates) {
-            HashSet<Integer> scores = new HashSet<Integer>(psmScoringPreferences.getScoreForAlgorithm(advocate));
+            HashSet<Integer> scores = new HashSet<>(psmScoringPreferences.getScoreForAlgorithm(advocate));
             spectrumMatchingScores.put(advocate, scores);
         }
-        defaultScores = new HashSet<Integer>(psmScoringPreferences.getDefaultScores());
+        defaultScores = new HashSet<>(psmScoringPreferences.getDefaultScores());
 
         // make an ordered list of the selected algorithms
-        advocateNames = new ArrayList<String>(spectrumMatchingScores.size());
+        advocateNames = new ArrayList<>(spectrumMatchingScores.size());
         for (Integer advocateId : advocates) {
             Advocate advocate = Advocate.getAdvocate(advocateId);
             advocateNames.add(advocate.getName());
@@ -157,7 +157,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
 
         // set scores
         PsmScore[] implementedScores = PsmScore.values();
-        psmScoresTableToolTips = new ArrayList<String>(implementedScores.length);
+        psmScoresTableToolTips = new ArrayList<>(implementedScores.length);
         psmScoresTableToolTips.add(null);
         psmScoresTableToolTips.add("Score Name");
         for (PsmScore psmScore : implementedScores) {

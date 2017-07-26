@@ -110,7 +110,7 @@ public class UnspecificCombinationIterator implements SequenceIterator {
         }
 
         // Construct the peptide
-        BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
+        BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax, smallMass);
 
         // Skip too heavy peptides

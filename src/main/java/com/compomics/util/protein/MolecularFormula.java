@@ -24,7 +24,7 @@ public class MolecularFormula {
     /**
      * The hashmap collecting all the MolecularElements
      */
-    private HashMap<MolecularElement,Integer> iFormula = new HashMap<MolecularElement,Integer>();
+    private HashMap<MolecularElement,Integer> iFormula = new HashMap<>();
 
     /**
      * Default constructor
@@ -39,7 +39,7 @@ public class MolecularFormula {
      * @param lSequence the amino acid sequence
      */
     public MolecularFormula(Sequence lSequence){
-        HashMap<String, MolecularFormula> iElements = new HashMap<String, MolecularFormula>();
+        HashMap<String, MolecularFormula> iElements = new HashMap<>();
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("elements.txt")));
             String line;

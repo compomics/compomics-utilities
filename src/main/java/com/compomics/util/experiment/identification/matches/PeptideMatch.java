@@ -26,7 +26,7 @@ public class PeptideMatch extends IdentificationMatch {
     /**
      * All spectrum matches indexed by spectrum id. See Spectrum class.
      */
-    private ArrayList<String> spectrumMatchesKeys = new ArrayList<String>();
+    private ArrayList<String> spectrumMatchesKeys = new ArrayList<>();
     /**
      * Is the peptide match a decoy hit?
      */

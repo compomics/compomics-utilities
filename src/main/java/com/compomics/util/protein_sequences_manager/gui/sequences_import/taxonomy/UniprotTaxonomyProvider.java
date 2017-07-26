@@ -32,7 +32,7 @@ public class UniprotTaxonomyProvider {
     /**
      * The lineages for a certain taxonomy.
      */
-    private final HashSet<String> lineages = new HashSet<String>();
+    private final HashSet<String> lineages = new HashSet<>();
     /**
      * The default JTreeModel.
      */
@@ -40,7 +40,7 @@ public class UniprotTaxonomyProvider {
     /**
      * Cache of taxonomies to increase speed and reduce server load.
      */
-    private final HashMap<String, String> cachedTaxonomies = new HashMap<String, String>();
+    private final HashMap<String, String> cachedTaxonomies = new HashMap<>();
 
     /**
      * GUI constructor.
@@ -70,7 +70,7 @@ public class UniprotTaxonomyProvider {
      */
     public List<String> getChildTaxonomies(String taxonomyName) throws MalformedURLException, IOException {
 
-        List<String> childrenTaxonomies = new ArrayList<String>();
+        List<String> childrenTaxonomies = new ArrayList<>();
         String url = ConnectionManager.getUniprotHost() + "taxonomy/?query=\"" + taxonomyName + "\"&format=tab";
         URL website = new URL(url);
         URLConnection connection = website.openConnection();
@@ -116,8 +116,8 @@ public class UniprotTaxonomyProvider {
         int maxPerQuery = 20000;
         String query = "\"" + taxonomyName + "\"" + "&sort=score&format=tab";
         URLConnection connection = ConnectionManager.getQueryConnection(query, QueryType.TAXONOMY);
-        HashMap<String, String> tempTaxIdMap = new HashMap<String, String>();
-        List<String> tempLineages = new ArrayList<String>();
+        HashMap<String, String> tempTaxIdMap = new HashMap<>();
+        List<String> tempLineages = new ArrayList<>();
         BufferedReader in = null;
 
         try {
@@ -326,7 +326,7 @@ public class UniprotTaxonomyProvider {
         String taxName = "";
         String taxID = "";
         URLConnection connection = website.openConnection();
-        HashMap<String, String> tempTaxIdMap = new HashMap<String, String>();
+        HashMap<String, String> tempTaxIdMap = new HashMap<>();
 
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));

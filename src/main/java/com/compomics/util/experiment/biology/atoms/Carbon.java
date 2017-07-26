@@ -15,7 +15,7 @@ public class Carbon extends Atom {
      */
     public Carbon() {
         monoisotopicMass = 12.0;
-        isotopeMap = new HashMap<Integer, Double>(15);
+        isotopeMap = new HashMap<>(15);
         isotopeMap.put(-4, 8.037675);
         isotopeMap.put(-3, 9.0310367);
         isotopeMap.put(-2, 10.0168532);
@@ -31,7 +31,7 @@ public class Carbon extends Atom {
         isotopeMap.put(8, 20.04032);
         isotopeMap.put(9, 21.04934);
         isotopeMap.put(10, 22.05720);
-        representativeComposition = new HashMap<Integer, Double>(2);
+        representativeComposition = new HashMap<>(2);
         representativeComposition.put(0, 0.9893);
         representativeComposition.put(1, 0.0107);
         

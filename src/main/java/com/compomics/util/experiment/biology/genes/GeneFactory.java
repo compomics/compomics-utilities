@@ -111,7 +111,7 @@ public class GeneFactory {
         if (ensemblVersionsFile.exists()) {
             loadEnsemblSpeciesVersions(ensemblVersionsFile);
         } else {
-            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap = new HashMap<>();
         }
 
         createDefaultGeneMappingFiles(
@@ -141,8 +141,8 @@ public class GeneFactory {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
         HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
-        HashMap<String, GeneMapping> geneMappings = new HashMap<String, GeneMapping>(speciesOccurrence.size());
-        HashMap<String, GoMapping> goMappings = new HashMap<String, GoMapping>(speciesOccurrence.size());
+        HashMap<String, GeneMapping> geneMappings = new HashMap<>(speciesOccurrence.size());
+        HashMap<String, GoMapping> goMappings = new HashMap<>(speciesOccurrence.size());
 
         // download/update species mapping, put them in maps per species
         for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
@@ -215,14 +215,14 @@ public class GeneFactory {
         // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
         if (ensemblVersionsMap == null) {
-            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap = new HashMap<>();
         }
-        HashMap<String, String> ensemblVersionsUsed = new HashMap<String, String>(ensemblVersionsMap);
-        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<String, String>();
-        HashMap<String, String> geneNameToChromosomeMap = new HashMap<String, String>();
-        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<String, HashSet<String>>();
-        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<String, HashSet<String>>();
-        HashMap<String, String> goNamesMap = new HashMap<String, String>();
+        HashMap<String, String> ensemblVersionsUsed = new HashMap<>(ensemblVersionsMap);
+        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<>();
+        HashMap<String, String> geneNameToChromosomeMap = new HashMap<>();
+        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<>();
+        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<>();
+        HashMap<String, String> goNamesMap = new HashMap<>();
         SequenceFactory.HeaderIterator it = sequenceFactory.getHeaderIterator(true);
 
         while (it.hasNext()) {
@@ -259,7 +259,7 @@ public class GeneFactory {
                             String accession = header.getAccession();
                             HashSet<String> goTerms = proteinToGoMap.get(accession);
                             if (goTerms == null) {
-                                goTerms = new HashSet<String>();
+                                goTerms = new HashSet<>();
                                 proteinToGoMap.put(accession, goTerms);
                             }
                             HashSet<String> newTerms = goMapping.getGoAccessions(accession);
@@ -273,7 +273,7 @@ public class GeneFactory {
 
                                     HashSet<String> proteins = goToProteinMap.get(goTerm);
                                     if (proteins == null) {
-                                        proteins = new HashSet<String>();
+                                        proteins = new HashSet<>();
                                         goToProteinMap.put(goTerm, proteins);
                                     }
                                     proteins.add(accession);
@@ -759,7 +759,7 @@ public class GeneFactory {
     public void updateEnsemblVersion(String ensemblDatasetName, String ensemblVersion) throws IOException {
 
         if (ensemblVersionsMap == null) {
-            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap = new HashMap<>();
         }
         ensemblVersionsMap.put(ensemblDatasetName, ensemblVersion);
 
@@ -828,7 +828,7 @@ public class GeneFactory {
         try {
             BufferedReader br = new BufferedReader(r);
             try {
-                ensemblVersionsMap = new HashMap<String, String>();
+                ensemblVersionsMap = new HashMap<>();
                 String line = br.readLine();
 
                 while (line != null) {

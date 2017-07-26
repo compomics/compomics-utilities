@@ -76,11 +76,11 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Stores the masses of the fixed n-terminal modifications.
      */
-    private ArrayList<Double> fixedNTerminalModifications = new ArrayList<Double>();
+    private ArrayList<Double> fixedNTerminalModifications = new ArrayList<>();
     /**
      * Stores the masses of the fixed c-terminal modifications.
      */
-    private ArrayList<Double> fixedCTerminalModifications = new ArrayList<Double>();
+    private ArrayList<Double> fixedCTerminalModifications = new ArrayList<>();
 
     /**
      * Blank constructor for instantiation purposes.
@@ -133,8 +133,8 @@ public class PepxmlIdfileReader implements IdfileReader {
             int type;
             boolean hasMatch = false;
 
-            HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<String, SpectrumMatch>();
-            spectrumMatches = new LinkedList<SpectrumMatch>();
+            HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
+            spectrumMatches = new LinkedList<>();
             SpectrumMatch currentMatch = null;
             Integer currentCharge = null;
 
@@ -216,7 +216,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                                     newModificationMatches = null;
                             if (previousModificationMatches != null) {
-                                newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                                newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                             }
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -275,7 +275,7 @@ public class PepxmlIdfileReader implements IdfileReader {
 
         Integer rank = null;
         String sequence = null;
-        ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
+        ArrayList<ModificationMatch> modificationMatches = new ArrayList<>();
         Double score = null;
 
         for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -558,10 +558,10 @@ public class PepxmlIdfileReader implements IdfileReader {
         }
 
         // extract the required information about the modifications
-        fixedModificationsMassDiffs = new HashMap<Character, ArrayList<Double>>();
-        fixedModificationMasses = new ArrayList<Double>();
-        fixedNTerminalModifications = new ArrayList<Double>();
-        fixedCTerminalModifications = new ArrayList<Double>();
+        fixedModificationsMassDiffs = new HashMap<>();
+        fixedModificationMasses = new ArrayList<>();
+        fixedNTerminalModifications = new ArrayList<>();
+        fixedCTerminalModifications = new ArrayList<>();
 
         int type;
 
@@ -606,7 +606,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                         if (!variable) {
                             ArrayList<Double> massDiffs = fixedModificationsMassDiffs.get(aminoacid);
                             if (massDiffs == null) {
-                                massDiffs = new ArrayList<Double>();
+                                massDiffs = new ArrayList<>();
                             }
                             massDiffs.add(massDiff);
                             fixedModificationsMassDiffs.put(aminoacid, massDiffs);
@@ -659,9 +659,9 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        ArrayList<String> versions = new ArrayList<String>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add(searchEngineVersion);
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>(1);
+        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
         result.put(searchEngine, versions);
         return result;
     }

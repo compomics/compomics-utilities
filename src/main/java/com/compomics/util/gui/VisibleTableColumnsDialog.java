@@ -200,7 +200,7 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        HashMap<Integer, Boolean> showColumns = new HashMap<Integer, Boolean>();
+        HashMap<Integer, Boolean> showColumns = new HashMap<>();
 
         for (int i = 0; i < selectedColumnsTable.getRowCount(); i++) {
             if ((Boolean) selectedColumnsTable.getValueAt(i, selectedColumnsTable.getColumn("  ").getModelIndex())) {

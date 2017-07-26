@@ -20,7 +20,7 @@ public class FileSelectionDialog extends javax.swing.JDialog {
     /**
      * A map of the parameter files indexed by their name.
      */
-    private HashMap<String, File> fileMap = new HashMap<String, File>();
+    private HashMap<String, File> fileMap = new HashMap<>();
     /**
      * Boolean indicating whether the user canceled the dialog.
      */

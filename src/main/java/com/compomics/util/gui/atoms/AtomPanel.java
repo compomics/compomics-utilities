@@ -86,7 +86,7 @@ public class AtomPanel extends javax.swing.JPanel {
             Atom atom = Atom.getAtom(atomShortName);
             ArrayList<Integer> isotopesList = atom.getImplementedIsotopes();
             Collections.sort(isotopesList);
-            isotopesMap = new HashMap<String, Integer>(isotopesList.size());
+            isotopesMap = new HashMap<>(isotopesList.size());
             String[] itemsArray = new String[isotopesList.size()];
             int zeroIndex = 0;
             for (int i = 0; i < isotopesList.size(); i++) {

@@ -167,7 +167,7 @@ public class SequenceFragmentationPanel extends JPanel {
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
 
-        tooltipRectangles = new HashMap<String, Rectangle>();
+        tooltipRectangles = new HashMap<>();
 
         addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -213,7 +213,7 @@ public class SequenceFragmentationPanel extends JPanel {
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
 
-        tooltipRectangles = new HashMap<String, Rectangle>();
+        tooltipRectangles = new HashMap<>();
 
         addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -447,7 +447,7 @@ public class SequenceFragmentationPanel extends JPanel {
     private int estimateWidth() {
         int lEstimateX = iXStart;
 
-        ArrayList<String> unmodifiedString = new ArrayList<String>();
+        ArrayList<String> unmodifiedString = new ArrayList<>();
 
         // remove the ptms, e.g., <oxidation>, as these will not be shown anyway
         for (String residue : iSequenceComponents) {

@@ -34,11 +34,11 @@ public class SpectrumFactory {
     /**
      * Map of already loaded spectra.
      */
-    private HashMap<String, HashMap<String, Spectrum>> currentSpectrumMap = new HashMap<String, HashMap<String, Spectrum>>();
+    private HashMap<String, HashMap<String, Spectrum>> currentSpectrumMap = new HashMap<>();
     /**
      * Map of already loaded precursors.
      */
-    private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<String, HashMap<String, Precursor>>();
+    private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<>();
     /**
      * Maximal number of spectra in cache. By default 1000000, which corresponds to approx. 110MB.
      */
@@ -46,29 +46,29 @@ public class SpectrumFactory {
     /**
      * List of the loaded spectra.
      */
-    private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<String>();
+    private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<>();
     /**
      * Map to the different files.
      */
-    private HashMap<String, File> filesMap = new HashMap<String, File>();
+    private HashMap<String, File> filesMap = new HashMap<>();
     /**
      * Map of the random access files of the loaded mgf files (filename &gt;
      * random access file).
      */
-    private HashMap<String, BufferedRandomAccessFile> mgfRandomAccessFilesMap = new HashMap<String, BufferedRandomAccessFile>();
+    private HashMap<String, BufferedRandomAccessFile> mgfRandomAccessFilesMap = new HashMap<>();
     /**
      * Map of the mgf indexes (fileName &gt; mgf index).
      */
-    private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
+    private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<>();
     /**
      * Map of the mzML unmarshallers (fileName &gt; unmarshaller).
      */
-    private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
+    private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<>();
     /**
      * Map of the spectrum file mapped according to the name used by the search
      * engine.
      */
-    private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
+    private HashMap<String, File> idToSpectrumName = new HashMap<>();
     /**
      * The time out in milliseconds when querying the file.
      */
@@ -687,7 +687,7 @@ public class SpectrumFactory {
                 throw new IllegalArgumentException("MS1 spectrum");
             } else {
                 //@TODO: is this correct..?
-                ArrayList<Charge> charges = new ArrayList<Charge>();
+                ArrayList<Charge> charges = new ArrayList<>();
                 charges.add(new Charge(Charge.PLUS, chargePrec));
                 currentPrecursor = new Precursor(scanTime, mzPrec, charges);
             }
@@ -697,7 +697,7 @@ public class SpectrumFactory {
         if (save) {
             HashMap<String, Precursor> fileMap = loadedPrecursorsMap.get(fileName);
             if (fileMap == null) {
-                fileMap = new HashMap<String, Precursor>();
+                fileMap = new HashMap<>();
                 loadedPrecursorsMap.put(fileName, fileMap);
             }
             fileMap.put(spectrumTitle, currentPrecursor);
@@ -851,7 +851,7 @@ public class SpectrumFactory {
             Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
             BinaryDataArray intBinaryDataArray = (BinaryDataArray) bdal.get(1);
             Number[] intNumbers = intBinaryDataArray.getBinaryDataAsNumberArray();
-            HashMap<Double, Peak> peakList = new HashMap<Double, Peak>();
+            HashMap<Double, Peak> peakList = new HashMap<>();
             for (int i = 0; i < mzNumbers.length; i++) {
                 peakList.put(mzNumbers[i].doubleValue(), new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
             }
@@ -859,7 +859,7 @@ public class SpectrumFactory {
                 currentSpectrum = new MS1Spectrum(spectrumFile, spectrumTitle, scanTime, peakList);
             } else {
                 //@TODO: is this the correct way to set the precursor..?
-                ArrayList<Charge> charges = new ArrayList<Charge>();
+                ArrayList<Charge> charges = new ArrayList<>();
                 charges.add(new Charge(Charge.PLUS, chargePrec));
                 Precursor precursor = new Precursor(scanTime, mzPrec, charges);
                 currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
@@ -878,7 +878,7 @@ public class SpectrumFactory {
         }
         HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
         if (fileMap == null) {
-            fileMap = new HashMap<String, Spectrum>();
+            fileMap = new HashMap<>();
             currentSpectrumMap.put(spectrumFile, fileMap);
         }
         fileMap.put(spectrumTitle, currentSpectrum);
@@ -934,7 +934,7 @@ public class SpectrumFactory {
      * @return a list of loaded mgf files
      */
     public ArrayList<String> getMgfFileNames() {
-        return new ArrayList<String>(mgfRandomAccessFilesMap.keySet());
+        return new ArrayList<>(mgfRandomAccessFilesMap.keySet());
     }
 
     /**
@@ -943,7 +943,7 @@ public class SpectrumFactory {
      * @return a list of loaded mzML files
      */
     public ArrayList<String> getMzMLFileNames() {
-        return new ArrayList<String>(mzMLUnmarshallers.keySet());
+        return new ArrayList<>(mzMLUnmarshallers.keySet());
     }
 
     /**
@@ -1065,7 +1065,7 @@ public class SpectrumFactory {
      * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown whenever an error occurs while reading an mzML file
      */
     public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException, MzMLUnmarshallerException {
-        HashMap<String, Precursor> precursorMap = new HashMap<String, Precursor>(getNSpectra(fileName));
+        HashMap<String, Precursor> precursorMap = new HashMap<>(getNSpectra(fileName));
         for (String spectrumtitle : getSpectrumTitles(fileName)) {
             Precursor precursor = getPrecursor(fileName, spectrumtitle);
             precursorMap.put(spectrumtitle, precursor);

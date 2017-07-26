@@ -134,7 +134,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //        }
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(novorCsvFile, "r", 1024 * 100);
 
@@ -177,14 +177,14 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
         String spectrumFileName = new File(inputFile).getName();
 
         // get the variable modifications
-        HashMap<Integer, String> variableModificationsMap = new HashMap<Integer, String>();
+        HashMap<Integer, String> variableModificationsMap = new HashMap<>();
         String[] tempVariable = variableModificationsLine.split(", ");
         for (int i = 0; i < tempVariable.length; i++) {
             variableModificationsMap.put(i, tempVariable[i]);
         }
 
         // get the fixed modifications
-        HashMap<Integer, String> fixedModificationsMap = new HashMap<Integer, String>();
+        HashMap<Integer, String> fixedModificationsMap = new HashMap<>();
         String[] tempFixed = fixedModificationsLine.split(", ");
         for (int i = 0; i < tempFixed.length; i++) {
             fixedModificationsMap.put(variableModificationsMap.size() + i, tempFixed[i]);
@@ -263,7 +263,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 for (int i = 0; i < tempAminoAcidScores.length; i++) {
                     aminoAcidScoresAsList[i] = Double.valueOf(tempAminoAcidScores[i]);
                 }
-                ArrayList<double[]> aminoAcidScores = new ArrayList<double[]>(1);
+                ArrayList<double[]> aminoAcidScores = new ArrayList<>(1);
                 aminoAcidScores.add(aminoAcidScoresAsList);
 
                 // get the name of the spectrum file
@@ -286,7 +286,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 }
 
                 // get the modifications
-                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<ModificationMatch>();
+                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
 
                 String peptideSequence;
 
@@ -381,7 +381,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;
                     if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
                     }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
@@ -424,8 +424,8 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put(softwareName, versions);
         return result;

@@ -185,9 +185,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     public SearchParameters() {
 
         // Set ions to be searched by default
-        forwardIons = new ArrayList<Integer>(1);
+        forwardIons = new ArrayList<>(1);
         forwardIons.add(PeptideFragmentIon.B_ION);
-        rewindIons = new ArrayList<Integer>(1);
+        rewindIons = new ArrayList<>(1);
         rewindIons.add(PeptideFragmentIon.Y_ION);
 
         // Set advanced parameters
@@ -211,8 +211,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.ptmSettings = new PtmSettings(searchParameters.getPtmSettings());
         this.digestionPreferences = searchParameters.getDigestionPreferences();
         this.fastaFile = searchParameters.getFastaFile();
-        this.forwardIons = new ArrayList<Integer>(searchParameters.getForwardIons());
-        this.rewindIons = new ArrayList<Integer>(searchParameters.getRewindIons());
+        this.forwardIons = new ArrayList<>(searchParameters.getForwardIons());
+        this.rewindIons = new ArrayList<>(searchParameters.getRewindIons());
         this.minChargeSearched = searchParameters.getMinChargeSearched();
         this.maxChargeSearched = searchParameters.getMaxChargeSearched();
         this.minIsotopicCorrection = searchParameters.getMinIsotopicCorrection();
@@ -484,7 +484,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public ArrayList<Integer> getForwardIons() {
         if (forwardIons == null) { // Backward compatibility
-            forwardIons = new ArrayList<Integer>(1);
+            forwardIons = new ArrayList<>(1);
             forwardIons.add(forwardIon);
         }
         return forwardIons;
@@ -508,7 +508,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public ArrayList<Integer> getRewindIons() {
         if (rewindIons == null) { // Backward compatibility
-            rewindIons = new ArrayList<Integer>(1);
+            rewindIons = new ArrayList<>(1);
             rewindIons.add(rewindIon);
         }
         return rewindIons;
@@ -691,7 +691,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public void setIdentificationAlgorithmParameter(int algorithmID, IdentificationAlgorithmParameter identificationAlgorithmParameter) {
         if (algorithmParameters == null) {
-            algorithmParameters = new HashMap<Integer, IdentificationAlgorithmParameter>();
+            algorithmParameters = new HashMap<>();
         }
         algorithmParameters.put(algorithmID, identificationAlgorithmParameter);
     }
@@ -705,7 +705,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Set<Integer> getAlgorithms() {
         if (algorithmParameters == null) {
-            return new HashSet<Integer>();
+            return new HashSet<>();
         }
         return algorithmParameters.keySet();
     }

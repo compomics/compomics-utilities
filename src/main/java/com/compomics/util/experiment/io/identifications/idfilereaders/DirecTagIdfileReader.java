@@ -78,25 +78,25 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * The tags parameters in a map.
      */
-    private HashMap<String, String> tagsParameters = new HashMap<String, String>();
+    private HashMap<String, String> tagsParameters = new HashMap<>();
     /**
      * Returns the content of the columns for a spectrum line. Name &gt; index
      * in the column.
      */
-    private HashMap<String, Integer> spectrumLineContent = new HashMap<String, Integer>();
+    private HashMap<String, Integer> spectrumLineContent = new HashMap<>();
     /**
      * Returns the content of the columns for a tag line. Name &gt; index in the
      * column.
      */
-    private HashMap<String, Integer> tagLineContent = new HashMap<String, Integer>();
+    private HashMap<String, Integer> tagLineContent = new HashMap<>();
     /**
      * The indexes at which are the spectra. Spectrum ID &gt; index.
      */
-    private HashMap<Integer, Long> spectrumIndexes = new HashMap<Integer, Long>();
+    private HashMap<Integer, Long> spectrumIndexes = new HashMap<>();
     /**
      * The indexes at which are the tags. Spectrum ID &gt; indexes.
      */
-    private HashMap<Integer, ArrayList<Long>> tagIndexes = new HashMap<Integer, ArrayList<Long>>();
+    private HashMap<Integer, ArrayList<Long>> tagIndexes = new HashMap<>();
     /**
      * The random access file used.
      */
@@ -363,7 +363,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             } else if (line.startsWith("T")) {
                 ArrayList<Long> indexes = tagIndexes.get(id);
                 if (indexes == null) {
-                    indexes = new ArrayList<Long>();
+                    indexes = new ArrayList<>();
                     tagIndexes.put(id, indexes);
                 }
                 indexes.add(lineIndex);
@@ -424,7 +424,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @throws IOException if an IOException occurs
      */
     private ArrayList<HashMap<String, String>> getTags(int spectrumId) throws IOException {
-        ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         ArrayList<Long> indexes = tagIndexes.get(spectrumId);
         if (indexes != null) {
             for (Long index : indexes) {
@@ -432,7 +432,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 String line = bufferedRandomAccessFile.readLine();
                 line = line.substring(1).trim();
                 String[] components = line.split("\t");
-                HashMap<String, String> lineMap = new HashMap<String, String>();
+                HashMap<String, String> lineMap = new HashMap<>();
                 for (String componentName : tagLineContent.keySet()) {
                     int columnIndex = tagLineContent.get(componentName);
                     String value = components[columnIndex];
@@ -457,7 +457,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
 
         // get the ptm residues from the DynamicMods field
-        dynamicModsResidues = new HashMap<Character, Character>();
+        dynamicModsResidues = new HashMap<>();
         String dynamicMods = tagsParameters.get("DynamicMods"); // assume something like: "M 0 15.994915 N 1 0.984016 Q 2 0.984016"
         dynamicMods = dynamicMods.trim();
         if (!dynamicMods.isEmpty()) {
@@ -475,7 +475,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
         int sCpt = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID");
         Integer chargeColumnIndex = spectrumLineContent.get("Charge");
@@ -569,7 +569,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         }
         String tagSequence = components[tagIndex];
         StringBuilder residues = new StringBuilder(tagSequence.length());
-        HashMap<Integer, ModificationMatch> modificationMatches = new HashMap<Integer, ModificationMatch>();
+        HashMap<Integer, ModificationMatch> modificationMatches = new HashMap<>();
         for (int i = 0; i < tagSequence.length(); i++) {
             char charAtI = tagSequence.charAt(i);
             try {
@@ -703,8 +703,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(tagsGeneratorVersion);
         result.put(tagsGenerator, versions);
         return result;

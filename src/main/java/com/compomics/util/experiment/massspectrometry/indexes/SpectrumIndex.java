@@ -89,7 +89,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @param ppm boolean indicating whether the tolerance is in ppm
      */
     public SpectrumIndex(HashMap<Double, Peak> peaks, Double intenstiyLimit, double tolerance, boolean ppm) {
-        this.peaksMap = new HashMap<Integer, HashMap<Double, Peak>>();
+        this.peaksMap = new HashMap<>();
         this.precursorTolerance = tolerance;
         this.ppm = ppm;
         if (ppm) {
@@ -108,7 +108,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
                 }
                 HashMap<Double, Peak> peaksInBin = peaksMap.get(bin);
                 if (peaksInBin == null) {
-                    peaksInBin = new HashMap<Double, Peak>(4);
+                    peaksInBin = new HashMap<>(4);
                     peaksMap.put(bin, peaksInBin);
                 }
                 peaksInBin.put(peak.mz, peak);
@@ -176,7 +176,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
         } else {
             bin0 = getBinAbsolute(mz);
         }
-        ArrayList<Peak> result = new ArrayList<Peak>(0);
+        ArrayList<Peak> result = new ArrayList<>(0);
         HashMap<Double, Peak> binContent = peaksMap.get(bin0 - 1);
         if (binContent != null) {
             for (Double peakMz : binContent.keySet()) {
@@ -229,7 +229,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      */
     public ArrayList<Integer> getBins() {
         zooActivateRead();
-        return new ArrayList<Integer>(peaksMap.keySet());
+        return new ArrayList<>(peaksMap.keySet());
     }
 
     /**

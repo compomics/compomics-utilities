@@ -90,7 +90,7 @@ public class WaveletTree {
         int innernodes = 0;
         HuffmanNode leftChild = null;
         HuffmanNode rightChild = null;
-        ArrayList<Byte> charAlphabet = new ArrayList<Byte>();
+        ArrayList<Byte> charAlphabet = new ArrayList<>();
 
         public HuffmanNode(int counts, int character) {
             this.counts = counts;
@@ -168,7 +168,7 @@ public class WaveletTree {
             ++counts[c];
         }
 
-        ArrayList<HuffmanNode> huffmanNodes = new ArrayList<HuffmanNode>();
+        ArrayList<HuffmanNode> huffmanNodes = new ArrayList<>();
         for (int i = 0; i < 128; ++i) {
             if (((aAlphabet[i >>> shift] >>> (i & mask)) & 1L) == 1) {
                 huffmanNodes.add(new HuffmanNode(counts[i], i));

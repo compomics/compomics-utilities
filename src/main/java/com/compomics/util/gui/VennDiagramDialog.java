@@ -86,10 +86,10 @@ public class VennDiagramDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
 
-        ArrayList<String> a = new ArrayList<String>();
-        ArrayList<String> b = new ArrayList<String>();
-        ArrayList<String> c = new ArrayList<String>();
-        ArrayList<String> d = new ArrayList<String>();
+        ArrayList<String> a = new ArrayList<>();
+        ArrayList<String> b = new ArrayList<>();
+        ArrayList<String> c = new ArrayList<>();
+        ArrayList<String> d = new ArrayList<>();
 
         String datasetA = datasetATextArea.getText();
         if (datasetA.trim().length() > 0) {

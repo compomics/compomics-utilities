@@ -595,7 +595,7 @@ public abstract class SpectrumAnnotator {
      */
     protected ArrayList<IonMatch> matchPeak(SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
 
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        ArrayList<IonMatch> result = new ArrayList<>();
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
@@ -640,7 +640,7 @@ public abstract class SpectrumAnnotator {
      */
     protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings) {
 
-        HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
+        HashMap<Integer, ArrayList<Ion>> result = new HashMap<>();
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
@@ -656,7 +656,7 @@ public abstract class SpectrumAnnotator {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         ArrayList<Ion> resultsAtCharge = result.get(charge);
                                         if (resultsAtCharge == null) {
-                                            resultsAtCharge = new ArrayList<Ion>();
+                                            resultsAtCharge = new ArrayList<>();
                                             result.put(charge, resultsAtCharge);
                                         }
                                         resultsAtCharge.add(ion);
@@ -687,7 +687,7 @@ public abstract class SpectrumAnnotator {
      * interrupted
      */
     public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) throws InterruptedException {
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>(1);
+        ArrayList<IonMatch> result = new ArrayList<>(1);
         double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {
             if (Math.abs(mz - targetMass) <= massTolerance) {

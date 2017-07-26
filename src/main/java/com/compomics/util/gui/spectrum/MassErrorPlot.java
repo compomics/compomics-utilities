@@ -76,7 +76,7 @@ public class MassErrorPlot extends JPanel {
 
             boolean useIntensityGrading = false;  // @TODO: make this selectable by the user?
             DefaultXYDataset xyDataset = new DefaultXYDataset();
-            ArrayList<Color> colors = new ArrayList<Color>();
+            ArrayList<Color> colors = new ArrayList<>();
 
             // find the most intense annotated peak
             double maxAnnotatedIntensity = 0.0;

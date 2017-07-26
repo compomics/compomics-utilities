@@ -46,11 +46,11 @@ public class HyperScore {
     /**
      * Histogram of the values found for a in the fitting.
      */
-    private HashMap<Double, Integer> as = new HashMap<Double, Integer>();
+    private HashMap<Double, Integer> as = new HashMap<>();
     /**
      * Histogram of the values found for b in the fitting.
      */
-    private HashMap<Double, Integer> bs = new HashMap<Double, Integer>();
+    private HashMap<Double, Integer> bs = new HashMap<>();
 
     /**
      * Constructor.
@@ -101,7 +101,7 @@ public class HyperScore {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
-        HashSet<Double> coveredMz = new HashSet<Double>(2);
+        HashSet<Double> coveredMz = new HashSet<>(2);
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
             Peak peak = ionMatch.peak;
@@ -133,9 +133,9 @@ public class HyperScore {
         Double totalIntensity = spectrumIndex.getTotalIntensity() - coveredIntensity;
 
         double xCorr = 0;
-        HashSet<Integer> ionsForward = new HashSet<Integer>(1);
-        HashSet<Integer> ionsRewind = new HashSet<Integer>(1);
-        HashSet<Double> accountedFor = new HashSet<Double>(ionMatches.size());
+        HashSet<Integer> ionsForward = new HashSet<>(1);
+        HashSet<Integer> ionsRewind = new HashSet<>(1);
+        HashSet<Double> accountedFor = new HashSet<>(ionMatches.size());
         for (IonMatch ionMatch : ionMatches) {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;
@@ -195,7 +195,7 @@ public class HyperScore {
      * @return the e-values corresponding to the given scores
      */
     public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores, boolean useCache) {
-        HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> histogram = new HashMap<>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
         for (Double score : hyperScores) {
@@ -232,7 +232,7 @@ public class HyperScore {
                 }
             }
         }
-        ArrayList<Integer> bins = new ArrayList<Integer>(histogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(histogram.keySet());
         for (Integer bin : bins) {
             if (bin > secondEmptybin) {
                 histogram.remove(bin);
@@ -257,7 +257,7 @@ public class HyperScore {
      * @return the interpolation values for the given scores
      */
     public double[] getInterpolationValues(int[] scores, boolean useCache) {
-        HashMap<Integer, Integer> scoreHistogram = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> scoreHistogram = new HashMap<>();
         int maxScore = 0;
         int minScore = Integer.MAX_VALUE;
         for (int score : scores) {
@@ -291,7 +291,7 @@ public class HyperScore {
                 }
             }
         }
-        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(scoreHistogram.keySet());
         for (Integer bin : bins) {
             if (bin > secondEmptybin) {
                 scoreHistogram.remove(bin);
@@ -314,10 +314,10 @@ public class HyperScore {
      */
     public double[] getInterpolationValues(HashMap<Integer, Integer> scoreHistogram, boolean useCache) {
 
-        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(scoreHistogram.keySet());
         Collections.sort(bins, Collections.reverseOrder());
-        ArrayList<Double> evalueFunctionX = new ArrayList<Double>(scoreHistogram.size());
-        ArrayList<Double> evalueFunctionY = new ArrayList<Double>(scoreHistogram.size());
+        ArrayList<Double> evalueFunctionX = new ArrayList<>(scoreHistogram.size());
+        ArrayList<Double> evalueFunctionY = new ArrayList<>(scoreHistogram.size());
         Integer currentSum = 0;
         for (Integer bin : bins) {
             Integer nInBin = scoreHistogram.get(bin);
@@ -369,7 +369,7 @@ public class HyperScore {
      * @return the interpolation for every score in a map.
      */
     public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, Double a, Double b) {
-        HashMap<Double, Double> result = new HashMap<Double, Double>();
+        HashMap<Double, Double> result = new HashMap<>();
         for (Double hyperScore : hyperScores) {
             if (!result.containsKey(hyperScore)) {
                 if (hyperScore > 0) {

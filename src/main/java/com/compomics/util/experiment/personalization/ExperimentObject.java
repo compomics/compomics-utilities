@@ -53,7 +53,7 @@ public abstract class ExperimentObject extends IdObject {
     private synchronized void createParamsMap() {
         zooActivateWrite();
         if (urParams == null) {
-            urParams = new HashMap<String, UrParameter>(1);
+            urParams = new HashMap<>(1);
         }
     }
 

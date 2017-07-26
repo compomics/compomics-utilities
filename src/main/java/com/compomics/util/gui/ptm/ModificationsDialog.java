@@ -65,7 +65,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The lines of the PTMs concerned by the search.
      */
-    private ArrayList<Integer> searchPossibilities = new ArrayList<Integer>();
+    private ArrayList<Integer> searchPossibilities = new ArrayList<>();
     /**
      * The search current selection.
      */
@@ -139,7 +139,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModificationsTable.getColumn("CV").setMinWidth(100);
 
         // set up the ptm type color map
-        HashMap<Integer, Color> ptmTypeColorMap = new HashMap<Integer, Color>();
+        HashMap<Integer, Color> ptmTypeColorMap = new HashMap<>();
         ptmTypeColorMap.put(PTM.MODMAX, Color.lightGray);
         ptmTypeColorMap.put(PTM.MODAA, sparklineColor);
         ptmTypeColorMap.put(PTM.MODC, Color.CYAN);
@@ -152,7 +152,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         ptmTypeColorMap.put(PTM.MODNPAA, Color.GRAY);
 
         // set up the ptm type tooltip map
-        HashMap<Integer, String> ptmTypeTooltipMap = new HashMap<Integer, String>();
+        HashMap<Integer, String> ptmTypeTooltipMap = new HashMap<>();
         ptmTypeTooltipMap.put(PTM.MODMAX, "max number of modification types");
         ptmTypeTooltipMap.put(PTM.MODAA, "Particular Amino Acid(s)");
         ptmTypeTooltipMap.put(PTM.MODC, "Protein C-term");
@@ -173,7 +173,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         updateMassSparklines();
 
         // set up the table header tooltips
-        defaultModsTableToolTips = new ArrayList<String>();
+        defaultModsTableToolTips = new ArrayList<>();
         defaultModsTableToolTips.add(null);
         defaultModsTableToolTips.add("Modification Name");
         defaultModsTableToolTips.add("Modification Short Name");
@@ -182,7 +182,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModsTableToolTips.add("Affected Residues");
         defaultModsTableToolTips.add("CV Term Mapping");
 
-        userModsTableToolTips = new ArrayList<String>();
+        userModsTableToolTips = new ArrayList<>();
         userModsTableToolTips.add(null);
         userModsTableToolTips.add("Modification Name");
         userModsTableToolTips.add("Modification Short Name");
@@ -796,7 +796,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             searchPreviousButtonActionPerformed(null);
         } else {
             String ptmName, mass;
-            ArrayList<Integer> toAdd = new ArrayList<Integer>();
+            ArrayList<Integer> toAdd = new ArrayList<>();
             searchPossibilities.clear();
             searchCurrentSelection = 0;
             String input = searchInputTxt.getText().trim().toLowerCase();

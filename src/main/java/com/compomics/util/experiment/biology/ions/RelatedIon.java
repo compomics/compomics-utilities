@@ -148,7 +148,7 @@ public class RelatedIon extends Ion {
             Character aminoAcidChar = aminoAcidTarget.getSingleLetterCodeAsChar();
             ArrayList<RelatedIon> relatedIons = implementedIons.get(aminoAcidChar);
             if (relatedIons == null) {
-                relatedIons = new ArrayList<RelatedIon>(1);
+                relatedIons = new ArrayList<>(1);
                 implementedIons.put(aminoAcidTarget.getSingleLetterCodeAsChar(), relatedIons);
             }
             relatedIons.add(this);
@@ -164,7 +164,7 @@ public class RelatedIon extends Ion {
     public static ArrayList<RelatedIon> getRelatedIons(AminoAcid aminoAcidTarget) {
         ArrayList<RelatedIon> relatedIons = implementedIons.get(aminoAcidTarget.getSingleLetterCodeAsChar());
         if (relatedIons == null) {
-            relatedIons = new ArrayList<RelatedIon>(1);
+            relatedIons = new ArrayList<>(1);
         }
         return relatedIons;
     }
@@ -215,7 +215,7 @@ public class RelatedIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
+        ArrayList<Integer> possibleTypes = new ArrayList<>();
         for (int i = 0; i < subTypeCounter; i++) {
             possibleTypes.add(i);
         }

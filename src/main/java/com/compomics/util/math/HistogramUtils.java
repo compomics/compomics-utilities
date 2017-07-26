@@ -39,7 +39,7 @@ public class HistogramUtils {
      */
     public static Double getMedianValue(HashMap<Double, Integer> histogram, long nValues) {
 
-        ArrayList<Double> values = new ArrayList<Double>(histogram.keySet());
+        ArrayList<Double> values = new ArrayList<>(histogram.keySet());
         Collections.sort(values);
         long currentSum = 0;
         long previousSum = 0;
@@ -69,7 +69,7 @@ public class HistogramUtils {
      */
     public static HashMap<Double, Integer> mergeHistograms(Collection<HashMap<Double, Integer>> histograms) {
 
-        HashMap<Double, Integer> result = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> result = new HashMap<>();
 
         for (HashMap<Double, Integer> histogram : histograms) {
             for (Double value : histogram.keySet()) {

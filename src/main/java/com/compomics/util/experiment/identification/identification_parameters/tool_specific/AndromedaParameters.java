@@ -85,7 +85,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * Map of the Andromeda indexes used for user modifications in this search.
      */
-    private HashMap<Integer, String> ptmIndexes = new HashMap<Integer, String>(128);
+    private HashMap<Integer, String> ptmIndexes = new HashMap<>(128);
     /**
      * The decoy mode.
      */

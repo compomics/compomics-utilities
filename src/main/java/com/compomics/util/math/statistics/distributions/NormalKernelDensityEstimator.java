@@ -135,7 +135,7 @@ public class NormalKernelDensityEstimator {
      * @return another double array with no longer null values
      */
     public double[] excludeNullValues(Double[] data) {
-        ArrayList<Double> list = new ArrayList<Double>();
+        ArrayList<Double> list = new ArrayList<>();
         for (Double value : data) {
             if (value != null) {
                 list.add(value);

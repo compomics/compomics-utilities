@@ -101,7 +101,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
-            ArrayList<String> possibleValues = new ArrayList<String>(3);
+            ArrayList<String> possibleValues = new ArrayList<>(3);
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.A_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.B_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.C_ION));
@@ -111,7 +111,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
-            ArrayList<String> possibleValues = new ArrayList<String>(3);
+            ArrayList<String> possibleValues = new ArrayList<>(3);
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.X_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Y_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Z_ION));
@@ -121,7 +121,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
-            ArrayList<String> possibleValues = new ArrayList<String>(Specificity.values().length);
+            ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
             for (DigestionPreferences.CleavagePreference cleavagePreference : DigestionPreferences.CleavagePreference.values()) {
                 possibleValues.add(cleavagePreference.index + "");
             }
@@ -151,7 +151,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SPECIFICITY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SPECIFICITY.id);
-            ArrayList<String> possibleValues = new ArrayList<String>(Specificity.values().length);
+            ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
             for (Specificity specificity : Specificity.values()) {
                 possibleValues.add(specificity.index + "");
             }
@@ -856,7 +856,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_OUTPUT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_OUTPUT.id);
-            List<String> supportedInput = new ArrayList<String>();
+            List<String> supportedInput = new ArrayList<>();
             for (CometParameters.CometOutputFormat format : CometParameters.CometOutputFormat.values()) {
                 supportedInput.add(format.toString());
             }
@@ -1182,7 +1182,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id);
-            List<String> supportedInput = new ArrayList<String>();
+            List<String> supportedInput = new ArrayList<>();
             for (AndromedaParameters.AndromedaDecoyMode decoyMode : AndromedaParameters.AndromedaDecoyMode.values()) {
                 supportedInput.add(decoyMode.toString());
             }
@@ -1742,7 +1742,7 @@ public class IdentificationParametersInputBean {
             if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
                 arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
-                mcs = new ArrayList<Integer>(args.size());
+                mcs = new ArrayList<>(args.size());
                 for (String stringValue : args) {
                     mcs.add(new Integer(stringValue));
                 }
@@ -1750,7 +1750,7 @@ public class IdentificationParametersInputBean {
             if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIFICITY.id)) {
                 arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIFICITY.id);
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
-                specificities = new ArrayList<Specificity>(args.size());
+                specificities = new ArrayList<>(args.size());
                 for (String stringValue : args) {
                     specificities.add(Specificity.getSpecificity(new Integer(stringValue)));
                 }
@@ -1795,7 +1795,7 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
-            ArrayList<Integer> ions = new ArrayList<Integer>(args.size());
+            ArrayList<Integer> ions = new ArrayList<>(args.size());
             for (String ionName : args) {
                 ions.add(PeptideFragmentIon.getIonType(ionName));
             }
@@ -1804,7 +1804,7 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
-            ArrayList<Integer> ions = new ArrayList<Integer>(args.size());
+            ArrayList<Integer> ions = new ArrayList<>(args.size());
             for (String ionName : args) {
                 ions.add(PeptideFragmentIon.getIonType(ionName));
             }

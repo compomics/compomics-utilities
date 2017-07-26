@@ -78,10 +78,10 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             filters = (HashMap<Integer, String>) msConvertParameters.getFiltersMap().clone();
         } else {
             outputFormatCmb.setSelectedItem(MsFormat.mzML);
-            filters = new HashMap<Integer, String>(2);
+            filters = new HashMap<>(2);
         }
 
-        filterIndexes = new ArrayList<Integer>(filters.keySet());
+        filterIndexes = new ArrayList<>(filters.keySet());
         Collections.sort(filterIndexes);
         DefaultTableModel tableModel = new FiltersTableModel();
         filtersTable.setModel(tableModel);
@@ -134,7 +134,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * Updates the table.
      */
     private void updateTable() {
-        filterIndexes = new ArrayList<Integer>(filters.keySet());
+        filterIndexes = new ArrayList<>(filters.keySet());
         Collections.sort(filterIndexes);
         ((DefaultTableModel) filtersTable.getModel()).fireTableDataChanged();
     }

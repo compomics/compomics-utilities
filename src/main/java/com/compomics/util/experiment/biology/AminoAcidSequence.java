@@ -70,10 +70,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         this.sequence = sequence.getSequence();
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = sequence.getModificationMatches();
         if (modificationMatches != null) {
-            modifications = new HashMap<Integer, ArrayList<ModificationMatch>>(modificationMatches.size());
+            modifications = new HashMap<>(modificationMatches.size());
             for (int site : modificationMatches.keySet()) {
                 ArrayList<ModificationMatch> oldModifications = modificationMatches.get(site);
-                ArrayList<ModificationMatch> newModifications = new ArrayList<ModificationMatch>(oldModifications.size());
+                ArrayList<ModificationMatch> newModifications = new ArrayList<>(oldModifications.size());
                 for (ModificationMatch modificationMatch : oldModifications) {
                     newModifications.add(modificationMatch.clone());
                 }
@@ -274,7 +274,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses1 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
             for (ModificationMatch modMatch : tempModifications) {
@@ -289,7 +289,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             }
         }
 
-        HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses2 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> tempModifications = anotherPattern.getModificationsAt(i);
             for (ModificationMatch modMatch : tempModifications) {
@@ -400,11 +400,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             if (modifications != null) {
                 newSize = modifications.size();
             }
-            HashMap<Integer, ArrayList<ModificationMatch>> newModificationMatches = new HashMap<Integer, ArrayList<ModificationMatch>>(otherSize + newSize);
+            HashMap<Integer, ArrayList<ModificationMatch>> newModificationMatches = new HashMap<>(otherSize + newSize);
             if (otherModificationMatches != null) {
                 for (int site : otherModificationMatches.keySet()) {
                     ArrayList<ModificationMatch> modMatches = otherModificationMatches.get(site);
-                    ArrayList<ModificationMatch> newModMatches = new ArrayList<ModificationMatch>(modMatches.size());
+                    ArrayList<ModificationMatch> newModMatches = new ArrayList<>(modMatches.size());
                     for (ModificationMatch modificationMatch : modMatches) {
                         newModMatches.add(modificationMatch.clone());
                     }
@@ -415,7 +415,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 for (int site : modifications.keySet()) {
                     int newSite = site + otherSequenceLength;
                     ArrayList<ModificationMatch> modMatches = modifications.get(site);
-                    ArrayList<ModificationMatch> newModMatches = new ArrayList<ModificationMatch>(modMatches.size());
+                    ArrayList<ModificationMatch> newModMatches = new ArrayList<>(modMatches.size());
                     for (ModificationMatch oldModificationMatch : modifications.get(site)) {
                         ModificationMatch newModificationMatch = oldModificationMatch.clone();
                         oldModificationMatch.setModificationSite(newSite);
@@ -479,9 +479,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public ArrayList<Integer> getModificationIndexes() {
         if (modifications == null) {
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
         }
-        return new ArrayList<Integer>(modifications.keySet());
+        return new ArrayList<>(modifications.keySet());
     }
 
     /**
@@ -499,7 +499,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 return result;
             }
         }
-        return new ArrayList<ModificationMatch>();
+        return new ArrayList<>();
     }
 
     /**
@@ -540,11 +540,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (modifications == null) {
-            modifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+            modifications = new HashMap<>();
         }
         ArrayList<ModificationMatch> modificationMatches = modifications.get(localization);
         if (modificationMatches == null) {
-            modificationMatches = new ArrayList<ModificationMatch>();
+            modificationMatches = new ArrayList<>();
             modifications.put(localization, modificationMatches);
         }
         modificationMatches.add(modificationMatch);
@@ -563,11 +563,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (modifications == null) {
-            modifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+            modifications = new HashMap<>();
         }
         ArrayList<ModificationMatch> modificationMatchesAtIndex = modifications.get(localization);
         if (modificationMatchesAtIndex == null) {
-            modificationMatchesAtIndex = new ArrayList<ModificationMatch>();
+            modificationMatchesAtIndex = new ArrayList<>();
             modifications.put(localization, modificationMatchesAtIndex);
         }
         modificationMatches.addAll(modificationMatches);
@@ -609,10 +609,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
 
-        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
-        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<Integer, ArrayList<String>>();
-        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
-        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>();
 
         if (modifications != null) {
             for (int modSite : modifications.keySet()) {
@@ -621,18 +621,18 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     if (modificationMatch.getVariable()) {
                         if (modificationMatch.getConfident()) {
                             if (!confidentModificationSites.containsKey(modSite)) {
-                                confidentModificationSites.put(modSite, new ArrayList<String>());
+                                confidentModificationSites.put(modSite, new ArrayList<>());
                             }
                             confidentModificationSites.get(modSite).add(modName);
                         } else {
                             if (!representativeModificationSites.containsKey(modSite)) {
-                                representativeModificationSites.put(modSite, new ArrayList<String>());
+                                representativeModificationSites.put(modSite, new ArrayList<>());
                             }
                             representativeModificationSites.get(modSite).add(modName);
                         }
                     } else if (!excludeAllFixedPtms) {
                         if (!fixedModificationSites.containsKey(modSite)) {
-                            fixedModificationSites.put(modSite, new ArrayList<String>());
+                            fixedModificationSites.put(modSite, new ArrayList<>());
                         }
                         fixedModificationSites.get(modSite).add(modName);
                     }
@@ -676,16 +676,16 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             boolean useShortName) {
 
         if (confidentModificationSites == null) {
-            confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
+            confidentModificationSites = new HashMap<>();
         }
         if (representativeAmbiguousModificationSites == null) {
-            representativeAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+            representativeAmbiguousModificationSites = new HashMap<>();
         }
         if (secondaryAmbiguousModificationSites == null) {
-            secondaryAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+            secondaryAmbiguousModificationSites = new HashMap<>();
         }
         if (fixedModificationSites == null) {
-            fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+            fixedModificationSites = new HashMap<>();
         }
 
         StringBuilder modifiedSequence = new StringBuilder(sequence.length());
@@ -864,7 +864,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses1 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
             for (ModificationMatch modMatch : tempModifications) {
@@ -879,7 +879,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             }
         }
 
-        HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses2 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> tempModifications = anotherSequence.getModificationsAt(i);
             for (ModificationMatch modMatch : tempModifications) {
@@ -1022,9 +1022,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * when expanding ambiguous amino acids like Xs
      */
     public static ArrayList<StringBuilder> getCombinations(String sequence) {
-        ArrayList<StringBuilder> newCombination, combination = new ArrayList<StringBuilder>();
+        ArrayList<StringBuilder> newCombination, combination = new ArrayList<>();
         for (int i = 0; i < sequence.length(); i++) {
-            newCombination = new ArrayList<StringBuilder>();
+            newCombination = new ArrayList<>();
             char aa = sequence.charAt(i);
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             for (char newAa : aminoAcid.getSubAminoAcids(false)) {

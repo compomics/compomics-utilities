@@ -63,10 +63,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public AminoAcidPattern(AminoAcidSequence aminoAcidSequence) {
         String sequence = aminoAcidSequence.getSequence();
-        residueTargeted = new HashMap<Integer, ArrayList<Character>>(sequence.length());
+        residueTargeted = new HashMap<>(sequence.length());
         for (int i = 0; i < sequence.length(); i++) {
             char letter = sequence.charAt(i);
-            ArrayList<Character> list = new ArrayList<Character>(1);
+            ArrayList<Character> list = new ArrayList<>(1);
             list.add(letter);
             residueTargeted.put(i, list);
         }
@@ -82,14 +82,14 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public AminoAcidPattern(AminoAcidPattern aminoAcidPattern) {
         HashMap<Integer, ArrayList<Character>> otherTargets = aminoAcidPattern.getAaTargeted();
         if (otherTargets != null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(otherTargets.size());
+            residueTargeted = new HashMap<>(otherTargets.size());
             for (int index : otherTargets.keySet()) {
                 residueTargeted.put(index, (ArrayList<Character>) otherTargets.get(index).clone());
             }
         }
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = aminoAcidPattern.getModificationMatches();
         if (modificationMatches != null) {
-            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(modificationMatches.size());
+            targetModifications = new HashMap<>(modificationMatches.size());
             for (int index : modificationMatches.keySet()) {
                 targetModifications.put(index, (ArrayList<ModificationMatch>) modificationMatches.get(index).clone());
             }
@@ -142,7 +142,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
         if (cntOpenBrackets == 0) {
             for (int i = 0; i < aminoAcidPatternAsString.length(); ++i) {
-                ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                ArrayList<Character> aminoAcids = new ArrayList<>();
                 AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                 aminoAcids.add(aminoAcidPatternAsString.charAt(i));
                 aminoAcidPattern.addPTMSite(i, aminoAcids);
@@ -152,7 +152,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             while (pos < aminoAcidPatternAsString.length()) {
                 if (aminoAcidPatternAsString.charAt(pos) == '[') {
                     int end = aminoAcidPatternAsString.indexOf("]", pos + 1);
-                    ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                    ArrayList<Character> aminoAcids = new ArrayList<>();
                     for (int i = pos + 1; i < end; ++i) {
                         AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                         aminoAcids.add(aminoAcidPatternAsString.charAt(i));
@@ -160,7 +160,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
                     pos = end + 1;
                 } else {
-                    ArrayList<Character> aminoAcids = new ArrayList<Character>();
+                    ArrayList<Character> aminoAcids = new ArrayList<>();
                     AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(pos));
                     aminoAcids.add(aminoAcidPatternAsString.charAt(pos));
                     aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
@@ -191,11 +191,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * not recognized as amino acid
      */
     public AminoAcidPattern(ArrayList<String> targetResidues) throws IllegalArgumentException {
-        ArrayList<Character> aminoAcids = new ArrayList<Character>(targetResidues.size());
+        ArrayList<Character> aminoAcids = new ArrayList<>(targetResidues.size());
         for (String letter : targetResidues) {
             aminoAcids.add(letter.charAt(0));
         }
-        residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+        residueTargeted = new HashMap<>(1);
         residueTargeted.put(0, aminoAcids);
         length = 1;
     }
@@ -210,7 +210,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
 
         if (residueTargeted == null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+            residueTargeted = new HashMap<>(1);
         }
 
         if (residueTargeted.size() < fromRow || fromRow < 0 || toRow < 0) {
@@ -246,14 +246,14 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void setTarget(Integer target) {
         
         if (residueTargeted == null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+            residueTargeted = new HashMap<>(1);
         }
         
         if (residueTargeted.size() > 0 && !residueTargeted.containsKey(target)) {
             throw new IllegalArgumentException("Target number exceeds residue site for index shifting.");
         }
 
-        HashMap<Integer, ArrayList<Character>> residueTargetedTmp = new HashMap<Integer, ArrayList<Character>>();
+        HashMap<Integer, ArrayList<Character>> residueTargetedTmp = new HashMap<>();
         for (HashMap.Entry<Integer, ArrayList<Character>> entry : residueTargeted.entrySet()) {
             residueTargetedTmp.put(entry.getKey() - target, entry.getValue());
         }
@@ -279,7 +279,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public HashSet<Character> getAminoAcidsAtTargetSet() {
         if (aaAtTarget == null) {
             ArrayList<Character> aaAtTargetList = getAminoAcidsAtTarget();
-            aaAtTarget = new HashSet<Character>(aaAtTargetList);
+            aaAtTarget = new HashSet<>(aaAtTargetList);
         }
         return aaAtTarget;
     }
@@ -293,7 +293,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void setTargeted(int index, ArrayList<Character> targets) {
         if (residueTargeted == null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+            residueTargeted = new HashMap<>(1);
         }
         residueTargeted.put(index, targets);
         if (index + 1 > length) {
@@ -311,12 +311,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void setExcluded(int index, ArrayList<Character> exceptions) {
         if (residueTargeted == null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+            residueTargeted = new HashMap<>(1);
         }
         if (exceptions == null || exceptions.isEmpty()) {
-            residueTargeted.put(index, new ArrayList<Character>());
+            residueTargeted.put(index, new ArrayList<>());
         } else {
-            ArrayList<Character> notExcluded = new ArrayList<Character>();
+            ArrayList<Character> notExcluded = new ArrayList<>();
             ArrayList<Character> targeted = residueTargeted.get(index);
             if (targeted == null || targeted.isEmpty()) {
                 for (char aa : AminoAcid.getUniqueAminoAcids()) {
@@ -353,7 +353,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 return result;
             }
         }
-        return new ArrayList<Character>(0);
+        return new ArrayList<>(0);
     }
 
     /**
@@ -380,7 +380,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void removeAA(int index) {
 
         if (residueTargeted != null) {
-            ArrayList<Integer> indexes = new ArrayList<Integer>(residueTargeted.keySet());
+            ArrayList<Integer> indexes = new ArrayList<>(residueTargeted.keySet());
             Collections.sort(indexes);
             for (int aa : indexes) {
                 if (aa >= index) {
@@ -393,7 +393,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
 
         if (targetModifications != null) {
-            ArrayList<Integer> indexes = new ArrayList<Integer>(targetModifications.keySet());
+            ArrayList<Integer> indexes = new ArrayList<>(targetModifications.keySet());
             Collections.sort(indexes);
             int ptmIndex = index + 1;
             for (int aa : indexes) {
@@ -427,7 +427,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
         for (int i = 0; i < tempLength; i++) {
 
-            ArrayList<Character> toAdd = new ArrayList<Character>(1);
+            ArrayList<Character> toAdd = new ArrayList<>(1);
 
             if (residueTargeted != null) {
                 ArrayList<Character> tempTarget = residueTargeted.get(i);
@@ -500,7 +500,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             if (targetedAas.isEmpty()) {
                 cpt++;
             } else if (targetedAas.size() > 15) {
-                ArrayList<Character> excludedAas = new ArrayList<Character>();
+                ArrayList<Character> excludedAas = new ArrayList<>();
                 for (char aa : AminoAcid.getUniqueAminoAcids()) {
                     if (!targetedAas.contains(aa)) {
                         excludedAas.add(aa);
@@ -547,7 +547,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(String input, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         int index = 0;
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
             result.add(index + 1);
@@ -566,7 +566,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         int index = 0;
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
             result.add(index + 1);
@@ -968,7 +968,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses1 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
@@ -983,7 +983,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
 
-        HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
+        HashMap<Double, Integer> masses2 = new HashMap<>();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
@@ -1059,11 +1059,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public static AminoAcidPattern getTrypsinExample() {
         AminoAcidPattern example = new AminoAcidPattern();
         example.setTarget(0);
-        ArrayList<Character> target = new ArrayList<Character>();
+        ArrayList<Character> target = new ArrayList<>();
         target.add(AminoAcid.K.getSingleLetterCodeAsChar());
         target.add(AminoAcid.R.getSingleLetterCodeAsChar());
         example.setTargeted(0, target);
-        ArrayList<Character> exclusion = new ArrayList<Character>();
+        ArrayList<Character> exclusion = new ArrayList<>();
         exclusion.add(AminoAcid.P.getSingleLetterCodeAsChar());
         example.setExcluded(1, exclusion);
         return example;
@@ -1085,7 +1085,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int i : otherInclusionMap.keySet()) {
                 ArrayList<Character> otherAAs = otherPattern.getTargetedAA(i);
                 if (residueTargeted == null) {
-                    residueTargeted = new HashMap<Integer, ArrayList<Character>>(otherInclusionMap.size());
+                    residueTargeted = new HashMap<>(otherInclusionMap.size());
                 }
                 ArrayList<Character> targetedAA = residueTargeted.get(i);
                 if (targetedAA == null) {
@@ -1126,7 +1126,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         HashMap<Integer, ArrayList<Character>> otherTargetedMap = otherPattern.getAaTargeted();
         if (otherTargetedMap != null) {
             if (residueTargeted == null) {
-                residueTargeted = new HashMap<Integer, ArrayList<Character>>(otherTargetedMap.size());
+                residueTargeted = new HashMap<>(otherTargetedMap.size());
             }
             for (int i : otherTargetedMap.keySet()) {
                 int index = patternLength + i;
@@ -1239,9 +1239,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public ArrayList<Integer> getModificationIndexes() {
         if (targetModifications == null) {
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
         }
-        return new ArrayList<Integer>(targetModifications.keySet());
+        return new ArrayList<>(targetModifications.keySet());
     }
 
     /**
@@ -1259,7 +1259,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 return result;
             }
         }
-        return new ArrayList<ModificationMatch>();
+        return new ArrayList<>();
     }
 
     /**
@@ -1302,11 +1302,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (targetModifications == null) {
-            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+            targetModifications = new HashMap<>();
         }
         ArrayList<ModificationMatch> modificationMatches = targetModifications.get(localization);
         if (modificationMatches == null) {
-            modificationMatches = new ArrayList<ModificationMatch>();
+            modificationMatches = new ArrayList<>();
             targetModifications.put(localization, modificationMatches);
         }
         modificationMatches.add(modificationMatch);
@@ -1325,11 +1325,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (targetModifications == null) {
-            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+            targetModifications = new HashMap<>();
         }
         ArrayList<ModificationMatch> modificationMatchesAtIndex = targetModifications.get(localization);
         if (modificationMatchesAtIndex == null) {
-            modificationMatchesAtIndex = new ArrayList<ModificationMatch>();
+            modificationMatchesAtIndex = new ArrayList<>();
             targetModifications.put(localization, modificationMatchesAtIndex);
         }
         modificationMatches.addAll(modificationMatches);
@@ -1343,7 +1343,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void addPTMSite(int localization, ArrayList<Character> PTMSite) {
         if (residueTargeted == null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
+            residueTargeted = new HashMap<>(1);
         }
         residueTargeted.put(localization, PTMSite);
     }
@@ -1384,9 +1384,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
 
-        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>();
-        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
-        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>();
 
         if (targetModifications != null) {
             for (int modSite : targetModifications.keySet()) {
@@ -1395,18 +1395,18 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     if (modificationMatch.getVariable()) {
                         if (modificationMatch.getConfident()) {
                             if (!mainModificationSites.containsKey(modSite)) {
-                                mainModificationSites.put(modSite, new ArrayList<String>());
+                                mainModificationSites.put(modSite, new ArrayList<>());
                             }
                             mainModificationSites.get(modSite).add(modName);
                         } else {
                             if (!secondaryModificationSites.containsKey(modSite)) {
-                                secondaryModificationSites.put(modSite, new ArrayList<String>());
+                                secondaryModificationSites.put(modSite, new ArrayList<>());
                             }
                             secondaryModificationSites.get(modSite).add(modName);
                         }
                     } else if (!excludeAllFixedPtms) {
                         if (!fixedModificationSites.containsKey(modSite)) {
-                            fixedModificationSites.put(modSite, new ArrayList<String>());
+                            fixedModificationSites.put(modSite, new ArrayList<>());
                         }
                         fixedModificationSites.get(modSite).add(modName);
                     }
@@ -1446,13 +1446,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             boolean useShortName) {
 
         if (mainModificationSites == null) {
-            mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+            mainModificationSites = new HashMap<>();
         }
         if (secondaryModificationSites == null) {
-            secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
+            secondaryModificationSites = new HashMap<>();
         }
         if (fixedModificationSites == null) {
-            fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+            fixedModificationSites = new HashMap<>();
         }
 
         String modifiedSequence = "";
@@ -1563,7 +1563,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public ArrayList<String> getAllPossibleSequences() {
 
-        ArrayList<StringBuilder> stringBuilders = new ArrayList<StringBuilder>(1);
+        ArrayList<StringBuilder> stringBuilders = new ArrayList<>(1);
         int tempLength = length();
 
         for (int i = 0; i < length(); i++) {
@@ -1587,7 +1587,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     stringBuilders.add(newBuilder);
                 }
             } else {
-                ArrayList<StringBuilder> newBuilders = new ArrayList<StringBuilder>(1);
+                ArrayList<StringBuilder> newBuilders = new ArrayList<>(1);
                 for (StringBuilder stringBuilder : stringBuilders) {
                     if (residueTargeted != null) {
                         ArrayList<Character> aminoAcids = residueTargeted.get(i);
@@ -1612,7 +1612,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
 
-        ArrayList<String> results = new ArrayList<String>(stringBuilders.size());
+        ArrayList<String> results = new ArrayList<>(stringBuilders.size());
         for (StringBuilder stringBuilder : stringBuilders) {
             results.add(stringBuilder.toString());
         }
@@ -1687,7 +1687,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 if (i > startIndex && i <= endIndex + 1) {
                     int index = i - startIndex;
                     ArrayList<ModificationMatch> modificationMatches = targetModifications.get(i);
-                    ArrayList<ModificationMatch> newMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
+                    ArrayList<ModificationMatch> newMatches = new ArrayList<>(modificationMatches.size());
                     for (ModificationMatch modificationMatch : modificationMatches) {
                         newMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), index));
                     }

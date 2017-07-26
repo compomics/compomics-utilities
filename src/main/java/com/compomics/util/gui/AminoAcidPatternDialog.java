@@ -84,7 +84,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             cancelButton.setEnabled(false);
         }
 
-        patternDesignTableToolTips = new ArrayList<String>();
+        patternDesignTableToolTips = new ArrayList<>();
         patternDesignTableToolTips.add(null);
         patternDesignTableToolTips.add("Reference Index");
         patternDesignTableToolTips.add("The targeted amino acids");
@@ -441,7 +441,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
-        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<Character>(1));
+        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<>(1));
         repaintTable();
     }//GEN-LAST:event_addJMenuItemActionPerformed
 
@@ -595,7 +595,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @return the corresponding list of amino acids
      */
     private ArrayList<Character> getAAfromString(String aminoAcids) {
-        ArrayList<Character> result = new ArrayList<Character>();
+        ArrayList<Character> result = new ArrayList<>();
         for (String aa : aminoAcids.split(",")) {
             String input = aa.trim();
             input = input.toUpperCase();

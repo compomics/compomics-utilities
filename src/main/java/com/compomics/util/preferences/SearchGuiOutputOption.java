@@ -109,7 +109,7 @@ public enum SearchGuiOutputOption {
      */
     public static String getCommandLineOptions() {
         SearchGuiOutputOption[] values = values();
-        ArrayList<Integer> options = new ArrayList<Integer>(values.length);
+        ArrayList<Integer> options = new ArrayList<>(values.length);
         for (SearchGuiOutputOption option : values) {
             options.add(option.id);
         }

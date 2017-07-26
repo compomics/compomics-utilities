@@ -38,8 +38,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      */
     public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
 
-        ionMap = new HashMap<String, Ion>();
-        keys = new ArrayList<String>();
+        ionMap = new HashMap<>();
+        keys = new ArrayList<>();
         Ion currentIon;
 
         for (IonType ionType : iontypes.keySet()) {
@@ -90,8 +90,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      *
      */
     public IonLabelColorTableModel() {
-        ionMap = new HashMap<String, Ion>();
-        keys = new ArrayList<String>();
+        ionMap = new HashMap<>();
+        keys = new ArrayList<>();
     }
 
     @Override

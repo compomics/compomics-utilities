@@ -104,7 +104,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      */
     public static void addNeutralLoss(NeutralLoss neutralLoss) {
         if (neutralLosses == null) {
-            neutralLosses = new HashMap<String, NeutralLoss>();
+            neutralLosses = new HashMap<>();
         }
         neutralLosses.put(neutralLoss.name, neutralLoss);
     }

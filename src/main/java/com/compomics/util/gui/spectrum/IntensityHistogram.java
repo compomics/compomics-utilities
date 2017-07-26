@@ -51,7 +51,7 @@ public class IntensityHistogram extends JPanel {
                 currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityLevel));
 
         // the annotated intensities
-        ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();
+        ArrayList<Double> annotatedPeakIntensities = new ArrayList<>();
 
         // get the list of annotated and not annotated intensities
         for (IonMatch ionMatch : annotations) {

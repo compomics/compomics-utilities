@@ -114,7 +114,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
         zooActivateRead();
-        ArrayList<TagAssumption> results = new ArrayList<TagAssumption>();
+        ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
         int refCharge = identificationCharge.value;

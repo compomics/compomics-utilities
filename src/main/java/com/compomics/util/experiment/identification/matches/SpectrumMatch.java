@@ -80,9 +80,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public SpectrumMatch(String spectrumFile, String spectrumTitle, SpectrumIdentificationAssumption assumption) {
         int advocateId = assumption.getAdvocate();
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
-        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
-        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
+        assumptionsMap = new HashMap<>(1);
+        assumptionsMap.put(advocateId, new HashMap<>());
+        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<>());
         assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
         
         this.spectrumFile = spectrumFile;
@@ -108,7 +108,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public SpectrumMatch(String spectrumFile, String spectrumTitle) {
         this.spectrumFile = spectrumFile;
         this.spectrumTitle = spectrumTitle;
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
+        assumptionsMap = new HashMap<>(1);
     }
 
     /**
@@ -186,7 +186,7 @@ public class SpectrumMatch extends IdentificationMatch {
         if (getAssumptionsMap() == null) {
             return null;
         }
-        ArrayList<SpectrumIdentificationAssumption> result = new ArrayList<SpectrumIdentificationAssumption>();
+        ArrayList<SpectrumIdentificationAssumption> result = new ArrayList<>();
         for (HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> seMap : getAssumptionsMap().values()) {
             for (double eValue : seMap.keySet()) {
                 result.addAll(seMap.get(eValue));
@@ -218,13 +218,13 @@ public class SpectrumMatch extends IdentificationMatch {
         zooActivateWrite();
         HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptionsMap.get(otherAdvocateId);
         if (advocateMap == null) {
-            advocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>();
+            advocateMap = new HashMap<>();
             assumptionsMap.put(otherAdvocateId, advocateMap);
         }
         Double score = otherAssumption.getScore();
         ArrayList<SpectrumIdentificationAssumption> assumptionList = advocateMap.get(score);
         if (assumptionList == null) {
-            assumptionList = new ArrayList<SpectrumIdentificationAssumption>();
+            assumptionList = new ArrayList<>();
             advocateMap.put(score, assumptionList);
         }
         assumptionList.add(otherAssumption);
@@ -297,9 +297,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removeAssumption(SpectrumIdentificationAssumption assumption) {
         zooActivateWrite();
-        ArrayList<Integer> seToRemove = new ArrayList<Integer>();
+        ArrayList<Integer> seToRemove = new ArrayList<>();
         for (int se : assumptionsMap.keySet()) {
-            ArrayList<Double> eValueToRemove = new ArrayList<Double>();
+            ArrayList<Double> eValueToRemove = new ArrayList<>();
             for (double eValue : assumptionsMap.get(se).keySet()) {
                 assumptionsMap.get(se).get(eValue).remove(assumption);
                 if (assumptionsMap.get(se).get(eValue).isEmpty()) {
@@ -389,7 +389,7 @@ public class SpectrumMatch extends IdentificationMatch {
         for (int advocateId : assumptionsMap.keySet()) {
 
             int rank = 1;
-            ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
+            ArrayList<Double> scores = new ArrayList<>(assumptionsMap.get(advocateId).keySet());
 
             if (scoreInAscendingOrder) {
                 Collections.sort(scores);

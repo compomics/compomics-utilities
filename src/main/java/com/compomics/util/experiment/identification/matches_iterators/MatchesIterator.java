@@ -103,11 +103,11 @@ public abstract class MatchesIterator {
         }
         else {
             if (filters == null){
-                longKeys = new ArrayList<Long>(identification.getClassObjects(className));
+                longKeys = new ArrayList<>(identification.getClassObjects(className));
             }
             else {
                 iterator = identification.getIterator(className, filters);
-                longKeys = new ArrayList<Long>(identification.getNumber(className));
+                longKeys = new ArrayList<>(identification.getNumber(className));
                 while (iterator.hasNext()){
                     longKeys.add(((IdObject)iterator.next()).getId());
                 }

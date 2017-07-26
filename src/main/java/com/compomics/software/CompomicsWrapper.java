@@ -777,7 +777,7 @@ public class CompomicsWrapper {
             e.printStackTrace();
         }
 
-        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<>();
 
         File javaOptions = new File(confFolder, "JavaOptions.txt");
         File uniprotApiPropertiesFile = new File(confFolder, "proxy/uniprotjapi.properties");
@@ -1051,7 +1051,7 @@ public class CompomicsWrapper {
      */
     public ArrayList<String> getJavaHomeAndOptions(String toolPath) throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        ArrayList<String> javaHomeAndOptions = new ArrayList<String>();
+        ArrayList<String> javaHomeAndOptions = new ArrayList<>();
 
         CompomicsWrapper wrapper = new CompomicsWrapper();
         File confFolder = new File(new File(toolPath).getParentFile(), "resources/conf");

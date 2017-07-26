@@ -48,7 +48,7 @@ public class ComplementarityScore {
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
                 spectrum, peptide);
 
-        HashMap<Integer, Double> residueToMatchesMap = new HashMap<Integer, Double>(sequenceLength);
+        HashMap<Integer, Double> residueToMatchesMap = new HashMap<>(sequenceLength);
         for (int i = 1; i <= sequenceLength; i++) {
             residueToMatchesMap.put(i, 0.0);
         }
@@ -61,7 +61,7 @@ public class ComplementarityScore {
             }
         }
 
-        ArrayList<Double> scorePerResidue = new ArrayList<Double>(residueToMatchesMap.size());
+        ArrayList<Double> scorePerResidue = new ArrayList<>(residueToMatchesMap.size());
         for (int number = 1; number <= sequenceLength; number++) {
             Double nIons = residueToMatchesMap.get(number);
             if (nIons != null) {

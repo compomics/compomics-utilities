@@ -16,9 +16,9 @@ import java.util.HashMap;
 public class ProjectParameters extends IdObject {
     private Date creationTime = null;
     private String projectUniqueName = "";
-    private HashMap<String, String> stringParameters = new HashMap<String, String>();
-    private HashMap<String, Integer> integerParameters = new HashMap<String, Integer>();
-    private HashMap<String, Double> numericParameters = new HashMap<String, Double>();
+    private HashMap<String, String> stringParameters = new HashMap<>();
+    private HashMap<String, Integer> integerParameters = new HashMap<>();
+    private HashMap<String, Double> numericParameters = new HashMap<>();
     
     public static String nameForDatabase = "Project_parameters_object";
     

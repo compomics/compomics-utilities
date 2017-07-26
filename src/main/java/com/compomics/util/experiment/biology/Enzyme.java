@@ -34,41 +34,41 @@ public class Enzyme extends ExperimentObject {
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>(0);
+    private ArrayList<Character> aminoAcidBefore = new ArrayList<>(0);
     /*
      * The amino acids after cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>(0);
+    private ArrayList<Character> aminoAcidAfter = new ArrayList<>(0);
     /*
      * The restriction amino acids before cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> restrictionBefore = new ArrayList<Character>(0);
+    private ArrayList<Character> restrictionBefore = new ArrayList<>(0);
     /*
      * The restriction amino acids after cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> restrictionAfter = new ArrayList<Character>(0);
+    private ArrayList<Character> restrictionAfter = new ArrayList<>(0);
     /*
      * The amino acids before cleavage.
      */
-    private HashSet<Character> aminoAcidBeforeSet = new HashSet<Character>(0);
+    private HashSet<Character> aminoAcidBeforeSet = new HashSet<>(0);
     /*
      * The amino acids after cleavage.
      */
-    private HashSet<Character> aminoAcidAfterSet = new HashSet<Character>(0);
+    private HashSet<Character> aminoAcidAfterSet = new HashSet<>(0);
     /*
      * The restriction amino acids before cleavage.
      */
-    private HashSet<Character> restrictionBeforeSet = new HashSet<Character>(0);
+    private HashSet<Character> restrictionBeforeSet = new HashSet<>(0);
     /*
      * The restriction amino acids after cleavage.
      */
-    private HashSet<Character> restrictionAfterSet = new HashSet<Character>(0);
+    private HashSet<Character> restrictionAfterSet = new HashSet<>(0);
     /**
      * If true, the enzyme is considered as semi-specific, meaning that only one
      * end of the resulting peptide has to be enzymatic.
@@ -327,11 +327,11 @@ public class Enzyme extends ExperimentObject {
         char aaAfter = sequence.charAt(0);
         StringBuilder currentPeptide = new StringBuilder();
         currentPeptide.append(aaAfter);
-        HashSet<String> results = new HashSet<String>();
+        HashSet<String> results = new HashSet<>();
 
-        HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> mc = new HashMap<>();
         for (int i = 1; i <= nMissedCleavages; i++) {
-            mc.put(i, new ArrayList<String>(nMissedCleavages));
+            mc.put(i, new ArrayList<>(nMissedCleavages));
         }
 
         for (int i = 1; i < sequence.length(); i++) {
@@ -406,13 +406,13 @@ public class Enzyme extends ExperimentObject {
         StringBuilder currentPeptide = new StringBuilder();
         currentPeptide.append(aaAfter);
         Double currentMass = AminoAcid.getAminoAcid(aaAfter).getMonoisotopicMass();
-        HashSet<String> results = new HashSet<String>();
+        HashSet<String> results = new HashSet<>();
 
-        HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> mc = new HashMap<>();
         for (int i = 1; i <= nMissedCleavages; i++) {
-            mc.put(i, new ArrayList<String>(nMissedCleavages));
+            mc.put(i, new ArrayList<>(nMissedCleavages));
         }
-        HashMap<String, Double> peptideMasses = new HashMap<String, Double>();
+        HashMap<String, Double> peptideMasses = new HashMap<>();
 
         for (int i = 1; i < sequence.length(); i++) {
 

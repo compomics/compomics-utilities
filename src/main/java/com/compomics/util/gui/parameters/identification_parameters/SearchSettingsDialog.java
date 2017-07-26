@@ -115,7 +115,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     /**
      * The list of the default modifications.
      */
-    private ArrayList<String> modificationUse = new ArrayList<String>();
+    private ArrayList<String> modificationUse = new ArrayList<>();
     /**
      * The line to use to reference the modification use in the configuration
      * file.
@@ -337,7 +337,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         variableModsTable.getColumn("Mass").setMaxWidth(100);
         variableModsTable.getColumn("Mass").setMinWidth(100);
 
-        modificationTableToolTips = new ArrayList<String>();
+        modificationTableToolTips = new ArrayList<>();
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");
@@ -1888,7 +1888,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     private String[] loadEnzymes() {
 
-        ArrayList<String> tempEnzymes = new ArrayList<String>();
+        ArrayList<String> tempEnzymes = new ArrayList<>();
 
         for (int i = 0; i < enzymeFactory.getEnzymes().size(); i++) {
             tempEnzymes.add(enzymeFactory.getEnzymes().get(i).getName());
@@ -1922,7 +1922,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             }
         }
 
-        ArrayList<String> missingPtms = new ArrayList<String>();
+        ArrayList<String> missingPtms = new ArrayList<>();
         PtmSettings modificationProfile = searchParameters.getPtmSettings();
         if (modificationProfile != null) {
             ArrayList<String> fixedMods = modificationProfile.getFixedModifications();
@@ -2352,11 +2352,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         } else {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
-        ArrayList<Integer> selectedForwardIons = new ArrayList<Integer>(1);
+        ArrayList<Integer> selectedForwardIons = new ArrayList<>(1);
         Integer ionType = PeptideFragmentIon.getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
         selectedForwardIons.add(ionType);
         tempSearchParameters.setForwardIons(selectedForwardIons);
-        ArrayList<Integer> selectedRewindIons = new ArrayList<Integer>(1);
+        ArrayList<Integer> selectedRewindIons = new ArrayList<>(1);
         ionType = PeptideFragmentIon.getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
         selectedRewindIons.add(ionType);
         tempSearchParameters.setRewindIons(selectedRewindIons);
@@ -2396,7 +2396,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * Updates the modification list (right).
      */
     private void updateModificationList() {
-        ArrayList<String> allModificationsList = new ArrayList<String>();
+        ArrayList<String> allModificationsList = new ArrayList<>();
         if (modificationsListCombo.getSelectedIndex() == 0) {
             for (String name : modificationUse) {
                 if (modificationUse.contains(name)) {
@@ -2409,7 +2409,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         int nFixed = fixedModsTable.getRowCount();
         int nVariable = variableModsTable.getRowCount();
-        ArrayList<String> allModifications = new ArrayList<String>();
+        ArrayList<String> allModifications = new ArrayList<>();
 
         for (String name : allModificationsList) {
             boolean found = false;
@@ -2546,14 +2546,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     public static ArrayList<String> loadModificationsUse(ConfigurationFile configurationFile) throws IOException {
 
-        ArrayList<String> modificationUse = new ArrayList<String>();
+        ArrayList<String> modificationUse = new ArrayList<>();
 
         String modificationLine = configurationFile.getParameterLine(MODIFICATION_USE_IN_CONFIGURATION);
         if (modificationLine != null) {
             // split the different modifications
             int start;
 
-            ArrayList<String> modificationUses = new ArrayList<String>();
+            ArrayList<String> modificationUses = new ArrayList<>();
             while ((start = modificationLine.indexOf(MODIFICATION_SEPARATOR)) >= 0) {
                 String name = modificationLine.substring(0, start);
                 modificationLine = modificationLine.substring(start + 2);

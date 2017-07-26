@@ -64,7 +64,7 @@ public class ObjectsDB {
     /**
      * HashMap to map hash IDs of entries into DB ids
      */
-    private final HashMap<Long, Long> idMap = new HashMap<Long, Long>();
+    private final HashMap<Long, Long> idMap = new HashMap<>();
     /**
      * path of the database folder
      */
@@ -76,7 +76,7 @@ public class ObjectsDB {
     
     private boolean connectionActive = false;
     
-    private HashMap<String, HashSet<Long>> classCounter = new HashMap<String, HashSet<Long>>();
+    private HashMap<String, HashSet<Long>> classCounter = new HashMap<>();
     
     private int currentAdded = 0;
     
@@ -249,7 +249,7 @@ public class ObjectsDB {
         if (!idMap.containsKey(longKey)){
             idMap.put(longKey, 0l);
             if(!classCounter.containsKey(object.getClass().getSimpleName())){
-                classCounter.put(object.getClass().getSimpleName(), new HashSet<Long>());
+                classCounter.put(object.getClass().getSimpleName(), new HashSet<>());
             }
             classCounter.get(object.getClass().getSimpleName()).add(longKey);
             
@@ -314,7 +314,7 @@ public class ObjectsDB {
         
         
         dbMutex.acquire();
-        HashMap<Long, Object> objectsToAdd = new HashMap<Long, Object>(objects.size());
+        HashMap<Long, Object> objectsToAdd = new HashMap<>(objects.size());
         for (String objectKey : objects.keySet()) {
             Object object = objects.get(objectKey);
             if (debugInteractions) {
@@ -327,7 +327,7 @@ public class ObjectsDB {
             if (!idMap.containsKey(longKey)){
                 idMap.put(longKey, 0l);
                 if(!classCounter.containsKey(object.getClass().getSimpleName())){
-                    classCounter.put(object.getClass().getSimpleName(), new HashSet<Long>());
+                    classCounter.put(object.getClass().getSimpleName(), new HashSet<>());
                 }
                 classCounter.get(object.getClass().getSimpleName()).add(longKey);
                 objectsToAdd.put(longKey, object);
@@ -366,8 +366,8 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
         
-        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
-        ArrayList<Long> hashedKeys = new ArrayList<Long>();
+        HashMap<Long, Object> allObjects = new HashMap<>();
+        ArrayList<Long> hashedKeys = new ArrayList<>();
         for (String objectKey : keys){
             if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
@@ -418,7 +418,7 @@ public class ObjectsDB {
         }
         
         
-        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        HashMap<Long, Object> allObjects = new HashMap<>();
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
         for (Long longKey : hashedKeys){
             if (waitingHandler.isRunCanceled()) break;
@@ -432,7 +432,7 @@ public class ObjectsDB {
             objectsCache.addObjects(allObjects);
         }
         dbMutex.release();
-        return new ArrayList<Long>(hashedKeys);
+        return new ArrayList<>(hashedKeys);
     }
     
     
@@ -555,8 +555,8 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
         }
         
-        ArrayList<Object> retrievingObjects = new ArrayList<Object>();
-        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
+        ArrayList<Object> retrievingObjects = new ArrayList<>();
+        HashMap<Long, Object> allObjects = new HashMap<>();
         for (String objectKey : keys){
             if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
@@ -605,8 +605,8 @@ public class ObjectsDB {
         }
         
         
-        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
-        ArrayList<Object> retrievingObjects = new ArrayList<Object>();
+        HashMap<Long, Object> allObjects = new HashMap<>();
+        ArrayList<Object> retrievingObjects = new ArrayList<>();
         for (long longKey : classCounter.get(className.getSimpleName())){
             if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             
@@ -898,7 +898,7 @@ public class ObjectsDB {
                 idMap.put(id, zooId);     
                 
                 if(!classCounter.containsKey(obj.getClass().getSimpleName())){
-                    classCounter.put(obj.getClass().getSimpleName(), new HashSet<Long>());
+                    classCounter.put(obj.getClass().getSimpleName(), new HashSet<>());
                 }
                 classCounter.get(obj.getClass().getSimpleName()).add(id);
             }

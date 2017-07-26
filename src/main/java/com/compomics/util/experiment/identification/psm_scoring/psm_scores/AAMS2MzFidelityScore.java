@@ -61,7 +61,7 @@ public class AAMS2MzFidelityScore {
             }
         }
         
-        ArrayList<Double> mzDeviations = new ArrayList<Double>(aaDeviations.values());
+        ArrayList<Double> mzDeviations = new ArrayList<>(aaDeviations.values());
         if (mzDeviations.isEmpty()) {
             return specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz());
         }

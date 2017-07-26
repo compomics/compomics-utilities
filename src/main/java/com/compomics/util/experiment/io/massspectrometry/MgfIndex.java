@@ -261,7 +261,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
         if (spectrumTitles != null) {
             return spectrumTitles;
         } else {
-            return new ArrayList<String>(indexMap.keySet());
+            return new ArrayList<>(indexMap.keySet());
         }
     }
 

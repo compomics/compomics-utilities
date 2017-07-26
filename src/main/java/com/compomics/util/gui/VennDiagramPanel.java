@@ -156,7 +156,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
             currentVennDiagramType = VennDiagramType.FOUR_WAY;
         }
 
-        groupNames = new HashMap<String, String>();
+        groupNames = new HashMap<>();
 
         groupNames.put("a", groupA);
         groupNames.put("b", groupB);
@@ -205,7 +205,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     public void updatePlot() {
 
         plotPanel.removeAll();
-        tooltipToDatasetMap = new HashMap<String, String>();
+        tooltipToDatasetMap = new HashMap<>();
 
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
 
@@ -602,7 +602,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
      */
     public ArrayList<ChartEntity> getEntitiesForPoint(int viewX, int viewY) {
 
-        ArrayList<ChartEntity> entitiesForPoint = new ArrayList<ChartEntity>();
+        ArrayList<ChartEntity> entitiesForPoint = new ArrayList<>();
         ChartRenderingInfo info = chartPanel.getChartRenderingInfo();
 
         if (info != null) {

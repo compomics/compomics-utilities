@@ -41,11 +41,11 @@ public class PtmDialog extends javax.swing.JDialog {
     /**
      * The neutral losses.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<>();
     /**
      * The reporter ions.
      */
-    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
+    private ArrayList<ReporterIon> reporterIons = new ArrayList<>();
     /**
      * Boolean indicating whether the user can edit the PTM or not.
      */
@@ -164,13 +164,13 @@ public class PtmDialog extends javax.swing.JDialog {
                 null,
                 "Fixed", null));
 
-        reporterIonTableToolTips = new ArrayList<String>();
+        reporterIonTableToolTips = new ArrayList<>();
         reporterIonTableToolTips.add(null);
         reporterIonTableToolTips.add("Reporter Ion Name");
         reporterIonTableToolTips.add("Reporter Ion Composition");
         reporterIonTableToolTips.add("Reporter Ion Mass (m/z)");
 
-        neutralLossesTableToolTips = new ArrayList<String>();
+        neutralLossesTableToolTips = new ArrayList<>();
         neutralLossesTableToolTips.add(null);
         neutralLossesTableToolTips.add("Neutral Loss Name");
         neutralLossesTableToolTips.add("Neutral Loss Composition");

@@ -112,7 +112,7 @@ public class ToolFactory {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (cpsFile != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerFileOption);
                     args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
@@ -152,7 +152,7 @@ public class ToolFactory {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (pxAccession != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerPxAccessionOption);
                     args.add(pxAccession);
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
@@ -196,7 +196,7 @@ public class ToolFactory {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (zipUrl != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerUrlOption);
                     args.add(CommandLineUtils.getQuoteType() + zipUrl + CommandLineUtils.getQuoteType());
                     args.add(peptideShakerUrlDownloadFolderOption);
@@ -292,7 +292,7 @@ public class ToolFactory {
                 if (mgfFiles == null && rawFiles == null && searchParameters == null && species == null) {
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
                 } else {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     if (mgfFiles != null && !mgfFiles.isEmpty()) {
                         args.add(searchGuiSpectrumFileOption);
                         args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));

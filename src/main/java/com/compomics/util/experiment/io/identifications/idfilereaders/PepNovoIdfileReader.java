@@ -118,7 +118,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             progressUnit = 1;
         }
 
-        index = new HashMap<String, Long>();
+        index = new HashMap<>();
 
         String line;
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
@@ -165,7 +165,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<>();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -257,7 +257,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         Integer charge = new Integer(lineComponents[6]);
         String pepNovoSequence = lineComponents[7];
         String sequence = "";
-        ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
+        ArrayList<ModificationMatch> modificationMatches = new ArrayList<>();
         String modificationMass = "", currentAA = "";
         int currentPtmLocation = 0;
 
@@ -376,8 +376,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add("3.1 (beta)");
         result.put("PepNovo+", versions);
         return result;

@@ -68,14 +68,14 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         this.toolName = toolName;
         this.originalKeyToPathMap = keyToPathMap;
         this.keyToPathMap = (HashMap<PathKey, String>) keyToPathMap.clone();
-        nameToKey = new HashMap<String, PathKey>(keyToPathMap.size());
+        nameToKey = new HashMap<>(keyToPathMap.size());
         for (PathKey key : keyToPathMap.keySet()) {
             nameToKey.put(key.getId(), key);
         }
-        ArrayList<String> names = new ArrayList<String>(nameToKey.keySet());
+        ArrayList<String> names = new ArrayList<>(nameToKey.keySet());
         Collections.sort(names);
-        keyList = new ArrayList<PathKey>(names.size());
-        pathsToolTips = new ArrayList<String>(names.size());
+        keyList = new ArrayList<>(names.size());
+        pathsToolTips = new ArrayList<>(names.size());
         for (String name : names) {
             PathKey pathKey = nameToKey.get(name);
             keyList.add(pathKey);
@@ -115,7 +115,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         // make sure that the scroll panes are see-through
         pathTableScrollPane.getViewport().setOpaque(false);
 
-        pathTableToolTips = new ArrayList<String>();
+        pathTableToolTips = new ArrayList<>();
         pathTableToolTips.add(null);
         pathTableToolTips.add("Path Name");
         pathTableToolTips.add("Path");

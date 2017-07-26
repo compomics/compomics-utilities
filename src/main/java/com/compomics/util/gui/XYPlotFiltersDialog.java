@@ -188,7 +188,7 @@ public class XYPlotFiltersDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        HashMap<String, String> dataFiltersInclude = new HashMap<String, String>();
+        HashMap<String, String> dataFiltersInclude = new HashMap<>();
 
         for (int i = 0; i < filtersTable.getRowCount(); i++) {
 

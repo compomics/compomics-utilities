@@ -255,7 +255,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         int outcome = JOptionPane.showConfirmDialog(this, "This operation cannot be undone, continue?", "Warning", JOptionPane.WARNING_MESSAGE);
 
         if (outcome == JOptionPane.YES_OPTION) {
-            ArrayList<String> notDeleted = new ArrayList<String>();
+            ArrayList<String> notDeleted = new ArrayList<>();
             for (File file : dbFolder.listFiles()) {
                 boolean success = false;
                 try {

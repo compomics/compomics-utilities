@@ -69,7 +69,7 @@ public enum PtmScore {
      * @return a list of the implemented scores
      */
     public static ArrayList<PtmScore> getImplementedPtmScores() {
-        ArrayList<PtmScore> result = new ArrayList<PtmScore>();
+        ArrayList<PtmScore> result = new ArrayList<>();
         result.add(AScore);
         result.add(PhosphoRS);
         result.add(None);

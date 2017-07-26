@@ -152,14 +152,14 @@ public class PhosphoRS {
         SpecificAnnotationSettings scoringAnnotationSetttings = specificAnnotationSettings.clone();
         scoringAnnotationSetttings.setNeutralLossesMap(scoringLossesMap);
         HashMap<Ion.IonType, HashSet<Integer>> ions = specificAnnotationSettings.getIonTypes(),
-                newIons = new HashMap<Ion.IonType, HashSet<Integer>>(1);
+                newIons = new HashMap<>(1);
         for (Ion.IonType ionType : ions.keySet()) {
             if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                 newIons.put(ionType, ions.get(ionType));
             }
         }
         scoringAnnotationSetttings.setSelectedIonsMap(newIons);
-        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        ArrayList<Integer> possibleSites = new ArrayList<>();
 
         int peptideLength = peptide.getSequence().length();
 
@@ -182,8 +182,8 @@ public class PhosphoRS {
         }
         Collections.sort(possibleSites);
 
-        HashMap<String, Double> profileToScoreMap = new HashMap<String, Double>(possibleSites.size());
-        HashMap<String, ArrayList<Integer>> profileToSitesMap = new HashMap<String, ArrayList<Integer>>(possibleSites.size());
+        HashMap<String, Double> profileToScoreMap = new HashMap<>(possibleSites.size());
+        HashMap<String, ArrayList<Integer>> profileToSitesMap = new HashMap<>(possibleSites.size());
 
         if (possibleSites.size() > nPTM) {
 
@@ -191,7 +191,7 @@ public class PhosphoRS {
 
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
-            ArrayList<String> possibleProfileKeys = new ArrayList<String>(possibleProfiles.size());
+            ArrayList<String> possibleProfileKeys = new ArrayList<>(possibleProfiles.size());
             for (ArrayList<Integer> profile : possibleProfiles) {
                 String profileKey = KeyUtils.getKey(profile);
                 possibleProfileKeys.add(profileKey);
@@ -203,11 +203,11 @@ public class PhosphoRS {
             HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, profileToPossibleFragments, spectrumAnnotator, scoringAnnotationSetttings);
 
             HashMap<Double, ArrayList<String>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, ptms, spectrumAnnotator, scoringAnnotationSetttings);
-            ArrayList<Double> siteDeterminingIons = new ArrayList<Double>(siteDeterminingIonsMap.keySet());
+            ArrayList<Double> siteDeterminingIons = new ArrayList<>(siteDeterminingIonsMap.keySet());
 
             double minMz = spectrum.getMinMz(), maxMz = spectrum.getMaxMz(), tempMax;
 
-            HashMap<Double, Peak> reducedSpectrum = new HashMap<Double, Peak>();
+            HashMap<Double, Peak> reducedSpectrum = new HashMap<>();
 
             double d = specificAnnotationSettings.getFragmentIonAccuracy();
             double dOverW = d / WINDOW_SIZE;
@@ -236,14 +236,14 @@ public class PhosphoRS {
 
                     ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
 
-                    HashMap<String, HashSet<Double>> profileToSiteDeterminingIonsMz = new HashMap<String, HashSet<Double>>(siteDeterminingIons.size());
+                    HashMap<String, HashSet<Double>> profileToSiteDeterminingIonsMz = new HashMap<>(siteDeterminingIons.size());
                     for (double ionMz : siteDeterminingIons) {
                         if (ionMz > minMz && ionMz <= tempMax) {
                             ArrayList<String> profiles = siteDeterminingIonsMap.get(ionMz);
                             for (String profileKey : profiles) {
                                 HashSet<Double> mzs = profileToSiteDeterminingIonsMz.get(profileKey);
                                 if (mzs == null) {
-                                    mzs = new HashSet<Double>(1);
+                                    mzs = new HashSet<>(1);
                                     profileToSiteDeterminingIonsMz.put(profileKey, mzs);
                                 }
                                 mzs.add(ionMz);
@@ -253,13 +253,13 @@ public class PhosphoRS {
 
                     if (!profileToSiteDeterminingIonsMz.isEmpty()) {
 
-                        ArrayList<ArrayList<Double>> deltas = new ArrayList<ArrayList<Double>>(spectra.size());
+                        ArrayList<ArrayList<Double>> deltas = new ArrayList<>(spectra.size());
                         int nDeltas = 0;
 
                         for (MSnSpectrum currentSpectrum : spectra) {
-                            ArrayList<Double> bigPs = new ArrayList<Double>(possibleProfileKeys.size());
-                            ArrayList<Double> currentDeltas = new ArrayList<Double>(possibleProfileKeys.size());
-                            ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfileKeys.size());
+                            ArrayList<Double> bigPs = new ArrayList<>(possibleProfileKeys.size());
+                            ArrayList<Double> currentDeltas = new ArrayList<>(possibleProfileKeys.size());
+                            ArrayList<HashSet<Double>> scored = new ArrayList<>(possibleProfileKeys.size());
                             boolean profileWithNoSiteDeterminingIonsScored = false;
                             double currentP = getp(currentSpectrum, WINDOW_SIZE, d, nDecimals);
                             for (String profileKey : possibleProfileKeys) {
@@ -369,7 +369,7 @@ public class PhosphoRS {
             dOverW = -FastMath.log10(dOverW);
             nDecimals = ((int) dOverW) + 1;
             double currentP = getp(phosphoRsSpectrum, w, d, nDecimals);
-            HashMap<String, Double> pInvMap = new HashMap<String, Double>(possibleProfileKeys.size());
+            HashMap<String, Double> pInvMap = new HashMap<>(possibleProfileKeys.size());
             Double pInvTotal = 0.0;
 
             for (String profileKey : possibleProfileKeys) {
@@ -401,7 +401,7 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
-        HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
+        HashMap<Integer, Double> scores = new HashMap<>();
         for (String profile : profileToScoreMap.keySet()) {
             Double score = profileToScoreMap.get(profile);
             ArrayList<Integer> sites = profileToSitesMap.get(profile);
@@ -481,7 +481,7 @@ public class PhosphoRS {
      */
     private static synchronized void addDistributionToCache(double p, int n, BinomialDistribution binomialDistribution) {
         if (distributionCache.size() >= distributionCacheSize) {
-            HashSet<Double> keys = new HashSet<Double>(distributionCache.keySet());
+            HashSet<Double> keys = new HashSet<>(distributionCache.keySet());
             for (Double key : keys) {
                 distributionCache.remove(key);
                 if (distributionCache.size() < distributionCacheSize) {
@@ -491,7 +491,7 @@ public class PhosphoRS {
         }
         HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
         if (distributionsAtP == null) {
-            distributionsAtP = new HashMap<Integer, BinomialDistribution>(2);
+            distributionsAtP = new HashMap<>(2);
             distributionCache.put(p, distributionsAtP);
         }
         distributionsAtP.put(n, binomialDistribution);
@@ -545,7 +545,7 @@ public class PhosphoRS {
     private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<PTM> ptms, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         String representativePTM = ptms.get(0).getName();
-        HashMap<String, Peptide> result = new HashMap<String, Peptide>(possibleProfiles.size());
+        HashMap<String, Peptide> result = new HashMap<>(possibleProfiles.size());
         int peptideLength = peptide.getSequence().length();
         for (ArrayList<Integer> profile : possibleProfiles) {
             Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
@@ -578,7 +578,7 @@ public class PhosphoRS {
      * @return a map of the number of possible fragment ions for every peptide
      */
     private static HashMap<String, Integer> getPossiblePeptideToN(HashMap<String, Peptide> possiblePeptides, HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> possiblePeptideFragments, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
-        HashMap<String, Integer> result = new HashMap<String, Integer>(possiblePeptides.size());
+        HashMap<String, Integer> result = new HashMap<>(possiblePeptides.size());
         for (String profileKey : possiblePeptides.keySet()) {
             Peptide peptide = possiblePeptides.get(profileKey);
             HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> fragmentsForProfile = possiblePeptideFragments.get(profileKey);
@@ -602,7 +602,7 @@ public class PhosphoRS {
      * @return a map of the possible ions for every peptide of every profile
      */
     private static HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> getPossiblePeptideFragments(HashMap<String, Peptide> possiblePeptides, SpecificAnnotationSettings scoringAnnotationSetttings) {
-        HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> result = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>>(possiblePeptides.size());
+        HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> result = new HashMap<>(possiblePeptides.size());
         IonFactory fragmentFactory = IonFactory.getInstance();
         for (String profileKey : possiblePeptides.keySet()) {
             Peptide peptide = possiblePeptides.get(profileKey);
@@ -623,23 +623,23 @@ public class PhosphoRS {
      */
     private static ArrayList<ArrayList<Integer>> getPossibleModificationProfiles(ArrayList<Integer> possibleSites, int nPtms) {
 
-        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
 
         for (int pos : possibleSites) {
-            ArrayList<Integer> profile = new ArrayList<Integer>(nPtms);
+            ArrayList<Integer> profile = new ArrayList<>(nPtms);
             profile.add(pos);
             result.add(profile);
         }
 
         for (int i = 2; i <= nPtms; i++) {
 
-            ArrayList<ArrayList<Integer>> resultAtI = new ArrayList<ArrayList<Integer>>((int) (1.5 * result.size()));
+            ArrayList<ArrayList<Integer>> resultAtI = new ArrayList<>((int) (1.5 * result.size()));
 
             for (ArrayList<Integer> previousProfile : result) {
                 int lastPos = previousProfile.get(previousProfile.size() - 1);
                 for (int pos : possibleSites) {
                     if (pos > lastPos) {
-                        ArrayList<Integer> profile = new ArrayList<Integer>(previousProfile);
+                        ArrayList<Integer> profile = new ArrayList<>(previousProfile);
                         profile.add(pos);
                         resultAtI.add(profile);
                     }
@@ -673,8 +673,8 @@ public class PhosphoRS {
         int sequenceLength = sequence.length();
         String representativePTM = ptms.get(0).getName();
 
-        HashMap<Double, ArrayList<String>> siteDeterminingIons = new HashMap<Double, ArrayList<String>>();
-        HashMap<Double, ArrayList<String>> commonIons = new HashMap<Double, ArrayList<String>>();
+        HashMap<Double, ArrayList<String>> siteDeterminingIons = new HashMap<>();
+        HashMap<Double, ArrayList<String>> commonIons = new HashMap<>();
 
         for (ArrayList<Integer> modificationProfile : possibleProfiles) {
 
@@ -690,7 +690,7 @@ public class PhosphoRS {
                 peptide.addModificationMatch(new ModificationMatch(representativePTM, true, position));
             }
 
-            HashSet<Double> mzs = new HashSet<Double>(2);
+            HashSet<Double> mzs = new HashSet<>(2);
 
             for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values()) {
                 for (Ion ion : ions) {
@@ -706,20 +706,20 @@ public class PhosphoRS {
             String profileKey = KeyUtils.getKey(modificationProfile);
             for (double mz : mzs) {
                 if (commonIons.isEmpty()) {
-                    ArrayList<String> profiles = new ArrayList<String>(2);
+                    ArrayList<String> profiles = new ArrayList<>(2);
                     commonIons.put(mz, profiles);
                     profiles.add(profileKey);
                 } else if (!commonIons.containsKey(mz)) {
                     ArrayList<String> profiles = siteDeterminingIons.get(mz);
                     if (profiles == null) {
-                        profiles = new ArrayList<String>(2);
+                        profiles = new ArrayList<>(2);
                         siteDeterminingIons.put(mz, profiles);
                     }
                     profiles.add(profileKey);
                 }
             }
 
-            for (double mz : new HashSet<Double>(commonIons.keySet())) {
+            for (double mz : new HashSet<>(commonIons.keySet())) {
                 if (!mzs.contains(mz)) {
                     siteDeterminingIons.put(mz, commonIons.get(mz));
                     commonIons.remove(mz);
@@ -747,24 +747,24 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Attempting to extract peaks from an empty spectrum.");
         }
 
-        ArrayList<MSnSpectrum> reducedSpectra = new ArrayList<MSnSpectrum>(MAX_DEPTH);
-        HashMap<Double, ArrayList<Peak>> intensityToPeakMap = new HashMap<Double, ArrayList<Peak>>(spectrum.getPeakMap().size());
+        ArrayList<MSnSpectrum> reducedSpectra = new ArrayList<>(MAX_DEPTH);
+        HashMap<Double, ArrayList<Peak>> intensityToPeakMap = new HashMap<>(spectrum.getPeakMap().size());
 
         for (Peak peak : spectrum.getPeakList()) {
             double intensity = peak.intensity;
             ArrayList<Peak> peaks = intensityToPeakMap.get(intensity);
             if (peaks == null) {
-                peaks = new ArrayList<Peak>();
+                peaks = new ArrayList<>();
                 intensityToPeakMap.put(intensity, peaks);
             }
             peaks.add(peak);
         }
 
-        ArrayList<Double> intensities = new ArrayList<Double>(intensityToPeakMap.keySet());
+        ArrayList<Double> intensities = new ArrayList<>(intensityToPeakMap.keySet());
         Collections.sort(intensities, Collections.reverseOrder());
         int depth = 0;
 
-        HashMap<Double, Peak> mzToPeak = new HashMap<Double, Peak>(1);
+        HashMap<Double, Peak> mzToPeak = new HashMap<>(1);
 
         for (double intensity : intensities) {
             for (Peak peak : intensityToPeakMap.get(intensity)) {
@@ -774,7 +774,7 @@ public class PhosphoRS {
                 if (depth > MAX_DEPTH) {
                     break;
                 }
-                HashMap<Double, Peak> newMzToPeak = new HashMap<Double, Peak>(depth + 1);
+                HashMap<Double, Peak> newMzToPeak = new HashMap<>(depth + 1);
                 newMzToPeak.putAll(mzToPeak);
                 mzToPeak = newMzToPeak;
             }
@@ -818,8 +818,8 @@ public class PhosphoRS {
         }
 
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap(),
-                newMap = new HashMap<Double, Peak>(peakMap.size()),
-                tempMap = new HashMap<Double, Peak>();
+                newMap = new HashMap<>(peakMap.size()),
+                tempMap = new HashMap<>();
         Double refMz = null;
 
         for (Double mz : spectrum.getOrderedMzValues()) {
@@ -830,7 +830,7 @@ public class PhosphoRS {
                     newMap.putAll(tempMap);
                     tempMap.clear();
                 } else {
-                    ArrayList<Double> intensities = new ArrayList<Double>(tempMap.keySet());
+                    ArrayList<Double> intensities = new ArrayList<>(tempMap.keySet());
                     Collections.sort(intensities, Collections.reverseOrder());
                     for (int i = 0; i < Math.min(intensities.size(), maxPeaks); i++) {
                         Double intensity = intensities.get(i);
@@ -845,7 +845,7 @@ public class PhosphoRS {
             tempMap.put(peak.intensity, peak);
         }
 
-        ArrayList<Double> intensities = new ArrayList<Double>(tempMap.keySet());
+        ArrayList<Double> intensities = new ArrayList<>(tempMap.keySet());
         Collections.sort(intensities, Collections.reverseOrder());
 
         for (int i = 0; i < Math.min(intensities.size(), maxPeaks); i++) {

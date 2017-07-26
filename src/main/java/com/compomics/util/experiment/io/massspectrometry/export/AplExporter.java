@@ -48,7 +48,7 @@ public class AplExporter {
 
         String fileName = mgfFile.getName();
         SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-        HashMap<Double, HashMap<String, Integer>> precursorMassToTitleMap = new HashMap<Double, HashMap<String, Integer>>(spectrumFactory.getNSpectra(fileName));
+        HashMap<Double, HashMap<String, Integer>> precursorMassToTitleMap = new HashMap<>(spectrumFactory.getNSpectra(fileName));
         for (String title : spectrumFactory.getSpectrumTitles(fileName)) {
             Precursor precursor = spectrumFactory.getPrecursor(Spectrum.getSpectrumKey(fileName, title));
             Double mz = precursor.getMz();
@@ -58,7 +58,7 @@ public class AplExporter {
                     double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
                     HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
                     if (titlesAtMass == null) {
-                        titlesAtMass = new HashMap<String, Integer>(1);
+                        titlesAtMass = new HashMap<>(1);
                         precursorMassToTitleMap.put(mass, titlesAtMass);
                     }
                     titlesAtMass.put(title, charge);
@@ -68,14 +68,14 @@ public class AplExporter {
                     double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
                     HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
                     if (titlesAtMass == null) {
-                        titlesAtMass = new HashMap<String, Integer>(1);
+                        titlesAtMass = new HashMap<>(1);
                         precursorMassToTitleMap.put(mass, titlesAtMass);
                     }
                     titlesAtMass.put(title, charge);
                 }
             }
         }
-        ArrayList<Double> masses = new ArrayList<Double>(precursorMassToTitleMap.keySet());
+        ArrayList<Double> masses = new ArrayList<>(precursorMassToTitleMap.keySet());
         Collections.sort(masses);
 
         FileWriter fileWriter = new FileWriter(destinationFile);

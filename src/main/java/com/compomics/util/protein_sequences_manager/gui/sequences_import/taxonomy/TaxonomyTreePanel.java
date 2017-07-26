@@ -95,7 +95,7 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
      * @return the selected taxonomy map
      */
     public HashMap<String, String> getSelectedTaxonomyMap() {
-        HashMap<String, String> taxIDMap = new HashMap<String, String>();
+        HashMap<String, String> taxIDMap = new HashMap<>();
         if (taxonomyTree.getSelectionPaths().length > 0) {
             for (TreePath path : taxonomyTree.getSelectionPaths()) {
                 String taxonomyName = ((DefaultMutableTreeNode) path.getLastPathComponent()).toString();

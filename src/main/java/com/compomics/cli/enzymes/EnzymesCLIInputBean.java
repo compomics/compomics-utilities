@@ -63,7 +63,7 @@ public class EnzymesCLIInputBean {
         boolean name = aLine.hasOption(EnzymesCLIParams.NAME.id);
         boolean attributes = false;
         char[] aminoAcids = AminoAcid.getUniqueAminoAcids();
-        ArrayList<String> possibilities = new ArrayList<String>(aminoAcids.length);
+        ArrayList<String> possibilities = new ArrayList<>(aminoAcids.length);
         for (char aa : aminoAcids) {
             possibilities.add(aa + "");
         }

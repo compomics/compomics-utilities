@@ -82,11 +82,11 @@ public class PTM extends ExperimentObject {
     /**
      * List of known neutral losses for this modification.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>(0);
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<>(0);
     /**
      * List of known reporter ions for this modification.
      */
-    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>(0);
+    private ArrayList<ReporterIon> reporterIons = new ArrayList<>(0);
     /**
      * The amino acid pattern targeted by this modification (can be set using
      * the AminoAcidPatternDialog).

@@ -69,7 +69,7 @@ public class MassErrorBubblePlot extends JPanel {
     /**
      * The data series fragment ion colors.
      */
-    private ArrayList<Color> dataSeriesfragmentIonColors = new ArrayList<Color>();
+    private ArrayList<Color> dataSeriesfragmentIonColors = new ArrayList<>();
 
     /**
      * Creates a new MassErrorBubblePlot.
@@ -156,10 +156,10 @@ public class MassErrorBubblePlot extends JPanel {
         setOpaque(false);
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        currentlyUsedIonMatches = new ArrayList<IonMatch>();
+        currentlyUsedIonMatches = new ArrayList<>();
 
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
-        HashMap<IonMatch, ArrayList<XYZDataPoint>> fragmentIonDataset = new HashMap<IonMatch, ArrayList<XYZDataPoint>>();
+        HashMap<IonMatch, ArrayList<XYZDataPoint>> fragmentIonDataset = new HashMap<>();
         double maxError = 0.0;
 
         for (int j = 0; j < annotations.size(); j++) {
@@ -208,7 +208,7 @@ public class MassErrorBubblePlot extends JPanel {
                             fragmentIonDataset.get(ionMatch).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                         } else {
-                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+                            ArrayList<XYZDataPoint> temp = new ArrayList<>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                             fragmentIonDataset.put(ionMatch, temp);
                         }
@@ -255,7 +255,7 @@ public class MassErrorBubblePlot extends JPanel {
                             fragmentIonDataset.get(ionMatch).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                         } else {
-                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+                            ArrayList<XYZDataPoint> temp = new ArrayList<>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                             fragmentIonDataset.put(ionMatch, temp);
                         }
@@ -437,8 +437,8 @@ public class MassErrorBubblePlot extends JPanel {
     public DefaultXYZDataset addXYZDataSeries(HashMap<IonMatch, ArrayList<XYZDataPoint>> data) {
 
         // sort the keys
-        ArrayList<String> sortedKeys = new ArrayList<String>();
-        HashMap<String, IonMatch> ionNameTypeMap = new HashMap<String, IonMatch>();
+        ArrayList<String> sortedKeys = new ArrayList<>();
+        HashMap<String, IonMatch> ionNameTypeMap = new HashMap<>();
 
         Iterator<IonMatch> iterator = data.keySet().iterator();
 

@@ -108,11 +108,11 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
         this.nMissedCleavages = nMissedCleavages;
         this.massMin = massMin;
         this.massMax = massMax;
-        this.peptideStartMap = new HashMap<Integer, Integer>(nMissedCleavages + 1);
-        this.result = new ArrayList<PeptideWithPosition>(nMissedCleavages + 1);
-        this.ambiguousPeptidesStartMap = new HashMap<String, Integer>(nMissedCleavages + 1);
-        this.ambiguousPeptidesMC = new HashMap<String, Integer>(nMissedCleavages + 1);
-        this.ambiguousPeptidesXs = new HashMap<String, Integer>(nMissedCleavages + 1);
+        this.peptideStartMap = new HashMap<>(nMissedCleavages + 1);
+        this.result = new ArrayList<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesStartMap = new HashMap<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesMC = new HashMap<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesXs = new HashMap<>(nMissedCleavages + 1);
         this.ambiguousPeptides = new String[0];
     }
 
@@ -177,7 +177,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
 
         int initialIndex = sequenceIndex;
 
-        ArrayList<Character> firstAaCombination = new ArrayList<Character>(1);
+        ArrayList<Character> firstAaCombination = new ArrayList<>(1);
         if (sequenceIndex > 0) {
             char aaAfter = proteinSequenceAsCharArray[sequenceIndex];
             AminoAcid aminoAcidAfter = AminoAcid.getAminoAcid(aaAfter);
@@ -197,7 +197,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
             firstAaCombination.add(proteinSequenceAsCharArray[sequenceIndex]);
         }
 
-        ArrayList<Character> lastAaCombination = new ArrayList<Character>(1);
+        ArrayList<Character> lastAaCombination = new ArrayList<>(1);
         int nX = 0;
         while (++sequenceIndex < proteinSequenceAsCharArray.length) {
 
@@ -233,16 +233,16 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
         }
 
         result.clear();
-        HashMap<String, Integer> newAmbiguousPeptidesStartMap = new HashMap<String, Integer>(ambiguousPeptidesStartMap.size());
-        HashMap<String, Integer> newambiguousPeptidesMC = new HashMap<String, Integer>(ambiguousPeptidesMC.size());
-        HashMap<String, Integer> newambiguousPeptidesXs = new HashMap<String, Integer>(ambiguousPeptidesXs.size());
-        HashMap<Integer, Integer> newPeptideStartMap = new HashMap<Integer, Integer>(peptideStartMap.size());
+        HashMap<String, Integer> newAmbiguousPeptidesStartMap = new HashMap<>(ambiguousPeptidesStartMap.size());
+        HashMap<String, Integer> newambiguousPeptidesMC = new HashMap<>(ambiguousPeptidesMC.size());
+        HashMap<String, Integer> newambiguousPeptidesXs = new HashMap<>(ambiguousPeptidesXs.size());
+        HashMap<Integer, Integer> newPeptideStartMap = new HashMap<>(peptideStartMap.size());
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
         for (char firstAa : firstAaCombination) {
             newSequence[0] = firstAa;
             for (char lastAa : lastAaCombination) {
                 newSequence[newSequence.length - 1] = lastAa;
-                BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
+                BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
                 if (!AminoAcidSequence.hasCombination(newSequence)) {
                     Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
                     if (peptide != null

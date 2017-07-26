@@ -110,13 +110,13 @@ public class AtomChainDialog extends javax.swing.JDialog {
         }
 
         if (!atomChainAdded.getAtomChain().isEmpty()) {
-            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
+            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<>();
 
             for (AtomImpl tempAtom : atomChainAdded.getAtomChain()) {
                 if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
                     elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                             atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = new ArrayList<Integer>();
+                    ArrayList<Integer> tempList = new ArrayList<>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
@@ -130,13 +130,13 @@ public class AtomChainDialog extends javax.swing.JDialog {
         }
 
         if (!atomChainRemoved.getAtomChain().isEmpty()) {
-            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
+            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<>();
 
             for (AtomImpl tempAtom : atomChainRemoved.getAtomChain()) {
                 if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
                     elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                             -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = new ArrayList<Integer>();
+                    ArrayList<Integer> tempList = new ArrayList<>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {

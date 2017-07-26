@@ -36,7 +36,7 @@ public class IonFactory {
     /**
      * Cache for the possible combinations of neutral losses.
      */
-    private HashMap<String, NeutralLossCombination[]> neutralLossesCombinationsCache = new HashMap<String, NeutralLossCombination[]>();
+    private HashMap<String, NeutralLossCombination[]> neutralLossesCombinationsCache = new HashMap<>();
     /**
      * Cache for the mass of NH3.
      */
@@ -101,7 +101,7 @@ public class IonFactory {
      */
     private static synchronized void setDefaultNeutralLosses() {
         if (defaultNeutralLosses == null) {
-            defaultNeutralLosses = new ArrayList<NeutralLoss>(2);
+            defaultNeutralLosses = new ArrayList<>(2);
             defaultNeutralLosses.add(NeutralLoss.H2O);
             defaultNeutralLosses.add(NeutralLoss.NH3);
         }
@@ -117,7 +117,7 @@ public class IonFactory {
      * @return the neutral losses expected in the dataset
      */
     public static ArrayList<NeutralLoss> getNeutralLosses(PtmSettings ptmSettings) {
-        ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+        ArrayList<NeutralLoss> neutralLosses = new ArrayList<>();
         neutralLosses.addAll(IonFactory.getDefaultNeutralLosses());
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String modification : ptmSettings.getAllModifications()) {
@@ -147,7 +147,7 @@ public class IonFactory {
      */
     public static HashSet<Integer> getReporterIons(PtmSettings ptmSettings) {
 
-        HashSet<Integer> reporterIons = new HashSet<Integer>();
+        HashSet<Integer> reporterIons = new HashSet<>();
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String modification : ptmSettings.getAllModifications()) {
             PTM currentPtm = ptmFactory.getPTM(modification);
@@ -189,14 +189,14 @@ public class IonFactory {
             selectedIonTypes = specificAnnotationSettings.getIonTypes();
         }
 
-        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>();
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<>();
         String sequence = peptide.getSequence();
-        HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<Integer, ArrayList<PTM>>(peptide.getNModifications());
+        HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<>(peptide.getNModifications());
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ArrayList<String> processedPtms = null;
         ArrayList<NeutralLoss> possibleNeutralLosses = null;
         if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
-            possibleNeutralLosses = new ArrayList<NeutralLoss>(getDefaultNeutralLosses());
+            possibleNeutralLosses = new ArrayList<>(getDefaultNeutralLosses());
         }
 
         if (peptide.isModified()) {
@@ -209,7 +209,7 @@ public class IonFactory {
                 }
                 ArrayList<PTM> modificationsAtSite = modifications.get(location);
                 if (modificationsAtSite == null) {
-                    modificationsAtSite = new ArrayList<PTM>(1);
+                    modificationsAtSite = new ArrayList<>(1);
                     modifications.put(location, modificationsAtSite);
                 }
                 modificationsAtSite.add(ptm);
@@ -218,13 +218,13 @@ public class IonFactory {
                         for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                             HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
                             if (ionsMap == null) {
-                                ionsMap = new HashMap<Integer, ArrayList<Ion>>(ptm.getReporterIons().size());
+                                ionsMap = new HashMap<>(ptm.getReporterIons().size());
                                 result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
                             }
                             int subType = ptmReporterIon.getSubType();
                             ArrayList<Ion> ions = ionsMap.get(subType);
                             if (ions == null) {
-                                ions = new ArrayList<Ion>(1);
+                                ions = new ArrayList<>(1);
                                 ionsMap.put(subType, ions);
                                 ions.add(ptmReporterIon);
                             }
@@ -245,7 +245,7 @@ public class IonFactory {
                         }
                     }
                     if (processedPtms == null) {
-                        processedPtms = new ArrayList<String>(peptide.getNModifications());
+                        processedPtms = new ArrayList<>(peptide.getNModifications());
                     }
                     processedPtms.add(ptmName);
                 }
@@ -269,14 +269,14 @@ public class IonFactory {
             if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.IMMONIUM_ION)) {
                 HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                 if (ionsMap == null) {
-                    ionsMap = new HashMap<Integer, ArrayList<Ion>>(sequence.length());
+                    ionsMap = new HashMap<>(sequence.length());
                     result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                 }
                 ImmoniumIon immoniumIon = new ImmoniumIon(aaName);
                 int subType = immoniumIon.getSubType();
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
-                    ions = new ArrayList<Ion>(1);
+                    ions = new ArrayList<>(1);
                     ions.add(immoniumIon);
                     ionsMap.put(subType, ions);
                 }
@@ -286,7 +286,7 @@ public class IonFactory {
             if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.RELATED_ION)) {
                 HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.RELATED_ION.index);
                 if (ionsMap == null) {
-                    ionsMap = new HashMap<Integer, ArrayList<Ion>>(sequence.length());
+                    ionsMap = new HashMap<>(sequence.length());
                     result.put(Ion.IonType.RELATED_ION.index, ionsMap);
                 }
 
@@ -297,7 +297,7 @@ public class IonFactory {
 
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
 
                     ions.add(tempRelated);
@@ -317,7 +317,7 @@ public class IonFactory {
 
             HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
             if (ionsMap == null) {
-                ionsMap = new HashMap<Integer, ArrayList<Ion>>(6);
+                ionsMap = new HashMap<>(6);
                 result.put(Ion.IonType.PEPTIDE_FRAGMENT_ION.index, ionsMap);
             }
 
@@ -327,9 +327,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -348,9 +348,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -369,9 +369,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -400,9 +400,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -421,9 +421,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -442,9 +442,9 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     if (neutralLossesCombinations != null) {
-                        ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                        ions = new ArrayList<>(neutralLossesCombinations.length);
                     } else {
-                        ions = new ArrayList<Ion>(1);
+                        ions = new ArrayList<>(1);
                     }
                     ionsMap.put(subType, ions);
                 }
@@ -471,16 +471,16 @@ public class IonFactory {
             // add the precursor ion
             HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PRECURSOR_ION.index);
             if (ionsMap == null) {
-                ionsMap = new HashMap<Integer, ArrayList<Ion>>(1);
+                ionsMap = new HashMap<>(1);
                 result.put(Ion.IonType.PRECURSOR_ION.index, ionsMap);
             }
             int subType = PrecursorIon.PRECURSOR;
             ArrayList<Ion> ions = ionsMap.get(subType);
             if (ions == null) {
                 if (neutralLossesCombinations != null) {
-                    ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+                    ions = new ArrayList<>(neutralLossesCombinations.length);
                 } else {
-                    ions = new ArrayList<Ion>(1);
+                    ions = new ArrayList<>(1);
                 }
                 ionsMap.put(subType, ions);
             }
@@ -507,22 +507,22 @@ public class IonFactory {
      */
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag) {
 
-        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>();
-        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>(getDefaultNeutralLosses());
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<>();
+        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<>(getDefaultNeutralLosses());
         ArrayList<String> processedPtms = null;
 
         // We account for up to two neutral losses per ion maximum
         NeutralLossCombination[] neutralLossesCombinations = getNeutralLossesCombinations(possibleNeutralLosses);
 
         int ionNumberOffset = 1;
-        ArrayList<Double> massOffsets = new ArrayList<Double>();
+        ArrayList<Double> massOffsets = new ArrayList<>();
         massOffsets.add(0.0);
         for (TagComponent tagComponent : tag.getContent()) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                ArrayList<Double> patternMasses = new ArrayList<Double>();
+                ArrayList<Double> patternMasses = new ArrayList<>();
                 for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
+                    ArrayList<Double> aminoAcidMasses = new ArrayList<>();
                     for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.getMonoisotopicMass();
@@ -533,13 +533,13 @@ public class IonFactory {
                                 for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
                                     if (ionsMap == null) {
-                                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                                        ionsMap = new HashMap<>();
                                         result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
                                     }
                                     int subType = ptmReporterIon.getSubType();
                                     ArrayList<Ion> ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                         ions.add(ptmReporterIon);
                                     }
@@ -559,7 +559,7 @@ public class IonFactory {
                                     }
                                 }
                                 if (processedPtms == null) {
-                                    processedPtms = new ArrayList<String>();
+                                    processedPtms = new ArrayList<>();
                                 }
                                 processedPtms.add(ptmName);
                             }
@@ -572,14 +572,14 @@ public class IonFactory {
                         // immonium ions
                         HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                         if (ionsMap == null) {
-                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            ionsMap = new HashMap<>();
                             result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                         }
                         ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                         int subType = immoniumIon.getSubType();
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ions.add(immoniumIon);
                             ionsMap.put(subType, ions);
                         }
@@ -587,7 +587,7 @@ public class IonFactory {
                         // related ions
                         ionsMap = result.get(Ion.IonType.RELATED_ION.index);
                         if (ionsMap == null) {
-                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            ionsMap = new HashMap<>();
                             result.put(Ion.IonType.RELATED_ION.index, ionsMap);
                         }
                         ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
@@ -597,7 +597,7 @@ public class IonFactory {
 
                             ions = ionsMap.get(subType);
                             if (ions == null) {
-                                ions = new ArrayList<Ion>(1);
+                                ions = new ArrayList<>(1);
                             }
 
                             ions.add(tempRelated);
@@ -607,12 +607,12 @@ public class IonFactory {
 
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
 
                     for (double massOffset : massOffsets) {
-                        ArrayList<Double> newPatternMassess = new ArrayList<Double>();
+                        ArrayList<Double> newPatternMassess = new ArrayList<>();
                         if (patternMasses.isEmpty()) {
                             for (double mass : aminoAcidMasses) {
                                 int aa = ionNumberOffset + i;
@@ -623,7 +623,7 @@ public class IonFactory {
                                 int subType = TagFragmentIon.A_ION;
                                 ArrayList<Ion> ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -634,7 +634,7 @@ public class IonFactory {
                                 subType = TagFragmentIon.B_ION;
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -645,7 +645,7 @@ public class IonFactory {
                                 subType = TagFragmentIon.B_ION;
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -668,7 +668,7 @@ public class IonFactory {
                                     int subType = TagFragmentIon.A_ION;
                                     ArrayList<Ion> ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -679,7 +679,7 @@ public class IonFactory {
                                     subType = TagFragmentIon.B_ION;
                                     ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -690,7 +690,7 @@ public class IonFactory {
                                     subType = TagFragmentIon.C_ION;
                                     ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -706,7 +706,7 @@ public class IonFactory {
                         patternMasses = newPatternMassess;
                     }
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     for (double mass : patternMasses) {
                         double newMass = offsetMass + mass;
@@ -726,14 +726,14 @@ public class IonFactory {
                     // immonium ions
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                     }
                     ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                     int subType = immoniumIon.getSubType();
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ions.add(immoniumIon);
                         ionsMap.put(subType, ions);
                     }
@@ -741,7 +741,7 @@ public class IonFactory {
                     // related ions
                     ionsMap = result.get(Ion.IonType.RELATED_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.RELATED_ION.index, ionsMap);
                     }
                     ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
@@ -751,7 +751,7 @@ public class IonFactory {
 
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>(1);
+                            ions = new ArrayList<>(1);
                         }
 
                         ions.add(tempRelated);
@@ -766,13 +766,13 @@ public class IonFactory {
                             for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                 ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
                                 if (ionsMap == null) {
-                                    ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                                    ionsMap = new HashMap<>();
                                     result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
                                 }
                                 subType = ptmReporterIon.getSubType();
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                     ions.add(ptmReporterIon);
                                 }
@@ -792,7 +792,7 @@ public class IonFactory {
                                 }
                             }
                             if (processedPtms == null) {
-                                processedPtms = new ArrayList<String>();
+                                processedPtms = new ArrayList<>();
                             }
                             processedPtms.add(ptmName);
                         }
@@ -802,7 +802,7 @@ public class IonFactory {
 
                     ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
                     for (double massOffset : massOffsets) {
@@ -814,7 +814,7 @@ public class IonFactory {
                         subType = TagFragmentIon.A_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -825,7 +825,7 @@ public class IonFactory {
                         subType = TagFragmentIon.B_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -836,7 +836,7 @@ public class IonFactory {
                         subType = TagFragmentIon.C_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -844,7 +844,7 @@ public class IonFactory {
                         }
                     }
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     double newMass = offsetMass + sequenceMass;
                     if (!newOffsetMasses.contains(newMass)) {
@@ -860,7 +860,7 @@ public class IonFactory {
 
                 HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                 if (ionsMap == null) {
-                    ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                    ionsMap = new HashMap<>();
                     result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                 }
 
@@ -871,7 +871,7 @@ public class IonFactory {
                     int subType = TagFragmentIon.A_ION;
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -882,7 +882,7 @@ public class IonFactory {
                     subType = TagFragmentIon.B_ION;
                     ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -893,7 +893,7 @@ public class IonFactory {
                     subType = TagFragmentIon.C_ION;
                     ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -901,7 +901,7 @@ public class IonFactory {
                     }
 
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     newOffsetMasses.add(offsetMass + gapMass);
                 }
@@ -912,7 +912,7 @@ public class IonFactory {
             }
         }
 
-        ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
+        ArrayList<TagComponent> reversedTag = new ArrayList<>(tag.getContent());
         Collections.reverse(reversedTag);
         ionNumberOffset = 0;
         massOffsets.clear();
@@ -920,9 +920,9 @@ public class IonFactory {
         for (TagComponent tagComponent : reversedTag) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                ArrayList<Double> patternMasses = new ArrayList<Double>();
+                ArrayList<Double> patternMasses = new ArrayList<>();
                 for (int i = aminoAcidPattern.length() - 1; i >= 0; i--) {
-                    ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
+                    ArrayList<Double> aminoAcidMasses = new ArrayList<>();
                     for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.getMonoisotopicMass();
@@ -933,13 +933,13 @@ public class IonFactory {
                                 for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
                                     if (ionsMap == null) {
-                                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                                        ionsMap = new HashMap<>();
                                         result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
                                     }
                                     int subType = ptmReporterIon.getSubType();
                                     ArrayList<Ion> ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                         ions.add(ptmReporterIon);
                                     }
@@ -959,7 +959,7 @@ public class IonFactory {
                                     }
                                 }
                                 if (processedPtms == null) {
-                                    processedPtms = new ArrayList<String>();
+                                    processedPtms = new ArrayList<>();
                                 }
                                 processedPtms.add(ptmName);
                             }
@@ -972,14 +972,14 @@ public class IonFactory {
                         // immonium ions
                         HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                         if (ionsMap == null) {
-                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            ionsMap = new HashMap<>();
                             result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                         }
                         ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                         int subType = immoniumIon.getSubType();
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ions.add(immoniumIon);
                             ionsMap.put(subType, ions);
                         }
@@ -987,7 +987,7 @@ public class IonFactory {
                         // related ions
                         ionsMap = result.get(Ion.IonType.RELATED_ION.index);
                         if (ionsMap == null) {
-                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            ionsMap = new HashMap<>();
                             result.put(Ion.IonType.RELATED_ION.index, ionsMap);
                         }
                         ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
@@ -997,7 +997,7 @@ public class IonFactory {
 
                             ions = ionsMap.get(subType);
                             if (ions == null) {
-                                ions = new ArrayList<Ion>(1);
+                                ions = new ArrayList<>(1);
                             }
 
                             ions.add(tempRelated);
@@ -1007,12 +1007,12 @@ public class IonFactory {
 
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
 
                     for (double massOffset : massOffsets) {
-                        ArrayList<Double> newPatternMassess = new ArrayList<Double>();
+                        ArrayList<Double> newPatternMassess = new ArrayList<>();
                         if (patternMasses.isEmpty()) {
                             for (double mass : aminoAcidMasses) {
                                 int aa = ionNumberOffset + aminoAcidPattern.length() - i;
@@ -1027,7 +1027,7 @@ public class IonFactory {
                                 int subType = TagFragmentIon.X_ION;
                                 ArrayList<Ion> ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1038,7 +1038,7 @@ public class IonFactory {
                                 subType = TagFragmentIon.Y_ION;
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1049,7 +1049,7 @@ public class IonFactory {
                                 subType = TagFragmentIon.Z_ION;
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                 }
                                 for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1076,7 +1076,7 @@ public class IonFactory {
                                     int subType = TagFragmentIon.X_ION;
                                     ArrayList<Ion> ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1087,7 +1087,7 @@ public class IonFactory {
                                     subType = TagFragmentIon.Y_ION;
                                     ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1098,7 +1098,7 @@ public class IonFactory {
                                     subType = TagFragmentIon.Z_ION;
                                     ions = ionsMap.get(subType);
                                     if (ions == null) {
-                                        ions = new ArrayList<Ion>();
+                                        ions = new ArrayList<>();
                                         ionsMap.put(subType, ions);
                                     }
                                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1114,7 +1114,7 @@ public class IonFactory {
                         patternMasses = newPatternMassess;
                     }
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     for (double mass : patternMasses) {
                         double newMass = offsetMass + mass;
@@ -1138,14 +1138,14 @@ public class IonFactory {
                     // immonium ions
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                     }
                     ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                     int subType = immoniumIon.getSubType();
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ions.add(immoniumIon);
                         ionsMap.put(subType, ions);
                     }
@@ -1153,7 +1153,7 @@ public class IonFactory {
                     // related ions
                     ionsMap = result.get(Ion.IonType.RELATED_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.RELATED_ION.index, ionsMap);
                     }
                     ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
@@ -1163,7 +1163,7 @@ public class IonFactory {
 
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>(1);
+                            ions = new ArrayList<>(1);
                         }
 
                         ions.add(tempRelated);
@@ -1178,13 +1178,13 @@ public class IonFactory {
                             for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                 ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
                                 if (ionsMap == null) {
-                                    ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                                    ionsMap = new HashMap<>();
                                     result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
                                 }
                                 subType = ptmReporterIon.getSubType();
                                 ions = ionsMap.get(subType);
                                 if (ions == null) {
-                                    ions = new ArrayList<Ion>();
+                                    ions = new ArrayList<>();
                                     ionsMap.put(subType, ions);
                                     ions.add(ptmReporterIon);
                                 }
@@ -1204,7 +1204,7 @@ public class IonFactory {
                                 }
                             }
                             if (processedPtms == null) {
-                                processedPtms = new ArrayList<String>();
+                                processedPtms = new ArrayList<>();
                             }
                             processedPtms.add(ptmName);
                         }
@@ -1214,7 +1214,7 @@ public class IonFactory {
 
                     ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        ionsMap = new HashMap<>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
                     for (double massOffset : massOffsets) {
@@ -1230,7 +1230,7 @@ public class IonFactory {
                         subType = TagFragmentIon.X_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1241,7 +1241,7 @@ public class IonFactory {
                         subType = TagFragmentIon.Y_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1252,7 +1252,7 @@ public class IonFactory {
                         subType = TagFragmentIon.Z_ION;
                         ions = ionsMap.get(subType);
                         if (ions == null) {
-                            ions = new ArrayList<Ion>();
+                            ions = new ArrayList<>();
                             ionsMap.put(subType, ions);
                         }
                         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1260,7 +1260,7 @@ public class IonFactory {
                         }
                     }
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     double newMass = offsetMass + sequenceMass;
                     if (!newOffsetMasses.contains(newMass)) {
@@ -1276,7 +1276,7 @@ public class IonFactory {
 
                 HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                 if (ionsMap == null) {
-                    ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                    ionsMap = new HashMap<>();
                     result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                 }
                 for (double massOffset : massOffsets) {
@@ -1290,7 +1290,7 @@ public class IonFactory {
                     int subType = TagFragmentIon.X_ION;
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1301,7 +1301,7 @@ public class IonFactory {
                     subType = TagFragmentIon.Y_ION;
                     ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1312,7 +1312,7 @@ public class IonFactory {
                     subType = TagFragmentIon.Z_ION;
                     ions = ionsMap.get(subType);
                     if (ions == null) {
-                        ions = new ArrayList<Ion>();
+                        ions = new ArrayList<>();
                         ionsMap.put(subType, ions);
                     }
                     for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1320,7 +1320,7 @@ public class IonFactory {
                     }
 
                 }
-                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                ArrayList<Double> newOffsetMasses = new ArrayList<>();
                 for (double offsetMass : massOffsets) {
                     newOffsetMasses.add(offsetMass + gapMass);
                 }
@@ -1334,13 +1334,13 @@ public class IonFactory {
         // add the precursor ion
         HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PRECURSOR_ION.index);
         if (ionsMap == null) {
-            ionsMap = new HashMap<Integer, ArrayList<Ion>>(1);
+            ionsMap = new HashMap<>(1);
             result.put(Ion.IonType.PRECURSOR_ION.index, ionsMap);
         }
         int subType = PrecursorIon.PRECURSOR;
         ArrayList<Ion> ions = ionsMap.get(subType);
         if (ions == null) {
-            ions = new ArrayList<Ion>(neutralLossesCombinations.length);
+            ions = new ArrayList<>(neutralLossesCombinations.length);
             ionsMap.put(subType, ions);
         }
         for (NeutralLossCombination losses : neutralLossesCombinations) {
@@ -1387,8 +1387,8 @@ public class IonFactory {
     private ArrayList<ArrayList<NeutralLoss>> estimateNeutralLossesCombinations(ArrayList<NeutralLoss> possibleNeutralLosses) {
 
         // We will account for up to two neutral losses per ion maximum
-        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
-        ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>(0);
+        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<>();
+        ArrayList<NeutralLoss> tempList = new ArrayList<>(0);
         neutralLossesCombinations.add(tempList);
 
         for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
@@ -1399,7 +1399,7 @@ public class IonFactory {
                 }
             }
             if (!found) {
-                tempList = new ArrayList<NeutralLoss>(1);
+                tempList = new ArrayList<>(1);
                 tempList.add(neutralLoss1);
                 neutralLossesCombinations.add(tempList);
             }
@@ -1419,7 +1419,7 @@ public class IonFactory {
                         }
                     }
                     if (!found) {
-                        tempList = new ArrayList<NeutralLoss>(2);
+                        tempList = new ArrayList<>(2);
                         tempList.add(neutralLoss1);
                         tempList.add(neutralLoss2);
                         neutralLossesCombinations.add(tempList);

@@ -41,7 +41,7 @@ public class IntensityRankScore {
         double nMissedTolerance = 10 * ((double) spectrum.getNPeaks()) / 100;
 
         HashMap<Double, ArrayList<Peak>> intensityMap = spectrum.getIntensityMap();
-        ArrayList<Double> intensities = new ArrayList<Double>(intensityMap.keySet());
+        ArrayList<Double> intensities = new ArrayList<>(intensityMap.keySet());
         Collections.sort(intensities, Collections.reverseOrder());
 
         double rank = 0;

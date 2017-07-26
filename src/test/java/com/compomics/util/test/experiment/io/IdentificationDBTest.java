@@ -54,11 +54,11 @@ public class IdentificationDBTest extends TestCase {
                 String proteinKey = "test_protein";
                 Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
 
-                ArrayList<String> testProteins = new ArrayList<String>();
+                ArrayList<String> testProteins = new ArrayList<>();
                 testProteins.add("test protein1");
                 testProteins.add("test protein2");
 
-                Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+                Peptide peptide = new Peptide(peptideKey, new ArrayList<>());
                 SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
                 testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
                 idDB.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
@@ -89,7 +89,7 @@ public class IdentificationDBTest extends TestCase {
                 HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
-                ArrayList<Double> mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
+                ArrayList<Double> mascotScores = new ArrayList<>(mascotAssumptions.keySet());
                 Assert.assertTrue(mascotScores.size() == 1);
                 double bestScore = mascotScores.get(0);
                 Assert.assertTrue(bestScore == 0.1);
@@ -99,7 +99,7 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 2);
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
                 Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
-                ArrayList<String> proteins = new ArrayList<String>();
+                ArrayList<String> proteins = new ArrayList<>();
                 proteins.add(proteinKey);
                 bestPeptide.setParentProteins(proteins);
 
@@ -107,7 +107,7 @@ public class IdentificationDBTest extends TestCase {
                 assumptionsMap = testSpectrumMatch.getAssumptionsMap();
                 mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
-                mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
+                mascotScores = new ArrayList<>(mascotAssumptions.keySet());
                 Assert.assertTrue(mascotScores.size() == 1);
                 bestScore = mascotScores.get(0);
                 Assert.assertTrue(bestScore == 0.1);

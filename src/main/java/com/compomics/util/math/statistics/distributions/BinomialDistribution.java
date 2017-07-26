@@ -33,11 +33,11 @@ public class BinomialDistribution implements Distribution {
     /**
      * A cache for the probabilities.
      */
-    private HashMap<Integer, Double> pCache = new HashMap<Integer, Double>();
+    private HashMap<Integer, Double> pCache = new HashMap<>();
     /**
      * A cache for the cumulative probabilities.
      */
-    private HashMap<Integer, Double> descendingCumulativePCache = new HashMap<Integer, Double>();
+    private HashMap<Integer, Double> descendingCumulativePCache = new HashMap<>();
 
     /**
      * Constructor.
@@ -77,7 +77,7 @@ public class BinomialDistribution implements Distribution {
      */
     private synchronized void addPToCache(int k, Double p) {
         if (pCache.size() >= cacheSize) {
-            HashSet<Integer> keys = new HashSet<Integer>(pCache.keySet());
+            HashSet<Integer> keys = new HashSet<>(pCache.keySet());
             for (Integer key : keys) {
                 pCache.remove(key);
                 if (pCache.size() < cacheSize) {
@@ -121,7 +121,7 @@ public class BinomialDistribution implements Distribution {
      */
     private synchronized void addDescendingCumulativePToCache(int k, Double p) {
         if (descendingCumulativePCache.size() >= cacheSize) {
-            HashSet<Integer> keys = new HashSet<Integer>(descendingCumulativePCache.keySet());
+            HashSet<Integer> keys = new HashSet<>(descendingCumulativePCache.keySet());
             for (Integer key : keys) {
                 descendingCumulativePCache.remove(key);
                 if (descendingCumulativePCache.size() < cacheSize) {

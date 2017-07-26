@@ -184,9 +184,9 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      */
     public ArrayList<Integer> getImplementedIsotopes() {
         if (isotopeMap != null) {
-            return new ArrayList<Integer>(isotopeMap.keySet());
+            return new ArrayList<>(isotopeMap.keySet());
         }
-        return new ArrayList<Integer>();
+        return new ArrayList<>();
     }
 
     /**

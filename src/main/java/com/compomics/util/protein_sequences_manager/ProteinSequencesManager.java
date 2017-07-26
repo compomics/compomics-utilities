@@ -70,9 +70,9 @@ public class ProteinSequencesManager {
      * Parses the databases found in the working folder.
      */
     private void parseWorkingFolder() {
-        databaseNames = new ArrayList<String>();
-        databaseInputTypes = new HashMap<String, SequenceInputType>();
-        databaseIndexes = new HashMap<String, HashMap<String, FastaIndex>>();
+        databaseNames = new ArrayList<>();
+        databaseInputTypes = new HashMap<>();
+        databaseIndexes = new HashMap<>();
         parseSubFolder(getUniprotFolder(), SequenceInputType.uniprot);
         parseSubFolder(getUserFolder(), SequenceInputType.user);
         parseSubFolder(getDnaFolder(), SequenceInputType.dna);
@@ -123,7 +123,7 @@ public class ProteinSequencesManager {
                             databaseInputTypes.put(name, sequenceInputType);
                             HashMap<String, FastaIndex> fastaMap = databaseIndexes.get(name);
                             if (fastaMap == null) {
-                                fastaMap = new HashMap<String, FastaIndex>(1);
+                                fastaMap = new HashMap<>(1);
                                 databaseIndexes.put(name, fastaMap);
                             }
                             fastaMap.put(version, fastaIndex);
@@ -213,7 +213,7 @@ public class ProteinSequencesManager {
             }
             HashMap<String, FastaIndex> databaseMap = databaseIndexes.get(fastaName);
             if (databaseMap == null) {
-                databaseMap = new HashMap<String, FastaIndex>(1);
+                databaseMap = new HashMap<>(1);
                 databaseIndexes.put(fastaName, databaseMap);
             }
             databaseMap.put(version, newIndex);
@@ -279,7 +279,7 @@ public class ProteinSequencesManager {
      * the working folder
      */
     public ArrayList<String> getVersionsForDb(String databaseName) {
-        ArrayList<String> result = new ArrayList<String>(databaseIndexes.get(databaseName).keySet());
+        ArrayList<String> result = new ArrayList<>(databaseIndexes.get(databaseName).keySet());
         Collections.sort(result);
         return result;
     }

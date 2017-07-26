@@ -120,7 +120,7 @@ public class AScore {
 
         int peptideLength = peptide.getSequence().length();
 
-        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        ArrayList<Integer> possibleSites = new ArrayList<>();
         for (PTM ptm : ptms) {
             if (ptm.isNTerm()) {
                 if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
@@ -148,7 +148,7 @@ public class AScore {
                     spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM);
 
             HashMap<Double, ArrayList<Integer>> peptideScoreToPostitionMap = getPeptideScoreToPositionMap(positionToScoreMap);
-            ArrayList<Double> scores = new ArrayList<Double>(peptideScoreToPostitionMap.keySet());
+            ArrayList<Double> scores = new ArrayList<>(peptideScoreToPostitionMap.keySet());
             Collections.sort(scores, Collections.reverseOrder());
             ArrayList<Integer> bestScoringSites = peptideScoreToPostitionMap.get(scores.get(0));
             if (bestScoringSites.size() == 1) {
@@ -230,7 +230,7 @@ public class AScore {
                 return lowestScoreMap;
             }
         } else if (possibleSites.size() == nPTM) {
-            HashMap<Integer, Double> result = new HashMap<Integer, Double>();
+            HashMap<Integer, Double> result = new HashMap<>();
             for (int pos : possibleSites) {
                 result.put(pos, 100.0);
             }
@@ -294,7 +294,7 @@ public class AScore {
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
             SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException {
 
-        HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
+        HashMap<Integer, Double> result = new HashMap<>(2);
 
         int N = 0;
         int posMin = Math.min(bestPosition, secondPosition);
@@ -432,7 +432,7 @@ public class AScore {
      */
     public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
 
-        HashMap<Double, ArrayList<Integer>> result = new HashMap<Double, ArrayList<Integer>>();
+        HashMap<Double, ArrayList<Integer>> result = new HashMap<>();
 
         for (int pos : positionToScoreMap.keySet()) {
             Double peptideScore = 0.0;
@@ -478,7 +478,7 @@ public class AScore {
             }
             ArrayList<Integer> sites = result.get(peptideScore);
             if (sites == null) {
-                sites = new ArrayList<Integer>(2);
+                sites = new ArrayList<>(2);
                 result.put(peptideScore, sites);
             }
             sites.add(pos);
@@ -511,7 +511,7 @@ public class AScore {
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
             MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException {
 
-        HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
+        HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<>();
 
         int N = 0;
 
@@ -547,7 +547,7 @@ public class AScore {
                 Double score = -10 * MathUtils.log(10, bigP);
                 HashMap<Integer, Double> scoresAtPosition = positionToScoreMap.get(pos);
                 if (scoresAtPosition == null) {
-                    scoresAtPosition = new HashMap<Integer, Double>(2);
+                    scoresAtPosition = new HashMap<>(2);
                     positionToScoreMap.put(pos, scoresAtPosition);
                 }
                 scoresAtPosition.put(i + 1, score);
@@ -583,9 +583,9 @@ public class AScore {
      */
     public static HashMap<Integer, MSnSpectrum> getReducedSpectra(MSnSpectrum baseSpectrum, double mzTolerance, int depthMax) {
 
-        HashMap<Integer, MSnSpectrum> result = new HashMap<Integer, MSnSpectrum>();
+        HashMap<Integer, MSnSpectrum> result = new HashMap<>();
         HashMap<Double, Peak> tempMap, peakMap = baseSpectrum.getPeakMap();
-        ArrayList<Double> intensities, mz = new ArrayList<Double>(peakMap.keySet());
+        ArrayList<Double> intensities, mz = new ArrayList<>(peakMap.keySet());
         Collections.sort(mz);
         double mzMax = mz.get(mz.size() - 1);
         int cpt = 0;
@@ -606,15 +606,15 @@ public class AScore {
         }
 
         for (int i = 0; i < depthMax; i++) {
-            result.put(i, new MSnSpectrum(2, baseSpectrum.getPrecursor(), baseSpectrum.getSpectrumTitle() + "_" + i, new HashMap<Double, Peak>(), "a score"));
+            result.put(i, new MSnSpectrum(2, baseSpectrum.getPrecursor(), baseSpectrum.getSpectrumTitle() + "_" + i, new HashMap<>(), "a score"));
         }
 
         cpt = 0;
         currentmzMin = 0;
 
         while (currentmzMin < mzMax) {
-            intensities = new ArrayList<Double>();
-            tempMap = new HashMap<Double, Peak>();
+            intensities = new ArrayList<>();
+            tempMap = new HashMap<>();
 
             while (cpt < mz.size()
                     && mz.get(cpt) < currentmzMin + 20 * mzTolerance) {

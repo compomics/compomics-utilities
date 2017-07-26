@@ -163,13 +163,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
             if (taxons != null && !taxons.isEmpty()) {
 
-                ArrayList<String> speciesList = new ArrayList<String>(taxons.size());
-                selectedSpeciesList = new ArrayList<String>(taxons.size());
+                ArrayList<String> speciesList = new ArrayList<>(taxons.size());
+                selectedSpeciesList = new ArrayList<>(taxons.size());
 
                 speciesList.add(SELECT_SPECIES_TAG);
 
                 String selectedItem = null;
-                speciesToTaxonMap = new HashMap<String, Integer>();
+                speciesToTaxonMap = new HashMap<>();
                 for (Integer taxon : taxons) {
                     String speciesName = speciesFactory.getName(taxon);
                     String tempEnsemblVersion = geneFactory.getEnsemblVersion(taxon);

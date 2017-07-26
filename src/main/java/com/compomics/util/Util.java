@@ -913,7 +913,7 @@ public class Util {
      */
     public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
         Pattern pattern = Pattern.compile(smallString);
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         Matcher matcher = pattern.matcher(bigString);
         matcher.matches();
         int index = 0;

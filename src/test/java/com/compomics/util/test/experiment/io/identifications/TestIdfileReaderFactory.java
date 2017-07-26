@@ -63,8 +63,8 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-                HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-                ArrayList<String> versions = new ArrayList<String>();
+                HashMap<String, ArrayList<String>> result = new HashMap<>();
+                ArrayList<String> versions = new ArrayList<>();
                 versions.add("X.Y.Z");
                 result.put("testIdfileReaderRegistration", versions);
                 return result;
@@ -145,8 +145,8 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-            HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-            ArrayList<String> versions = new ArrayList<String>();
+            HashMap<String, ArrayList<String>> result = new HashMap<>();
+            ArrayList<String> versions = new ArrayList<>();
             versions.add("X.Y.Z");
             result.put("testIdfileReaderRegistration", versions);
             return result;

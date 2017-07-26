@@ -65,7 +65,7 @@ public class SimpleLinearRegression {
         Double b = yMean - (a * xMean);
         Double ssTot = 0.0;
         Double ssRes = 0.0;
-        ArrayList<Double> deltasSquare = new ArrayList<Double>(x.size());
+        ArrayList<Double> deltasSquare = new ArrayList<>(x.size());
 
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);

@@ -138,18 +138,18 @@ public class PeptideProteinMapping {
      * @return a map of the mapping
      */
     public static HashMap<String, HashMap<String, ArrayList<Integer>>> getPeptideProteinIndexesMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>(2);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<>(2);
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             String peptideSequence = peptideProteinMapping.getPeptideSequence();
             HashMap<String, ArrayList<Integer>> proteins = result.get(peptideSequence);
             if (proteins == null) {
-                proteins = new HashMap<String, ArrayList<Integer>>(2);
+                proteins = new HashMap<>(2);
                 result.put(peptideSequence, proteins);
             }
             String accession = peptideProteinMapping.getProteinAccession();
             ArrayList<Integer> indexes = proteins.get(accession);
             if (indexes == null) {
-                indexes = new ArrayList<Integer>(2);
+                indexes = new ArrayList<>(2);
                 proteins.put(accession, indexes);
             }
             indexes.add(peptideProteinMapping.getIndex());
@@ -166,12 +166,12 @@ public class PeptideProteinMapping {
      * @return a map of the mapping
      */
     public static HashMap<String, HashSet<String>> getPeptideProteinMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
-        HashMap<String, HashSet<String>> result = new HashMap<String, HashSet<String>>(peptideProteinMappings.size());
+        HashMap<String, HashSet<String>> result = new HashMap<>(peptideProteinMappings.size());
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             String peptideSequence = peptideProteinMapping.getPeptideSequence();
             HashSet<String> proteins = result.get(peptideSequence);
             if (proteins == null) {
-                proteins = new HashSet<String>(1);
+                proteins = new HashSet<>(1);
                 result.put(peptideSequence, proteins);
             }
             String accession = peptideProteinMapping.getProteinAccession();
@@ -189,8 +189,8 @@ public class PeptideProteinMapping {
      * @return a list of peptides
      */
     public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        HashMap<String, Peptide> peptidesMap = new HashMap<String, Peptide>(peptideProteinMappings.size());
-        HashMap<String, HashSet<String>> proteinsMap = new HashMap<String, HashSet<String>>(peptideProteinMappings.size());
+        HashMap<String, Peptide> peptidesMap = new HashMap<>(peptideProteinMappings.size());
+        HashMap<String, HashSet<String>> proteinsMap = new HashMap<>(peptideProteinMappings.size());
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             Peptide tempPeptide = new Peptide(peptideProteinMapping.getPeptideSequence(), peptideProteinMapping.getModificationMatches());
             String peptideKey = tempPeptide.getMatchingKey(sequenceMatchingPreferences);
@@ -198,7 +198,7 @@ public class PeptideProteinMapping {
             if (peptide == null) {
                 tempPeptide.addVariantMatches(peptideProteinMapping.getVariantMatches());
                 peptidesMap.put(peptideKey, tempPeptide);
-                HashSet<String> proteins = new HashSet<String>(1);
+                HashSet<String> proteins = new HashSet<>(1);
                 proteins.add(peptideProteinMapping.getProteinAccession());
                 proteinsMap.put(peptideKey, proteins);
             } else {
@@ -209,7 +209,7 @@ public class PeptideProteinMapping {
         }
         for (String peptideKey : peptidesMap.keySet()) {
             HashSet<String> proteins = proteinsMap.get(peptideKey);
-            ArrayList<String> sortedProteinList = new ArrayList<String>(proteins);
+            ArrayList<String> sortedProteinList = new ArrayList<>(proteins);
             Collections.sort(sortedProteinList);
             Peptide peptide = peptidesMap.get(peptideKey);
             peptide.setParentProteins(sortedProteinList);

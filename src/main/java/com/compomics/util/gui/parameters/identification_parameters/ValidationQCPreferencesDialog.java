@@ -28,15 +28,15 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     /**
      * List of the PSM quality filters.
      */
-    private ArrayList<Filter> psmFilters = new ArrayList<Filter>();
+    private ArrayList<Filter> psmFilters = new ArrayList<>();
     /**
      * List of the peptide quality filters.
      */
-    private ArrayList<Filter> peptideFilters = new ArrayList<Filter>();
+    private ArrayList<Filter> peptideFilters = new ArrayList<>();
     /**
      * List of the protein quality filters.
      */
-    private ArrayList<Filter> proteinFilters = new ArrayList<Filter>();
+    private ArrayList<Filter> proteinFilters = new ArrayList<>();
     /**
      * Boolean indicating whether the dialog was canceled.
      */
@@ -73,7 +73,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 psmFilters.add(filter.clone());
             }
         } else {
-            psmFilters = new ArrayList<Filter>();
+            psmFilters = new ArrayList<>();
         }
 
         ArrayList<Filter> originalPeptidesFilters = validationQCPreferences.getPeptideFilters();
@@ -82,7 +82,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 peptideFilters.add(filter.clone());
             }
         } else {
-            peptideFilters = new ArrayList<Filter>();
+            peptideFilters = new ArrayList<>();
         }
 
         ArrayList<Filter> originalProteinFilters = validationQCPreferences.getProteinFilters();
@@ -91,7 +91,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 proteinFilters.add(filter.clone());
             }
         } else {
-            proteinFilters = new ArrayList<Filter>();
+            proteinFilters = new ArrayList<>();
         }
 
         setUpGUI(validationQCPreferences);
@@ -124,7 +124,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 psmFilters.add(filter.clone());
             }
         } else {
-            psmFilters = new ArrayList<Filter>();
+            psmFilters = new ArrayList<>();
         }
 
         ArrayList<Filter> originalPeptidesFilters = validationQCPreferences.getPeptideFilters();
@@ -133,7 +133,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 peptideFilters.add(filter.clone());
             }
         } else {
-            peptideFilters = new ArrayList<Filter>();
+            peptideFilters = new ArrayList<>();
         }
 
         ArrayList<Filter> originalProteinFilters = validationQCPreferences.getProteinFilters();
@@ -142,7 +142,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
                 proteinFilters.add(filter.clone());
             }
         } else {
-            proteinFilters = new ArrayList<Filter>();
+            proteinFilters = new ArrayList<>();
         }
 
         setUpGUI(validationQCPreferences);

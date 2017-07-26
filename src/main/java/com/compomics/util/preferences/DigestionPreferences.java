@@ -266,7 +266,7 @@ public class DigestionPreferences implements Serializable {
      */
     public void addEnzyme(Enzyme enzyme) {
         if (enzymes == null) {
-            enzymes = new ArrayList<Enzyme>(1);
+            enzymes = new ArrayList<>(1);
         }
         enzymes.add(enzyme);
         setSpecificity(enzyme.getName(), Specificity.specific);
@@ -315,7 +315,7 @@ public class DigestionPreferences implements Serializable {
      */
     public void setnMissedCleavages(String enzymeName, int enzymeMissedCleavages) {
         if (nMissedCleavages == null) {
-            nMissedCleavages = new HashMap<String, Integer>(1);
+            nMissedCleavages = new HashMap<>(1);
         }
         nMissedCleavages.put(enzymeName, enzymeMissedCleavages);
     }
@@ -343,7 +343,7 @@ public class DigestionPreferences implements Serializable {
      */
     public void setSpecificity(String enzymeName, Specificity enzymeSpecificity) {
         if (specificity == null) {
-            specificity = new HashMap<String, Specificity>(1);
+            specificity = new HashMap<>(1);
         }
         specificity.put(enzymeName, enzymeSpecificity);
     }
@@ -428,11 +428,11 @@ public class DigestionPreferences implements Serializable {
             if (enzymes.size() != otherEnzymes.size()) {
                 return false;
             }
-            ArrayList<String> enzymeNames = new ArrayList<String>(enzymes.size());
+            ArrayList<String> enzymeNames = new ArrayList<>(enzymes.size());
             for (Enzyme enzyme : enzymes) {
                 enzymeNames.add(enzyme.getName());
             }
-            ArrayList<String> otherNames = new ArrayList<String>(otherEnzymes.size());
+            ArrayList<String> otherNames = new ArrayList<>(otherEnzymes.size());
             for (Enzyme enzyme : otherEnzymes) {
                 otherNames.add(enzyme.getName());
             }
@@ -543,7 +543,7 @@ public class DigestionPreferences implements Serializable {
         if (enzymes.size() == 1) {
             commonRestrictionAfter = enzymes.get(0).getRestrictionAfter();
         } else {
-            commonRestrictionAfter = new HashSet<Character>();
+            commonRestrictionAfter = new HashSet<>();
             for (Character aa : enzymes.get(0).getRestrictionAfter()) {
                 boolean missing = false;
                 for (Enzyme enzyme : enzymes) {
@@ -576,7 +576,7 @@ public class DigestionPreferences implements Serializable {
         if (enzymes.size() == 1) {
             commonRestrictionBefore = enzymes.get(0).getRestrictionBefore();
         } else {
-            commonRestrictionBefore = new HashSet<Character>();
+            commonRestrictionBefore = new HashSet<>();
             for (Character aa : enzymes.get(0).getRestrictionBefore()) {
                 boolean missing = false;
                 for (Enzyme enzyme : enzymes) {

@@ -42,11 +42,11 @@ public class SequenceFactory {
     /**
      * Map of the currently loaded Headers.
      */
-    private HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
+    private HashMap<String, Header> currentHeaderMap = new HashMap<>();
     /**
      * Map of the currently loaded proteins.
      */
-    private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
+    private HashMap<String, Protein> currentProteinMap = new HashMap<>();
     /**
      * Index of the FASTA file.
      */
@@ -67,7 +67,7 @@ public class SequenceFactory {
     /**
      * List of accessions of the loaded proteins.
      */
-    private ArrayList<String> loadedProteins = new ArrayList<String>();
+    private ArrayList<String> loadedProteins = new ArrayList<>();
     /**
      * Recognized flags for a decoy protein.
      */
@@ -75,7 +75,7 @@ public class SequenceFactory {
     /**
      * HashMap of the currently calculated protein molecular weights.
      */
-    private HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
+    private HashMap<String, Double> molecularWeights = new HashMap<>();
     /**
      * The default peptide to protein mapper.
      */
@@ -737,8 +737,8 @@ public class SequenceFactory {
     private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, String version,
             WaitingHandler waitingHandler) throws IOException {
 
-        HashMap<String, Long> indexes = new HashMap<String, Long>();
-        HashSet<String> decoyAccessions = new HashSet<String>();
+        HashMap<String, Long> indexes = new HashMap<>();
+        HashSet<String> decoyAccessions = new HashSet<>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
@@ -754,10 +754,10 @@ public class SequenceFactory {
         long index = bufferedRandomAccessFile.getFilePointer();
 
         // a map of the database header types
-        HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<Header.DatabaseType, Integer>();
+        HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<>();
 
         // a map of the species
-        HashMap<String, Integer> species = new HashMap<String, Integer>();
+        HashMap<String, Integer> species = new HashMap<>();
 
         StringBuilder sequenceBuilder = new StringBuilder();
         String accession = null;
@@ -1160,7 +1160,7 @@ public class SequenceFactory {
      * @return the sequences present in the database
      */
     public Set<String> getAccessions() {
-        Set<String> setToFill = new HashSet<String>();
+        Set<String> setToFill = new HashSet<>();
         if (fastaIndex != null) {
             setToFill = fastaIndex.getIndexes().keySet();
         }
@@ -1199,7 +1199,7 @@ public class SequenceFactory {
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, InterruptedException, ClassNotFoundException {
 
-        HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
+        HashMap<String, Integer> aaMap = new HashMap<>();
         Set<String> accessions = getAccessions();
 
         if (progressBar != null) {

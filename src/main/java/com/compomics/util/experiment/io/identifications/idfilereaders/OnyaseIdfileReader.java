@@ -139,8 +139,8 @@ public class OnyaseIdfileReader implements IdfileReader {
 
         // To remove
         String fileVersion = "test";
-        version = new HashMap<String, ArrayList<String>>(1);
-        ArrayList<String> versions = new ArrayList<String>(1);
+        version = new HashMap<>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add(fileVersion);
         version.put(Advocate.onyaseEngine.getName(), versions);
         mgfFile = "bla\\qExactive01819.mgf";
@@ -163,7 +163,7 @@ public class OnyaseIdfileReader implements IdfileReader {
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<String, SpectrumMatch>();
+        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
 
         String spectrumFileName = Util.getFileName(mgfFile);
         String resultFileName = Util.getFileName(resultsFile);
@@ -199,10 +199,10 @@ public class OnyaseIdfileReader implements IdfileReader {
             }
         }
 
-        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<>();
         for (SpectrumMatch spectrumMatch : spectrumMatchesMap.values()) {
             HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> assumptionsMap = spectrumMatch.getAllAssumptions(Advocate.onyaseEngine.getIndex());
-            ArrayList<Double> eValues = new ArrayList<Double>(assumptionsMap.keySet());
+            ArrayList<Double> eValues = new ArrayList<>(assumptionsMap.keySet());
             Collections.sort(eValues);
             int rank = 1;
             int cpt = 1;
@@ -232,11 +232,11 @@ public class OnyaseIdfileReader implements IdfileReader {
      */
     private ArrayList<ModificationMatch> getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
         if (modificationsString.length() == 0) {
-            return new ArrayList<ModificationMatch>(0);
+            return new ArrayList<>(0);
         }
         String decodedString = URLDecoder.decode(modificationsString, "utf-8");
         String[] modifications = decodedString.split(Peptide.MODIFICATION_SEPARATOR);
-        ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>(modifications.length);
+        ArrayList<ModificationMatch> modificationMatches = new ArrayList<>(modifications.length);
         for (String modification : modifications) {
             String[] modificationSplit = modification.split(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR);
             String modificationName = modificationSplit[0];

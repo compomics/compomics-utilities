@@ -50,7 +50,7 @@ public class AnnotationSettings implements Serializable {
     /**
      * The types of ions to annotate.
      */
-    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>(4);
+    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<>(4);
     /**
      * List of neutral losses to annotate.
      */
@@ -146,7 +146,7 @@ public class AnnotationSettings implements Serializable {
             }
             specificAnnotationPreferences.setNeutralLossesMap(tempNeutralLossesMap);
         }
-        ArrayList<Integer> charges = new ArrayList<Integer>(4);
+        ArrayList<Integer> charges = new ArrayList<>(4);
         int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
         if (precursorCharge == 1) {
             charges.add(precursorCharge);
@@ -288,7 +288,7 @@ public class AnnotationSettings implements Serializable {
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
         if (neutralLossesList == null) {
-            neutralLossesList = new ArrayList<NeutralLoss>(2);
+            neutralLossesList = new ArrayList<>(2);
         }
         return neutralLossesList;
     }
@@ -300,7 +300,7 @@ public class AnnotationSettings implements Serializable {
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
         if (neutralLossesList == null) {
-            neutralLossesList = new ArrayList<NeutralLoss>(2);
+            neutralLossesList = new ArrayList<>(2);
         }
         boolean alreadyInList = false;
         for (NeutralLoss tempNeutralLoss : neutralLossesList) {
@@ -330,7 +330,7 @@ public class AnnotationSettings implements Serializable {
      */
     public HashSet<Integer> getFragmentIonTypes() {
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-            return new HashSet<Integer>();
+            return new HashSet<>();
         } else {
             return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION); // @TOOO: what about tags..?
         }
@@ -344,7 +344,7 @@ public class AnnotationSettings implements Serializable {
      */
     public void addIonType(Ion.IonType ionType, int subType) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
+            selectedIonsMap.put(ionType, new HashSet<>());
         }
         this.selectedIonsMap.get(ionType).add(subType);
     }
@@ -356,7 +356,7 @@ public class AnnotationSettings implements Serializable {
      */
     public void addIonType(Ion.IonType ionType) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<Integer>());
+            selectedIonsMap.put(ionType, new HashSet<>());
         }
         for (int subType : Ion.getPossibleSubtypes(ionType)) {
             this.selectedIonsMap.get(ionType).add(subType);

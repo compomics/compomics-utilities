@@ -51,7 +51,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
     /**
      * A map of all the database types and how often they occur.
      */
-    private HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<Header.DatabaseType, Integer>();
+    private HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<>();
     /**
      * The version of the database.
      */

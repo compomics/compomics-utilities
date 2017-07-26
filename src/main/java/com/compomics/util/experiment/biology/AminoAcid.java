@@ -438,7 +438,7 @@ public abstract class AminoAcid implements Serializable {
      * codes
      */
     protected String[] getStandardGeneticCodeForCombination() {
-        ArrayList<String> uniqueCodes = new ArrayList<String>();
+        ArrayList<String> uniqueCodes = new ArrayList<>();
         for (char aa : getSubAminoAcids()) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             if (!aminoAcid.iscombination()) {

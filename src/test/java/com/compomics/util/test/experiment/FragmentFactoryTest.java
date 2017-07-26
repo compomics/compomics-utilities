@@ -39,9 +39,9 @@ public class FragmentFactoryTest extends TestCase {
     public void testPeptideFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        Peptide peptide = new Peptide(sequence, new ArrayList<ModificationMatch>());
+        Peptide peptide = new Peptide(sequence, new ArrayList<>());
 
-        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
+        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
@@ -377,7 +377,7 @@ public class FragmentFactoryTest extends TestCase {
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
         Tag tag = new Tag(0, AminoAcidPattern.getAminoAcidPatternFromString(sequence), 0);
 
-        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
+        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();

@@ -501,7 +501,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                 spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, index);
             }
         }
-
+        Advocate advocate = Advocate.getAdvocate(searchEngine);
         SpectrumMatch spectrumMatch = new SpectrumMatch(inputFileName, spectrumTitle);
         spectrumMatch.setSpectrumNumber(index);
 

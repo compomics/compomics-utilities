@@ -63,6 +63,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
     
     public void setTheoreticProtein(ArrayList<String> theoreticProtein){
+        zooActivateWrite();
         this.theoreticProtein = theoreticProtein;
     }
     
@@ -128,6 +129,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param proteinAccession the matching protein
      */
     public void addTheoreticProtein(String proteinAccession) {
+        zooActivateWrite();
         theoreticProtein.add(proteinAccession);
     }
 
@@ -177,6 +179,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKey a peptide key
      */
     public void addPeptideMatchKey(String peptideMatchKey) {
+        zooActivateWrite();
         if (!peptideMatchesKeys.contains(peptideMatchKey)) {
             peptideMatchesKeys.add(peptideMatchKey);
         }
@@ -198,6 +201,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of peptides found
      */
     public int getPeptideCount() {
+        zooActivateRead();
         return peptideMatchesKeys.size();
     }
 
@@ -207,6 +211,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {
+        zooActivateRead();
         for (String accession : theoreticProtein) {
             if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                 return true;
@@ -237,6 +242,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
+        zooActivateRead();
         Collections.sort(getTheoreticProtein());
         StringBuilder result = new StringBuilder();
         for (String accession : getTheoreticProtein()) {
@@ -296,6 +302,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of proteins for this match
      */
     public int getNProteins() {
+        zooActivateRead();
         return theoreticProtein.size();
     }
 
@@ -387,6 +394,7 @@ public class ProteinMatch extends IdentificationMatch {
      * set of theoretic proteins
      */
     public boolean contains(ProteinMatch proteinMatch) {
+        zooActivateRead();
         if (getKey().equals(proteinMatch.getKey())) {
             return false;
         }
@@ -407,6 +415,7 @@ public class ProteinMatch extends IdentificationMatch {
      * match
      */
     public boolean contains(String aProtein) {
+        zooActivateRead();
         return theoreticProtein.contains(aProtein);
     }
 
@@ -465,6 +474,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean hasEnzymaticPeptide(String accession, ArrayList<Enzyme> enzymes, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException {
+        zooActivateRead();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatchesKeys) {
             String peptideSequence = Peptide.getSequence(peptideKey);

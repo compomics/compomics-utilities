@@ -63,6 +63,7 @@ public class ModificationMatch extends ExperimentObject {
      * @return a boolean indicating if the modification is variable
      */
     public boolean getVariable() {
+        zooActivateRead();
         return variable;
     }
 
@@ -168,6 +169,7 @@ public class ModificationMatch extends ExperimentObject {
      * same.
      */
     public boolean isSameAs(ModificationMatch anotherModificationMatch) {
+        zooActivateRead();
         if (!theoreticPtm.equals(anotherModificationMatch.getTheoreticPtm())) {
             return false;
         }
@@ -180,6 +182,7 @@ public class ModificationMatch extends ExperimentObject {
      * @return a new modification match with the same attributes
      */
     public ModificationMatch clone() {
+        zooActivateRead();
         ModificationMatch newMatch = new ModificationMatch(theoreticPtm, variable, modifiedSite);
         newMatch.setConfident(confident);
         newMatch.setInferred(inferred);

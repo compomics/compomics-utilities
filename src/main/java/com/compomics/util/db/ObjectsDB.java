@@ -78,6 +78,22 @@ public class ObjectsDB {
     
     private HashMap<String, HashSet<Long>> classCounter = new HashMap<String, HashSet<Long>>();
     
+    private int currentAdded = 0;
+    
+    public void resetCurrentAdded(){
+        currentAdded = 0;
+    }
+    
+    public int getCurrentAdded(){
+        return currentAdded;
+    }
+    
+    public void commit() throws InterruptedException{
+        dbMutex.acquire();
+        pm.currentTransaction().commit();
+        pm.currentTransaction().begin();
+        dbMutex.release();
+    }
     
     /**
      * Constructor.
@@ -221,13 +237,12 @@ public class ObjectsDB {
      * occurred while interacting with the database
      */
     public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
-
         dbMutex.acquire();
         long longKey = createLongKey(objectKey);
         
-        if (debugInteractions) {
+        //if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey + "  /  " + longKey);
-        }
+        //}
         
         ((IdObject)object).setId(longKey);
         ((IdObject)object).setFirstLevel(true);
@@ -239,6 +254,10 @@ public class ObjectsDB {
             classCounter.get(object.getClass().getSimpleName()).add(longKey);
             
         }
+        else {
+            throw new InterruptedException("hoppla doppelt: " + objectKey);
+        }
+        currentAdded += 1;
         objectsCache.addObject(longKey, object);
         dbMutex.release();
     }
@@ -266,8 +285,11 @@ public class ObjectsDB {
      * occurred
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) throws IOException, InterruptedException, SQLException{
+        
+        dbMutex.acquire();
         dumpToDB();
         Query q = pm.newQuery(className, filters);
+        dbMutex.release();
         return ((SynchronizedROCollection<?>)q.execute()).iterator();
     }
     
@@ -292,6 +314,7 @@ public class ObjectsDB {
         
         
         dbMutex.acquire();
+        HashMap<Long, Object> objectsToAdd = new HashMap<Long, Object>(objects.size());
         for (String objectKey : objects.keySet()) {
             Object object = objects.get(objectKey);
             if (debugInteractions) {
@@ -307,16 +330,11 @@ public class ObjectsDB {
                     classCounter.put(object.getClass().getSimpleName(), new HashSet<Long>());
                 }
                 classCounter.get(object.getClass().getSimpleName()).add(longKey);
-
-            }
-            objectsCache.addObject(longKey, object);
-            
-            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-                pm.makePersistent(object);
-                pm.currentTransaction().commit();
-                pm.currentTransaction().begin();
+                objectsToAdd.put(longKey, object);
             }
         }
+        currentAdded += objects.size();
+        objectsCache.addObjects(objectsToAdd);
         dbMutex.release();
     }
     
@@ -342,11 +360,12 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Long> loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        
+        dbMutex.acquire();
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
         
-        dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Long> hashedKeys = new ArrayList<Long>();
         for (String objectKey : keys){
@@ -360,7 +379,6 @@ public class ObjectsDB {
             }
             
         }
-        dbMutex.release();
         if (hashedKeys.size() != keys.size()){
             throw new InterruptedException("Array sizes in function do not match, " + keys.size() + " vs. " + hashedKeys.size());
         }
@@ -368,6 +386,7 @@ public class ObjectsDB {
             objectsCache.addObjects(allObjects);
         }
         
+        dbMutex.release();
         return hashedKeys;
     }
     
@@ -393,12 +412,12 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        dbMutex.acquire();
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
         
         
-        dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
         for (Long longKey : hashedKeys){
@@ -409,64 +428,13 @@ public class ObjectsDB {
             }
             
         }
-        dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects);
         }
+        dbMutex.release();
         return new ArrayList<Long>(hashedKeys);
     }
     
-    
-    /**
-     * Loads some objects from a table in the cache.
-     *
-     * @param iterator the iterator
-     * @param num number of objects that have to be retrieved in a batch
-     * @param waitingHandler the waiting handler allowing displaying progress
-     * and canceling the process
-     * @param displayProgress boolean indicating whether the progress of this
-     * method should be displayed on the waiting handler
-     * @return returns the list of hashed keys
-     *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    /*
-    public ArrayList<Long> loadObjects(Iterator<?> iterator, int num, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " loading " + num + " objects");
-        }
-        
-        dbMutex.acquire();
-        HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
-        ArrayList<Long> hashedKeys = new ArrayList<Long>();
-        while(num > 0 && iterator.hasNext()){
-            if (waitingHandler.isRunCanceled()) break;
-            Object obj = iterator.next();
-            long longKey = ((IdObject)obj).getId();
-            hashedKeys.add(longKey);
-            Long zooid = idMap.get(longKey);
-            if (zooid != null){
-                if (!idMap.containsKey(longKey)){
-                    idMap.put(longKey, (Long)pm.getObjectId(obj));
-                }
-            }
-            allObjects.put(longKey, obj);
-            num--;
-        }
-        dbMutex.release();
-        if (waitingHandler != null && !waitingHandler.isRunCanceled()){
-            objectsCache.addObjects(allObjects, false);
-        }
-        return hashedKeys;
-    }
-    */
     
     /**
      * retrieves some objects from the database or cache.
@@ -484,23 +452,18 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public Object retrieveObject(long longKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        dbMutex.acquire();
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
         }
                 
         Object obj = objectsCache.getObject(longKey);
         if (obj == null){
-            dbMutex.acquire();
             Long zooid = idMap.get(longKey);
-            if (zooid != null){
-                obj = pm.getObjectById(zooid);
-                if (!idMap.containsKey(longKey)){
-                    idMap.put(longKey, (Long)pm.getObjectId(obj));
-                }
-            }
+            obj = pm.getObjectById(zooid);
             objectsCache.addObject(longKey, obj);
-            dbMutex.release();
         }
+        dbMutex.release();
         return obj;
     }
     
@@ -545,9 +508,10 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public int getNumber(Class className) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        //if (debugInteractions) {
+        dbMutex.acquire();
+        if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
-        //}
+        }
         
         for (String clsName : classCounter.keySet()){
             System.out.println(clsName + ": " + classCounter.get(clsName).size());
@@ -555,27 +519,14 @@ public class ObjectsDB {
         System.out.println();
         
         HashSet counter = classCounter.get(className.getSimpleName());
+        dbMutex.release();
         return (counter != null ? counter.size() : 0);
     }
     
-    
-    /**
-     * Clears the cache and dumps everything into the database.
-     * 
-     *
-     * @throws IOException if an IOException occurs while writing to the
-     * database
-     * @throws SQLException if an SQLException occurs while writing to the
-     * database
-     * @throws java.lang.InterruptedException if a threading error occurs
-     * writing to the database
-     */
-    public void clearCache() throws IOException, SQLException, InterruptedException {
-        objectsCache.clearCache();
-    }
-    
     public void dumpToDB() throws IOException, SQLException, InterruptedException {
+        dbMutex.acquire();
         objectsCache.saveCache(null, false);
+        dbMutex.release();
     }
     
     
@@ -599,35 +550,30 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Object> retrieveObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (debugInteractions) {
+        dbMutex.acquire();
+        if (true || debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
         }
         
-        dbMutex.acquire();
         ArrayList<Object> retrievingObjects = new ArrayList<Object>();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         for (String objectKey : keys){
-            if (waitingHandler.isRunCanceled()) break;
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
             Object obj = objectsCache.getObject(longKey);
             if (obj == null){
                 
                 Long zooid = idMap.get(longKey);
-                if (zooid != null){
-                    obj = pm.getObjectById(zooid);
-                    if (!idMap.containsKey(longKey)){
-                        idMap.put(longKey, (Long)pm.getObjectId(obj));
-                    }
-                    allObjects.put(longKey, obj);
-                }
+                obj = pm.getObjectById(zooid);
+                allObjects.put(longKey, obj);
             
             }
             retrievingObjects.add(obj);
         }
-        dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects);
         }
+        dbMutex.release();
         return retrievingObjects;
     }
     
@@ -653,28 +599,32 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (debugInteractions) {
+        dbMutex.acquire();
+        if (true || debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
         
         
-        dbMutex.acquire();
         HashMap<Long, Object> allObjects = new HashMap<Long, Object>();
         ArrayList<Object> retrievingObjects = new ArrayList<Object>();
-        for (Object obj : pm.getExtent(className)){
-            if (waitingHandler.isRunCanceled()) break;
-            long longKey = ((IdObject)obj).getId();
-            if (!idMap.containsKey(longKey)){
-                idMap.put(longKey, (Long)pm.getObjectId(obj));
+        for (long longKey : classCounter.get(className.getSimpleName())){
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
+            
+            Object obj = objectsCache.getObject(longKey);
+            if (obj == null){
+                
+                Long zooid = idMap.get(longKey);
+                obj = pm.getObjectById(zooid);
+                allObjects.put(longKey, obj);
+            
             }
-            allObjects.put(longKey, obj);
             retrievingObjects.add(obj);
             
         }
-        dbMutex.release();
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects);
         }
+        dbMutex.release();
         return retrievingObjects;
     }
     
@@ -700,17 +650,16 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        dbMutex.acquire();
+        
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
         }
-        
-        dbMutex.acquire();
         
         for (String key : keys){
             if (waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(key);
             String className = objectsCache.removeObject(longKey);
-            dbMutex.acquire();
             Long zooid = idMap.get(longKey);
             if (zooid != null){
                 if (zooid != 0){
@@ -743,6 +692,7 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void removeObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        dbMutex.acquire();
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " removing object: " + key);
         }
@@ -750,7 +700,6 @@ public class ObjectsDB {
         
         long longKey = createLongKey(key);
         String className = objectsCache.removeObject(longKey);
-        dbMutex.acquire();
         Long zooid = idMap.get(longKey);
         if (zooid != null){
             if (zooid != 0){
@@ -779,7 +728,10 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean inCache(String objectKey) throws SQLException, InterruptedException {
-        return objectsCache.inCache(createLongKey(objectKey));
+        dbMutex.acquire();
+        boolean isInCache = objectsCache.inCache(createLongKey(objectKey));
+        dbMutex.release();
+        return isInCache;
     }
     
     
@@ -796,14 +748,17 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean inDB(String objectKey) throws SQLException, InterruptedException {
+        dbMutex.acquire();
 
         long longKey = createLongKey(objectKey);
 
         if (objectsCache.inCache(longKey)) {
+            dbMutex.release();
             return true;
         }
-
-        return savedInDB(objectKey);
+        boolean isInDB = savedInDB(objectKey);
+        dbMutex.release();
+        return isInDB;
     }
 
     /**
@@ -825,13 +780,10 @@ public class ObjectsDB {
         
         long longKey = createLongKey(objectKey);
         
-        dbMutex.acquire();
         Query q = pm.newQuery(IdObject.class, "id == " + longKey);
         if( ((Collection<?>) q.execute()).size() > 0){
-            dbMutex.release();
             return true;
         }
-        dbMutex.release();
         return false;
     }   
 
@@ -875,6 +827,7 @@ public class ObjectsDB {
      */
     public void close(boolean clearing) throws SQLException, InterruptedException, IOException, ClassNotFoundException {
         
+        dbMutex.acquire();
         for (String className : classCounter.keySet()){
             System.out.println(className + ": " + classCounter.get(className).size());
         }
@@ -882,7 +835,6 @@ public class ObjectsDB {
         
         objectsCache.saveCache(null, clearing);
         
-        dbMutex.acquire();
         connectionActive = false;
         pm.currentTransaction().commit();
         if (pm.currentTransaction().isActive()) {
@@ -892,7 +844,6 @@ public class ObjectsDB {
         pm.getPersistenceManagerFactory().close();
         if (clearing) idMap.clear();
         dbMutex.release();
-
     }
     
     /**
@@ -926,10 +877,10 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public void establishConnection(boolean loading) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        dbMutex.acquire();
         if (debugInteractions){
             System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
         }
-        dbMutex.acquire();
         idMap.clear();
         classCounter.clear();
         
@@ -937,7 +888,6 @@ public class ObjectsDB {
         pm.currentTransaction().begin();
         connectionActive = true;
         
-        dbMutex.release();
         
         if (loading){
             Query q = pm.newQuery(IdObject.class, "firstLevel == true");
@@ -953,6 +903,7 @@ public class ObjectsDB {
                 classCounter.get(obj.getClass().getSimpleName()).add(id);
             }
         }
+        dbMutex.release();
     }
     
     

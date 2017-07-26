@@ -121,6 +121,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey the key of a spectrum match
      */
     public void addSpectrumMatchKey(String spectrumMatchKey) {
+        zooActivateWrite();
         if (!spectrumMatchesKeys.contains(spectrumMatchKey)) {
             spectrumMatchesKeys.add(spectrumMatchKey);
         } else {

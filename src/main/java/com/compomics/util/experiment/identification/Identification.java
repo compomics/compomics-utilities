@@ -478,23 +478,6 @@ public abstract class Identification extends ExperimentObject {
     }
     
     
-    
-    /**
-     * Clears the cache and dumps everything into the database.
-     * 
-     *
-     * @throws IOException if an IOException occurs while writing to the
-     * database
-     * @throws SQLException if an SQLException occurs while writing to the
-     * database
-     * @throws java.lang.InterruptedException if a threading error occurs
-     * writing to the database
-     */
-    public void clearCache() throws IOException, SQLException, InterruptedException {
-        objectsDB.clearCache();
-    }
-    
-    
 
     /**
      * Checks if database contains a certain object.

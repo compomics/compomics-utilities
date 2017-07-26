@@ -74,7 +74,6 @@ public class IdentificationDBTest extends TestCase {
                 idDB.addObject(ProjectParameters.nameForDatabase, projectParameters);
 
                 idDB.getObjectsDB().dumpToDB();
-                idDB.clearCache();
                 idDB.close();
 
                 objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);

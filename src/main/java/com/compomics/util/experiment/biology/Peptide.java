@@ -157,7 +157,7 @@ public class Peptide extends ExperimentObject {
      * for forbidden characters.
      */
     private void sanityCheck() {
-        zooActivateRead();
+        zooActivateWrite();
         sequence = sequence.replaceAll("[#*$%&]", "");
         if (modificationMatches != null) {
             for (ModificationMatch mod : modificationMatches) {

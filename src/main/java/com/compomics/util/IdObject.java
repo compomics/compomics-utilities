@@ -8,6 +8,7 @@ package com.compomics.util;
 
 import java.io.Serializable;
 import org.zoodb.api.impl.ZooPC;
+import com.compomics.util.db.ObjectsDB;
 
 /**
  * All classes that are stored in the backend need a unique identifier,
@@ -34,7 +35,7 @@ public class IdObject extends ZooPC implements Serializable {
     public IdObject(){}
     
     public void setId(long id){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.id = id;
     }
     

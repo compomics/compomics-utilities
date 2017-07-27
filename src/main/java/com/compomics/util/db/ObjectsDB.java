@@ -90,20 +90,28 @@ public class ObjectsDB {
         return readWriteCounter;
     }
     
-    public static void increaseRWCounter() throws InterruptedException{
-        forCommit.acquire();
-        forCommit.release();
-        forRW.acquire();
-        readWriteCounter++;
-        forRW.release();
+    public static void increaseRWCounter() {
+        try {
+            forCommit.acquire();
+            forCommit.release();
+            forRW.acquire();
+            readWriteCounter++;
+            forRW.release();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
     
-    public static void decreaseRWCounter() throws InterruptedException{
-        forCommit.acquire();
-        forCommit.release();
-        forRW.acquire();
-        readWriteCounter--;
-        forRW.release();
+    public static void decreaseRWCounter() {
+        try {
+            forRW.acquire();
+            readWriteCounter--;
+            forRW.release();
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
     
     public static void setCommitSemaphore(boolean activate) throws InterruptedException {

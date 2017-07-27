@@ -145,6 +145,7 @@ public class ObjectsCache {
      */
     public void addObject(Long objectKey, Object object) throws IOException, SQLException, InterruptedException {
         loadedObjectMutex.acquire();
+        semaphore = true;
         if (!readOnly) {            
             
             if (!loadedObjects.containsKey(objectKey)){
@@ -160,8 +161,7 @@ public class ObjectsCache {
                     objectsDB.getIdMap().put(objectKey, zooid);
                 }
                 if (objectsDB.getCurrentAdded() > 1000){
-                    objectsDB.getDB().currentTransaction().commit();
-                    objectsDB.getDB().currentTransaction().begin();
+                    commit();
                     objectsDB.resetCurrentAdded();
                 }
                 
@@ -169,6 +169,7 @@ public class ObjectsCache {
             }
             updateCache();
         }
+        semaphore = false;
         loadedObjectMutex.release();
     }
 
@@ -188,6 +189,7 @@ public class ObjectsCache {
      */
     public void addObjects(HashMap<Long, Object> objects) throws IOException, SQLException, InterruptedException {
         loadedObjectMutex.acquire();
+        semaphore = true;
         if (!readOnly) {            
             
             loadedObjects.putAll(objects);
@@ -203,13 +205,13 @@ public class ObjectsCache {
             }
             
             if (objectsDB.getCurrentAdded() > 1000){
-                objectsDB.getDB().currentTransaction().commit();
-                objectsDB.getDB().currentTransaction().begin();
+                commit();
                 objectsDB.resetCurrentAdded();
             }
             
             updateCache();
         }
+        semaphore = false;
         loadedObjectMutex.release();
     }
 
@@ -303,14 +305,26 @@ public class ObjectsCache {
                 
                 if (clearEntries) loadedObjects.remove(key);
             }
-            pm.currentTransaction().commit();
-            pm.currentTransaction().begin();
+            commit();
             
             
             System.out.println("storing out");
         }
         if (!semaphore) loadedObjectMutex.release();
     }
+    
+    
+    public void commit() throws InterruptedException {
+        if (!semaphore) loadedObjectMutex.acquire();
+        PersistenceManager pm = objectsDB.getDB();
+        ObjectsDB.setCommitSemaphore(true);
+        while(ObjectsDB.getRWCounter() > 0){}
+        pm.currentTransaction().commit();
+        pm.currentTransaction().begin();
+        ObjectsDB.setCommitSemaphore(false);
+        if (!semaphore) loadedObjectMutex.release();
+    }
+    
 
     /**
      * Updates the cache according to the memory settings.

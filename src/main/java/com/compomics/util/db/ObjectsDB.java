@@ -837,13 +837,7 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
         
-        long longKey = createLongKey(objectKey);
-        
-        Query q = pm.newQuery(IdObject.class, "id == " + longKey);
-        if( ((Collection<?>) q.execute()).size() > 0){
-            return true;
-        }
-        return false;
+        return idMap.containsKey(createLongKey(objectKey));
     }   
 
 

@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.IdObject;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.variants.Variant;
-import org.zoodb.api.impl.ZooPC;
 
 /**
  * Class capturing the information on a variant.
@@ -10,7 +10,7 @@ import org.zoodb.api.impl.ZooPC;
  * @author Marc Vaudel
  * @author Dominik Kopczynski
  */
-public class VariantMatch extends ZooPC {
+public class VariantMatch extends IdObject {
     
     /**
      * The variant.

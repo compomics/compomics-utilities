@@ -1,5 +1,6 @@
 package com.compomics.util.general;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.IdObject;
 
 /**
@@ -37,7 +38,7 @@ public class BoxedObject<K> extends IdObject {
      * @return the boxed object
      */
     public K getObject() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return object;
     }
 
@@ -47,7 +48,7 @@ public class BoxedObject<K> extends IdObject {
      * @param object the boxed object
      */
     public void setObject(K object) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.object = object;
     }
 }

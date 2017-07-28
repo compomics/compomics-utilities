@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -59,7 +60,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification rank
      */
     public int getRank() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return rank;
     }
 
@@ -69,7 +70,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param rank the rank of the PeptideAssumptio
      */
     public void setRank(int rank) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.rank = rank;
     }
 
@@ -79,12 +80,12 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the advocate index
      */
     public int getAdvocate() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return advocate;
     }
     
     public void setAdvocate(int advocate){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.advocate = advocate;
     }
 
@@ -94,7 +95,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the score
      */
     public double getScore() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return score;
     }
 
@@ -105,7 +106,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param score the score
      */
     public void setScore(double score) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.score = score;
     }
 
@@ -115,12 +116,12 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification file
      */
     public String getIdentificationFile() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return identificationFile;
     }
     
     public void setIdentificationFile(String identificationFile){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.identificationFile = identificationFile;
     }
 
@@ -130,7 +131,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the charge used for identification
      */
     public Charge getIdentificationCharge() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return identificationCharge;
     }
 
@@ -140,7 +141,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param identificationCharge the identification charge
      */
     public void setIdentificationCharge(Charge identificationCharge) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.identificationCharge = identificationCharge;
     }
 
@@ -157,7 +158,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the theoretic m/z
      */
     public double getTheoreticMz() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
     }
 
@@ -176,7 +177,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the precursor mass error (in ppm or Da)
      */
     public double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 
@@ -190,7 +191,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the precursor isotope number according to the number of protons
      */
     public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber(minIsotope, maxIsotope);
     }
 
@@ -201,7 +202,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the ion match
      */
     public IonMatch getPrecursorMatch(Peak precursorPeak) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge().value);
     }
 
@@ -211,7 +212,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the raw score as provided by the identification algorithm
      */
     public double getRawScore() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return rawScore;
     }
 
@@ -221,7 +222,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param rawScore the raw score as provided by the identification algorithm
      */
     public void setRawScore(double rawScore) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.rawScore = rawScore;
     }
 
@@ -233,7 +234,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the amino acid scores
      */
     public ArrayList<double[]> getAminoAcidScores() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return aminoAcidScores;
     }
 
@@ -245,7 +246,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param aminoAcidScores the amino acid scores
      */
     public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.aminoAcidScores = aminoAcidScores;
     }
 }

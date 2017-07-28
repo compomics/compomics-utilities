@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -46,22 +47,22 @@ public class Charge extends ExperimentObject {
     }
     
     public int getSign(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return sign;
     }
     
     public void setSign(int sign){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.sign = sign;
     }
     
     public int getValue(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return value;
     }
     
     public void setValue(int value){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.value = value;
     }
     
@@ -73,7 +74,7 @@ public class Charge extends ExperimentObject {
      * @return charge as a string
      */
     public String toString() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         switch (sign) {
             case PLUS:
                 return value + "+";
@@ -92,7 +93,7 @@ public class Charge extends ExperimentObject {
      */
     public String getChargeAsFormattedString() {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         String temp = "";
 
         for (int i = 0; i < value; i++) {
@@ -112,7 +113,7 @@ public class Charge extends ExperimentObject {
 
     @Override
     public int hashCode() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int hash = 7;
         hash = 97 * hash + this.sign;
         hash = 97 * hash + this.value;
@@ -121,7 +122,7 @@ public class Charge extends ExperimentObject {
 
     @Override
     public boolean equals(Object obj) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (obj == null) {
             return false;
         }

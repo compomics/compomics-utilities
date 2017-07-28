@@ -5,6 +5,7 @@
  */
 package com.compomics.util;
 
+import com.compomics.util.db.ObjectsDB;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,17 +44,17 @@ public class BlobObject extends IdObject {
     }
     
     public void setBlob(byte[] blob){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.blob = blob;
     }
     
     public byte[] getBlob(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return blob;
     }
     
     public Object unBlob() throws IOException, ClassNotFoundException{
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         Object object;
         ByteArrayInputStream bais = new ByteArrayInputStream(blob);
         BufferedInputStream bis = new BufferedInputStream(bais);

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
@@ -63,12 +64,12 @@ public class ProteinMatch extends IdentificationMatch {
     }
     
     public void setTheoreticProtein(ArrayList<String> theoreticProtein){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.theoreticProtein = theoreticProtein;
     }
     
     public int getCacheSize(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return cacheSize;
     }
 
@@ -119,7 +120,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the accessions of the possible theoretic proteins
      */
     public ArrayList<String> getTheoreticProtein() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return theoreticProtein;
     }
 
@@ -129,7 +130,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param proteinAccession the matching protein
      */
     public void addTheoreticProtein(String proteinAccession) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         theoreticProtein.add(proteinAccession);
     }
 
@@ -139,7 +140,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the main match accession after protein inference
      */
     public String getMainMatch() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return mainMatch;
     }
 
@@ -149,7 +150,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param mainMatch the main match
      */
     public void setMainMatch(String mainMatch) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.mainMatch = mainMatch;
     }
 
@@ -159,17 +160,17 @@ public class ProteinMatch extends IdentificationMatch {
      * @return subordinated peptide keys
      */
     public ArrayList<String> getPeptideMatchesKeys() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peptideMatchesKeys;
     }
     
     public HashMap<String, String[]> getProteinGroupCache(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return proteinGroupCache;
     }
     
     public int getSizeOfProteinsInCache(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return sizeOfProteinsInCache;
     }
 
@@ -179,7 +180,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKey a peptide key
      */
     public void addPeptideMatchKey(String peptideMatchKey) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (!peptideMatchesKeys.contains(peptideMatchKey)) {
             peptideMatchesKeys.add(peptideMatchKey);
         }
@@ -191,7 +192,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKeys the peptide match keys
      */
     public void setPeptideMatchesKeys(ArrayList<String> peptideMatchKeys) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         peptideMatchesKeys = peptideMatchKeys;
     }
 
@@ -201,7 +202,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of peptides found
      */
     public int getPeptideCount() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peptideMatchesKeys.size();
     }
 
@@ -211,7 +212,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         for (String accession : theoreticProtein) {
             if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                 return true;
@@ -242,7 +243,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         Collections.sort(getTheoreticProtein());
         StringBuilder result = new StringBuilder();
         for (String accession : getTheoreticProtein()) {
@@ -302,7 +303,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of proteins for this match
      */
     public int getNProteins() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return theoreticProtein.size();
     }
 
@@ -394,7 +395,7 @@ public class ProteinMatch extends IdentificationMatch {
      * set of theoretic proteins
      */
     public boolean contains(ProteinMatch proteinMatch) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (getKey().equals(proteinMatch.getKey())) {
             return false;
         }
@@ -415,7 +416,7 @@ public class ProteinMatch extends IdentificationMatch {
      * match
      */
     public boolean contains(String aProtein) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return theoreticProtein.contains(aProtein);
     }
 
@@ -474,7 +475,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean hasEnzymaticPeptide(String accession, ArrayList<Enzyme> enzymes, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatchesKeys) {
             String peptideSequence = Peptide.getSequence(peptideKey);

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
@@ -94,12 +95,12 @@ public class Tag extends ExperimentObject {
      * @return the content of this tag as a list
      */
     public ArrayList<TagComponent> getContent() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return content;
     }
     
     public void setContent(ArrayList<TagComponent> content){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.content = content;
     }
 
@@ -109,7 +110,7 @@ public class Tag extends ExperimentObject {
      * @param massGap the value of the mass gap
      */
     public void addMassGap(double massGap) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (massGap != 0) {
             content.add(new MassGap(massGap));
         }
@@ -121,7 +122,7 @@ public class Tag extends ExperimentObject {
      * @param aminoAcidPattern the amino acid sequence with modifications
      */
     public void addAminoAcidPattern(AminoAcidPattern aminoAcidPattern) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (aminoAcidPattern.length() > 0) {
             if (!content.isEmpty()) {
                 TagComponent lastComponent = content.get(content.size() - 1);
@@ -141,7 +142,7 @@ public class Tag extends ExperimentObject {
      * @param aminoAcidSequence the amino acid sequence with modifications
      */
     public void addAminoAcidSequence(AminoAcidSequence aminoAcidSequence) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (aminoAcidSequence.length() > 0) {
             if (!content.isEmpty()) {
                 TagComponent lastComponent = content.get(content.size() - 1);
@@ -162,7 +163,7 @@ public class Tag extends ExperimentObject {
      * @return The tag as intelligible sequence for display.
      */
     public String asSequence() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         StringBuilder result = new StringBuilder(content.size() * 4);
         for (TagComponent tagComponent : content) {
             result.append(tagComponent.asSequence());
@@ -176,7 +177,7 @@ public class Tag extends ExperimentObject {
      * @return the longest amino acid sequence contained in this tag
      */
     public String getLongestAminoAcidSequence() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         String result = "";
         AminoAcidPattern lastAminoAcidPattern = null;
         AminoAcidSequence lastAminoAcidSequence = null;
@@ -233,7 +234,7 @@ public class Tag extends ExperimentObject {
      * @return the mass of the tag
      */
     public double getMass() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double mass = Atom.H.getMonoisotopicMass();
         for (TagComponent tagComponent : content) {
             mass += tagComponent.getMass();
@@ -253,7 +254,7 @@ public class Tag extends ExperimentObject {
      * @return the theoretic mass of the tag
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double mass = getMass();
         if (!includeCTermGap) {
             mass -= getCTerminalGap();
@@ -270,7 +271,7 @@ public class Tag extends ExperimentObject {
      * @return the N-terminal gap of the tag
      */
     public double getNTerminalGap() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.isEmpty()) {
             return 0;
         }
@@ -288,7 +289,7 @@ public class Tag extends ExperimentObject {
      * @return the C-terminal gap of the tag
      */
     public double getCTerminalGap() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.isEmpty()) {
             return 0;
         }
@@ -321,7 +322,7 @@ public class Tag extends ExperimentObject {
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedModifications, boolean includeTerminalGaps) {
         
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, excludeAllFixedModifications, includeTerminalGaps);
     }
 
@@ -344,7 +345,7 @@ public class Tag extends ExperimentObject {
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps) {
         
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false, includeTerminalGaps);
     }
 
@@ -411,7 +412,7 @@ public class Tag extends ExperimentObject {
      * @return the N-terminal tag of this tag
      */
     public String getNTerminal(boolean includeTerminalGaps) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.isEmpty()) {
             return "";
         }
@@ -459,7 +460,7 @@ public class Tag extends ExperimentObject {
      * @return the C-terminal tag of this tag
      */
     public String getCTerminal(boolean includeTerminalGaps) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.isEmpty()) {
             return "";
         }
@@ -506,7 +507,7 @@ public class Tag extends ExperimentObject {
      * @return the amino acid length of the tag
      */
     public int getLengthInAminoAcid() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int length = 0;
         for (TagComponent tagComponent : content) {
             if (tagComponent instanceof AminoAcidPattern) {
@@ -547,7 +548,7 @@ public class Tag extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         AminoAcidPattern ptmPattern = ptm.getPattern(); 
         int patternLength = ptmPattern.length(); // @TODO: what if pattern is null..?
@@ -640,7 +641,7 @@ public class Tag extends ExperimentObject {
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameAs(Tag anotherTag, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.size() != anotherTag.getContent().size()) {
             return false;
         }
@@ -664,7 +665,7 @@ public class Tag extends ExperimentObject {
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.size() != anotherTag.getContent().size()) {
             return false;
         }
@@ -757,7 +758,7 @@ public class Tag extends ExperimentObject {
      * @return a new tag instance which is a reversed version of the current tag
      */
     public Tag reverse(boolean yIon) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double water = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
         Tag newTag = new Tag();
         for (int i = content.size() - 1; i >= 0; i--) {
@@ -796,7 +797,7 @@ public class Tag extends ExperimentObject {
      * @return whether the tag can be reversed
      */
     public boolean canReverse() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double water = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
         TagComponent terminalComponent = content.get(0);
         if (terminalComponent instanceof MassGap) {

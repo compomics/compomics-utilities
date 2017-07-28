@@ -40,28 +40,28 @@ public class IdObject extends ZooPC implements Serializable {
     }
     
     public boolean getFirstLevel(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return firstLevel;
     }
     
     public void setFirstLevel(boolean firstLevel){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.firstLevel = firstLevel;
     }
     
     public long getId(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return id;
     }
     
     public boolean getStoredInDB(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return storedInDB;
     }
     
     
     public void setStoredInDB(boolean storedInDB){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.storedInDB = storedInDB;
     }
 }

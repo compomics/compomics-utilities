@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.variants.Variant;
 import org.zoodb.api.impl.ZooPC;
 
@@ -43,7 +44,7 @@ public class VariantMatch extends ZooPC {
      * @return the variant
      */
     public Variant getVariant() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return variant;
     }
 
@@ -53,7 +54,7 @@ public class VariantMatch extends ZooPC {
      * @return the site on the peptide
      */
     public int getSite() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return site;
     }
 
@@ -63,22 +64,22 @@ public class VariantMatch extends ZooPC {
      * @return the protein accession where this variant was found
      */
     public String getProteinAccession() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return proteinAccession;
     }
     
     public void setProteinAccession(String proteinAccession){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.proteinAccession = proteinAccession;
     }
     
     public void setSite(int site){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.site = site;
     }
     
     public void setVariant(Variant variant){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.variant = variant;
     }
 }

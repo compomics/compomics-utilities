@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.IdObject;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
@@ -60,22 +61,22 @@ public class SpectrumIndex extends IdObject implements UrParameter {
     }
     
     public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peaksMap;
     }
     
     public boolean getPpm(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return ppm;
     }
     
     public double getPrecursorToleance(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return precursorTolerance;
     }
     
     public double getScalingFactor(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return scalingFactor;
     }
 
@@ -124,7 +125,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     public int getBin(double mz) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (ppm) {
             return getBinPpm(mz);
         } else {
@@ -141,7 +142,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     private int getBinAbsolute(double mz) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int bin = (int) (mz / precursorTolerance);
         return bin;
     }
@@ -155,7 +156,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bin
      */
     private int getBinPpm(double mz) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
         return bin;
     }
@@ -169,7 +170,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the peaks matching the given m/z
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int bin0;
         if (ppm) {
             bin0 = getBinPpm(mz);
@@ -228,7 +229,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new ArrayList<Integer>(peaksMap.keySet());
     }
 
@@ -238,7 +239,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the bins in the map
      */
     public Set<Integer> getRawBins() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peaksMap.keySet();
     }
 
@@ -250,7 +251,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the peaks at the given bin
      */
     public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peaksMap.get(bin);
     }
 
@@ -262,7 +263,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the mass associated with the given bin
      */
     public Double getMass(int bin) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (ppm) {
             return FastMath.exp((scalingFactor * bin) + mzAnchorLog);
         } else {
@@ -276,7 +277,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return binMax the highest bin
      */
     public Integer getBinMax() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return binMax;
     }
 
@@ -286,7 +287,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return binMin the lowest bin
      */
     public Integer getBinMin() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return binMin;
     }
 
@@ -296,7 +297,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @return the total intensity of the peaks above the intensity threshold
      */
     public Double getTotalIntensity() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return totalIntensity;
     }
 
@@ -306,37 +307,37 @@ public class SpectrumIndex extends IdObject implements UrParameter {
     }
     
     public void setBinMax(Integer binMax){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.binMax = binMax;
     }
     
     public void setBinMin(Integer binMin){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.binMin = binMin;
     }
     
     public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.peaksMap = peaksMap;
     }
     
     public void setPpm(boolean ppm){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.ppm = ppm;
     }
     
     public void setPrecursorTolerance(double precursorTolerance){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.precursorTolerance = precursorTolerance;
     }
     
     public void setScalingFactor(double scalingFactor){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.scalingFactor = scalingFactor;
     }
     
     public void setTotalIntensity(Double totalIntensity){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.totalIntensity = totalIntensity;
     }
 }

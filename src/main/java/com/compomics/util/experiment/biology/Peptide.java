@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -86,42 +87,42 @@ public class Peptide extends ExperimentObject {
     
     
     public void setMass(double mass){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.mass = mass;
     }
     
     public void setKey(String key){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.key = key;
     }
     
     public ArrayList<String> getParentProteins(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return parentProteins;
     }
     
     public void setMatchingKey(String matchingKey){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.matchingKey = matchingKey;
     }
     
     public void setSequenceWithLowerCasePtms(String sequenceWithLowerCasePtms){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.sequenceWithLowerCasePtms = sequenceWithLowerCasePtms;
     }
     
     public void setVariants(ArrayList<VariantMatch> variantMatches){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.variantMatches = variantMatches;
     }
     
     public ArrayList<VariantMatch> getVariants(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return variantMatches;
     }
     
     public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.variantsMap = variantsMap;
     }
 
@@ -157,7 +158,7 @@ public class Peptide extends ExperimentObject {
      * for forbidden characters.
      */
     private void sanityCheck() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         sequence = sequence.replaceAll("[#*$%&]", "");
         if (modificationMatches != null) {
             for (ModificationMatch mod : modificationMatches) {
@@ -194,7 +195,7 @@ public class Peptide extends ExperimentObject {
      * @return the peptide mass
      */
     public double getMass() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (mass == 0) {
             estimateTheoreticMass();
         }
@@ -207,7 +208,7 @@ public class Peptide extends ExperimentObject {
      * @return the modifications matches as found by the search engine
      */
     public ArrayList<ModificationMatch> getModificationMatches() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return modificationMatches;
     }
 
@@ -217,7 +218,7 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatches the new modification matches
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.modificationMatches = modificationMatches;
         mass = 0;
         key = null;
@@ -228,7 +229,7 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported modification matches.
      */
     public void clearModificationMatches() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         modificationMatches.clear();
         mass = 0;
         key = null;
@@ -241,7 +242,7 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (modificationMatches == null) {
             modificationMatches = new ArrayList<ModificationMatch>(1);
         }
@@ -257,7 +258,7 @@ public class Peptide extends ExperimentObject {
      * @return the variants matches as found by the search engine
      */
     public ArrayList<VariantMatch> getVariantMatches() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return variantMatches;
     }
 
@@ -267,7 +268,7 @@ public class Peptide extends ExperimentObject {
      * @param variants the new variant matches
      */
     public void setVariantMatches(ArrayList<VariantMatch> variants) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.variantMatches = variants;
     }
 
@@ -275,7 +276,7 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (variantMatches != null) {
             variantMatches.clear();
             variantsMap = null;
@@ -288,7 +289,7 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatch(VariantMatch variantMatch) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(1);
         }
@@ -302,7 +303,7 @@ public class Peptide extends ExperimentObject {
      * @param variantMatch the variant match to add
      */
     public void addVariantMatches(Collection<VariantMatch> variantMatch) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (variantMatches == null) {
             variantMatches = new ArrayList<VariantMatch>(variantMatch != null ? variantMatch.size() : 0);
         }
@@ -319,7 +320,7 @@ public class Peptide extends ExperimentObject {
      * @return the variants in a map
      */
     public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (variantsMap == null) {
             variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(variantMatches.size());
             for (VariantMatch variantMatch : variantMatches) {
@@ -345,7 +346,7 @@ public class Peptide extends ExperimentObject {
      * Clears the map saved in cache.
      */
     public void clearVariantsMap() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         variantsMap = null;
     }
 
@@ -355,12 +356,12 @@ public class Peptide extends ExperimentObject {
      * @return the peptide sequence
      */
     public String getSequence() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return sequence;
     }
     
     public void setSequence(String sequence){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.sequence = sequence;
     }
 
@@ -371,7 +372,7 @@ public class Peptide extends ExperimentObject {
      * @return the peptide sequence with the modified residues in lowercase
      */
     public String getSequenceWithLowerCasePtms() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         if (sequenceWithLowerCasePtms != null) {
             return sequenceWithLowerCasePtms;
@@ -410,7 +411,7 @@ public class Peptide extends ExperimentObject {
      * @return the amount of missed cleavages
      */
     public int getNMissedCleavages(Enzyme enzyme) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return enzyme.getNmissedCleavages(sequence);
     }
 
@@ -422,7 +423,7 @@ public class Peptide extends ExperimentObject {
      * @return the amount of missed cleavages
      */
     public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         Integer peptideMinMissedCleavages = null;
         if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
             for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
@@ -454,7 +455,7 @@ public class Peptide extends ExperimentObject {
      * interacting with an SQL database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getParentProteins(sequenceMatchingPreferences, true);
     }
 
@@ -478,7 +479,7 @@ public class Peptide extends ExperimentObject {
      * interacting with an SQL database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, boolean remap) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         if (!remap || parentProteins != null) { // avoid building the index if not necessary
             return parentProteins;
@@ -513,7 +514,7 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (parentProteins == null) {
             mapParentProteins(sequenceMatchingPreferences, peptideMapper);
         }
@@ -539,7 +540,7 @@ public class Peptide extends ExperimentObject {
      */
     public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (getParentProteins() == null) {
             ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(getSequence(), sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
@@ -557,7 +558,7 @@ public class Peptide extends ExperimentObject {
      * @return an ArrayList containing the parent proteins
      */
     public ArrayList<String> getParentProteinsNoRemapping() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return parentProteins;
     }
 
@@ -569,7 +570,7 @@ public class Peptide extends ExperimentObject {
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.parentProteins = parentProteins;
     }
 
@@ -577,12 +578,12 @@ public class Peptide extends ExperimentObject {
      * Clears the parent proteins list.
      */
     public void clearParentProteins() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         parentProteins = null;
     }
     
     public String getMatchingKey(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return matchingKey;
     }
 
@@ -597,7 +598,7 @@ public class Peptide extends ExperimentObject {
      * @return a key unique to the given matching type
      */
     public String getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (matchingKey == null) {
             String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
             matchingKey = getKey(matchingSequence, modificationMatches);
@@ -609,7 +610,7 @@ public class Peptide extends ExperimentObject {
      * Resets the internal cache of the keys.
      */
     public void resetKeysCaches() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         matchingKey = null;
         key = null;
     }
@@ -626,7 +627,7 @@ public class Peptide extends ExperimentObject {
      * @return the key of the peptide
      */
     public String getKey() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (key == null) {
             key = getKey(getSequence(), getModificationMatches());
         }
@@ -683,7 +684,7 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether a peptide carries modifications
      */
     public boolean isModified() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return modificationMatches != null && !modificationMatches.isEmpty();
     }
 
@@ -734,7 +735,7 @@ public class Peptide extends ExperimentObject {
      * @return the number of occurrences of this modification
      */
     public int getNVariableModifications(double modificationMass) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         int n = 0;
         if (modificationMatches != null) {
             for (ModificationMatch modificationMatch : modificationMatches) {
@@ -755,7 +756,7 @@ public class Peptide extends ExperimentObject {
      * @return the number of modifications carried by this peptide
      */
     public int getNModifications() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (modificationMatches != null) {
             return modificationMatches.size();
         } else {
@@ -855,7 +856,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<String> isNterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
 
@@ -898,7 +899,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<String> isCterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
 
@@ -941,7 +942,7 @@ public class Peptide extends ExperimentObject {
     public boolean isModifiable(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         AminoAcidPattern pattern = ptm.getPattern();
 
         switch (ptm.getType()) {
@@ -1059,7 +1060,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
             PtmSettings modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> sites = new ArrayList<Integer>();
 
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
@@ -1101,7 +1102,7 @@ public class Peptide extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>(1);
 
         switch (ptm.getType()) {
@@ -1230,7 +1231,7 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<Integer> getPotentialModificationSitesNoCombination(PTM ptm, String proteinSequence, Integer indexOnProtein) {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>(1);
 
         switch (ptm.getType()) {
@@ -1348,7 +1349,7 @@ public class Peptide extends ExperimentObject {
      * sequence and modification status.
      */
     public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return isSameSequence(anotherPeptide, sequenceMatchingPreferences) && isSameModificationStatus(anotherPeptide);
     }
 
@@ -1363,9 +1364,9 @@ public class Peptide extends ExperimentObject {
      * sequence
      */
     public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         AminoAcidSequence pattern = new AminoAcidSequence(anotherPeptide.getSequence());
-        return pattern.matches(sequence, sequenceMatchingPreferences);
+        return pattern.matches(getSequence(), sequenceMatchingPreferences);
     }
 
     /**
@@ -1380,7 +1381,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean isSameModificationStatus(Peptide anotherPeptide) {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1444,7 +1445,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> ptms) {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1512,7 +1513,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean sameModificationsAs(Peptide anotherPeptide) {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1522,7 +1523,7 @@ public class Peptide extends ExperimentObject {
         }
 
         ArrayList<String> ptms = new ArrayList<String>();
-        for (ModificationMatch modificationMatch : modificationMatches) {
+        for (ModificationMatch modificationMatch : getModificationMatches()) {
             String modName = modificationMatch.getTheoreticPtm();
             if (!ptms.contains(modName)) {
                 ptms.add(modName);
@@ -1547,7 +1548,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getNTerminal() {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         String nTerm = "NH2";
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -1577,7 +1578,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getCTerminal() {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         String cTerm = "COOH";
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
@@ -1617,7 +1618,7 @@ public class Peptide extends ExperimentObject {
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (modificationMatches != null) {
             for (ModificationMatch modMatch : modificationMatches) {
                 String modName = modMatch.getTheoreticPtm();
@@ -1661,7 +1662,7 @@ public class Peptide extends ExperimentObject {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
     }
 
@@ -1798,7 +1799,7 @@ public class Peptide extends ExperimentObject {
      * @return the indexes of the modified residues
      */
     public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         if (modificationMatches == null) {
             return new ArrayList<Integer>(0);
@@ -1828,7 +1829,7 @@ public class Peptide extends ExperimentObject {
      * @return an indexed map of all fixed modifications amino acid
      */
     public HashMap<Integer, ArrayList<String>> getIndexedFixedModifications() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         if (modificationMatches == null) {
             return new HashMap<Integer, ArrayList<String>>(0);
@@ -1855,7 +1856,7 @@ public class Peptide extends ExperimentObject {
      * amino acids
      */
     public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         if (mass == 0) {
 
@@ -1909,7 +1910,7 @@ public class Peptide extends ExperimentObject {
      * @return the sequence of this peptide as AminoAcidSequence
      */
     public AminoAcidSequence getSequenceAsAminoAcidSequence() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getSequenceAsAminoAcidSequence(sequence);
     }
 
@@ -1940,7 +1941,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (parentProteins == null) {
             getParentProteins(sequenceMatchingPreferences);
         }

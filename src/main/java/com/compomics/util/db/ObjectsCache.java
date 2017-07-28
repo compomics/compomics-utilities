@@ -23,7 +23,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.2;
+    private double memoryShare = 0.1;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
@@ -46,6 +46,10 @@ public class ObjectsCache {
     private ObjectsDB objectsDB = null;
     
     private boolean semaphore = false;
+    
+    private final int keepObjectsThreshold = 1000;
+    
+    private final int numToCommit = 1000;
 
     /**
      * Constructor.
@@ -160,8 +164,8 @@ public class ObjectsCache {
                     Long zooid = (Long)objectsDB.getDB().getObjectId(object);
                     objectsDB.getIdMap().put(objectKey, zooid);
                 }
-                if (objectsDB.getCurrentAdded() > 1000){
-                    commit();
+                if (objectsDB.getCurrentAdded() > numToCommit){
+                    objectsDB.commit();
                     objectsDB.resetCurrentAdded();
                 }
                 
@@ -204,8 +208,8 @@ public class ObjectsCache {
                 }
             }
             
-            if (objectsDB.getCurrentAdded() > 1000){
-                commit();
+            if (objectsDB.getCurrentAdded() > numToCommit){
+                objectsDB.commit();
                 objectsDB.resetCurrentAdded();
             }
             
@@ -305,23 +309,11 @@ public class ObjectsCache {
                 
                 if (clearEntries) loadedObjects.remove(key);
             }
-            commit();
+            objectsDB.commit();
             
             
             System.out.println("storing out");
         }
-        if (!semaphore) loadedObjectMutex.release();
-    }
-    
-    
-    public void commit() throws InterruptedException {
-        if (!semaphore) loadedObjectMutex.acquire();
-        PersistenceManager pm = objectsDB.getDB();
-        ObjectsDB.setCommitSemaphore(true);
-        while(ObjectsDB.getRWCounter() > 0){}
-        pm.currentTransaction().commit();
-        pm.currentTransaction().begin();
-        ObjectsDB.setCommitSemaphore(false);
         if (!semaphore) loadedObjectMutex.release();
     }
     
@@ -339,7 +331,7 @@ public class ObjectsCache {
         semaphore = true;
         while (!memoryCheck()){
             int toRemove = (int) (((double) loadedObjects.size()) * 0.25);
-            if (loadedObjects.size() <= 1000 || toRemove == 0) break;
+            if (loadedObjects.size() <= keepObjectsThreshold || toRemove == 0) break;
             saveObjects(toRemove, null, true);
         }
         semaphore = false;

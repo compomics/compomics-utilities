@@ -2,12 +2,10 @@ package com.compomics.util.experiment.identification.matches_iterators;
 
 import com.compomics.util.IdObject;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.concurrent.Semaphore;
 import java.util.Iterator;
 
@@ -113,7 +111,6 @@ public abstract class MatchesIterator {
                 }
             }
             num = longKeys.size();
-            System.out.println("get It " + className.getSimpleName() + " / " + num);
         }
         
         index = 0;
@@ -150,7 +147,6 @@ public abstract class MatchesIterator {
      */
     public synchronized Object nextObject() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        //nextMutex.acquire();
         Object obj = null;
         if (index < num){
             if (keys == null){
@@ -161,8 +157,6 @@ public abstract class MatchesIterator {
             }
             index++;
         }
-        
-        //nextMutex.release();
         return obj;
     }
 }

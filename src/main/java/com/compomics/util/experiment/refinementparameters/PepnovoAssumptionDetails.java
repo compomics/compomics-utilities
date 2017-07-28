@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.refinementparameters;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.IdObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
@@ -32,7 +33,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @return the PepNovo rank score
      */
     public double getRankScore() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return rankScore;
     }
 
@@ -42,7 +43,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.rankScore = rankScore;
     }
 
@@ -52,7 +53,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @return the PepNovo mH
      */
     public double getMH() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return mH;
     }
 
@@ -62,7 +63,7 @@ public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
      * @param mH the PepNovo mH
      */
     public void setMH(double mH) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.mH = mH;
     }
 

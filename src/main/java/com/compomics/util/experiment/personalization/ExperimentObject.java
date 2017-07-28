@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.personalization;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.IdObject;
 import java.util.HashMap;
 
@@ -28,7 +29,7 @@ public abstract class ExperimentObject extends IdObject {
      * @param parameter The parameter
      */
     public void addUrParam(UrParameter parameter) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (urParams == null) {
             createParamsMap();
         }
@@ -41,7 +42,7 @@ public abstract class ExperimentObject extends IdObject {
      * @param paramterKey the key of the parameter
      */
     public void removeUrParam(String paramterKey) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (urParams != null) {
             urParams.remove(paramterKey);
         }
@@ -51,7 +52,7 @@ public abstract class ExperimentObject extends IdObject {
      * Creates the parameters map unless done by another thread already.
      */
     private synchronized void createParamsMap() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (urParams == null) {
             urParams = new HashMap<>(1);
         }
@@ -64,7 +65,7 @@ public abstract class ExperimentObject extends IdObject {
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (urParams == null) {
             return null;
         }
@@ -75,17 +76,17 @@ public abstract class ExperimentObject extends IdObject {
      * Clears the loaded parameters.
      */
     public void clearParametersMap() {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         urParams = null;
     }
     
     public void setUrParams(HashMap<String, UrParameter> urParams){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.urParams = urParams;
     }
     
     public HashMap<String, UrParameter> getUrParams(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return urParams;
     }
 }

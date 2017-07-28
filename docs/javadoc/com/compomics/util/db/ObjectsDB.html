@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":9,"i32":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":9,"i34":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -163,21 +163,19 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#clearCache--">clearCache</a></span>()</code>
-<div class="block">Clears the cache and dumps everything into the database.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#close--">close</a></span>()</code>
+<div class="block">Closes the db connection.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#close--">close</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#close-boolean-">close</a></span>(boolean&nbsp;clearing)</code>
 <div class="block">Closes the db connection.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#close-boolean-">close</a></span>(boolean&nbsp;clearing)</code>
-<div class="block">Closes the db connection.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#commit--">commit</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>long</code></td>
@@ -206,76 +204,80 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i8" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getCurrentAdded--">getCurrentAdded</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>javax.jdo.PersistenceManager</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDB--">getDB</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDbFile--">getDbFile</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDbFolder--">getDbFolder</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/Semaphore.html?is-external=true" title="class or interface in java.util.concurrent">Semaphore</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getDbMutex--">getDbMutex</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getIdMap--">getIdMap</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getName--">getName</a></span>()</code>
 <div class="block">Returns the database name.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getNumber-java.lang.Class-">getNumber</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</code>
 <div class="block">Returns the number of instances of a given class stored in the db</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/compomics/util/db/ObjectsCache.html" title="class in com.compomics.util.db">ObjectsCache</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getObjectsCache--">getObjectsCache</a></span>()</code>
 <div class="block">Returns the cache used by this database.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getObjectsIterator-java.lang.Class-java.lang.String-">getObjectsIterator</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                   <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
 <div class="block">Returns an iterator of all objects of a given class</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#getPath--">getPath</a></span>()</code>
 <div class="block">Returns the path to the database.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#inCache-java.lang.String-">inCache</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;objectKey)</code>
 <div class="block">Indicates whether an object is loaded.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#inDB-java.lang.String-">inDB</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;objectKey)</code>
 <div class="block">Indicates whether an object is loaded.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#insertObject-java.lang.String-java.lang.Object-">insertObject</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;objectKey,
             <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)</code>
 <div class="block">Stores an object in the desired table.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#insertObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">insertObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;objects,
              <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -283,13 +285,13 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Inserts a set of objects in the given table.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#isConnectionActive--">isConnectionActive</a></span>()</code>
 <div class="block">Indicates whether the connection to the DB is active.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -297,7 +299,7 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Loads some objects from a table in the cache.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
            <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -305,13 +307,13 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Loads all objects from a given class.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#removeObject-java.lang.String-">removeObject</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Removing an object from.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
              <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -319,19 +321,23 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Removing an object from.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#resetCurrentAdded--">resetCurrentAdded</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#retrieveObject-long-">retrieveObject</a></span>(long&nbsp;longKey)</code>
 <div class="block">retrieves some objects from the database or cache.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#retrieveObject-java.lang.String-">retrieveObject</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">retrieves some objects from the database or cache.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -339,7 +345,7 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">retrieves some objects from the database or cache.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#retrieveObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -347,13 +353,13 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <div class="block">Retrieves all objects from a given class.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#setDebugInteractions-boolean-">setDebugInteractions</a></span>(boolean&nbsp;debug)</code>
 <div class="block">Turn the debugging of interactions on or off.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/compomics/util/db/ObjectsDB.html#setObjectCache-com.compomics.util.db.ObjectsCache-">setObjectCache</a></span>(<a href="../../../../com/compomics/util/db/ObjectsCache.html" title="class in com.compomics.util.db">ObjectsCache</a>&nbsp;objectCache)</code>
 <div class="block">Sets the object cache to be used by this database.</div>
@@ -449,6 +455,38 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="resetCurrentAdded--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>resetCurrentAdded</h4>
+<pre>public&nbsp;void&nbsp;resetCurrentAdded()</pre>
+</li>
+</ul>
+<a name="getCurrentAdded--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCurrentAdded</h4>
+<pre>public&nbsp;int&nbsp;getCurrentAdded()</pre>
+</li>
+</ul>
+<a name="commit--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>commit</h4>
+<pre>public&nbsp;void&nbsp;commit()
+            throws <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code></dd>
+</dl>
+</li>
+</ul>
 <a name="getIdMap--">
 <!--   -->
 </a>
@@ -800,28 +838,6 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
  occurred while deserializing a file from the database</dd>
 <dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
  while interacting with the database</dd>
-</dl>
-</li>
-</ul>
-<a name="clearCache--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>clearCache</h4>
-<pre>public&nbsp;void&nbsp;clearCache()
-                throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                       <a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                       <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Clears the cache and dumps everything into the database.</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs while writing to the
- database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs while writing to the
- database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if a threading error occurs
- writing to the database</dd>
 </dl>
 </li>
 </ul>

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import java.util.ArrayList;
@@ -33,12 +34,12 @@ public class PeptideMatch extends IdentificationMatch {
     private boolean isDecoy = false;
     
     public boolean getIsDecoy(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return isDecoy;
     }
     
     public void setIsDecoy(boolean isDecoy){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.isDecoy = isDecoy;
     }
 
@@ -50,7 +51,7 @@ public class PeptideMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return key;
     }
     
@@ -60,7 +61,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param newKey a new key for the match
      */
     public void setKey(String newKey) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.key = newKey;
     }
 
@@ -81,7 +82,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the theoretic peptide
      */
     public Peptide getTheoreticPeptide() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return theoreticPeptide;
     }
 
@@ -91,7 +92,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param theoreticPeptide a theoretic peptide
      */
     public void setTheoreticPeptide(Peptide theoreticPeptide) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.theoreticPeptide = theoreticPeptide;
     }
 
@@ -101,7 +102,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the keys of all spectrum matches
      */
     public ArrayList<String> getSpectrumMatchesKeys() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return spectrumMatchesKeys;
     }
     
@@ -111,7 +112,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchesKeys the keys
      */
     public void setSpectrumMatchesKeys(ArrayList<String> spectrumMatchesKeys){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.spectrumMatchesKeys = spectrumMatchesKeys;
     }
 
@@ -121,7 +122,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey the key of a spectrum match
      */
     public void addSpectrumMatchKey(String spectrumMatchKey) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         if (!spectrumMatchesKeys.contains(spectrumMatchKey)) {
             spectrumMatchesKeys.add(spectrumMatchKey);
         } else {
@@ -135,7 +136,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return spectrumMatchesKeys.size();
     }
 

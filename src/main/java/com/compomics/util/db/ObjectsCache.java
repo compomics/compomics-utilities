@@ -23,7 +23,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.2;
+    private double memoryShare = 0.8;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
@@ -46,6 +46,10 @@ public class ObjectsCache {
     private ObjectsDB objectsDB = null;
     
     private boolean semaphore = false;
+    
+    private final int keepObjectsThreshold = 1000;
+    
+    private final int numToCommit = 1000;
 
     /**
      * Constructor.
@@ -145,6 +149,7 @@ public class ObjectsCache {
      */
     public void addObject(Long objectKey, Object object) throws IOException, SQLException, InterruptedException {
         loadedObjectMutex.acquire();
+        semaphore = true;
         if (!readOnly) {            
             
             if (!loadedObjects.containsKey(objectKey)){
@@ -159,9 +164,8 @@ public class ObjectsCache {
                     Long zooid = (Long)objectsDB.getDB().getObjectId(object);
                     objectsDB.getIdMap().put(objectKey, zooid);
                 }
-                if (objectsDB.getCurrentAdded() > 1000){
-                    objectsDB.getDB().currentTransaction().commit();
-                    objectsDB.getDB().currentTransaction().begin();
+                if (objectsDB.getCurrentAdded() > numToCommit){
+                    objectsDB.commit();
                     objectsDB.resetCurrentAdded();
                 }
                 
@@ -169,6 +173,7 @@ public class ObjectsCache {
             }
             updateCache();
         }
+        semaphore = false;
         loadedObjectMutex.release();
     }
 
@@ -188,6 +193,7 @@ public class ObjectsCache {
      */
     public void addObjects(HashMap<Long, Object> objects) throws IOException, SQLException, InterruptedException {
         loadedObjectMutex.acquire();
+        semaphore = true;
         if (!readOnly) {            
             
             loadedObjects.putAll(objects);
@@ -202,14 +208,14 @@ public class ObjectsCache {
                 }
             }
             
-            if (objectsDB.getCurrentAdded() > 1000){
-                objectsDB.getDB().currentTransaction().commit();
-                objectsDB.getDB().currentTransaction().begin();
+            if (objectsDB.getCurrentAdded() > numToCommit){
+                objectsDB.commit();
                 objectsDB.resetCurrentAdded();
             }
             
             updateCache();
         }
+        semaphore = false;
         loadedObjectMutex.release();
     }
 
@@ -303,14 +309,14 @@ public class ObjectsCache {
                 
                 if (clearEntries) loadedObjects.remove(key);
             }
-            pm.currentTransaction().commit();
-            pm.currentTransaction().begin();
+            objectsDB.commit();
             
             
             System.out.println("storing out");
         }
         if (!semaphore) loadedObjectMutex.release();
     }
+    
 
     /**
      * Updates the cache according to the memory settings.
@@ -325,7 +331,7 @@ public class ObjectsCache {
         semaphore = true;
         while (!memoryCheck()){
             int toRemove = (int) (((double) loadedObjects.size()) * 0.25);
-            if (loadedObjects.size() <= 1000 || toRemove == 0) break;
+            if (loadedObjects.size() <= keepObjectsThreshold || toRemove == 0) break;
             saveObjects(toRemove, null, true);
         }
         semaphore = false;

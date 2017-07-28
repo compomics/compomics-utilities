@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_assumptions;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -83,18 +84,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peptide;
     }
     
     public void setPeptide(Peptide peptide){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return peptide.getMass();
     }
 }

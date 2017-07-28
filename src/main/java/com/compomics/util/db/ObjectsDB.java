@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
+import java.util.concurrent.locks.ReentrantLock;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.zoodb.internal.util.SynchronizedROCollection;
@@ -76,9 +77,45 @@ public class ObjectsDB {
     
     private boolean connectionActive = false;
     
-    private HashMap<String, HashSet<Long>> classCounter = new HashMap<>();
+    private final HashMap<String, HashSet<Long>> classCounter = new HashMap<>();
     
     private int currentAdded = 0;
+    
+    private final static Object forCommit = new Object();
+    
+    private final static Object rWObject = new Object();
+    
+    private static int readWriteCounter = 0;
+    
+    private final static Semaphore blockCommit = new Semaphore(1);
+    
+    
+    
+    public static void increaseRWCounter() {
+        synchronized(forCommit) {
+            //System.out.println("inside commit");
+        }
+        synchronized(rWObject) {
+            
+            try {
+                if (readWriteCounter == 0) blockCommit.acquire();
+                readWriteCounter++;
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void decreaseRWCounter() {
+        synchronized(rWObject) {
+            readWriteCounter--;
+            if (readWriteCounter == 0) blockCommit.release();
+        }
+    }
+    
+    
+    
     
     public void resetCurrentAdded(){
         currentAdded = 0;
@@ -88,11 +125,22 @@ public class ObjectsDB {
         return currentAdded;
     }
     
-    public void commit() throws InterruptedException{
-        dbMutex.acquire();
-        pm.currentTransaction().commit();
-        pm.currentTransaction().begin();
-        dbMutex.release();
+    
+    public void commit() throws InterruptedException {
+        System.out.println("start commit");
+        synchronized(forCommit){
+            System.out.println("commit locked");
+
+            blockCommit.acquire();
+            blockCommit.release();
+            //while(readWriteCounter > 0){}
+
+            pm.currentTransaction().commit();
+            pm.currentTransaction().begin();
+
+            System.out.println("commit unlocking");
+        }
+        System.out.println("end commit");
     }
     
     /**
@@ -240,9 +288,12 @@ public class ObjectsDB {
         dbMutex.acquire();
         long longKey = createLongKey(objectKey);
         
-        //if (debugInteractions) {
+        if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey + "  /  " + longKey);
-        //}
+        }
+        if (object == null){
+            throw new InterruptedException("error: null insertion: " + objectKey);
+        }
         
         ((IdObject)object).setId(longKey);
         ((IdObject)object).setFirstLevel(true);
@@ -255,7 +306,7 @@ public class ObjectsDB {
             
         }
         else {
-            throw new InterruptedException("hoppla doppelt: " + objectKey);
+            throw new InterruptedException("error double insertion: " + objectKey);
         }
         currentAdded += 1;
         objectsCache.addObject(longKey, object);
@@ -321,6 +372,10 @@ public class ObjectsDB {
                 System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
             }
             
+            if (object == null){
+                throw new InterruptedException("error: null insertion: " + objectKey);
+            }
+            
             long longKey = createLongKey(objectKey);
             ((IdObject)object).setId(longKey);
             ((IdObject)object).setFirstLevel(true);
@@ -331,6 +386,9 @@ public class ObjectsDB {
                 }
                 classCounter.get(object.getClass().getSimpleName()).add(longKey);
                 objectsToAdd.put(longKey, object);
+            }
+            else {
+                throw new InterruptedException("error double insertion: " + objectKey);
             }
         }
         currentAdded += objects.size();
@@ -456,12 +514,15 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
         }
-                
-        Object obj = objectsCache.getObject(longKey);
-        if (obj == null){
-            Long zooid = idMap.get(longKey);
-            obj = pm.getObjectById(zooid);
-            objectsCache.addObject(longKey, obj);
+        Object obj = null;
+        
+        if (idMap.containsKey(longKey)){                
+            obj = objectsCache.getObject(longKey);
+            if (obj == null){
+                Long zooid = idMap.get(longKey);
+                obj = pm.getObjectById(zooid);
+                objectsCache.addObject(longKey, obj);
+            }
         }
         dbMutex.release();
         return obj;
@@ -513,11 +574,6 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
         }
         
-        for (String clsName : classCounter.keySet()){
-            System.out.println(clsName + ": " + classCounter.get(clsName).size());
-        }
-        System.out.println();
-        
         HashSet counter = classCounter.get(className.getSimpleName());
         dbMutex.release();
         return (counter != null ? counter.size() : 0);
@@ -560,15 +616,17 @@ public class ObjectsDB {
         for (String objectKey : keys){
             if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
             long longKey = createLongKey(objectKey);
-            Object obj = objectsCache.getObject(longKey);
-            if (obj == null){
-                
-                Long zooid = idMap.get(longKey);
-                obj = pm.getObjectById(zooid);
-                allObjects.put(longKey, obj);
-            
+            if (idMap.containsKey(longKey)){
+                Object obj = objectsCache.getObject(longKey);
+                if (obj == null){
+
+                    Long zooid = idMap.get(longKey);
+                    obj = pm.getObjectById(zooid);
+                    allObjects.put(longKey, obj);
+
+                }
+                retrievingObjects.add(obj);
             }
-            retrievingObjects.add(obj);
         }
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
             objectsCache.addObjects(allObjects);
@@ -609,16 +667,17 @@ public class ObjectsDB {
         ArrayList<Object> retrievingObjects = new ArrayList<>();
         for (long longKey : classCounter.get(className.getSimpleName())){
             if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
-            
-            Object obj = objectsCache.getObject(longKey);
-            if (obj == null){
-                
-                Long zooid = idMap.get(longKey);
-                obj = pm.getObjectById(zooid);
-                allObjects.put(longKey, obj);
-            
+            if (idMap.containsKey(longKey)){
+                Object obj = objectsCache.getObject(longKey);
+                if (obj == null){
+
+                    Long zooid = idMap.get(longKey);
+                    obj = pm.getObjectById(zooid);
+                    allObjects.put(longKey, obj);
+
+                }
+                retrievingObjects.add(obj);
             }
-            retrievingObjects.add(obj);
             
         }
         if (waitingHandler != null && !waitingHandler.isRunCanceled()){
@@ -778,13 +837,7 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
         
-        long longKey = createLongKey(objectKey);
-        
-        Query q = pm.newQuery(IdObject.class, "id == " + longKey);
-        if( ((Collection<?>) q.execute()).size() > 0){
-            return true;
-        }
-        return false;
+        return idMap.containsKey(createLongKey(objectKey));
     }   
 
 
@@ -828,9 +881,9 @@ public class ObjectsDB {
     public void close(boolean clearing) throws SQLException, InterruptedException, IOException, ClassNotFoundException {
         
         dbMutex.acquire();
-        for (String className : classCounter.keySet()){
-            System.out.println(className + ": " + classCounter.get(className).size());
-        }
+        //if (debugInteractions){
+            System.out.println("closing database");
+        //}
         
         
         objectsCache.saveCache(null, clearing);

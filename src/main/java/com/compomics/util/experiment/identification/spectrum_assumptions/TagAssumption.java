@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_assumptions;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
@@ -56,18 +57,18 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the tag of this assumption
      */
     public Tag getTag() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tag;
     }
     
     public void setTag(Tag tag){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.tag = tag;
     }
 
     @Override
     public double getTheoreticMass() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tag.getMass();
     }
 
@@ -81,7 +82,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMass(boolean includeCTermGap, boolean includeNTermGap) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tag.getMass(includeCTermGap, includeNTermGap);
     }
 
@@ -95,7 +96,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
     }
 
@@ -113,7 +114,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * by accounting for other charges and isotopes
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
@@ -151,13 +152,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * of this tag
      */
     public TagAssumption reverse(boolean yIon) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, score);
     }
 
     @Override
     public String toString() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";
     }
 

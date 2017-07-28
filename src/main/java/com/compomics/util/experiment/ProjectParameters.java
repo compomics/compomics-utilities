@@ -5,6 +5,7 @@
  */
 package com.compomics.util.experiment;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.IdObject;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,52 +34,52 @@ public class ProjectParameters extends IdObject {
     }
     
     public Date getCreationTime(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return creationTime;
     }
     
     public void setCreationTime(Date creationTime){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.creationTime = creationTime;
     }
     
     public String getProjectUniqueName(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return projectUniqueName;
     }
     
     public void getProjectUniqueName(String projectUniqueName){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         this.projectUniqueName = projectUniqueName;
     }
     
     public void setStringParameter(String key, String parameter){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         stringParameters.put(key, parameter);
     }
     
     public String getStringParameter(String key){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return stringParameters.get(key);
     }
     
     public void setIntegerParameter(String key, Integer parameter){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         integerParameters.put(key, parameter);
     }
     
     public int getIntegerParameter(String key){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return integerParameters.get(key);
     }
     
     public void setNumericParameter(String key, Double parameter){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         numericParameters.put(key, parameter);
     }
     
     public double getNumericParameter(String key){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return numericParameters.get(key);
     }
 }

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -65,7 +66,7 @@ public class SpectrumMatch extends IdentificationMatch {
     }
     
     public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
     }
     
@@ -88,12 +89,12 @@ public class SpectrumMatch extends IdentificationMatch {
     }
     
     public int getTagAssumptionMapKeySize(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tagAssumptionsMapKeySize;
     }
     
     public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.assumptionsMap = assumptionsMap;
     }
 
@@ -115,7 +116,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best peptide assumption for the spectrum
      */
     public PeptideAssumption getBestPeptideAssumption() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return bestPeptideAssumption;
     }
 
@@ -125,7 +126,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestPeptideAssumption the best peptide assumption for the spectrum
      */
     public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.bestPeptideAssumption = bestPeptideAssumption;
     }
     
@@ -137,7 +138,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best tag assumption for the spectrum
      */
     public TagAssumption getBestTagAssumption() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return bestTagAssumption;
     }
 
@@ -147,13 +148,13 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestTagAssumption the best tag assumption for the spectrum
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.bestTagAssumption = bestTagAssumption;
     }
 
     @Override
     public String getKey() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
     }
 
@@ -166,7 +167,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (assumptionsMap == null) {
             return null;
         }
@@ -180,7 +181,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public ArrayList<SpectrumIdentificationAssumption> getAllAssumptions() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (getAssumptionsMap() == null) {
             return null;
         }
@@ -200,7 +201,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the assumptions map
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return assumptionsMap;
     }
 
@@ -213,7 +214,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * get better
      */
     public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptionsMap.get(otherAdvocateId);
         if (advocateMap == null) {
             advocateMap = new HashMap<>();
@@ -230,7 +231,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     @Override
     public MatchType getType() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return MatchType.Spectrum;
     }
 
@@ -242,28 +243,28 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param spectrumTitle the spectrum tile
      */
     public void setKey(String spectrumFile, String spectrumTitle) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.spectrumFile = spectrumFile;
         this.spectrumTitle = spectrumTitle;
     }
     
     public void setSpectrumFile(String spectrumFile){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.spectrumFile = spectrumFile;
     }
     
     public void setSpectrumTitle(String spectrumTitle){
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.spectrumTitle = spectrumTitle;
     }
     
     public String getSpectrumFile(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return spectrumFile;
     }
     
     public String getSpectrumTitle(){
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return spectrumTitle;
     }
 
@@ -274,7 +275,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the spectrum number in the spectrum file
      */
     public int getSpectrumNumber() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return spectrumNumber;
     }
 
@@ -284,7 +285,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param spectrumNumber the spectrum number in the spectrum file
      */
     public void setSpectrumNumber(int spectrumNumber) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.spectrumNumber = spectrumNumber;
     }
 
@@ -294,7 +295,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param assumption the peptide assumption to remove
      */
     public void removeAssumption(SpectrumIdentificationAssumption assumption) {
-        zooActivateWrite();
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> seToRemove = new ArrayList<>();
         for (int se : assumptionsMap.keySet()) {
             ArrayList<Double> eValueToRemove = new ArrayList<>();
@@ -324,7 +325,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * assumption
      */
     public boolean hasAssumption() {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         for (int se : assumptionsMap.keySet()) {
             for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptionsMap.get(se).values()) {
                 if (!assumptionsAtScore.isEmpty()) {
@@ -344,7 +345,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide assumption for the given advocate
      */
     public boolean hasAssumption(int advocateId) {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (assumptionsMap.containsKey(advocateId)) {
             for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptionsMap.get(advocateId).values()) {
                 if (!assumptionsAtEvalue.isEmpty()) {
@@ -379,7 +380,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        zooActivateRead();
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
 

@@ -83,7 +83,9 @@ public class ObjectsDB {
     
     private final static Object forCommit = new Object();
     
-    private static Integer readWriteCounter = 0;
+    private final static Object rWObject = new Object();
+    
+    private static int readWriteCounter = 0;
     
     private final static Semaphore blockCommit = new Semaphore(1);
     
@@ -91,24 +93,24 @@ public class ObjectsDB {
     
     public static void increaseRWCounter() {
         synchronized(forCommit) {
-            System.out.println("inside commit");
+            //System.out.println("inside commit");
         }
-        synchronized(readWriteCounter) {readWriteCounter++;
-            /*
+        synchronized(rWObject) {
+            
             try {
                 if (readWriteCounter == 0) blockCommit.acquire();
                 readWriteCounter++;
             }
             catch (InterruptedException e){
                 e.printStackTrace();
-            }*/
+            }
         }
     }
     
     public static void decreaseRWCounter() {
-        synchronized(readWriteCounter) {
+        synchronized(rWObject) {
             readWriteCounter--;
-            //if (readWriteCounter == 0) blockCommit.release();
+            if (readWriteCounter == 0) blockCommit.release();
         }
     }
     
@@ -129,9 +131,9 @@ public class ObjectsDB {
         synchronized(forCommit){
             System.out.println("commit locked");
 
-            //blockCommit.acquire();
-            //blockCommit.release();
-            while(readWriteCounter > 0){}
+            blockCommit.acquire();
+            blockCommit.release();
+            //while(readWriteCounter > 0){}
 
             pm.currentTransaction().commit();
             pm.currentTransaction().begin();

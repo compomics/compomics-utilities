@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.spectrum_annotation;
+package com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.FragmentAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.FragmentAnnotatorNL;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.ImmoniumIonAnnotator;

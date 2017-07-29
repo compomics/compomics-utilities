@@ -33,7 +33,7 @@ public class AtomChain implements Serializable {
     /**
      * Cache for the string value.
      * 
-     * @deprecated deprectated since utilities version 4.8.2. Use stringValue1 instead.
+     * @deprecated deprecated since utilities version 4.8.2. Use stringValue1 instead.
      */
     private String stringValue = null;
     /**

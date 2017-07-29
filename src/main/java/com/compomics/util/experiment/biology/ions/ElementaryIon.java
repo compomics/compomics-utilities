@@ -32,7 +32,32 @@ public class ElementaryIon extends Ion {
      * The subtype identifier.
      */
     private int subType;
-
+    /**
+     * Cache for the multiples of the proton mass.
+     */
+    public static double[] protonMassMultiples = {0.0, 
+        proton.getTheoreticMass(),
+        2* proton.getTheoreticMass(),
+        3* proton.getTheoreticMass(),
+        4* proton.getTheoreticMass(),
+        5* proton.getTheoreticMass(),
+        6* proton.getTheoreticMass(),
+        7* proton.getTheoreticMass(),
+        8* proton.getTheoreticMass(),
+        9* proton.getTheoreticMass(),
+        10* proton.getTheoreticMass()};
+    
+    /**
+     * Returns the mass of the proton multiplied by i. if i is smaller or equal to ten a value in cache is used. It is calculated otherwise. Throws an exception for negative i without sanity check.
+     * 
+     * @param i i
+     * 
+     * @return the mass of the proton multiplied by i
+     */
+    public static double getProtonMassMultiple(int i) {
+        return i <= 10 ? protonMassMultiples[i] : i * ElementaryIon.proton.getTheoreticMass();
+    }
+    
     /**
      * Constructor.
      *

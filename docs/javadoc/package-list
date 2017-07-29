@@ -1,7 +1,6 @@
 com.compomics.cli.enzymes
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
-com.compomics.scripts_marc
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli
@@ -41,6 +40,10 @@ com.compomics.util.experiment.identification.matches
 com.compomics.util.experiment.identification.matches_iterators
 com.compomics.util.experiment.identification.peptide_fragmentation
 com.compomics.util.experiment.identification.peptide_fragmentation.models
+com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration
+com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features
+com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic
+com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation
 com.compomics.util.experiment.identification.protein_inference
 com.compomics.util.experiment.identification.protein_inference.executable
 com.compomics.util.experiment.identification.protein_inference.fm_index
@@ -53,6 +56,7 @@ com.compomics.util.experiment.identification.psm_scoring.psm_scores
 com.compomics.util.experiment.identification.ptm
 com.compomics.util.experiment.identification.ptm.ptmscores
 com.compomics.util.experiment.identification.spectrum_annotation
+com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators
 com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators
 com.compomics.util.experiment.identification.spectrum_assumptions
 com.compomics.util.experiment.io
@@ -64,6 +68,7 @@ com.compomics.util.experiment.massspectrometry
 com.compomics.util.experiment.massspectrometry.indexes
 com.compomics.util.experiment.massspectrometry.proteowizard
 com.compomics.util.experiment.massspectrometry.proteowizard.gui
+com.compomics.util.experiment.massspectrometry.utils
 com.compomics.util.experiment.normalization
 com.compomics.util.experiment.patient
 com.compomics.util.experiment.personalization

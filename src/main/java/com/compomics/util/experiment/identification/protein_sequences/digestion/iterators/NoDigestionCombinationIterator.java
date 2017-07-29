@@ -130,7 +130,7 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
         
         // Get the next sequence
         char[] sequence = ambiguousSequenceIterator.getNextSequence();

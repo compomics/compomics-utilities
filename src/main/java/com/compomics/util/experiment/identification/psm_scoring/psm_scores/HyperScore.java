@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -79,25 +80,29 @@ public class HyperScore {
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
         ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
+        return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
     }
 
     /**
      * Returns the hyperscore.
      *
      * @param peptide the peptide of interest
+     * @param charge the charge
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
+    public double getScore(Peptide peptide, int charge, MSnSpectrum spectrum, ArrayList<IonMatch> ionMatches) throws InterruptedException, MathException {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
@@ -121,16 +126,7 @@ public class HyperScore {
             return 0.0;
         }
 
-        SpectrumIndex spectrumIndex = new SpectrumIndex();
-        spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
-        if (spectrumIndex == null) {
-            // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()),
-                    annotationSettings.getFragmentIonAccuracy(), annotationSettings.isFragmentIonPpm());
-            spectrum.addUrParam(spectrumIndex);
-        }
-
-        Double totalIntensity = spectrumIndex.getTotalIntensity() - coveredIntensity;
+        Double consideredIntensity = spectrum.getTotalIntensity() - coveredIntensity;
 
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<Integer>(1);
@@ -145,7 +141,7 @@ public class HyperScore {
                 int number = peptideFragmentIon.getNumber();
                 if (number > 1) {
                     accountedFor.add(mz);
-                    Double x0I = peakI.intensity / totalIntensity;
+                    Double x0I = peakI.intensity / consideredIntensity;
                     xCorr += x0I;
                     if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
                         if (ion.getSubType() == PeptideFragmentIon.X_ION
@@ -161,8 +157,8 @@ public class HyperScore {
                 }
             }
         }
-        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
-        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
+        int nForward = ionsForward.size() / (Math.max(charge - 1, 1));
+        int nRewind = ionsRewind.size() / (Math.max(charge - 1, 1));
         nForward = nForward > 20 ? 20 : nForward;
         nRewind = nRewind > 20 ? 20 : nRewind;
         long forwardFactorial = BasicMathFunctions.factorial(nForward);

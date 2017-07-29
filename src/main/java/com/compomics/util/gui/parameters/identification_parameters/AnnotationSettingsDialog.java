@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
@@ -126,6 +127,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                 null,
                 "Selected", null));
+        
 
         aBox.setEnabled(editable);
         bBox.setEnabled(editable);
@@ -138,6 +140,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         reporterBox.setEnabled(editable);
         relatedBox.setEnabled(editable);
         intensitySpinner.setEnabled(editable);
+        intensityThresholdCmb.setEnabled(editable);
         accuracySpinner.setEnabled(editable);
         highResolutionBox.setEnabled(editable);
     }
@@ -164,6 +167,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         }
         ((NeutralLossesTableModel) neutralLossesTable.getModel()).updateData();
 
+        intensityThresholdCmb.setSelectedItem(annotationSettings.getIntensityThresholdType());
         intensitySpinner.setValue((int) (annotationSettings.getAnnotationIntensityLimit() * 100));
 
         double fragmentIonAccuracy = annotationSettings.getFragmentIonAccuracy();
@@ -302,6 +306,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
             annotationSettings.addIonType(IonType.RELATED_ION);
         }
 
+        annotationSettings.setIntensityThresholdType((AnnotationSettings.IntensityThresholdType) intensityThresholdCmb.getSelectedItem());
         annotationSettings.setIntensityLimit(((Integer) intensitySpinner.getValue()) / 100.0);
         annotationSettings.setFragmentIonAccuracy((Double) accuracySpinner.getValue());
         SpectrumAnnotator.TiesResolution tiesResolution = highResolutionBox.isSelected() ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
@@ -351,6 +356,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         annotationLevelLabel = new javax.swing.JLabel();
         accuracySpinner = new javax.swing.JSpinner();
         highResolutionBox = new javax.swing.JCheckBox();
+        intensityThresholdCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Spectrum Annotation");
@@ -533,6 +539,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         highResolutionBox.setText("High Resolution");
         highResolutionBox.setIconTextGap(10);
 
+        intensityThresholdCmb.setModel(new DefaultComboBoxModel(AnnotationSettings.IntensityThresholdType.values()));
+
         javax.swing.GroupLayout peakMatchingPanelLayout = new javax.swing.GroupLayout(peakMatchingPanel);
         peakMatchingPanel.setLayout(peakMatchingPanelLayout);
         peakMatchingPanelLayout.setHorizontalGroup(
@@ -551,8 +559,12 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                     .addComponent(fragmentIonAccuracyTypeLabel)
                     .addComponent(annotationLevelPercentLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(35, 35, 35)
-                .addComponent(highResolutionBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(peakMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(peakMatchingPanelLayout.createSequentialGroup()
+                        .addComponent(highResolutionBox)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(intensityThresholdCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         peakMatchingPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {annotationLevelPercentLabel, fragmentIonAccuracyTypeLabel});
@@ -564,7 +576,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 .addGroup(peakMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(annotationLevelLabel)
                     .addComponent(intensitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(annotationLevelPercentLabel))
+                    .addComponent(annotationLevelPercentLabel)
+                    .addComponent(intensityThresholdCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(peakMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(fragmentIonAccuracyLabel)
@@ -702,6 +715,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JCheckBox highResolutionBox;
     private javax.swing.JCheckBox immoniumBox;
     private javax.swing.JSpinner intensitySpinner;
+    private javax.swing.JComboBox intensityThresholdCmb;
     private javax.swing.JPanel ionsPanel;
     private javax.swing.JPanel neutralLossPanel;
     private javax.swing.JScrollPane neutralLossScrollPane;

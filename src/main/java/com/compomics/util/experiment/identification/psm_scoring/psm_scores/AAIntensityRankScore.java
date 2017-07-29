@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -14,7 +13,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import org.apache.commons.math.MathException;
 
 /**
  * The intensity rank sub-score as adapted from the DirecTag paper where the
@@ -46,8 +45,9 @@ public class AAIntensityRankScore {
      * 
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
 
         int sequenceLength = peptide.getSequence().length();
         HashMap<Integer, Double> aaIntensities = new HashMap(sequenceLength);
@@ -56,7 +56,7 @@ public class AAIntensityRankScore {
         }
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrum, peptide);
+                spectrum, peptide, false);
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             if (ion instanceof PeptideFragmentIon) {

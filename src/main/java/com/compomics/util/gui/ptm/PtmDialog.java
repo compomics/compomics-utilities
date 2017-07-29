@@ -1176,7 +1176,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
-        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(), false, false));
+        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(), false, null, false));
         updateTables();
     }//GEN-LAST:event_addNeutralLossActionPerformed
 

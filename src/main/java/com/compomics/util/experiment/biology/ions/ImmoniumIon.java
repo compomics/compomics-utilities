@@ -1,9 +1,9 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
@@ -19,113 +19,101 @@ public class ImmoniumIon extends Ion {
      */
     static final long serialVersionUID = -3403620196563864756L;
     /**
-     * Subtype int for an alanine immonium ion.
+     * Alanine immonium ion.
      */
-    public static final int ALANINE = 0;
+    public static final ImmoniumIon ALANINE = new ImmoniumIon(0, 'A');
     /**
-     * Subtype int for an arginine immonium ion.
+     * Arginine immonium ion.
      */
-    public static final int ARGININE = 1;
+    public static final ImmoniumIon ARGININE = new ImmoniumIon(1, 'R');
     /**
-     * Subtype int for an asparagine immonium ion.
+     * Asparagine immonium ion.
      */
-    public static final int ASPARAGINE = 2;
+    public static final ImmoniumIon ASPARAGINE = new ImmoniumIon(2, 'N');
     /**
-     * Subtype int for an aspartic acid immonium ion.
+     * Aspartic acid immonium ion.
      */
-    public static final int ASPARTIC_ACID = 3;
+    public static final ImmoniumIon ASPARTIC_ACID = new ImmoniumIon(3, 'D');
     /**
-     * Subtype int for a cysteine immonium ion.
+     * Cysteine immonium ion.
      */
-    public static final int CYSTEINE = 4;
+    public static final ImmoniumIon CYSTEINE = new ImmoniumIon(4, 'C');
     /**
-     * Subtype int for a glutamic acid immonium ion.
+     * Glutamic acid immonium ion.
      */
-    public static final int GLUTAMIC_ACID = 5;
+    public static final ImmoniumIon GLUTAMIC_ACID = new ImmoniumIon(5, 'E');
     /**
-     * Subtype int for a glutamine immonium ion.
+     * Glutamine immonium ion.
      */
-    public static final int GLUTAMINE = 6;
+    public static final ImmoniumIon GLUTAMINE = new ImmoniumIon(6, 'Q');
     /**
-     * Subtype int for a glycine immonium ion.
+     * Glycine immonium ion.
      */
-    public static final int GLYCINE = 7;
+    public static final ImmoniumIon GLYCINE = new ImmoniumIon(7, 'G');
     /**
-     * Subtype int for an histidine immonium ion.
+     * Histidine immonium ion.
      */
-    public static final int HISTIDINE = 8;
+    public static final ImmoniumIon HISTIDINE = new ImmoniumIon(8, 'H');
     /**
-     * Subtype int for an isoleucine immonium ion.
+     * Isoleucine immonium ion.
      */
-    public static final int ISOLEUCINE = 9;
+    public static final ImmoniumIon ISOLEUCINE = new ImmoniumIon(9, 'I');
     /**
-     * Subtype int for a leucine immonium ion.
+     * Leucine immonium ion.
      */
-    public static final int LEUCINE = 10;
+    public static final ImmoniumIon LEUCINE = new ImmoniumIon(10, 'L');
     /**
-     * Subtype int for a lysine immonium ion.
+     * Lysine immonium ion.
      */
-    public static final int LYSINE = 11;
+    public static final ImmoniumIon LYSINE = new ImmoniumIon(11, 'K');
     /**
-     * Subtype int for a methionine immonium ion.
+     * Methionine immonium ion.
      */
-    public static final int METHIONINE = 12;
+    public static final ImmoniumIon METHIONINE = new ImmoniumIon(12, 'M');
     /**
-     * Subtype int for a phenylananine immonium ion.
+     * Phenylananine immonium ion.
      */
-    public static final int PHENYLALANINE = 13;
+    public static final ImmoniumIon PHENYLALANINE = new ImmoniumIon(13, 'F');
     /**
-     * Subtype int for a proline immonium ion.
+     * Proline immonium ion.
      */
-    public static final int PROLINE = 14;
+    public static final ImmoniumIon PROLINE = new ImmoniumIon(14, 'P');
     /**
-     * Subtype int for a selenocysteine immonium ion.
+     * Selenocysteine immonium ion.
      */
-    public static final int SELENOCYSTEINE = 15;
+    public static final ImmoniumIon SELENOCYSTEINE = new ImmoniumIon(15, 'U');
     /**
-     * Subtype int for a serine immonium ion.
+     * Serine immonium ion.
      */
-    public static final int SERINE = 16;
+    public static final ImmoniumIon SERINE = new ImmoniumIon(16, 'S');
     /**
-     * Subtype int for a threonine immonium ion.
+     * Threonine immonium ion.
      */
-    public static final int THREONINE = 17;
+    public static final ImmoniumIon THREONINE = new ImmoniumIon(17, 'T');
     /**
-     * Subtype int for a tryptophan immonium ion.
+     * Tryptophan immonium ion.
      */
-    public static final int TRYPTOPHAN = 18;
+    public static final ImmoniumIon TRYPTOPHAN = new ImmoniumIon(18, 'W');
     /**
-     * Subtype int for a tyrosine immonium ion.
+     * Tyrosine immonium ion.
      */
-    public static final int TYROSINE = 19;
+    public static final ImmoniumIon TYROSINE = new ImmoniumIon(19, 'Y');
     /**
-     * Subtype int for a valine immonium ion.
+     * Valine immonium ion.
      */
-    public static final int VALINE = 20;
+    public static final ImmoniumIon VALINE = new ImmoniumIon(21, 'V');
     /**
      * Subtype of immonium ion.
      */
-    private int subType;
+    private final int subType;
     /**
-     * The CV term of the reporter ion, null if not set.
+     * The amino acid that can generate this ion as single letter code.
      */
-    private CvTerm cvTerm = null;
+    public final char aa;
     /**
-     * The PSI MS CV term of the reporter ion, null if not set.
+     * The PSI CV term.
      */
-    private CvTerm psiCvTerm = null;
-
-    /**
-     * Constructor for an immonium ion.
-     *
-     * @param residue the type of immonium ion as char
-     */
-    public ImmoniumIon(char residue) {
-        type = IonType.IMMONIUM_ION;
-        this.subType = getSubtype(residue);
-        AminoAcid currentAA = AminoAcid.getAminoAcid(residue);
-        theoreticMass1 = currentAA.getMonoisotopicMass() - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass();
-    }
+    private static CvTerm psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
 
     /**
      * Constructor for an immonium ion.
@@ -133,74 +121,78 @@ public class ImmoniumIon extends Ion {
      * @param subType the type of immonium ion as integer as indexed by the
      * static fields
      */
-    public ImmoniumIon(int subType) {
+    private ImmoniumIon(int subType, char aa) {
         type = IonType.IMMONIUM_ION;
+        this.aa = aa;
         this.subType = subType;
-        char aa = getResidue(subType);
         AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-        theoreticMass1 = currentAA.getMonoisotopicMass() - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass();
+        theoreticMass1 = currentAA.getMonoisotopicMass() - StandardMasses.co.mass;
     }
 
     /**
-     * Returns the amino acid of the immonium ion based on the subtype index.
+     * Returns the immonium ion corresponding to the given subtype.
      *
-     * @param subtype the subtype index from the static fields
-     * @return the one letter code of the amino acid
+     * @param subType the subtype
+     * 
+     * @return the immonium ion 
      */
-    public static char getResidue(int subtype) {
-        switch (subtype) {
-            case ALANINE:
-                return 'A';
-            case CYSTEINE:
-                return 'C';
-            case ASPARTIC_ACID:
-                return 'D';
-            case GLUTAMIC_ACID:
-                return 'E';
-            case PHENYLALANINE:
-                return 'F';
-            case GLYCINE:
-                return 'G';
-            case HISTIDINE:
-                return 'H';
-            case ISOLEUCINE:
-                return 'I';
-            case LYSINE:
-                return 'K';
-            case LEUCINE:
-                return 'L';
-            case METHIONINE:
-                return 'M';
-            case ASPARAGINE:
-                return 'N';
-            case PROLINE:
-                return 'P';
-            case GLUTAMINE:
-                return 'Q';
-            case ARGININE:
-                return 'R';
-            case SERINE:
-                return 'S';
-            case THREONINE:
-                return 'T';
-            case VALINE:
-                return 'V';
-            case TRYPTOPHAN:
-                return 'W';
-            case TYROSINE:
-                return 'Y';
+    public static ImmoniumIon getImmoniumIon(int subType) {
+        switch (subType) {
+            case 0:
+                return ALANINE;
+            case 1:
+                return ARGININE;
+            case 2:
+                return ASPARAGINE;
+            case 3:
+                return ASPARTIC_ACID;
+            case 4:
+                return CYSTEINE;
+            case 5:
+                return GLUTAMIC_ACID;
+            case 6:
+                return GLUTAMINE;
+            case 7:
+                return GLYCINE;
+            case 8:
+                return HISTIDINE;
+            case 9:
+                return ISOLEUCINE;
+            case 10:
+                return LEUCINE;
+            case 11:
+                return LYSINE;
+            case 12:
+                return METHIONINE;
+            case 13:
+                return PHENYLALANINE;
+            case 14:
+                return PROLINE;
+            case 15:
+                return SELENOCYSTEINE;
+            case 16:
+                return SERINE;
+            case 17:
+                return THREONINE;
+            case 18:
+                return TRYPTOPHAN;
+            case 19:
+                return TYROSINE;
+            case 20:
+                return VALINE;
             default:
-                return 'X';
+                throw new UnsupportedOperationException("No immonium ion implemented for subtype " + subType + ".");
         }
     }
 
     /**
-     * Returns the subtype identifier based on the amino acid one letter symbol.
+     * Returns the immonium ion produced by the given amino acid.
      *
      * @param residue the amino acid as char
-     * @return the subtype as indexed by the static fields. -1 if not found.
+     * 
+     * @return the immonium ion 
      */
-    public static int getSubtype(char residue) {
+    public static ImmoniumIon getImmoniumIon(char residue) {
         switch (residue) {
             case 'A':
                 return ALANINE;
@@ -236,6 +228,8 @@ public class ImmoniumIon extends Ion {
                 return SERINE;
             case 'T':
                 return THREONINE;
+            case 'U':
+                return SELENOCYSTEINE;
             case 'V':
                 return VALINE;
             case 'W':
@@ -243,13 +237,13 @@ public class ImmoniumIon extends Ion {
             case 'Y':
                 return TYROSINE;
             default:
-                return -1;
+                throw new UnsupportedOperationException("No immonium ion implemented for amino acid " + residue + ".");
         }
     }
 
     @Override
     public String getName() {
-        return "i" + getResidue(subType);
+        return "i" + aa;
     }
 
     @Override
@@ -260,82 +254,54 @@ public class ImmoniumIon extends Ion {
         //        get the same cv term and this end up being group togeher when iterating 
         //        the terms in the writeSpectrumIdentificationResult method
 
-        if (cvTerm != null) {
-            return cvTerm;
+        switch (aa) {
+            case 'A':
+                return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");
+            case 'C':
+                return new CvTerm("PRIDE", "PRIDE:0000241", "immonium C", "0");
+            case 'D':
+                return new CvTerm("PRIDE", "PRIDE:0000242", "immonium D", "0");
+            case 'E':
+                return new CvTerm("PRIDE", "PRIDE:0000243", "immonium E", "0");
+            case 'f':
+                return new CvTerm("PRIDE", "PRIDE:0000244", "immonium F", "0");
+            case 'G':
+                return new CvTerm("PRIDE", "PRIDE:0000245", "immonium G", "0");
+            case 'H':
+                return new CvTerm("PRIDE", "PRIDE:0000246", "immonium H", "0");
+            case 'I':
+                return new CvTerm("PRIDE", "PRIDE:0000247", "immonium I", "0");
+            case 'K':
+                return new CvTerm("PRIDE", "PRIDE:0000248", "immonium K", "0");
+            case 'L':
+                return new CvTerm("PRIDE", "PRIDE:0000249", "immonium L", "0");
+            case 'M':
+                return new CvTerm("PRIDE", "PRIDE:0000250", "immonium M", "0");
+            case 'N':
+                return new CvTerm("PRIDE", "PRIDE:0000251", "immonium N", "0");
+            case 'P':
+                return new CvTerm("PRIDE", "PRIDE:0000252", "immonium P", "0");
+            case 'Q':
+                return new CvTerm("PRIDE", "PRIDE:0000253", "immonium Q", "0");
+            case 'R':
+                return new CvTerm("PRIDE", "PRIDE:0000254", "immonium R", "0");
+            case 'S':
+                return new CvTerm("PRIDE", "PRIDE:0000255", "immonium S", "0");
+            case 'T':
+                return new CvTerm("PRIDE", "PRIDE:0000256", "immonium T", "0");
+            case 'V':
+                return new CvTerm("PRIDE", "PRIDE:0000257", "immonium V", "0");
+            case 'W':
+                return new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", "0");
+            case 'Y':
+                return new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", "0");
+                default:
+                    return null;
         }
-
-        switch (subType) {
-            case ALANINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");
-                break;
-            case CYSTEINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000241", "immonium C", "0");
-                break;
-            case ASPARTIC_ACID:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000242", "immonium D", "0");
-                break;
-            case GLUTAMIC_ACID:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000243", "immonium E", "0");
-                break;
-            case PHENYLALANINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000244", "immonium F", "0");
-                break;
-            case GLYCINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000245", "immonium G", "0");
-                break;
-            case HISTIDINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000246", "immonium H", "0");
-                break;
-            case ISOLEUCINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000247", "immonium I", "0");
-                break;
-            case LYSINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000248", "immonium K", "0");
-                break;
-            case LEUCINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000249", "immonium L", "0");
-                break;
-            case METHIONINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000250", "immonium M", "0");
-                break;
-            case ASPARAGINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000251", "immonium N", "0");
-                break;
-            case PROLINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000252", "immonium P", "0");
-                break;
-            case GLUTAMINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000253", "immonium Q", "0");
-                break;
-            case ARGININE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000254", "immonium R", "0");
-                break;
-            case SERINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000255", "immonium S", "0");
-                break;
-            case THREONINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000256", "immonium T", "0");
-                break;
-            case VALINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000257", "immonium V", "0");
-                break;
-            case TRYPTOPHAN:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", "0");
-                break;
-            case TYROSINE:
-                cvTerm = new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", "0");
-                break;
-        }
-
-        return cvTerm;
     }
 
     @Override
     public CvTerm getPsiMsCvTerm() {
-        if (psiCvTerm != null) {
-            return psiCvTerm;
-        }
-        psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
         return psiCvTerm;
     }
 
@@ -346,7 +312,7 @@ public class ImmoniumIon extends Ion {
 
     @Override
     public String getSubTypeAsString() {
-        return "Immonium " + getResidue(subType);
+        return "Immonium " + aa;
     }
 
     /**
@@ -355,27 +321,10 @@ public class ImmoniumIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
-        possibleTypes.add(ALANINE);
-        possibleTypes.add(CYSTEINE);
-        possibleTypes.add(ASPARTIC_ACID);
-        possibleTypes.add(GLUTAMIC_ACID);
-        possibleTypes.add(PHENYLALANINE);
-        possibleTypes.add(GLYCINE);
-        possibleTypes.add(HISTIDINE);
-        possibleTypes.add(ISOLEUCINE);
-        possibleTypes.add(LYSINE);
-        possibleTypes.add(LEUCINE);
-        possibleTypes.add(METHIONINE);
-        possibleTypes.add(ASPARAGINE);
-        possibleTypes.add(PROLINE);
-        possibleTypes.add(GLUTAMINE);
-        possibleTypes.add(ARGININE);
-        possibleTypes.add(SERINE);
-        possibleTypes.add(THREONINE);
-        possibleTypes.add(VALINE);
-        possibleTypes.add(TRYPTOPHAN);
-        possibleTypes.add(TYROSINE);
+        ArrayList<Integer> possibleTypes = new ArrayList<Integer>(21);
+        for (int i = 0 ; i <= 20 ; i++) {
+            possibleTypes.add(i);
+        }
         return possibleTypes;
     }
 

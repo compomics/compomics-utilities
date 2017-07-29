@@ -1,6 +1,7 @@
 com.compomics.cli.enzymes
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
+com.compomics.scripts_marc
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli
@@ -31,7 +32,6 @@ com.compomics.util.experiment.biology.variants.amino_acids
 com.compomics.util.experiment.filtering
 com.compomics.util.experiment.identification
 com.compomics.util.experiment.identification.amino_acid_tags
-com.compomics.util.experiment.identification.amino_acid_tags.matchers
 com.compomics.util.experiment.identification.filtering
 com.compomics.util.experiment.identification.identification_parameters
 com.compomics.util.experiment.identification.identification_parameters.tool_specific

@@ -3784,7 +3784,6 @@ public class FMIndex implements PeptideMapper {
      * Mapping tags against the proteome.
      *
      * @param tag information about the identified peptide
-     * @param tagMatcher the tag matcher
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the mass tolerance
      * @return the protein mapping

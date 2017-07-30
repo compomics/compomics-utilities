@@ -84,6 +84,7 @@ public abstract class MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @param filters filters for the class
      * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database

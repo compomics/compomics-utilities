@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 import javax.swing.JProgressBar;
@@ -97,6 +98,11 @@ public class SequenceFactory {
      * statistics.
      */
     public static int minProteinCount = 1000; // @TODO: use a better metric
+    /**
+     * The reference number for amino acid occurrence calculation, e.g. 100 for percent, 1000 per mille, 1000000 ppm.
+     */
+    public final static int nAaOccurrence = 1000000;
+
     /**
      * Constructor.
      */
@@ -420,11 +426,9 @@ public class SequenceFactory {
      *
      * @param proteinSequence the protein sequence
      */
-    public static void validateSequence(String proteinSequence) {
-        for (int i = 0; i < proteinSequence.length(); i++) {
-            char aa = proteinSequence.charAt(i);
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            if (aminoAcid == null) {
+    public static void validateSequence(char[] proteinSequence) {
+        for (char aa : proteinSequence) {
+            if (!AminoAcid.isAa(aa)) {
                 throw new IllegalArgumentException("Found character in protein sequence that cannot be mapped to an amino acid (" + aa + ").");
             }
         }
@@ -757,7 +761,12 @@ public class SequenceFactory {
         HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<>();
 
         // a map of the species
-        HashMap<String, Integer> species = new HashMap<>();
+        HashMap<String, Integer> species = new HashMap<String, Integer>();
+        
+        // Keep track of the number of amino acids
+        int[] aaOccurrence = new int[26];
+        LinkedList<int[]> aaOccurrenceList = new LinkedList<int[]>();
+        int nAAs = 0;
 
         StringBuilder sequenceBuilder = new StringBuilder();
         String accession = null;
@@ -771,10 +780,23 @@ public class SequenceFactory {
 
                 if (sequenceBuilder.length() != 0 && accession != null) {
                     String sequence = importSequenceFromFasta(sequenceBuilder);
+                    char[] aaSequence = sequence.toCharArray();
                     try {
-                        validateSequence(sequence);
+                        validateSequence(aaSequence);
                     } catch (Exception e) {
                         throw new IllegalArgumentException("An error occurred while parsing the sequence of " + accession + " at line " + lineNumber + ": " + e.toString());
+                    }
+                    for (char aa : aaSequence) {
+                        if (AminoAcid.isUniqueAa(aa)) {
+                            int aaIndex = aa - 65;
+                            aaOccurrence[aaIndex]++;
+                            nAAs++;
+                            if (nAAs == nAaOccurrence) {
+                                aaOccurrenceList.add(aaOccurrence);
+                                aaOccurrence = new int[26];
+                                nAAs = 0;
+                            }
+                        }
                     }
                 }
 
@@ -879,8 +901,21 @@ public class SequenceFactory {
                 mainDatabaseType = tempDatabaseType;
             }
         }
+        
+        // Aggregate the amino acid occurrence lists
+        double scaling = ((double) nAAs)/nAaOccurrence;
+        scaling += aaOccurrenceList.size();
+        double[] aaOccurrenceSummary = new double[aaOccurrence.length];
+        for (int[] aaOccurrenceTemp : aaOccurrenceList) {
+            for (int i = 0 ; i < aaOccurrenceTemp.length ; i++) {
+                aaOccurrenceSummary[i] += ((double) aaOccurrenceTemp[i]) / scaling;
+            }
+        }
+        for (int i = 0 ; i < aaOccurrence.length ; i++) {
+            aaOccurrence[i] = (int) ((((double) aaOccurrence[i]) / scaling) + aaOccurrenceSummary[i]);
+        }
 
-        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, mainDatabaseType, databaseTypes, decoyTag, version, species);
+        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, mainDatabaseType, databaseTypes, decoyTag, version, species, aaOccurrence);
     }
 
     /**
@@ -1197,9 +1232,9 @@ public class SequenceFactory {
      * @throws InterruptedException if an InterruptedException occurs
      * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
-    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, Long> getAAOccurrences(JProgressBar progressBar) throws IOException, InterruptedException, ClassNotFoundException {
 
-        HashMap<String, Integer> aaMap = new HashMap<>();
+        HashMap<String, Long> aaMap = new HashMap<String, Long>(26);
         Set<String> accessions = getAccessions();
 
         if (progressBar != null) {
@@ -1213,9 +1248,9 @@ public class SequenceFactory {
             if (!isDecoyAccession(accession)) {
                 Protein protein = getProtein(accession);
                 for (String aa : protein.getSequence().split("")) {
-                    Integer n = aaMap.get(aa);
+                    Long n = aaMap.get(aa);
                     if (n == null) {
-                        n = 0;
+                        n = 0l;
                     }
                     aaMap.put(aa, n + 1);
                 }

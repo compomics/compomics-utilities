@@ -1,10 +1,12 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import org.apache.commons.math.MathException;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,15 +34,18 @@ public class IntensityHistogram extends JPanel {
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
-     * @param intensityLevel annotation intensity level, e.g., 0.75 for 75%
+     * @param intensityThresholdType the type of intensity threshold
+     * @param intensityThreshold the intensity threshold
      * 
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
             MSnSpectrum currentSpectrum,
-            double intensityLevel) throws InterruptedException {
+            AnnotationSettings.IntensityThresholdType intensityThresholdType,
+            double intensityThreshold) throws InterruptedException, MathException {
         super();
 
         setOpaque(false);
@@ -48,7 +53,7 @@ public class IntensityHistogram extends JPanel {
 
         // the non annotated intensities
         ArrayList<Double> nonAnnotatedPeakIntensities =
-                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityLevel));
+                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityThresholdType, intensityThreshold));
 
         // the annotated intensities
         ArrayList<Double> annotatedPeakIntensities = new ArrayList<>();

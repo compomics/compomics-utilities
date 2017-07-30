@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -1108,15 +1109,49 @@ public class Util {
      */
     public static char[] mergeCharArrays(char[] array1, char[] array2) {
         char[] result = new char[array1.length + array2.length];
-        int count = 0;
-        for (int i = 0; i < array1.length; i++) {
-            result[count] = array1[i];
-            count++;
-        }
-        for (int i = 0; i < array2.length; i++) {
-            result[count] = array2[i];
-            count++;
-        }
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
         return result;
+    }
+    
+    /**
+     * Returns an array containing the unique characters of the given array.
+     * 
+     * @param array the array
+     * 
+     * @return the unique array
+     */
+    public static char[] makeUnique(char[] array) {
+        
+        char[] arrayUnique = new char[array.length];
+        int index = 0;
+        char aa = array[index];
+        arrayUnique[index] = aa;
+        for (int i = 1; i < array.length; i++) {
+            
+            aa = array[i];
+            boolean duplicate = false;
+            
+            for (int j = 0; j < i; j++) {
+                
+                char aaTemp = array[j];
+                
+                if (aa == aaTemp) {
+                    
+                    duplicate = true;
+                    break;
+                    
+                }
+            }
+            
+            if (!duplicate) {
+                
+                arrayUnique[index] = aa;
+                
+            }
+        }
+        
+        System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
+        return arrayUnique;
     }
 }

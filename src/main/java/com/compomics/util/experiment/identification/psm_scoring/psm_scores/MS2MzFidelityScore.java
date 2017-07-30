@@ -8,6 +8,7 @@ import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import java.util.ArrayList;
+import org.apache.commons.math.MathException;
 
 /**
  * The m/z fidelity sub-score as adapted from the DirecTag manuscript
@@ -33,8 +34,9 @@ public class MS2MzFidelityScore {
      * 
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
                 spectrum, peptide);

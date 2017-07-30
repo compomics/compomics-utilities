@@ -141,6 +141,7 @@ public abstract class Ion extends ExperimentObject {
      * Returns an arraylist of possible subtypes.
      *
      * @param ionType an arraylist of possible subtypes
+     * 
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes(IonType ionType) {
@@ -371,7 +372,7 @@ public abstract class Ion extends ExperimentObject {
             case GLYCAN:
                 return new Glycan("new Glycan", "new Glycan");
             case IMMONIUM_ION:
-                return new ImmoniumIon(subType);
+                return ImmoniumIon.getImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:
                 return new PeptideFragmentIon(subType, neutralLosses);
             case TAG_FRAGMENT_ION:
@@ -402,7 +403,7 @@ public abstract class Ion extends ExperimentObject {
             case GLYCAN:
                 return new Glycan("new Glycon", "new Glycon");
             case IMMONIUM_ION:
-                return new ImmoniumIon(subType);
+                return ImmoniumIon.getImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:
                 return new PeptideFragmentIon(subType);
             case TAG_FRAGMENT_ION:

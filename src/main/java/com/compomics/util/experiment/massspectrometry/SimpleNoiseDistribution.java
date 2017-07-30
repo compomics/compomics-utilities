@@ -32,11 +32,16 @@ public class SimpleNoiseDistribution {
      * The p log values.
      */
     private double[] pLog;
+    /**
+     * The noise distribution.
+     */
+    private NonSymmetricalNormalDistribution intensityLogDistribution;
 
     /**
      * Constructor.
      * 
      * @param peakList the peak list
+     * 
      * @throws MathException thrown if a math error occurs
      */
     public SimpleNoiseDistribution(HashMap<Double, Peak> peakList) throws MathException {
@@ -47,7 +52,7 @@ public class SimpleNoiseDistribution {
             intensitiesLog.add(log);
         }
         Collections.sort(intensitiesLog);
-        NonSymmetricalNormalDistribution intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
+        intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
 
         orderedBins = new int[nBins - 1];
         pLog = new double[nBins - 1];
@@ -65,7 +70,8 @@ public class SimpleNoiseDistribution {
      * Get the binned cumulative probability.
      * 
      * @param intensity the intensity
-     * @return the binned cumulative probabilit
+     * 
+     * @return the binned cumulative probability
      */
     public double getBinnedCumulativeProbability(double intensity) {
         for (int i = 0; i < orderedBins.length; i++) {
@@ -81,6 +87,7 @@ public class SimpleNoiseDistribution {
      * Get the binned logged cumulative probability.
      * 
      * @param intensity the intensity
+     * 
      * @return the binned cumulative logged probability
      */
     public double getBinnedCumulativeProbabilityLog(double intensity) {
@@ -91,5 +98,31 @@ public class SimpleNoiseDistribution {
             }
         }
         return 0.0;
+    }
+    
+    /**
+     * Returns the log10 intensity at a given upper tale cumulative probability.
+     * 
+     * @param p the probability
+     * 
+     * @return the log10 intensity
+     * 
+     * @throws MathException exception thrown if an error occurred while estimating the probability
+     */
+    public double getLogIntensityAtP(double p) throws MathException {
+        return intensityLogDistribution.getValueAtDescendingCumulativeProbability(p);
+    }
+    
+    /**
+     * Returns the intensity at a given upper tale cumulative probability.
+     * 
+     * @param p the probability
+     * 
+     * @return the intensity
+     * 
+     * @throws MathException exception thrown if an error occurred while estimating the probability
+     */
+    public double getIntensityAtP(double p) throws MathException {
+        return FastMath.pow(10, getLogIntensityAtP(p));
     }
 }

@@ -272,7 +272,7 @@ public class IonFactory {
                     ionsMap = new HashMap<>(sequence.length());
                     result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                 }
-                ImmoniumIon immoniumIon = new ImmoniumIon(aaName);
+                ImmoniumIon immoniumIon = ImmoniumIon.getImmoniumIon(aaName);
                 int subType = immoniumIon.getSubType();
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
@@ -292,16 +292,18 @@ public class IonFactory {
 
                 ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(AminoAcid.getAminoAcid(aaName));
 
-                for (RelatedIon tempRelated : relatedIons) {
-                    int subType = tempRelated.getSubType();
+                if (relatedIons != null) {
+                    for (RelatedIon tempRelated : relatedIons) {
+                        int subType = tempRelated.getSubType();
 
-                    ArrayList<Ion> ions = ionsMap.get(subType);
-                    if (ions == null) {
-                        ions = new ArrayList<>(1);
+                        ArrayList<Ion> ions = ionsMap.get(subType);
+                        if (ions == null) {
+                            ions = new ArrayList<Ion>(1);
+                        }
+
+                        ions.add(tempRelated);
+                        ionsMap.put(subType, ions);
                     }
-
-                    ions.add(tempRelated);
-                    ionsMap.put(subType, ions);
                 }
             }
 
@@ -575,7 +577,7 @@ public class IonFactory {
                             ionsMap = new HashMap<>();
                             result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                         }
-                        ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
+                        ImmoniumIon immoniumIon = ImmoniumIon.getImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                         int subType = immoniumIon.getSubType();
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
@@ -592,16 +594,18 @@ public class IonFactory {
                         }
                         ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
 
-                        for (RelatedIon tempRelated : relatedIons) {
-                            subType = tempRelated.getSubType();
+                        if (relatedIons != null) {
+                            for (RelatedIon tempRelated : relatedIons) {
+                                subType = tempRelated.getSubType();
 
-                            ions = ionsMap.get(subType);
-                            if (ions == null) {
-                                ions = new ArrayList<>(1);
+                                ions = ionsMap.get(subType);
+                                if (ions == null) {
+                                    ions = new ArrayList<Ion>(1);
+                                }
+
+                                ions.add(tempRelated);
+                                ionsMap.put(subType, ions);
                             }
-
-                            ions.add(tempRelated);
-                            ionsMap.put(subType, ions);
                         }
                     }
 
@@ -729,7 +733,7 @@ public class IonFactory {
                         ionsMap = new HashMap<>();
                         result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                     }
-                    ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
+                    ImmoniumIon immoniumIon = ImmoniumIon.getImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                     int subType = immoniumIon.getSubType();
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
@@ -746,16 +750,18 @@ public class IonFactory {
                     }
                     ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
 
-                    for (RelatedIon tempRelated : relatedIons) {
-                        subType = tempRelated.getSubType();
+                    if (relatedIons != null) {
+                        for (RelatedIon tempRelated : relatedIons) {
+                            subType = tempRelated.getSubType();
 
-                        ions = ionsMap.get(subType);
-                        if (ions == null) {
-                            ions = new ArrayList<>(1);
+                            ions = ionsMap.get(subType);
+                            if (ions == null) {
+                                ions = new ArrayList<Ion>(1);
+                            }
+
+                            ions.add(tempRelated);
+                            ionsMap.put(subType, ions);
                         }
-
-                        ions.add(tempRelated);
-                        ionsMap.put(subType, ions);
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
@@ -975,7 +981,7 @@ public class IonFactory {
                             ionsMap = new HashMap<>();
                             result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                         }
-                        ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
+                        ImmoniumIon immoniumIon = ImmoniumIon.getImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                         int subType = immoniumIon.getSubType();
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
@@ -992,16 +998,18 @@ public class IonFactory {
                         }
                         ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
 
-                        for (RelatedIon tempRelated : relatedIons) {
-                            subType = tempRelated.getSubType();
+                        if (relatedIons != null) {
+                            for (RelatedIon tempRelated : relatedIons) {
+                                subType = tempRelated.getSubType();
 
-                            ions = ionsMap.get(subType);
-                            if (ions == null) {
-                                ions = new ArrayList<>(1);
+                                ions = ionsMap.get(subType);
+                                if (ions == null) {
+                                    ions = new ArrayList<Ion>(1);
+                                }
+
+                                ions.add(tempRelated);
+                                ionsMap.put(subType, ions);
                             }
-
-                            ions.add(tempRelated);
-                            ionsMap.put(subType, ions);
                         }
                     }
 
@@ -1141,7 +1149,7 @@ public class IonFactory {
                         ionsMap = new HashMap<>();
                         result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
                     }
-                    ImmoniumIon immoniumIon = new ImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
+                    ImmoniumIon immoniumIon = ImmoniumIon.getImmoniumIon(aminoAcid.getSingleLetterCodeAsChar());
                     int subType = immoniumIon.getSubType();
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
@@ -1158,16 +1166,18 @@ public class IonFactory {
                     }
                     ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
 
-                    for (RelatedIon tempRelated : relatedIons) {
-                        subType = tempRelated.getSubType();
+                    if (relatedIons != null) {
+                        for (RelatedIon tempRelated : relatedIons) {
+                            subType = tempRelated.getSubType();
 
-                        ions = ionsMap.get(subType);
-                        if (ions == null) {
-                            ions = new ArrayList<>(1);
+                            ions = ionsMap.get(subType);
+                            if (ions == null) {
+                                ions = new ArrayList<Ion>(1);
+                            }
+
+                            ions.add(tempRelated);
+                            ionsMap.put(subType, ions);
                         }
-
-                        ions.add(tempRelated);
-                        ionsMap.put(subType, ions);
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();

@@ -11,6 +11,9 @@ public interface SequenceIterator {
      * Returns the next peptide that can be generated from the iterator. Null if none left.
      * 
      * @return the next peptide that can be generated from the iterator
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public PeptideWithPosition getNextPeptide();
+    public PeptideWithPosition getNextPeptide() throws InterruptedException;
 }

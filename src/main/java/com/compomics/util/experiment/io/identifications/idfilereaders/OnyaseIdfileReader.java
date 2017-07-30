@@ -16,7 +16,6 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,7 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.zip.GZIPInputStream;
 import javax.xml.bind.JAXBException;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * Id file reader for the scripts in Onyase.

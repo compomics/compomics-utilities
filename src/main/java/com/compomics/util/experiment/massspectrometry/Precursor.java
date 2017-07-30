@@ -3,6 +3,7 @@ package com.compomics.util.experiment.massspectrometry;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * This class models a precursor.
@@ -39,7 +40,7 @@ public class Precursor extends ExperimentObject {
     /**
      * The charge of the precursor.
      */
-    private ArrayList<Charge> possibleCharges = new ArrayList<>();
+    private ArrayList<Charge> possibleCharges = new ArrayList<Charge>(1);
 
     /**
      * Constructor for the precursor.
@@ -180,7 +181,7 @@ public class Precursor extends ExperimentObject {
     public ArrayList<Charge> getPossibleCharges() {
         return possibleCharges;
     }
-
+    
     /**
      * Returns the possible charges as a string.
      *

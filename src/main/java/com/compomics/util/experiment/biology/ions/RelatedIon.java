@@ -158,15 +158,23 @@ public class RelatedIon extends Ion {
     /**
      * Returns the list of related ions for the given amino acid.
      *
+     * @param aa the amino acid target single letter code
+     *
+     * @return the list of related ions for the given amino acid
+     */
+    public static ArrayList<RelatedIon> getRelatedIons(char aa) {
+        return implementedIons.get(aa);
+    }
+
+    /**
+     * Returns the list of related ions for the given amino acid.
+     *
      * @param aminoAcidTarget the amino acid target
+     *
      * @return the list of related ions for the given amino acid
      */
     public static ArrayList<RelatedIon> getRelatedIons(AminoAcid aminoAcidTarget) {
-        ArrayList<RelatedIon> relatedIons = implementedIons.get(aminoAcidTarget.getSingleLetterCodeAsChar());
-        if (relatedIons == null) {
-            relatedIons = new ArrayList<>(1);
-        }
-        return relatedIons;
+        return getRelatedIons(aminoAcidTarget.getSingleLetterCodeAsChar());
     }
 
     @Override

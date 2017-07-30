@@ -199,6 +199,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * Returns the ion match.
      *
      * @param precursorPeak the precursor peak
+     * 
      * @return the ion match
      */
     public IonMatch getPrecursorMatch(Peak precursorPeak) {

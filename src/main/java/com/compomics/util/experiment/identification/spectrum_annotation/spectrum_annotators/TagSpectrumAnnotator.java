@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 
 /**
  * Annotates a spectrum with information from a tag.
@@ -205,7 +206,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     /**
-     * Returns the spectrum annotations of a spectrum in a list of IonMatches.
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches using an intensity filter.
      *
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
@@ -217,14 +218,42 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
+            MSnSpectrum spectrum, Tag tag) throws InterruptedException, MathException {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, true);
+    }
+
+    /**
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches.
+     *
+     * Note that, except for +1 precursors, fragments ions will be expected to
+     * have a charge strictly smaller than the precursor ion charge.
+     *
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param spectrum the spectrum to match
+     * @param tag the tag of interest
+     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     *
+     * @return an ArrayList of IonMatch containing the ion matches with the
+     * given settings
+     * 
+     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     */
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
+            MSnSpectrum spectrum, Tag tag, boolean useIntensityFilter) throws InterruptedException, MathException {
 
         ArrayList<IonMatch> result = new ArrayList<>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
+            double intensityLimit = useIntensityFilter ? spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()) : 0.0;
+            setSpectrum(spectrum, intensityLimit);
         }
         setTag(tag, specificAnnotationSettings.getPrecursorCharge());
 
@@ -276,7 +305,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
-        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }
 }

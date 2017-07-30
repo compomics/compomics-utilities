@@ -61,7 +61,6 @@ public class ProteinMatchesIterator extends MatchesIterator {
     }
     
 
-
     /**
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.

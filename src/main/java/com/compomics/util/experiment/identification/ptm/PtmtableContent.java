@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.commons.math.MathException;
 
 /**
  * Convenience class for the content of a PTM table.
@@ -218,9 +219,13 @@ public class PtmtableContent {
      * @param specificAnnotationPreferences the specific annotation preferences
      *
      * @return the PTM plot series in the JFreechart format for one PSM.
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
+            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws InterruptedException, MathException {
 
         //@TODO: use Peptide.getNoModPeptide instead
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>());
@@ -279,13 +284,14 @@ public class PtmtableContent {
      * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException, MathException {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 

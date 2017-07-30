@@ -311,8 +311,10 @@ public class PeptideAssumptionFilter implements Serializable {
      * @throws IOException if an error occurs while reading the spectrum
      * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
      * reading while the spectrum
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException, InterruptedException {
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {

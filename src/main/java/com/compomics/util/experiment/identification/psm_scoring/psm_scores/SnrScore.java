@@ -4,11 +4,11 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.protein_sequences.AaOccurrence;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,19 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
+    /**
+     * The occurrence of amino acids in the database.
+     */
+    private AaOccurrence aaOccurrence;
+    
+    /**
+     * Constructor.
+     * 
+     * @param aaOccurrence the amino acid occurrence in the database
+     */
+    public SnrScore(AaOccurrence aaOccurrence) {
+        this.aaOccurrence = aaOccurrence;
+    }
 
     /**
      * Returns the score.
@@ -46,8 +59,8 @@ public class SnrScore {
      * occurs when calculating logs
      */
     public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
-        ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatchesList);
+        ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, false);
+        return getScore(peptide, spectrum, ionMatchesList);
     }
 
     /**
@@ -55,9 +68,6 @@ public class SnrScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatchesList the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
@@ -67,8 +77,8 @@ public class SnrScore {
      * @throws org.apache.commons.math.MathException exception if an exception
      * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
-        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
+        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<Double, ArrayList<IonMatch>>(ionMatchesList.size());
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
@@ -78,7 +88,7 @@ public class SnrScore {
             }
             peakMatches.add(ionMatch);
         }
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
+        return getScore(peptide, spectrum, ionMatches);
     }
 
     /**
@@ -86,9 +96,6 @@ public class SnrScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      * indexed by mz
      *
@@ -99,36 +106,68 @@ public class SnrScore {
      * @throws org.apache.commons.math.MathException exception if an exception
      * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
+
+        char[] sequence = peptide.getSequence().toCharArray();
+        int sequenceLength = sequence.length;
         
-        Double pAnnotatedMinusLog = 0.0;
-        Double pNotAnnotatedMinusLog = 0.0;
-        HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         
-        for (Double mz : spectrum.getOrderedMzValues()) {
-            Peak peak = peakMap.get(mz);
-            double intensity = peak.intensity;
-            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+        double pFragmentIonMinusLog = 0.0;
+        double pAnnotatedMinusLog = 0.0;
+
+        for (double mz : ionMatches.keySet()) {
+
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
-            if (peakMatches == null) {
-                pNotAnnotatedMinusLog += pMinusLog;
-            } else {
-                for (IonMatch ionMatch : peakMatches) {
-                    if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                        PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                        if (!peptideFragmentIon.hasNeutralLosses() && peptideFragmentIon.getNumber() >= 2) {
-                            pAnnotatedMinusLog += pMinusLog;
-                            break;
+
+            double intensity = peakMatches.get(0).peak.intensity;
+            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+
+            for (IonMatch ionMatch : peakMatches) {
+
+                if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+
+                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                    int number = peptideFragmentIon.getNumber();
+
+                    if (!peptideFragmentIon.hasNeutralLosses() && number >= 2) {
+
+                        double aasP;
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION
+                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION
+                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
+                            aasP = aaOccurrence.getP(sequence, 0, number, 4);
+                        } else {
+                            aasP = aaOccurrence.getP(sequence, sequenceLength-number, sequenceLength, 4);
                         }
+                        pFragmentIonMinusLog += pMinusLog + aasP;
+                        break;
+
                     }
                 }
             }
+
+            pAnnotatedMinusLog += pMinusLog;
+
         }
-        if (pAnnotatedMinusLog == 0.0) {
-            return pAnnotatedMinusLog;
+
+        if (pFragmentIonMinusLog == 0.0) {
+            return pFragmentIonMinusLog;
         }
+
+        double pTotalMinusLog = 0.0;
+        double[] intensities = spectrum.getIntensityValuesAsArray();
+
+        for (double intensity : intensities) {
+
+            double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
+            pTotalMinusLog += pMinusLog;
+        }
+
+        double pNotAnnotatedMinusLog = pTotalMinusLog - pAnnotatedMinusLog;
+
         if (pNotAnnotatedMinusLog < limitLog10) {
+
             double pNotAnnotated = FastMath.pow(10, -pNotAnnotatedMinusLog);
             if (pNotAnnotated > 1.0 - Double.MIN_VALUE) {
                 pNotAnnotated = 1.0 - Double.MIN_VALUE;
@@ -138,8 +177,9 @@ public class SnrScore {
             if (notAnnotatedCorrection > pAnnotatedMinusLog) {
                 notAnnotatedCorrection = pAnnotatedMinusLog;
             }
-            pAnnotatedMinusLog += notAnnotatedCorrection;
+            pFragmentIonMinusLog += notAnnotatedCorrection;
+
         }
-        return pAnnotatedMinusLog;
+        return pFragmentIonMinusLog;
     }
 }

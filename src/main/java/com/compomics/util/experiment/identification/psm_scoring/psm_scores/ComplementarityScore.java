@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import org.apache.commons.math.util.FastMath;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.commons.math.MathException;
 
 /**
  * The intensity sub-score as adapted from the DirecTag manuscript
@@ -40,8 +41,12 @@ public class ComplementarityScore {
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
+     * 
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
 
         int sequenceLength = peptide.getSequence().length();
 

@@ -203,7 +203,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="dynamicRangeLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Dynamic Range (Da)    (?)"/>
+                    <Property name="text" type="java.lang.String" value="Spectrum Dynamic Range    (?)"/>
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>

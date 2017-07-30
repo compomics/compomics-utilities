@@ -51,13 +51,17 @@ public class SpectrumIndex extends IdObject implements UrParameter {
     /**
      * The total intensity above the intensity threshold.
      */
-    private Double totalIntensity;
+    private double totalIntensity;
+    /**
+     * The intensity limit used for the index.
+     */
+    public final double intensityLimit;
 
     /**
      * Constructor for an empty index.
      */
     public SpectrumIndex() {
-
+        intensityLimit = 0.0;
     }
     
     public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
@@ -89,8 +93,9 @@ public class SpectrumIndex extends IdObject implements UrParameter {
      * @param tolerance the tolerance to use
      * @param ppm boolean indicating whether the tolerance is in ppm
      */
-    public SpectrumIndex(HashMap<Double, Peak> peaks, Double intenstiyLimit, double tolerance, boolean ppm) {
-        this.peaksMap = new HashMap<>();
+    public SpectrumIndex(HashMap<Double, Peak> peaks, double intenstiyLimit, double tolerance, boolean ppm) {
+        this.intensityLimit = intenstiyLimit;
+        this.peaksMap = new HashMap<Integer, HashMap<Double, Peak>>();
         this.precursorTolerance = tolerance;
         this.ppm = ppm;
         if (ppm) {
@@ -98,7 +103,7 @@ public class SpectrumIndex extends IdObject implements UrParameter {
         }
         totalIntensity = 0.0;
         for (Peak peak : peaks.values()) {
-            if (intenstiyLimit == null || peak.intensity >= intenstiyLimit) {
+            if (peak.intensity >= intenstiyLimit) {
                 totalIntensity += peak.intensity;
                 Integer bin = getBin(peak.mz);
                 if (binMax == null || bin > binMax) {

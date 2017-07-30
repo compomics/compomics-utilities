@@ -289,10 +289,12 @@ public class AScore {
      * @return the candidate A-score in a map
      *
      * @throws org.apache.commons.math.MathException exception thrown whenever a
-     * math error occurred while computing the score.
+     * math error occurred while computing the score or estimating the noise level
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException {
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException, InterruptedException {
 
         HashMap<Integer, Double> result = new HashMap<>(2);
 
@@ -327,7 +329,7 @@ public class AScore {
         Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrumAtBestDepth, tempPeptide);
+                spectrumAtBestDepth, tempPeptide, false);
         int n = 0;
 
         for (IonMatch match : matches) {
@@ -359,7 +361,7 @@ public class AScore {
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
         matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                spectrumAtBestDepth, tempPeptide);
+                spectrumAtBestDepth, tempPeptide, false);
         n = 0;
 
         for (IonMatch match : matches) {
@@ -506,10 +508,12 @@ public class AScore {
      * @return a map PTM localization &gt; score
      *
      * @throws org.apache.commons.math.MathException exception thrown whenever a
-     * math error occurred while computing the score.
+     * math error occurred while computing the score or estimating the noise level
+     * @throws java.lang.InterruptedException exception thrown if the thread is
+     * interrupted
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException {
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException, InterruptedException {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<>();
 
@@ -539,7 +543,7 @@ public class AScore {
                 tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, position));
 
                 ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
-                        spectrumMap.get(i), tempPeptide);
+                        spectrumMap.get(i), tempPeptide, false);
                 int n = matches.size();
 
                 BinomialDistribution distribution = new BinomialDistribution(N, p);

@@ -524,7 +524,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
         spectrumImportSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        dynamicRangeLbl.setText("Dynamic Range (Da)    (?)");
+        dynamicRangeLbl.setText("Spectrum Dynamic Range    (?)");
         dynamicRangeLbl.setToolTipText("Open X!Tandem parameter details");
         dynamicRangeLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {

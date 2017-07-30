@@ -171,6 +171,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#nAaOccurrence">nAaOccurrence</a></span></code>
+<div class="block">The reference number for amino acid occurrence calculation, e.g.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#TIME_OUT">TIME_OUT</a></span></code>
 <div class="block">The time out in milliseconds when querying the file.</div>
@@ -235,7 +241,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#getAAOccurrences-javax.swing.JProgressBar-">getAAOccurrences</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JProgressBar.html?is-external=true" title="class or interface in javax.swing">JProgressBar</a>&nbsp;progressBar)</code>
 <div class="block">Returns the occurrence of every amino acid in the database.</div>
 </td>
@@ -505,7 +511,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#validateSequence-java.lang.String-">validateSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#validateSequence-char:A-">validateSequence</a></span>(char[]&nbsp;proteinSequence)</code>
 <div class="block">Verifies that the sequence can be parsed into a series of amino acids.</div>
 </td>
 </tr>
@@ -555,12 +561,26 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="minProteinCount">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>minProteinCount</h4>
 <pre>public static&nbsp;int minProteinCount</pre>
 <div class="block">The minimal protein count required for reliable target/decoy based
  statistics.</div>
+</li>
+</ul>
+<a name="nAaOccurrence">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>nAaOccurrence</h4>
+<pre>public static final&nbsp;int nAaOccurrence</pre>
+<div class="block">The reference number for amino acid occurrence calculation, e.g. 100 for percent, 1000 per mille, 1000000 ppm.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../constant-values.html#com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.nAaOccurrence">Constant Field Values</a></dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -745,13 +765,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="validateSequence-java.lang.String-">
+<a name="validateSequence-char:A-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>validateSequence</h4>
-<pre>public static&nbsp;void&nbsp;validateSequence(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence)</pre>
+<pre>public static&nbsp;void&nbsp;validateSequence(char[]&nbsp;proteinSequence)</pre>
 <div class="block">Verifies that the sequence can be parsed into a series of amino acids.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1171,10 +1191,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>getAAOccurrences</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;getAAOccurrences(<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JProgressBar.html?is-external=true" title="class or interface in javax.swing">JProgressBar</a>&nbsp;progressBar)
-                                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;getAAOccurrences(<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JProgressBar.html?is-external=true" title="class or interface in javax.swing">JProgressBar</a>&nbsp;progressBar)
+                                      throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
 <div class="block">Returns the occurrence of every amino acid in the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

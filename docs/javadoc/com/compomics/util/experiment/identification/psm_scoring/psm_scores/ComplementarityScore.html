@@ -212,7 +212,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
                        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationPreferences,
                        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationPreferences,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator)</pre>
+                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator)
+                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
+                       org.apache.commons.math.MathException</pre>
 <div class="block">Scores the match between the given peptide and spectrum using the
  complementarity of the matched peaks. For every residue, a list of
  matched peaks is established and if any is found, the score per residue
@@ -227,6 +229,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>peptideSpectrumAnnotator</code> - the spectrum annotator to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the score of the match</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
+ interrupted</dd>
+<dd><code>org.apache.commons.math.MathException</code> - exception thrown if a math exception occurred when estimating the noise level</dd>
 </dl>
 </li>
 </ul>

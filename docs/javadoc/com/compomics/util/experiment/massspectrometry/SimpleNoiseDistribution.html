@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -167,6 +167,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Get the binned logged cumulative probability.</div>
 </td>
 </tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html#getIntensityAtP-double-">getIntensityAtP</a></span>(double&nbsp;p)</code>
+<div class="block">Returns the intensity at a given upper tale cumulative probability.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html#getLogIntensityAtP-double-">getLogIntensityAtP</a></span>(double&nbsp;p)</code>
+<div class="block">Returns the log10 intensity at a given upper tale cumulative probability.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -226,14 +238,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>intensity</code> - the intensity</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the binned cumulative probabilit</dd>
+<dd>the binned cumulative probability</dd>
 </dl>
 </li>
 </ul>
 <a name="getBinnedCumulativeProbabilityLog-double-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getBinnedCumulativeProbabilityLog</h4>
 <pre>public&nbsp;double&nbsp;getBinnedCumulativeProbabilityLog(double&nbsp;intensity)</pre>
@@ -243,6 +255,44 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>intensity</code> - the intensity</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the binned cumulative logged probability</dd>
+</dl>
+</li>
+</ul>
+<a name="getLogIntensityAtP-double-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLogIntensityAtP</h4>
+<pre>public&nbsp;double&nbsp;getLogIntensityAtP(double&nbsp;p)
+                          throws org.apache.commons.math.MathException</pre>
+<div class="block">Returns the log10 intensity at a given upper tale cumulative probability.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>p</code> - the probability</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the log10 intensity</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>org.apache.commons.math.MathException</code> - exception thrown if an error occurred while estimating the probability</dd>
+</dl>
+</li>
+</ul>
+<a name="getIntensityAtP-double-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getIntensityAtP</h4>
+<pre>public&nbsp;double&nbsp;getIntensityAtP(double&nbsp;p)
+                       throws org.apache.commons.math.MathException</pre>
+<div class="block">Returns the intensity at a given upper tale cumulative probability.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>p</code> - the probability</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the intensity</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>org.apache.commons.math.MathException</code> - exception thrown if an error occurred while estimating the probability</dd>
 </dl>
 </li>
 </ul>

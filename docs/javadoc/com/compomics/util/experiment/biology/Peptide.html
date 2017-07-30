@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9,"i12":10,"i13":10,"i14":10,"i15":9,"i16":9,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":9,"i23":10,"i24":9,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":9,"i33":10,"i34":10,"i35":10,"i36":10,"i37":9,"i38":10,"i39":9,"i40":10,"i41":9,"i42":10,"i43":10,"i44":10,"i45":9,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":10,"i53":9,"i54":9,"i55":10,"i56":10,"i57":10,"i58":10,"i59":10,"i60":10,"i61":10,"i62":10,"i63":10,"i64":10,"i65":10,"i66":10,"i67":10,"i68":10,"i69":10,"i70":10,"i71":10,"i72":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9,"i12":10,"i13":10,"i14":10,"i15":9,"i16":9,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":9,"i23":10,"i24":9,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":9,"i33":10,"i34":10,"i35":10,"i36":10,"i37":9,"i38":10,"i39":9,"i40":10,"i41":9,"i42":10,"i43":10,"i44":10,"i45":9,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":9,"i53":9,"i54":10,"i55":10,"i56":10,"i57":10,"i58":10,"i59":10,"i60":10,"i61":10,"i62":10,"i63":10,"i64":10,"i65":10,"i66":10,"i67":10,"i68":10,"i69":10,"i70":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -214,6 +214,14 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Constructor.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#Peptide-java.lang.String-java.util.ArrayList-boolean-double-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
+       <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches,
+       boolean&nbsp;sanityCheck,
+       double&nbsp;mass)</code>
+<div class="block">Constructor.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -311,7 +319,9 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getMatchingKey--">getMatchingKey</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getMatchingKey--">getMatchingKey</a></span>()</code>
+<div class="block">Returns the key accounting for sequence matching preferences</div>
+</td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
@@ -403,7 +413,9 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getParentProteins--">getParentProteins</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getParentProteins--">getParentProteins</a></span>()</code>
+<div class="block">Returns the proteins where this peptide can be found.</div>
+</td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
@@ -549,53 +561,49 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <tr id="i46" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getVariantMatches--">getVariantMatches</a></span>()</code>
-<div class="block">Getter for the variants carried by this peptide.</div>
+<div class="block">Returns the sequence variant matches of this peptide.</div>
 </td>
 </tr>
 <tr id="i47" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getVariants--">getVariants</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i48" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&gt;&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#getVariantsMap--">getVariantsMap</a></span>()</code>
 <div class="block">Returns the variants in a map indexed by protein accession and index.</div>
 </td>
 </tr>
-<tr id="i49" class="rowColor">
+<tr id="i48" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isCterm-com.compomics.util.preferences.SequenceMatchingPreferences-">isCterm</a></span>(<a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
 <div class="block">Returns a list of proteins where this peptide can be found in the
  C-terminus.</div>
 </td>
 </tr>
-<tr id="i50" class="altColor">
+<tr id="i49" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isDecoy-com.compomics.util.preferences.SequenceMatchingPreferences-">isDecoy</a></span>(<a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
 <div class="block">Indicates whether a peptide can be derived from a decoy protein.</div>
 </td>
 </tr>
-<tr id="i51" class="rowColor">
+<tr id="i50" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isModifiable-com.compomics.util.experiment.biology.PTM-com.compomics.util.preferences.SequenceMatchingPreferences-">isModifiable</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a>&nbsp;ptm,
             <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
 <div class="block">Indicates whether the given modification can be found on the peptide.</div>
 </td>
 </tr>
-<tr id="i52" class="altColor">
+<tr id="i51" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isModified--">isModified</a></span>()</code>
 <div class="block">Indicates whether a peptide carries modifications.</div>
 </td>
 </tr>
-<tr id="i53" class="rowColor">
+<tr id="i52" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isModified-java.lang.String-">isModified</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideKey)</code>
 <div class="block">Returns a boolean indicating whether the peptide has variable
  modifications based on its key.</div>
 </td>
 </tr>
-<tr id="i54" class="altColor">
+<tr id="i53" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isModified-java.lang.String-java.lang.Double-">isModified</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideKey,
           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;modificationMass)</code>
@@ -603,21 +611,21 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  modification based on its key.</div>
 </td>
 </tr>
-<tr id="i55" class="rowColor">
+<tr id="i54" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isNterm-com.compomics.util.preferences.SequenceMatchingPreferences-">isNterm</a></span>(<a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
 <div class="block">Returns a list of proteins where this peptide can be found in the
  N-terminus.</div>
 </td>
 </tr>
-<tr id="i56" class="altColor">
+<tr id="i55" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isSameModificationStatus-com.compomics.util.experiment.biology.Peptide-">isSameModificationStatus</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;anotherPeptide)</code>
 <div class="block">Indicates whether another peptide has the same variable modifications as
  this peptide.</div>
 </td>
 </tr>
-<tr id="i57" class="rowColor">
+<tr id="i56" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isSameSequence-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-">isSameSequence</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;anotherPeptide,
               <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
@@ -625,7 +633,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  sequence as the given peptide</div>
 </td>
 </tr>
-<tr id="i58" class="altColor">
+<tr id="i57" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#isSameSequenceAndModificationStatus-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-">isSameSequenceAndModificationStatus</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;anotherPeptide,
                                    <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
@@ -633,7 +641,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  status without accounting for modification localization.</div>
 </td>
 </tr>
-<tr id="i59" class="rowColor">
+<tr id="i58" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#mapParentProteins-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">mapParentProteins</a></span>(<a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
                  <a href="../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)</code>
@@ -641,20 +649,20 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  sequence factory.</div>
 </td>
 </tr>
-<tr id="i60" class="altColor">
+<tr id="i59" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#resetKeysCaches--">resetKeysCaches</a></span>()</code>
 <div class="block">Resets the internal cache of the keys.</div>
 </td>
 </tr>
-<tr id="i61" class="rowColor">
+<tr id="i60" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#sameModificationsAs-com.compomics.util.experiment.biology.Peptide-">sameModificationsAs</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;anotherPeptide)</code>
 <div class="block">Indicates whether another peptide has the same modifications at the same
  localization as this peptide.</div>
 </td>
 </tr>
-<tr id="i62" class="altColor">
+<tr id="i61" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#sameModificationsAs-com.compomics.util.experiment.biology.Peptide-java.util.ArrayList-">sameModificationsAs</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;anotherPeptide,
                    <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;ptms)</code>
@@ -662,51 +670,57 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  localization as this peptide.</div>
 </td>
 </tr>
+<tr id="i62" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setKey-java.lang.String-">setKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
+<div class="block">Sets the object key.</div>
+</td>
+</tr>
 <tr id="i63" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setKey-java.lang.String-">setKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setMass-double-">setMass</a></span>(double&nbsp;mass)</code>
+<div class="block">Sets the mass.</div>
+</td>
 </tr>
 <tr id="i64" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setMass-double-">setMass</a></span>(double&nbsp;mass)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setMatchingKey-java.lang.String-">setMatchingKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchingKey)</code>
+<div class="block">Sets the key accounting for sequence matching preferences.</div>
+</td>
 </tr>
 <tr id="i65" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setMatchingKey-java.lang.String-">setMatchingKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchingKey)</code>&nbsp;</td>
-</tr>
-<tr id="i66" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setModificationMatches-java.util.ArrayList-">setModificationMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</code>
 <div class="block">Sets new modification matches for the peptide.</div>
 </td>
 </tr>
-<tr id="i67" class="rowColor">
+<tr id="i66" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setParentProteins-java.util.ArrayList-">setParentProteins</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;parentProteins)</code>
 <div class="block">Sets the parent proteins.</div>
 </td>
 </tr>
-<tr id="i68" class="altColor">
+<tr id="i67" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setSequence-java.lang.String-">setSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence)</code>&nbsp;</td>
 </tr>
+<tr id="i68" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setSequenceWithLowerCasePtms-java.lang.String-">setSequenceWithLowerCasePtms</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequenceWithLowerCasePtms)</code>
+<div class="block">Sets the sequence with lower case PTMs.</div>
+</td>
+</tr>
 <tr id="i69" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setSequenceWithLowerCasePtms-java.lang.String-">setSequenceWithLowerCasePtms</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequenceWithLowerCasePtms)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setVariantMatches-java.util.ArrayList-">setVariantMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variantMatches)</code>
+<div class="block">Sets the sequence variant matches of this peptide.</div>
+</td>
 </tr>
 <tr id="i70" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setVariantMatches-java.util.ArrayList-">setVariantMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variants)</code>
-<div class="block">Sets new variants for the peptide.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setVariantsMap-java.util.HashMap-">setVariantsMap</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&gt;&gt;&gt;&nbsp;variantsMap)</code>
+<div class="block">Sets the sequence variants map of this peptide.</div>
 </td>
-</tr>
-<tr id="i71" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setVariants-java.util.ArrayList-">setVariants</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variantMatches)</code>&nbsp;</td>
-</tr>
-<tr id="i72" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Peptide.html#setVariantsMap-java.util.HashMap-">setVariantsMap</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&gt;&gt;&gt;&nbsp;variantsMap)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -830,6 +844,26 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
+<a name="Peptide-java.lang.String-java.util.ArrayList-boolean-double-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>Peptide</h4>
+<pre>public&nbsp;Peptide(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches,
+               boolean&nbsp;sanityCheck,
+               double&nbsp;mass)</pre>
+<div class="block">Constructor.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>aSequence</code> - the peptide sequence, assumed to be in upper case only</dd>
+<dd><code>modificationMatches</code> - the PTM of this peptide</dd>
+<dd><code>sanityCheck</code> - boolean indicating whether the input should be checked</dd>
+<dd><code>mass</code> - the mass of the peptide</dd>
+</dl>
+</li>
+</ul>
 <a name="Peptide-java.lang.String-java.util.ArrayList-">
 <!--   -->
 </a>
@@ -881,6 +915,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>setMass</h4>
 <pre>public&nbsp;void&nbsp;setMass(double&nbsp;mass)</pre>
+<div class="block">Sets the mass.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mass</code> - the mass</dd>
+</dl>
 </li>
 </ul>
 <a name="setKey-java.lang.String-">
@@ -890,6 +929,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>setKey</h4>
 <pre>public&nbsp;void&nbsp;setKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<div class="block">Sets the object key.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the object key</dd>
+</dl>
 </li>
 </ul>
 <a name="getParentProteins--">
@@ -899,15 +943,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getParentProteins</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getParentProteins()</pre>
-</li>
-</ul>
-<a name="setMatchingKey-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setMatchingKey</h4>
-<pre>public&nbsp;void&nbsp;setMatchingKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchingKey)</pre>
+<div class="block">Returns the proteins where this peptide can be found.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the proteins where this peptide can be found</dd>
+</dl>
 </li>
 </ul>
 <a name="setSequenceWithLowerCasePtms-java.lang.String-">
@@ -917,24 +957,39 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>setSequenceWithLowerCasePtms</h4>
 <pre>public&nbsp;void&nbsp;setSequenceWithLowerCasePtms(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequenceWithLowerCasePtms)</pre>
+<div class="block">Sets the sequence with lower case PTMs.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>sequenceWithLowerCasePtms</code> - the sequence with lower case PTMs</dd>
+</dl>
 </li>
 </ul>
-<a name="setVariants-java.util.ArrayList-">
+<a name="setVariantMatches-java.util.ArrayList-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setVariants</h4>
-<pre>public&nbsp;void&nbsp;setVariants(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variantMatches)</pre>
+<h4>setVariantMatches</h4>
+<pre>public&nbsp;void&nbsp;setVariantMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variantMatches)</pre>
+<div class="block">Sets the sequence variant matches of this peptide.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>variantMatches</code> - the variant matches of this peptide</dd>
+</dl>
 </li>
 </ul>
-<a name="getVariants--">
+<a name="getVariantMatches--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getVariants</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;getVariants()</pre>
+<h4>getVariantMatches</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;getVariantMatches()</pre>
+<div class="block">Returns the sequence variant matches of this peptide.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the sequence variant matches of this peptide</dd>
+</dl>
 </li>
 </ul>
 <a name="setVariantsMap-java.util.HashMap-">
@@ -944,6 +999,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>setVariantsMap</h4>
 <pre>public&nbsp;void&nbsp;setVariantsMap(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&gt;&gt;&gt;&nbsp;variantsMap)</pre>
+<div class="block">Sets the sequence variants map of this peptide.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>variantsMap</code> - the sequence variants map of this peptide</dd>
+</dl>
 </li>
 </ul>
 <a name="getMass--">
@@ -980,11 +1040,15 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>setModificationMatches</h4>
-<pre>public&nbsp;void&nbsp;setModificationMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</pre>
+<pre>public&nbsp;void&nbsp;setModificationMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)
+                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Sets new modification matches for the peptide.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>modificationMatches</code> - the new modification matches</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
+ interrupted.</dd>
 </dl>
 </li>
 </ul>
@@ -994,8 +1058,14 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>clearModificationMatches</h4>
-<pre>public&nbsp;void&nbsp;clearModificationMatches()</pre>
+<pre>public&nbsp;void&nbsp;clearModificationMatches()
+                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Clears the list of imported modification matches.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever the thread is
+ interrupted.</dd>
+</dl>
 </li>
 </ul>
 <a name="addModificationMatch-com.compomics.util.experiment.identification.matches.ModificationMatch-">
@@ -1009,34 +1079,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>modificationMatch</code> - the modification match to add</dd>
-</dl>
-</li>
-</ul>
-<a name="getVariantMatches--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getVariantMatches</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;getVariantMatches()</pre>
-<div class="block">Getter for the variants carried by this peptide. Null if not set.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the variants matches as found by the search engine</dd>
-</dl>
-</li>
-</ul>
-<a name="setVariantMatches-java.util.ArrayList-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setVariantMatches</h4>
-<pre>public&nbsp;void&nbsp;setVariantMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">VariantMatch</a>&gt;&nbsp;variants)</pre>
-<div class="block">Sets new variants for the peptide.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>variants</code> - the new variant matches</dd>
 </dl>
 </li>
 </ul>
@@ -1348,6 +1390,25 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getMatchingKey</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getMatchingKey()</pre>
+<div class="block">Returns the key accounting for sequence matching preferences</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the key accounting for sequence matching preferences</dd>
+</dl>
+</li>
+</ul>
+<a name="setMatchingKey-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setMatchingKey</h4>
+<pre>public&nbsp;void&nbsp;setMatchingKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchingKey)</pre>
+<div class="block">Sets the key accounting for sequence matching preferences.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>matchingKey</code> - the key accounting for sequence matching preferences</dd>
+</dl>
 </li>
 </ul>
 <a name="getMatchingKey-com.compomics.util.preferences.SequenceMatchingPreferences-">
@@ -2095,15 +2156,9 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>estimateTheoreticMass</h4>
-<pre>public&nbsp;void&nbsp;estimateTheoreticMass()
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></pre>
+<pre>public&nbsp;void&nbsp;estimateTheoreticMass()</pre>
 <div class="block">Estimates the theoretic mass of the peptide. The previous version is
  silently overwritten.</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if the peptide sequence contains unknown
- amino acids</dd>
-</dl>
 </li>
 </ul>
 <a name="getSequenceAsPattern--">

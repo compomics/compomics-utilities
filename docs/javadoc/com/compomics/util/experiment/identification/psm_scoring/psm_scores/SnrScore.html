@@ -135,7 +135,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#SnrScore--">SnrScore</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#SnrScore-com.compomics.util.experiment.identification.protein_sequences.AaOccurrence-">SnrScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/AaOccurrence.html" title="class in com.compomics.util.experiment.identification.protein_sequences">AaOccurrence</a>&nbsp;aaOccurrence)</code>
+<div class="block">Constructor.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -154,31 +156,27 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-java.util.ArrayList-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
-        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
-        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
-        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatchesList)</code>
-<div class="block">Returns the score.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-java.util.HashMap-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
-        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
-        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
-        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;ionMatches)</code>
-<div class="block">Returns the score.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
         <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator)</code>
+<div class="block">Returns the score.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-java.util.ArrayList-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
+        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatchesList)</code>
+<div class="block">Returns the score.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html#getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-java.util.HashMap-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
+        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;ionMatches)</code>
 <div class="block">Returns the score.</div>
 </td>
 </tr>
@@ -204,13 +202,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SnrScore--">
+<a name="SnrScore-com.compomics.util.experiment.identification.protein_sequences.AaOccurrence-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SnrScore</h4>
-<pre>public&nbsp;SnrScore()</pre>
+<pre>public&nbsp;SnrScore(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/AaOccurrence.html" title="class in com.compomics.util.experiment.identification.protein_sequences">AaOccurrence</a>&nbsp;aaOccurrence)</pre>
+<div class="block">Constructor.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>aaOccurrence</code> - the amino acid occurrence in the database</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -253,7 +256,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-java.util.ArrayList-">
+<a name="getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-java.util.ArrayList-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -261,8 +264,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getScore</h4>
 <pre>public&nbsp;double&nbsp;getScore(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatchesList)
                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
                        org.apache.commons.math.MathException</pre>
@@ -271,9 +272,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest</dd>
 <dd><code>spectrum</code> - the spectrum of interest</dd>
-<dd><code>annotationSettings</code> - the general spectrum annotation settings</dd>
-<dd><code>specificAnnotationSettings</code> - the annotation settings specific to
- this PSM</dd>
 <dd><code>ionMatchesList</code> - the ion matches obtained from spectrum annotation</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the score of the match</dd>
@@ -285,7 +283,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-java.util.HashMap-">
+<a name="getScore-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.MSnSpectrum-java.util.HashMap-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -293,8 +291,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getScore</h4>
 <pre>public&nbsp;double&nbsp;getScore(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
                        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;ionMatches)
                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
                        org.apache.commons.math.MathException</pre>
@@ -303,9 +299,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest</dd>
 <dd><code>spectrum</code> - the spectrum of interest</dd>
-<dd><code>annotationSettings</code> - the general spectrum annotation settings</dd>
-<dd><code>specificAnnotationSettings</code> - the annotation settings specific to
- this PSM</dd>
 <dd><code>ionMatches</code> - the ion matches obtained from spectrum annotation
  indexed by mz</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

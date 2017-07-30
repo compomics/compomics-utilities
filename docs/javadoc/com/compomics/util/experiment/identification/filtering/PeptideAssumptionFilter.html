@@ -551,7 +551,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
                                  <a href="../../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry">SpectrumFactory</a>&nbsp;spectrumFactory,
                                  <a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)
                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                 uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException</pre>
+                                 uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException,
+                                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Validates the mass deviation of a peptide assumption.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -567,6 +568,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an error occurs while reading the spectrum</dd>
 <dd><code>uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException</code> - if an MzMLUnmarshallerException occurs
  reading while the spectrum</dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a thread is
+ interrupted</dd>
 </dl>
 </li>
 </ul>

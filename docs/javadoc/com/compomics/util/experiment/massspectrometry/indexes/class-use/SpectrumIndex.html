@@ -72,7 +72,107 @@
 <div class="header">
 <h2 title="Uses of Class com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex" class="title">Uses of Class<br>com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex</h2>
 </div>
-<div class="classUseContainer">No usage of com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex</div>
+<div class="classUseContainer">
+<ul class="blockList">
+<li class="blockList">
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing packages, and an explanation">
+<caption><span>Packages that use <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Package</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators">com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators</a></td>
+<td class="colLast">
+<div class="block">This package contains implementations of the SimpleAnnotator allowing the annotation of specific sets of ions.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a></td>
+<td class="colLast">
+<div class="block">This package contains implementations of the SpectrumAnnotator allowing the annotation of all ions.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ReporterIonAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/ReporterIonAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex)</code>
+<div class="block">Returns the ions matched in the given spectrum.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">ImmoniumIonAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/ImmoniumIonAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex)</code>
+<div class="block">Returns the ions matched in the given spectrum.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">FragmentAnnotatorNL.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotatorNL.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+             int&nbsp;peptideCharge)</code>
+<div class="block">Returns the ions matched in the given spectrum at the given charge.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">FragmentAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+             int&nbsp;peptideCharge)</code>
+<div class="block">Returns the ions matched in the given spectrum at the given charge.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">PrecursorAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/PrecursorAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+             int&nbsp;peptideCharge,
+             int&nbsp;isotopeMax)</code>
+<div class="block">Returns the ions matched in the given spectrum at the given charge.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">SimplePeptideAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+             int&nbsp;peptideCharge,
+             int&nbsp;precursorIsotopeMax)</code>
+<div class="block">Returns the ion matches for the given spectrum.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">
 <!--   -->

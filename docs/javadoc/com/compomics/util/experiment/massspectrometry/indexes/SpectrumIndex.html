@@ -75,13 +75,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -145,6 +145,19 @@ implements <a href="../../../../../../com/compomics/util/experiment/personalizat
 <!--   -->
 </a>
 <h3>Field Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html#intensityLimit">intensityLimit</a></span></code>
+<div class="block">The intensity limit used for the index.</div>
+</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="fields.inherited.from.class.com.compomics.util.experiment.personalization.UrParameter">
 <!--   -->
@@ -171,8 +184,8 @@ implements <a href="../../../../../../com/compomics/util/experiment/personalizat
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html#SpectrumIndex-java.util.HashMap-java.lang.Double-double-boolean-">SpectrumIndex</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks,
-             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;intenstiyLimit,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html#SpectrumIndex-java.util.HashMap-double-double-boolean-">SpectrumIndex</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks,
+             double&nbsp;intenstiyLimit,
              double&nbsp;tolerance,
              boolean&nbsp;ppm)</code>
 <div class="block">Builds a new index.</div>
@@ -327,6 +340,24 @@ implements <a href="../../../../../../com/compomics/util/experiment/personalizat
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="intensityLimit">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>intensityLimit</h4>
+<pre>public final&nbsp;double intensityLimit</pre>
+<div class="block">The intensity limit used for the index.</div>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -343,14 +374,14 @@ implements <a href="../../../../../../com/compomics/util/experiment/personalizat
 <div class="block">Constructor for an empty index.</div>
 </li>
 </ul>
-<a name="SpectrumIndex-java.util.HashMap-java.lang.Double-double-boolean-">
+<a name="SpectrumIndex-java.util.HashMap-double-double-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SpectrumIndex</h4>
 <pre>public&nbsp;SpectrumIndex(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;intenstiyLimit,
+                     double&nbsp;intenstiyLimit,
                      double&nbsp;tolerance,
                      boolean&nbsp;ppm)</pre>
 <div class="block">Builds a new index.</div>
@@ -677,13 +708,13 @@ implements <a href="../../../../../../com/compomics/util/experiment/personalizat
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

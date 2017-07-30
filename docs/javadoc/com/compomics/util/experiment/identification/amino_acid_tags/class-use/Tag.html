@@ -109,7 +109,7 @@
 <tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a></td>
 <td class="colLast">
-<div class="block">Spectrum annotation.</div>
+<div class="block">This package contains implementations of the SpectrumAnnotator allowing the annotation of all ions.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -348,10 +348,20 @@
                      <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
                      <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
                      <a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag)</code>
-<div class="block">Returns the spectrum annotations of a spectrum in a list of IonMatches.</div>
+<div class="block">Returns the spectrum annotations of a spectrum in a list of IonMatches using an intensity filter.</div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">TagSpectrumAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/TagSpectrumAnnotator.html#getSpectrumAnnotation-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-">getSpectrumAnnotation</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings</a>&nbsp;annotationSettings,
+                     <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationSettings.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationSettings</a>&nbsp;specificAnnotationSettings,
+                     <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;spectrum,
+                     <a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                     boolean&nbsp;useIntensityFilter)</code>
+<div class="block">Returns the spectrum annotations of a spectrum in a list of IonMatches.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="typeNameLabel">TagSpectrumAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/TagSpectrumAnnotator.html#setTag-com.compomics.util.experiment.identification.amino_acid_tags.Tag-int-">setTag</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;newTag,
       int&nbsp;precursorCharge)</code>

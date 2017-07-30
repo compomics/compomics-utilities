@@ -225,9 +225,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/IntensityHistogram.html#IntensityHistogram-java.util.ArrayList-com.compomics.util.experiment.massspectrometry.MSnSpectrum-double-">IntensityHistogram</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/IntensityHistogram.html#IntensityHistogram-java.util.ArrayList-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.IntensityThresholdType-double-">IntensityHistogram</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                   <a href="../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;currentSpectrum,
-                  double&nbsp;intensityLevel)</code>
+                  <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings.IntensityThresholdType</a>&nbsp;intensityThresholdType,
+                  double&nbsp;intensityThreshold)</code>
 <div class="block">Creates an IntensityHistogram plot</div>
 </td>
 </tr>
@@ -302,7 +303,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="IntensityHistogram-java.util.ArrayList-com.compomics.util.experiment.massspectrometry.MSnSpectrum-double-">
+<a name="IntensityHistogram-java.util.ArrayList-com.compomics.util.experiment.massspectrometry.MSnSpectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.IntensityThresholdType-double-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -310,17 +311,21 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <h4>IntensityHistogram</h4>
 <pre>public&nbsp;IntensityHistogram(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                           <a href="../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;currentSpectrum,
-                          double&nbsp;intensityLevel)
-                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                          <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings.IntensityThresholdType</a>&nbsp;intensityThresholdType,
+                          double&nbsp;intensityThreshold)
+                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
+                          org.apache.commons.math.MathException</pre>
 <div class="block">Creates an IntensityHistogram plot</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>annotations</code> - the full list of spectrum annotations</dd>
 <dd><code>currentSpectrum</code> - the current spectrum</dd>
-<dd><code>intensityLevel</code> - annotation intensity level, e.g., 0.75 for 75%</dd>
+<dd><code>intensityThresholdType</code> - the type of intensity threshold</dd>
+<dd><code>intensityThreshold</code> - the intensity threshold</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
  interrupted</dd>
+<dd><code>org.apache.commons.math.MathException</code> - exception thrown if a math exception occurred when estimating the noise level</dd>
 </dl>
 </li>
 </ul>

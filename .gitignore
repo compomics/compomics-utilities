@@ -7,5 +7,5 @@ derby.log
 /src/test/resources/*
 /docs
 =======
-/docs/
 >>>>>>> 1b0bd7ecabd8abc9e16e5b4b576dfa6db8851cc0
+!/docs/

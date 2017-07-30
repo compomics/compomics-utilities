@@ -157,42 +157,48 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>char[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#aminoAcids">aminoAcids</a></span></code>
+<div class="block">Amino acids that are likely to induce this loss.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#C3H9N">C3H9N</a></span></code>
 <div class="block">C3H9N loss.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#CH4OS">CH4OS</a></span></code>
 <div class="block">CH4OS loss.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#H2O">H2O</a></span></code>
 <div class="block">H2O loss.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#H3PO4">H3PO4</a></span></code>
 <div class="block">H3PO4 loss.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#HPO3">HPO3</a></span></code>
 <div class="block">H3PO3 loss.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#name">name</a></span></code>
 <div class="block">The name of the neutral loss.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html" title="class in com.compomics.util.experiment.biology">NeutralLoss</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#NH3">NH3</a></span></code>
 <div class="block">NH3 loss.</div>
@@ -220,9 +226,18 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-boolean-">NeutralLoss</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-char:A-">NeutralLoss</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
            <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;composition,
            boolean&nbsp;fixed,
+           char[]&nbsp;aminoAcids)</code>
+<div class="block">Constructor for a user defined neutral loss.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-char:A-boolean-">NeutralLoss</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
+           <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;composition,
+           boolean&nbsp;fixed,
+           char[]&nbsp;aminoAcids,
            boolean&nbsp;save)</code>
 <div class="block">Constructor for a user defined neutral loss.</div>
 </td>
@@ -416,11 +431,21 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <a name="name">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>name</h4>
 <pre>public final&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> name</pre>
 <div class="block">The name of the neutral loss.</div>
+</li>
+</ul>
+<a name="aminoAcids">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>aminoAcids</h4>
+<pre>public final&nbsp;char[] aminoAcids</pre>
+<div class="block">Amino acids that are likely to induce this loss. Null if not a loss originating from amino acids.</div>
 </li>
 </ul>
 </li>
@@ -431,6 +456,27 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
+<a name="NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-char:A-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>NeutralLoss</h4>
+<pre>public&nbsp;NeutralLoss(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
+                   <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;composition,
+                   boolean&nbsp;fixed,
+                   char[]&nbsp;aminoAcids)</pre>
+<div class="block">Constructor for a user defined neutral loss. The neutral loss is added to
+ the factory.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - name of the neutral loss</dd>
+<dd><code>composition</code> - the atomic composition of the neutral loss</dd>
+<dd><code>fixed</code> - is the neutral loss fixed or not</dd>
+<dd><code>aminoAcids</code> - the amino acids that are likely to induce this loss</dd>
+</dl>
+</li>
+</ul>
 <a name="NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-">
 <!--   -->
 </a>
@@ -450,7 +496,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-boolean-">
+<a name="NeutralLoss-java.lang.String-com.compomics.util.experiment.biology.AtomChain-boolean-char:A-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -459,6 +505,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <pre>public&nbsp;NeutralLoss(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
                    <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;composition,
                    boolean&nbsp;fixed,
+                   char[]&nbsp;aminoAcids,
                    boolean&nbsp;save)</pre>
 <div class="block">Constructor for a user defined neutral loss.</div>
 <dl>
@@ -466,6 +513,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dd><code>name</code> - name of the neutral loss</dd>
 <dd><code>composition</code> - the atomic composition of the neutral loss</dd>
 <dd><code>fixed</code> - is the neutral loss fixed or not</dd>
+<dd><code>aminoAcids</code> - the amino acids that are likely to induce this loss</dd>
 <dd><code>save</code> - if true, the neutral loss will be added to the factory</dd>
 </dl>
 </li>

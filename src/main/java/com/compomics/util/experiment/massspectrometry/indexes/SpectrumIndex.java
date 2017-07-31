@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import org.apache.commons.math.util.FastMath;
  *
  * @author Marc Vaudel
  */
-public class SpectrumIndex extends IdObject implements UrParameter {
+public class SpectrumIndex extends DbObject implements UrParameter {
 
     /**
      * The precursor mass tolerance.

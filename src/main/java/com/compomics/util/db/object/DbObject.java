@@ -1,21 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.compomics.util;
+package com.compomics.util.db.object;
 
 
 import java.io.Serializable;
 import org.zoodb.api.impl.ZooPC;
-import com.compomics.util.db.ObjectsDB;
 
 /**
  * All classes that are stored in the backend need a unique identifier,
- * all further classes inherit from this
+ * all further classes inherit from this class.
+ * 
  * @author dominik.kopczynski
  */
-public class IdObject extends ZooPC implements Serializable {
+public class DbObject extends ZooPC implements Serializable {
     
     private static final long serialVersionUID = -7906158551970915613l;
     
@@ -24,7 +19,7 @@ public class IdObject extends ZooPC implements Serializable {
      */
     private long id;
     /**
-     * indecates if the object is already stored in the db
+     * Indicates if the object is already stored in the db
      */
     private boolean storedInDB = false;
     /** 
@@ -32,34 +27,63 @@ public class IdObject extends ZooPC implements Serializable {
      */
     private boolean firstLevel = false;
     
-    public IdObject(){}
+    public DbObject(){}
     
-    public void setId(long id){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.id = id;
-    }
-    
-    public boolean getFirstLevel(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return firstLevel;
-    }
-    
-    public void setFirstLevel(boolean firstLevel){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.firstLevel = firstLevel;
-    }
-    
+    /**
+     * Returns the id of the object.
+     * 
+     * @return the id of the object
+     */
     public long getId(){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return id;
     }
     
+    /**
+     * Sets the id of the object.
+     * 
+     * @param id the id of the object
+     */
+    public void setId(long id){
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        this.id = id;
+    }
+    
+    /**
+     * Indicates whether the object is a first level object.
+     * 
+     * @return a boolean indicating whether the object is a first level object
+     */
+    public boolean getFirstLevel(){
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        return firstLevel;
+    }
+    
+    /**
+     * Sets whether the object is a first level object.
+     * 
+     * @param firstLevel a boolean indicating whether the object is a first level object
+     */
+    public void setFirstLevel(boolean firstLevel){
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        this.firstLevel = firstLevel;
+    }
+    
+    /**
+     * Indicates whether the object is stored in the database.
+     * 
+     * @return a boolean indicating whether the object is stored in the database
+     */
     public boolean getStoredInDB(){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return storedInDB;
     }
     
-    
+    /**
+     * Sets whether the object is stored in the database.
+     * 
+     * @param storedInDB a boolean indicating whether the object is stored in the database
+     */
     public void setStoredInDB(boolean storedInDB){
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.storedInDB = storedInDB;

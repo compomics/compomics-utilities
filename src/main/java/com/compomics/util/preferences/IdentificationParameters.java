@@ -1,6 +1,6 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;

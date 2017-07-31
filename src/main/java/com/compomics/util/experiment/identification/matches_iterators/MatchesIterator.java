@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.matches_iterators;
 
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
@@ -108,7 +108,7 @@ public abstract class MatchesIterator {
                 iterator = identification.getIterator(className, filters);
                 longKeys = new ArrayList<>(identification.getNumber(className));
                 while (iterator.hasNext()){
-                    longKeys.add(((IdObject)iterator.next()).getId());
+                    longKeys.add(((DbObject)iterator.next()).getId());
                 }
             }
             num = longKeys.size();

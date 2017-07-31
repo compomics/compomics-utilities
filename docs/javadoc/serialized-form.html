@@ -759,57 +759,6 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="com.compomics.util.BlobObject">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/BlobObject.html" title="class in com.compomics.util">com.compomics.util.BlobObject</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>blob</h4>
-<pre>byte[] blob</pre>
-</li>
-<li class="blockListLast">
-<h4>getBlob</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> getBlob</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a name="com.compomics.util.IdObject">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a> extends org.zoodb.api.impl.ZooPC implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-7906158551970915613L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>id</h4>
-<pre>long id</pre>
-<div class="block">unique identifier</div>
-</li>
-<li class="blockList">
-<h4>storedInDB</h4>
-<pre>boolean storedInDB</pre>
-<div class="block">indecates if the object is already stored in the db</div>
-</li>
-<li class="blockListLast">
-<h4>firstLevel</h4>
-<pre>boolean firstLevel</pre>
-<div class="block">flag if object is a first level object or not</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="blockList">
@@ -867,6 +816,69 @@
 <h4>iNested</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a> iNested</pre>
 <div class="block">The nested exception.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.db.object</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.db.object.DbObject">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a> extends org.zoodb.api.impl.ZooPC implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>-7906158551970915613L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>id</h4>
+<pre>long id</pre>
+<div class="block">unique identifier</div>
+</li>
+<li class="blockList">
+<h4>storedInDB</h4>
+<pre>boolean storedInDB</pre>
+<div class="block">Indicates if the object is already stored in the db</div>
+</li>
+<li class="blockListLast">
+<h4>firstLevel</h4>
+<pre>boolean firstLevel</pre>
+<div class="block">flag if object is a first level object or not</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.db.object.objects</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.db.object.objects.BlobObject">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/db/object/objects/BlobObject.html" title="class in com.compomics.util.db.object.objects">com.compomics.util.db.object.objects.BlobObject</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>blob</h4>
+<pre>byte[] blob</pre>
+<div class="block">Byte representation of the blob.</div>
+</li>
+<li class="blockListLast">
+<h4>getBlob</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> getBlob</pre>
+<div class="block">Object representation of the blob.</div>
 </li>
 </ul>
 </li>
@@ -1514,7 +1526,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.ProjectParameters">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/ProjectParameters.html" title="class in com.compomics.util.experiment">com.compomics.util.experiment.ProjectParameters</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/ProjectParameters.html" title="class in com.compomics.util.experiment">com.compomics.util.experiment.ProjectParameters</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -1863,7 +1875,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.biology.ElementaryElement">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/biology/ElementaryElement.html" title="class in com.compomics.util.experiment.biology">com.compomics.util.experiment.biology.ElementaryElement</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/biology/ElementaryElement.html" title="class in com.compomics.util.experiment.biology">com.compomics.util.experiment.biology.ElementaryElement</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -3064,7 +3076,7 @@
 </li>
 <li class="blockList">
 <h4>objectsDB</h4>
-<pre><a href="com/compomics/util/db/ObjectsDB.html" title="class in com.compomics.util.db">ObjectsDB</a> objectsDB</pre>
+<pre><a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a> objectsDB</pre>
 <div class="block">The database which will contain the objects.</div>
 </li>
 <li class="blockList">
@@ -5115,7 +5127,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.identification.matches.VariantMatch">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches.VariantMatch</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/identification/matches/VariantMatch.html" title="class in com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches.VariantMatch</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -6228,7 +6240,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -6430,7 +6442,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.personalization.ExperimentObject">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
 <dd>1929697552061121072L</dd>
@@ -6619,7 +6631,7 @@
 <li class="blockList"><a name="com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/refinementparameters/PepnovoAssumptionDetails.html" title="class in com.compomics.util.experiment.refinementparameters">com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/refinementparameters/PepnovoAssumptionDetails.html" title="class in com.compomics.util.experiment.refinementparameters">com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -6682,7 +6694,7 @@
 <li class="blockList"><a name="com.compomics.util.general.BoxedObject">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/general/BoxedObject.html" title="class in com.compomics.util.general">com.compomics.util.general.BoxedObject</a> extends <a href="com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/general/BoxedObject.html" title="class in com.compomics.util.general">com.compomics.util.general.BoxedObject</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>

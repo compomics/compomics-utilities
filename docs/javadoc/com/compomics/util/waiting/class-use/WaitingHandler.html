@@ -95,9 +95,9 @@
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.db">com.compomics.util.db</a></td>
+<td class="colFirst"><a href="#com.compomics.util.db.object">com.compomics.util.db.object</a></td>
 <td class="colLast">
-<div class="block">Database related classes.</div>
+<div class="block">This package contains the classes relative to the object database.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -338,12 +338,12 @@
 </tbody>
 </table>
 </li>
-<li class="blockList"><a name="com.compomics.util.db">
+<li class="blockList"><a name="com.compomics.util.db.object">
 <!--   -->
 </a>
-<h3>Uses of <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a> in <a href="../../../../../com/compomics/util/db/package-summary.html">com.compomics.util.db</a></h3>
+<h3>Uses of <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a> in <a href="../../../../../com/compomics/util/db/object/package-summary.html">com.compomics.util.db.object</a></h3>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../com/compomics/util/db/package-summary.html">com.compomics.util.db</a> with parameters of type <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../../../../com/compomics/util/db/object/package-summary.html">com.compomics.util.db.object</a> with parameters of type <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -351,7 +351,7 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#insertObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">insertObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;objects,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#insertObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">insertObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;objects,
              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
              boolean&nbsp;displayProgress)</code>
 <div class="block">Inserts a set of objects in the given table.</div>
@@ -359,7 +359,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads some objects from a table in the cache.</div>
@@ -367,7 +367,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;displayProgress)</code>
 <div class="block">Loads all objects from a given class.</div>
@@ -375,7 +375,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
              boolean&nbsp;displayProgress)</code>
 <div class="block">Removing an object from.</div>
@@ -383,7 +383,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress)</code>
 <div class="block">retrieves some objects from the database or cache.</div>
@@ -391,7 +391,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsDB.html#retrieveObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
+<td class="colLast"><span class="typeNameLabel">ObjectsDB.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#retrieveObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress)</code>
 <div class="block">Retrieves all objects from a given class.</div>
@@ -399,21 +399,21 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsCache.html#saveCache-com.compomics.util.waiting.WaitingHandler-boolean-">saveCache</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsCache.html#saveCache-com.compomics.util.waiting.WaitingHandler-boolean-">saveCache</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
          boolean&nbsp;emptyCache)</code>
 <div class="block">Saves the cache content in the database.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-">saveObjects</a></span>(int&nbsp;numLastEntries,
+<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-">saveObjects</a></span>(int&nbsp;numLastEntries,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Saves an entry in the database if modified and clears it from the cache.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-boolean-">saveObjects</a></span>(int&nbsp;numLastEntries,
+<td class="colLast"><span class="typeNameLabel">ObjectsCache.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsCache.html#saveObjects-int-com.compomics.util.waiting.WaitingHandler-boolean-">saveObjects</a></span>(int&nbsp;numLastEntries,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
            boolean&nbsp;clearEntries)</code>
 <div class="block">Saves an entry in the database if modified.</div>

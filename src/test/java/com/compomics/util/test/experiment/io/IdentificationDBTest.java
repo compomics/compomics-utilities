@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.io;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.ProjectParameters;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;

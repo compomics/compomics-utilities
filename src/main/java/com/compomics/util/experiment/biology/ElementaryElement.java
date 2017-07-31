@@ -1,13 +1,13 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.DbObject;
 
 /**
  * This class can be used to retrieve elementary elements like a neutron.
  *
  * @author Marc Vaudel
  */
-public class ElementaryElement extends IdObject {
+public class ElementaryElement extends DbObject {
 
     /**
      * The name of the element.

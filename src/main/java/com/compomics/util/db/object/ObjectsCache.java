@@ -1,6 +1,5 @@
-package com.compomics.util.db;
+package com.compomics.util.db.object;
 
-import com.compomics.util.IdObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -100,6 +99,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      *
      * @return the object of interest, null if not present in the cache
+     * 
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public Object getObject(Long objectKey) throws InterruptedException {
@@ -158,8 +158,8 @@ public class ObjectsCache {
                 
                 
                 
-                if (!((IdObject)object).getStoredInDB()){
-                    ((IdObject)object).setStoredInDB(true);
+                if (!((DbObject)object).getStoredInDB()){
+                    ((DbObject)object).setStoredInDB(true);
                     objectsDB.getDB().makePersistent(object);
                     Long zooid = (Long)objectsDB.getDB().getObjectId(object);
                     objectsDB.getIdMap().put(objectKey, zooid);
@@ -200,8 +200,8 @@ public class ObjectsCache {
             objectQueue.addAll(objects.keySet());
             for (Long objectKey : objects.keySet()){
                 Object object = objects.get(objectKey);
-                if (!((IdObject)object).getStoredInDB()){
-                    ((IdObject)object).setStoredInDB(true);
+                if (!((DbObject)object).getStoredInDB()){
+                    ((DbObject)object).setStoredInDB(true);
                     objectsDB.getDB().makePersistent(object);
                     Long zooid = (Long)objectsDB.getDB().getObjectId(object);
                     objectsDB.getIdMap().put(objectKey, zooid);
@@ -300,8 +300,8 @@ public class ObjectsCache {
                 long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
                 
                 Object obj = loadedObjects.get(key);
-                if (!((IdObject)obj).getStoredInDB()){
-                    ((IdObject)obj).setStoredInDB(true);
+                if (!((DbObject)obj).getStoredInDB()){
+                    ((DbObject)obj).setStoredInDB(true);
                     pm.makePersistent(obj);
                     Long zooid = (Long)pm.getObjectId(obj);
                     objectsDB.getIdMap().put(key, zooid);

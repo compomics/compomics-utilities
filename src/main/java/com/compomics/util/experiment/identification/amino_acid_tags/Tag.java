@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;

@@ -1,7 +1,7 @@
 package com.compomics.util.general;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
 
 /**
  * Convenience class allowing the boxing of an object.
@@ -10,7 +10,7 @@ import com.compomics.util.IdObject;
  *
  * @param <K> the type of object to box
  */
-public class BoxedObject<K> extends IdObject {
+public class BoxedObject<K> extends DbObject {
 
     /**
      * The object to box.

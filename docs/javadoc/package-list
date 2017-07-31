@@ -11,6 +11,8 @@ com.compomics.util
 com.compomics.util.db
 com.compomics.util.db.components
 com.compomics.util.db.interfaces
+com.compomics.util.db.object
+com.compomics.util.db.object.objects
 com.compomics.util.enumeration
 com.compomics.util.examples
 com.compomics.util.exceptions

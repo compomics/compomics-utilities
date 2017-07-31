@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.personalization;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
 import java.util.HashMap;
 
 /**
@@ -10,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public abstract class ExperimentObject extends IdObject {
+public abstract class ExperimentObject extends DbObject {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

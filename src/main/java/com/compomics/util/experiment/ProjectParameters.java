@@ -5,8 +5,8 @@
  */
 package com.compomics.util.experiment;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
  * All project specific parameters are supposed to be stored here
  * @author Dominik Kopczynski
  */
-public class ProjectParameters extends IdObject {
+public class ProjectParameters extends DbObject {
     private Date creationTime = null;
     private String projectUniqueName = "";
     private HashMap<String, String> stringParameters = new HashMap<>();

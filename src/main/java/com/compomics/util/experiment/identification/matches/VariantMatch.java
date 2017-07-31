@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.IdObject;
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.variants.Variant;
 
 /**
@@ -10,7 +10,7 @@ import com.compomics.util.experiment.biology.variants.Variant;
  * @author Marc Vaudel
  * @author Dominik Kopczynski
  */
-public class VariantMatch extends IdObject {
+public class VariantMatch extends DbObject {
     
     /**
      * The variant.

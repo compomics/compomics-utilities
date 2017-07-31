@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.refinementparameters;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.IdObject;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
@@ -10,7 +10,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
  *
  * @author Marc Vaudel
  */
-public class PepnovoAssumptionDetails extends IdObject implements UrParameter {
+public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
 
     /**
      * The PepNovo rank score.

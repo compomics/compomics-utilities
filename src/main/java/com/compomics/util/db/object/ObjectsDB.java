@@ -1,6 +1,5 @@
-package com.compomics.util.db;
+package com.compomics.util.db.object;
 
-import com.compomics.util.IdObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.math.BigInteger;
@@ -14,7 +13,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
-import java.util.concurrent.locks.ReentrantLock;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.zoodb.internal.util.SynchronizedROCollection;
@@ -26,6 +24,7 @@ import org.zoodb.tools.ZooHelper;
  * A database which can easily be used to store objects.
  *
  * @author Marc Vaudel
+ * @author dominik.kopczynski
  */
 public class ObjectsDB {
 
@@ -61,7 +60,7 @@ public class ObjectsDB {
     /**
      * OrientDB database connection
      */
-    PersistenceManager pm = null;
+    private PersistenceManager pm = null;
     /**
      * HashMap to map hash IDs of entries into DB ids
      */
@@ -295,8 +294,8 @@ public class ObjectsDB {
             throw new InterruptedException("error: null insertion: " + objectKey);
         }
         
-        ((IdObject)object).setId(longKey);
-        ((IdObject)object).setFirstLevel(true);
+        ((DbObject)object).setId(longKey);
+        ((DbObject)object).setFirstLevel(true);
         if (!idMap.containsKey(longKey)){
             idMap.put(longKey, 0l);
             if(!classCounter.containsKey(object.getClass().getSimpleName())){
@@ -377,8 +376,8 @@ public class ObjectsDB {
             }
             
             long longKey = createLongKey(objectKey);
-            ((IdObject)object).setId(longKey);
-            ((IdObject)object).setFirstLevel(true);
+            ((DbObject)object).setId(longKey);
+            ((DbObject)object).setFirstLevel(true);
             if (!idMap.containsKey(longKey)){
                 idMap.put(longKey, 0l);
                 if(!classCounter.containsKey(object.getClass().getSimpleName())){
@@ -943,9 +942,9 @@ public class ObjectsDB {
         
         
         if (loading){
-            Query q = pm.newQuery(IdObject.class, "firstLevel == true");
+            Query q = pm.newQuery(DbObject.class, "firstLevel == true");
             for (Object obj : (Collection<?>) q.execute()){
-                IdObject idObj = (IdObject)obj;
+                DbObject idObj = (DbObject)obj;
                 long id = idObj.getId();
                 long zooId = (Long)pm.getObjectId(idObj);
                 idMap.put(id, zooId);     

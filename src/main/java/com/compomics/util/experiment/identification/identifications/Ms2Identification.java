@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.identifications;
 
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.IdentificationMethod;
 import com.compomics.util.experiment.identification.Identification;
 

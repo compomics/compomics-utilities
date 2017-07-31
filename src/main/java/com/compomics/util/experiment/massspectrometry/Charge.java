@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**

@@ -1161,7 +1161,7 @@ public class MgfReader {
      * @return the possible charges found
      * @throws IllegalArgumentException
      */
-    private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
+    protected static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
 
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);

@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
+import com.compomics.util.experiment.io.massspectrometry.MspReader;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import java.io.*;
@@ -183,7 +184,7 @@ public class SpectrumFactory {
         String fileName = spectrumFile.getName();
         filesMap.put(fileName, spectrumFile);
 
-        if (fileName.toLowerCase().endsWith(".mgf")) {
+        if (fileName.toLowerCase().endsWith(".mgf")|| fileName.toLowerCase().endsWith(".msp")) {
 
             File indexFile = new File(spectrumFile.getParent(), getIndexName(fileName));
             MgfIndex mgfIndex = null;
@@ -208,7 +209,13 @@ public class SpectrumFactory {
             }
 
             if (mgfIndex == null) {
-                mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
+                 if(fileName.endsWith(".mgf")){
+                    mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
+                }
+                else{
+                    mgfIndex = MspReader.getIndexMap(spectrumFile, waitingHandler);
+                }
+                
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return; // return without saving the partial index
@@ -646,7 +653,33 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
                 }
             }
-        } else if (fileName.toLowerCase().endsWith(".mzml")) {
+        } else if(fileName.toLowerCase().endsWith(".msp")) {
+
+            // a special fix for mgf files with strange titles...
+            spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
+
+            if (mgfIndexesMap.get(fileName) == null) {
+                throw new IOException("msp file not found: \'" + fileName + "\'.");
+            }
+            if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in msp file \'" + fileName + "\' not found.");
+            }
+            try {
+                
+                currentPrecursor = MspReader.getPrecursor(mgfRandomAccessFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
+            } catch (Exception e) {
+                if (waitingTime < timeOut) {
+                    try {
+                        wait(waitingTime);
+                    } catch (InterruptedException ie) {
+                    }
+                    return getPrecursor(fileName, spectrumTitle, save, 2 * waitingTime);
+                } else {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
+                }
+            }
+        }else if (fileName.toLowerCase().endsWith(".mzml")) {
             uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(fileName).getSpectrumById(spectrumTitle);
             int level = 2;
             double mzPrec = 0.0;
@@ -789,6 +822,31 @@ public class SpectrumFactory {
             }
             try {
                 currentSpectrum = MgfReader.getSpectrum(mgfRandomAccessFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
+            } catch (Exception e) {
+                if (waitingTime < timeOut) {
+                    try {
+                        wait(waitingTime);
+                    } catch (InterruptedException ie) {
+                    }
+                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
+                } else {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
+                }
+            }
+        }else if(spectrumFile.toLowerCase().endsWith(".msp")) {
+
+            // a special fix for mgf files with strange titles...
+            spectrumTitle = fixMgfTitle(spectrumTitle, spectrumFile);
+
+            if (mgfIndexesMap.get(spectrumFile) == null) {
+                throw new FileNotFoundException("msp file not found: \'" + spectrumFile + "\'!");
+            }
+            if (mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle) == null) {
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in msp file \'" + spectrumFile + "\' not found!");
+            }
+            try {
+                currentSpectrum = MspReader.getSpectrum(mgfRandomAccessFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
             } catch (Exception e) {
                 if (waitingTime < timeOut) {
                     try {

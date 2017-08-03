@@ -15,6 +15,7 @@ import java.util.ArrayList;
  * @author Dominik Kopczynski
  */
 public class PeptideMatchesIterator extends MatchesIterator {
+    
     /**
      * Constructor.
      *
@@ -46,17 +47,8 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * 
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, PeptideMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -66,17 +58,8 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * done iterating.
      *
      * @return the next match
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public PeptideMatch next() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PeptideMatch next() {
         return (PeptideMatch)nextObject();
     }
 }

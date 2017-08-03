@@ -4,6 +4,7 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * This class models a peptide match.
@@ -19,27 +20,42 @@ public class PeptideMatch extends IdentificationMatch {
     /**
      * The theoretic peptide match.
      */
-    private Peptide theoreticPeptide;
+    private Peptide peptide;
     /**
      * The key of the match.
      */
     private String key;
     /**
-     * All spectrum matches indexed by spectrum id. See Spectrum class.
+     * All spectrum matches indexed by spectrum id.
      */
-    private ArrayList<String> spectrumMatchesKeys = new ArrayList<>();
+    private HashSet<String> spectrumMatchesKeys = new HashSet<>(1);
     /**
      * Is the peptide match a decoy hit?
      */
     private boolean isDecoy = false;
-    
-    public boolean getIsDecoy(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+
+    /**
+     * Indicates whether the peptide maps to a decoy sequence.
+     *
+     * @return a boolean indicating whether the peptide maps to a decoy sequence
+     */
+    public boolean getIsDecoy() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return isDecoy;
     }
-    
-    public void setIsDecoy(boolean isDecoy){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+
+    /**
+     * Sets a boolean indicating whether the peptide maps to a decoy sequence.
+     *
+     * @param isDecoy a boolean indicating whether the peptide maps to a decoy
+     * sequence
+     */
+    public void setIsDecoy(boolean isDecoy) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
         this.isDecoy = isDecoy;
     }
 
@@ -51,17 +67,21 @@ public class PeptideMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return key;
     }
-    
+
     /**
      * Sets a new key for the match.
-     * 
+     *
      * @param newKey a new key for the match
      */
     public void setKey(String newKey) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
         this.key = newKey;
     }
 
@@ -72,28 +92,32 @@ public class PeptideMatch extends IdentificationMatch {
      * @param matchKey the key of the match as referenced in the identification
      */
     public PeptideMatch(Peptide peptide, String matchKey) {
-        theoreticPeptide = peptide;
+        this.peptide = peptide;
         this.key = matchKey;
     }
 
     /**
-     * Getter for the theoretic peptide.
+     * Getter for the peptide.
      *
-     * @return the theoretic peptide
+     * @return the peptide
      */
-    public Peptide getTheoreticPeptide() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return theoreticPeptide;
+    public Peptide getPeptide() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return peptide;
     }
 
     /**
-     * Setter for the theoretic peptide.
+     * Setter for the peptide.
      *
-     * @param theoreticPeptide a theoretic peptide
+     * @param peptide a peptide
      */
-    public void setTheoreticPeptide(Peptide theoreticPeptide) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.theoreticPeptide = theoreticPeptide;
+    public void setPeptide(Peptide peptide) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        this.peptide = peptide;
     }
 
     /**
@@ -101,18 +125,22 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @return the keys of all spectrum matches
      */
-    public ArrayList<String> getSpectrumMatchesKeys() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+    public HashSet<String> getSpectrumMatchesKeys() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return spectrumMatchesKeys;
     }
-    
+
     /**
      * Sets the spectrum matches keys.
-     * 
+     *
      * @param spectrumMatchesKeys the keys
      */
-    public void setSpectrumMatchesKeys(ArrayList<String> spectrumMatchesKeys){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+    public void setSpectrumMatchesKeys(HashSet<String> spectrumMatchesKeys) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
         this.spectrumMatchesKeys = spectrumMatchesKeys;
     }
 
@@ -122,12 +150,10 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey the key of a spectrum match
      */
     public void addSpectrumMatchKey(String spectrumMatchKey) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        if (!spectrumMatchesKeys.contains(spectrumMatchKey)) {
-            spectrumMatchesKeys.add(spectrumMatchKey);
-        } else {
-            throw new IllegalArgumentException("Trying to add two times the same spectrum match (" + spectrumMatchKey + ") to the same peptide match (" + getKey() + ").");
-        }
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        spectrumMatchesKeys.add(spectrumMatchKey);
     }
 
     /**
@@ -136,7 +162,9 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return spectrumMatchesKeys.size();
     }
 

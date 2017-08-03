@@ -1284,7 +1284,6 @@ public class SequenceFactory {
     public double computeMolecularWeight(String accession) throws IOException, InterruptedException, ClassNotFoundException {
 
         if (isDefaultReversed() && isDecoyAccession(accession)) {
-            // Don't really see where we would need that...
             try {
                 return computeMolecularWeight(getDefaultTargetAccession(accession));
             } catch (Exception e) {

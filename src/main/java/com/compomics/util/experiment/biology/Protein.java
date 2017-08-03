@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.protein.Header.DatabaseType;
@@ -243,7 +244,7 @@ public class Protein extends ExperimentObject {
      */
     public double computeMolecularWeight() {
 
-        double mass = Atom.H.getMonoisotopicMass();
+        double mass = StandardMasses.h2o.mass;
 
         for (int iaa = 0; iaa < sequence.length(); iaa++) {
             char aa = sequence.charAt(iaa);
@@ -266,8 +267,6 @@ public class Protein extends ExperimentObject {
                 }
             }
         }
-
-        mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
         return mass;
     }

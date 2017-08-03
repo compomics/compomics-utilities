@@ -1,14 +1,11 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.db.object.ObjectsDB;
-import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -44,17 +41,13 @@ public class Peptide extends ExperimentObject {
      */
     private String matchingKey;
     /**
-     * The peptide sequence with the modified residues indicated in lower case.
-     */
-    private String sequenceWithLowerCasePtms;
-    /**
      * The peptide mass.
      */
     private double mass = -1;
     /**
-     * The parent proteins.
+     * The mapping of this peptide on proteins as a map, accession to position. Position on protein sequences is 0 based.
      */
-    private ArrayList<String> parentProteins = null;
+    private HashMap<String, HashSet<Integer>> proteinMapping = null;
     /**
      * The modifications carried by the peptide.
      */
@@ -64,10 +57,6 @@ public class Peptide extends ExperimentObject {
      */
     private ArrayList<VariantMatch> variantMatches = null;
     /**
-     * The variants in a map indexed by protein.
-     */
-    private HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap = null;
-    /**
      * Separator preceding confident localization of the confident localization
      * of a modification.
      */
@@ -76,99 +65,11 @@ public class Peptide extends ExperimentObject {
      * Separator used to separate modifications in peptide keys as string.
      */
     public final static String MODIFICATION_SEPARATOR = "_";
-    /**
-     * Separator used to separate modifications in peptide keys as char.
-     */
-    public final static char MODIFICATION_SEPARATOR_CHAR = '_';
 
     /**
      * Constructor for the peptide.
      */
     public Peptide() {
-    }
-
-    /**
-     * Sets the mass.
-     *
-     * @param mass the mass
-     */
-    public void setMass(double mass) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.mass = mass;
-    }
-
-    /**
-     * Sets the object key.
-     *
-     * @param key the object key
-     */
-    public void setKey(String key) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.key = key;
-    }
-
-    /**
-     * Returns the proteins where this peptide can be found.
-     *
-     * @return the proteins where this peptide can be found
-     */
-    public ArrayList<String> getParentProteins() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return parentProteins;
-    }
-
-    /**
-     * Sets the sequence with lower case PTMs.
-     *
-     * @param sequenceWithLowerCasePtms the sequence with lower case PTMs
-     */
-    public void setSequenceWithLowerCasePtms(String sequenceWithLowerCasePtms) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.sequenceWithLowerCasePtms = sequenceWithLowerCasePtms;
-    }
-
-    /**
-     * Sets the sequence variant matches of this peptide.
-     *
-     * @param variantMatches the variant matches of this peptide
-     */
-    public void setVariantMatches(ArrayList<VariantMatch> variantMatches) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.variantMatches = variantMatches;
-    }
-
-    /**
-     * Returns the sequence variant matches of this peptide.
-     *
-     * @return the sequence variant matches of this peptide
-     */
-    public ArrayList<VariantMatch> getVariantMatches() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return variantMatches;
-    }
-
-    /**
-     * Sets the sequence variants map of this peptide.
-     *
-     * @param variantsMap the sequence variants map of this peptide
-     */
-    public void setVariantsMap(HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.variantsMap = variantsMap;
     }
 
     /**
@@ -218,6 +119,23 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Constructor for the peptide.
+     *
+     * @param aSequence the peptide sequence, assumed to be in upper case only
+     * @param modifications the PTM of this peptide
+     * @param variants the variants compared to the database
+     * @param sanityCheck boolean indicating whether the input should be checked
+     */
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants, boolean sanityCheck) {
+        this.sequence = aSequence;
+        this.modificationMatches = new ArrayList<>(modifications);
+        this.variantMatches = new ArrayList<>(variants);
+        if (sanityCheck) {
+            sanityCheck();
+        }
+    }
+
+    /**
      * Removes characters from the sequence and checks the modifications names
      * for forbidden characters.
      */
@@ -238,20 +156,63 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Constructor for the peptide.
+     * Sets the mass.
      *
-     * @param aSequence the peptide sequence, assumed to be in upper case only
-     * @param modifications the PTM of this peptide
-     * @param variants the variants compared to the database
-     * @param sanityCheck boolean indicating whether the input should be checked
+     * @param mass the mass
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants, boolean sanityCheck) {
-        this.sequence = aSequence;
-        this.modificationMatches = new ArrayList<>(modifications);
-        this.variantMatches = new ArrayList<>(variants);
-        if (sanityCheck) {
-            sanityCheck();
-        }
+    public void setMass(double mass) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        this.mass = mass;
+    }
+
+    /**
+     * Sets the object key.
+     *
+     * @param key the object key
+     */
+    public void setKey(String key) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        this.key = key;
+    }
+
+    /**
+     * Returns the proteins where this peptide can be found.
+     *
+     * @return the proteins where this peptide can be found
+     */
+    public HashMap<String, HashSet<Integer>> getProteinMapping() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return proteinMapping;
+    }
+
+    /**
+     * Sets the sequence variant matches of this peptide.
+     *
+     * @param variantMatches the variant matches of this peptide
+     */
+    public void setVariantMatches(ArrayList<VariantMatch> variantMatches) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        this.variantMatches = variantMatches;
+    }
+
+    /**
+     * Returns the sequence variant matches of this peptide.
+     *
+     * @return the sequence variant matches of this peptide
+     */
+    public ArrayList<VariantMatch> getVariantMatches() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return variantMatches;
     }
 
     /**
@@ -342,7 +303,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         if (variantMatches != null) {
             variantMatches.clear();
-            variantsMap = null;
         }
     }
 
@@ -359,7 +319,6 @@ public class Peptide extends ExperimentObject {
             variantMatches = new ArrayList<>(1);
         }
         variantMatches.add(variantMatch);
-        variantsMap = null;
     }
 
     /**
@@ -377,48 +336,6 @@ public class Peptide extends ExperimentObject {
         if (variantMatch != null) {
             variantMatches.addAll(variantMatch);
         }
-        variantsMap = null;
-    }
-
-    /**
-     * Returns the variants in a map indexed by protein accession and index. The
-     * map is computed from the list of variants and saved in cache.
-     *
-     * @return the variants in a map
-     */
-    public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        if (variantsMap == null) {
-            variantsMap = new HashMap<>(variantMatches.size());
-            for (VariantMatch variantMatch : variantMatches) {
-                String proteinAccession = variantMatch.getProteinAccession();
-                HashMap<Integer, ArrayList<Variant>> proteinVariants = variantsMap.get(proteinAccession);
-                if (proteinVariants == null) {
-                    proteinVariants = new HashMap<>(1);
-                    variantsMap.put(proteinAccession, proteinVariants);
-                }
-                int site = variantMatch.getSite();
-                ArrayList<Variant> variantsAtSite = proteinVariants.get(site);
-                if (variantsAtSite == null) {
-                    variantsAtSite = new ArrayList<>(1);
-                    proteinVariants.put(site, variantsAtSite);
-                }
-                variantsAtSite.add(variantMatch.getVariant());
-            }
-        }
-        return variantsMap;
-    }
-
-    /**
-     * Clears the map saved in cache.
-     */
-    public void clearVariantsMap() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        variantsMap = null;
     }
 
     /**
@@ -433,52 +350,16 @@ public class Peptide extends ExperimentObject {
         return sequence;
     }
 
+    /**
+     * Setter for the sequence.
+     * 
+     * @param sequence the peptide sequence
+     */
     public void setSequence(String sequence) {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
         this.sequence = sequence;
-    }
-
-    /**
-     * Returns the peptide sequence as a String where the modified residues are
-     * in lower case.
-     *
-     * @return the peptide sequence with the modified residues in lowercase
-     */
-    public String getSequenceWithLowerCasePtms() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        if (sequenceWithLowerCasePtms != null) {
-            return sequenceWithLowerCasePtms;
-        } else {
-
-            StringBuilder peptideSequence = new StringBuilder(sequence.length());
-
-            for (int i = 0; i < sequence.length(); i++) {
-
-                boolean modified = false;
-                if (modificationMatches != null) {
-                    for (int j = 0; j < modificationMatches.size() && !modified; j++) {
-                        if (modificationMatches.get(j).getModificationSite() == (i + 1)) {
-                            modified = true;
-                        }
-                    }
-                }
-
-                if (modified) {
-                    peptideSequence.append(sequence.substring(i, i + 1).toLowerCase());
-                } else {
-                    peptideSequence.append(sequence.charAt(i));
-                }
-            }
-
-            sequenceWithLowerCasePtms = peptideSequence.toString();
-
-            return sequenceWithLowerCasePtms;
-        }
     }
 
     /**
@@ -496,9 +377,10 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the number of missed cleavages using the digestion preferences.
-     * Null if no cleavage set.
+     * Null if no cleavage set. If multiple enzymes were used, the minimum across the different enzymes.
      *
      * @param digestionPreferences the digestion preferences
+     * 
      * @return the amount of missed cleavages
      */
     public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
@@ -515,165 +397,6 @@ public class Peptide extends ExperimentObject {
             }
         }
         return peptideMinMissedCleavages;
-    }
-
-    /**
-     * Returns the parent proteins and remaps the peptide to the protein in the
-     * sequence factory if no protein mapping was set using the default mapper
-     * of the sequence factory.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return the proteins mapping this peptide
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
-     */
-    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return getParentProteins(sequenceMatchingPreferences, true);
-    }
-
-    /**
-     * Returns the parent proteins and eventually remaps the peptide to the
-     * protein using the default protein tree.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param remap boolean indicating whether the peptide sequence should be
-     * remapped to the proteins if no protein is found
-     *
-     * @return the proteins mapping this peptide
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
-     */
-    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, boolean remap) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        if (!remap || parentProteins != null) { // avoid building the index if not necessary
-            return parentProteins;
-        }
-
-        PeptideMapper peptideMapper = SequenceFactory.getInstance().getDefaultPeptideMapper();
-
-        if (peptideMapper == null) {
-            throw new IllegalArgumentException("Index not created for peptide to protein mapping.");
-        }
-        return getParentProteins(sequenceMatchingPreferences, peptideMapper);
-    }
-
-    /**
-     * Returns the parent proteins and remaps the peptide to the protein if no
-     * protein mapping was set.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideMapper the peptide mapper to use for peptide to protein
-     * mapping
-     *
-     * @return the proteins where this peptide can be mapped
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
-     */
-    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        if (parentProteins == null) {
-            mapParentProteins(sequenceMatchingPreferences, peptideMapper);
-        }
-
-        return parentProteins;
-    }
-
-    /**
-     * Maps the peptides to the proteins in the sequence database loaded in the
-     * sequence factory.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideMapper the peptide mapper to use
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the FASTA file
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred while mapping the peptide
-     * @throws SQLException exception thrown whenever an error occurred while
-     * querying the protein tree database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting an object from the protein tree database
-     */
-    public void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        if (getParentProteins() == null) {
-            ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(getSequence(), sequenceMatchingPreferences);
-            HashSet<String> accessionsFound = proteinMapping.stream()
-                    .map(peptideProteinMapping -> peptideProteinMapping.getProteinAccession())
-                    .collect(Collectors.toCollection(HashSet::new));
-            parentProteins = new ArrayList<>(accessionsFound);
-            Collections.sort(parentProteins);
-        }
-    }
-
-    /**
-     * Returns the parent proteins without remapping them. Null if none mapped.
-     *
-     * @return an ArrayList containing the parent proteins
-     */
-    public ArrayList<String> getParentProteinsNoRemapping() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return parentProteins;
-    }
-
-    /**
-     * Sets the parent proteins. To clear the parent proteins, please use
-     * clearParentProteins().
-     *
-     * @param parentProteins the parent proteins as list, cannot be null or
-     * empty
-     */
-    public void setParentProteins(ArrayList<String> parentProteins) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        this.parentProteins = parentProteins;
-    }
-
-    /**
-     * Clears the parent proteins list.
-     */
-    public void clearParentProteins() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        parentProteins = null;
     }
 
     /**
@@ -792,7 +515,7 @@ public class Peptide extends ExperimentObject {
         result.append(sequence);
         Collections.sort(tempModifications);
         for (String mod : tempModifications) {
-            result.append(MODIFICATION_SEPARATOR_CHAR).append(mod);
+            result.append(MODIFICATION_SEPARATOR).append(mod);
         }
         return result.toString();
     }
@@ -807,46 +530,6 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         return modificationMatches != null && !modificationMatches.isEmpty();
-    }
-
-    /**
-     * Returns a boolean indicating whether the peptide has variable
-     * modifications based on its key.
-     *
-     * @param peptideKey the peptide key
-     * @return a boolean indicating whether the peptide has variable
-     * modifications
-     */
-    public static boolean isModified(String peptideKey) {
-        return peptideKey.contains(MODIFICATION_SEPARATOR);
-    }
-
-    /**
-     * Returns a boolean indicating whether the peptide has the given variable
-     * modification based on its key.
-     *
-     * @param peptideKey the peptide key
-     * @param modificationMass the mass of the modification
-     *
-     * @return a boolean indicating whether the peptide has variable
-     * modifications
-     */
-    public static boolean isModified(String peptideKey, Double modificationMass) {
-        return peptideKey.contains(modificationMass.toString());
-    }
-
-    /**
-     * Returns how many of the given modification was found in the given
-     * peptide.
-     *
-     * @param peptideKey the peptide key
-     * @param modificationMass the mass of the modification
-     * @return the number of modifications
-     */
-    public static int getModificationCount(String peptideKey, Double modificationMass) {
-        String modKey = modificationMass + "";
-        String test = peptideKey + MODIFICATION_SEPARATOR;
-        return test.split(modKey).length - 1;
     }
 
     /**
@@ -878,55 +561,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the list of modifications confidently localized or inferred for
-     * the peptide indexed by the given key.
-     *
-     * @param peptideKey the peptide key
-     * @param ptmMass the mass of the modification
-     *
-     * @return the number of modifications confidently localized
-     */
-    public static ArrayList<Integer> getNModificationLocalized(String peptideKey, Double ptmMass) {
-        String test = peptideKey;
-        ArrayList<Integer> result = new ArrayList<>();
-        boolean first = true;
-        String modKey = ptmMass + "";
-        for (String modificationSplit : test.split(MODIFICATION_SEPARATOR)) {
-            if (!first) {
-                String[] localizationSplit = modificationSplit.split(MODIFICATION_LOCALIZATION_SEPARATOR);
-                if (localizationSplit.length == 2) {
-                    if (localizationSplit[0].equals(modKey)) {
-                        try {
-                            result.add(Integer.valueOf(localizationSplit[1]));
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("Cannot parse modification localization "
-                                    + localizationSplit[1] + " for modification of mass " + ptmMass + " in peptide key " + peptideKey);
-                        }
-                    }
-                }
-            } else {
-                first = false;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Returns the sequence of the peptide indexed by the given key.
-     *
-     * @param peptideKey the peptide key
-     * @return the corresponding sequence
-     */
-    public static String getSequence(String peptideKey) {
-        int index = peptideKey.indexOf(MODIFICATION_SEPARATOR);
-        if (index > 0) {
-            return peptideKey.substring(0, peptideKey.indexOf(MODIFICATION_SEPARATOR));
-        } else {
-            return peptideKey;
-        }
-    }
-
-    /**
      * Returns a list of masses of the variable modifications found in the key
      * of a peptide.
      *
@@ -947,9 +581,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns a list of proteins where this peptide can be found in the
      * N-terminus. The proteins must be accessible via the sequence factory. If
-     * none found, an empty list is returned. Warning: if the parent proteins
-     * are not set, they will be set using the default protein tree and the
-     * given matching type and mass tolerance
+     * none found, an empty list is returned.
      *
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
@@ -1019,10 +651,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<>();
-
-        if (parentProteins == null) {
-            getParentProteins(sequenceMatchingPreferences);
-        }
 
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
@@ -2084,9 +1712,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        if (parentProteins == null) {
-            getParentProteins(sequenceMatchingPreferences);
-        }
         return parentProteins.stream().anyMatch(accession -> SequenceFactory.getInstance().isDecoyAccession(accession));
     }
 

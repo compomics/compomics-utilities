@@ -1,8 +1,6 @@
 package com.compomics.util.db.object;
 
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -140,14 +138,10 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      *
-     * @throws IOException if an IOException occurs while writing to the
-     * database
-     * @throws SQLException if an SQLException occurs while writing to the
-     * database
      * @throws java.lang.InterruptedException if a threading error occurs
      * writing to the database
      */
-    public void addObject(Long objectKey, Object object) throws IOException, SQLException, InterruptedException {
+    public void addObject(Long objectKey, Object object) throws InterruptedException {
         loadedObjectMutex.acquire();
         semaphore = true;
         if (!readOnly) {            
@@ -184,14 +178,10 @@ public class ObjectsCache {
      *
      * @param objects the key / objects to store in the cache
      *
-     * @throws IOException if an IOException occurs while writing to the
-     * database
-     * @throws SQLException if an SQLException occurs while writing to the
-     * database
      * @throws java.lang.InterruptedException if a threading error occurs
      * writing to the database
      */
-    public void addObjects(HashMap<Long, Object> objects) throws IOException, SQLException, InterruptedException {
+    public void addObjects(HashMap<Long, Object> objects) throws InterruptedException {
         loadedObjectMutex.acquire();
         semaphore = true;
         if (!readOnly) {            
@@ -236,13 +226,9 @@ public class ObjectsCache {
      *
      * @param numLastEntries number of keys of the entries
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries) throws IOException, SQLException, InterruptedException {
+    public void saveObjects(int numLastEntries) throws InterruptedException {
         saveObjects(numLastEntries, null, true);
     }
 
@@ -253,13 +239,9 @@ public class ObjectsCache {
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) throws IOException, SQLException, InterruptedException {
+    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) throws InterruptedException {
         saveObjects(numLastEntries, waitingHandler, true);
     }
 
@@ -272,13 +254,9 @@ public class ObjectsCache {
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
+    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws InterruptedException {
         if (!semaphore) loadedObjectMutex.acquire();
         if (!readOnly) {
             System.out.println("storing " + numLastEntries + (clearEntries ? " with deleting" : " without deleting"));
@@ -321,13 +299,9 @@ public class ObjectsCache {
     /**
      * Updates the cache according to the memory settings.
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the objectlongKey in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    private void updateCache() throws IOException, SQLException, InterruptedException {
+    private void updateCache() throws InterruptedException {
         semaphore = true;
         while (!memoryCheck()){
             int toRemove = (int) (((double) loadedObjects.size()) * 0.25);
@@ -354,13 +328,9 @@ public class ObjectsCache {
      * @param emptyCache boolean indicating whether the cache content shall be
      * cleared while saving displayed as secondary progress. can be null
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException, InterruptedException {
+    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws InterruptedException {
         saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
     }
 

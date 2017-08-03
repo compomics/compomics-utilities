@@ -26,14 +26,19 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private String spectrumKey;
     /**
-     * Map of the identification algorithm assumption: advocate number &gt;
+     * Map of the identification algorithm peptide assumptions: advocate number &gt;
      * score &gt; assumptions.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = null;
+    private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap = null;
     /**
      * The best peptide assumption.
      */
     private PeptideAssumption bestPeptideAssumption;
+    /**
+     * Map of the identification algorithm tag assumptions: advocate number &gt;
+     * score &gt; assumptions.
+     */
+    private HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap = null;
     /**
      * The best tag assumption.
      */
@@ -45,39 +50,28 @@ public class SpectrumMatch extends IdentificationMatch {
     public SpectrumMatch() {
     }
 
-    public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize) {
+    /**
+     * Sets the peptide assumption map.
+     *
+     * @param peptideAssumptionsMap the peptide assumption map
+     */
+    public void setPeptideAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
+        this.peptideAssumptionsMap = peptideAssumptionsMap;
     }
 
     /**
-     * Constructor for the spectrum match.
+     * Sets the tag assumption map.
      *
-     * @param spectrumKey the key of the spectrum
-     * @param assumption the matching assumption
+     * @param tagAssumptionsMap the tag assumption map
      */
-    public SpectrumMatch(String spectrumKey, SpectrumIdentificationAssumption assumption) {
-        int advocateId = assumption.getAdvocate();
-        assumptionsMap = new HashMap<>(1);
-        assumptionsMap.put(advocateId, new HashMap<>(1));
-        ArrayList<SpectrumIdentificationAssumption> assumptionsList = new ArrayList<>(1);
-        assumptionsList.add(assumption);
-        assumptionsMap.get(advocateId).put(assumption.getScore(), assumptionsList);
-
-        this.spectrumKey = spectrumKey;
-    }
-
-    /**
-     * Sets the assumption map.
-     *
-     * @param assumptionsMap the assumption map
-     */
-    public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap) {
+    public void setTagAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        this.assumptionsMap = assumptionsMap;
+        this.tagAssumptionsMap = tagAssumptionsMap;
     }
 
     /**
@@ -87,7 +81,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public SpectrumMatch(String spectrumKey) {
         this.spectrumKey = spectrumKey;
-        assumptionsMap = new HashMap<>(1);
+        peptideAssumptionsMap = new HashMap<>(1);
     }
 
     /**
@@ -147,67 +141,131 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns all assumptions for the specified search engine indexed by their
+     * Returns all peptide assumptions for the specified search engine indexed by their
      * score. Null if none found.
      *
      * @param advocateId the desired advocate ID
      *
      * @return all assumptions
      */
-    public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
+    public HashMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        return assumptionsMap.get(advocateId);
+        return peptideAssumptionsMap.get(advocateId);
     }
 
     /**
-     * Returns a stream of all assumptions
+     * Returns all tag assumptions for the specified search engine indexed by their
+     * score. Null if none found.
+     *
+     * @param advocateId the desired advocate ID
      *
      * @return all assumptions
      */
-    public Stream<SpectrumIdentificationAssumption> getAllAssumptions() {
+    public HashMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        return assumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream()).flatMap(assumptionsList -> assumptionsList.stream());
+        return tagAssumptionsMap.get(advocateId);
     }
 
     /**
-     * Returns the assumptions map: advocate id &gt; score &gt; list of
+     * Returns a stream of all peptide assumptions
+     *
+     * @return a stream of all peptide assumptions
+     */
+    public Stream<PeptideAssumption> getAllPeptideAssumptions() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return peptideAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream()).flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns a stream of all tag assumptions
+     *
+     * @return a stream of all tag assumptions
+     */
+    public Stream<TagAssumption> getAllTagAssumptions() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream()).flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns the peptide assumptions map: advocate id &gt; score &gt; list of
      * assumptions.
      *
      * @return the assumptions map
      */
-    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
+    public HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        return assumptionsMap;
+        return peptideAssumptionsMap;
+    }
+
+    /**
+     * Returns the tag assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
+     *
+     * @return the assumptions map
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        return tagAssumptionsMap;
     }
 
     /**
      * Add a hit.
      *
-     * @param otherAdvocateId the index of the new advocate
-     * @param otherAssumption the new identification assumption
+     * @param advocateId the index of the advocate of the new hit
+     * @param peptideAssumption the new identification assumption
      */
-    public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption) {
+    public void addPeptideAssumption(int advocateId, PeptideAssumption peptideAssumption) {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptionsMap.get(otherAdvocateId);
+        HashMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
         if (advocateMap == null) {
             advocateMap = new HashMap<>(1);
-            assumptionsMap.put(otherAdvocateId, advocateMap);
+            peptideAssumptionsMap.put(advocateId, advocateMap);
         }
-        Double score = otherAssumption.getScore();
-        ArrayList<SpectrumIdentificationAssumption> assumptionList = advocateMap.get(score);
+        Double score = peptideAssumption.getScore();
+        ArrayList<PeptideAssumption> assumptionList = advocateMap.get(score);
         if (assumptionList == null) {
             assumptionList = new ArrayList<>(1);
             advocateMap.put(score, assumptionList);
         }
-        assumptionList.add(otherAssumption);
+        assumptionList.add(peptideAssumption);
+    }
+
+    /**
+     * Add a hit.
+     *
+     * @param advocateId the index of the advocate of the new hit
+     * @param tagAssumption the new identification assumption
+     */
+    public void addTagAssumption(int advocateId, TagAssumption tagAssumption) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        HashMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
+        if (advocateMap == null) {
+            advocateMap = new HashMap<>(1);
+            tagAssumptionsMap.put(advocateId, advocateMap);
+        }
+        Double score = tagAssumption.getScore();
+        ArrayList<TagAssumption> assumptionList = advocateMap.get(score);
+        if (assumptionList == null) {
+            assumptionList = new ArrayList<>(1);
+            advocateMap.put(score, assumptionList);
+        }
+        assumptionList.add(tagAssumption);
     }
 
     @Override
@@ -234,36 +292,72 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Removes an assumption from the mapping.
      *
-     * @param assumption the peptide assumption to remove
+     * @param peptideAssumption the peptide assumption to remove
      */
-    public void removeAssumption(SpectrumIdentificationAssumption assumption) {
+    public void removePeptideAssumption(PeptideAssumption peptideAssumption) {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        int se = assumption.getAdvocate();
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> algorithmMap = assumptionsMap.get(se);
-        ArrayList<SpectrumIdentificationAssumption> assumptionsList = algorithmMap.get(assumption.getScore());
-        assumptionsList.remove(assumption);
+        int se = peptideAssumption.getAdvocate();
+        HashMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
+        ArrayList<PeptideAssumption> assumptionsList = algorithmMap.get(peptideAssumption.getScore());
+        assumptionsList.remove(peptideAssumption);
         if (assumptionsList.isEmpty()) {
-            algorithmMap.remove(assumption.getScore());
+            algorithmMap.remove(peptideAssumption.getScore());
         }
         if (algorithmMap.isEmpty()) {
-            assumptionsMap.remove(se);
+            peptideAssumptionsMap.remove(se);
         }
     }
 
     /**
-     * Indicates whether the spectrum match contains a spectrum assumption.
+     * Removes an assumption from the mapping.
      *
-     * @return a boolean indicating whether the spectrum match contains an
+     * @param tagAssumption the tag assumption to remove
+     */
+    public void removeTagAssumption(TagAssumption tagAssumption) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        int se = tagAssumption.getAdvocate();
+        HashMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
+        ArrayList<TagAssumption> assumptionsList = algorithmMap.get(tagAssumption.getScore());
+        assumptionsList.remove(tagAssumption);
+        if (assumptionsList.isEmpty()) {
+            algorithmMap.remove(tagAssumption.getScore());
+        }
+        if (algorithmMap.isEmpty()) {
+            tagAssumptionsMap.remove(se);
+        }
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a peptide
      * assumption
      */
-    public boolean hasAssumption() {
+    public boolean hasPeptideAssumption() {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return assumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+        return peptideAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+                .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a tag assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a tag
+     * assumption
+     */
+    public boolean hasTagAssumption() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
                 .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
     }
 
@@ -276,12 +370,31 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return a boolean indicating whether the spectrum match contains an
      * assumption for the given advocate
      */
-    public boolean hasAssumption(int advocateId) {
+    public boolean hasPeptideAssumption(int advocateId) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> algorithmIds = assumptionsMap.get(advocateId);
+        HashMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
+
+        return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a tag assumption for
+     * the given advocate (see the Advocate class).
+     *
+     * @param advocateId The index of the advocate
+     *
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption for the given advocate
+     */
+    public boolean hasTagAssumption(int advocateId) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        HashMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
 
         return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }

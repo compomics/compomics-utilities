@@ -559,227 +559,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         return modificationMatches != null ? modificationMatches.size() : 0;
     }
-
-    /**
-     * Returns a list of masses of the variable modifications found in the key
-     * of a peptide.
-     *
-     * @param peptideKey the key of a peptide
-     *
-     * @return a list of names of the variable modifications found in the key
-     */
-    public static ArrayList<String> getModificationFamily(String peptideKey) {
-        ArrayList<String> result = new ArrayList<>();
-        String[] parsedKey = peptideKey.split(MODIFICATION_SEPARATOR);
-        for (int i = 1; i < parsedKey.length; i++) {
-            String[] parsedMod = parsedKey[i].split(MODIFICATION_LOCALIZATION_SEPARATOR);
-            result.add(parsedMod[0]);
-        }
-        return result;
-    }
-
-    /**
-     * Returns a list of proteins where this peptide can be found in the
-     * N-terminus. The proteins must be accessible via the sequence factory. If
-     * none found, an empty list is returned.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a list of proteins where this peptide can be found in the
-     * N-terminus
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading the protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading the protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     */
-    public ArrayList<String> isNterm(SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        ArrayList<String> result = new ArrayList<>();
-
-        if (parentProteins == null) {
-            getParentProteins(sequenceMatchingPreferences);
-        }
-
-        for (String accession : parentProteins) {
-            Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isNTerm(sequence, sequenceMatchingPreferences)) {
-                result.add(accession);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Returns a list of proteins where this peptide can be found in the
-     * C-terminus. The proteins must be accessible via the sequence factory. If
-     * none found, an empty list is returned. Warning: if the parent proteins
-     * are not set, they will be set using the default protein tree and the
-     * given matching type and mass tolerance
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a list of proteins where this peptide can be found in the
-     * C-terminus
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     */
-    public ArrayList<String> isCterm(SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        ArrayList<String> result = new ArrayList<>();
-
-        for (String accession : parentProteins) {
-            Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isCTerm(sequence, sequenceMatchingPreferences)) {
-                result.add(accession);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Indicates whether the given modification can be found on the peptide. For
-     * instance, 'oxidation of M' cannot be found on sequence "PEPTIDE". For the
-     * inspection of protein termini and peptide terminus the proteins sequences
-     * must be accessible from the sequence factory.
-     *
-     * @param ptm the PTM of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a boolean indicating whether the given modification can be found
-     * on the peptide
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     */
-    public boolean isModifiable(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        AminoAcidPattern pattern = ptm.getPattern();
-
-        switch (ptm.getType()) {
-            case PTM.MODAA:
-                int patternLength = pattern.length();
-                int target = pattern.getTarget();
-                if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.matchesIn(sequence, sequenceMatchingPreferences);
-                } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    for (String accession : parentProteins) {
-                        Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
-                            int beginIndex = index - target - 1;
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matchesIn(tempSequence, sequenceMatchingPreferences)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                    return false;
-                }
-            case PTM.MODCP:
-                return true;
-            case PTM.MODNP:
-                return true;
-            case PTM.MODC:
-                return !isCterm(sequenceMatchingPreferences).isEmpty();
-            case PTM.MODN:
-                return !isNterm(sequenceMatchingPreferences).isEmpty();
-            case PTM.MODCAA:
-                if (isCterm(sequenceMatchingPreferences).isEmpty()) {
-                    return false;
-                }
-            case PTM.MODCPAA:
-                patternLength = pattern.length();
-                target = pattern.getTarget();
-                if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    return pattern.isEnding(sequence, sequenceMatchingPreferences);
-                } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    for (String accession : parentProteins) {
-                        Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
-                            int beginIndex = index - target - 1;
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isEnding(tempSequence, sequenceMatchingPreferences)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                    return false;
-                }
-            case PTM.MODNAA:
-                if (isNterm(sequenceMatchingPreferences).isEmpty()) {
-                    return false;
-                }
-            case PTM.MODNPAA:
-                patternLength = pattern.length();
-                target = pattern.getTarget();
-                if (target == 0 && sequence.length() >= patternLength) {
-                    return pattern.isStarting(sequence, sequenceMatchingPreferences);
-                } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    for (String accession : parentProteins) {
-                        Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
-                            int beginIndex = index - target - 1;
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isStarting(tempSequence, sequenceMatchingPreferences)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                    return false;
-                }
-            default:
-                return false;
-        }
-    }
-
+    
     /**
      * Returns the potential modification sites as an ordered list of sites. 1
      * is the first amino acid. An empty list is returned if no possibility was
@@ -793,35 +573,20 @@ public class Peptide extends ExperimentObject {
      * @param modificationProfile the modification profile of the identification
      *
      * @return a list of potential modification sites
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
-            PtmSettings modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public HashSet<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
+            PtmSettings modificationProfile) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        ArrayList<Integer> sites = new ArrayList<>();
+        
+        PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
-            PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-            if (ptm.getMass() == ptmMass) { //@TODO: use a mass tolerance
-                for (int site : getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
-                    if (!sites.contains(site)) {
-                        sites.add(site);
-                    }
-                }
-            }
-        }
+        HashSet<Integer> sites = modificationProfile.getAllNotFixedModifications().stream().map(ptmName -> ptmFactory.getPTM(ptmName))
+                .filter(ptm -> ptm.getMass() == ptmMass)
+                .flatMap(ptm -> getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).stream())
+                .collect(Collectors.toCollection(HashSet::new));
 
         return sites;
     }
@@ -848,8 +613,7 @@ public class Peptide extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();

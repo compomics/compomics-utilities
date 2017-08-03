@@ -296,7 +296,7 @@ public class Protein extends ExperimentObject {
      * @return a boolean indicating whether the protein starts with the given
      * peptide
      */
-    public boolean isNTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isNTerm(String peptideSequence, int index) {
         String subSequence = sequence.substring(0, peptideSequence.length());
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
         if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {

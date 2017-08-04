@@ -48,8 +48,8 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 
 /**
- * This class parses the parameters from a command line and stores them
- * in a SearchParameters object.
+ * This class parses the parameters from a command line and stores them in a
+ * SearchParameters object.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -2200,6 +2200,13 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id);
             Integer option = new Integer(arg);
             msgfParameters.setFragmentationType(option); // @TODO: check for valid index!!
+        } else {
+            Integer instrumentId = msgfParameters.getInstrumentID();
+            if (instrumentId == 1 || instrumentId == 3) {
+                msgfParameters.setFragmentationType(3);
+            } else {
+                msgfParameters.setFragmentationType(0);
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PROTOCOL.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PROTOCOL.id);
@@ -2230,6 +2237,22 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberTolerableTermini(option);
+        } else {
+            // Infer this setting from the general settings
+            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
+            String enzymeName = enzyme.getName();
+            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+            switch (specificity) {
+                case specific:
+                    msgfParameters.setNumberTolerableTermini(2);
+                    break;
+                case semiSpecific:
+                case specificNTermOnly:
+                case specificCTermOnly:
+                    msgfParameters.setNumberTolerableTermini(1);
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
@@ -2287,6 +2310,22 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMinTerminiCleavages(option);
+        } else {
+            // Infer this setting from the general settings
+            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
+            String enzymeName = enzyme.getName();
+            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+            switch (specificity) {
+                case specific:
+                    myriMatchParameters.setMinTerminiCleavages(2);
+                    break;
+                case semiSpecific:
+                case specificNTermOnly:
+                case specificCTermOnly:
+                    myriMatchParameters.setMinTerminiCleavages(1);
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id);
@@ -2426,6 +2465,27 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id);
             Integer option = new Integer(arg);
             cometParameters.setEnzymeType(option);
+        } else {
+            // Infer this setting from the general settings
+            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
+            String enzymeName = enzyme.getName();
+            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+            switch (specificity) {
+                case specific:
+                    cometParameters.setEnzymeType(2);
+                    break;
+                case semiSpecific:
+                    cometParameters.setEnzymeType(1);
+                    break;
+                case specificNTermOnly:
+                    cometParameters.setEnzymeType(8);
+                    break;
+                case specificCTermOnly:
+                    cometParameters.setEnzymeType(9);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);

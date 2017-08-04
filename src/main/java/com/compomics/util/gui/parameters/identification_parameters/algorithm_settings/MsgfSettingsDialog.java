@@ -226,6 +226,11 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
 
         instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Low-res LCQ/LTQ", "Orbitrap/FTICR", "TOF", "Q-Exactive" }));
         instrumentCmb.setSelectedIndex(3);
+        instrumentCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                instrumentCmbActionPerformed(evt);
+            }
+        });
 
         decoyDatabaseCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         decoyDatabaseCmb.setSelectedIndex(1);
@@ -556,6 +561,16 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
     private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxPtmsTxtKeyReleased
+
+    private void instrumentCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instrumentCmbActionPerformed
+        
+        String selectedValue = (String) instrumentCmb.getSelectedItem();
+        if (selectedValue.equals("Q-Exactive") || selectedValue.equals("Orbitrap/FTICR")) {
+            fragmentationMethodCmb.setSelectedItem("HCD");
+        } else {
+            fragmentationMethodCmb.setSelectedItem("Automatic");
+        }
+    }//GEN-LAST:event_instrumentCmbActionPerformed
 
     /**
      * Inspects the parameters validity.

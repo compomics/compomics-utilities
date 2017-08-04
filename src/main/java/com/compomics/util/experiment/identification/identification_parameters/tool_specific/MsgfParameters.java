@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.identification_parameters.tool_specific;
 
-import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 

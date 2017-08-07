@@ -77,16 +77,15 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                 }
             } else if (line.startsWith("Comment")) {
-                String temp = line.substring(line.indexOf("Parent=" + 7), line.indexOf("" + 1));
-                //String[] values = temp.split("\\s");
+              
+                String temp=line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=")+1);
                 precursorMz = Double.parseDouble(temp);
                 if (line.contains("Scan")) {
                     scanNumber = line.substring(line.indexOf("Scan=" + 5), line.indexOf(""));
 
                 }
-                if (line.contains("Origfile")) {
-                    spectrumTitle = line.substring(line.indexOf("Origfile=" + 9), line.indexOf(""));
-                }
+               
 
             } else if (line.startsWith("Num peaks:")) {
                 String temp = line.substring(line.indexOf('=') + 1);
@@ -128,9 +127,9 @@ public class MspReader extends MgfReader{
        
     
     /**
-     * Reads an MGF file and retrieves a list of spectra.
+     * Reads an MSP file and retrieves a list of spectra.
      *
-     * @param aFile the mgf file
+     * @param aFile the msp file
      * @return list of MSnSpectra imported from the file
      * @throws FileNotFoundException Exception thrown if a problem is
      * encountered reading the file
@@ -157,9 +156,9 @@ public class MspReader extends MgfReader{
 
      
      /**
-     * Returns the index of all spectra in the given MGF file.
+     * Returns the index of all spectra in the given MSP file.
      *
-     * @param mgfFile the given MGF file
+     * @param mspFile the given MSP file
      * @param waitingHandler a waitingHandler showing the progress
      * @return the index of all spectra
      * @throws FileNotFoundException Exception thrown whenever the file is not
@@ -167,14 +166,14 @@ public class MspReader extends MgfReader{
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-   public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+   public static MgfIndex getIndexMap(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
         HashMap<Integer, Double> precursorMzMap = new HashMap<Integer, Double>();
         LinkedHashSet<String> spectrumTitles = new LinkedHashSet<String>();
         HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
-        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mspFile, "r", 1024 * 100);
         long currentIndex = 0;
         String title = null;
         
@@ -237,7 +236,7 @@ public class MspReader extends MgfReader{
                 if (nDuplicates != null || spectrumTitles.contains(title)) {
                     if (nDuplicates == null) {
                         nDuplicates = 0;
-                        System.err.println("Warning: Spectrum title " + title + " is not unique in " + mgfFile.getName() + "!");
+                        System.err.println("Warning: Spectrum title " + title + " is not unique in " + mspFile.getName() + "!");
                     }
                     duplicateTitles.put(title, ++nDuplicates);
                     title += "_" + nDuplicates;
@@ -328,8 +327,8 @@ public class MspReader extends MgfReader{
             spectrumTitlesAsArrayList.add(temp);
         }
 
-        return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, precursorMzMap, mgfFile.getName(), minRT, maxRT,
-                maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, precursorChargesMissing, mgfFile.lastModified(), spectrumCounter);
+        return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, precursorMzMap, mspFile.getName(), minRT, maxRT,
+                maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, precursorChargesMissing, mspFile.lastModified(), spectrumCounter);
     }
 
     
@@ -338,7 +337,7 @@ public class MspReader extends MgfReader{
     /**
      * Adds missing spectrum titles.
      *
-     * @param mgfFile the MGF file to fix
+     * @param mspFile the MSP file to fix
      * @param waitingHandler a waitingHandler showing the progress, can be null
      *
      * @throws FileNotFoundException Exception thrown whenever the file is not
@@ -348,11 +347,11 @@ public class MspReader extends MgfReader{
      * @throws UnsupportedEncodingException if the decoding of a spectrum title
      * fails
      */
-    public static void addMissingSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+    public static void addMissingSpectrumTitles(File File, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
         ArrayList<String> spectrumTitles = new ArrayList<String>();
 
-        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+        File tempSpectrumFile = new File(File.getParentFile(), File.getName() + "_temp");
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -360,7 +359,7 @@ public class MspReader extends MgfReader{
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(File, "r", 1024 * 100);
         String lineBreak = System.getProperty("line.separator");
 
         try {
@@ -388,7 +387,7 @@ public class MspReader extends MgfReader{
                                
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
-                                throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                                throw new UnsupportedEncodingException("An exception was thrown when trying to decode an  title: " + title);
                             }
                               spectrumTitles.add(title);
                             
@@ -436,8 +435,8 @@ public class MspReader extends MgfReader{
         }
 
         // replace the old file
-        String orignalFilePath = mgfFile.getAbsolutePath();
-        boolean fileDeleted = mgfFile.delete();
+        String orignalFilePath = File.getAbsolutePath();
+        boolean fileDeleted = File.delete();
 
         if (!fileDeleted) {
             throw new IOException("Failed to delete the original spectrum file.");
@@ -455,7 +454,7 @@ public class MspReader extends MgfReader{
     /**
      * Removes zero intensity peaks.
      *
-     * @param mgfFile the MGF file to fix
+     * @param File the MSP file to fix
      * @param waitingHandler a waitingHandler showing the progress, can be null
      *
      * @throws FileNotFoundException Exception thrown whenever the file is not
@@ -465,9 +464,9 @@ public class MspReader extends MgfReader{
      * @throws UnsupportedEncodingException if the decoding of a spectrum title
      * fails
      */
-    public static void removeZeroes(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+    public static void removeZeroes(File File, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+        File tempSpectrumFile = new File(File.getParentFile(), File.getName() + "_temp");
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -475,7 +474,7 @@ public class MspReader extends MgfReader{
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(File, "r", 1024 * 100);
 
         try {
             long progressUnit = br.length() / 100;
@@ -551,8 +550,8 @@ public class MspReader extends MgfReader{
         }
 
         // replace the old file
-        String orignalFilePath = mgfFile.getAbsolutePath();
-        boolean fileDeleted = mgfFile.delete();
+        String orignalFilePath = File.getAbsolutePath();
+        boolean fileDeleted = File.delete();
 
         if (!fileDeleted) {
             throw new IOException("Failed to delete the original spectrum file."); // can sometimes happeen of the file is loaded twice in the gui, e.g., once with cancel for zero removal and one with ok
@@ -569,7 +568,7 @@ public class MspReader extends MgfReader{
      * Renames duplicate spectrum titles. Adds (2), (3) etc, behind the
      * duplicate spectrum titles.
      *
-     * @param mgfFile the MGF file to validate
+     * @param mspFile the MSP file to validate
      * @param waitingHandler a waitingHandler showing the progress
      * @throws FileNotFoundException Exception thrown whenever the file is not
      * found
@@ -578,14 +577,14 @@ public class MspReader extends MgfReader{
      * @throws UnsupportedEncodingException if the decoding of a spectrum title
      * fails
      */
-    public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+    public static void renameDuplicateSpectrumTitles(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
         ArrayList<String> spectrumTitles = new ArrayList<String>();
-        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+        File tempSpectrumFile = new File(mspFile.getParentFile(), mspFile.getName() + "_temp");
 
         FileWriter fw = new FileWriter(tempSpectrumFile);
         BufferedWriter bw = new BufferedWriter(fw);
-        FileReader fr = new FileReader(mgfFile);
+        FileReader fr = new FileReader(mspFile);
         BufferedReader br = new BufferedReader(fr);
         String lineBreak = System.getProperty("line.separator");
 
@@ -608,7 +607,7 @@ public class MspReader extends MgfReader{
                     originalTitle = URLDecoder.decode(originalTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + originalTitle);
+                    throw new UnsupportedEncodingException("An exception was thrown when trying to decode an msp title: " + originalTitle);
                 }
 
                 String tempTitle = originalTitle;
@@ -633,8 +632,8 @@ public class MspReader extends MgfReader{
         fw.close();
 
         // replace the old file
-        String orignalFilePath = mgfFile.getAbsolutePath();
-        boolean fileDeleted = mgfFile.delete();
+        String orignalFilePath = mspFile.getAbsolutePath();
+        boolean fileDeleted = mspFile.delete();
 
         if (!fileDeleted) {
             throw new IOException("Failed to delete the original spectrum file.");
@@ -648,10 +647,10 @@ public class MspReader extends MgfReader{
     }
 
     /**
-     * Splits an mgf file into smaller ones and returns the indexes of the
+     * Splits an msp file into smaller ones and returns the indexes of the
      * generated files.
      *
-     * @param mgfFile the mgf file to split
+     * @param mspFile the msp file to split
      * @param nSpectra the number of spectra allowed in the smaller files
      * @param waitingHandler the waitingHandler showing the progress
      * @return a list of indexes of the generated files
@@ -660,9 +659,9 @@ public class MspReader extends MgfReader{
      * @throws IOException exception thrown whenever a problem occurred while
      * reading/writing a file
      */
-    public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public ArrayList<MgfIndex> splitFile(File mspFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        String fileName = mgfFile.getName();
+        String fileName = mspFile.getName();
 
         if (fileName.toLowerCase().endsWith(".msp")) {
 
@@ -677,11 +676,11 @@ public class MspReader extends MgfReader{
 
             int fileCounter = 1, spectrumCounter = 0;
             String currentName = splittedName + "_" + fileCounter + ".msp";
-            File testFile = new File(mgfFile.getParent(), currentName);
+            File testFile = new File(mspFile.getParent(), currentName);
             splittedFiles.add(testFile);
 
             BufferedRandomAccessFile writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
-            BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+            BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mspFile, "r", 1024 * 100);
             String lineBreak = System.getProperty("line.separator");
 
             long sizeOfReadAccessFile = readBufferedRandomAccessFile.length(), lastIndex = 0;
@@ -700,7 +699,7 @@ public class MspReader extends MgfReader{
                         if (sizeOfReadAccessFile - readIndex > (readIndex - lastIndex) / 2) { // try to avoid small leftovers
                             writeBufferedRandomAccessFile.close();
                             currentName = splittedName + "_" + ++fileCounter + ".msp";
-                            testFile = new File(mgfFile.getParent(), currentName);
+                            testFile = new File(mspFile.getParent(), currentName);
                             splittedFiles.add(testFile);
                             lastIndex = readIndex;
                             spectrumCounter = 0;
@@ -723,7 +722,7 @@ public class MspReader extends MgfReader{
             readBufferedRandomAccessFile.close();
 
             // index the new files
-            ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
+            ArrayList<MgfIndex> mspIndexes = new ArrayList<MgfIndex>();
             for (int i = 0; i < splittedFiles.size(); i++) {
                 File newFile = splittedFiles.get(i);
 
@@ -731,7 +730,7 @@ public class MspReader extends MgfReader{
                     waitingHandler.setWaitingText("Indexing New Files " + (i + 1) + "/" + splittedFiles.size() + ". Please Wait...");
                 }
 
-                mgfIndexes.add(getIndexMap(newFile, waitingHandler));
+                mspIndexes.add(getIndexMap(newFile, waitingHandler));
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
@@ -741,7 +740,7 @@ public class MspReader extends MgfReader{
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);
             }
 
-            return mgfIndexes;
+            return mspIndexes;
 
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");
@@ -752,9 +751,9 @@ public class MspReader extends MgfReader{
      * Returns the next spectrum starting from the given index.
      *
      * @param bufferedRandomAccessFile The random access file of the inspected
-     * mgf file
+     * msp file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the MGF file
+     * @param fileName The name of the MSP file
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -869,9 +868,9 @@ public class MspReader extends MgfReader{
      * Returns the next precursor starting from the given index.
      *
      * @param bufferedRandomAccessFile The random access file of the inspected
-     * mgf file
+     * msp file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the mgf file
+     * @param fileName The name of the msp file
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -904,7 +903,7 @@ public class MspReader extends MgfReader{
                     line = URLDecoder.decode(line, "utf-8");
                    
                 } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + line);
+                    System.out.println("An exception was thrown when trying to decode an msp title: " + line);
                     e.printStackTrace();
                 }
             }  else if (line.startsWith("Comment")) {

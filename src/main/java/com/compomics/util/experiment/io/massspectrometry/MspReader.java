@@ -40,7 +40,7 @@ public class MspReader extends MgfReader{
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
-        String spectrumName = "";//added for msp format
+     
         int numberofPeaks = 0;//added for msp format
         double molecularWeight = 0.0;//added for msp format
 
@@ -56,13 +56,17 @@ public class MspReader extends MgfReader{
             if (line.startsWith("Name:")) {
                 // reset the spectrum details
                 insideSpectrum = true;
-                spectrumName = line.substring(line.indexOf(':') + 1, line.indexOf('/'));
+                spectrumTitle = line.substring(line.indexOf(':') +1);
 
+              
                 try {
-                    spectrumName = URLDecoder.decode(spectrumName, "utf-8");
-                    precursorCharges = parseCharges(line.substring(line.indexOf('/' + 1)));
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                   
+                    int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
+                    precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                   
                 } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumName + "'.");
+                    System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
                     e.printStackTrace();
                 }
             } else if (line.startsWith("MW:")) {
@@ -163,7 +167,7 @@ public class MspReader extends MgfReader{
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-    public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+   public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
@@ -172,12 +176,18 @@ public class MspReader extends MgfReader{
         HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long currentIndex = 0;
-        String title = null,spectrumName=null;
+        String title = null;
+        
         int spectrumCounter = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
         int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
         boolean peakPicked = true;
         boolean precursorChargesMissing = false;
+        
+        
+        
+        int numberofPeaks = 0;//added for msp format
+        double molecularWeight = 0.0;//added for msp format
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -197,56 +207,86 @@ public class MspReader extends MgfReader{
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
-            if (line.equals("Name:")) {
+
+            if (line.startsWith("Name")) {
                 insideSpectrum = true;
                 chargeTagFound = false;
-                
-                currentIndex = bufferedRandomAccessFile.getFilePointer();
+                currentIndex = (bufferedRandomAccessFile.getFilePointer()-line.length())-1;
                 spectrumCounter++;
                 peakCount = 0;
-                spectrumName = line.substring(line.indexOf(':') + 1, line.indexOf('/'));
-
-                try {
-                    spectrumName = URLDecoder.decode(spectrumName, "utf-8");
-                    ArrayList<Charge> precursorCharges = parseCharges(line.substring(line.indexOf('/' + 1)));
-                    for (Charge charge : precursorCharges) {
-                    if (charge.value > maxCharge) {
-                        maxCharge = charge.value;
-                    }
-                }
-                chargeTagFound = true;
-                    
-                } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumName + "'.");
-                    e.printStackTrace();
-                }
-                
-                
-                
-                
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
-            } else if (line.startsWith("Comment")) {                
                 
                 
-                
-                String temp = line.substring(line.indexOf("Parent=" + 7), line.indexOf("" + 1));
-                
-                double precursorMz =  Double.parseDouble(temp);
+               title = line.substring(line.indexOf(':') + 1);
 
-                if (precursorMz > maxMz) {
+                try {
+                    title = URLDecoder.decode(title, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    if (waitingHandler != null) {
+                        waitingHandler.appendReport("An exception was thrown when trying to decode an msp title: " + title, true, true);
+                    }
+                    System.out.println("An exception was thrown when trying to decode an msp title: " + title);
+                    e.printStackTrace();
+                }
+                Integer nDuplicates = duplicateTitles.get(title);
+                if (nDuplicates != null || spectrumTitles.contains(title)) {
+                    if (nDuplicates == null) {
+                        nDuplicates = 0;
+                        System.err.println("Warning: Spectrum title " + title + " is not unique in " + mgfFile.getName() + "!");
+                    }
+                    duplicateTitles.put(title, ++nDuplicates);
+                    title += "_" + nDuplicates;
+                }
+                spectrumTitles.add(title);
+                indexes.put(title, currentIndex);
+                spectrumIndexes.put(title, spectrumCounter - 1);
+                
+                
+                ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+                int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
+                precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                
+                for (Charge charge : precursorCharges) {
+                    if (charge.value > maxCharge) {
+                        maxCharge = charge.value;
+                    }
+                }
+                chargeTagFound = true;
+
+            } 
+            else if (line.startsWith("MW:")) {
+                try {
+                    molecularWeight = Double.parseDouble(line.substring(line.indexOf(':') + 1));
+                } catch (Exception e) {
+                    System.out.println("An exception was thrown when trying to decode the msp Molecular Weight'" + molecularWeight + "'.");
+                    e.printStackTrace();
+                }
+            } else if (line.startsWith("Comment")) {
+                String temp=line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=")+1);
+                //String[] values = temp.split("\\s");
+                double precursorMz = Double.parseDouble(temp);
+                 if (precursorMz > maxMz) {
                     maxMz = precursorMz;
                 }
+                 
+                 precursorMzMap.put(spectrumCounter - 1, precursorMz);
 
-
-                precursorMzMap.put(spectrumCounter - 1, precursorMz);
-
-            } else if (line.startsWith("")) {
+            } else if (line.startsWith("Num peaks:")) {
+                String temp = line.substring(line.indexOf('=') + 1);
+                try {
+                    numberofPeaks = Integer.parseInt(temp);
+                } catch (Exception e) {
+                    System.out.println("An exception was thrown when trying to decode the number of peaks " + numberofPeaks + ".");
+                    e.printStackTrace();
+                    // ignore exception, RT will not be parsed
+                }
+            } else if (line.equals("")) {
                 insideSpectrum = false;
                 if (title != null) {
                     if (peakCount > maxPeakCount) {
@@ -277,10 +317,10 @@ public class MspReader extends MgfReader{
         }
 
         bufferedRandomAccessFile.close();
-//
-//        if (minRT == Double.MAX_VALUE) {
-//            minRT = 0;
-//        }
+
+        if (minRT == Double.MAX_VALUE) {
+            minRT = 0;
+        }
 
         // convert the spectrum titles to an arraylist
         ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<String>(); // @TODO: is there a faster way of doing this?
@@ -333,7 +373,7 @@ public class MspReader extends MgfReader{
 
                     String line;
                     String currentSpectrum = "";
-                    String title = null, spectrumName=null;
+                    String title = null;
                     int spectrumCounter = 0;
 
                     while ((line = br.readLine()) != null) {
@@ -342,10 +382,10 @@ public class MspReader extends MgfReader{
                             spectrumCounter++;
                             currentSpectrum += line + lineBreak;
 
-                            title = line.substring(line.indexOf('=') + 1);
+                            title = line.substring(line.indexOf(':') + 1);
                             try {
                                 title = URLDecoder.decode(title, "utf-8");
-                                spectrumName=title;
+                               
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                                 throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
@@ -737,7 +777,7 @@ public class MspReader extends MgfReader{
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
-        String spectrumName = "";//added for msp format
+       
         int numberofPeaks = 0;//added for msp format
         double molecularWeight = 0.0;//added for msp format
         
@@ -754,13 +794,15 @@ public class MspReader extends MgfReader{
             if (line.startsWith("Name:")) {
                 // reset the spectrum details
                 insideSpectrum = true;
-                spectrumName = line.substring(line.indexOf(':') + 1, line.indexOf('/'));
+                spectrumTitle =  line.substring(line.indexOf(':') + 1);
 
                 try {
-                    spectrumName = URLDecoder.decode(spectrumName, "utf-8");
-                    precursorCharges = parseCharges(line.substring(line.indexOf('/' + 1)));
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");                    
+                    int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
+                    precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                  
                 } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumName + "'.");
+                    System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
                     e.printStackTrace();
                 }
             } else if (line.startsWith("MW:")) {
@@ -771,7 +813,9 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                 }
             } else if (line.startsWith("Comment")) {
-                String temp = line.substring(line.indexOf("Parent=" + 7), line.indexOf("" + 1));
+                
+                String temp=line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=")+1);
                 //String[] values = temp.split("\\s");
                 precursorMz = Double.parseDouble(temp);
                 if (line.contains("Scan")) {
@@ -838,11 +882,12 @@ public class MspReader extends MgfReader{
 
         // @TODO: get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
-        String line, title = null, spectrumName=null;
+        String line = bufferedRandomAccessFile.readLine();
+       // String spectrumName=null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
-        while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
+        while (line != null) {
             
             // fix for lines ending with \r
             if (line.endsWith("\r")) {
@@ -850,32 +895,40 @@ public class MspReader extends MgfReader{
             }
             
             if (line.startsWith("Name:")) {
-                title = line.substring(line.indexOf(":") + 1);
-                precursorCharges = parseCharges(line.substring(line.indexOf('/'+1)));
+                line = line.substring(line.indexOf(":") + 1);
+                
+                int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
+                precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+
                 try {
-                    title = URLDecoder.decode(title, "utf-8");
-                    spectrumName=title;
+                    line = URLDecoder.decode(line, "utf-8");
+                   
                 } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + line);
                     e.printStackTrace();
                 }
             }  else if (line.startsWith("Comment")) {
-                String temp = line.substring(line.indexOf("Parent=" + 7), line.indexOf("" + 1));
+                
+                String temp=line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=")+1);
                
                 precursorMz = Double.parseDouble(temp);                
                 precursorIntensity = 0.0;
                
-            }  else if (!line.isEmpty()) {
-                if (line.startsWith("")) {
-                    if (rt1 != -1 && rt2 != -1) {
-                        return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
-                    }
-                    return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
-                }
+            }  else if (line.equals("")) {
+                return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
+//                if (line.equals("")) {
+//                    if (rt1 != -1 && rt2 != -1) {
+//                        return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
+//                    }
+//                    return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
+//                }
+
             }
+        line = bufferedRandomAccessFile.getNextLine();
         }
 
-        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
+        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + line);
     }
 
  

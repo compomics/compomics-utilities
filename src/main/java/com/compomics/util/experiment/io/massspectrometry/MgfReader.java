@@ -49,6 +49,7 @@ public class MgfReader {
         double rt1 = -1.0;
         double rt2 = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        
         String scanNumber = "";
         String spectrumTitle = "";
         boolean insideSpectrum = false;
@@ -1161,7 +1162,7 @@ public class MgfReader {
      * @return the possible charges found
      * @throws IllegalArgumentException
      */
-    protected static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
+    private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
 
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);

@@ -291,7 +291,6 @@ public class Protein extends ExperimentObject {
      * peptide.
      *
      * @param peptideSequence the peptide sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the protein starts with the given
      * peptide

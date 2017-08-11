@@ -45,7 +45,8 @@ public class Peptide extends ExperimentObject {
      */
     private double mass = -1;
     /**
-     * The mapping of this peptide on proteins as a map, accession to position. Position on protein sequences is 0 based.
+     * The mapping of this peptide on proteins as a map, accession to position.
+     * Position on protein sequences is 0 based.
      */
     private HashMap<String, HashSet<Integer>> proteinMapping = null;
     /**
@@ -352,7 +353,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Setter for the sequence.
-     * 
+     *
      * @param sequence the peptide sequence
      */
     public void setSequence(String sequence) {
@@ -377,10 +378,11 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the number of missed cleavages using the digestion preferences.
-     * Null if no cleavage set. If multiple enzymes were used, the minimum across the different enzymes.
+     * Null if no cleavage set. If multiple enzymes were used, the minimum
+     * across the different enzymes.
      *
      * @param digestionPreferences the digestion preferences
-     * 
+     *
      * @return the amount of missed cleavages
      */
     public Integer getNMissedCleavages(DigestionPreferences digestionPreferences) {
@@ -559,7 +561,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         return modificationMatches != null ? modificationMatches.size() : 0;
     }
-    
+
     /**
      * Returns the potential modification sites as an ordered list of sites. 1
      * is the first amino acid. An empty list is returned if no possibility was
@@ -580,7 +582,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
+
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         HashSet<Integer> sites = modificationProfile.getAllNotFixedModifications().stream().map(ptmName -> ptmFactory.getPTM(ptmName))
@@ -603,22 +605,13 @@ public class Peptide extends ExperimentObject {
      * for PTM to peptide mapping
      *
      * @return a list of potential modification sites
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the ProteinTree
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public HashSet<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        ArrayList<Integer> possibleSites = new ArrayList<>(1);
+        HashSet<Integer> possibleSites = new HashSet<>(1);
 
         switch (ptm.getType()) {
             case PTM.MODAA:
@@ -629,9 +622,9 @@ public class Peptide extends ExperimentObject {
                     return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    for (String accession : parentProteins) {
+                    for (String accession : proteinMapping.keySet()) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
+                        for (int index : proteinMapping.get(accession)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -639,9 +632,7 @@ public class Peptide extends ExperimentObject {
                                 if (pattern.matchesIn(tempSequence, ptmSequenceMatchingPreferences)) {
                                     for (int tempIndex : pattern.getIndexes(tempSequence, ptmSequenceMatchingPreferences)) {
                                         Integer sequenceIndex = tempIndex - target;
-                                        if (!possibleSites.contains(sequenceIndex)) {
-                                            possibleSites.add(tempIndex);
-                                        }
+                                        possibleSites.add(sequenceIndex);
                                     }
                                 }
                             }

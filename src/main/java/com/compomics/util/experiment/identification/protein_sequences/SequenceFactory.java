@@ -184,15 +184,10 @@ public class SequenceFactory {
      * will be re-indexed.
      *
      * @param accession accession of the desired protein
+     * 
      * @return the desired protein
-     * @throws IOException thrown whenever an error is encountered while reading
-     * the FASTA file
-     * @throws IllegalArgumentException thrown whenever an error is encountered
-     * while reading the FASTA file
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
+    public Protein getProtein(String accession) {
         return getProtein(accession, true);
     }
 

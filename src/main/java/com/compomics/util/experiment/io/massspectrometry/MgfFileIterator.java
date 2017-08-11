@@ -46,7 +46,14 @@ public class MgfFileIterator {
     public MgfFileIterator(File mgfFile) throws FileNotFoundException, IOException {
         mgfFileName = mgfFile.getName();
         br = new BufferedReader(new FileReader(mgfFile));
-        nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+
+        if (mgfFile.getName().endsWith("mgf")) {
+            nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+        } else {
+            //MspReader mspr=new MspReader();
+            nextSpectrum = MspReader.getSpectrum(br, mgfFileName);
+        }
+
         rank = 1;
         if (nextSpectrum.getScanNumber() == null) {
             nextSpectrum.setScanNumber(rank + "");
@@ -75,7 +82,12 @@ public class MgfFileIterator {
 
         MSnSpectrum currentSpectrum = nextSpectrum;
         if (!streamClosed) {
-            nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+
+            if (mgfFileName.endsWith("mgf")) {
+                nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+            } else {
+                nextSpectrum = MspReader.getSpectrum(br, mgfFileName);
+            }
         } else {
             nextSpectrum = null;
         }

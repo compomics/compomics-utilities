@@ -286,11 +286,8 @@ public abstract class AminoAcid implements Serializable {
      * @return the actual amino acids
      */
     public char[] getSubAminoAcids(boolean includeCombinations) {
-        if (includeCombinations) {
-            return subAminoAcidsWithCombination;
-        } else {
-            return subAminoAcidsWithoutCombination;
-        }
+        
+        return includeCombinations ? subAminoAcidsWithCombination : subAminoAcidsWithoutCombination;
     }
 
     /**

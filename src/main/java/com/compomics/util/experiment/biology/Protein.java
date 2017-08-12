@@ -2,11 +2,9 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.protein.Header.DatabaseType;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
 /**
  * This class models a protein.
@@ -42,6 +40,7 @@ public class Protein extends ExperimentObject {
      * Constructor for a protein.
      */
     public Protein() {
+        
     }
 
     /**
@@ -52,8 +51,10 @@ public class Protein extends ExperimentObject {
      * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, boolean isDecoy) {
+        
         this.accession = accession;
         this.decoy = isDecoy;
+        
     }
 
     /**
@@ -64,9 +65,11 @@ public class Protein extends ExperimentObject {
      * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, String sequence, boolean isDecoy) {
+        
         this.accession = accession;
         this.sequence = sequence;
         this.decoy = isDecoy;
+        
     }
 
     /**
@@ -78,10 +81,12 @@ public class Protein extends ExperimentObject {
      * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, DatabaseType databaseType, String sequence, boolean isDecoy) {
+        
         this.accession = accession;
         this.databaseType = databaseType;
         this.sequence = sequence;
         this.decoy = isDecoy;
+        
     }
 
     /**
@@ -90,7 +95,9 @@ public class Protein extends ExperimentObject {
      * @return a boolean indicating if the protein is factice
      */
     public boolean isDecoy() {
+        
         return decoy;
+        
     }
 
     /**
@@ -99,7 +106,9 @@ public class Protein extends ExperimentObject {
      * @return the protein accession
      */
     public String getAccession() {
+        
         return accession;
+        
     }
 
     /**
@@ -108,7 +117,9 @@ public class Protein extends ExperimentObject {
      * @return the protein database type
      */
     public DatabaseType getDatabaseType() {
+        
         return databaseType;
+        
     }
 
     /**
@@ -117,17 +128,9 @@ public class Protein extends ExperimentObject {
      * @return the protein sequence
      */
     public String getSequence() {
+        
         return sequence;
-    }
-
-    /**
-     * A method to compare proteins. For now accession based.
-     *
-     * @param anotherProtein an other protein
-     * @return a boolean indicating if the proteins are identical
-     */
-    public boolean isSameAs(Protein anotherProtein) {
-        return accession.equals(anotherProtein.getAccession());
+        
     }
 
     /**
@@ -136,7 +139,9 @@ public class Protein extends ExperimentObject {
      * @return the key for protein indexing.
      */
     public String getProteinKey() {
+        
         return accession;
+        
     }
 
     /**
@@ -145,7 +150,9 @@ public class Protein extends ExperimentObject {
      * @return the number of amino acids in the sequence
      */
     public int getLength() {
+        
         return sequence.length();
+        
     }
 
     /**
@@ -158,41 +165,40 @@ public class Protein extends ExperimentObject {
      * @return the number of observable amino acids of the sequence
      */
     public int[] getObservableAminoAcids(ArrayList<Enzyme> enzymes, double pepMaxLength) {
-        int lastCleavage = 0, tempLength = 1;
+        
+        int lastCleavage = -1;
+        
         int[] observableAas = new int[sequence.length()];
-        for (int i = 0; i < sequence.length() - 1; i++) {
-            boolean cleavage = false;
+        
+        for (int i = 0 ; i < sequence.length() - 1 ; i++) {
+            
             char charati = sequence.charAt(i), charatiPlusOne = sequence.charAt(i + 1);
-            for (Enzyme enzyme : enzymes) {
-                if (enzyme.isCleavageSite(charati, charatiPlusOne)) {
-                    cleavage = true;
-                    break;
-                }
-            }
-            if (cleavage) {
-                if (tempLength <= pepMaxLength) {
-                    for (int k = lastCleavage; k < i; k++) {
+            
+            if (enzymes.stream().anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
+                
+                if (i - lastCleavage <= pepMaxLength) {
+                    
+                    for (int k = lastCleavage ; k < i ; k++) {
+                        
                         observableAas[k] = 1;
-                    }
-                } else {
-                    for (int k = lastCleavage; k < i; k++) {
-                        observableAas[k] = 0;
+                        
                     }
                 }
+                
                 lastCleavage = i;
-                tempLength = 0;
+                
             }
-            tempLength++;
         }
-        if (tempLength <= pepMaxLength) {
-            for (int k = lastCleavage; k < sequence.length(); k++) {
+        
+        if (sequence.length() - 1 - lastCleavage <= pepMaxLength) {
+            
+            for (int k = lastCleavage ; k < sequence.length() ; k++) {
+                
                 observableAas[k] = 1;
-            }
-        } else {
-            for (int k = lastCleavage; k < sequence.length(); k++) {
-                observableAas[k] = 0;
+                
             }
         }
+        
         return observableAas;
     }
 
@@ -205,12 +211,10 @@ public class Protein extends ExperimentObject {
      * @return the number of observable amino acids of the sequence
      */
     public int getObservableLength(ArrayList<Enzyme> enzymes, double pepMaxLength) {
+        
         int[] observalbeAas = getObservableAminoAcids(enzymes, pepMaxLength);
-        int observableLength = 0;
-        for (int observable : observalbeAas) {
-            observableLength += observable;
-        }
-        return observableLength;
+        
+        return Arrays.stream(observalbeAas).sum();
     }
 
     /**
@@ -221,16 +225,20 @@ public class Protein extends ExperimentObject {
      * @return the number of possible peptides
      */
     public int getNCleavageSites(ArrayList<Enzyme> enzymes) {
+        
         int nCleavageSites = 0;
+        
         for (int i = 0; i < sequence.length() - 1; i++) {
+            
             char charati = sequence.charAt(i), charatiPlusOne = sequence.charAt(i + 1);
-            for (Enzyme enzyme : enzymes) {
-                if (enzyme.isCleavageSite(charati, charatiPlusOne)) {
-                    nCleavageSites++;
-                    break;
-                }
+            
+            if (enzymes.stream().anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
+                
+                nCleavageSites++;
+            
             }
         }
+        
         return nCleavageSites;
     }
 
@@ -246,197 +254,88 @@ public class Protein extends ExperimentObject {
 
         double mass = StandardMasses.h2o.mass;
 
-        for (int iaa = 0; iaa < sequence.length(); iaa++) {
-            char aa = sequence.charAt(iaa);
-            try {
-                if (aa != '*') {
-                    AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-                    mass += currentAA.getMonoisotopicMass();
-                }
-            } catch (NullPointerException e) {
-                if (aa == '>') {
-                    throw new IllegalArgumentException("Error parsing the sequence of " + accession);
-                } else {
-                    throw new IllegalArgumentException("Unknown amino acid: " + aa);
-                }
-            } catch (IllegalArgumentException e) {
-                if (aa == '>') {
-                    throw new IllegalArgumentException("Error parsing the sequence of " + accession + ". Protein sequence: " + sequence + ".");
-                } else {
-                    throw new IllegalArgumentException("Unknown amino acid: " + aa);
-                }
-            }
-        }
+        mass += sequence.chars().mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass()).sum();
 
         return mass;
     }
 
     /**
-     * Returns the list of indexes where a peptide can be found in the protein
-     * sequence. 1 is the first amino acid.
+     * Returns the number of enzymatic termini for the given enzyme on this
+     * protein at the given location.
      *
-     * @param peptideSequence the sequence of the peptide of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return the list of indexes where a peptide can be found in a protein
-     * sequence
-     */
-    public ArrayList<Integer> getPeptideStart(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(peptideSequence);
-        return aminoAcidPattern.getIndexes(sequence, sequenceMatchingPreferences);
-    }
-
-    /**
-     * Returns a boolean indicating whether the protein starts with the given
-     * peptide.
-     *
-     * @param peptideSequence the peptide sequence
-     *
-     * @return a boolean indicating whether the protein starts with the given
-     * peptide
-     */
-    public boolean isNTerm(String peptideSequence, int index) {
-        String subSequence = sequence.substring(0, peptideSequence.length());
-        AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
-            return true;
-        }
-        if (sequence.charAt(0) == 'M' && sequence.length() > peptideSequence.length()) {
-            subSequence = sequence.substring(1, peptideSequence.length() + 1);
-            if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns a boolean indicating whether the protein ends with the given
-     * peptide.
-     *
-     * @param peptideSequence the peptide sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a boolean indicating whether the protein ends with the given
-     * peptide
-     */
-    public boolean isCTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        String subSequence;
-
-        if (sequence.length() <= peptideSequence.length()) {
-            subSequence = sequence;
-        } else {
-            subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
-        }
-
-        AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        return aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
-    }
-
-    /**
-     * Returns true if the peptide is enzymatic, i.e., both termini can be
-     * generated by the enzyme used. If a peptide maps to multiple locations in
-     * the protein sequence this method returns true if one or more of these
-     * peptides are enzymatic, even if not all mappings are enzymatic.
-     *
-     * @param peptideSequence the peptide sequence to check
+     * @param peptideStart the 0 based index of the peptide start on the protein
+     * @param peptideEnd the 0 based index of the peptide end on the protein
      * @param enzyme the enzyme to use
-     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true of the peptide is non-enzymatic
-     *
-     * @throws IOException if an IOException occurs
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
+    public int getNEnzymaticTermini(int peptideStart, int peptideEnd, Enzyme enzyme) {
 
-        // get the surrounding amino acids
-        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1, sequenceMatchingPreferences);
+        int nEnzymatic = 0;
 
-        String firstAA = peptideSequence.charAt(0) + "";
-        String lastAA = peptideSequence.charAt(peptideSequence.length() - 1) + "";
+        if (peptideStart == 0) {
 
-        // iterate the possible extended peptide sequences
-        for (int index : surroundingAminoAcids.keySet()) {
+            nEnzymatic++;
 
-            String before = surroundingAminoAcids.get(index)[0];
-            String after = surroundingAminoAcids.get(index)[1];
+        } else {
 
-            if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
-                    || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
-                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
-                return true;
+            char aaBefore = sequence.charAt(peptideStart - 1);
+            char aaAfter = sequence.charAt(peptideStart);
+
+            if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+
+                nEnzymatic++;
+
+            }
+
+        }
+
+        if (peptideEnd == sequence.length() - 1) {
+
+            nEnzymatic++;
+
+        } else {
+
+            char aaBefore = sequence.charAt(peptideEnd);
+            char aaAfter = sequence.charAt(peptideEnd + 1);
+
+            if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+
+                nEnzymatic++;
+
             }
         }
 
-        return false;
+        return nEnzymatic;
     }
 
     /**
-     * Returns true if the peptide is enzymatic, i.e., both termini can be
-     * generated by one of the enzymes used. If a peptide maps to multiple
-     * locations in the protein sequence this method returns true if one or more
-     * of these peptides are enzymatic, even if not all mappings are enzymatic.
+     * Returns the maximal number of enzymatic termini for the given enzymes on
+     * this protein at the given location.
      *
-     * @param peptideSequence the peptide sequence to check
+     * @param peptideStart the 0 based index of the peptide start on the protein
+     * @param peptideEnd the 0 based index of the peptide end on the protein
      * @param enzymes the enzymes to use
-     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true of the peptide is non-enzymatic
-     *
-     * @throws IOException if an IOException occurs
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, ArrayList<Enzyme> enzymes, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
-        for (Enzyme enzyme : enzymes) {
-            if (isEnzymaticPeptide(peptideSequence, enzyme, sequenceMatchingPreferences)) {
-                return true;
-            }
-        }
-        return false;
+    public int getNEnzymaticTermini(int peptideStart, int peptideEnd, ArrayList<Enzyme> enzymes) {
+
+        return enzymes.stream().mapToInt(enzyme -> getNEnzymaticTermini(peptideStart, peptideEnd, enzyme)).max().orElse(0);
     }
 
     /**
-     * Returns the amino acids surrounding a peptide in the sequence of the
-     * given protein in a map: peptide start index &gt; (amino acids before,
-     * amino acids after).
+     * Returns the maximal number of enzymatic termini for the given peptide
+     * sequence using the given enzymes on this protein at the given locations.
      *
-     * @param peptide the sequence of the peptide of interest
-     * @param nAA the number of amino acids to include
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param peptideStartEnd a list of 0 based index pairs of the peptide start
+     * on the protein
+     * @param enzymes the enzymes to use
      *
-     * @return the amino acids surrounding a peptide in the protein sequence
-     *
-     * @throws IOException Exception thrown whenever an error occurred while
-     * parsing the protein sequence
+     * @return true of the peptide is non-enzymatic
      */
-    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
+    public int getNEnzymaticTermini(ArrayList<int[]> peptideStartEnd, ArrayList<Enzyme> enzymes) {
 
-        ArrayList<Integer> startIndexes = getPeptideStart(peptide, sequenceMatchingPreferences);
-        HashMap<Integer, String[]> result = new HashMap<>();
-
-        for (int startIndex : startIndexes) {
-
-            result.put(startIndex, new String[2]);
-            String subsequence = "";
-
-            int stringIndex = startIndex - 1;
-            for (int aa = stringIndex - nAA; aa < stringIndex; aa++) {
-                if (aa >= 0 && aa < sequence.length()) {
-                    subsequence += sequence.charAt(aa);
-                }
-            }
-
-            result.get(startIndex)[0] = subsequence;
-            subsequence = "";
-
-            for (int aa = stringIndex + peptide.length(); aa < stringIndex + peptide.length() + nAA; aa++) {
-                if (aa >= 0 && aa < sequence.length()) {
-                    subsequence += sequence.charAt(aa);
-                }
-            }
-
-            result.get(startIndex)[1] = subsequence;
-        }
-
-        return result;
+        return peptideStartEnd.stream().mapToInt(startEnd -> getNEnzymaticTermini(startEnd[0], startEnd[1], enzymes)).max().orElse(0);
     }
 }

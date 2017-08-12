@@ -240,7 +240,7 @@ public class Enzyme extends ExperimentObject {
      *
      * @return true if the amino acid combination can represent a cleavage site
      */
-    public boolean isCleavageSite(Character aaBefore, Character aaAfter) {
+    public boolean isCleavageSite(char aaBefore, char aaAfter) {
 
         AminoAcid aminoAcid1 = AminoAcid.getAminoAcid(aaBefore);
         AminoAcid aminoAcid2 = AminoAcid.getAminoAcid(aaAfter);

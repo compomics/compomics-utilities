@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AtomChain;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
@@ -117,18 +118,18 @@ public class ModificationsCLIInputBean {
                 return false;
             }
             Integer type = new Integer(arg);
-            if (!pattern && (type == Modification.MODAA
-                    || type == Modification.MODCAA
-                    || type == Modification.MODNAA
-                    || type == Modification.MODCPAA
-                    || type == Modification.MODNPAA)) {
-                System.out.println(System.getProperty("line.separator") + "No amino acid pattern found for PTM targetting specific amino acids." + System.getProperty("line.separator"));
+            if (type >= ModificationType.values().length || type < 0) {
+                System.out.println(System.getProperty("line.separator") + "No modification type found for index " + type + "." + System.getProperty("line.separator"));
                 return false;
             }
-            if (pattern && (type == Modification.MODC
-                    || type == Modification.MODN
-                    || type == Modification.MODCP
-                    || type == Modification.MODNP)) {
+            if (!pattern && (type == ModificationType.modaa.index
+                    || type == ModificationType.modcaa_peptide.index
+                    || type == ModificationType.modcaa_protein.index
+                    || type == ModificationType.modnaa_peptide.index
+                    || type == ModificationType.modnaa_protein.index)) {
+                System.out.println(System.getProperty("line.separator") + "No amino acid pattern found for PTM targetting specific amino acids." + System.getProperty("line.separator"));
+                return false;
+            } else if (pattern) {
                 System.out.println(System.getProperty("line.separator") + "Amino acid pattern found for PTM targetting a terminus." + System.getProperty("line.separator"));
                 return false;
             }
@@ -221,13 +222,14 @@ public class ModificationsCLIInputBean {
                 String arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN.id);
                 aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(arg);
                 Integer target = 0;
-            if (aLine.hasOption(ModificationsCLIParams.PATTERN_INDEX.id)) {
-                arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN_INDEX.id);
-                target = new Integer(arg);
+                if (aLine.hasOption(ModificationsCLIParams.PATTERN_INDEX.id)) {
+                    arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN_INDEX.id);
+                    target = new Integer(arg);
+                }
+                aminoAcidPattern.setTarget(target);
             }
-            aminoAcidPattern.setTarget(target);
-            }
-            modificationToAdd = new Modification(index, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
+            ModificationType modificationType = ModificationType.values()[index];
+            modificationToAdd = new Modification(modificationType, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
             if (aLine.hasOption(ModificationsCLIParams.SHORT_NAME.id)) {
                 String arg = aLine.getOptionValue(ModificationsCLIParams.SHORT_NAME.id);
                 modificationToAdd.setShortName(arg);

@@ -45,7 +45,7 @@ public enum ModificationType {
     modcaa_peptide(8, "Modification at the C-terminus of a peptide at particular amino acids.");
 
     /**
-     * The index of the type.
+     * The index of the type, must be the index in the values array.
      */
     public final int index;
     /**

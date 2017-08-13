@@ -60,7 +60,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * Creates a new GeneDetailsDialog.
      *
      * @param parent the parent frame
-     * @param proteinMatchKey the protein match key
+     * @param proteinMatch the protein match
      * @param geneMaps the gene maps
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
@@ -68,31 +68,26 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @throws java.lang.InterruptedException exception thrown whenever an error
      * occurred while waiting for the connection to the FASTA file to recover.
      */
-    public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey, GeneMaps geneMaps) throws IOException, InterruptedException {
+    public GeneDetailsDialog(java.awt.Frame parent, ProteinMatch proteinMatch, GeneMaps geneMaps) throws IOException, InterruptedException {
         super(parent, true);
         initComponents();
         this.geneMaps = geneMaps;
-        proteinAccessions = new ArrayList<>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
+        proteinAccessions = proteinMatch.getAccessions();
         goTable.setModel(new GOTableModel());
         if (geneMaps != null) {
             goTermDescriptions = new ArrayList<>();
 
-            if (proteinAccessions.size() == 1) {
-                goTermDescriptions = new ArrayList<>(geneMaps.getGoNamesForProtein(proteinMatchKey));
-                Collections.sort(goTermDescriptions);
-            } else {
-                for (String accession : proteinAccessions) {
+            for (String accession : proteinAccessions) {
 
-                    HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
-                    ArrayList<String> tempGoNameAccessionsArray = new ArrayList<>();
-                    tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
-                    Collections.sort(tempGoNameAccessionsArray);
+                HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
+                ArrayList<String> tempGoNameAccessionsArray = new ArrayList<>();
+                tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
+                Collections.sort(tempGoNameAccessionsArray);
 
-                    goTermDescriptions.addAll(tempGoNameAccessionsArray);
+                goTermDescriptions.addAll(tempGoNameAccessionsArray);
 
-                    for (int i = 0; i < tempGoNameAccessionsArray.size(); i++) {
-                        proteinAccessionColumn.add(accession);
-                    }
+                for (int i = 0; i < tempGoNameAccessionsArray.size(); i++) {
+                    proteinAccessionColumn.add(accession);
                 }
             }
         } else {

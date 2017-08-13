@@ -3,11 +3,12 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.gui.ptm.ModificationsDialog;
+import com.compomics.util.gui.modification.ModificationsDialog;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
@@ -55,7 +56,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     /**
      * The post translational modifications factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * Boolean indicating whether the modification profile has been changed.
      * Note that it only checks if the user has made changed to the selection,
@@ -179,7 +180,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         pointMutationsCmb.setEnabled(editable);
         snapsCmb.setEnabled(editable);
         spectrumSynthesisCmb.setEnabled(editable);
-        ptmComplexityTxt.setEnabled(editable);
+        modificationComplexityTxt.setEnabled(editable);
     }
 
     /**
@@ -325,9 +326,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             skylineTxt.setText(xtandemParameters.getSkylinePath() + "");
         }
 
-        ptmComplexityTxt.setText(xtandemParameters.getProteinPtmComplexity() + "");
+        modificationComplexityTxt.setText(xtandemParameters.getProteinPtmComplexity() + "");
 
-        // load the ptms
+        // load the modifications
         updateModificationList();
     }
 
@@ -396,7 +397,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         if (!input.equals("")) {
             result.setSkylinePath(input);
         }
-        input = ptmComplexityTxt.getText().trim();
+        input = modificationComplexityTxt.getText().trim();
         if (!input.equals("")) {
             result.setProteinPtmComplexity(new Double(input));
         }
@@ -455,8 +456,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         quickPyroLabel = new javax.swing.JLabel();
         stpBiasLabel = new javax.swing.JLabel();
         stpBiasCmb = new javax.swing.JComboBox();
-        ptmComplexityLbl = new javax.swing.JLabel();
-        ptmComplexityTxt = new javax.swing.JTextField();
+        modificationComplexityLbl = new javax.swing.JLabel();
+        modificationComplexityTxt = new javax.swing.JTextField();
         outputSettingsPanel = new javax.swing.JPanel();
         eValueLbl = new javax.swing.JLabel();
         eValueTxt = new javax.swing.JTextField();
@@ -515,7 +516,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("X!Tandem Advanced Settings");
         setMinimumSize(new java.awt.Dimension(600, 550));
-        setPreferredSize(new java.awt.Dimension(638, 600));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -775,24 +775,24 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
         stpBiasCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        ptmComplexityLbl.setText("PTM Complexity    (?)");
-        ptmComplexityLbl.setToolTipText("Open X!Tandem parameter details");
-        ptmComplexityLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+        modificationComplexityLbl.setText("PTM Complexity    (?)");
+        modificationComplexityLbl.setToolTipText("Open X!Tandem parameter details");
+        modificationComplexityLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                ptmComplexityLblMouseEntered(evt);
+                modificationComplexityLblMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                ptmComplexityLblMouseExited(evt);
+                modificationComplexityLblMouseExited(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                ptmComplexityLblMouseReleased(evt);
+                modificationComplexityLblMouseReleased(evt);
             }
         });
 
-        ptmComplexityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        ptmComplexityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        modificationComplexityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        modificationComplexityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                ptmComplexityTxtKeyReleased(evt);
+                modificationComplexityTxtKeyReleased(evt);
             }
         });
 
@@ -804,9 +804,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 .addGap(25, 25, 25)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(ptmComplexityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(modificationComplexityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ptmComplexityTxt))
+                        .addComponent(modificationComplexityTxt))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -836,8 +836,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                     .addComponent(stpBiasLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ptmComplexityLbl)
-                    .addComponent(ptmComplexityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(modificationComplexityLbl)
+                    .addComponent(modificationComplexityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(314, Short.MAX_VALUE))
         );
 
@@ -1517,9 +1517,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private void quickAcetylCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickAcetylCmbActionPerformed
         if (quickAcetylCmb.getSelectedIndex() == 0) {
             for (String modName : modificationProfile.getFixedModifications()) {
-                Modification ptm = ptmFactory.getModification(modName);
-                if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA)
-                        && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracyInDa) {
+                Modification modification = modificationFactory.getModification(modName);
+                if ((modification.getModificationType() == ModificationType.modn_peptide || modification.getModificationType() == ModificationType.modnaa_peptide || modification.getModificationType() == ModificationType.modn_protein || modification.getModificationType() == ModificationType.modnaa_protein)
+                        && Math.abs(modification.getMass() - 42.010565) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick acetyl option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);
@@ -1537,9 +1537,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private void quickPyroCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPyroCmbActionPerformed
         if (quickPyroCmb.getSelectedIndex() == 0) {
             for (String modName : modificationProfile.getFixedModifications()) {
-                Modification ptm = ptmFactory.getModification(modName);
-                if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA)
-                        && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracyInDa) {
+                Modification modification = modificationFactory.getModification(modName);
+                if ((modification.getModificationType() == ModificationType.modn_peptide || modification.getModificationType() == ModificationType.modnaa_peptide || modification.getModificationType() == ModificationType.modn_protein || modification.getModificationType() == ModificationType.modnaa_protein)
+                        && Math.abs(modification.getMass() + 17.026549) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick pyrolidone option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);
@@ -2284,8 +2284,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     }//GEN-LAST:event_modificationsTableMouseExited
 
     /**
-     * Opens a color chooser where the color for the PTM can be changed, or
-     * allows the users to change of a PTM is in the most used PTMs list.
+     * Opens a color chooser where the color for the modification can be changed, or
+     * allows the users to change of a Modification is in the most used modifications list.
      *
      * @param evt
      */
@@ -2298,7 +2298,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) modificationsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    ptmFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
+                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
                     modificationsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
@@ -2307,18 +2307,18 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
-                String ptmName = (String) modificationsTable.getValueAt(row, 1);
+                String modificationName = (String) modificationsTable.getValueAt(row, 1);
 
-                // add/remove the ptm as a refinement ptm
+                // add/remove the modification as a refinement modification
                 if (selected) {
-                    // add as refinement ptm
-                    if (!modificationProfile.getRefinementVariableModifications().contains(ptmName)) {
-                        modificationProfile.addRefinementVariableModification(ptmFactory.getModification(ptmName));
+                    // add as refinement modification
+                    if (!modificationProfile.getRefinementVariableModifications().contains(modificationName)) {
+                        modificationProfile.addRefinementVariableModification(modificationFactory.getModification(modificationName));
                         modProfileChanged = true;
                     }
                 } else {
-                    // remove the ptm as refinement ptm
-                    modificationProfile.removeRefinementVariableModification(ptmName);
+                    // remove the modification as refinement modification
+                    modificationProfile.removeRefinementVariableModification(modificationName);
                     modProfileChanged = true;
                 }
 
@@ -2333,18 +2333,18 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
-                String ptmName = (String) modificationsTable.getValueAt(row, 1);
+                String modificationName = (String) modificationsTable.getValueAt(row, 1);
 
-                // add/remove the ptm as a refinement ptm
+                // add/remove the modification as a refinement modification
                 if (selected) {
-                    // add as refinement ptm
-                    if (!modificationProfile.getRefinementFixedModifications().contains(ptmName)) {
-                        modificationProfile.addRefinementFixedModification(ptmFactory.getModification(ptmName));
+                    // add as refinement modification
+                    if (!modificationProfile.getRefinementFixedModifications().contains(modificationName)) {
+                        modificationProfile.addRefinementFixedModification(modificationFactory.getModification(modificationName));
                         modProfileChanged = true;
                     }
                 } else {
-                    // remove the ptm as refinement ptm
-                    modificationProfile.removeRefinementFixedModification(ptmName);
+                    // remove the modification as refinement modification
+                    modificationProfile.removeRefinementFixedModification(modificationName);
                     modProfileChanged = true;
                 }
 
@@ -2504,38 +2504,38 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      *
      * @param evt
      */
-    private void ptmComplexityLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseEntered
+    private void modificationComplexityLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationComplexityLblMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_ptmComplexityLblMouseEntered
+    }//GEN-LAST:event_modificationComplexityLblMouseEntered
 
     /**
      * Change the cursor back to the default cursor.
      *
      * @param evt
      */
-    private void ptmComplexityLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseExited
+    private void modificationComplexityLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationComplexityLblMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_ptmComplexityLblMouseExited
+    }//GEN-LAST:event_modificationComplexityLblMouseExited
 
     /**
      * Open the link to the X!Tandem help pages.
      *
      * @param evt
      */
-    private void ptmComplexityLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseReleased
+    private void modificationComplexityLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationComplexityLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/release.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_ptmComplexityLblMouseReleased
+    }//GEN-LAST:event_modificationComplexityLblMouseReleased
 
     /**
      * Validate the input.
      *
      * @param evt
      */
-    private void ptmComplexityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptmComplexityTxtKeyReleased
+    private void modificationComplexityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modificationComplexityTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_ptmComplexityTxtKeyReleased
+    }//GEN-LAST:event_modificationComplexityTxtKeyReleased
 
     /**
      * Inspects the parameters validity.
@@ -2554,20 +2554,20 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimal number of peaks", "Minimal Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minPrecMassLbl, minPrecMassTxt, "minimal precursor mass", "Minimal Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, maxEValueRefinmentLbl, maxEValueRefineTxt, "maximal e-value for the refinement", "Maximal Refinement E-Value Error", true, showMessage, valid);
-        valid = GuiUtilities.validateDoubleInput(this, ptmComplexityLbl, ptmComplexityTxt, "PTM complexity", "PTM Complexity Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, modificationComplexityLbl, modificationComplexityTxt, "PTM complexity", "PTM Complexity Error", true, showMessage, valid);
 
-        // check if the ptm complexity value is in the range (0.0-12.0)
+        // check if the modification complexity value is in the range (0.0-12.0)
         if (valid) {
             try {
-                Double value = new Double(ptmComplexityTxt.getText());
+                Double value = new Double(modificationComplexityTxt.getText());
                 if (value > 12) {
                     if (showMessage && valid) {
-                        JOptionPane.showMessageDialog(this, "Please select a number in the range (0.0-12.0) for PTM complexity.",
-                                "PTM Complexity Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Please select a number in the range (0.0-12.0) for Modification complexity.",
+                                "Modification Complexity Error", JOptionPane.WARNING_MESSAGE);
                     }
                     valid = false;
-                    ptmComplexityLbl.setForeground(Color.RED);
-                    ptmComplexityLbl.setToolTipText("Please select a number in the range (0.0-12.0)");
+                    modificationComplexityLbl.setForeground(Color.RED);
+                    modificationComplexityLbl.setToolTipText("Please select a number in the range (0.0-12.0)");
                 }
             } catch (NumberFormatException e) {
                 // ignore, already caught above
@@ -2584,7 +2584,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      */
     private void updateModificationList() {
 
-        ArrayList<String> allModificationsList = ptmFactory.getPTMs();
+        ArrayList<String> allModificationsList = modificationFactory.getModifications();
         String[] allModificationsAsArray = new String[allModificationsList.size()];
 
         for (int i = 0; i < allModificationsList.size(); i++) {
@@ -2617,9 +2617,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
         for (String mod : allModificationsAsArray) {
             ((DefaultTableModel) modificationsTable.getModel()).addRow(
-                    new Object[]{ptmFactory.getColor(mod),
+                    new Object[]{modificationFactory.getColor(mod),
                         mod,
-                        ptmFactory.getModification(mod).getMass(),
+                        modificationFactory.getModification(mod).getMass(),
                         modificationProfile.getRefinementVariableModifications().contains(mod),
                         modificationProfile.getRefinementFixedModifications().contains(mod)});
         }
@@ -2630,12 +2630,12 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         double maxMass = Double.MIN_VALUE;
         double minMass = Double.MAX_VALUE;
 
-        for (String ptm : ptmFactory.getPTMs()) {
-            if (ptmFactory.getModification(ptm).getMass() > maxMass) {
-                maxMass = ptmFactory.getModification(ptm).getMass();
+        for (String modification : modificationFactory.getModifications()) {
+            if (modificationFactory.getModification(modification).getMass() > maxMass) {
+                maxMass = modificationFactory.getModification(modification).getMass();
             }
-            if (ptmFactory.getModification(ptm).getMass() < minMass) {
-                minMass = ptmFactory.getModification(ptm).getMass();
+            if (modificationFactory.getModification(modification).getMass() < minMass) {
+                minMass = modificationFactory.getModification(modification).getMass();
             }
         }
 
@@ -2667,6 +2667,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JTextField minPeaksTxt;
     private javax.swing.JLabel minPrecMassLbl;
     private javax.swing.JTextField minPrecMassTxt;
+    private javax.swing.JLabel modificationComplexityLbl;
+    private javax.swing.JTextField modificationComplexityTxt;
     private javax.swing.JScrollPane modificationsJScrollPane;
     private javax.swing.JTable modificationsTable;
     private javax.swing.JLabel nPeaksLbl;
@@ -2690,8 +2692,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JLabel pointMutationLabel;
     private javax.swing.JComboBox pointMutationsCmb;
     private javax.swing.JComboBox potentialModificationsCmb;
-    private javax.swing.JLabel ptmComplexityLbl;
-    private javax.swing.JTextField ptmComplexityTxt;
     private javax.swing.JComboBox quickAcetylCmb;
     private javax.swing.JLabel quickAcetylLabel;
     private javax.swing.JComboBox quickPyroCmb;

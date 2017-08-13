@@ -1,6 +1,5 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import java.io.Serializable;
 
@@ -103,18 +102,6 @@ public class SequenceMatchingPreferences implements Serializable {
      * Limit the share of X's a match can contain, range [0.0-1.0].
      */
     private Double limitX = null;
-    /**
-     * Matrix of allowed mutations.
-     * 
-     * @deprecated use the PeptideVariantPreferences instead.
-     */
-    private MutationMatrix mutationMatrix = null;
-    /**
-     * The maximal number of mutations allowed per peptide.
-     * 
-     * @deprecated use the PeptideVariantPreferences instead.
-     */
-    private Integer maxMutationsPerPeptide = null;
     /**
      * The peptide mapper to use, FMI by default.
      */

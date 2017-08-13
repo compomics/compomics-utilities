@@ -5,6 +5,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
@@ -39,7 +40,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * The color used for the sparkline bar chart plots.
      */
@@ -63,7 +64,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private ArrayList<String> userModsTableToolTips;
     /**
-     * The lines of the PTMs concerned by the search.
+     * The lines of the Modifications concerned by the search.
      */
     private ArrayList<Integer> searchPossibilities = new ArrayList<>();
     /**
@@ -138,34 +139,32 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModificationsTable.getColumn("CV").setMaxWidth(100);
         userModificationsTable.getColumn("CV").setMinWidth(100);
 
-        // set up the ptm type color map
-        HashMap<Integer, Color> ptmTypeColorMap = new HashMap<>();
-        ptmTypeColorMap.put(Modification.MODMAX, Color.lightGray);
-        ptmTypeColorMap.put(Modification.MODAA, sparklineColor);
-        ptmTypeColorMap.put(Modification.MODC, Color.CYAN);
-        ptmTypeColorMap.put(Modification.MODCAA, Color.MAGENTA);
-        ptmTypeColorMap.put(Modification.MODCP, Color.RED);
-        ptmTypeColorMap.put(Modification.MODCPAA, Color.ORANGE);
-        ptmTypeColorMap.put(Modification.MODN, Color.YELLOW);
-        ptmTypeColorMap.put(Modification.MODNAA, Color.PINK);
-        ptmTypeColorMap.put(Modification.MODNP, Color.BLUE);
-        ptmTypeColorMap.put(Modification.MODNPAA, Color.GRAY);
+        // set up the modification type color map
+        HashMap<Integer, Color> modificationTypeColorMap = new HashMap<>();
+        modificationTypeColorMap.put(ModificationType.modaa.index, sparklineColor);
+        modificationTypeColorMap.put(ModificationType.modc_protein.index, Color.CYAN);
+        modificationTypeColorMap.put(ModificationType.modcaa_protein.index, Color.MAGENTA);
+        modificationTypeColorMap.put(ModificationType.modc_peptide.index, Color.RED);
+        modificationTypeColorMap.put(ModificationType.modcaa_peptide.index, Color.ORANGE);
+        modificationTypeColorMap.put(ModificationType.modn_protein.index, Color.YELLOW);
+        modificationTypeColorMap.put(ModificationType.modnaa_protein.index, Color.PINK);
+        modificationTypeColorMap.put(ModificationType.modn_peptide.index, Color.BLUE);
+        modificationTypeColorMap.put(ModificationType.modnaa_protein.index, Color.GRAY);
 
-        // set up the ptm type tooltip map
-        HashMap<Integer, String> ptmTypeTooltipMap = new HashMap<>();
-        ptmTypeTooltipMap.put(Modification.MODMAX, "max number of modification types");
-        ptmTypeTooltipMap.put(Modification.MODAA, "Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(Modification.MODC, "Protein C-term");
-        ptmTypeTooltipMap.put(Modification.MODCAA, "Protein C-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(Modification.MODCP, "Peptide C-term");
-        ptmTypeTooltipMap.put(Modification.MODCPAA, "Peptide C-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(Modification.MODN, "Protein N-term");
-        ptmTypeTooltipMap.put(Modification.MODNAA, "Protein N-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(Modification.MODNP, "Peptide N-term");
-        ptmTypeTooltipMap.put(Modification.MODNPAA, "Peptide N-term - Particular Amino Acid(s)");
+        // set up the modification type tooltip map
+        HashMap<Integer, String> modificationTypeTooltipMap = new HashMap<>();
+        modificationTypeTooltipMap.put(ModificationType.modaa.index, "Particular Amino Acid(s)");
+        modificationTypeTooltipMap.put(ModificationType.modc_protein.index, "Protein C-term");
+        modificationTypeTooltipMap.put(ModificationType.modcaa_protein.index, "Protein C-term - Particular Amino Acid(s)");
+        modificationTypeTooltipMap.put(ModificationType.modc_peptide.index, "Peptide C-term");
+        modificationTypeTooltipMap.put(ModificationType.modcaa_peptide.index, "Peptide C-term - Particular Amino Acid(s)");
+        modificationTypeTooltipMap.put(ModificationType.modn_protein.index, "Protein N-term");
+        modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Protein N-term - Particular Amino Acid(s)");
+        modificationTypeTooltipMap.put(ModificationType.modn_peptide.index, "Peptide N-term");
+        modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Peptide N-term - Particular Amino Acid(s)");
 
-        defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, ptmTypeColorMap, ptmTypeTooltipMap));
-        userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, ptmTypeColorMap, ptmTypeTooltipMap));
+        defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
+        userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
 
         defaultModificationsTable.getColumn("CV").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
         userModificationsTable.getColumn("CV").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
@@ -271,8 +270,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 };
             }
         };
-        deleteUserPTM = new javax.swing.JButton();
-        editUserPTM = new javax.swing.JButton();
+        deleteUserModification = new javax.swing.JButton();
+        editUserModification = new javax.swing.JButton();
         addUserPTM = new javax.swing.JButton();
         exportUserModsLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
@@ -315,7 +314,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Modifications"));
         defaultModsPanel.setOpaque(false);
 
-        defaultModificationsTable.setModel(new DefaultPTMTable());
+        defaultModificationsTable.setModel(new DefaultModificationTable());
         defaultModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         defaultModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
@@ -454,7 +453,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("User Modifications"));
         userModsPanel.setOpaque(false);
 
-        userModificationsTable.setModel(new UserPTMTable());
+        userModificationsTable.setModel(new UserModificationTable());
         userModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         userModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
@@ -474,21 +473,21 @@ public class ModificationsDialog extends javax.swing.JDialog {
         });
         userModsScrollPane.setViewportView(userModificationsTable);
 
-        deleteUserPTM.setText("Delete");
-        deleteUserPTM.setToolTipText("Delete a user defined modification");
-        deleteUserPTM.setEnabled(false);
-        deleteUserPTM.addActionListener(new java.awt.event.ActionListener() {
+        deleteUserModification.setText("Delete");
+        deleteUserModification.setToolTipText("Delete a user defined modification");
+        deleteUserModification.setEnabled(false);
+        deleteUserModification.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteUserPTMActionPerformed(evt);
+                deleteUserModificationActionPerformed(evt);
             }
         });
 
-        editUserPTM.setText("Edit");
-        editUserPTM.setToolTipText("Edit a user defined modification");
-        editUserPTM.setEnabled(false);
-        editUserPTM.addActionListener(new java.awt.event.ActionListener() {
+        editUserModification.setText("Edit");
+        editUserModification.setToolTipText("Edit a user defined modification");
+        editUserModification.setEnabled(false);
+        editUserModification.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editUserPTMActionPerformed(evt);
+                editUserModificationActionPerformed(evt);
             }
         });
 
@@ -528,9 +527,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editUserModification, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(deleteUserModification, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         userModsPanelLayout.setVerticalGroup(
@@ -540,8 +539,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteUserModification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editUserModification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -633,9 +632,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
             defaultModificationsTable.setRowSelectionInterval(defaultModificationsTable.rowAtPoint(evt.getPoint()), defaultModificationsTable.rowAtPoint(evt.getPoint()));
             defaultPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
-            String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
-            Modification ptm = ptmFactory.getModification(ptmName);
-            new PtmDialog(this, ptm, false);
+            String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            new PtmDialog(this, modification, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
 
@@ -722,7 +721,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_searchNextButtonMouseExited
 
     /**
-     * Find the next matching PTM.
+     * Find the next matching Modification.
      *
      * @param evt
      */
@@ -754,7 +753,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_searchPreviousButtonMouseExited
 
     /**
-     * Find the previous matching PTM.
+     * Find the previous matching Modification.
      *
      * @param evt
      */
@@ -768,7 +767,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_searchPreviousButtonActionPerformed
 
     /**
-     * Start the PTM search.
+     * Start the Modification search.
      *
      * @param evt
      */
@@ -779,7 +778,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_searchInputTxtMouseReleased
 
     /**
-     * Start the PTM search.
+     * Start the Modification search.
      *
      * @param evt
      */
@@ -795,18 +794,18 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT & searchPreviousButton.isEnabled()) {
             searchPreviousButtonActionPerformed(null);
         } else {
-            String ptmName, mass;
+            String modificationName, mass;
             ArrayList<Integer> toAdd = new ArrayList<>();
             searchPossibilities.clear();
             searchCurrentSelection = 0;
             String input = searchInputTxt.getText().trim().toLowerCase();
             if (!input.equals("")) {
-                for (int row = 0; row < ptmFactory.getDefaultModifications().size(); row++) {
-                    ptmName = ptmFactory.getDefaultModifications().get(row).toLowerCase();
-                    mass = ptmFactory.getModification(ptmName).getMass() + "";
+                for (int row = 0; row < modificationFactory.getDefaultModifications().size(); row++) {
+                    modificationName = modificationFactory.getDefaultModifications().get(row).toLowerCase();
+                    mass = modificationFactory.getModification(modificationName).getMass() + "";
                     if (mass.startsWith(input)) {
                         searchPossibilities.add(row);
-                    } else if (ptmName.contains(input)) {
+                    } else if (modificationName.contains(input)) {
                         toAdd.add(row);
                     }
                 }
@@ -839,14 +838,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void userModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON3) {
             userModificationsTable.setRowSelectionInterval(userModificationsTable.rowAtPoint(evt.getPoint()), userModificationsTable.rowAtPoint(evt.getPoint()));
-            editUserPTM.setEnabled(true);
-            deleteUserPTM.setEnabled(true);
+            editUserModification.setEnabled(true);
+            deleteUserModification.setEnabled(true);
             userPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
-            String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
-            Modification ptm = ptmFactory.getModification(ptmName);
-            PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
-            if (!ptmDialog.isCanceled()) {
+            String modificationName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+            if (!modificationDialog.isCanceled()) {
                 updateModifications();
             }
         }
@@ -867,8 +866,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void userModificationsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseReleased
-        editUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
-        deleteUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
+        editUserModification.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
+        deleteUserModification.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
 
         int row = userModificationsTable.rowAtPoint(evt.getPoint());
         int column = userModificationsTable.columnAtPoint(evt.getPoint());
@@ -919,46 +918,46 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_userModificationsTableMouseMoved
 
     /**
-     * Delete the given user PTM.
+     * Delete the given user Modification.
      *
      * @param evt
      */
-    private void deleteUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserPTMActionPerformed
+    private void deleteUserModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserModificationActionPerformed
         int row = userModificationsTable.getSelectedRow();
-        String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
+        String modificationName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
 
-        int value = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \'" + ptmName + "\'?", "Delete Modification?", JOptionPane.YES_NO_OPTION);
+        int value = JOptionPane.showConfirmDialog(this, "Are you sure that you want to delete \'" + modificationName + "\'?", "Delete Modification?", JOptionPane.YES_NO_OPTION);
 
         if (value == JOptionPane.YES_OPTION) {
-            ptmFactory.removeUserPtm(ptmName);
+            modificationFactory.removeUserPtm(modificationName);
             updateModifications();
         }
-    }//GEN-LAST:event_deleteUserPTMActionPerformed
+    }//GEN-LAST:event_deleteUserModificationActionPerformed
 
     /**
-     * Edit user PTM.
+     * Edit user Modification.
      *
      * @param evt
      */
-    private void editUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPTMActionPerformed
+    private void editUserModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserModificationActionPerformed
         int row = userModificationsTable.getSelectedRow();
-        String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
-        Modification ptm = ptmFactory.getModification(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
-        if (!ptmDialog.isCanceled()) {
+        String modificationName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
+        Modification modification = modificationFactory.getModification(modificationName);
+        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
-    }//GEN-LAST:event_editUserPTMActionPerformed
+    }//GEN-LAST:event_editUserModificationActionPerformed
 
     /**
-     * Add user PTM.
+     * Add user Modification.
      *
      * @param evt
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
-        if (ptmFactory.getUserModifications().size() < 30) {
-            PtmDialog ptmDialog = new PtmDialog(this, null, true);
-            if (!ptmDialog.isCanceled()) {
+        if (modificationFactory.getUserModifications().size() < 30) {
+            PtmDialog modificationDialog = new PtmDialog(this, null, true);
+            if (!modificationDialog.isCanceled()) {
                 updateModifications();
             }
         } else {
@@ -1000,35 +999,35 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_modificationsHelpJButtonActionPerformed
 
     /**
-     * Edit a default PTM.
+     * Edit a default Modification.
      *
      * @param evt
      */
     private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
-        String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
-        Modification ptm = ptmFactory.getModification(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
-        if (!ptmDialog.isCanceled()) {
+        String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
+        Modification modification = modificationFactory.getModification(modificationName);
+        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
     }//GEN-LAST:event_viewDefaultPtmJMenuItemActionPerformed
 
     /**
-     * Edit user PTM.
+     * Edit user Modification.
      *
      * @param evt
      */
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
-        String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
-        Modification ptm = ptmFactory.getModification(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
-        if (!ptmDialog.isCanceled()) {
+        String modificationName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
+        Modification modification = modificationFactory.getModification(modificationName);
+        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
     }//GEN-LAST:event_editUserPtmJMenuItemActionPerformed
 
     /**
-     * Save the PTM details.
+     * Save the Modification details.
      *
      * @param evt
      */
@@ -1036,7 +1035,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         // save any changes to the factory
         try {
-            ptmFactory.saveFactory();
+            modificationFactory.saveFactory();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
                     "Saving Error", JOptionPane.WARNING_MESSAGE);
@@ -1046,7 +1045,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     /**
-     * Close the dialog and updated the PTMs in the dialog parent.
+     * Close the dialog and updated the Modifications in the dialog parent.
      *
      * @param evt
      */
@@ -1143,8 +1142,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel defaultModsPanel;
     private javax.swing.JScrollPane defaultModsScrollPane;
     private javax.swing.JPopupMenu defaultPtmPopupMenu;
-    private javax.swing.JButton deleteUserPTM;
-    private javax.swing.JButton editUserPTM;
+    private javax.swing.JButton deleteUserModification;
+    private javax.swing.JButton editUserModification;
     private javax.swing.JMenuItem editUserPtmJMenuItem;
     private javax.swing.JLabel exportDefaultModsLabel;
     private javax.swing.JLabel exportUserModsLabel;
@@ -1165,13 +1164,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Table model for the default PTM table.
+     * Table model for the default Modification table.
      */
-    private class DefaultPTMTable extends DefaultTableModel {
+    private class DefaultModificationTable extends DefaultTableModel {
 
         @Override
         public int getRowCount() {
-            return ptmFactory.getDefaultModifications().size();
+            return modificationFactory.getDefaultModifications().size();
         }
 
         @Override
@@ -1203,21 +1202,21 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public Object getValueAt(int row, int column) {
-            String name = ptmFactory.getDefaultModificationsOrdered().get(row);
+            String name = modificationFactory.getDefaultModificationsOrdered().get(row);
             switch (column) {
                 case 0:
                     return row + 1;
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getModification(name).getShortName();
+                    return modificationFactory.getModification(name).getShortName();
                 case 3:
-                    return ptmFactory.getModification(name).getMass();
+                    return modificationFactory.getModification(name).getMass();
                 case 4:
-                    return ptmFactory.getModification(name).getModificationType();
+                    return modificationFactory.getModification(name).getModificationType();
                 case 5:
                     String residues = "";
-                    AminoAcidPattern aminoAcidPattern = ptmFactory.getModification(name).getPattern();
+                    AminoAcidPattern aminoAcidPattern = modificationFactory.getModification(name).getPattern();
                     if (aminoAcidPattern != null) {
                         for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
                             if (!residues.equals("")) {
@@ -1228,7 +1227,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = ptmFactory.getModification(name).getCvTerm();
+                    CvTerm cvTerm = modificationFactory.getModification(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());
@@ -1260,13 +1259,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Table model for the default PTM table.
+     * Table model for the default Modification table.
      */
-    private class UserPTMTable extends DefaultTableModel {
+    private class UserModificationTable extends DefaultTableModel {
 
         @Override
         public int getRowCount() {
-            return ptmFactory.getUserModifications().size();
+            return modificationFactory.getUserModifications().size();
         }
 
         @Override
@@ -1298,21 +1297,21 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public Object getValueAt(int row, int column) {
-            String name = ptmFactory.getUserModificationsOrdered().get(row);
+            String name = modificationFactory.getUserModificationsOrdered().get(row);
             switch (column) {
                 case 0:
                     return row + 1;
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getModification(name).getShortName();
+                    return modificationFactory.getModification(name).getShortName();
                 case 3:
-                    return ptmFactory.getModification(name).getMass();
+                    return modificationFactory.getModification(name).getMass();
                 case 4:
-                    return ptmFactory.getModification(name).getModificationType();
+                    return modificationFactory.getModification(name).getModificationType();
                 case 5:
                     String residues = "";
-                    AminoAcidPattern aminoAcidPattern = ptmFactory.getModification(name).getPattern();
+                    AminoAcidPattern aminoAcidPattern = modificationFactory.getModification(name).getPattern();
                     if (aminoAcidPattern != null) {
                         for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
                             if (!residues.equals("")) {
@@ -1323,7 +1322,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = ptmFactory.getModification(name).getCvTerm();
+                    CvTerm cvTerm = modificationFactory.getModification(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());
@@ -1391,8 +1390,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
         dm.fireTableDataChanged();
         dm = (DefaultTableModel) userModificationsTable.getModel();
         dm.fireTableDataChanged();
-        editUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
-        deleteUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
+        editUserModification.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
+        deleteUserModification.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
         updateMassSparklines();
 
         ((TitledBorder) userModsPanel.getBorder()).setTitle("User Modifications (" + userModificationsTable.getRowCount() + ")");
@@ -1401,7 +1400,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the PTM selection in the default table.
+     * Updates the Modification selection in the default table.
      */
     public void updatePtmSelection() {
         int row = defaultModificationsTable.convertRowIndexToView(searchPossibilities.get(searchCurrentSelection));

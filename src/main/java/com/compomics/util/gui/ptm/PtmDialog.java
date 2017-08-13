@@ -1,4 +1,4 @@
-package com.compomics.util.gui.ptm;
+package com.compomics.util.gui.modification;
 
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
@@ -6,6 +6,7 @@ import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.*;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.gui.AminoAcidPatternDialog;
 import com.compomics.util.gui.atoms.AtomChainDialog;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -25,7 +26,7 @@ import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 
 /**
- * This dialog allows the user to create/edit PTMs.
+ * This dialog allows the user to create/edit Modifications.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -35,9 +36,9 @@ public class PtmDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
-     * The edited PTM.
+     * The edited Modification.
      */
     private Modification currentPtm = null;
     /**
@@ -49,7 +50,7 @@ public class PtmDialog extends javax.swing.JDialog {
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<>();
     /**
-     * Boolean indicating whether the user can edit the PTM or not.
+     * Boolean indicating whether the user can edit the Modification or not.
      */
     private boolean editable;
     /**
@@ -78,21 +79,21 @@ public class PtmDialog extends javax.swing.JDialog {
     private boolean canceled = false;
 
     /**
-     * Creates a new PTM dialog.
+     * Creates a new Modification dialog.
      *
      * @param parent the JDialog parent
-     * @param currentPTM the PTM to edit (can be null)
-     * @param editable boolean indicating whether the user can edit the PTM
+     * @param currentModification the Modification to edit (can be null)
+     * @param editable boolean indicating whether the user can edit the Modification
      * details
      */
-    public PtmDialog(JDialog parent, Modification currentPTM, boolean editable) {
+    public PtmDialog(JDialog parent, Modification currentModification, boolean editable) {
         super(parent, true);
 
-        this.currentPtm = currentPTM;
-        if (currentPTM != null) {
+        this.currentPtm = currentModification;
+        if (currentModification != null) {
             this.pattern = currentPtm.getPattern();
-            this.atomChainAdded = currentPTM.getAtomChainAdded();
-            this.atomChainRemoved = currentPTM.getAtomChainRemoved();
+            this.atomChainAdded = currentModification.getAtomChainAdded();
+            this.atomChainRemoved = currentModification.getAtomChainRemoved();
         } else {
             pattern = null;
             this.atomChainAdded = new AtomChain();
@@ -107,23 +108,23 @@ public class PtmDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Creates a new PTM dialog.
+     * Creates a new Modification dialog.
      *
      * @param parent the JFrame parent
-     * @param ptmToPrideMap the PTM to PRIDE map
-     * @param currentPTM the PTM to edit (can be null)
-     * @param editable boolean indicating whether the user can edit the PTM
+     * @param modificationToPrideMap the Modification to PRIDE map
+     * @param currentModification the Modification to edit (can be null)
+     * @param editable boolean indicating whether the user can edit the Modification
      * details
      */
-    public PtmDialog(JFrame parent, PtmToPrideMap ptmToPrideMap, Modification currentPTM, boolean editable) {
+    public PtmDialog(JFrame parent, PtmToPrideMap modificationToPrideMap, Modification currentModification, boolean editable) {
         super(parent, true);
 
-        this.currentPtm = currentPTM;
+        this.currentPtm = currentModification;
         this.editable = editable;
-        if (currentPTM != null) {
+        if (currentModification != null) {
             this.pattern = currentPtm.getPattern();
-            this.atomChainAdded = currentPTM.getAtomChainAdded();
-            this.atomChainRemoved = currentPTM.getAtomChainRemoved();
+            this.atomChainAdded = currentModification.getAtomChainAdded();
+            this.atomChainRemoved = currentModification.getAtomChainRemoved();
         } else {
             pattern = null;
             this.atomChainAdded = new AtomChain();
@@ -203,7 +204,7 @@ public class PtmDialog extends javax.swing.JDialog {
         unimodNameJTextField.setEditable(editable);
 
         if (currentPtm != null) {
-            typeCmb.setSelectedIndex(currentPtm.getModificationType());
+            typeCmb.setSelectedIndex(currentPtm.getModificationType().index);
             nameTxt.setText(currentPtm.getName());
             nameShortTxt.setText(currentPtm.getShortName());
 
@@ -241,7 +242,7 @@ public class PtmDialog extends javax.swing.JDialog {
                 updateModMappingText(cvTerm);
             }
 
-            // special case for the default ptms without cv terms
+            // special case for the default modifications without cv terms
             if (cvTerm == null) {
                 unimodAccessionJTextField.setEditable(true);
                 unimodNameJTextField.setEditable(true);
@@ -283,10 +284,10 @@ public class PtmDialog extends javax.swing.JDialog {
 
     /**
      * Returns a boolean indicating whether the input can be translated into a
-     * PTM.
+     * Modification.
      *
      * @return a boolean indicating whether the input can be translated into a
-     * PTM
+     * Modification
      */
     private boolean validateInput(boolean showMessage) {
 
@@ -429,7 +430,7 @@ public class PtmDialog extends javax.swing.JDialog {
 
         // check that the modification name does not already exist as a default modification
         name = nameTxt.getText().trim();
-        if (ptmFactory.getDefaultModifications().contains(name)
+        if (modificationFactory.getDefaultModifications().contains(name)
                 && (currentPtm == null || !name.equals(currentPtm.getName()))) {
             if (showMessage && !error) {
                 JOptionPane.showMessageDialog(this, "A modification named \'" + name + "\' already exists in the "
@@ -451,7 +452,7 @@ public class PtmDialog extends javax.swing.JDialog {
         }
 
         // check that the modification does not already exist as a user defined modification
-        if (ptmFactory.getUserModifications().contains(name)
+        if (modificationFactory.getUserModifications().contains(name)
                 && (currentPtm == null || !name.equals(currentPtm.getName()))) {
             if (showMessage && !error) {
                 JOptionPane.showMessageDialog(this, "There is already a modification named \'" + name + "\'!",
@@ -1048,7 +1049,7 @@ public class PtmDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
-     * Add the PTM to the PtmDialogParent.
+     * Add the Modification to the PtmDialogParent.
      *
      * @param evt
      */
@@ -1091,18 +1092,19 @@ public class PtmDialog extends javax.swing.JDialog {
                     cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
                 }
 
-                Modification newPTM = new Modification(typeCmb.getSelectedIndex(),
+                ModificationType modificationType = ModificationType.values()[typeCmb.getSelectedIndex()];
+                Modification newModification = new Modification(modificationType,
                         nameTxt.getText().trim(),
                         nameShortTxt.getText().trim().toLowerCase(),
                         atomChainAdded, atomChainRemoved, pattern, cvTerm);
-                newPTM.setNeutralLosses(neutralLosses);
-                newPTM.setReporterIons(reporterIons);
+                newModification.setNeutralLosses(neutralLosses);
+                newModification.setReporterIons(reporterIons);
 
-                for (String ptm : ptmFactory.getPTMs()) {
-                    if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
-                        Modification otherPTM = ptmFactory.getModification(ptm);
-                        if (newPTM.isSameAs(otherPTM)) {
-                            int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + ptm
+                for (String modification : modificationFactory.getModifications()) {
+                    if (currentPtm == null || !modification.equals(currentPtm.getName())) {
+                        Modification otherModification = modificationFactory.getModification(modification);
+                        if (newModification.isSameAs(otherModification)) {
+                            int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + modification
                                     + "\' presents characteristics similar to your input.\n"
                                     + "Are you sure you want to create this new modification?",
                                     "Modification Already Exists", JOptionPane.YES_NO_OPTION);
@@ -1113,7 +1115,7 @@ public class PtmDialog extends javax.swing.JDialog {
                     }
                 }
 
-                ptmFactory.addUserPTM(newPTM); // note: "editable" is here used to decide if it's a user ptm
+                modificationFactory.addUserModification(newModification); // note: "editable" is here used to decide if it's a user modification
             }
 
             saveChanges();
@@ -1173,7 +1175,7 @@ public class PtmDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_helpJButtonActionPerformed
 
     /**
-     * Add a new PTM dependent neutral losses.
+     * Add a new Modification dependent neutral losses.
      *
      * @param evt
      */
@@ -1183,7 +1185,7 @@ public class PtmDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_addNeutralLossActionPerformed
 
     /**
-     * Add a new PTM dependent reporter ion.
+     * Add a new Modification dependent reporter ion.
      *
      * @param evt
      */
@@ -1448,11 +1450,11 @@ public class PtmDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Saves the changes of the PTM factory.
+     * Saves the changes of the Modification factory.
      */
     private void saveChanges() {
         try {
-            ptmFactory.saveFactory();
+            modificationFactory.saveFactory();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.", "Saving Error", JOptionPane.WARNING_MESSAGE);
         }

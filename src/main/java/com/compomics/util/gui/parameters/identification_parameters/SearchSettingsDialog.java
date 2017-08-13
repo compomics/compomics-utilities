@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
@@ -17,7 +18,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
-import com.compomics.util.gui.ptm.ModificationsDialog;
+import com.compomics.util.gui.modification.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.DigestionPreferences;
@@ -72,7 +73,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /*
      * The search parameters.
      */
@@ -103,7 +104,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     private int keyPressedCounter = 0;
     /**
-     * The current PTM search string.
+     * The current Modification search string.
      */
     private String currentPtmSearchString = "";
     /**
@@ -237,12 +238,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             this.searchParameters = searchParameters;
         }
 
-        // load project specific PTMs
+        // load project specific Modifications
         String error = loadModifications(this.searchParameters);
         if (error != null) {
             JOptionPane.showMessageDialog(this,
                     error,
-                    "PTM Definition Changed", JOptionPane.WARNING_MESSAGE);
+                    "Modification Definition Changed", JOptionPane.WARNING_MESSAGE);
         }
 
         try {
@@ -1203,7 +1204,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getModification(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
         }
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
@@ -1241,7 +1242,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getModification(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
         }
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
@@ -1288,7 +1289,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, ptmFactory.getModification(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
         }
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
@@ -1332,7 +1333,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, ptmFactory.getModification(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
         }
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
@@ -1410,9 +1411,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         int column = fixedModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            String ptmName = (String) fixedModsTable.getValueAt(row, fixedModsTable.getColumn("Name").getModelIndex());
-            Modification ptm = ptmFactory.getModification(ptmName);
-            fixedModsTable.setToolTipText(ptm.getHtmlTooltip());
+            String modificationName = (String) fixedModsTable.getValueAt(row, fixedModsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            fixedModsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == fixedModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1425,7 +1426,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_fixedModsTableMouseMoved
 
     /**
-     * Opens a file chooser where the color for the PTM can be changed.
+     * Opens a file chooser where the color for the Modification can be changed.
      *
      * @param evt
      */
@@ -1468,9 +1469,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         int column = modificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            String ptmName = (String) modificationsTable.getValueAt(row, modificationsTable.getColumn("Name").getModelIndex());
-            Modification ptm = ptmFactory.getModification(ptmName);
-            modificationsTable.setToolTipText(ptm.getHtmlTooltip());
+            String modificationName = (String) modificationsTable.getValueAt(row, modificationsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            modificationsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1483,8 +1484,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_modificationsTableMouseMoved
 
     /**
-     * Opens a color chooser where the color for the PTM can be changed, or
-     * allows the users to change of a PTM is in the most used PTMs list.
+     * Opens a color chooser where the color for the Modification can be changed, or
+     * allows the users to change of a Modification is in the most used Modifications list.
      *
      * @param evt
      */
@@ -1497,7 +1498,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) modificationsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    ptmFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
+                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
                     modificationsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
@@ -1507,20 +1508,20 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
-                String ptmName = (String) modificationsTable.getValueAt(row, 1);
+                String modificationName = (String) modificationsTable.getValueAt(row, 1);
 
-                // change if the ptm is considered as default
+                // change if the modification is considered as default
                 if (modificationsListCombo.getSelectedIndex() == 0) {
-                    // remove from default ptm set
-                    modificationUse.remove(ptmName);
+                    // remove from default modification set
+                    modificationUse.remove(modificationName);
                 } else if (selected) {
-                    // add to default ptm set
-                    if (!modificationUse.contains(ptmName)) {
-                        modificationUse.add(ptmName);
+                    // add to default modification set
+                    if (!modificationUse.contains(modificationName)) {
+                        modificationUse.add(modificationName);
                     }
                 } else {
-                    // remove from default ptm set
-                    modificationUse.remove(ptmName);
+                    // remove from default modification set
+                    modificationUse.remove(modificationName);
                 }
 
                 Point viewPosition = modificationsJScrollPane.getViewport().getViewPosition();
@@ -1560,9 +1561,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         int column = variableModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            String ptmName = (String) variableModsTable.getValueAt(row, variableModsTable.getColumn("Name").getModelIndex());
-            Modification ptm = ptmFactory.getModification(ptmName);
-            variableModsTable.setToolTipText(ptm.getHtmlTooltip());
+            String modificationName = (String) variableModsTable.getValueAt(row, variableModsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            variableModsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == variableModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1575,7 +1576,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_variableModsTableMouseMoved
 
     /**
-     * Opens a file chooser where the color for the PTM can be changed.
+     * Opens a file chooser where the color for the Modification can be changed.
      *
      * @param evt
      */
@@ -1660,7 +1661,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_openDialogHelpJButton1MouseExited
 
     /**
-     * Jump to the row with the PTM starting with the typed letters.
+     * Jump to the row with the Modification starting with the typed letters.
      *
      * @param evt
      */
@@ -1687,7 +1688,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                         // see if the gui is to be updated or not
                         if (keyPressedCounter == 1) {
 
-                            // search in the ptm table
+                            // search in the modification table
                             for (int i = 0; i < modificationsTable.getRowCount(); i++) {
 
                                 String currentPtmName = ((String) modificationsTable.getValueAt(i, modificationsTable.getColumn("Name").getModelIndex())).toLowerCase();
@@ -1929,9 +1930,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         if (modificationProfile != null) {
             ArrayList<String> fixedMods = modificationProfile.getFixedModifications();
 
-            for (String ptmName : fixedMods) {
-                if (!ptmFactory.containsPTM(ptmName)) {
-                    missingPtms.add(ptmName);
+            for (String modificationName : fixedMods) {
+                if (!modificationFactory.containsModification(modificationName)) {
+                    missingPtms.add(modificationName);
                 }
             }
 
@@ -1947,13 +1948,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
-                    for (String ptm : missingPtms) {
+                    for (String modification : missingPtms) {
                         if (first) {
                             first = false;
                         } else {
                             output += ", ";
                         }
-                        output += ptm;
+                        output += modification;
                     }
 
                     output += ".\nPlease import them in the Modification Editor.";
@@ -1965,7 +1966,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             fixedModel.getDataVector().removeAllElements();
 
             for (String fixedMod : fixedMods) {
-                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getModification(fixedMod).getMass()});
+                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
             }
             ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
             fixedModsTable.repaint();
@@ -1973,9 +1974,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
             ArrayList<String> variableMods = modificationProfile.getVariableModifications();
 
-            for (String ptmName : variableMods) {
-                if (!ptmFactory.containsPTM(ptmName)) {
-                    missingPtms.add(ptmName);
+            for (String modificationName : variableMods) {
+                if (!modificationFactory.containsModification(modificationName)) {
+                    missingPtms.add(modificationName);
                 }
             }
 
@@ -1991,13 +1992,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
-                    for (String ptm : missingPtms) {
+                    for (String modification : missingPtms) {
                         if (first) {
                             first = false;
                         } else {
                             output += ", ";
                         }
-                        output += ptm;
+                        output += modification;
                     }
 
                     output += ".\nPlease import them in the Modification Editor.";
@@ -2007,7 +2008,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             DefaultTableModel variableModel = (DefaultTableModel) variableModsTable.getModel();
             variableModel.getDataVector().removeAllElements();
             for (String variableMod : variableMods) {
-                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variableMod), variableMod, ptmFactory.getModification(variableMod).getMass()});
+                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variableMod), variableMod, modificationFactory.getModification(variableMod).getMass()});
             }
             ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
             variableModsTable.repaint();
@@ -2308,52 +2309,56 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         // save the digestion settings
         tempSearchParameters.setDigestionPreferences(digestionPreferences);
 
-        double fragmentAccuracy = new Double(fragmentIonAccuracyTxt.getText().trim());
-
-        boolean acetylConflict = false;
-        boolean pyroConflict = false;
-        PtmSettings modificationProfile = new PtmSettings();
-        for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
-            String modName = (String) fixedModsTable.getValueAt(i, 1);
-            Modification ptm = ptmFactory.getModification(modName);
-            modificationProfile.addFixedModification(ptm);
-            modificationProfile.addRefinementFixedModification(ptm);
-            modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
-            if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA) && Math.abs(ptm.getMass() - 42.010565) < fragmentAccuracy) {
-                acetylConflict = true;
-            }
-            if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA) && Math.abs(ptm.getMass() + 17.026549) < fragmentAccuracy) {
-                pyroConflict = true;
-            }
-        }
-
-        for (int i = 0; i < variableModsTable.getRowCount(); i++) {
-            String modName = (String) variableModsTable.getValueAt(i, 1);
-            modificationProfile.addVariableModification(ptmFactory.getModification(modName));
-            modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
-        }
-
-        // re-add the variable refinement modifications
-        ArrayList<String> variableRefinemetModifications = tempSearchParameters.getPtmSettings().getRefinementVariableModifications();
-        for (String varRefinementMod : variableRefinemetModifications) {
-            Modification ptm = ptmFactory.getModification(varRefinementMod);
-            modificationProfile.addRefinementVariableModification(ptm);
-        }
-
-        tempSearchParameters.setPtmSettings(modificationProfile);
-
+// Precursor m/z tolerance
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
         } else {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
-        tempSearchParameters.setFragmentIonAccuracy(fragmentAccuracy);
+        
+        // Fragment m/z tolerance
+        tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
         if (fragmentIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
         } else {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
+
+        // Check for conflicts in the X!Tandem quick acetyl and pyrolidone options
+        double fragmentIonToleranceDa = tempSearchParameters.getFragmentIonAccuracyInDaltons(refMass);
+        boolean acetylConflict = false;
+        boolean pyroConflict = false;
+        PtmSettings modificationProfile = new PtmSettings();
+        for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
+            String modName = (String) fixedModsTable.getValueAt(i, 1);
+            Modification modification = modificationFactory.getModification(modName);
+            modificationProfile.addFixedModification(modification);
+            modificationProfile.addRefinementFixedModification(modification);
+            modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
+            if ((modification.getModificationType() == ModificationType.modn_peptide || modification.getModificationType() == ModificationType.modnaa_peptide || modification.getModificationType() == ModificationType.modn_protein || modification.getModificationType() == ModificationType.modnaa_protein) && Math.abs(modification.getMass() - 42.010565) < fragmentIonToleranceDa) {
+                acetylConflict = true;
+            }
+            if ((modification.getModificationType() == ModificationType.modn_peptide || modification.getModificationType() == ModificationType.modnaa_peptide || modification.getModificationType() == ModificationType.modn_protein || modification.getModificationType() == ModificationType.modnaa_protein) && Math.abs(modification.getMass() + 17.026549) < fragmentIonToleranceDa) {
+                pyroConflict = true;
+            }
+        }
+
+        for (int i = 0; i < variableModsTable.getRowCount(); i++) {
+            String modName = (String) variableModsTable.getValueAt(i, 1);
+            modificationProfile.addVariableModification(modificationFactory.getModification(modName));
+            modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
+        }
+
+        // re-add the variable refinement modifications
+        ArrayList<String> variableRefinemetModifications = tempSearchParameters.getPtmSettings().getRefinementVariableModifications();
+        for (String varRefinementMod : variableRefinemetModifications) {
+            Modification modification = modificationFactory.getModification(varRefinementMod);
+            modificationProfile.addRefinementVariableModification(modification);
+        }
+
+        tempSearchParameters.setPtmSettings(modificationProfile);
+        
         ArrayList<Integer> selectedForwardIons = new ArrayList<>(1);
         Integer ionType = PeptideFragmentIon.getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
         selectedForwardIons.add(ionType);
@@ -2476,7 +2481,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 }
             }
         } else {
-            allModificationsList = ptmFactory.getPTMs();
+            allModificationsList = modificationFactory.getModifications();
         }
 
         int nFixed = fixedModsTable.getRowCount();
@@ -2559,7 +2564,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         for (String mod : allModificationsAsArray) {
-            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{ptmFactory.getColor(mod), mod, ptmFactory.getModification(mod).getMass(), modificationUse.contains(mod)});
+            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{modificationFactory.getColor(mod), mod, modificationFactory.getModification(mod).getMass(), modificationUse.contains(mod)});
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();
@@ -2568,12 +2573,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         double maxMass = Double.MIN_VALUE;
         double minMass = Double.MAX_VALUE;
 
-        for (String ptm : ptmFactory.getPTMs()) {
-            if (ptmFactory.getModification(ptm).getMass() > maxMass) {
-                maxMass = ptmFactory.getModification(ptm).getMass();
+        for (String modification : modificationFactory.getModifications()) {
+            if (modificationFactory.getModification(modification).getMass() > maxMass) {
+                maxMass = modificationFactory.getModification(modification).getMass();
             }
-            if (ptmFactory.getModification(ptm).getMass() < minMass) {
-                minMass = ptmFactory.getModification(ptm).getMass();
+            if (modificationFactory.getModification(modification).getMass() < minMass) {
+                minMass = modificationFactory.getModification(modification).getMass();
             }
         }
 
@@ -2592,12 +2597,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             modificationsTable.requestFocus();
         }
 
-        // enable/disable the add/remove ptm buttons
+        // enable/disable the add/remove modification buttons
         enableAddRemoveButtons();
     }
 
     /**
-     * Enable/disable the add/remove PTM buttons.
+     * Enable/disable the add/remove Modification buttons.
      */
     private void enableAddRemoveButtons() {
         removeVariableModification.setEnabled(variableModsTable.getSelectedRow() != -1 && editable);
@@ -2637,7 +2642,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             for (String name : modificationUses) {
                 String modificationName = name;
 
-                if (ModificationFactory.getInstance().containsPTM(modificationName)) {
+                if (ModificationFactory.getInstance().containsModification(modificationName)) {
                     modificationUse.add(modificationName);
                 }
             }
@@ -2719,7 +2724,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         String error = null;
         ArrayList<String> toCheck = ModificationFactory.getInstance().loadBackedUpModifications(searchParameters, true);
         if (!toCheck.isEmpty()) {
-            error = "The definition of the following PTM(s) seems to have changed and were overwritten:\n";
+            error = "The definition of the following Modification(s) seems to have changed and were overwritten:\n";
             for (int i = 0; i < toCheck.size(); i++) {
                 if (i > 0) {
                     if (i < toCheck.size() - 1) {
@@ -2730,7 +2735,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 }
                 error += toCheck.get(i);
             }
-            error += ".\nPlease verify the definition of the PTM(s) in the modifications editor.";
+            error += ".\nPlease verify the definition of the Modification(s) in the modifications editor.";
         }
         return error;
     }

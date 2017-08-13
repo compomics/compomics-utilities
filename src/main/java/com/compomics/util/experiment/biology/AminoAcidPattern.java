@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * An amino acid pattern is a sequence of amino acids. For example for trypsin:
@@ -191,10 +192,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * not recognized as amino acid
      */
     public AminoAcidPattern(ArrayList<String> targetResidues) throws IllegalArgumentException {
-        ArrayList<Character> aminoAcids = new ArrayList<>(targetResidues.size());
-        for (String letter : targetResidues) {
-            aminoAcids.add(letter.charAt(0));
-        }
+        
+        ArrayList<Character> aminoAcids = targetResidues.stream()
+                .map(aa -> aa.charAt(0))
+                .collect(Collectors.toCollection(ArrayList::new));
         residueTargeted = new HashMap<>(1);
         residueTargeted.put(0, aminoAcids);
         length = 1;
@@ -205,9 +206,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @param fromRow from row
      * @param toRow to row
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
+    public void swapRows(int fromRow, int toRow) {
 
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
@@ -234,8 +234,29 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the index of the amino acid of interest in the pattern.
      */
-    public Integer getTarget() {
+    public int getTarget() {
+        
         return 0;
+    }
+    
+    /**
+     * Returns the minimal index where amino acids are found.
+     * 
+     * @return the minimal index where amino acids are found
+     */
+    public int getMinIndex() {
+        
+        return Math.min(residueTargeted.keySet().stream().mapToInt(index -> (int) index).min().orElse(0), 0);
+    }
+    
+    /**
+     * Returns the maximal index where amino acids are found.
+     * 
+     * @return the maximal index where amino acids are found
+     */
+    public int getMaxIndex() {
+        
+        return Math.max(residueTargeted.keySet().stream().mapToInt(index -> (int) index).max().orElse(0), 0);
     }
 
     /**
@@ -547,12 +568,17 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(String input, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        
         ArrayList<Integer> result = new ArrayList<>();
         int index = 0;
+        
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
+        
             result.add(index + 1);
             index++;
+            
         }
+        
         return result;
     }
 

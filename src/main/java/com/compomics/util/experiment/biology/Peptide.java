@@ -350,6 +350,37 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the 0 based end index of the peptide on the protein sequence.
+     *
+     * @param proteinAccession the protein accession
+     * @param peptideStart the peptide start index
+     *
+     * @return the 0 based end index of the peptide on the protein sequence
+     */
+    public int getPeptideEnd(String proteinAccession, int peptideStart) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        int peptideEnd = peptideStart + sequence.length();
+
+        HashMap<Integer, PeptideVariantMatches> proteinVariants = variantMatches.get(proteinAccession);
+
+        if (proteinVariants != null) {
+
+            PeptideVariantMatches peptideVariantMatches = proteinVariants.get(peptideStart);
+
+            if (peptideVariantMatches != null) {
+
+                peptideEnd += peptideVariantMatches.getLengthDiff();
+            }
+        }
+
+        return peptideEnd;
+    }
+
+    /**
      * Returns for the sequence.
      *
      * @return the peptide sequence
@@ -643,11 +674,196 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the potential modification sites as an ordered list of sites. No
+     * amino acid combination is tested. 1 is the first amino acid. An empty
+     * list is returned if no possibility was found. No peptide to protein
+     * mapping is done. The index on the protein must be provided with 0 as
+     * first amino acid.
+     *
+     * @param ptm the PTM considered
+     * @param proteinSequence the protein sequence
+     * @param peptideStart the index of the peptide start on the protein
+     *
+     * @return a list of potential modification sites
+     */
+    public ArrayList<Integer> getPotentialModificationSitesNoCombination(PTM ptm, String proteinSequence, int peptideStart) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        ArrayList<Integer> possibleSites = new ArrayList<>(1);
+
+        switch (ptm.getType()) {
+
+            case PTM.MODAA:
+
+                AminoAcidPattern aminoAcidPattern = ptm.getPattern();
+                HashSet<Character> targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
+
+                if (aminoAcidPattern.length() == 1) {
+
+                    for (int i = 0; i < sequence.length(); i++) {
+
+                        char aa = sequence.charAt(i);
+
+                        if (targetedAA.contains(aa)) {
+
+                            possibleSites.add(i + 1);
+
+                        }
+                    }
+
+                } else {
+
+                    for (int i = 0; i < sequence.length(); i++) {
+
+                        Character aa = sequence.charAt(i);
+
+                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideStart + i)) {
+
+                            possibleSites.add(i + 1);
+
+                        }
+                    }
+                }
+
+                return possibleSites;
+
+            case PTM.MODC:
+
+                int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+
+                if (peptideEnd == proteinSequence.length() - 1) {
+
+                    possibleSites.add(peptideEnd + 1);
+
+                }
+                return possibleSites;
+
+            case PTM.MODCP:
+
+                possibleSites.add(sequence.length());
+
+                return possibleSites;
+
+            case PTM.MODN:
+
+                if (peptideStart == 0) {
+
+                    possibleSites.add(1);
+
+                }
+                return possibleSites;
+
+            case PTM.MODNP:
+
+                possibleSites.add(1);
+
+                return possibleSites;
+
+            case PTM.MODCAA:
+
+                aminoAcidPattern = ptm.getPattern();
+                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
+                peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+
+                if (peptideEnd == proteinSequence.length() - 1) {
+
+                    Character aa = sequence.charAt(sequence.length() - 1);
+
+                    if (aminoAcidPattern.length() == 1) {
+                        if (targetedAA.contains(aa)) {
+
+                            possibleSites.add(sequence.length());
+
+                        }
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideEnd)) {
+
+                        possibleSites.add(sequence.length());
+
+                    }
+                }
+                return possibleSites;
+
+            case PTM.MODCPAA:
+
+                aminoAcidPattern = ptm.getPattern();
+                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
+                Character aa = sequence.charAt(sequence.length() - 1);
+
+                if (aminoAcidPattern.length() == 1) {
+                    if (targetedAA.contains(aa)) {
+
+                        possibleSites.add(sequence.length());
+
+                    }
+                } else {
+
+                    peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+
+                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideEnd)) {
+
+                        possibleSites.add(sequence.length());
+
+                    }
+                }
+                return possibleSites;
+
+            case PTM.MODNAA:
+
+                aminoAcidPattern = ptm.getPattern();
+                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
+
+                if (peptideStart == 0) {
+
+                    aa = sequence.charAt(0);
+                    if (aminoAcidPattern.length() == 1) {
+                        if (targetedAA.contains(aa)) {
+
+                            possibleSites.add(1);
+
+                        }
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+
+                        possibleSites.add(1);
+
+                    }
+                }
+                return possibleSites;
+
+            case PTM.MODNPAA:
+
+                aminoAcidPattern = ptm.getPattern();
+                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
+                aa = sequence.charAt(0);
+
+                if (aminoAcidPattern.length() == 1) {
+                    if (targetedAA.contains(aa)) {
+
+                        possibleSites.add(1);
+
+                    }
+                } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+
+                    possibleSites.add(1);
+
+                }
+                return possibleSites;
+                
+            default:
+                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
+        }
+    }
+
+    /**
      * Returns the potential modification sites as an ordered list of sites. 1
      * is the first amino acid. An empty list is returned if no modification
      * site was found.
      *
      * @param ptm the PTM considered
+     * @param proteinSequence the protein sequence
+     * @param peptideStart the index of the peptide start on the protein
      * @param sequenceMatchingPreferences the sequence matching preferences for
      * peptide to protein mapping
      * @param ptmSequenceMatchingPreferences the sequence matching preferences
@@ -655,7 +871,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return a list of potential modification sites
      */
-    public HashSet<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, String proteinSequence, int peptideStart, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -664,18 +880,23 @@ public class Peptide extends ExperimentObject {
         HashSet<Integer> possibleSites = new HashSet<>(1);
 
         switch (ptm.getType()) {
+            
             case PTM.MODAA:
+                
                 AminoAcidPattern pattern = ptm.getPattern();
                 int patternLength = pattern.length();
                 int target = pattern.getTarget();
+                
                 if (target >= 0 && patternLength - target <= 1) {
+                    
                     return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
+                    
                 } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    for (String accession : proteinMapping.keySet()) {
-                        Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : proteinMapping.get(accession)) {
-                            int beginIndex = index - target - 1;
+                    int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+                            int missingLeft = Math.min(pattern.getMinIndex(), peptideStart);
+                            int missingRight = Math.min(pattern.getMaxIndex(), proteinSequence.length() - peptideEnd);
+                            StringBuilder tempSequence = new StringBuilder(missingLeft + sequence.length() + missingRight);
+                            String complementLeft = 
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -686,8 +907,6 @@ public class Peptide extends ExperimentObject {
                                     }
                                 }
                             }
-                        }
-                    }
                 }
                 return possibleSites;
             case PTM.MODC:
@@ -764,155 +983,6 @@ public class Peptide extends ExperimentObject {
                                 }
                             }
                         }
-                    }
-                }
-                return possibleSites;
-            default:
-                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
-        }
-    }
-
-    /**
-     * Returns the potential modification sites as an ordered list of sites. No
-     * amino acid combination is tested. 1 is the first amino acid. An empty
-     * list is returned if no possibility was found. No peptide to protein
-     * mapping is done. The index on the protein must be provided with 0 as
-     * first amino acid.
-     *
-     * @param ptm the PTM considered
-     * @param proteinSequence the protein sequence
-     * @param peptideStart the index of the peptide start on the protein
-     * @param peptideEnd the index of the peptide end on the protein
-     *
-     * @return a list of potential modification sites
-     */
-    public ArrayList<Integer> getPotentialModificationSitesNoCombination(PTM ptm, String proteinSequence, int peptideStart, int peptideEnd) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        ArrayList<Integer> possibleSites = new ArrayList<>(1);
-
-        switch (ptm.getType()) {
-
-            case PTM.MODAA:
-
-                AminoAcidPattern aminoAcidPattern = ptm.getPattern();
-                HashSet<Character> targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-
-                if (aminoAcidPattern.length() == 1) {
-
-                    for (int i = 0; i < sequence.length(); i++) {
-
-                        char aa = sequence.charAt(i);
-
-                        if (targetedAA.contains(aa)) {
-
-                            possibleSites.add(i + 1);
-
-                        }
-                    }
-
-                } else {
-
-                    for (int i = 0; i < sequence.length(); i++) {
-
-                        Character aa = sequence.charAt(i);
-
-                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideStart + i)) {
-
-                            possibleSites.add(i + 1);
-
-                        }
-                    }
-                }
-
-                return possibleSites;
-
-            case PTM.MODC:
-
-                int peptideLength = sequence.length();
-
-                if (indexOnProtein + peptideLength == proteinSequence.length()) {
-
-                    possibleSites.add(peptideLength);
-
-                }
-                return possibleSites;
-
-            case PTM.MODCP:
-
-                possibleSites.add(sequence.length());
-
-                return possibleSites;
-
-            case PTM.MODN:
-                if (indexOnProtein == 0) {
-                    possibleSites.add(1);
-                }
-                return possibleSites;
-            case PTM.MODNP:
-                possibleSites.add(1);
-                return possibleSites;
-            case PTM.MODCAA:
-                aminoAcidPattern = ptm.getPattern();
-                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                peptideLength = sequence.length();
-                if (indexOnProtein + peptideLength == proteinSequence.length()) {
-                    Character aa = sequence.charAt(peptideLength - 1);
-                    if (aminoAcidPattern.length() == 1) {
-                        if (targetedAA.contains(aa)) {
-                            possibleSites.add(peptideLength);
-                        }
-                    } else {
-                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein + peptideLength)) {
-                            possibleSites.add(peptideLength);
-                        }
-                    }
-                }
-                return possibleSites;
-            case PTM.MODCPAA:
-                aminoAcidPattern = ptm.getPattern();
-                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                peptideLength = sequence.length();
-                Character aa = sequence.charAt(peptideLength - 1);
-                if (aminoAcidPattern.length() == 1) {
-                    if (targetedAA.contains(aa)) {
-                        possibleSites.add(peptideLength);
-                    }
-                } else {
-                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, indexOnProtein + peptideLength)) {
-                        possibleSites.add(peptideLength);
-                    }
-                }
-                return possibleSites;
-            case PTM.MODNAA:
-                aminoAcidPattern = ptm.getPattern();
-                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                if (indexOnProtein == 0) {
-                    aa = sequence.charAt(0);
-                    if (aminoAcidPattern.length() == 1) {
-                        if (targetedAA.contains(aa)) {
-                            possibleSites.add(1);
-                        }
-                    } else {
-                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
-                            possibleSites.add(1);
-                        }
-                    }
-                }
-                return possibleSites;
-            case PTM.MODNPAA:
-                aminoAcidPattern = ptm.getPattern();
-                targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
-                aa = sequence.charAt(0);
-                if (aminoAcidPattern.length() == 1) {
-                    if (targetedAA.contains(aa)) {
-                        possibleSites.add(1);
-                    }
-                } else {
-                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
-                        possibleSites.add(1);
                     }
                 }
                 return possibleSites;

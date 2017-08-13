@@ -569,7 +569,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public ArrayList<Integer> getIndexes(String input, SequenceMatchingPreferences sequenceMatchingPreferences) {
         
-        ArrayList<Integer> result = new ArrayList<>();
+        ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
         
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
@@ -592,7 +592,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        ArrayList<Integer> result = new ArrayList<>();
+        ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
             result.add(index + 1);
@@ -994,7 +994,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<>();
+        HashMap<Double, Integer> masses1 = new HashMap<>(1);
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
@@ -1009,7 +1009,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
 
-        HashMap<Double, Integer> masses2 = new HashMap<>();
+        HashMap<Double, Integer> masses2 = new HashMap<>(1);
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
@@ -1085,11 +1085,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public static AminoAcidPattern getTrypsinExample() {
         AminoAcidPattern example = new AminoAcidPattern();
         example.setTarget(0);
-        ArrayList<Character> target = new ArrayList<>();
+        ArrayList<Character> target = new ArrayList<>(2);
         target.add(AminoAcid.K.getSingleLetterCodeAsChar());
         target.add(AminoAcid.R.getSingleLetterCodeAsChar());
         example.setTargeted(0, target);
-        ArrayList<Character> exclusion = new ArrayList<>();
+        ArrayList<Character> exclusion = new ArrayList<>(1);
         exclusion.add(AminoAcid.P.getSingleLetterCodeAsChar());
         example.setExcluded(1, exclusion);
         return example;
@@ -1265,7 +1265,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public ArrayList<Integer> getModificationIndexes() {
         if (targetModifications == null) {
-            return new ArrayList<>();
+            return new ArrayList<>(0);
         }
         return new ArrayList<>(targetModifications.keySet());
     }
@@ -1285,7 +1285,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 return result;
             }
         }
-        return new ArrayList<>();
+        return new ArrayList<>(0);
     }
 
     /**
@@ -1328,11 +1328,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (targetModifications == null) {
-            targetModifications = new HashMap<>();
+            targetModifications = new HashMap<>(1);
         }
         ArrayList<ModificationMatch> modificationMatches = targetModifications.get(localization);
         if (modificationMatches == null) {
-            modificationMatches = new ArrayList<>();
+            modificationMatches = new ArrayList<>(1);
             targetModifications.put(localization, modificationMatches);
         }
         modificationMatches.add(modificationMatch);
@@ -1351,11 +1351,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
         if (targetModifications == null) {
-            targetModifications = new HashMap<>();
+            targetModifications = new HashMap<>(1);
         }
         ArrayList<ModificationMatch> modificationMatchesAtIndex = targetModifications.get(localization);
         if (modificationMatchesAtIndex == null) {
-            modificationMatchesAtIndex = new ArrayList<>();
+            modificationMatchesAtIndex = new ArrayList<>(modificationMatches.size());
             targetModifications.put(localization, modificationMatchesAtIndex);
         }
         modificationMatches.addAll(modificationMatches);
@@ -1410,9 +1410,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
 
-        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<>();
-        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
-        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<>(1);
+        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>(1);
+        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>(1);
 
         if (targetModifications != null) {
             for (int modSite : targetModifications.keySet()) {
@@ -1421,18 +1421,18 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     if (modificationMatch.getVariable()) {
                         if (modificationMatch.getConfident()) {
                             if (!mainModificationSites.containsKey(modSite)) {
-                                mainModificationSites.put(modSite, new ArrayList<>());
+                                mainModificationSites.put(modSite, new ArrayList<>(1));
                             }
                             mainModificationSites.get(modSite).add(modName);
                         } else {
                             if (!secondaryModificationSites.containsKey(modSite)) {
-                                secondaryModificationSites.put(modSite, new ArrayList<>());
+                                secondaryModificationSites.put(modSite, new ArrayList<>(1));
                             }
                             secondaryModificationSites.get(modSite).add(modName);
                         }
                     } else if (!excludeAllFixedPtms) {
                         if (!fixedModificationSites.containsKey(modSite)) {
-                            fixedModificationSites.put(modSite, new ArrayList<>());
+                            fixedModificationSites.put(modSite, new ArrayList<>(1));
                         }
                         fixedModificationSites.get(modSite).add(modName);
                     }
@@ -1472,13 +1472,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             boolean useShortName) {
 
         if (mainModificationSites == null) {
-            mainModificationSites = new HashMap<>();
+            mainModificationSites = new HashMap<>(1);
         }
         if (secondaryModificationSites == null) {
-            secondaryModificationSites = new HashMap<>();
+            secondaryModificationSites = new HashMap<>(1);
         }
         if (fixedModificationSites == null) {
-            fixedModificationSites = new HashMap<>();
+            fixedModificationSites = new HashMap<>(1);
         }
 
         String modifiedSequence = "";

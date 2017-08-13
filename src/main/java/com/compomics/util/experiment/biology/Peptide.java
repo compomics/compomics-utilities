@@ -204,9 +204,9 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the proteins where this peptide can be found.
+     * Returns the proteins mapping as a map of 0 based indexes for every protein accession.
      *
-     * @return the proteins where this peptide can be found
+     * @return the proteins mapping
      */
     public HashMap<String, HashSet<Integer>> getProteinMapping() {
 
@@ -215,6 +215,15 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
 
         return proteinMapping;
+    }
+
+    /**
+     * Sets the proteins mapping as a map of 0 based indexes for every protein accession.
+     * 
+     * @param proteinMapping the proteins mapping
+     */
+    public void setProteinMapping(HashMap<String, HashSet<Integer>> proteinMapping) {
+        this.proteinMapping = proteinMapping;
     }
 
     /**
@@ -365,15 +374,18 @@ public class Peptide extends ExperimentObject {
 
         int peptideEnd = peptideStart + sequence.length();
 
-        HashMap<Integer, PeptideVariantMatches> proteinVariants = variantMatches.get(proteinAccession);
+        if (variantMatches != null) {
 
-        if (proteinVariants != null) {
+            HashMap<Integer, PeptideVariantMatches> proteinVariants = variantMatches.get(proteinAccession);
 
-            PeptideVariantMatches peptideVariantMatches = proteinVariants.get(peptideStart);
+            if (proteinVariants != null) {
 
-            if (peptideVariantMatches != null) {
+                PeptideVariantMatches peptideVariantMatches = proteinVariants.get(peptideStart);
 
-                peptideEnd += peptideVariantMatches.getLengthDiff();
+                if (peptideVariantMatches != null) {
+
+                    peptideEnd += peptideVariantMatches.getLengthDiff();
+                }
             }
         }
 
@@ -643,37 +655,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the potential modification sites as an ordered list of sites. 1
-     * is the first amino acid. An empty list is returned if no possibility was
-     * found. This method does not account for protein terminal modifications.
-     *
-     * @param ptmMass the mass of the potential PTM
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
-     * @param modificationProfile the modification profile of the identification
-     *
-     * @return a list of potential modification sites
-     */
-    public HashSet<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
-            PtmSettings modificationProfile) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-
-        HashSet<Integer> sites = modificationProfile.getAllNotFixedModifications().stream().map(ptmName -> ptmFactory.getPTM(ptmName))
-                .filter(ptm -> ptm.getMass() == ptmMass)
-                .flatMap(ptm -> getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).stream())
-                .collect(Collectors.toCollection(HashSet::new));
-
-        return sites;
-    }
-
-    /**
      * Returns the potential modification sites as an ordered list of sites. No
      * amino acid combination is tested. 1 is the first amino acid. An empty
      * list is returned if no possibility was found. No peptide to protein
@@ -691,7 +672,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
+
         ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
         switch (ptm.getType()) {
@@ -850,7 +831,7 @@ public class Peptide extends ExperimentObject {
 
                 }
                 return possibleSites;
-                
+
             default:
                 throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
         }
@@ -864,131 +845,226 @@ public class Peptide extends ExperimentObject {
      * @param ptm the PTM considered
      * @param proteinSequence the protein sequence
      * @param peptideStart the index of the peptide start on the protein
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
      * @param ptmSequenceMatchingPreferences the sequence matching preferences
      * for PTM to peptide mapping
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, String proteinSequence, int peptideStart, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, String proteinSequence, int peptideStart, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        HashSet<Integer> possibleSites = new HashSet<>(1);
+        ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
         switch (ptm.getType()) {
-            
+
             case PTM.MODAA:
-                
+
                 AminoAcidPattern pattern = ptm.getPattern();
                 int patternLength = pattern.length();
                 int target = pattern.getTarget();
-                
+
                 if (target >= 0 && patternLength - target <= 1) {
-                    
+
                     return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
-                    
+
                 } else {
+                    
                     int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
-                            int missingLeft = Math.min(pattern.getMinIndex(), peptideStart);
-                            int missingRight = Math.min(pattern.getMaxIndex(), proteinSequence.length() - peptideEnd);
-                            StringBuilder tempSequence = new StringBuilder(missingLeft + sequence.length() + missingRight);
-                            String complementLeft = 
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matchesIn(tempSequence, ptmSequenceMatchingPreferences)) {
-                                    for (int tempIndex : pattern.getIndexes(tempSequence, ptmSequenceMatchingPreferences)) {
-                                        Integer sequenceIndex = tempIndex - target;
-                                        possibleSites.add(sequenceIndex);
-                                    }
-                                }
-                            }
+                    int missingLeft = Math.min(-pattern.getMinIndex(), peptideStart);
+                    int missingRight = Math.min(pattern.getMaxIndex(), proteinSequence.length() - peptideEnd);
+                    StringBuilder tempSequence = new StringBuilder(missingLeft + sequence.length() + missingRight);
+                    
+                    if (missingLeft > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideStart - missingLeft, peptideStart);
+                        tempSequence.append(complement);
+                        
+                    }
+                    
+                    tempSequence.append(sequence);
+                    
+                    if (missingRight > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideEnd + 1, peptideEnd + missingRight + 1);
+                        tempSequence.append(complement);
+                        
+                    }
+                    
+                    for (int tempIndex : pattern.getIndexes(tempSequence.toString(), ptmSequenceMatchingPreferences)) {
+                        
+                        int sequenceIndex = tempIndex - missingLeft;
+                        possibleSites.add(sequenceIndex);
+                        
+                    }
                 }
                 return possibleSites;
+                
             case PTM.MODC:
-                if (isCterm(sequenceMatchingPreferences).isEmpty()) {
+                
+                if (!isCterm(proteinSequence, peptideStart)) {
+                    
                     return possibleSites;
+                    
                 }
+                
             case PTM.MODCP:
+                
                 possibleSites.add(sequence.length());
                 return possibleSites;
+                
             case PTM.MODN:
-                if (isNterm(sequenceMatchingPreferences).isEmpty()) {
+                
+                if (!isNterm(proteinSequence, peptideStart)) {
+                    
                     return possibleSites;
+                    
                 }
+                
             case PTM.MODNP:
+                
                 possibleSites.add(1);
                 return possibleSites;
+                
             case PTM.MODCAA:
-                if (isCterm(sequenceMatchingPreferences).isEmpty()) {
+                
+                if (!isCterm(proteinSequence, peptideStart)) {
+                    
                     return possibleSites;
+                    
                 }
+                
             case PTM.MODCPAA:
+                
                 pattern = ptm.getPattern();
-                patternLength = pattern.length();
-                target = pattern.getTarget();
-                if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    if (pattern.isEnding(sequence, ptmSequenceMatchingPreferences)) {
-                        possibleSites.add(sequence.length());
-                    }
+
+                // See if we have the correct amino acid at terminus
+                if (!pattern.getAminoAcidsAtTargetSet().contains(sequence.charAt(sequence.length() - 1))) {
+                    
                     return possibleSites;
-                } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
-                    for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
-                            int beginIndex = index - target - 1;
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isEnding(tempSequence, ptmSequenceMatchingPreferences)) {
-                                    possibleSites.add(sequence.length());
-                                    return possibleSites;
-                                }
-                            }
-                        }
-                    }
-                    return possibleSites;
+                    
                 }
-            case PTM.MODNAA:
-                if (isNterm(sequenceMatchingPreferences).isEmpty()) {
-                    return possibleSites;
-                }
-            case PTM.MODNPAA:
-                pattern = ptm.getPattern();
-                patternLength = pattern.length();
-                target = pattern.getTarget();
-                if (target == 0 && sequence.length() >= patternLength) {
-                    if (pattern.isStarting(sequence, ptmSequenceMatchingPreferences)) {
-                        possibleSites.add(1);
+
+                // If we have a multiple amino acid pattern see if we match on the peptide terminus
+                if (pattern.length() > 1) {
+                    
+                    int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+                    int missingLeft = Math.min(Math.max(-pattern.getMinIndex() - sequence.length(), 0), peptideStart);
+                    int missingRight = Math.min(pattern.getMaxIndex(), proteinSequence.length() - peptideEnd);
+                    StringBuilder tempSequence = new StringBuilder(missingLeft + sequence.length() + missingRight);
+                    
+                    if (missingLeft > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideStart - missingLeft, peptideStart);
+                        tempSequence.append(complement);
+                        
                     }
-                } else {
-                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
-                    for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, sequenceMatchingPreferences)) {
-                            int beginIndex = index - target - 1;
-                            int endIndex = index + sequence.length() - 2 + patternLength - target;
-                            if (endIndex < protein.getLength()) {
-                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isStarting(tempSequence, ptmSequenceMatchingPreferences)) {
-                                    possibleSites.add(1);
-                                    return possibleSites;
-                                }
-                            }
-                        }
+                    
+                    tempSequence.append(sequence);
+                    
+                    if (missingRight > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideEnd + 1, peptideEnd + missingRight + 1);
+                        tempSequence.append(complement);
+                        
+                    }
+                    
+                    if (!pattern.matchesAt(tempSequence.toString(), ptmSequenceMatchingPreferences, sequence.length() - 1 + missingLeft)) {
+                        
+                        return possibleSites;
+                        
                     }
                 }
+
+                possibleSites.add(sequence.length() - 1);
                 return possibleSites;
+                
+            case PTM.MODNAA:
+                
+                if (!isNterm(proteinSequence, peptideStart)) {
+                    
+                    return possibleSites;
+                }
+                
+            case PTM.MODNPAA:
+                
+                pattern = ptm.getPattern();
+
+                // See if we have the correct amino acid at terminus
+                if (!pattern.getAminoAcidsAtTargetSet().contains(sequence.charAt(0))) {
+                    
+                    return possibleSites;
+                    
+                }
+
+                // If we have a multiple amino acid pattern see if we match on the peptide terminus
+                if (pattern.length() > 1) {
+                    
+                    int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+                    int missingLeft = Math.min(-pattern.getMinIndex(), peptideStart);
+                    int missingRight = Math.min(Math.max(pattern.getMaxIndex() - sequence.length(), 0), proteinSequence.length() - peptideEnd);
+                    StringBuilder tempSequence = new StringBuilder(missingLeft + sequence.length() + missingRight);
+                    
+                    if (missingLeft > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideStart - missingLeft, peptideStart);
+                        tempSequence.append(complement);
+                        
+                    }
+                    
+                    tempSequence.append(sequence);
+                    
+                    if (missingRight > 0) {
+                        
+                        String complement = proteinSequence.substring(peptideEnd + 1, peptideEnd + missingRight + 1);
+                        tempSequence.append(complement);
+                        
+                    }
+                    
+                    if (!pattern.matchesAt(tempSequence.toString(), ptmSequenceMatchingPreferences, missingLeft)) {
+                        
+                        return possibleSites;
+                        
+                    }
+                }
+
+                possibleSites.add(1);
+                return possibleSites;
+                
             default:
                 throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
         }
+    }
+
+    /**
+     * Returns a boolean indicating whether the peptide is at the N-terminus of
+     * the given protein sequence. Initial methionine is cleaved.
+     *
+     * @param proteinSequence the sequence of the protein
+     * @param peptideStart the 0 based peptide start index on the protein
+     *
+     * @return a boolean indicating whether the peptide is at the N-terminus of
+     * the given protein
+     */
+    public boolean isNterm(String proteinSequence, int peptideStart) {
+        return peptideStart == 0 || peptideStart == 1 && proteinSequence.charAt(0) == 'M';
+    }
+
+    /**
+     * Returns a boolean indicating whether the peptide is at the C-terminus of
+     * the given protein sequence.
+     *
+     * @param proteinSequence the sequence of the protein
+     * @param peptideStart the 0 based peptide start index on the protein
+     *
+     * @return a boolean indicating whether the peptide is at the C-terminus of
+     * the given protein
+     */
+    public boolean isCterm(String proteinSequence, int peptideStart) {
+        int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
+        return peptideEnd == proteinSequence.length() - 1;
     }
 
     /**
@@ -1029,7 +1105,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether another peptide has the same variable modifications as
      * this peptide. The localization of the PTM is not accounted for.
-     * Modifications are considered equal when of same mass. Modifications
+     * Modifications are considered equal when of exact same mass, no rounding is conducted. Modifications
      * should be loaded in the PTM factory.
      *
      * @param anotherPeptide the other peptide
@@ -1041,6 +1117,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         if (!isModified() && !anotherPeptide.isModified()) {
             return true;
         }
@@ -1050,44 +1127,20 @@ public class Peptide extends ExperimentObject {
         }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        ArrayList<String> modifications1 = getModificationFamily(getKey());
-        HashMap<Double, Integer> masses1 = new HashMap<>();
-        for (String modName : modifications1) {
-            PTM ptm = ptmFactory.getPTM(modName);
-            double tempMass = ptm.getMass();
-            Integer occurrence = masses1.get(tempMass);
-            if (occurrence == null) {
-                masses1.put(tempMass, 1);
-            } else {
-                masses1.put(tempMass, occurrence + 1);
-            }
-        }
-
-        ArrayList<String> modifications2 = getModificationFamily(anotherPeptide.getKey());
-        HashMap<Double, Integer> masses2 = new HashMap<>();
-        for (String modName : modifications2) {
-            PTM ptm = ptmFactory.getPTM(modName);
-            double tempMass = ptm.getMass();
-            Integer occurrence = masses2.get(tempMass);
-            if (occurrence == null) {
-                masses2.put(tempMass, 1);
-            } else {
-                masses2.put(tempMass, occurrence + 1);
-            }
-        }
+        
+        ArrayList<ModificationMatch> modificationMatches1 = getModificationMatches();
+        Map<Double, Long> masses1 = modificationMatches1.stream().collect(Collectors.groupingBy(
+                modificationMatch -> ptmFactory.getPTM(modificationMatch.getTheoreticPtm()).getMass(), Collectors.counting()));
+        
+        ArrayList<ModificationMatch> modificationMatches2 = anotherPeptide.getModificationMatches();
+        Map<Double, Long> masses2 = modificationMatches2.stream().collect(Collectors.groupingBy(
+                modificationMatch -> ptmFactory.getPTM(modificationMatch.getTheoreticPtm()).getMass(), Collectors.counting()));
 
         if (masses1.size() != masses2.size()) {
             return false;
         }
-        for (Double tempMass : masses1.keySet()) {
-            Integer occurrence1 = masses1.get(tempMass);
-            Integer occurrence2 = masses2.get(tempMass);
-            if (occurrence2 == null || occurrence2.intValue() != occurrence1) {
-                return false;
-            }
-        }
-
-        return true;
+        
+        return !masses1.entrySet().stream().anyMatch(entry -> masses2.get(entry.getKey()) == null || !entry.getValue().equals(masses2.get(entry.getKey())));
     }
 
     /**
@@ -1612,43 +1665,32 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        return parentProteins.stream().anyMatch(accession -> SequenceFactory.getInstance().isDecoyAccession(accession));
+        return proteinMapping.keySet().stream().anyMatch(accession -> SequenceFactory.getInstance().isDecoyAccession(accession));
     }
 
     /**
-     * Returns a version of the peptide which does not contain the inspected
-     * PTMs.
+     * Returns a version of the peptide which does not contain the given list of modifications.
      *
      * @param peptide the original peptide
-     * @param ptms list of inspected PTMs
+     * @param forbiddenModifications list of forbidden modifications
      *
      * @return a not modified version of the peptide
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
      */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> forbiddenModifications) {
 
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>());
-        noModPeptide.setParentProteins(peptide.getParentProteinsNoRemapping());
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>(0));
+        noModPeptide.setProteinMapping(peptide.getProteinMapping());
 
-        if (peptide.isModified()) {
-            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                boolean found = false;
-                for (PTM ptm : ptms) {
-                    if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    noModPeptide.addModificationMatch(modificationMatch);
-                }
-            }
+        ArrayList<ModificationMatch> allModificationMatches = peptide.getModificationMatches();
+        
+        if (allModificationMatches != null) {
+            
+            HashSet<String> forbiddenModificationsNames = forbiddenModifications.stream().map(modification -> modification.getName()).collect(Collectors.toCollection(HashSet::new));
+            
+            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream().filter(modificationMatch -> !forbiddenModificationsNames.contains(modificationMatch.getTheoreticPtm())).collect(Collectors.toCollection(ArrayList::new));
+
+            noModPeptide.setModificationMatches(filteredModificationMatches);
+            
         }
 
         return noModPeptide;

@@ -4,10 +4,11 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -420,10 +421,10 @@ public class Tag extends ExperimentObject {
         if (firstComponent instanceof AminoAcidPattern) {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) firstComponent;
             String nTerm = "NH2";
-            PTMFactory ptmFactory = PTMFactory.getInstance();
+            ModificationFactory ptmFactory = ModificationFactory.getInstance();
             for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(1)) {
-                PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                Modification ptm = ptmFactory.getModification(modificationMatch.getModification());
+                if (ptm.getModificationType() != ModificationType.modaa) {
                     nTerm = ptm.getShortName();
                 }
             }
@@ -432,10 +433,10 @@ public class Tag extends ExperimentObject {
         } else if (firstComponent instanceof AminoAcidSequence) {
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) firstComponent;
             String nTerm = "NH2";
-            PTMFactory ptmFactory = PTMFactory.getInstance();
+            ModificationFactory ptmFactory = ModificationFactory.getInstance();
             for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(1)) {
-                PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                Modification ptm = ptmFactory.getModification(modificationMatch.getModification());
+                if (ptm.getModificationType() != ModificationType.modaa) {
                     nTerm = ptm.getShortName();
                 }
             }
@@ -468,10 +469,10 @@ public class Tag extends ExperimentObject {
         if (lastComponent instanceof AminoAcidPattern) {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) lastComponent;
             String cTerm = "COOH";
-            PTMFactory ptmFactory = PTMFactory.getInstance();
+            ModificationFactory ptmFactory = ModificationFactory.getInstance();
             for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(aminoAcidPattern.length())) {
-                PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                Modification ptm = ptmFactory.getModification(modificationMatch.getModification());
+                if (ptm.getModificationType() != ModificationType.modaa) {
                     cTerm = ptm.getShortName();
                 }
             }
@@ -480,10 +481,10 @@ public class Tag extends ExperimentObject {
         } else if (lastComponent instanceof AminoAcidSequence) {
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) lastComponent;
             String cTerm = "COOH";
-            PTMFactory ptmFactory = PTMFactory.getInstance();
+            ModificationFactory ptmFactory = ModificationFactory.getInstance();
             for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(aminoAcidSequence.length())) {
-                PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                Modification ptm = ptmFactory.getModification(modificationMatch.getModification());
+                if (ptm.getModificationType() != ModificationType.modaa) {
                     cTerm = ptm.getShortName();
                 }
             }
@@ -545,7 +546,7 @@ public class Tag extends ExperimentObject {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
+    public ArrayList<Integer> getPotentialModificationSites(Modification ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
@@ -553,8 +554,8 @@ public class Tag extends ExperimentObject {
         AminoAcidPattern ptmPattern = ptm.getPattern(); 
         int patternLength = ptmPattern.length(); // @TODO: what if pattern is null..?
 
-        switch (ptm.getType()) {
-            case PTM.MODAA:
+        switch (ptm.getModificationType()) {
+            case modaa:
                 int offset = 0;
                 for (TagComponent tagComponent : content) {
                     if (tagComponent instanceof AminoAcidPattern) {
@@ -574,16 +575,16 @@ public class Tag extends ExperimentObject {
                     }
                 }
                 return possibleSites;
-            case PTM.MODC:
-            case PTM.MODCP:
+            case modc_protein:
+            case modc_peptide:
                 possibleSites.add(patternLength);
                 return possibleSites;
-            case PTM.MODN:
-            case PTM.MODNP:
+            case modn_peptide:
+            case modn_protein:
                 possibleSites.add(1);
                 return possibleSites;
-            case PTM.MODCAA:
-            case PTM.MODCPAA:
+            case modcaa_peptide:
+            case modcaa_protein:
                 if (content.isEmpty()) {
                     return new ArrayList<>();
                 }
@@ -604,8 +605,8 @@ public class Tag extends ExperimentObject {
                     throw new UnsupportedOperationException("Possible modifications not implemnted for tag component " + component.getClass() + ".");
                 }
                 return possibleSites;
-            case PTM.MODNAA:
-            case PTM.MODNPAA:
+            case modnaa_peptide:
+            case modnaa_protein:
                 if (content.isEmpty()) {
                     return new ArrayList<>();
                 }
@@ -627,7 +628,7 @@ public class Tag extends ExperimentObject {
                 }
                 return possibleSites;
             default:
-                throw new IllegalArgumentException("PTM type " + ptm.getType() + " not recognized.");
+                throw new IllegalArgumentException("PTM type " + ptm.getModificationType() + " not recognized.");
         }
     }
 
@@ -696,10 +697,10 @@ public class Tag extends ExperimentObject {
                 for (int i = 1; i <= aminoAcidPattern.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
                         if (modificationMatch.getVariable()) {
-                            if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
-                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<>());
+                            if (!modMap.containsKey(modificationMatch.getModification())) {
+                                modMap.put(modificationMatch.getModification(), new ArrayList<>());
                             }
-                            modMap.get(modificationMatch.getTheoreticPtm()).add(i + offset);
+                            modMap.get(modificationMatch.getModification()).add(i + offset);
                         }
                     }
                 }
@@ -709,10 +710,10 @@ public class Tag extends ExperimentObject {
                 for (int i = 1; i <= aminoAcidSequence.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i)) {
                         if (modificationMatch.getVariable()) {
-                            if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
-                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<>());
+                            if (!modMap.containsKey(modificationMatch.getModification())) {
+                                modMap.put(modificationMatch.getModification(), new ArrayList<>());
                             }
-                            modMap.get(modificationMatch.getTheoreticPtm()).add(i + offset);
+                            modMap.get(modificationMatch.getModification()).add(i + offset);
                         }
                     }
                 }

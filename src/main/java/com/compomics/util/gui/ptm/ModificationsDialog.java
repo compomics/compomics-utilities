@@ -3,8 +3,8 @@ package com.compomics.util.gui.ptm;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
@@ -39,7 +39,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The color used for the sparkline bar chart plots.
      */
@@ -140,29 +140,29 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         // set up the ptm type color map
         HashMap<Integer, Color> ptmTypeColorMap = new HashMap<>();
-        ptmTypeColorMap.put(PTM.MODMAX, Color.lightGray);
-        ptmTypeColorMap.put(PTM.MODAA, sparklineColor);
-        ptmTypeColorMap.put(PTM.MODC, Color.CYAN);
-        ptmTypeColorMap.put(PTM.MODCAA, Color.MAGENTA);
-        ptmTypeColorMap.put(PTM.MODCP, Color.RED);
-        ptmTypeColorMap.put(PTM.MODCPAA, Color.ORANGE);
-        ptmTypeColorMap.put(PTM.MODN, Color.YELLOW);
-        ptmTypeColorMap.put(PTM.MODNAA, Color.PINK);
-        ptmTypeColorMap.put(PTM.MODNP, Color.BLUE);
-        ptmTypeColorMap.put(PTM.MODNPAA, Color.GRAY);
+        ptmTypeColorMap.put(Modification.MODMAX, Color.lightGray);
+        ptmTypeColorMap.put(Modification.MODAA, sparklineColor);
+        ptmTypeColorMap.put(Modification.MODC, Color.CYAN);
+        ptmTypeColorMap.put(Modification.MODCAA, Color.MAGENTA);
+        ptmTypeColorMap.put(Modification.MODCP, Color.RED);
+        ptmTypeColorMap.put(Modification.MODCPAA, Color.ORANGE);
+        ptmTypeColorMap.put(Modification.MODN, Color.YELLOW);
+        ptmTypeColorMap.put(Modification.MODNAA, Color.PINK);
+        ptmTypeColorMap.put(Modification.MODNP, Color.BLUE);
+        ptmTypeColorMap.put(Modification.MODNPAA, Color.GRAY);
 
         // set up the ptm type tooltip map
         HashMap<Integer, String> ptmTypeTooltipMap = new HashMap<>();
-        ptmTypeTooltipMap.put(PTM.MODMAX, "max number of modification types");
-        ptmTypeTooltipMap.put(PTM.MODAA, "Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(PTM.MODC, "Protein C-term");
-        ptmTypeTooltipMap.put(PTM.MODCAA, "Protein C-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(PTM.MODCP, "Peptide C-term");
-        ptmTypeTooltipMap.put(PTM.MODCPAA, "Peptide C-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(PTM.MODN, "Protein N-term");
-        ptmTypeTooltipMap.put(PTM.MODNAA, "Protein N-term - Particular Amino Acid(s)");
-        ptmTypeTooltipMap.put(PTM.MODNP, "Peptide N-term");
-        ptmTypeTooltipMap.put(PTM.MODNPAA, "Peptide N-term - Particular Amino Acid(s)");
+        ptmTypeTooltipMap.put(Modification.MODMAX, "max number of modification types");
+        ptmTypeTooltipMap.put(Modification.MODAA, "Particular Amino Acid(s)");
+        ptmTypeTooltipMap.put(Modification.MODC, "Protein C-term");
+        ptmTypeTooltipMap.put(Modification.MODCAA, "Protein C-term - Particular Amino Acid(s)");
+        ptmTypeTooltipMap.put(Modification.MODCP, "Peptide C-term");
+        ptmTypeTooltipMap.put(Modification.MODCPAA, "Peptide C-term - Particular Amino Acid(s)");
+        ptmTypeTooltipMap.put(Modification.MODN, "Protein N-term");
+        ptmTypeTooltipMap.put(Modification.MODNAA, "Protein N-term - Particular Amino Acid(s)");
+        ptmTypeTooltipMap.put(Modification.MODNP, "Peptide N-term");
+        ptmTypeTooltipMap.put(Modification.MODNPAA, "Peptide N-term - Particular Amino Acid(s)");
 
         defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, ptmTypeColorMap, ptmTypeTooltipMap));
         userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, ptmTypeColorMap, ptmTypeTooltipMap));
@@ -634,7 +634,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             defaultPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
-            PTM ptm = ptmFactory.getPTM(ptmName);
+            Modification ptm = ptmFactory.getModification(ptmName);
             new PtmDialog(this, ptm, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
@@ -803,7 +803,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             if (!input.equals("")) {
                 for (int row = 0; row < ptmFactory.getDefaultModifications().size(); row++) {
                     ptmName = ptmFactory.getDefaultModifications().get(row).toLowerCase();
-                    mass = ptmFactory.getPTM(ptmName).getMass() + "";
+                    mass = ptmFactory.getModification(ptmName).getMass() + "";
                     if (mass.startsWith(input)) {
                         searchPossibilities.add(row);
                     } else if (ptmName.contains(input)) {
@@ -844,7 +844,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             userPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
-            PTM ptm = ptmFactory.getPTM(ptmName);
+            Modification ptm = ptmFactory.getModification(ptmName);
             PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
             if (!ptmDialog.isCanceled()) {
                 updateModifications();
@@ -943,7 +943,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void editUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPTMActionPerformed
         int row = userModificationsTable.getSelectedRow();
         String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
-        PTM ptm = ptmFactory.getPTM(ptmName);
+        Modification ptm = ptmFactory.getModification(ptmName);
         PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
@@ -1006,7 +1006,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
-        PTM ptm = ptmFactory.getPTM(ptmName);
+        Modification ptm = ptmFactory.getModification(ptmName);
         PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
@@ -1020,7 +1020,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
-        PTM ptm = ptmFactory.getPTM(ptmName);
+        Modification ptm = ptmFactory.getModification(ptmName);
         PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
@@ -1210,14 +1210,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getPTM(name).getShortName();
+                    return ptmFactory.getModification(name).getShortName();
                 case 3:
-                    return ptmFactory.getPTM(name).getMass();
+                    return ptmFactory.getModification(name).getMass();
                 case 4:
-                    return ptmFactory.getPTM(name).getType();
+                    return ptmFactory.getModification(name).getModificationType();
                 case 5:
                     String residues = "";
-                    AminoAcidPattern aminoAcidPattern = ptmFactory.getPTM(name).getPattern();
+                    AminoAcidPattern aminoAcidPattern = ptmFactory.getModification(name).getPattern();
                     if (aminoAcidPattern != null) {
                         for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
                             if (!residues.equals("")) {
@@ -1228,7 +1228,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = ptmFactory.getPTM(name).getCvTerm();
+                    CvTerm cvTerm = ptmFactory.getModification(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());
@@ -1305,14 +1305,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getPTM(name).getShortName();
+                    return ptmFactory.getModification(name).getShortName();
                 case 3:
-                    return ptmFactory.getPTM(name).getMass();
+                    return ptmFactory.getModification(name).getMass();
                 case 4:
-                    return ptmFactory.getPTM(name).getType();
+                    return ptmFactory.getModification(name).getModificationType();
                 case 5:
                     String residues = "";
-                    AminoAcidPattern aminoAcidPattern = ptmFactory.getPTM(name).getPattern();
+                    AminoAcidPattern aminoAcidPattern = ptmFactory.getModification(name).getPattern();
                     if (aminoAcidPattern != null) {
                         for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
                             if (!residues.equals("")) {
@@ -1323,7 +1323,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = ptmFactory.getPTM(name).getCvTerm();
+                    CvTerm cvTerm = ptmFactory.getModification(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());

@@ -5,8 +5,8 @@ import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -86,7 +86,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings)
             throws IOException, InterruptedException, ClassNotFoundException {
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        ModificationFactory pTMFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
         int tagLength = tag.getLengthInAminoAcid();
@@ -181,9 +181,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
                 for (int i = 1; i <= aminoAcidPattern.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
-                        PTM ptm = pTMFactory.getPTM(modificationMatch.getTheoreticPtm());
+                        Modification ptm = pTMFactory.getModification(modificationMatch.getModification());
                         if (ptm == null) {
-                            throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
+                            throw new IllegalArgumentException("PTM " + modificationMatch.getModification() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                             ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings); // @TODO: could end in a null pointer?

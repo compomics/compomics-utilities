@@ -3,8 +3,8 @@ package com.compomics.util.experiment.identification.spectrum_annotation.spectru
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
@@ -339,7 +339,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingSettings,
             SequenceMatchingPreferences ptmSequenceMatchingSettings) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        ModificationFactory pTMFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
         String sequence = peptide.getSequence();
@@ -367,7 +367,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                Modification ptm = pTMFactory.getModification(modMatch.getModification());
                 for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                     ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingSettings, ptmSequenceMatchingSettings);
                     if (!indexes.isEmpty()) {

@@ -2,8 +2,8 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.Ms2pipFeature;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.FeaturesMap;
@@ -40,7 +40,7 @@ public class FeaturesGenerator {
     /**
      * The PTM factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The map of the different features to include.
      */
@@ -95,7 +95,7 @@ public class FeaturesGenerator {
         if (modificationMatches != null) {
             reversedModificationMatches = new ArrayList<>(modificationMatches.size());
             for (ModificationMatch modificationMatch : modificationMatches) {
-                ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
+                ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
                 reversedModificationMatches.add(reversedModificationMatch);
             }
         } else {
@@ -771,8 +771,8 @@ public class FeaturesGenerator {
             if (modificationMatches != null) {
                 for (ModificationMatch modificationMatch : modificationMatches) {
 
-                    String modificationName = modificationMatch.getTheoreticPtm();
-                    PTM modification = ptmFactory.getPTM(modificationName);
+                    String modificationName = modificationMatch.getModification();
+                    Modification modification = ptmFactory.getModification(modificationName);
                     double modificationMass = modification.getMass();
                     int modificationSite = modificationMatch.getModificationSite();
 

@@ -1,7 +1,7 @@
 package com.compomics.cli.modifications;
 
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -105,22 +105,22 @@ public class ModificationsCLI {
      */
     public Object call() {
 
-        PTMFactory ptmFactory = null;
+        ModificationFactory ptmFactory = null;
         File inputFile = modificationsCLIInputBean.getFileIn();
         if (inputFile != null) {
             try {
-                ptmFactory = PTMFactory.loadFromFile(inputFile);
+                ptmFactory = ModificationFactory.loadFromFile(inputFile);
             } catch (IOException e) {
                 System.out.println("An error occurred while reading modifications from " + inputFile + ".");
                 return 1;
             }
         } else {
-            ptmFactory = PTMFactory.getInstance();
+            ptmFactory = ModificationFactory.getInstance();
         }
 
         if (modificationsCLIInputBean.isList()) {
-            for (String ptmName : ptmFactory.getPTMs()) {
-                PTM ptm = ptmFactory.getPTM(ptmName);
+            for (String ptmName : ptmFactory.getModifications()) {
+                Modification ptm = ptmFactory.getModification(ptmName);
                 System.out.println(ptm);
                 System.out.println();
             }
@@ -132,15 +132,15 @@ public class ModificationsCLI {
             ptmFactory.removeUserPtm(modificationToRemove);
         }
 
-        PTM modificationToAdd = modificationsCLIInputBean.getModificationToAdd();
+        Modification modificationToAdd = modificationsCLIInputBean.getModificationToAdd();
         if (modificationToAdd != null) {
-            ptmFactory.addUserPTM(modificationToAdd);
+            ptmFactory.addUserModification(modificationToAdd);
         }
 
         File outputFile = modificationsCLIInputBean.getFileOut();
         if (outputFile != null) {
             try {
-                PTMFactory.saveToFile(ptmFactory, outputFile);
+                ModificationFactory.saveToFile(ptmFactory, outputFile);
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the modifications to " + outputFile + ".");
                 return 1;

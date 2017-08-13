@@ -1,6 +1,6 @@
 package com.compomics.util.test.io;
 
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -79,9 +79,9 @@ public class TestSearchParameterMarshaller {
      */
     private PtmSettings createMockUpPTMSettings() {
         PtmSettings settings = new PtmSettings();
-        PTMFactory instance = PTMFactory.getInstance();
-        settings.addFixedModification(instance.getPTM("Carboxymethylation of C"));
-        settings.addVariableModification(instance.getPTM("Oxidation of M"));
+        ModificationFactory instance = ModificationFactory.getInstance();
+        settings.addFixedModification(instance.getModification("Carboxymethylation of C"));
+        settings.addVariableModification(instance.getModification("Oxidation of M"));
         return settings;
     }
 }

@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
@@ -78,7 +78,7 @@ public class AScore {
      * @throws org.apache.commons.math.MathException exception thrown whenever a
      * math error occurred while computing the score.
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationSettings annotationPreferences,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<Modification> ptms, MSnSpectrum spectrum, AnnotationSettings annotationPreferences,
             SpecificAnnotationSettings specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
@@ -91,8 +91,8 @@ public class AScore {
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                 if (modMatch.getVariable()) {
-                    for (PTM ptm : ptms) {
-                        if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
+                    for (Modification ptm : ptms) {
+                        if (ptm.getName().equals(modMatch.getModification())) {
                             nPTM++;
                         }
                     }
@@ -103,7 +103,7 @@ public class AScore {
             throw new IllegalArgumentException("Given PTMs not found in the peptide for A-score calculation.");
         }
 
-        PTM refPTM = ptms.get(0);
+        Modification refPTM = ptms.get(0);
         double ptmMass = refPTM.getMass();
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationPreferences.getNeutralLossesMap(),
@@ -121,7 +121,7 @@ public class AScore {
         int peptideLength = peptide.getSequence().length();
 
         ArrayList<Integer> possibleSites = new ArrayList<>();
-        for (PTM ptm : ptms) {
+        for (Modification ptm : ptms) {
             if (ptm.isNTerm()) {
                 if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
                     possibleSites.add(0);
@@ -293,7 +293,7 @@ public class AScore {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
+    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, Modification refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
             SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException, InterruptedException {
 
         HashMap<Integer, Double> result = new HashMap<>(2);
@@ -513,7 +513,7 @@ public class AScore {
      * interrupted
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException, InterruptedException {
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, Modification refPTM) throws MathException, InterruptedException {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<>();
 

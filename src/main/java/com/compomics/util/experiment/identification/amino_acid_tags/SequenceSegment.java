@@ -3,8 +3,8 @@ package com.compomics.util.experiment.identification.amino_acid_tags;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -282,7 +282,7 @@ public class SequenceSegment {
                 if (modificationMatches.size() > 1) {
                     throw new IllegalArgumentException("Two PTMs found on the same amino acid when mapping tags. Only one supported.");
                 }
-                modificationMatches.put(index + length, modificationMatchesList.get(0).getTheoreticPtm());
+                modificationMatches.put(index + length, modificationMatchesList.get(0).getModification());
             }
         }
         length += aminoAcidSequence.length();
@@ -310,7 +310,7 @@ public class SequenceSegment {
                 if (modificationMatches.size() > 1) {
                     throw new IllegalArgumentException("Two PTMs found on the same amino acid when mapping tags. Only one supported.");
                 }
-                modificationMatches.put(index + length, modificationMatchesList.get(0).getTheoreticPtm());
+                modificationMatches.put(index + length, modificationMatchesList.get(0).getModification());
             }
         }
         length += aminoAcidPattern.length();
@@ -343,7 +343,7 @@ public class SequenceSegment {
      * @param modification the modification
      */
     public void addModificationTerminus(String modification) {
-        PTM ptm = PTMFactory.getInstance().getPTM(modification);
+        Modification ptm = ModificationFactory.getInstance().getModification(modification);
         addModificationTerminus(modification, ptm.getMass());
     }
 

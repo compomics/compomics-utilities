@@ -1,7 +1,7 @@
 package com.compomics.software.settings;
 
 import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
@@ -190,7 +190,7 @@ public class UtilitiesPathPreferences {
                 PrideObjectsFactory.setPrideFolder(path);
                 return;
             case ptmFactoryKey:
-                PTMFactory.setSerializationFolder(path);
+                ModificationFactory.setSerializationFolder(path);
                 return;
             case enzymeFactoryKey:
                 EnzymeFactory.setSerializationFile(path);
@@ -220,7 +220,7 @@ public class UtilitiesPathPreferences {
             case prideAnnotationKey:
                 return PrideObjectsFactory.getPrideFolder();
             case ptmFactoryKey:
-                return PTMFactory.getSerializationFolder();
+                return ModificationFactory.getSerializationFolder();
             case enzymeFactoryKey:
                 return EnzymeFactory.getSerializationFile();
             case utilitiesPreferencesKey:
@@ -341,7 +341,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case ptmFactoryKey:
-                toWrite = PTMFactory.getSerializationFolder();
+                toWrite = ModificationFactory.getSerializationFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }

@@ -4,7 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -107,7 +107,7 @@ public class PhosphoRS {
      * @throws org.apache.commons.math.MathException exception thrown whenever a
      * math error occurred while computing the score.
      */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationSettings annotationSettings,
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> ptms, MSnSpectrum spectrum, AnnotationSettings annotationSettings,
             SpecificAnnotationSettings specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
@@ -124,8 +124,8 @@ public class PhosphoRS {
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                 if (modMatch.getVariable()) {
-                    for (PTM ptm : ptms) {
-                        if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
+                    for (Modification ptm : ptms) {
+                        if (ptm.getName().equals(modMatch.getModification())) {
                             nPTM++;
                         }
                     }
@@ -163,7 +163,7 @@ public class PhosphoRS {
 
         int peptideLength = peptide.getSequence().length();
 
-        for (PTM ptm : ptms) {
+        for (Modification ptm : ptms) {
             if (ptm.isNTerm()) {
                 if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
                     possibleSites.add(0);
@@ -546,7 +546,7 @@ public class PhosphoRS {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<PTM> ptms, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<Modification> ptms, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         String representativePTM = ptms.get(0).getName();
         HashMap<String, Peptide> result = new HashMap<>(possibleProfiles.size());
@@ -670,7 +670,7 @@ public class PhosphoRS {
      *
      * @return a map of all potential site determining ions indexed by their m/z
      */
-    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles, ArrayList<PTM> ptms, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles, ArrayList<Modification> ptms, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         String sequence = noModPeptide.getSequence();
         Peptide peptide = new Peptide(sequence, noModPeptide.getModificationMatches());

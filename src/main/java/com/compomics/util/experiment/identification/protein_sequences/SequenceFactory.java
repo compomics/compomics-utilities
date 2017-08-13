@@ -99,7 +99,8 @@ public class SequenceFactory {
      */
     public static int minProteinCount = 1000; // @TODO: use a better metric
     /**
-     * The reference number for amino acid occurrence calculation, e.g. 100 for percent, 1000 per mille, 1000000 ppm.
+     * The reference number for amino acid occurrence calculation, e.g. 100 for
+     * percent, 1000 per mille, 1000000 ppm.
      */
     public final static int nAaOccurrence = 1000000;
 
@@ -108,7 +109,7 @@ public class SequenceFactory {
      */
     private SequenceFactory() {
     }
-    
+
     /**
      * Static method returning the instance of the factory.
      *
@@ -184,28 +185,10 @@ public class SequenceFactory {
      * will be re-indexed.
      *
      * @param accession accession of the desired protein
-     * 
+     *
      * @return the desired protein
      */
     public Protein getProtein(String accession) {
-        return getProtein(accession, true);
-    }
-
-    /**
-     * Returns the desired protein. Eventually re-indexes the database if the
-     * protein is not found.
-     *
-     * @param accession accession of the desired protein
-     * @param reindex a boolean indicating whether the database should be
-     * re-indexed in case the protein is not found.
-     * @return the desired protein
-     * @throws IOException thrown whenever an error is encountered while reading
-     * the FASTA file
-     * @throws IllegalArgumentException thrown whenever an error is encountered
-     * while reading the FASTA file
-     * @throws InterruptedException if an InterruptedException occurs
-     */
-    private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
         if (fastaIndex == null) {
             throw new IllegalArgumentException("Protein sequences not loaded in the sequence factory.");
@@ -757,7 +740,7 @@ public class SequenceFactory {
 
         // a map of the species
         HashMap<String, Integer> species = new HashMap<String, Integer>();
-        
+
         // Keep track of the number of amino acids
         int[] aaOccurrence = new int[26];
         LinkedList<int[]> aaOccurrenceList = new LinkedList<int[]>();
@@ -804,7 +787,6 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-
                 // check accessions for quotation marks
                 if (accession.lastIndexOf("'") != -1 || accession.lastIndexOf("\"") != -1) {
                     throw new IllegalArgumentException("Accession numbers cannot contain quotation marks: \'" + accession + "\'!\nPlease check your FASTA file.");
@@ -896,17 +878,17 @@ public class SequenceFactory {
                 mainDatabaseType = tempDatabaseType;
             }
         }
-        
+
         // Aggregate the amino acid occurrence lists
-        double scaling = ((double) nAAs)/nAaOccurrence;
+        double scaling = ((double) nAAs) / nAaOccurrence;
         scaling += aaOccurrenceList.size();
         double[] aaOccurrenceSummary = new double[aaOccurrence.length];
         for (int[] aaOccurrenceTemp : aaOccurrenceList) {
-            for (int i = 0 ; i < aaOccurrenceTemp.length ; i++) {
+            for (int i = 0; i < aaOccurrenceTemp.length; i++) {
                 aaOccurrenceSummary[i] += ((double) aaOccurrenceTemp[i]) / scaling;
             }
         }
-        for (int i = 0 ; i < aaOccurrence.length ; i++) {
+        for (int i = 0; i < aaOccurrence.length; i++) {
             aaOccurrence[i] = (int) ((((double) aaOccurrence[i]) / scaling) + aaOccurrenceSummary[i]);
         }
 
@@ -1433,7 +1415,7 @@ public class SequenceFactory {
      */
     public PeptideMapper getDefaultPeptideMapper(WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler, int nThreads, IdentificationParameters identificationParameters) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getDefaultPeptideMapper(identificationParameters.getSequenceMatchingPreferences(), 
+        return getDefaultPeptideMapper(identificationParameters.getSequenceMatchingPreferences(),
                 identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsPreferences(), waitingHandler, exceptionHandler, true, nThreads);
     }
 
@@ -1680,66 +1662,69 @@ public class SequenceFactory {
          * @return true if there is another protein
          *
          * @throws IOException if an IOException occurs
-         * @throws java.lang.InterruptedException exception thrown if a
-         * threading issue occurred
          */
-        public boolean hasNext() throws IOException, InterruptedException {
+        public boolean hasNext() throws IOException {
 
-            readerMutex.acquire();
-            String line = br.readLine();
+            try {
 
-            // reached end of file
-            if (line == null) {
-                readerMutex.release();
-                return false;
-            }
+                readerMutex.acquire();
+                String line = br.readLine();
 
-            StringBuilder sequence = new StringBuilder();
-            Header header = nextHeader;
-            boolean newHeaderFound = false;
-
-            while (line != null) {
-                if (line.startsWith(">")) {
-                    Header tempHeader = Header.parseFromFASTA(line);
-                    String accession = tempHeader.getAccessionOrRest();
-                    if (targetOnly && isDecoyAccession(accession)) {
-                        while ((line = br.readLine()) != null) {
-                            if (line.startsWith(">")) {
-                                tempHeader = Header.parseFromFASTA(line);
-                                if (!isDecoyAccession(tempHeader.getAccessionOrRest())) {
-                                    break;
-                                }
-                            }
-                        }
-                        if (line == null) {
-                            break;
-                        }
-                    }
-                    if (header == null) {
-                        header = tempHeader;
-                    } else {
-                        nextHeader = tempHeader;
-                        newHeaderFound = true;
-                        break;
-                    }
-                } else {
-                    sequence.append(line.trim());
+                // reached end of file
+                if (line == null) {
+                    readerMutex.release();
+                    return false;
                 }
 
-                line = br.readLine();
-            }
-            readerMutex.release();
-            if (newHeaderFound || line == null) { // line == null means that we read the last protein
-                String accession = header.getAccessionOrRest();
-                Header.DatabaseType databaseType = header.getDatabaseType();
-                String cleanedSequence = importSequenceFromFasta(sequence);
-                boolean decoy = isDecoyAccession(accession);
-                nextProteinMutex.acquire();
-                nextProtein = new Protein(accession, databaseType, cleanedSequence, decoy);
-                return true;
-            } else {
-                close();
-                return false;
+                StringBuilder sequence = new StringBuilder();
+                Header header = nextHeader;
+                boolean newHeaderFound = false;
+
+                while (line != null) {
+                    if (line.startsWith(">")) {
+                        Header tempHeader = Header.parseFromFASTA(line);
+                        String accession = tempHeader.getAccessionOrRest();
+                        if (targetOnly && isDecoyAccession(accession)) {
+                            while ((line = br.readLine()) != null) {
+                                if (line.startsWith(">")) {
+                                    tempHeader = Header.parseFromFASTA(line);
+                                    if (!isDecoyAccession(tempHeader.getAccessionOrRest())) {
+                                        break;
+                                    }
+                                }
+                            }
+                            if (line == null) {
+                                break;
+                            }
+                        }
+                        if (header == null) {
+                            header = tempHeader;
+                        } else {
+                            nextHeader = tempHeader;
+                            newHeaderFound = true;
+                            break;
+                        }
+                    } else {
+                        sequence.append(line.trim());
+                    }
+
+                    line = br.readLine();
+                }
+                readerMutex.release();
+                if (newHeaderFound || line == null) { // line == null means that we read the last protein
+                    String accession = header.getAccessionOrRest();
+                    Header.DatabaseType databaseType = header.getDatabaseType();
+                    String cleanedSequence = importSequenceFromFasta(sequence);
+                    boolean decoy = isDecoyAccession(accession);
+                    nextProteinMutex.acquire();
+                    nextProtein = new Protein(accession, databaseType, cleanedSequence, decoy);
+                    return true;
+                } else {
+                    close();
+                    return false;
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 

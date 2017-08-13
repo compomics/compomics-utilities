@@ -1,6 +1,9 @@
-package com.compomics.util.experiment.biology;
+package com.compomics.util.experiment.biology.modifications;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -8,61 +11,22 @@ import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
 /**
- * This class models a post-translational modification.
+ * This class models a peptide or protein modification.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PTM extends ExperimentObject {
+public class Modification extends ExperimentObject {
 
     /**
      * The version UID for backward compatibility.
      */
     static final long serialVersionUID = -545472596243822505L;
+
     /**
-     * Modification at particular amino acids.
+     * The modification type.
      */
-    public static final int MODAA = 0;
-    /**
-     * Modification at the N terminus of a protein.
-     */
-    public static final int MODN = 1;
-    /**
-     * Modification at the N terminus of a protein at particular amino acids.
-     */
-    public static final int MODNAA = 2;
-    /**
-     * Modification at the C terminus of a protein.
-     */
-    public static final int MODC = 3;
-    /**
-     * Modification at the C terminus of a protein at particular amino acids.
-     */
-    public static final int MODCAA = 4;
-    /**
-     * Modification at the N terminus of a peptide.
-     */
-    public static final int MODNP = 5;
-    /**
-     * Modification at the N terminus of a peptide at particular amino acids.
-     */
-    public static final int MODNPAA = 6;
-    /**
-     * Modification at the C terminus of a peptide.
-     */
-    public static final int MODCP = 7;
-    /**
-     * Modification at the C terminus of a peptide at particular amino acids.
-     */
-    public static final int MODCPAA = 8;
-    /**
-     * The max number of modification types.
-     */
-    public static final int MODMAX = 9;
-    /**
-     * The modification type according to static field.
-     */
-    private int type;
+    private ModificationType modificationType;
     /**
      * Name of the modification.
      */
@@ -75,10 +39,6 @@ public class PTM extends ExperimentObject {
      * Mass difference produced by this modification. Null if not set.
      */
     private Double mass = null;
-    /**
-     * The mass as string.
-     */
-    private String massAsString = null;
     /**
      * List of known neutral losses for this modification.
      */
@@ -105,6 +65,10 @@ public class PTM extends ExperimentObject {
      */
     private CvTerm cvTerm = null;
     /**
+     * The ambiguity key for ambiguous modifications.
+     */
+    private String ambiguityKey = null;
+    /**
      * The number of decimals used in the getRoundedMass method.
      */
     private static final int NUMBER_OF_ROUNDED_DECIMALS = 6;
@@ -112,21 +76,21 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for the modification.
      */
-    public PTM() {
+    public Modification() {
     }
 
     /**
      * Constructor for a reference modification.
      *
-     * @param type type of modification according to static attributes
+     * @param modificationType type of modification
      * @param name name of the modification
      * @param shortName short name of the modification
      * @param atomChainAdded atomic composition of the molecule added
      * @param atomChainRemoved atomic composition of the molecule removed
      * @param aminoAcidPattern residue pattern affected by this modification
      */
-    public PTM(int type, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern) {
-        this.type = type;
+    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern) {
+        this.modificationType = modificationType;
         this.name = name;
         this.shortName = shortName;
         this.atomChainAdded = atomChainAdded;
@@ -138,7 +102,7 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for a reference modification.
      *
-     * @param type type of modification according to static attributes
+     * @param modificationType type of modification
      * @param name name of the modification
      * @param shortName short name of the modification
      * @param atomChainAdded atomic composition of the molecule added
@@ -146,8 +110,8 @@ public class PTM extends ExperimentObject {
      * @param aminoAcidPattern residue pattern affected by this modification
      * @param cvTerm the CV term associated with this PTM, null if not set
      */
-    public PTM(int type, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
-        this.type = type;
+    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
+        this.modificationType = modificationType;
         this.name = name;
         this.shortName = shortName;
         this.atomChainAdded = atomChainAdded;
@@ -160,13 +124,13 @@ public class PTM extends ExperimentObject {
      * Simple constructor for a PTM. This constructor does not set the atomic
      * composition or the cv term.
      *
-     * @param type type of modification according to static attributes
+     * @param modificationType type of modification
      * @param name name of the modification
      * @param mass the mass of the modification
      * @param residues list of residues possibly targeted by this modification
      */
-    public PTM(int type, String name, Double mass, ArrayList<String> residues) {
-        this.type = type;
+    public Modification(ModificationType modificationType, String name, Double mass, ArrayList<String> residues) {
+        this.modificationType = modificationType;
         this.name = name;
         this.mass = mass;
         if (residues != null) {
@@ -175,12 +139,12 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Getter for the modification type.
-     *
+     * Returns the modification type.
+     * 
      * @return the modification type
      */
-    public int getType() {
-        return type;
+    public ModificationType getModificationType() {
+        return modificationType;
     }
 
     /**
@@ -230,7 +194,7 @@ public class PTM extends ExperimentObject {
         }
         return mass;
     }
-    
+
     /**
      * Estimates the mass of the PTM and stores it in the mass attribute.
      */
@@ -245,6 +209,27 @@ public class PTM extends ExperimentObject {
             }
             mass = tempMass;
         }
+    }
+
+    /**
+     * Returns the ambiguity key.
+     * 
+     * @return the ambiguity key
+     */
+    public String getAmbiguityKey() {
+        
+        if (ambiguityKey == null) {
+            setAmbiguityKey();
+        }
+        
+        return ambiguityKey;
+    }
+
+    /**
+     * Sets the ambiguity key.
+     */
+    private void setAmbiguityKey() {
+        this.ambiguityKey = getMass() + "";
     }
 
     /**
@@ -285,7 +270,6 @@ public class PTM extends ExperimentObject {
     public void setAtomChainAdded(AtomChain atomChainAdded) {
         this.atomChainAdded = atomChainAdded;
         mass = null;
-        massAsString = null;
     }
 
     /**
@@ -305,7 +289,6 @@ public class PTM extends ExperimentObject {
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
         this.atomChainRemoved = atomChainRemoved;
         mass = null;
-        massAsString = null;
     }
 
     /**
@@ -317,7 +300,7 @@ public class PTM extends ExperimentObject {
      * @return true if the atomic composition of the PTM is the same as the
      * other one
      */
-    public boolean isSameAtomicComposition(PTM anotherPTM) {
+    public boolean isSameAtomicComposition(Modification anotherPTM) {
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
             return false;
@@ -338,7 +321,7 @@ public class PTM extends ExperimentObject {
      * @return true if the targeted pattern of the PTM is the same as the other
      * one
      */
-    public boolean isSamePattern(PTM anotherPTM) {
+    public boolean isSamePattern(Modification anotherPTM) {
         if (pattern == null && anotherPTM.getPattern() != null && anotherPTM.getPattern().length() > 0) {
             return false;
         }
@@ -355,8 +338,8 @@ public class PTM extends ExperimentObject {
      *
      * @return true if the PTM is the same as the other one
      */
-    public boolean isSameAs(PTM anotherPTM) {
-        if (type != anotherPTM.getType()) {
+    public boolean isSameAs(Modification anotherPTM) {
+        if (modificationType != anotherPTM.getModificationType()) {
 //            System.out.println("type difference");
 //            System.out.println("local: " + type);
 //            System.out.println("parameters: " + anotherPTM.getType());
@@ -466,30 +449,6 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Returns true if the PTM is an n-term PTM.
-     *
-     * @return true if the PTM is an n-term PTM
-     */
-    public boolean isNTerm() {
-        return type == PTM.MODN
-                || type == PTM.MODNAA
-                || type == PTM.MODNP
-                || type == PTM.MODNPAA;
-    }
-
-    /**
-     * Returns true if the PTM is a c-term PTM.
-     *
-     * @return true if the PTM is a c-term PTM
-     */
-    public boolean isCTerm() {
-        return type == PTM.MODC
-                || type == PTM.MODCAA
-                || type == PTM.MODCP
-                || type == PTM.MODCPAA;
-    }
-
-    /**
      * Returns information about the PTM as an HTML tooltip.
      *
      * @return information about the PTM as an HTML tooltip
@@ -502,24 +461,24 @@ public class PTM extends ExperimentObject {
         tooltip += "Mass: " + getRoundedMass(4) + "<br>";
         tooltip += "Type: ";
 
-        switch (type) {
-            case MODAA:
+        switch (modificationType) {
+            case modaa:
                 tooltip += "Particular amino acid(s)";
                 break;
-            case MODN:
-            case MODNAA:
+            case modn_protein:
+            case modnaa_protein:
                 tooltip += "Protein N terminus";
                 break;
-            case MODC:
-            case MODCAA:
+            case modc_protein:
+            case modcaa_protein:
                 tooltip += "Protein C terminus";
                 break;
-            case MODNP:
-            case MODNPAA:
+            case modn_peptide:
+            case modnaa_peptide:
                 tooltip += "Peptide N terminus";
                 break;
-            case MODCP:
-            case MODCPAA:
+            case modc_peptide:
+            case modcaa_peptide:
                 tooltip += "Peptide C terminus";
                 break;
             default:
@@ -528,12 +487,10 @@ public class PTM extends ExperimentObject {
 
         tooltip += "<br>";
 
-        tooltip += "Target: ";
         if (pattern != null && !pattern.getAminoAcidsAtTarget().isEmpty()) {
+            tooltip += "Target: ";
             String patternAsString = pattern.toString();
             tooltip += patternAsString;
-        } else {
-            tooltip += "All";
         }
 
         tooltip += "</html>";
@@ -558,53 +515,41 @@ public class PTM extends ExperimentObject {
     public void setCvTerm(CvTerm cvTerm) {
         this.cvTerm = cvTerm;
     }
-    
-    /**
-     * Returns the mass of the PTM as a string.
-     * 
-     * @return the mass of the PTM as a string
-     */
-    public String getMassAsString() {
-        if (massAsString == null) {
-            massAsString = "" + getMass();
-        }
-        return massAsString;
-    }
-    
+
     @Override
     public String toString() {
-        
+
         String target = "";
-        switch (getType()) {
-            case PTM.MODAA:
+        switch (modificationType) {
+            case modaa:
                 target = getPattern().toString();
                 break;
-            case PTM.MODC:
+            case modc_protein:
                 target = "Protein C-terminus";
                 break;
-            case PTM.MODCAA:
+            case modcaa_protein:
                 target = "Protein C-terminus ending with " + getPattern().toString();
                 break;
-            case PTM.MODCP:
+            case modc_peptide:
                 target = "Peptide C-terminus";
                 break;
-            case PTM.MODCPAA:
+            case modcaa_peptide:
                 target = "Peptide C-terminus ending with " + getPattern().toString();
                 break;
-            case PTM.MODN:
+            case modn_protein:
                 target = "Protein N-terminus";
                 break;
-            case PTM.MODNAA:
+            case modnaa_protein:
                 target = "Protein N-terminus starting with " + getPattern().toString();
                 break;
-            case PTM.MODNP:
+            case modn_peptide:
                 target = "Peptide N-terminus";
                 break;
-            case PTM.MODNPAA:
+            case modnaa_peptide:
                 target = "Peptide N-terminus starting with " + getPattern().toString();
                 break;
         }
-        
+
         StringBuilder description = new StringBuilder();
         description.append(name);
         if (shortName != null && !shortName.equals("")) {
@@ -617,7 +562,7 @@ public class PTM extends ExperimentObject {
         if (atomChainRemoved != null) {
             description.append("-{").append(atomChainRemoved).append("}");
         }
-        
+
         double ptmMass = getRoundedMass();
         String sign;
         if (ptmMass > 0) {
@@ -626,7 +571,7 @@ public class PTM extends ExperimentObject {
             sign = "-";
         }
         description.append(" (").append(sign).append(ptmMass).append(")");
-        
+
         description.append(" targeting ").append(target);
 
         return description.toString();

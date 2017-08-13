@@ -1,30 +1,30 @@
-package com.compomics.util.experiment.biology;
+package com.compomics.util.experiment.biology.modifications;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.AtomImpl;
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.io.json.JsonMarshaller;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This factory will load PTM from an XML file and provide them on demand as
+ * This factory will load Modification from an XML file and provide them on demand as
  * standard class.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PTMFactory implements Serializable {
+public class ModificationFactory implements Serializable {
 
     /**
      * Serial number for serialization compatibility.
@@ -33,19 +33,20 @@ public class PTMFactory implements Serializable {
     /**
      * Instance of the factory.
      */
-    private static PTMFactory instance = null;
+    private static ModificationFactory instance = null;
     /**
-     * The folder containing the PTM factory.
+     * The folder containing the Modification factory.
      */
     private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
-     * The name of the PTM factory back-up file. The version number follows the one of utilities.
+     * The name of the Modification factory back-up file. The version number follows the
+     * one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.1.json";
+    private static String SERIALIZATION_FILE_NAME = "modificationFactory-4.12.1.json";
     /**
      * A map linking indexes with modifications.
      */
-    private HashMap<String, PTM> ptmMap = new HashMap<>();
+    private HashMap<String, Modification> modificationMap = new HashMap<>();
     /**
      * List of the indexes of default modifications.
      */
@@ -58,10 +59,6 @@ public class PTMFactory implements Serializable {
      * Mapping of the expected modification names to the color used.
      */
     private HashMap<String, Color> userColors = new HashMap<>();
-    /**
-     * Unknown modification to be returned when the modification is not found.
-     */
-    public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", "*", null, null, new AminoAcidPattern());
     /**
      * Suffix for the modification clone targeting a single amino acid instead
      * of a pattern.
@@ -79,7 +76,7 @@ public class PTMFactory implements Serializable {
     /**
      * Constructor for the factory.
      */
-    private PTMFactory() {
+    private ModificationFactory() {
         defaultModsSorted = false;
         setDefaultModifications();
     }
@@ -89,64 +86,67 @@ public class PTMFactory implements Serializable {
      *
      * @return the instance of the factory
      */
-    public static PTMFactory getInstance() {
+    public static ModificationFactory getInstance() {
         if (instance == null) {
             try {
                 File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
                 instance = loadFromFile(savedFile);
                 instance.checkUserModifications();
             } catch (Exception e) {
-                instance = new PTMFactory();
+                instance = new ModificationFactory();
             }
         }
         return instance;
     }
 
     /**
-     * Loads an enzyme factory from a file. The file must be an export of the factory in the json format.
-     * 
+     * Loads an enzyme factory from a file. The file must be an export of the
+     * factory in the json format.
+     *
      * @param file the file to load
-     * 
+     *
      * @return the enzyme factory saved in file
-     * 
-     * @throws IOException exception thrown whenever an error occurred while loading the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading the file
      */
-    public static PTMFactory loadFromFile(File file) throws IOException {
+    public static ModificationFactory loadFromFile(File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
-        PTMFactory result = (PTMFactory) jsonMarshaller.fromJson(PTMFactory.class, file);
+        ModificationFactory result = (ModificationFactory) jsonMarshaller.fromJson(ModificationFactory.class, file);
         return result;
     }
-    
+
     /**
-     * Saves a PTM factory to a file.
-     * 
-     * @param ptmFactory the PTM factory to save
+     * Saves a Modification factory to a file.
+     *
+     * @param modificationFactory the Modification factory to save
      * @param file the file where to save
-     * 
-     * @throws IOException exception thrown whenever an error occurred while saving the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the file
      */
-    public static void saveToFile(PTMFactory ptmFactory, File file) throws IOException {
+    public static void saveToFile(ModificationFactory modificationFactory, File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
-        jsonMarshaller.saveObjectToJson(ptmFactory, file);
+        jsonMarshaller.saveObjectToJson(modificationFactory, file);
     }
-    
+
     /**
-     * Add neutral losses and reporter ions for the user PTMs.
+     * Add neutral losses and reporter ions for the user Modifications.
      */
     private void checkUserModifications() {
         for (String tempUserMod : getUserModifications()) {
-            
-            PTM ptm = getPTM(tempUserMod);
-            
-            if (!ptm.getNeutralLosses().isEmpty()) {
-                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+
+            Modification modification = getModification(tempUserMod);
+
+            if (!modification.getNeutralLosses().isEmpty()) {
+                for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
                     if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
                         NeutralLoss.addNeutralLoss(neutralLoss);
                     }
                 }
             }
-            if (!ptm.getReporterIons().isEmpty()) {
-                for (ReporterIon reporterIon : ptm.getReporterIons()) {
+            if (!modification.getReporterIons().isEmpty()) {
+                for (ReporterIon reporterIon : modification.getReporterIons()) {
                     if (ReporterIon.getReporterIon(reporterIon.getName()) == null) {
                         ReporterIon.addReporterIon(reporterIon);
                     }
@@ -159,7 +159,7 @@ public class PTMFactory implements Serializable {
      * Clears the factory getInstance() needs to be called afterwards.
      */
     public void clearFactory() {
-        instance = new PTMFactory();
+        instance = new ModificationFactory();
     }
 
     /**
@@ -173,7 +173,7 @@ public class PTMFactory implements Serializable {
      * Saves the factory in the user folder.
      *
      * @throws IOException exception thrown whenever an error occurred while
-     * saving the ptmFactory
+     * saving the modificationFactory
      */
     public void saveFactory() throws IOException {
         File factoryFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
@@ -184,17 +184,17 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given PTM targeting a single amino acid instead of
+     * Returns a clone of the given Modification targeting a single amino acid instead of
      * a pattern.
      *
      * @param modification the modification of interest
      *
-     * @return a clone of the given PTM targeting a single amino acid instead of
+     * @return a clone of the given Modification targeting a single amino acid instead of
      * a pattern
      */
-    public static PTM getSingleAAPTM(PTM modification) {
+    public static Modification getSingleAAModification(Modification modification) {
         if (!modification.isStandardSearch()) {
-            return new PTM(modification.getType(), modification.getShortName(),
+            return new Modification(modification.getModificationType(), modification.getShortName(),
                     modification.getName() + SINGLE_AA_SUFFIX, modification.getAtomChainAdded(),
                     modification.getAtomChainRemoved(), modification.getPattern().getStandardSearchPattern());
         } else {
@@ -203,87 +203,80 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given PTM targeting a single amino acid instead of
+     * Returns a clone of the given Modification targeting a single amino acid instead of
      * a pattern.
      *
      * @param modificationName the name of the modification of interest
      *
-     * @return a clone of the given PTM targeting a single amino acid instead of
+     * @return a clone of the given Modification targeting a single amino acid instead of
      * a pattern
      */
-    public PTM getSingleAAPTM(String modificationName) {
-        PTM modification = getPTM(modificationName);
-        return getSingleAAPTM(modification);
+    public Modification getSingleAAModification(String modificationName) {
+        Modification modification = getModification(modificationName);
+        return getSingleAAModification(modification);
     }
 
     /**
      * Adds a new user modification.
      *
-     * @param ptm the new modification to add
+     * @param modification the new modification to add
      */
-    public void addUserPTM(PTM ptm) {
+    public void addUserModification(Modification modification) {
 
-        String modName = ptm.getName();
-        ptmMap.put(modName, ptm);
-        if (!userMods.contains(modName)) {
-            userMods.add(modName);
+        String modn_proteiname = modification.getName();
+        modificationMap.put(modn_proteiname, modification);
+        if (!userMods.contains(modn_proteiname)) {
+            userMods.add(modn_proteiname);
         } else {
-            userMods.set(userMods.indexOf(modName), modName);
+            userMods.set(userMods.indexOf(modn_proteiname), modn_proteiname);
         }
         usersModsSorted = false;
 
         // add the neutral losses and reporter ions
-        if (!ptm.getNeutralLosses().isEmpty()) {
-            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
-                    NeutralLoss.addNeutralLoss(neutralLoss);
-                }
+        for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+            if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
+                NeutralLoss.addNeutralLoss(neutralLoss);
             }
         }
-        if (!ptm.getReporterIons().isEmpty()) {
-            for (ReporterIon reporterIon : ptm.getReporterIons()) {
-                if (ReporterIon.getReporterIon(reporterIon.getName()) == null) {
-                    ReporterIon.addReporterIon(reporterIon);
-                }
+        for (ReporterIon reporterIon : modification.getReporterIons()) {
+            if (ReporterIon.getReporterIon(reporterIon.getName()) == null) {
+                ReporterIon.addReporterIon(reporterIon);
             }
         }
     }
 
     /**
-     * Removes a user PTM.
+     * Removes a user Modification.
      *
-     * @param ptmName the name of the PTM to remove
+     * @param modificationName the name of the Modification to remove
      */
-    public void removeUserPtm(String ptmName) {
-        if (defaultMods.contains(ptmName)) {
-            throw new IllegalArgumentException("Impossible to remove default modification " + ptmName);
+    public void removeUserPtm(String modificationName) {
+        if (defaultMods.contains(modificationName)) {
+            throw new IllegalArgumentException("Impossible to remove default modification " + modificationName);
         }
-        ptmMap.remove(ptmName);
-        userMods.remove(ptmName);
+        modificationMap.remove(modificationName);
+        userMods.remove(modificationName);
     }
 
     /**
-     * Returns the PTM indexed by its name.
+     * Returns the Modification indexed by its name. Null if none found.
      *
-     * @param name the name of the desired PTM
-     * @return The desired PTM
+     * @param name the name of the modification of interest
+     * 
+     * @return the modification of interest
      */
-    public PTM getPTM(String name) {
-        PTM ptm = ptmMap.get(name);
-        if (ptm != null) {
-            return ptm;
-        }
-        return unknownPTM;
+    public Modification getModification(String name) {
+        return modificationMap.get(name);
     }
 
     /**
-     * Returns a boolean indicating whether the PTM is loaded in the factory.
+     * Returns a boolean indicating whether the Modification is loaded in the factory.
      *
-     * @param name the name of the PTM
-     * @return a boolean indicating whether the PTM is loaded in the factory
+     * @param name the name of the Modification
+     * @return a boolean indicating whether the Modification is loaded in the factory
      */
-    public boolean containsPTM(String name) {
-        return ptmMap.containsKey(name) || name.equals(unknownPTM.getName());
+    public boolean containsModification(String name) {
+        return modificationMap.containsKey(name);
     }
 
     /**
@@ -333,23 +326,23 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the names of all imported PTMs.
+     * Returns the names of all imported Modifications.
      *
-     * @return the names of all imported PTMs
+     * @return the names of all imported Modifications
      */
-    public ArrayList<String> getPTMs() {
-        return new ArrayList<>(ptmMap.keySet());
+    public ArrayList<String> getModifications() {
+        return new ArrayList<>(modificationMap.keySet());
     }
 
     /**
-     * Convenience method returning a boolean indicating whether a PTM is user
+     * Convenience method returning a boolean indicating whether a Modification is user
      * defined or default.
      *
-     * @param ptmName the name of the PTM
-     * @return boolean indicating whether a PTM is user defined
+     * @param modificationName the name of the Modification
+     * @return boolean indicating whether a Modification is user defined
      */
-    public boolean isUserDefined(String ptmName) {
-        return !defaultMods.contains(ptmName);
+    public boolean isUserDefined(String modificationName) {
+        return !defaultMods.contains(modificationName);
     }
 
     /**
@@ -364,352 +357,28 @@ public class PTMFactory implements Serializable {
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
         PtmSettings modificationProfile = searchParameters.getPtmSettings();
         ArrayList<String> toCheck = new ArrayList<>();
-        for (String modification : modificationProfile.getBackedUpPtms()) {
-            if (containsPTM(modification)) {
-                PTM oldPTM = getPTM(modification);
-                PTM newPTM = modificationProfile.getPtm(modification);
-                if (!oldPTM.isSameAs(newPTM)) {
-                    toCheck.add(modification);
+        for (String newModificationName : modificationProfile.getBackedUpPtms()) {
+            if (containsModification(newModificationName)) {
+                Modification oldModification = getModification(newModificationName);
+                Modification newModification = modificationProfile.getPtm(newModificationName);
+                if (!oldModification.isSameAs(newModification)) {
+                    toCheck.add(newModificationName);
                     if (overwrite) {
-                        PTM ptm = modificationProfile.getPtm(modification);
-                        ptmMap.put(modification, ptm);
-                        for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                        modificationMap.put(newModificationName, newModification);
+                        for (NeutralLoss neutralLoss : newModification.getNeutralLosses()) {
                             NeutralLoss.addNeutralLoss(neutralLoss);
                         }
                     }
                 }
             } else {
-                PTM ptm = modificationProfile.getPtm(modification);
-                addUserPTM(ptm);
-                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                Modification modification = modificationProfile.getPtm(newModificationName);
+                addUserModification(modification);
+                for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
                     NeutralLoss.addNeutralLoss(neutralLoss);
                 }
             }
         }
         return toCheck;
-    }
-
-    /**
-     * Returns the expected modifications based on the modification profile, the
-     * peptide found and the modification details. Returns the names in a map
-     * where the modification names are indexed by the index on the sequence. 1
-     * is the first amino acid.
-     *
-     * @param modificationProfile the modification profile used for the search
-     * (available in the search parameters)
-     * @param peptide the peptide identified with the parent proteins (necessary
-     * for protein termini modifications)
-     * @param modificationMass the modification mass as found in the search
-     * results
-     * @param ptmMassTolerance the mass tolerance to use to match the
-     * modification mass
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
-     *
-     * @return a map of expected PTMs corresponding to the given
-     * characteristics. Empty if none found.
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(PtmSettings modificationProfile, Peptide peptide,
-            double modificationMass, double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
-
-        HashMap<Integer, ArrayList<String>> mapping = new HashMap<>();
-
-        for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
-            PTM ptm = getPTM(ptmName);
-            if (Math.abs(ptm.getMass() - modificationMass) <= ptmMassTolerance) {
-                for (int site : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
-                    ArrayList<String> modifications = mapping.get(site);
-                    if (modifications == null) {
-                        modifications = new ArrayList<>();
-                        mapping.put(site, modifications);
-                    }
-                    modifications.add(ptmName);
-                }
-            }
-        }
-
-        return mapping;
-    }
-
-    /**
-     * Returns the names of the possibly expected modification based on the name
-     * of the expected modification in a map where the PTM names are indexed by
-     * their potential site on the sequence. 1 is the first amino acid.
-     * Candidate PTMs are expected non fixed modifications with the same mass.
-     *
-     * @param modificationProfile the modification profile used for the search
-     * (available in the search parameters)
-     * @param peptide the peptide
-     * @param ptmName the name of the searched PTM
-     * @param ptmMassTolerance the PTM mass tolerance
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
-     *
-     * @return the possible expected modification names. Empty if not found.
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(PtmSettings modificationProfile, Peptide peptide, String ptmName,
-            Double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        PTM ptm = getPTM(ptmName);
-        return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), ptmMassTolerance, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
-    }
-
-    /**
-     * Removes the fixed modifications of the peptide and remaps the one
-     * searched for according to the ModificationProfile. Note: for protein
-     * terminal modification the protein must be loaded in the sequence factory.
-     *
-     * @param modificationProfile the modification profile
-     * @param peptide the peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public void checkFixedModifications(PtmSettings modificationProfile, Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-        if (peptide.isModified()) {
-            ArrayList<ModificationMatch> toRemove = new ArrayList<>(peptide.getNModifications());
-            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (!modMatch.getVariable()) {
-                    toRemove.add(modMatch);
-                }
-            }
-            for (ModificationMatch modMatch : toRemove) {
-                peptide.getModificationMatches().remove(modMatch);
-            }
-        }
-        HashMap<Integer, Double> taken = new HashMap<>(peptide.getNModifications());
-
-        for (String fixedModification : modificationProfile.getFixedModifications()) {
-            PTM ptm = getPTM(fixedModification);
-            switch (ptm.getType()) {
-                case PTM.MODAA:
-                    for (int pos : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
-                        if (!taken.containsKey(pos)) {
-                            taken.put(pos, ptm.getMass());
-                            peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
-                        } else if (taken.get(pos) != ptm.getMass()) { // @TODO: compare against the accuracy
-                            throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
-                                    + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
-                        }
-                    }
-                    break;
-                case PTM.MODC:
-                    if (!peptide.isCterm(sequenceMatchingPreferences).isEmpty()) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-                    }
-                    break;
-                case PTM.MODN:
-                    if (!peptide.isNterm(sequenceMatchingPreferences).isEmpty()) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                    }
-                    break;
-                case PTM.MODCAA: {
-                    String sequence = peptide.getSequence();
-                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-                    }
-                    break;
-                }
-                case PTM.MODNAA:
-                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                    }
-                    break;
-                case PTM.MODCP:
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-                    break;
-                case PTM.MODNP:
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                    break;
-                case PTM.MODCPAA: {
-                    String sequence = peptide.getSequence();
-                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, sequence.length()));
-                    }
-                    break;
-                }
-                case PTM.MODNPAA:
-                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Removes the fixed modifications of the given tag and remaps the one
-     * searched for according to the ModificationProfile. Note: for protein
-     * terminal modification the protein must be loaded in the sequence factory.
-     *
-     * @param modificationProfile the modification profile
-     * @param tag the tag
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * PTM to amino acid mapping
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public void checkFixedModifications(PtmSettings modificationProfile, Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-        int indexInTag = 0, componentNumber = 0;
-        
-        for (TagComponent tagComponent : tag.getContent()) {
-            
-            componentNumber++;
-            
-            if (tagComponent instanceof AminoAcidPattern) {
-                
-                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                ArrayList<ModificationMatch> toRemove = new ArrayList<>();
-                
-                for (int aa : aminoAcidPattern.getModificationIndexes()) {
-                    ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
-                    for (ModificationMatch modMatch : modificationMatches) {
-                        if (!modMatch.getVariable()) {
-                            toRemove.add(modMatch);
-                        }
-                    }
-                    for (ModificationMatch modMatch : toRemove) {
-                        aminoAcidPattern.removeModificationMatch(aa, modMatch);
-                    }
-                }
-                
-                for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
-                    
-                    indexInTag++;
-                    Double modificationMass = null;
-
-                    for (String fixedModification : modificationProfile.getFixedModifications()) {
-                        
-                        PTM ptm = getPTM(fixedModification);
-                        
-                        if (ptm.getType() == PTM.MODAA) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
-                                if (modificationMass == null) {
-                                    modificationMass = ptm.getMass();
-                                    aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                                } else if (modificationMass != ptm.getMass()) { // @TODO: compare against the accuracy
-                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
-                                            + modificationMass + ", " + ptm.getMass() + ") at position " + aa + " in pattern "
-                                            + aminoAcidPattern.asSequence() + " of tag " + tag.asSequence() + ".");
-                                }
-                            }
-                        } else if (ptm.getType() == PTM.MODCP && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {
-                            aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                        } else if (ptm.getType() == PTM.MODNP && componentNumber == 1 && aa == 1) {
-                            aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
-                        } else if (ptm.getType() == PTM.MODCPAA && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
-                                aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                            }
-                        } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
-                                aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
-                            }
-                        }
-                    }
-                }
-            } else if (tagComponent instanceof AminoAcidSequence) {
-              
-                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                
-                ArrayList<ModificationMatch> toRemove = new ArrayList<>();
-                
-                for (int aa : aminoAcidSequence.getModificationIndexes()) {
-                    ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(aa);
-                    for (ModificationMatch modMatch : modificationMatches) {
-                        if (!modMatch.getVariable()) {
-                            toRemove.add(modMatch);
-                        }
-                    }
-                    for (ModificationMatch modMatch : toRemove) {
-                        aminoAcidSequence.removeModificationMatch(aa, modMatch);
-                    }
-                }
-                
-                for (int aa = 1; aa <= aminoAcidSequence.length(); aa++) {
-                    indexInTag++;
-                    Double modificationMass = null;
-
-                    for (String fixedModification : modificationProfile.getFixedModifications()) {
-                        PTM ptm = getPTM(fixedModification);
-                        if (ptm.getType() == PTM.MODAA) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
-                                if (modificationMass == null) {
-                                    modificationMass = ptm.getMass();
-                                    aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                                } else if (modificationMass != ptm.getMass()) { // @TODO: compare against the accuracy
-                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
-                                            + modificationMass + ", " + ptm.getMass() + ") at position " + aa + " in pattern "
-                                            + aminoAcidSequence.asSequence() + " of tag " + tag.asSequence() + ".");
-                                }
-                            }
-                        } else if (ptm.getType() == PTM.MODCP && componentNumber == tag.getContent().size() && aa == aminoAcidSequence.length()) {
-                            aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                        } else if (ptm.getType() == PTM.MODNP && componentNumber == 1 && aa == 1) {
-                            aminoAcidSequence.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
-                        } else if (ptm.getType() == PTM.MODCPAA && componentNumber == tag.getContent().size() && aa == aminoAcidSequence.length()) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
-                                aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
-                            }
-                        } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
-                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
-                                aminoAcidSequence.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
-                            }
-                        }
-                    }
-                }
-            } else {
-                indexInTag++;
-            }
-        }
     }
 
     /**
@@ -769,21 +438,21 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Tries to convert a PRIDE PTM to utilities PTM name, and add it to the
-     * modification profile. Unknown PTMs are added to the unknown PTMs
+     * Tries to convert a PRIDE Modification to utilities Modification name, and add it to the
+     * modification profile. Unknown Modifications are added to the unknown Modifications
      * arraylist.
      *
-     * @param pridePtmName the PRIDE PTM name
-     * @param modProfile the modification profile to add the PTMs to
-     * @param unknownPtms the list of unknown PTMS, updated during this method
-     * @param isFixed if true, the PTM will be added as a fixed modification
+     * @param pridePtmName the PRIDE Modification name
+     * @param modProfile the modification profile to add the Modifications to
+     * @param unknownPtms the list of unknown ModificationS, updated during this method
+     * @param isFixed if true, the Modification will be added as a fixed modification
      * @return a pride parameters report as a string (for use in PRIDE Reshake)
      */
     public String convertPridePtm(String pridePtmName, PtmSettings modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
 
         String prideParametersReport = "";
 
-        // special cases for when multiple ptms are needed
+        // special cases for when multiple modifications are needed
         if (pridePtmName.equalsIgnoreCase("iTRAQ4plex")
                 || pridePtmName.equalsIgnoreCase("iTRAQ4plex reporter+balance reagent N-acylated residue")
                 || pridePtmName.equalsIgnoreCase("iTRAQ4plex reporter+balance reagent acylated residue")
@@ -795,15 +464,15 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("iTRAQ4plex-117 reporter+balance reagent N6-acylated lysine")) {
 
             if (!modProfile.contains("iTRAQ 4-plex of K")) {
-                modProfile.addFixedModification(getPTM("iTRAQ 4-plex of K"));
+                modProfile.addFixedModification(getModification("iTRAQ 4-plex of K"));
                 prideParametersReport += "<br>" + "iTRAQ 4-plex of K" + " (assumed fixed)";
             }
             if (!modProfile.contains("iTRAQ 4-plex of N-term")) {
-                modProfile.addFixedModification(getPTM("iTRAQ 4-plex of N-term"));
+                modProfile.addFixedModification(getModification("iTRAQ 4-plex of N-term"));
                 prideParametersReport += "<br>" + "iTRAQ 4-plex of N-term" + " (assumed fixed)";
             }
             if (!modProfile.contains("iTRAQ 4-plex of Y")) {
-                modProfile.addVariableModification(getPTM("iTRAQ 4-plex of Y"));
+                modProfile.addVariableModification(getModification("iTRAQ 4-plex of Y"));
                 prideParametersReport += "<br>" + "iTRAQ 4-plex of Y" + " (assumed variable)";
             }
 
@@ -818,26 +487,26 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("iTRAQ8plex:13C(6)15N(2)")) {
 
             if (!modProfile.contains("iTRAQ 8-plex of K")) {
-                modProfile.addFixedModification(getPTM("iTRAQ 8-plex of K"));
+                modProfile.addFixedModification(getModification("iTRAQ 8-plex of K"));
                 prideParametersReport += "<br>" + "iTRAQ 8-plex of K" + " (assumed fixed)";
             }
             if (!modProfile.contains("iTRAQ 8-plex of N-term")) {
-                modProfile.addFixedModification(getPTM("iTRAQ 8-plex of N-term"));
+                modProfile.addFixedModification(getModification("iTRAQ 8-plex of N-term"));
                 prideParametersReport += "<br>" + "iTRAQ 8-plex of N-term" + " (assumed fixed)";
             }
             if (!modProfile.contains("iTRAQ 8-plex of Y")) {
-                modProfile.addVariableModification(getPTM("iTRAQ 8-plex of Y"));
+                modProfile.addVariableModification(getModification("iTRAQ 8-plex of Y"));
                 prideParametersReport += "<br>" + "iTRAQ 8-plex of Y" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("TMT2plex") || pridePtmName.equalsIgnoreCase("TMTduplex")) {
 
             if (!modProfile.contains("TMT 2-plex of K")) {
-                modProfile.addFixedModification(getPTM("TMT 2-plex of K"));
+                modProfile.addFixedModification(getModification("TMT 2-plex of K"));
                 prideParametersReport += "<br>" + "TMT 2-plex of K" + " (assumed fixed)";
             }
             if (!modProfile.contains("TMT 2-plex of N-term")) {
-                modProfile.addFixedModification(getPTM("TMT 2-plex of N-term"));
+                modProfile.addFixedModification(getModification("TMT 2-plex of N-term"));
                 prideParametersReport += "<br>" + "TMT 2-plex of N-term" + " (assumed fixed)";
             }
 
@@ -846,11 +515,11 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("TMT6plex-131 reporter+balance reagent N6-acylated lysine")) {
 
             if (!modProfile.contains("TMT 6-plex of K")) {
-                modProfile.addFixedModification(getPTM("TMT 6-plex of K"));
+                modProfile.addFixedModification(getModification("TMT 6-plex of K"));
                 prideParametersReport += "<br>" + "TMT 6-plex of K" + " (assumed fixed)";
             }
             if (!modProfile.contains("TMT 6-plex of N-term")) {
-                modProfile.addFixedModification(getPTM("TMT 6-plex of N-term"));
+                modProfile.addFixedModification(getModification("TMT 6-plex of N-term"));
                 prideParametersReport += "<br>" + "TMT 6-plex of N-term" + " (assumed fixed)";
             }
 
@@ -859,11 +528,11 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("TMT10plex-131 reporter+balance reagent N6-acylated lysine")) {
 
             if (!modProfile.contains("TMT 10-plex of K")) {
-                modProfile.addFixedModification(getPTM("TMT 10-plex of K"));
+                modProfile.addFixedModification(getModification("TMT 10-plex of K"));
                 prideParametersReport += "<br>" + "TMT 10-plex of K" + " (assumed fixed)";
             }
             if (!modProfile.contains("TMT 10-plex of N-term")) {
-                modProfile.addFixedModification(getPTM("TMT 10-plex of N-term"));
+                modProfile.addFixedModification(getModification("TMT 10-plex of N-term"));
                 prideParametersReport += "<br>" + "TMT 10-plex of N-term" + " (assumed fixed)";
             }
 
@@ -874,57 +543,57 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("phosphorylated residue")) {
 
             if (!modProfile.contains("Phosphorylation of S")) {
-                modProfile.addVariableModification(getPTM("Phosphorylation of S"));
+                modProfile.addVariableModification(getModification("Phosphorylation of S"));
                 prideParametersReport += "<br>" + "Phosphorylation of S" + " (assumed variable)";
             }
             if (!modProfile.contains("Phosphorylation of T")) {
-                modProfile.addVariableModification(getPTM("Phosphorylation of T"));
+                modProfile.addVariableModification(getModification("Phosphorylation of T"));
                 prideParametersReport += "<br>" + "Phosphorylation of T" + " (assumed variable)";
             }
             if (!modProfile.contains("Phosphorylation of Y")) {
-                modProfile.addVariableModification(getPTM("Phosphorylation of Y"));
+                modProfile.addVariableModification(getModification("Phosphorylation of Y"));
                 prideParametersReport += "<br>" + "Phosphorylation of Y" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Palmitoylation")) {
 
             if (!modProfile.contains("Palmitoylation of C")) {
-                modProfile.addVariableModification(getPTM("Palmitoylation of C"));
+                modProfile.addVariableModification(getModification("Palmitoylation of C"));
                 prideParametersReport += "<br>" + "Palmitoylation of C" + " (assumed variable)";
             }
             if (!modProfile.contains("Palmitoylation of K")) {
-                modProfile.addVariableModification(getPTM("Palmitoylation of K"));
+                modProfile.addVariableModification(getModification("Palmitoylation of K"));
                 prideParametersReport += "<br>" + "Palmitoylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Palmitoylation of S")) {
-                modProfile.addVariableModification(getPTM("Palmitoylation of S"));
+                modProfile.addVariableModification(getModification("Palmitoylation of S"));
                 prideParametersReport += "<br>" + "Palmitoylation of S" + " (assumed variable)";
             }
             if (!modProfile.contains("Palmitoylation of T")) {
-                modProfile.addVariableModification(getPTM("Palmitoylation of T"));
+                modProfile.addVariableModification(getModification("Palmitoylation of T"));
                 prideParametersReport += "<br>" + "Palmitoylation of T" + " (assumed variable)";
             }
             if (!modProfile.contains("Palmitoylation of protein N-term")) {
-                modProfile.addVariableModification(getPTM("Palmitoylation of protein N-term"));
+                modProfile.addVariableModification(getModification("Palmitoylation of protein N-term"));
                 prideParametersReport += "<br>" + "Palmitoylation of protein N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Formylation")) {
 
             if (!modProfile.contains("Formylation of K")) {
-                modProfile.addVariableModification(getPTM("Formylation of K"));
+                modProfile.addVariableModification(getModification("Formylation of K"));
                 prideParametersReport += "<br>" + "Formylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Formylation of S")) {
-                modProfile.addVariableModification(getPTM("Formylation of S"));
+                modProfile.addVariableModification(getModification("Formylation of S"));
                 prideParametersReport += "<br>" + "Formylation of S" + " (assumed variable)";
             }
             if (!modProfile.contains("Formylation of T")) {
-                modProfile.addVariableModification(getPTM("Formylation of T"));
+                modProfile.addVariableModification(getModification("Formylation of T"));
                 prideParametersReport += "<br>" + "Formylation of T" + " (assumed variable)";
             }
             if (!modProfile.contains("Formylation of peptide N-term")) {
-                modProfile.addVariableModification(getPTM("Formylation of peptide N-term"));
+                modProfile.addVariableModification(getModification("Formylation of peptide N-term"));
                 prideParametersReport += "<br>" + "Formylation of peptide N-term" + " (assumed variable)";
             }
 
@@ -932,67 +601,67 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("carbamoylated residue")) {
 
             if (!modProfile.contains("Carbamylation of K")) {
-                modProfile.addVariableModification(getPTM("Carbamylation of K"));
+                modProfile.addVariableModification(getModification("Carbamylation of K"));
                 prideParametersReport += "<br>" + "Carbamylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Carbamilation of protein N-term")) {
-                modProfile.addVariableModification(getPTM("Carbamilation of protein N-term"));
+                modProfile.addVariableModification(getModification("Carbamilation of protein N-term"));
                 prideParametersReport += "<br>" + "Carbamilation of protein N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(12)C labeled N6-propanoyl-L-lysine")) {
 
             if (!modProfile.contains("Propionyl of K light")) {
-                modProfile.addVariableModification(getPTM("Propionyl of K light"));
+                modProfile.addVariableModification(getModification("Propionyl of K light"));
                 prideParametersReport += "<br>" + "Propionyl of K light" + " (assumed variable)";
             }
             if (!modProfile.contains("Propionyl of peptide N-term light")) {
-                modProfile.addVariableModification(getPTM("Propionyl of peptide N-term light"));
+                modProfile.addVariableModification(getModification("Propionyl of peptide N-term light"));
                 prideParametersReport += "<br>" + "Propionyl of peptide N-term light" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(13)C labeled N6-propanoyl-L-lysine")) {
 
             if (!modProfile.contains("Propionyl of K heavy")) {
-                modProfile.addVariableModification(getPTM("Propionyl of K heavy"));
+                modProfile.addVariableModification(getModification("Propionyl of K heavy"));
                 prideParametersReport += "<br>" + "Propionyl of K heavy" + " (assumed variable)";
             }
             if (!modProfile.contains("Propionyl of peptide N-term heavy")) {
-                modProfile.addVariableModification(getPTM("Propionyl of peptide N-term heavy"));
+                modProfile.addVariableModification(getModification("Propionyl of peptide N-term heavy"));
                 prideParametersReport += "<br>" + "Propionyl of peptide N-term heavy" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(2)H residue methyl ester")) {
 
             if (!modProfile.contains("Trideuterated Methyl Ester of D")) {
-                modProfile.addVariableModification(getPTM("Trideuterated Methyl Ester of D"));
+                modProfile.addVariableModification(getModification("Trideuterated Methyl Ester of D"));
                 prideParametersReport += "<br>" + "Trideuterated Methyl Ester of D" + " (assumed variable)";
             }
             if (!modProfile.contains("Trideuterated Methyl Ester of E")) {
-                modProfile.addVariableModification(getPTM("Trideuterated Methyl Ester of E"));
+                modProfile.addVariableModification(getModification("Trideuterated Methyl Ester of E"));
                 prideParametersReport += "<br>" + "Trideuterated Methyl Ester of E" + " (assumed variable)";
             }
             if (!modProfile.contains("Trideuterated Methyl Ester of K")) {
-                modProfile.addVariableModification(getPTM("Trideuterated Methyl Ester of K"));
+                modProfile.addVariableModification(getModification("Trideuterated Methyl Ester of K"));
                 prideParametersReport += "<br>" + "Trideuterated Methyl Ester of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Trideuterated Methyl Ester of R")) {
-                modProfile.addVariableModification(getPTM("Trideuterated Methyl Ester of R"));
+                modProfile.addVariableModification(getModification("Trideuterated Methyl Ester of R"));
                 prideParametersReport += "<br>" + "Trideuterated Methyl Ester of R" + " (assumed variable)";
             }
             if (!modProfile.contains("Trideuterated Methyl Ester of peptide C-term")) {
-                modProfile.addVariableModification(getPTM("Trideuterated Methyl Ester of peptide C-term"));
+                modProfile.addVariableModification(getModification("Trideuterated Methyl Ester of peptide C-term"));
                 prideParametersReport += "<br>" + "Trideuterated Methyl Ester of peptide C-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("6x(13)C labeled residue")) {
 
             if (!modProfile.contains("Arginine 13C6")) {
-                modProfile.addVariableModification(getPTM("Arginine 13C6"));
+                modProfile.addVariableModification(getModification("Arginine 13C6"));
                 prideParametersReport += "<br>" + "Arginine 13C6" + " (assumed variable)";
             }
             if (!modProfile.contains("Lysine 13C6")) {
-                modProfile.addVariableModification(getPTM("Lysine 13C6"));
+                modProfile.addVariableModification(getModification("Lysine 13C6"));
                 prideParametersReport += "<br>" + "Lysine 13C6" + " (assumed variable)";
             }
 
@@ -1002,74 +671,74 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("acetylated residue")) {
 
             if (!modProfile.contains("Acetylation of K")) {
-                modProfile.addVariableModification(getPTM("Acetylation of K"));
+                modProfile.addVariableModification(getModification("Acetylation of K"));
                 prideParametersReport += "<br>" + "Acetylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Acetylation of peptide N-term")) {
-                modProfile.addVariableModification(getPTM("Acetylation of peptide N-term"));
+                modProfile.addVariableModification(getModification("Acetylation of peptide N-term"));
                 prideParametersReport += "<br>" + "Acetylation of peptide N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("dimethylated residue")) {
 
             if (!modProfile.contains("Dimethylation of K")) {
-                modProfile.addVariableModification(getPTM("Dimethylation of K"));
+                modProfile.addVariableModification(getModification("Dimethylation of K"));
                 prideParametersReport += "<br>" + "Dimethylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Dimethylation of R")) {
-                modProfile.addVariableModification(getPTM("Dimethylation of R"));
+                modProfile.addVariableModification(getModification("Dimethylation of R"));
                 prideParametersReport += "<br>" + "Dimethylation of R" + " (assumed variable)";
             }
             if (!modProfile.contains("Dimethylation of peptide N-term")) {
-                modProfile.addVariableModification(getPTM("Dimethylation of peptide N-term"));
+                modProfile.addVariableModification(getModification("Dimethylation of peptide N-term"));
                 prideParametersReport += "<br>" + "Dimethylation of peptide N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("trimethylated residue")) {
 
             if (!modProfile.contains("Trimethylation of K")) {
-                modProfile.addVariableModification(getPTM("Trimethylation of K"));
+                modProfile.addVariableModification(getModification("Trimethylation of K"));
                 prideParametersReport += "<br>" + "Trimethylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Trimethylation of R")) {
-                modProfile.addVariableModification(getPTM("Trimethylation of R"));
+                modProfile.addVariableModification(getModification("Trimethylation of R"));
                 prideParametersReport += "<br>" + "Trimethylation of R" + " (assumed variable)";
             }
             if (!modProfile.contains("Trimethylation of protein N-term A")) {
-                modProfile.addVariableModification(getPTM("Trimethylation of protein N-term A"));
+                modProfile.addVariableModification(getModification("Trimethylation of protein N-term A"));
                 prideParametersReport += "<br>" + "Trimethylation of protein N-term A" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Acetylation")) {
 
             if (!modProfile.contains("Acetylation of K")) {
-                modProfile.addVariableModification(getPTM("Acetylation of K"));
+                modProfile.addVariableModification(getModification("Acetylation of K"));
                 prideParametersReport += "<br>" + "Acetylation of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Acetylation of peptide N-term")) {
-                modProfile.addVariableModification(getPTM("Acetylation of peptide N-term"));
+                modProfile.addVariableModification(getModification("Acetylation of peptide N-term"));
                 prideParametersReport += "<br>" + "Acetylation of peptide N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Guanidination")) {
 
             if (!modProfile.contains("Guanidination of K")) {
-                modProfile.addVariableModification(getPTM("Guanidination of K"));
+                modProfile.addVariableModification(getModification("Guanidination of K"));
                 prideParametersReport += "<br>" + "Guanidination of K" + " (assumed variable)";
             }
             if (!modProfile.contains("Guanidination of peptide N-term")) {
-                modProfile.addVariableModification(getPTM("Guanidination of peptide N-term"));
+                modProfile.addVariableModification(getModification("Guanidination of peptide N-term"));
                 prideParametersReport += "<br>" + "Guanidination of peptide N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Methylthio")) {
 
             if (!modProfile.contains("Methylthio of N")) {
-                modProfile.addVariableModification(getPTM("Methylthio of N"));
+                modProfile.addVariableModification(getModification("Methylthio of N"));
                 prideParametersReport += "<br>" + "Methylthio of N" + " (assumed variable)";
             }
             if (!modProfile.contains("Methylthio of D")) {
-                modProfile.addVariableModification(getPTM("Methylthio of D"));
+                modProfile.addVariableModification(getModification("Methylthio of D"));
                 prideParametersReport += "<br>" + "Methylthio of D" + " (assumed variable)";
             }
 
@@ -1077,15 +746,15 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("sulfated residue")) {
 
             if (!modProfile.contains("Sulfonation of Y")) {
-                modProfile.addVariableModification(getPTM("Sulfonation of Y"));
+                modProfile.addVariableModification(getModification("Sulfonation of Y"));
                 prideParametersReport += "<br>" + "Sulfonation of Y" + " (assumed variable)";
             }
             if (!modProfile.contains("Sulfonation of S")) {
-                modProfile.addVariableModification(getPTM("Sulfonation of S"));
+                modProfile.addVariableModification(getModification("Sulfonation of S"));
                 prideParametersReport += "<br>" + "Sulfonation of S" + " (assumed variable)";
             }
             if (!modProfile.contains("Sulfonation of T")) {
-                modProfile.addVariableModification(getPTM("Sulfonation of T"));
+                modProfile.addVariableModification(getModification("Sulfonation of T"));
                 prideParametersReport += "<br>" + "Sulfonation of T" + " (assumed variable)";
             }
 
@@ -1096,22 +765,22 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("deaminated residue")) {
 
             if (!modProfile.contains("Deamidation of N")) {
-                modProfile.addVariableModification(getPTM("Deamidation of N"));
+                modProfile.addVariableModification(getModification("Deamidation of N"));
                 prideParametersReport += "<br>" + "Deamidation of N" + " (assumed variable)";
             }
             if (!modProfile.contains("Deamidation of Q")) {
-                modProfile.addVariableModification(getPTM("Deamidation of Q"));
+                modProfile.addVariableModification(getModification("Deamidation of Q"));
                 prideParametersReport += "<br>" + "Deamidation of Q" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("Dioxidation")) {
 
             if (!modProfile.contains("Dioxidation of M")) {
-                modProfile.addVariableModification(getPTM("Dioxidation of M"));
+                modProfile.addVariableModification(getModification("Dioxidation of M"));
                 prideParametersReport += "<br>" + "Dioxidation of M" + " (assumed variable)";
             }
             if (!modProfile.contains("Dioxidation of W")) {
-                modProfile.addVariableModification(getPTM("Dioxidation of W"));
+                modProfile.addVariableModification(getModification("Dioxidation of W"));
                 prideParametersReport += "<br>" + "Dioxidation of W" + " (assumed variable)";
             }
 
@@ -1119,28 +788,28 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("Dehydratation")) {
 
             if (!modProfile.contains("Dehydration of S")) {
-                modProfile.addVariableModification(getPTM("Dehydration of S"));
+                modProfile.addVariableModification(getModification("Dehydration of S"));
                 prideParametersReport += "<br>" + "Dehydration of S" + " (assumed variable)";
             }
             if (!modProfile.contains("Dehydration of T")) {
-                modProfile.addVariableModification(getPTM("Dehydration of T"));
+                modProfile.addVariableModification(getModification("Dehydration of T"));
                 prideParametersReport += "<br>" + "Dehydration of T" + " (assumed variable)";
             }
 
-        } else if (pridePtmName.equalsIgnoreCase("No PTMs are included in the dataset")) {
+        } else if (pridePtmName.equalsIgnoreCase("No Modifications are included in the dataset")) {
             // ignore
         } else {
 
-            // single ptm mapping
+            // single modification mapping
             String utilitiesPtmName = convertPridePtmToUtilitiesPtm(pridePtmName);
 
             if (utilitiesPtmName != null) {
                 if (!modProfile.contains(utilitiesPtmName)) {
                     if (isFixed) {
-                        modProfile.addFixedModification(getPTM(utilitiesPtmName));
+                        modProfile.addFixedModification(getModification(utilitiesPtmName));
                         prideParametersReport += "<br>" + utilitiesPtmName + " (assumed fixed)";
                     } else {
-                        modProfile.addVariableModification(getPTM(utilitiesPtmName));
+                        modProfile.addVariableModification(getModification(utilitiesPtmName));
                         prideParametersReport += "<br>" + utilitiesPtmName + " (assumed variable)";
                     }
                 }
@@ -1153,10 +822,10 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Tries to convert a PRIDE PTM name to utilities PTM name.
+     * Tries to convert a PRIDE Modification name to utilities Modification name.
      *
-     * @param pridePtmName the PRIDE PTM name
-     * @return the utilities PTM name, or null if there is no mapping
+     * @param pridePtmName the PRIDE Modification name
+     * @return the utilities Modification name, or null if there is no mapping
      */
     private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
 
@@ -1345,7 +1014,7 @@ public class PTMFactory implements Serializable {
      * @param serializationFolder the folder where the factory is saved
      */
     public static void setSerializationFolder(String serializationFolder) {
-        PTMFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
+        ModificationFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
     }
 
     /**
@@ -1360,13 +1029,13 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         AtomChain atomChainRemoved = null;
         AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        String ptmName = "Acetylation of K";
-        PTM ptm = new PTM(PTM.MODAA, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
-        ptm.addReporterIon(ReporterIon.ACE_K_126);
-        ptm.addReporterIon(ReporterIon.ACE_K_143);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        String modificationName = "Acetylation of K";
+        Modification modification = new Modification(ModificationType.modaa, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
+        modification.addReporterIon(ReporterIon.ACE_K_126);
+        modification.addReporterIon(ReporterIon.ACE_K_143);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Acetylation of peptide N-term
         atomChainAdded = new AtomChain();
@@ -1375,11 +1044,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetylation of peptide N-term"; // note: if name changed also change in TandemProcessBuilder
-        ptm = new PTM(PTM.MODNP, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Acetylation of peptide N-term"; // note: if name changed also change in TandemProcessBuilder
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Acetylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -1388,11 +1057,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
-        ptm = new PTM(PTM.MODN, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
+        modification = new Modification(ModificationType.modn_protein, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carbamidomethylation of C
         atomChainAdded = new AtomChain();
@@ -1402,11 +1071,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Carbamidomethylation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carbamidomethylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carbamidomethylation of E
         atomChainAdded = new AtomChain();
@@ -1416,11 +1085,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
-        ptmName = "Carbamidomethylation of E";
-        ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carbamidomethylation of E";
+        modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carbamidomethylation of K
         atomChainAdded = new AtomChain();
@@ -1430,89 +1099,89 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Carbamidomethylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carbamidomethylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:4", "Carbamidomethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Oxidation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
-        ptmName = "Oxidation of M";
-        ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
-        ptm.addNeutralLoss(NeutralLoss.CH4OS);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Oxidation of M";
+        modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
+        modification.addNeutralLoss(NeutralLoss.CH4OS);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Oxidation of P
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
-        ptmName = "Oxidation of P";
-        ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Oxidation of P";
+        modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Oxidation of K
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Oxidation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Oxidation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Oxidation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Oxidation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Oxidation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dioxydation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
-        ptmName = "Dioxidation of M";
-        ptm = new PTM(PTM.MODAA, ptmName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dioxidation of M";
+        modification = new Modification(ModificationType.modaa, modificationName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dioxydation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
-        ptmName = "Dioxidation of W";
-        ptm = new PTM(PTM.MODAA, ptmName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dioxidation of W";
+        modification = new Modification(ModificationType.modaa, modificationName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:425", "Dioxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trioxidation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Trioxidation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "triox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:345", "Trioxidation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trioxidation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "triox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:345", "Trioxidation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Phosphorylation of S
         atomChainAdded = new AtomChain();
@@ -1521,12 +1190,12 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Phosphorylation of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
-        ptm.addNeutralLoss(NeutralLoss.H3PO4);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Phosphorylation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
+        modification.addNeutralLoss(NeutralLoss.H3PO4);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Phosphorylation of T
         atomChainAdded = new AtomChain();
@@ -1535,12 +1204,12 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Phosphorylation of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
-        ptm.addNeutralLoss(NeutralLoss.H3PO4);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Phosphorylation of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
+        modification.addNeutralLoss(NeutralLoss.H3PO4);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Phosphorylation of Y
         atomChainAdded = new AtomChain();
@@ -1549,13 +1218,13 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "Phosphorylation of Y";
-        ptm = new PTM(PTM.MODAA, ptmName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
-        ptm.addNeutralLoss(NeutralLoss.HPO3);
-        ptm.addReporterIon(ReporterIon.PHOSPHO_Y);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Phosphorylation of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", null));
+        modification.addNeutralLoss(NeutralLoss.HPO3);
+        modification.addReporterIon(ReporterIon.PHOSPHO_Y);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Arg6
         atomChainAdded = new AtomChain();
@@ -1563,11 +1232,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Arginine 13C(6)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Arginine 13C(6)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Arg10
         atomChainAdded = new AtomChain();
@@ -1577,11 +1246,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 4);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Arginine 13C(6) 15N(4)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:267", "Label:13C(6)15N(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Arginine 13C(6) 15N(4)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:267", "Label:13C(6)15N(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Lys4
         atomChainAdded = new AtomChain();
@@ -1589,11 +1258,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Lysine 2H(4)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Lysine 2H(4)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Lys6
         atomChainAdded = new AtomChain();
@@ -1601,11 +1270,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Lysine 13C(6)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Lysine 13C(6)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:188", "Label:13C(6)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Lys8
         atomChainAdded = new AtomChain();
@@ -1615,11 +1284,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Lysine 13C(6) 15N(2)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:259", "Label:13C(6)15N(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Lysine 13C(6) 15N(2)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:259", "Label:13C(6)15N(2)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Pro5
         atomChainAdded = new AtomChain();
@@ -1627,11 +1296,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
-        ptmName = "Proline 13C(5)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:772", "Label:13C(5)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Proline 13C(5)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:772", "Label:13C(5)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // 4-Hydroxyloproline
         atomChainAdded = new AtomChain();
@@ -1640,11 +1309,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
-        ptmName = "4-Hydroxyproline";
-        ptm = new PTM(PTM.MODAA, ptmName, "hydroxy", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "4-Hydroxyproline";
+        modification = new Modification(ModificationType.modaa, modificationName, "hydroxy", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Leu7
         atomChainAdded = new AtomChain();
@@ -1654,11 +1323,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
-        ptmName = "Leucine 13C(6) 15N(1)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Leucine 13C(6) 15N(1)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Ile7
         atomChainAdded = new AtomChain();
@@ -1668,11 +1337,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
-        ptmName = "Isoleucine 13C(6) 15N(1)";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Isoleucine 13C(6) 15N(1)";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:695", "Label:13C(6)15N(1)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Label of K 2H4
         atomChainAdded = new AtomChain();
@@ -1680,11 +1349,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Label of K 2H(4)";
-        ptm = new PTM(PTM.MODAA, ptmName, "2H(4)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Label of K 2H(4)";
+        modification = new Modification(ModificationType.modaa, modificationName, "2H(4)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of K 2H4
         atomChainAdded = new AtomChain();
@@ -1692,12 +1361,12 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Dimethylation of K 2H(4)";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-        
+        modificationName = "Dimethylation of K 2H(4)";
+        modification = new Modification(ModificationType.modaa, modificationName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
         // Dimethylation of K 2H6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
@@ -1705,24 +1374,24 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Dimethylation of K 2H(6)";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291", "Dimethyl:2H(6)", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-        
-         // Dimethylation of K 2H(6) 13C(2)
+        modificationName = "Dimethylation of K 2H(6)";
+        modification = new Modification(ModificationType.modaa, modificationName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291", "Dimethyl:2H(6)", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Dimethylation of K 2H(6) 13C(2)
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Dimethylation of K 2H(6) 13C(2)";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of K 2H(6) 13C(2)";
+        modification = new Modification(ModificationType.modaa, modificationName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of peptide N-term 2H4
         atomChainAdded = new AtomChain();
@@ -1730,11 +1399,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Dimethylation of peptide N-term 2H(4)";
-        ptm = new PTM(PTM.MODNP, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of peptide N-term 2H(4)";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of peptide N-term 2H6
         atomChainAdded = new AtomChain();
@@ -1743,11 +1412,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = null;
-        ptmName = "Dimethylation of peptide N-term 2H(6)";
-        ptm = new PTM(PTM.MODNP, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 1291", "Dimethyl:2H(6)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of peptide N-term 2H(6)";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 1291", "Dimethyl:2H(6)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of peptide N-term 2H(6) 13C(2)
         atomChainAdded = new AtomChain();
@@ -1756,11 +1425,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = null;
-        ptmName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
-        ptm = new PTM(PTM.MODNP, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // 18O(2) of peptide C-term
         atomChainAdded = new AtomChain();
@@ -1768,11 +1437,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
         aminoAcidPattern = null;
-        ptmName = "18O(2) of peptide C-term";
-        ptm = new PTM(PTM.MODCP, ptmName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 193", "Label:18O(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "18O(2) of peptide C-term";
+        modification = new Modification(ModificationType.modc_peptide, modificationName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 193", "Label:18O(2)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // 18O(1) of peptide C-term
         atomChainAdded = new AtomChain();
@@ -1780,11 +1449,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "18O(1) of peptide C-term";
-        ptm = new PTM(PTM.MODCP, ptmName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:258", "Label:18O(1)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "18O(1) of peptide C-term";
+        modification = new Modification(ModificationType.modc_peptide, modificationName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:258", "Label:18O(1)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICAT-0
         atomChainAdded = new AtomChain();
@@ -1794,11 +1463,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "ICAT-O";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:105", "ICAT-C", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICAT-O";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:105", "ICAT-C", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICAT-9
         atomChainAdded = new AtomChain();
@@ -1809,11 +1478,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "ICAT-9";
-        ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:106", "ICAT-C:13C(9)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICAT-9";
+        modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:106", "ICAT-C:13C(9)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL0 of K
         atomChainAdded = new AtomChain();
@@ -1823,11 +1492,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "ICPL0 of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL0 of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL0 of peptide N-term
         atomChainAdded = new AtomChain();
@@ -1837,11 +1506,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "ICPL0 of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL0 of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL4 of K
         atomChainAdded = new AtomChain();
@@ -1852,11 +1521,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "ICPL4 of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL4 of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL4 of peptide N-term
         atomChainAdded = new AtomChain();
@@ -1867,11 +1536,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "ICPL4 of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL4 of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL6 of K
         atomChainAdded = new AtomChain();
@@ -1881,11 +1550,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "ICPL6 of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL6 of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL6 of peptide N-term
         atomChainAdded = new AtomChain();
@@ -1895,11 +1564,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "ICPL6 of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL6 of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL10 of K
         atomChainAdded = new AtomChain();
@@ -1910,11 +1579,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "ICPL10 of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL10 of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // ICPL10 of peptide N-term
         atomChainAdded = new AtomChain();
@@ -1925,11 +1594,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "ICPL10 of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "ICPL10 of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of K light
         atomChainAdded = new AtomChain();
@@ -1939,11 +1608,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "mTRAQ of K light";
-        ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of K light";
+        modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of peptide N-term light
         atomChainAdded = new AtomChain();
@@ -1953,11 +1622,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "mTRAQ of peptide N-term light";
-        ptm = new PTM(PTM.MODNP, ptmName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:888", "mTRAQ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of peptide N-term light";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:888", "mTRAQ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of K 13C3 15N
         atomChainAdded = new AtomChain();
@@ -1969,11 +1638,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "mTRAQ of K 13C(3) 15N";
-        ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of K 13C(3) 15N";
+        modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of peptide N-term 13C3 15N
         atomChainAdded = new AtomChain();
@@ -1985,11 +1654,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "mTRAQ of peptide N-term 13C(3) 15N";
-        ptm = new PTM(PTM.MODNP, ptmName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of peptide N-term 13C(3) 15N";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of K 13C6 15N2
         atomChainAdded = new AtomChain();
@@ -2000,11 +1669,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "mTRAQ of 13C(6) 15N(2)";
-        ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of 13C(6) 15N(2)";
+        modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // mTRAQ of peptide N-term 13C3 15N
         atomChainAdded = new AtomChain();
@@ -2015,11 +1684,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "mTRAQ of peptide N-term 13C(6) 15N(2)";
-        ptm = new PTM(PTM.MODNP, ptmName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "mTRAQ of peptide N-term 13C(6) 15N(2)";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 4-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2031,15 +1700,15 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "iTRAQ 4-plex of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_117);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 4-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_117);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 4-plex of K
         atomChainAdded = new AtomChain();
@@ -2051,15 +1720,15 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "iTRAQ 4-plex of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_117);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 4-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_117);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 4-plex of Y
         atomChainAdded = new AtomChain();
@@ -2071,15 +1740,15 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "iTRAQ 4-plex of Y";
-        ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ4Plex_117);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 4-plex of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ4Plex_117);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 8-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2091,19 +1760,19 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "iTRAQ 8-plex of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_113);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_117);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_118);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_119);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_121);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 8-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_113);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_117);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_118);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_119);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_121);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 8-plex of K
         atomChainAdded = new AtomChain();
@@ -2115,19 +1784,19 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "iTRAQ 8-plex of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_113);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_117);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_118);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_119);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_121);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 8-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_113);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_117);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_118);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_119);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_121);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // iTRAQ 8-plex of Y
         atomChainAdded = new AtomChain();
@@ -2139,19 +1808,19 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "iTRAQ 8-plex of Y";
-        ptm = new PTM(PTM.MODAA, ptmName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_113);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_114);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_115);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_116);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_117);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_118);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_119);
-        ptm.addReporterIon(ReporterIon.iTRAQ8Plex_121);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "iTRAQ 8-plex of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_113);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_114);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_115);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_116);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_117);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_118);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_119);
+        modification.addReporterIon(ReporterIon.iTRAQ8Plex_121);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 2-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2162,14 +1831,14 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "TMT 2-plex of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127C);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 2-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 2-plex of K
         atomChainAdded = new AtomChain();
@@ -2180,14 +1849,14 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "TMT 2-plex of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127C);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 2-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 6-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2199,35 +1868,35 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "TMT 6-plex of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 6-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 6-plex of K
         atomChainAdded = new AtomChain();
@@ -2239,35 +1908,35 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "TMT 6-plex of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 6-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 10-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2279,31 +1948,31 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "TMT 10-plex of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127C);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_128N);
-        ptm.addReporterIon(ReporterIon.TMT_129C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_130N);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 10-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // TMT 10-plex of K
         atomChainAdded = new AtomChain();
@@ -2315,31 +1984,31 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "TMT 10-plex of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
-        ptm.addReporterIon(ReporterIon.TMT_126);
-        ptm.addReporterIon(ReporterIon.TMT_127C);
-        ptm.addReporterIon(ReporterIon.TMT_127N);
-        ptm.addReporterIon(ReporterIon.TMT_128C);
-        ptm.addReporterIon(ReporterIon.TMT_128N);
-        ptm.addReporterIon(ReporterIon.TMT_129C);
-        ptm.addReporterIon(ReporterIon.TMT_129N);
-        ptm.addReporterIon(ReporterIon.TMT_130C);
-        ptm.addReporterIon(ReporterIon.TMT_130N);
-        ptm.addReporterIon(ReporterIon.TMT_131);
-        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
-        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "TMT 10-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Ubiquitination of K
         atomChainAdded = new AtomChain();
@@ -2349,11 +2018,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Ubiquitination of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "ub", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:121", "GG", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Ubiquitination of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "ub", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:121", "GG", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of K
         atomChainAdded = new AtomChain();
@@ -2361,11 +2030,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Methylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of R
         atomChainAdded = new AtomChain();
@@ -2373,16 +2042,16 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Methylation of R";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        ptm.addReporterIon(ReporterIon.METHYL_R_70);
-        ptm.addReporterIon(ReporterIon.METHYL_R_87);
-        ptm.addReporterIon(ReporterIon.METHYL_R_112);
-        ptm.addReporterIon(ReporterIon.METHYL_R_115);
-        ptm.addReporterIon(ReporterIon.METHYL_R_143);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        modification.addReporterIon(ReporterIon.METHYL_R_70);
+        modification.addReporterIon(ReporterIon.METHYL_R_87);
+        modification.addReporterIon(ReporterIon.METHYL_R_112);
+        modification.addReporterIon(ReporterIon.METHYL_R_115);
+        modification.addReporterIon(ReporterIon.METHYL_R_143);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of E
         atomChainAdded = new AtomChain();
@@ -2390,11 +2059,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
-        ptmName = "Methylation of E";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of E";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of C
         atomChainAdded = new AtomChain();
@@ -2402,11 +2071,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Methylation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of D
         atomChainAdded = new AtomChain();
@@ -2414,11 +2083,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
-        ptmName = "Methylation of D";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of D";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylation of S
         atomChainAdded = new AtomChain();
@@ -2426,11 +2095,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Methylation of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of K
         atomChainAdded = new AtomChain();
@@ -2438,11 +2107,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Dimethylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2450,11 +2119,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Dimethylation of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dimethylation of R
         atomChainAdded = new AtomChain();
@@ -2462,14 +2131,14 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Dimethylation of R";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
-        ptm.addReporterIon(ReporterIon.DI_METHYL_R_112);
-        ptm.addReporterIon(ReporterIon.DI_METHYL_R_115);
-        ptm.addReporterIon(ReporterIon.DI_METHYL_R_157);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dimethylation of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
+        modification.addReporterIon(ReporterIon.DI_METHYL_R_112);
+        modification.addReporterIon(ReporterIon.DI_METHYL_R_115);
+        modification.addReporterIon(ReporterIon.DI_METHYL_R_157);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trimethylation of K
         atomChainAdded = new AtomChain();
@@ -2477,12 +2146,12 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Trimethylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
-        ptm.addNeutralLoss(NeutralLoss.C3H9N);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trimethylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
+        modification.addNeutralLoss(NeutralLoss.C3H9N);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trimethylation of R
         atomChainAdded = new AtomChain();
@@ -2490,11 +2159,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Trimethylation of R";
-        ptm = new PTM(PTM.MODAA, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trimethylation of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trimethylation of protein N-term A
         atomChainAdded = new AtomChain();
@@ -2502,11 +2171,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
-        ptmName = "Trimethylation of protein N-term A";
-        ptm = new PTM(PTM.MODN, ptmName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trimethylation of protein N-term A";
+        modification = new Modification(ModificationType.modn_protein, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:37", "Trimethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Pyrolidone from E
         atomChainAdded = null;
@@ -2514,11 +2183,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
-        ptmName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
-        ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:27", "Glu->pyro-Glu", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
+        modification = new Modification(ModificationType.modnaa_peptide, modificationName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:27", "Glu->pyro-Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Pyrolidone from Q
         atomChainAdded = null;
@@ -2526,11 +2195,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
-        ptmName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
-        ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:28", "Gln->pyro-Glu", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
+        modification = new Modification(ModificationType.modnaa_peptide, modificationName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:28", "Gln->pyro-Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Pyrolidone from carbamidomethylated C
         atomChainAdded = null;
@@ -2538,11 +2207,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
-        ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
+        modification = new Modification(ModificationType.modnaa_peptide, modificationName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // HexNAc of S
         atomChainAdded = new AtomChain();
@@ -2552,11 +2221,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "HexNAc of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "HexNAc of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // HexNAc of T
         atomChainAdded = new AtomChain();
@@ -2566,11 +2235,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "HexNAc of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "HexNAc of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:43", "HexNAc", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Hex(1)NAc(1) of S
         atomChainAdded = new AtomChain();
@@ -2580,11 +2249,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Hex(1)NAc(1) of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Hex(1)NAc(1) of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Hex(1)NAc(1) of T
         atomChainAdded = new AtomChain();
@@ -2594,11 +2263,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Hex(1)NAc(1) of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Hex(1)NAc(1) of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:793", "Hex(1)HexNAc(1) ", null)); // note: does not have a PSI name, using interim name
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Hexose of K
         atomChainAdded = new AtomChain();
@@ -2607,11 +2276,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Hexose of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "hex", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:41", "Hex", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Hexose of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "hex", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:41", "Hex", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Hex(5) HexNAc(4) NeuAc(2) of N
         atomChainAdded = new AtomChain();
@@ -2621,11 +2290,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 6);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
-        ptmName = "Hex(5) HexNAc(4) NeuAc(2) of N";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Hex(5) HexNAc(4) NeuAc(2) of N";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Hex(5) HexNAc(4) NeuAc(2) Na of N
         atomChainAdded = new AtomChain();
@@ -2636,11 +2305,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.Na, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
-        ptmName = "Hex(5) HexNAc(4) NeuAc(2) Na of N";
-        ptm = new PTM(PTM.MODAA, ptmName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1408", "Hex(5)HexNAc(4)NeuAc(2) ", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Hex(5) HexNAc(4) NeuAc(2) Na of N";
+        modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1408", "Hex(5)HexNAc(4)NeuAc(2) ", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // SUMO-2/3 Q87R
         atomChainAdded = new AtomChain();
@@ -2650,19 +2319,19 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 8);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "SUMO-2/3 Q87R";
-        ptm = new PTM(PTM.MODAA, ptmName, "sumo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
-        ptm.addReporterIon(ReporterIon.QQ);
-        ptm.addReporterIon(ReporterIon.QQ_H2O);
-        ptm.addReporterIon(ReporterIon.QQT);
-        ptm.addReporterIon(ReporterIon.QQT_H2O);
-        ptm.addReporterIon(ReporterIon.QQTG);
-        ptm.addReporterIon(ReporterIon.QQTG_H2O);
-        ptm.addReporterIon(ReporterIon.QQTGG);
-        ptm.addReporterIon(ReporterIon.QQTGG_H2O);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "SUMO-2/3 Q87R";
+        modification = new Modification(ModificationType.modaa, modificationName, "sumo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
+        modification.addReporterIon(ReporterIon.QQ);
+        modification.addReporterIon(ReporterIon.QQ_H2O);
+        modification.addReporterIon(ReporterIon.QQT);
+        modification.addReporterIon(ReporterIon.QQT_H2O);
+        modification.addReporterIon(ReporterIon.QQTG);
+        modification.addReporterIon(ReporterIon.QQTG_H2O);
+        modification.addReporterIon(ReporterIon.QQTGG);
+        modification.addReporterIon(ReporterIon.QQTGG_H2O);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Deamidation of N
         atomChainAdded = new AtomChain();
@@ -2671,11 +2340,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
-        ptmName = "Deamidation of N";
-        ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Deamidation of N";
+        modification = new Modification(ModificationType.modaa, modificationName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Deamidation of Q
         atomChainAdded = new AtomChain();
@@ -2684,11 +2353,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
-        ptmName = "Deamidation of Q";
-        ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Deamidation of Q";
+        modification = new Modification(ModificationType.modaa, modificationName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Deamidation of N 18O
         atomChainAdded = new AtomChain();
@@ -2697,11 +2366,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
-        ptmName = "Deamidation of N 18O";
-        ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 366", "Deamidation in presence of O18", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Deamidation of N 18O";
+        modification = new Modification(ModificationType.modaa, modificationName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 366", "Deamidation in presence of O18", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carbamylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -2711,11 +2380,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Carbamilation of protein N-term";
-        ptm = new PTM(PTM.MODN, ptmName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carbamilation of protein N-term";
+        modification = new Modification(ModificationType.modn_protein, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carbamylation of K
         atomChainAdded = new AtomChain();
@@ -2725,11 +2394,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Carbamilation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carbamilation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Acetaldehyde +26
         atomChainAdded = new AtomChain();
@@ -2737,11 +2406,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetaldehyde +26";
-        ptm = new PTM(PTM.MODNP, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:254", "Delta:H(2)C(2)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Acetaldehyde +26";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:254", "Delta:H(2)C(2)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Sodium adduct to D
         atomChainAdded = new AtomChain();
@@ -2749,11 +2418,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
-        ptmName = "Sodium adduct to D";
-        ptm = new PTM(PTM.MODAA, ptmName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Sodium adduct to D";
+        modification = new Modification(ModificationType.modaa, modificationName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Sodium adduct to E
         atomChainAdded = new AtomChain();
@@ -2761,11 +2430,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
-        ptmName = "Sodium adduct to E";
-        ptm = new PTM(PTM.MODAA, ptmName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Sodium adduct to E";
+        modification = new Modification(ModificationType.modaa, modificationName, "Na", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:30", "Cation:Na", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Amidation of the peptide C-term
         atomChainAdded = new AtomChain();
@@ -2774,11 +2443,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "Amidation of the peptide C-term";
-        ptm = new PTM(PTM.MODCP, ptmName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Amidation of the peptide C-term";
+        modification = new Modification(ModificationType.modc_peptide, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Amidation of the protein C-term
         atomChainAdded = new AtomChain();
@@ -2787,11 +2456,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "Amidation of the protein C-term";
-        ptm = new PTM(PTM.MODC, ptmName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Amidation of the protein C-term";
+        modification = new Modification(ModificationType.modc_protein, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Sulfation of S
         atomChainAdded = new AtomChain();
@@ -2799,11 +2468,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Sulfation of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Sulfation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Sulfation of T
         atomChainAdded = new AtomChain();
@@ -2811,11 +2480,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Sulfation of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Sulfation of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Sulfation of Y
         atomChainAdded = new AtomChain();
@@ -2823,11 +2492,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "Sulfation of Y";
-        ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Sulfation of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:40", "Sulfo", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Palmitoylation of C
         atomChainAdded = new AtomChain();
@@ -2836,11 +2505,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Palmitoylation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Palmitoylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Palmitoylation of K
         atomChainAdded = new AtomChain();
@@ -2849,11 +2518,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Palmitoylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Palmitoylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Palmitoylation of S
         atomChainAdded = new AtomChain();
@@ -2862,11 +2531,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Palmitoylation of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Palmitoylation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Palmitoylation of T
         atomChainAdded = new AtomChain();
@@ -2875,11 +2544,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Palmitoylation of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Palmitoylation of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Palmitoylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -2888,11 +2557,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Palmitoylation of protein N-term";
-        ptm = new PTM(PTM.MODN, ptmName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Palmitoylation of protein N-term";
+        modification = new Modification(ModificationType.modn_protein, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Formylation of K
         atomChainAdded = new AtomChain();
@@ -2900,12 +2569,12 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Formylation of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
-        ptm.addReporterIon(ReporterIon.FORMYL_K);
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Formylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
+        modification.addReporterIon(ReporterIon.FORMYL_K);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Formylation of S
         atomChainAdded = new AtomChain();
@@ -2913,11 +2582,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Formylation of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Formylation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Formylation of T
         atomChainAdded = new AtomChain();
@@ -2925,11 +2594,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Formylation of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Formylation of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Formylation of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2937,11 +2606,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Formylation of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Formylation of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Formylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -2949,11 +2618,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Formylation of protein N-term";
-        ptm = new PTM(PTM.MODN, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Formylation of protein N-term";
+        modification = new Modification(ModificationType.modn_protein, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionyl of K light
         atomChainAdded = new AtomChain();
@@ -2962,11 +2631,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Propionyl of K light";
-        ptm = new PTM(PTM.MODAA, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionyl of K light";
+        modification = new Modification(ModificationType.modaa, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionyl of peptide N-term light
         atomChainAdded = new AtomChain();
@@ -2975,11 +2644,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Propionyl of peptide N-term light";
-        ptm = new PTM(PTM.MODNP, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionyl of peptide N-term light";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionyl of K heavy
         atomChainAdded = new AtomChain();
@@ -2988,11 +2657,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Propionyl of K heavy";
-        ptm = new PTM(PTM.MODAA, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionyl of K heavy";
+        modification = new Modification(ModificationType.modaa, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionyl of peptide N-term heavy
         atomChainAdded = new AtomChain();
@@ -3001,11 +2670,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Propionyl of peptide N-term heavy";
-        ptm = new PTM(PTM.MODNP, ptmName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionyl of peptide N-term heavy";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trideuterated Methyl Ester of D
         atomChainAdded = new AtomChain();
@@ -3014,11 +2683,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
-        ptmName = "Trideuterated Methyl Ester of D";
-        ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trideuterated Methyl Ester of D";
+        modification = new Modification(ModificationType.modaa, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trideuterated Methyl Ester of E
         atomChainAdded = new AtomChain();
@@ -3027,11 +2696,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
-        ptmName = "Trideuterated Methyl Ester of E";
-        ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trideuterated Methyl Ester of E";
+        modification = new Modification(ModificationType.modaa, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trideuterated Methyl Ester of K
         atomChainAdded = new AtomChain();
@@ -3040,11 +2709,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Trideuterated Methyl Ester of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trideuterated Methyl Ester of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trideuterated Methyl Ester of R
         atomChainAdded = new AtomChain();
@@ -3053,11 +2722,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Trideuterated Methyl Ester of R";
-        ptm = new PTM(PTM.MODAA, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trideuterated Methyl Ester of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Trideuterated Methyl Ester of peptide C-term
         atomChainAdded = new AtomChain();
@@ -3066,11 +2735,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "Trideuterated Methyl Ester of peptide C-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Trideuterated Methyl Ester of peptide C-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Carboxymethylation of C
         atomChainAdded = new AtomChain();
@@ -3079,11 +2748,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Carboxymethylation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:6", "Carboxymethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Carboxymethylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:6", "Carboxymethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Farnesylation of C
         atomChainAdded = new AtomChain();
@@ -3091,11 +2760,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 15);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Farnesylation of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "far", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:44", "Farnesyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Farnesylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "far", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:44", "Farnesyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Geranyl-geranyl of C
         atomChainAdded = new AtomChain();
@@ -3103,11 +2772,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 20);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Geranyl-geranyl of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "geranyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:48", "GeranylGeranyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Geranyl-geranyl of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "geranyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:48", "GeranylGeranyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Guanidination of K
         atomChainAdded = new AtomChain();
@@ -3116,11 +2785,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Guanidination of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Guanidination of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Guanidination of peptide N-term
         atomChainAdded = new AtomChain();
@@ -3129,11 +2798,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Guanidination of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Guanidination of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Homoserine of peptide C-term M
         atomChainAdded = new AtomChain();
@@ -3143,11 +2812,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
-        ptmName = "Homoserine of peptide C-term M";
-        ptm = new PTM(PTM.MODCPAA, ptmName, "hse", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:10", "Met->Hse", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Homoserine of peptide C-term M";
+        modification = new Modification(ModificationType.modcaa_peptide, modificationName, "hse", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:10", "Met->Hse", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Homoserine lactone of peptide C-term M
         atomChainAdded = null;
@@ -3156,11 +2825,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.S, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
-        ptmName = "Homoserine lactone of peptide C-term M";
-        ptm = new PTM(PTM.MODCPAA, ptmName, "hsel", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:11", "Met->Hsl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Homoserine lactone of peptide C-term M";
+        modification = new Modification(ModificationType.modcaa_peptide, modificationName, "hsel", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:11", "Met->Hsl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Lipoyl of K
         atomChainAdded = new AtomChain();
@@ -3170,11 +2839,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Lipoyl of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "lip", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:42", "Lipoyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Lipoyl of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "lip", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:42", "Lipoyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylthio of D
         atomChainAdded = new AtomChain();
@@ -3183,11 +2852,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
-        ptmName = "Methylthio of D";
-        ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylthio of D";
+        modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylthio of N
         atomChainAdded = new AtomChain();
@@ -3196,11 +2865,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
-        ptmName = "Methylthio of N";
-        ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylthio of N";
+        modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Methylthio of C
         atomChainAdded = new AtomChain();
@@ -3209,11 +2878,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Methylthio of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Methylthio of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:39", "Methylthio", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // NIPCAM of C
         atomChainAdded = new AtomChain();
@@ -3223,11 +2892,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "NIPCAM of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "nipcam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:17", "NIPCAM", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "NIPCAM of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "nipcam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:17", "NIPCAM", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionamide of C
         atomChainAdded = new AtomChain();
@@ -3237,11 +2906,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Propionamide of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionamide of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionamide of K
         atomChainAdded = new AtomChain();
@@ -3251,11 +2920,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
-        ptmName = "Propionamide of K";
-        ptm = new PTM(PTM.MODAA, ptmName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionamide of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Propionamide of peptide N-term
         atomChainAdded = new AtomChain();
@@ -3265,11 +2934,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Propionamide of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Propionamide of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Pyridylethyl of C
         atomChainAdded = new AtomChain();
@@ -3278,11 +2947,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Pyridylethyl of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "pyri", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:31", "Pyridylethyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Pyridylethyl of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "pyri", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:31", "Pyridylethyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dehydration of S
         atomChainAdded = null;
@@ -3290,11 +2959,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
-        ptmName = "Dehydration of S";
-        ptm = new PTM(PTM.MODAA, ptmName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dehydration of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Dehydration of T
         atomChainAdded = null;
@@ -3302,11 +2971,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Dehydration of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Dehydration of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "dehyd", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:23", "Dehydrated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Nethylmaleimide of C
         atomChainAdded = new AtomChain();
@@ -3316,11 +2985,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Nethylmaleimide of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "nem", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:108", "Nethylmaleimide", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Nethylmaleimide of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "nem", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:108", "Nethylmaleimide", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Glutathione of C
         atomChainAdded = new AtomChain();
@@ -3331,11 +3000,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "Glutathione of C";
-        ptm = new PTM(PTM.MODAA, ptmName, "glut", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:55", "Glutathione", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Glutathione of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "glut", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:55", "Glutathione", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // FormylMet of protein N-term
         atomChainAdded = new AtomChain();
@@ -3346,22 +3015,22 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "FormylMet of protein N-term";
-        ptm = new PTM(PTM.MODN, ptmName, "nmet", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:107", "FormylMet", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "FormylMet of protein N-term";
+        modification = new Modification(ModificationType.modn_protein, modificationName, "nmet", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:107", "FormylMet", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Didehydro of T
         atomChainAdded = null;
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
-        ptmName = "Didehydro of T";
-        ptm = new PTM(PTM.MODAA, ptmName, "didehyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:401", "Didehydro", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Didehydro of T";
+        modification = new Modification(ModificationType.modaa, modificationName, "didehyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:401", "Didehydro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Thioacyl of peptide N-term
         atomChainAdded = new AtomChain();
@@ -3371,11 +3040,11 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Thioacyl of peptide N-term";
-        ptm = new PTM(PTM.MODNP, ptmName, "thioacyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:126", "Thioacyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Thioacyl of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "thioacyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:126", "Thioacyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Diiodination of Y
         atomChainAdded = new AtomChain();
@@ -3383,11 +3052,11 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
-        ptmName = "Diiodination of Y";
-        ptm = new PTM(PTM.MODAA, ptmName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "Diiodination of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Citrullination of R
         atomChainAdded = new AtomChain();
@@ -3396,12 +3065,12 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
-        ptmName = "Citrullination of R";
-        ptm = new PTM(PTM.MODAA, ptmName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-        
+        modificationName = "Citrullination of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
         // S-nitrosylation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
@@ -3409,10 +3078,10 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
-        ptmName = "S-nitrosylation";
-        ptm = new PTM(PTM.MODAA, ptmName, "nitrosyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        modificationName = "S-nitrosylation";
+        modification = new Modification(ModificationType.modaa, modificationName, "nitrosyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
     }
 }

@@ -4,8 +4,8 @@ import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
@@ -1616,7 +1616,7 @@ public class IdentificationParametersInputBean {
     /**
      * The compomics PTM factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The enzyme factory.
      */
@@ -1832,7 +1832,7 @@ public class IdentificationParametersInputBean {
             ptmSettings.clearFixedModifications();
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
-                PTM modification = ptmFactory.getPTM(ptmName);
+                Modification modification = ptmFactory.getModification(ptmName);
                 ptmSettings.addFixedModification(modification);
             }
         }
@@ -1841,7 +1841,7 @@ public class IdentificationParametersInputBean {
             ptmSettings.clearVariableModifications();
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
-                PTM modification = ptmFactory.getPTM(ptmName);
+                Modification modification = ptmFactory.getModification(ptmName);
                 ptmSettings.addVariableModification(modification);
             }
         }
@@ -3532,8 +3532,8 @@ public class IdentificationParametersInputBean {
             try {
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 for (String ptmName : args) {
-                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                    if (ptm == null || ptm == PTMFactory.unknownPTM) {
+                    Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
+                    if (ptm == null) {
                         throw new IllegalArgumentException("PTM " + ptmName + " not found.");
                     }
                 }
@@ -3550,8 +3550,8 @@ public class IdentificationParametersInputBean {
             try {
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 for (String ptmName : args) {
-                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                    if (ptm == null || ptm == PTMFactory.unknownPTM) {
+                    Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
+                    if (ptm == null) {
                         throw new IllegalArgumentException("PTM " + ptmName + " not found.");
                     }
                 }

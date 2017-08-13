@@ -3,8 +3,8 @@ package com.compomics.util.experiment.identification.spectrum_annotation.simple_
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
@@ -27,7 +27,7 @@ public class FragmentAnnotatorNL {
     /**
      * The modifications factory.
      */
-    private final PTMFactory ptmFactory = PTMFactory.getInstance();
+    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * Array of the forward ion m/z with charge 1.
      */
@@ -103,8 +103,8 @@ public class FragmentAnnotatorNL {
             HashMap<String, int[]> modificationLossesSites = new HashMap<String, int[]>(1);
             for (ModificationMatch modificationMatch : modificationMatches) {
 
-                String modificationName = modificationMatch.getTheoreticPtm();
-                PTM modification = ptmFactory.getPTM(modificationName);
+                String modificationName = modificationMatch.getModification();
+                Modification modification = ptmFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
 
                 int site = modificationMatch.getModificationSite();
@@ -247,8 +247,8 @@ public class FragmentAnnotatorNL {
             HashMap<String, int[]> modificationLossesSites = new HashMap<String, int[]>(1);
             for (ModificationMatch modificationMatch : modificationMatches) {
 
-                String modificationName = modificationMatch.getTheoreticPtm();
-                PTM modification = ptmFactory.getPTM(modificationName);
+                String modificationName = modificationMatch.getModification();
+                Modification modification = ptmFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
 
                 int site = modificationMatch.getModificationSite();

@@ -2,8 +2,8 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
@@ -18,6 +18,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.stream.Collectors;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
@@ -213,12 +216,12 @@ public class PeptideAssumptionFilter implements Serializable {
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, peptideMapper);
+        HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
 
-        if (accessions != null && accessions.size() > 1) {
+        if (proteinMapping != null && proteinMapping.size() > 1) {
             boolean target = false;
             boolean decoy = false;
-            for (String accession : accessions) {
+            for (String accession : proteinMapping.keySet()) {
                 if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                     decoy = true;
                 } else {
@@ -234,7 +237,7 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Validates the modifications of a peptide.
+     * Verifies that the definition of every modification name is available.
      *
      * @param peptide the peptide of interest
      * @param sequenceMatchingPreferences the sequence matching preferences for
@@ -248,48 +251,18 @@ public class PeptideAssumptionFilter implements Serializable {
     public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
 
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+
         // check if it is an unknown peptide
         if (unknownPtm) {
             ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
             if (modificationMatches != null) {
                 for (ModificationMatch modMatch : modificationMatches) {
-                    String ptmName = modMatch.getTheoreticPtm();
-                    if (ptmName.equals(PTMFactory.unknownPTM.getName())) {
+                    String ptmName = modMatch.getModification();
+                    if (!modificationFactory.containsModification(ptmName)) {
                         return false;
                     }
                 }
-            }
-        }
-
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-
-        // get the variable ptms and the number of times they occur
-        HashMap<Double, Integer> modMatches = new HashMap<>(peptide.getNModifications());
-        if (peptide.isModified()) {
-            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (modMatch.getVariable()) {
-                    String modName = modMatch.getTheoreticPtm();
-                    PTM ptm = ptmFactory.getPTM(modName);
-                    double mass = ptm.getMass();
-                    if (!modMatches.containsKey(mass)) {
-                        modMatches.put(mass, 1);
-                    } else {
-                        modMatches.put(mass, modMatches.get(mass) + 1);
-                    }
-                }
-            }
-        }
-
-        // check if there are more ptms than ptm sites
-        for (double mass : modMatches.keySet()) {
-            try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, sequenceMatchingPreferences, ptmSequenceMatchingPreferences, modificationProfile);
-                if (possiblePositions.size() < modMatches.get(mass)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
             }
         }
 

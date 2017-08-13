@@ -1,6 +1,9 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -78,7 +81,7 @@ public class Peptide extends ExperimentObject {
      * Constructor.
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
-     * @param modificationMatches the PTM of this peptide
+     * @param modificationMatches the Modification of this peptide
      * @param sanityCheck boolean indicating whether the input should be checked
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modificationMatches, boolean sanityCheck) {
@@ -97,7 +100,7 @@ public class Peptide extends ExperimentObject {
      * Constructor.
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
-     * @param modificationMatches the PTM of this peptide
+     * @param modificationMatches the Modification of this peptide
      * @param sanityCheck boolean indicating whether the input should be checked
      * @param mass the mass of the peptide
      */
@@ -119,7 +122,7 @@ public class Peptide extends ExperimentObject {
      * Constructor. No sanity check is performed on the input.
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
-     * @param modifications the PTM of this peptide
+     * @param modifications the Modification of this peptide
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) {
 
@@ -162,14 +165,14 @@ public class Peptide extends ExperimentObject {
 
         if (modificationMatches != null) {
 
-            HashSet<String> conflictingPtms = modificationMatches.stream().map(modificationMatch -> modificationMatch.getTheoreticPtm())
+            HashSet<String> conflictingPtms = modificationMatches.stream().map(modificationMatch -> modificationMatch.getModification())
                     .filter((modificationName) -> (modificationName.contains(MODIFICATION_SEPARATOR) || modificationName.contains(MODIFICATION_LOCALIZATION_SEPARATOR)))
                     .collect(Collectors.toCollection(HashSet::new));
 
             if (!conflictingPtms.isEmpty()) {
 
                 String conflictingPtmsString = conflictingPtms.stream().collect(Collectors.joining(", "));
-                throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' or '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name(s): " + conflictingPtmsString);
+                throw new IllegalArgumentException("Modification names containing '" + MODIFICATION_SEPARATOR + "' or '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name(s): " + conflictingPtmsString);
 
             }
         }
@@ -529,7 +532,7 @@ public class Peptide extends ExperimentObject {
      *
      * Note: the key is not unique for indistinguishable sequences, see
      * getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences).
-     * Modifications must be loaded in the PTM factory.
+     * Modifications must be loaded in the Modification factory.
      *
      * @return the key of the peptide
      */
@@ -572,22 +575,22 @@ public class Peptide extends ExperimentObject {
 
             if (mod.getVariable()) {
 
-                String ptmName = mod.getTheoreticPtm();
+                String modificationName = mod.getModification();
 
-                if (ptmName != null) {
+                if (modificationName != null) {
 
-                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                    Modification modification = ModificationFactory.getInstance().getModification(modificationName);
 
                     if (mod.getConfident() || mod.getInferred()) {
 
                         StringBuilder tempModKey = new StringBuilder();
-                        tempModKey.append(ptm.getMassAsString()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
+                        tempModKey.append(modification.getAmbiguityKey()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
                         tempModifications.add(tempModKey.toString());
                         size += tempModKey.length();
 
                     } else {
 
-                        String massAsString = ptm.getMassAsString();
+                        String massAsString = modification.getAmbiguityKey();
                         tempModifications.add(massAsString);
                         size += massAsString.length();
 
@@ -636,8 +639,8 @@ public class Peptide extends ExperimentObject {
 
         return modificationMatches == null ? 0 : (int) modificationMatches.stream()
                 .filter(modificationMatch -> modificationMatch.getVariable())
-                .map(modificationMatch -> PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm()))
-                .filter(ptm -> ptm.getMass() == modificationMass).count();
+                .map(modificationMatch -> ModificationFactory.getInstance().getModification(modificationMatch.getModification()))
+                .filter(modification -> modification.getMass() == modificationMass).count();
     }
 
     /**
@@ -661,13 +664,13 @@ public class Peptide extends ExperimentObject {
      * mapping is done. The index on the protein must be provided with 0 as
      * first amino acid.
      *
-     * @param ptm the PTM considered
+     * @param modification the Modification considered
      * @param proteinSequence the protein sequence
      * @param peptideStart the index of the peptide start on the protein
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSitesNoCombination(PTM ptm, String proteinSequence, int peptideStart) {
+    public ArrayList<Integer> getPotentialModificationSitesNoCombination(Modification modification, String proteinSequence, int peptideStart) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -675,11 +678,11 @@ public class Peptide extends ExperimentObject {
 
         ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
-        switch (ptm.getType()) {
+        switch (modification.getModificationType()) {
 
-            case PTM.MODAA:
+            case modaa:
 
-                AminoAcidPattern aminoAcidPattern = ptm.getPattern();
+                AminoAcidPattern aminoAcidPattern = modification.getPattern();
                 HashSet<Character> targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
 
                 if (aminoAcidPattern.length() == 1) {
@@ -711,7 +714,7 @@ public class Peptide extends ExperimentObject {
 
                 return possibleSites;
 
-            case PTM.MODC:
+            case modc_protein:
 
                 int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
 
@@ -722,13 +725,13 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
 
-            case PTM.MODCP:
+            case modc_peptide:
 
                 possibleSites.add(sequence.length());
 
                 return possibleSites;
 
-            case PTM.MODN:
+            case modn_protein:
 
                 if (peptideStart == 0) {
 
@@ -737,15 +740,15 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
 
-            case PTM.MODNP:
+            case modn_peptide:
 
                 possibleSites.add(1);
 
                 return possibleSites;
 
-            case PTM.MODCAA:
+            case modcaa_protein:
 
-                aminoAcidPattern = ptm.getPattern();
+                aminoAcidPattern = modification.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
                 peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
 
@@ -767,9 +770,9 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
 
-            case PTM.MODCPAA:
+            case modcaa_peptide:
 
-                aminoAcidPattern = ptm.getPattern();
+                aminoAcidPattern = modification.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
                 Character aa = sequence.charAt(sequence.length() - 1);
 
@@ -791,9 +794,9 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
 
-            case PTM.MODNAA:
+            case modnaa_protein:
 
-                aminoAcidPattern = ptm.getPattern();
+                aminoAcidPattern = modification.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
 
                 if (peptideStart == 0) {
@@ -813,9 +816,9 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
 
-            case PTM.MODNPAA:
+            case modnaa_peptide:
 
-                aminoAcidPattern = ptm.getPattern();
+                aminoAcidPattern = modification.getPattern();
                 targetedAA = aminoAcidPattern.getAminoAcidsAtTargetSet();
                 aa = sequence.charAt(0);
 
@@ -833,7 +836,7 @@ public class Peptide extends ExperimentObject {
                 return possibleSites;
 
             default:
-                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
+                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + modification.getModificationType() + ".");
         }
     }
 
@@ -842,15 +845,15 @@ public class Peptide extends ExperimentObject {
      * is the first amino acid. An empty list is returned if no modification
      * site was found.
      *
-     * @param ptm the PTM considered
+     * @param modification the Modification considered
      * @param proteinSequence the protein sequence
      * @param peptideStart the index of the peptide start on the protein
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
+     * @param modificationSequenceMatchingPreferences the sequence matching preferences
+     * for Modification to peptide mapping
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, String proteinSequence, int peptideStart, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public ArrayList<Integer> getPotentialModificationSites(Modification modification, String proteinSequence, int peptideStart, SequenceMatchingPreferences modificationSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -858,17 +861,17 @@ public class Peptide extends ExperimentObject {
 
         ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
-        switch (ptm.getType()) {
+        switch (modification.getModificationType()) {
 
-            case PTM.MODAA:
+            case modaa:
 
-                AminoAcidPattern pattern = ptm.getPattern();
+                AminoAcidPattern pattern = modification.getPattern();
                 int patternLength = pattern.length();
                 int target = pattern.getTarget();
 
                 if (target >= 0 && patternLength - target <= 1) {
 
-                    return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
+                    return pattern.getIndexes(sequence, modificationSequenceMatchingPreferences);
 
                 } else {
                     
@@ -893,7 +896,7 @@ public class Peptide extends ExperimentObject {
                         
                     }
                     
-                    for (int tempIndex : pattern.getIndexes(tempSequence.toString(), ptmSequenceMatchingPreferences)) {
+                    for (int tempIndex : pattern.getIndexes(tempSequence.toString(), modificationSequenceMatchingPreferences)) {
                         
                         int sequenceIndex = tempIndex - missingLeft;
                         possibleSites.add(sequenceIndex);
@@ -902,7 +905,7 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
                 
-            case PTM.MODC:
+            case modc_protein:
                 
                 if (!isCterm(proteinSequence, peptideStart)) {
                     
@@ -910,12 +913,12 @@ public class Peptide extends ExperimentObject {
                     
                 }
                 
-            case PTM.MODCP:
+            case modc_peptide:
                 
                 possibleSites.add(sequence.length());
                 return possibleSites;
                 
-            case PTM.MODN:
+            case modn_protein:
                 
                 if (!isNterm(proteinSequence, peptideStart)) {
                     
@@ -923,12 +926,12 @@ public class Peptide extends ExperimentObject {
                     
                 }
                 
-            case PTM.MODNP:
+            case modn_peptide:
                 
                 possibleSites.add(1);
                 return possibleSites;
                 
-            case PTM.MODCAA:
+            case modcaa_protein:
                 
                 if (!isCterm(proteinSequence, peptideStart)) {
                     
@@ -936,9 +939,9 @@ public class Peptide extends ExperimentObject {
                     
                 }
                 
-            case PTM.MODCPAA:
+            case modcaa_peptide:
                 
-                pattern = ptm.getPattern();
+                pattern = modification.getPattern();
 
                 // See if we have the correct amino acid at terminus
                 if (!pattern.getAminoAcidsAtTargetSet().contains(sequence.charAt(sequence.length() - 1))) {
@@ -971,7 +974,7 @@ public class Peptide extends ExperimentObject {
                         
                     }
                     
-                    if (!pattern.matchesAt(tempSequence.toString(), ptmSequenceMatchingPreferences, sequence.length() - 1 + missingLeft)) {
+                    if (!pattern.matchesAt(tempSequence.toString(), modificationSequenceMatchingPreferences, sequence.length() - 1 + missingLeft)) {
                         
                         return possibleSites;
                         
@@ -981,16 +984,16 @@ public class Peptide extends ExperimentObject {
                 possibleSites.add(sequence.length() - 1);
                 return possibleSites;
                 
-            case PTM.MODNAA:
+            case modnaa_protein:
                 
                 if (!isNterm(proteinSequence, peptideStart)) {
                     
                     return possibleSites;
                 }
                 
-            case PTM.MODNPAA:
+            case modnaa_peptide:
                 
-                pattern = ptm.getPattern();
+                pattern = modification.getPattern();
 
                 // See if we have the correct amino acid at terminus
                 if (!pattern.getAminoAcidsAtTargetSet().contains(sequence.charAt(0))) {
@@ -1023,7 +1026,7 @@ public class Peptide extends ExperimentObject {
                         
                     }
                     
-                    if (!pattern.matchesAt(tempSequence.toString(), ptmSequenceMatchingPreferences, missingLeft)) {
+                    if (!pattern.matchesAt(tempSequence.toString(), modificationSequenceMatchingPreferences, missingLeft)) {
                         
                         return possibleSites;
                         
@@ -1034,7 +1037,7 @@ public class Peptide extends ExperimentObject {
                 return possibleSites;
                 
             default:
-                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + ptm.getType() + ".");
+                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + modification.getModificationType() + ".");
         }
     }
 
@@ -1104,9 +1107,9 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Indicates whether another peptide has the same variable modifications as
-     * this peptide. The localization of the PTM is not accounted for.
+     * this peptide. The localization of the Modification is not accounted for.
      * Modifications are considered equal when of exact same mass, no rounding is conducted. Modifications
-     * should be loaded in the PTM factory.
+     * should be loaded in the Modification factory.
      *
      * @param anotherPeptide the other peptide
      * @return a boolean indicating whether the other peptide has the same
@@ -1126,15 +1129,15 @@ public class Peptide extends ExperimentObject {
             return false;
         }
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         
         ArrayList<ModificationMatch> modificationMatches1 = getModificationMatches();
         Map<Double, Long> masses1 = modificationMatches1.stream().collect(Collectors.groupingBy(
-                modificationMatch -> ptmFactory.getPTM(modificationMatch.getTheoreticPtm()).getMass(), Collectors.counting()));
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
         
         ArrayList<ModificationMatch> modificationMatches2 = anotherPeptide.getModificationMatches();
         Map<Double, Long> masses2 = modificationMatches2.stream().collect(Collectors.groupingBy(
-                modificationMatch -> ptmFactory.getPTM(modificationMatch.getTheoreticPtm()).getMass(), Collectors.counting()));
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
 
         if (masses1.size() != masses2.size()) {
             return false;
@@ -1146,16 +1149,16 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether another peptide has the same modifications at the same
      * localization as this peptide. This method comes as a complement of
-     * isSameAs, here the localization of all PTMs is taken into account.
+     * isSameAs, here the localization of all Modifications is taken into account.
      * Modifications are considered equal when of same mass. Modifications
-     * should be loaded in the PTM factory.
+     * should be loaded in the Modification factory.
      *
      * @param anotherPeptide another peptide
-     * @param ptms the PTMs
+     * @param modifications the Modifications
      * @return true if the other peptide has the same positions at the same
      * location as the considered peptide
      */
-    public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> ptms) {
+    public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> modifications) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -1168,38 +1171,38 @@ public class Peptide extends ExperimentObject {
             return false;
         }
 
-        HashMap<Double, ArrayList<Integer>> ptmToPositionsMap1 = new HashMap<>();
-        HashMap<Double, ArrayList<Integer>> ptmToPositionsMap2 = new HashMap<>();
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        HashMap<Double, ArrayList<Integer>> modificationToPositionsMap1 = new HashMap<>();
+        HashMap<Double, ArrayList<Integer>> modificationToPositionsMap2 = new HashMap<>();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         for (ModificationMatch modificationMatch : modificationMatches) {
-            String modName = modificationMatch.getTheoreticPtm();
-            if (ptms.contains(modName)) {
-                double tempMass = ptmFactory.getPTM(modName).getMass();
-                ArrayList<Integer> sites = ptmToPositionsMap1.get(tempMass);
+            String modName = modificationMatch.getModification();
+            if (modifications.contains(modName)) {
+                double tempMass = modificationFactory.getModification(modName).getMass();
+                ArrayList<Integer> sites = modificationToPositionsMap1.get(tempMass);
                 if (sites == null) {
                     sites = new ArrayList<>();
-                    ptmToPositionsMap1.put(tempMass, sites);
+                    modificationToPositionsMap1.put(tempMass, sites);
                 }
                 int position = modificationMatch.getModificationSite();
                 sites.add(position);
             }
         }
         for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
-            String modName = modificationMatch.getTheoreticPtm();
-            if (ptms.contains(modName)) {
-                double tempMass = ptmFactory.getPTM(modName).getMass();
-                ArrayList<Integer> sites = ptmToPositionsMap2.get(tempMass);
+            String modName = modificationMatch.getModification();
+            if (modifications.contains(modName)) {
+                double tempMass = modificationFactory.getModification(modName).getMass();
+                ArrayList<Integer> sites = modificationToPositionsMap2.get(tempMass);
                 if (sites == null) {
                     sites = new ArrayList<>();
-                    ptmToPositionsMap2.put(tempMass, sites);
+                    modificationToPositionsMap2.put(tempMass, sites);
                 }
                 int position = modificationMatch.getModificationSite();
                 sites.add(position);
             }
         }
-        for (Double tempMass : ptmToPositionsMap1.keySet()) {
-            ArrayList<Integer> sites1 = ptmToPositionsMap1.get(tempMass);
-            ArrayList<Integer> sites2 = ptmToPositionsMap2.get(tempMass);
+        for (Double tempMass : modificationToPositionsMap1.keySet()) {
+            ArrayList<Integer> sites1 = modificationToPositionsMap1.get(tempMass);
+            ArrayList<Integer> sites2 = modificationToPositionsMap2.get(tempMass);
             if (sites2 == null || sites1.size() != sites2.size()) {
                 return false;
             }
@@ -1217,9 +1220,9 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether another peptide has the same modifications at the same
      * localization as this peptide. This method comes as a complement of
-     * isSameAs, here the localization of all PTMs is taken into account.
+     * isSameAs, here the localization of all Modifications is taken into account.
      * Modifications are considered equal when of same mass. Modifications
-     * should be loaded in the PTM factory.
+     * should be loaded in the Modification factory.
      *
      * @param anotherPeptide another peptide
      * @return true if the other peptide has the same positions at the same
@@ -1238,27 +1241,27 @@ public class Peptide extends ExperimentObject {
             return false;
         }
 
-        ArrayList<String> ptms = new ArrayList<>();
+        ArrayList<String> modifications = new ArrayList<>();
         for (ModificationMatch modificationMatch : getModificationMatches()) {
-            String modName = modificationMatch.getTheoreticPtm();
-            if (!ptms.contains(modName)) {
-                ptms.add(modName);
+            String modName = modificationMatch.getModification();
+            if (!modifications.contains(modName)) {
+                modifications.add(modName);
             }
         }
         for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
-            String modName = modificationMatch.getTheoreticPtm();
-            if (!ptms.contains(modName)) {
-                ptms.add(modName);
+            String modName = modificationMatch.getModification();
+            if (!modifications.contains(modName)) {
+                modifications.add(modName);
             }
         }
-        return sameModificationsAs(anotherPeptide, ptms);
+        return sameModificationsAs(anotherPeptide, modifications);
     }
 
     /**
      * Returns the N-terminal of the peptide as a String. Returns "NH2" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ this method will work only if the PTM found in the peptide are in the
-     * PTMFactory.
+     * /!\ this method will work only if the Modification found in the peptide are in the
+     * ModificationFactory.
      *
      * @return the N-terminal of the peptide as a String, e.g., "NH2"
      */
@@ -1269,14 +1272,14 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         String nTerm = "NH2";
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         if (modificationMatches != null) {
             for (ModificationMatch modificationMatch : modificationMatches) {
                 if (modificationMatch.getModificationSite() == 1) {
-                    PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
-                    if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                        nTerm = ptm.getShortName();
+                    Modification modification = modificationFactory.getModification(modificationMatch.getModification());
+                    if (modification.getModificationType() != ModificationType.modaa) {
+                        nTerm = modification.getShortName();
                     }
                 }
             }
@@ -1289,8 +1292,8 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ This method will work only if the PTM found in the peptide are in the
-     * PTMFactory.
+     * /!\ This method will work only if the Modification found in the peptide are in the
+     * ModificationFactory.
      *
      * @return the C-terminal of the peptide as a String, e.g., "COOH"
      */
@@ -1300,14 +1303,14 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         String cTerm = "COOH";
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         if (modificationMatches != null) {
             for (int i = 0; i < modificationMatches.size(); i++) {
                 if (modificationMatches.get(i).getModificationSite() == sequence.length()) {
-                    PTM ptm = ptmFactory.getPTM(modificationMatches.get(i).getTheoreticPtm());
-                    if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                        cTerm = ptm.getShortName();
+                    Modification modification = modificationFactory.getModification(modificationMatches.get(i).getModification());
+                    if (modification.getModificationType() != ModificationType.modaa) {
+                        cTerm = modification.getShortName();
                     }
                 }
             }
@@ -1319,17 +1322,17 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * this method will work only if the Modification found in the peptide are in the
+     * ModificationFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
-     * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
+     * @param excludeAllFixedPtms if true, all fixed Modifications are excluded
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
@@ -1343,7 +1346,7 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
         if (modificationMatches != null) {
             for (ModificationMatch modMatch : modificationMatches) {
-                String modName = modMatch.getTheoreticPtm();
+                String modName = modMatch.getModification();
                 int modSite = modMatch.getModificationSite();
                 if (modMatch.getVariable()) {
                     if (modMatch.getConfident()) {
@@ -1371,14 +1374,14 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * this method will work only if the Modification found in the peptide are in the
+     * ModificationFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
      * @return the modified sequence as a tagged string
@@ -1392,9 +1395,9 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory.
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * This method will work only if the Modification found in the peptide are in the
+     * ModificationFactory.
      *
      * @param modificationProfile the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
@@ -1411,7 +1414,7 @@ public class Peptide extends ExperimentObject {
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
@@ -1457,8 +1460,8 @@ public class Peptide extends ExperimentObject {
      * Returns the peptide modifications as a string.
      *
      * @param peptide the peptide
-     * @param variablePtms if true, only variable PTMs are shown, false return
-     * only the fixed PTMs
+     * @param variablePtms if true, only variable Modifications are shown, false return
+     * only the fixed Modifications
      *
      * @return the peptide modifications as a string
      */
@@ -1470,10 +1473,10 @@ public class Peptide extends ExperimentObject {
         if (peptide.isModified()) {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 if ((variablePtms && modificationMatch.getVariable()) || (!variablePtms && !modificationMatch.getVariable())) {
-                    if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
-                        modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<>());
+                    if (!modMap.containsKey(modificationMatch.getModification())) {
+                        modMap.put(modificationMatch.getModification(), new ArrayList<>());
                     }
-                    modMap.get(modificationMatch.getTheoreticPtm()).add(modificationMatch.getModificationSite());
+                    modMap.get(modificationMatch.getModification()).add(modificationMatch.getModificationSite());
                 }
             }
         }
@@ -1519,7 +1522,7 @@ public class Peptide extends ExperimentObject {
      * Returns the indexes of the residues in the peptide that contain at least
      * one modification.
      *
-     * @param excludeFixed exclude fixed PTMs
+     * @param excludeFixed exclude fixed Modifications
      * @return the indexes of the modified residues
      */
     public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
@@ -1533,11 +1536,11 @@ public class Peptide extends ExperimentObject {
 
         ArrayList<Integer> modifiedResidues = new ArrayList<>(modificationMatches.size());
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         for (int i = 0; i < sequence.length(); i++) {
             for (int j = 0; j < modificationMatches.size(); j++) {
-                PTM ptm = ptmFactory.getPTM(modificationMatches.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && (modificationMatches.get(j).getVariable() || !excludeFixed)) {
+                Modification modification = modificationFactory.getModification(modificationMatches.get(j).getModification());
+                if (modification.getModificationType() == ModificationType.modaa && (modificationMatches.get(j).getVariable() || !excludeFixed)) {
                     if (modificationMatches.get(j).getModificationSite() == (i + 1)) {
                         modifiedResidues.add(i + 1);
                     }
@@ -1570,7 +1573,7 @@ public class Peptide extends ExperimentObject {
                 if (!result.containsKey(aa)) {
                     result.put(aa, new ArrayList<>());
                 }
-                result.get(aa).add(modificationMatch.getTheoreticPtm());
+                result.get(aa).add(modificationMatch.getModification());
             }
         }
         return result;
@@ -1596,8 +1599,8 @@ public class Peptide extends ExperimentObject {
             }
 
             if (modificationMatches != null) {
-                PTMFactory ptmFactory = PTMFactory.getInstance();
-                tempMass += modificationMatches.stream().mapToDouble(modificationMatch -> ptmFactory.getPTM(modificationMatch.getTheoreticPtm()).getMass()).sum();
+                ModificationFactory modificationFactory = ModificationFactory.getInstance();
+                tempMass += modificationMatches.stream().mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass()).sum();
             }
 
             setMass(tempMass);
@@ -1652,15 +1655,8 @@ public class Peptide extends ExperimentObject {
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return whether a peptide can be derived from a decoy protein
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
      */
-    public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -1676,7 +1672,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return a not modified version of the peptide
      */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> forbiddenModifications) {
+    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<Modification> forbiddenModifications) {
 
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>(0));
         noModPeptide.setProteinMapping(peptide.getProteinMapping());
@@ -1687,7 +1683,7 @@ public class Peptide extends ExperimentObject {
             
             HashSet<String> forbiddenModificationsNames = forbiddenModifications.stream().map(modification -> modification.getName()).collect(Collectors.toCollection(HashSet::new));
             
-            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream().filter(modificationMatch -> !forbiddenModificationsNames.contains(modificationMatch.getTheoreticPtm())).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream().filter(modificationMatch -> !forbiddenModificationsNames.contains(modificationMatch.getModification())).collect(Collectors.toCollection(ArrayList::new));
 
             noModPeptide.setModificationMatches(filteredModificationMatches);
             

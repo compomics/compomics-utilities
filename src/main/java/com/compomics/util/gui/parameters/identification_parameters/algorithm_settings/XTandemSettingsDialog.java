@@ -1,8 +1,8 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.gui.GuiUtilities;
@@ -55,7 +55,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     /**
      * The post translational modifications factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * Boolean indicating whether the modification profile has been changed.
      * Note that it only checks if the user has made changed to the selection,
@@ -1517,8 +1517,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private void quickAcetylCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickAcetylCmbActionPerformed
         if (quickAcetylCmb.getSelectedIndex() == 0) {
             for (String modName : modificationProfile.getFixedModifications()) {
-                PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
+                Modification ptm = ptmFactory.getModification(modName);
+                if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA)
                         && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick acetyl option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
@@ -1537,8 +1537,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private void quickPyroCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPyroCmbActionPerformed
         if (quickPyroCmb.getSelectedIndex() == 0) {
             for (String modName : modificationProfile.getFixedModifications()) {
-                PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
+                Modification ptm = ptmFactory.getModification(modName);
+                if ((ptm.getModificationType() == Modification.MODNP || ptm.getModificationType() == Modification.MODNPAA || ptm.getModificationType() == Modification.MODN || ptm.getModificationType() == Modification.MODNAA)
                         && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick pyrolidone option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
@@ -2313,7 +2313,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 if (selected) {
                     // add as refinement ptm
                     if (!modificationProfile.getRefinementVariableModifications().contains(ptmName)) {
-                        modificationProfile.addRefinementVariableModification(ptmFactory.getPTM(ptmName));
+                        modificationProfile.addRefinementVariableModification(ptmFactory.getModification(ptmName));
                         modProfileChanged = true;
                     }
                 } else {
@@ -2339,7 +2339,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 if (selected) {
                     // add as refinement ptm
                     if (!modificationProfile.getRefinementFixedModifications().contains(ptmName)) {
-                        modificationProfile.addRefinementFixedModification(ptmFactory.getPTM(ptmName));
+                        modificationProfile.addRefinementFixedModification(ptmFactory.getModification(ptmName));
                         modProfileChanged = true;
                     }
                 } else {
@@ -2619,7 +2619,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             ((DefaultTableModel) modificationsTable.getModel()).addRow(
                     new Object[]{ptmFactory.getColor(mod),
                         mod,
-                        ptmFactory.getPTM(mod).getMass(),
+                        ptmFactory.getModification(mod).getMass(),
                         modificationProfile.getRefinementVariableModifications().contains(mod),
                         modificationProfile.getRefinementFixedModifications().contains(mod)});
         }
@@ -2631,11 +2631,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         double minMass = Double.MAX_VALUE;
 
         for (String ptm : ptmFactory.getPTMs()) {
-            if (ptmFactory.getPTM(ptm).getMass() > maxMass) {
-                maxMass = ptmFactory.getPTM(ptm).getMass();
+            if (ptmFactory.getModification(ptm).getMass() > maxMass) {
+                maxMass = ptmFactory.getModification(ptm).getMass();
             }
-            if (ptmFactory.getPTM(ptm).getMass() < minMass) {
-                minMass = ptmFactory.getPTM(ptm).getMass();
+            if (ptmFactory.getModification(ptm).getMass() < minMass) {
+                minMass = ptmFactory.getModification(ptm).getMass();
             }
         }
 

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class PtmSettings implements Serializable {
     /**
      * Back-up mapping of the PTMs for portability.
      */
-    private HashMap<String, PTM> backUp = new HashMap<>();
+    private HashMap<String, Modification> backUp = new HashMap<>();
 
     /**
      * Constructor.
@@ -179,7 +179,7 @@ public class PtmSettings implements Serializable {
      *
      * @param modification the modification to add
      */
-    public void addVariableModification(PTM modification) {
+    public void addVariableModification(Modification modification) {
         String modName = modification.getName();
         if (!variableModifications.contains(modName)) {
             variableModifications.add(modName);
@@ -195,7 +195,7 @@ public class PtmSettings implements Serializable {
      *
      * @param modification the modification to add
      */
-    public void addRefinementVariableModification(PTM modification) {
+    public void addRefinementVariableModification(Modification modification) {
         String modName = modification.getName();
         if (!refinementVariableModifications.contains(modName)) {
             refinementVariableModifications.add(modName);
@@ -211,7 +211,7 @@ public class PtmSettings implements Serializable {
      *
      * @param modification the modification to add
      */
-    public void addRefinementFixedModification(PTM modification) {
+    public void addRefinementFixedModification(Modification modification) {
         String modName = modification.getName();
         if (!refinementFixedModifications.contains(modName)) {
             refinementFixedModifications.add(modName);
@@ -227,7 +227,7 @@ public class PtmSettings implements Serializable {
      *
      * @param modification the modification to add
      */
-    public void addFixedModification(PTM modification) {
+    public void addFixedModification(Modification modification) {
         String modName = modification.getName();
         if (!fixedModifications.contains(modName)) {
             fixedModifications.add(modName);
@@ -253,7 +253,7 @@ public class PtmSettings implements Serializable {
      */
     public Color getColor(String modification) {
         if (!colors.containsKey(modification)) {
-            PTMFactory ptmFactory = PTMFactory.getInstance();
+            ModificationFactory ptmFactory = ModificationFactory.getInstance();
             setColor(modification, ptmFactory.getColor(modification));
         }
         return colors.get(modification);
@@ -283,7 +283,7 @@ public class PtmSettings implements Serializable {
      * @param modName the name of the PTM of interest
      * @return the corresponding PTM. Null if not found.
      */
-    public PTM getPtm(String modName) {
+    public Modification getPtm(String modName) {
         return backUp.get(modName);
     }
 
@@ -292,7 +292,7 @@ public class PtmSettings implements Serializable {
      *
      * @return the PTMs backed-up as a map
      */
-    public HashMap<String, PTM> getBackedUpPtmsMap() {
+    public HashMap<String, Modification> getBackedUpPtmsMap() {
         return backUp;
     }
 
@@ -365,10 +365,10 @@ public class PtmSettings implements Serializable {
      * @return a list of all not fixed modifications with the same mass
      */
     public ArrayList<String> getSimilarNotFixedModifications(Double ptmMass) {
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
         ArrayList<String> ptms = new ArrayList<>();
         for (String ptmName : getAllNotFixedModifications()) {
-            PTM ptm = ptmFactory.getPTM(ptmName);
+            Modification ptm = ptmFactory.getModification(ptmName);
             if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) { // @TODO: should compare against the accuracy
                 ptms.add(ptmName);
             }

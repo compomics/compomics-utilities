@@ -1,6 +1,9 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -146,7 +149,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 ArrayList<Character> aminoAcids = new ArrayList<>();
                 AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                 aminoAcids.add(aminoAcidPatternAsString.charAt(i));
-                aminoAcidPattern.addPTMSite(i, aminoAcids);
+                aminoAcidPattern.addModificationSite(i, aminoAcids);
             }
         } else {
             int pos = 0, siteIndex = -startIndex;
@@ -158,17 +161,16 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                         AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                         aminoAcids.add(aminoAcidPatternAsString.charAt(i));
                     }
-                    aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
+                    aminoAcidPattern.addModificationSite(siteIndex++, aminoAcids);
                     pos = end + 1;
                 } else {
                     ArrayList<Character> aminoAcids = new ArrayList<>();
                     AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(pos));
                     aminoAcids.add(aminoAcidPatternAsString.charAt(pos));
-                    aminoAcidPattern.addPTMSite(siteIndex++, aminoAcids);
+                    aminoAcidPattern.addModificationSite(siteIndex++, aminoAcids);
                     ++pos;
                 }
             }
-
         }
 
         return aminoAcidPattern;
@@ -416,10 +418,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (targetModifications != null) {
             ArrayList<Integer> indexes = new ArrayList<>(targetModifications.keySet());
             Collections.sort(indexes);
-            int ptmIndex = index + 1;
+            int modificationIndex = index + 1;
             for (int aa : indexes) {
-                if (aa >= ptmIndex) {
-                    if (aa > ptmIndex) {
+                if (aa >= modificationIndex) {
+                    if (aa > modificationIndex) {
                         targetModifications.put(aa - 1, targetModifications.get(aa));
                     }
                 }
@@ -934,7 +936,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Indicates whether another AminoAcidPattern targets the same pattern.
      * Modifications are considered equal when of same mass. Modifications
-     * should be loaded in the PTM factory.
+     * should be loaded in the Modification factory.
      *
      * @param anotherPattern the other AminoAcidPattern
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -951,7 +953,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             return false;
         }
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
             ArrayList<ModificationMatch> mods2 = anotherPattern.getModificationsAt(i);
@@ -959,11 +961,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 return false;
             }
             for (ModificationMatch modificationMatch1 : mods1) {
-                PTM ptm1 = ptmFactory.getPTM(modificationMatch1.getTheoreticPtm());
+                Modification modification1 = modificationFactory.getModification(modificationMatch1.getModification());
                 boolean found = false;
                 for (ModificationMatch modificationMatch2 : mods2) {
-                    PTM ptm2 = ptmFactory.getPTM(modificationMatch2.getTheoreticPtm());
-                    if (ptm1.getMass() == ptm2.getMass()) { // @TODO: compare against the accuracy
+                    Modification modification2 = modificationFactory.getModification(modificationMatch2.getModification());
+                    if (modification1.getMass() == modification2.getMass()) { // @TODO: compare against the accuracy
                         found = true;
                         break;
                     }
@@ -978,8 +980,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Indicates whether another AminoAcidPattern targets the same pattern
-     * without accounting for PTM localization. Modifications are considered
-     * equal when of same mass. Modifications should be loaded in the PTM
+     * without accounting for Modification localization. Modifications are considered
+     * equal when of same mass. Modifications should be loaded in the Modification
      * factory.
      *
      * @param anotherPattern the other AminoAcidPattern
@@ -993,13 +995,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             return false;
         }
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         HashMap<Double, Integer> masses1 = new HashMap<>(1);
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
-                PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
-                double mass = ptm.getMass();
+                Modification modification = modificationFactory.getModification(modMatch.getModification());
+                double mass = modification.getMass();
                 Integer occurrence = masses1.get(mass);
                 if (occurrence == null) {
                     masses1.put(mass, 1);
@@ -1013,8 +1015,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
             for (ModificationMatch modMatch : modifications) {
-                PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
-                double mass = ptm.getMass();
+                Modification modification = modificationFactory.getModification(modMatch.getModification());
+                double mass = modification.getMass();
                 Integer occurrence = masses2.get(mass);
                 if (occurrence == null) {
                     masses2.put(mass, 1);
@@ -1168,7 +1170,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
                 int newIndex = i + patternLength;
                 for (ModificationMatch oldModificationMatch : modificationMatches.get(i)) {
-                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.getVariable(), newIndex);
+                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getModification(), oldModificationMatch.getVariable(), newIndex);
                     addModificationMatch(newIndex, newModificationMatch);
                 }
             }
@@ -1325,7 +1327,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void addModificationMatch(int localization, ModificationMatch modificationMatch) {
         int index = localization - 1;
         if (index < 0) {
-            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
+            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for Modification localization.");
         }
         if (targetModifications == null) {
             targetModifications = new HashMap<>(1);
@@ -1348,7 +1350,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void addModificationMatches(int localization, ArrayList<ModificationMatch> modificationMatches) {
         int index = localization - 1;
         if (index < 0) {
-            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
+            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for Modification localization.");
         }
         if (targetModifications == null) {
             targetModifications = new HashMap<>(1);
@@ -1365,13 +1367,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * Adds a list of modifications to one of the amino acid pattern.
      *
      * @param localization the index of the amino acid residue site
-     * @param PTMSite valid amino acids for this site
+     * @param ModificationSite valid amino acids for this site
      */
-    public void addPTMSite(int localization, ArrayList<Character> PTMSite) {
+    public void addModificationSite(int localization, ArrayList<Character> ModificationSite) {
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
         }
-        residueTargeted.put(localization, PTMSite);
+        residueTargeted.put(localization, ModificationSite);
     }
 
     /**
@@ -1384,7 +1386,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void changeModificationSite(ModificationMatch modificationMatch, int oldLocalization, int newLocalization) {
         int oldIndex = oldLocalization - 1;
         if (oldIndex < 0) {
-            throw new IllegalArgumentException("Wrong modification old target index " + oldLocalization + ", 1 is the first amino acid for PTM localization.");
+            throw new IllegalArgumentException("Wrong modification old target index " + oldLocalization + ", 1 is the first amino acid for Modification localization.");
         }
         if (targetModifications == null || !targetModifications.containsKey(oldIndex) || !targetModifications.get(oldIndex).contains(modificationMatch)) {
             throw new IllegalArgumentException("Modification match " + modificationMatch + " not found at index " + oldLocalization + ".");
@@ -1395,17 +1397,17 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * this method will work only if the Modification found in the peptide are in the
+     * ModificationFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them. Note: this
      * does not include HTML start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
-     * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
+     * @param excludeAllFixedPtms if true, all fixed Modifications are excluded
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
@@ -1417,7 +1419,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (targetModifications != null) {
             for (int modSite : targetModifications.keySet()) {
                 for (ModificationMatch modificationMatch : targetModifications.get(modSite)) {
-                    String modName = modificationMatch.getTheoreticPtm();
+                    String modName = modificationMatch.getModification();
                     if (modificationMatch.getVariable()) {
                         if (modificationMatch.getConfident()) {
                             if (!mainModificationSites.containsKey(modSite)) {
@@ -1446,9 +1448,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * This method will work only if the Modification found in the peptide are in the
+     * ModificationFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
@@ -1462,7 +1464,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
@@ -1492,16 +1494,16 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
             if (aminoAcidPattern.getNTargetedAA(patternIndex) == 0) {
                 if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue('X', ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
+                    for (String modificationName : mainModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue('X', modificationName, modificationProfile, true, useHtmlColorCoding, useShortName);
                     }
                 } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue('X', ptmName, modificationProfile, false, useHtmlColorCoding, useShortName);
+                    for (String modificationName : secondaryModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue('X', modificationName, modificationProfile, false, useHtmlColorCoding, useShortName);
                     }
                 } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue('X', ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
+                    for (String modificationName : fixedModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue('X', modificationName, modificationProfile, true, useHtmlColorCoding, useShortName);
                     }
                 } else {
                     modifiedSequence += "X";
@@ -1509,16 +1511,16 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
             for (Character aminoAcid : aminoAcidPattern.getTargetedAA(patternIndex)) {
                 if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue(aminoAcid, ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
+                    for (String modificationName : mainModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue(aminoAcid, modificationName, modificationProfile, true, useHtmlColorCoding, useShortName);
                     }
                 } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue(aminoAcid, ptmName, modificationProfile, false, useHtmlColorCoding, useShortName);
+                    for (String modificationName : secondaryModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue(aminoAcid, modificationName, modificationProfile, false, useHtmlColorCoding, useShortName);
                     }
                 } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-                    for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
-                        modifiedSequence += getTaggedResidue(aminoAcid, ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
+                    for (String modificationName : fixedModificationSites.get(aa)) { //There should be only one
+                        modifiedSequence += getTaggedResidue(aminoAcid, modificationName, modificationProfile, true, useHtmlColorCoding, useShortName);
                     }
                 } else {
                     modifiedSequence += aminoAcid;
@@ -1533,41 +1535,41 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Returns the single residue as a tagged string (HTML color or PTM tag).
+     * Returns the single residue as a tagged string (HTML color or Modification tag).
      *
      * @param residue the residue to tag
-     * @param ptmName the name of the PTM
+     * @param modificationName the name of the Modification
      * @param modificationProfile the modification profile
      * @param mainPtm if true, white font is used on colored background, if
      * false colored font on white background
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
+     * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the single residue as a tagged string
      */
-    private static String getTaggedResidue(char residue, String ptmName, PtmSettings modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
+    private static String getTaggedResidue(char residue, String modificationName, PtmSettings modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
 
         String taggedResidue = "";
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-        PTM ptm = ptmFactory.getPTM(ptmName);
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        Modification modification = modificationFactory.getModification(modificationName);
 
-        if (ptm.getType() == PTM.MODAA) {
+        if (modification.getModificationType() == ModificationType.modaa) {
             if (!useHtmlColorCoding) {
                 if (useShortName) {
-                    taggedResidue += residue + "<" + ptm.getShortName() + ">";
+                    taggedResidue += residue + "<" + modification.getShortName() + ">";
                 } else {
-                    taggedResidue += residue + "<" + ptmName + ">";
+                    taggedResidue += residue + "<" + modificationName + ">";
                 }
             } else {
-                Color ptmColor = modificationProfile.getColor(ptmName);
+                Color modificationColor = modificationProfile.getColor(modificationName);
                 if (mainPtm) {
                     taggedResidue
-                            += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
+                            += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(modificationColor) + "\">"
                             + residue
                             + "</span>";
                 } else {
                     taggedResidue
-                            += "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
+                            += "<span style=\"color:#" + Util.color2Hex(modificationColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
                             + residue
                             + "</span>";
                 }
@@ -1668,8 +1670,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i + 1);
                 if (modificationAtIndex != null) {
                     for (ModificationMatch modificationMatch : modificationAtIndex) {
-                        PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
-                        mass += ptm.getMass();
+                        Modification modification = ModificationFactory.getInstance().getModification(modificationMatch.getModification());
+                        mass += modification.getMass();
                     }
                 }
             }
@@ -1715,7 +1717,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     ArrayList<ModificationMatch> modificationMatches = targetModifications.get(i);
                     ArrayList<ModificationMatch> newMatches = new ArrayList<>(modificationMatches.size());
                     for (ModificationMatch modificationMatch : modificationMatches) {
-                        newMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), index));
+                        newMatches.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), index));
                     }
                     aminoAcidPattern.addModificationMatches(index, newMatches);
                 }
@@ -1761,7 +1763,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int i : targetModifications.keySet()) {
                 int reversed = length() - i + 1;
                 for (ModificationMatch modificationMatch : targetModifications.get(i)) {
-                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), reversed);
+                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), reversed);
                     if (modificationMatch.getConfident()) {
                         newMatch.setConfident(true);
                     }

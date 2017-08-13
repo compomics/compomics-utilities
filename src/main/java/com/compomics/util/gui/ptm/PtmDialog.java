@@ -1,5 +1,7 @@
 package com.compomics.util.gui.ptm;
 
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.*;
@@ -33,11 +35,11 @@ public class PtmDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The edited PTM.
      */
-    private PTM currentPtm = null;
+    private Modification currentPtm = null;
     /**
      * The neutral losses.
      */
@@ -83,7 +85,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the user can edit the PTM
      * details
      */
-    public PtmDialog(JDialog parent, PTM currentPTM, boolean editable) {
+    public PtmDialog(JDialog parent, Modification currentPTM, boolean editable) {
         super(parent, true);
 
         this.currentPtm = currentPTM;
@@ -113,7 +115,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the user can edit the PTM
      * details
      */
-    public PtmDialog(JFrame parent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
+    public PtmDialog(JFrame parent, PtmToPrideMap ptmToPrideMap, Modification currentPTM, boolean editable) {
         super(parent, true);
 
         this.currentPtm = currentPTM;
@@ -201,7 +203,7 @@ public class PtmDialog extends javax.swing.JDialog {
         unimodNameJTextField.setEditable(editable);
 
         if (currentPtm != null) {
-            typeCmb.setSelectedIndex(currentPtm.getType());
+            typeCmb.setSelectedIndex(currentPtm.getModificationType());
             nameTxt.setText(currentPtm.getName());
             nameShortTxt.setText(currentPtm.getShortName());
 
@@ -401,27 +403,27 @@ public class PtmDialog extends javax.swing.JDialog {
         }
 
         // check if name ends with a protected suffix
-        if (name.contains(PTMFactory.SINGLE_AA_SUFFIX)) {
-            String newName = name.replace(PTMFactory.SINGLE_AA_SUFFIX, "SEARCH-ONLY");
+        if (name.contains(ModificationFactory.SINGLE_AA_SUFFIX)) {
+            String newName = name.replace(ModificationFactory.SINGLE_AA_SUFFIX, "SEARCH-ONLY");
 
             if (showMessage && !error) {
-                int outcome = JOptionPane.showConfirmDialog(this, "\'" + PTMFactory.SINGLE_AA_SUFFIX
+                int outcome = JOptionPane.showConfirmDialog(this, "\'" + ModificationFactory.SINGLE_AA_SUFFIX
                         + "\' should be avoided in the end of modification names.\n"
                         + "Shall " + name + " be replaced by "
-                        + newName + "?", "'" + PTMFactory.SINGLE_AA_SUFFIX + "' Ending Name", JOptionPane.YES_NO_OPTION);
+                        + newName + "?", "'" + ModificationFactory.SINGLE_AA_SUFFIX + "' Ending Name", JOptionPane.YES_NO_OPTION);
                 if (outcome == JOptionPane.YES_OPTION) {
                     nameTxt.setText(newName);
                 } else {
                     error = true;
                     nameLabel.setForeground(Color.RED);
-                    nameLabel.setToolTipText("\'" + PTMFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
-                    nameTxt.setToolTipText("\'" + PTMFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
+                    nameLabel.setToolTipText("\'" + ModificationFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
+                    nameTxt.setToolTipText("\'" + ModificationFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
                 }
             } else {
                 error = true;
                 nameLabel.setForeground(Color.RED);
-                nameLabel.setToolTipText("\'" + PTMFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
-                nameTxt.setToolTipText("\'" + PTMFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
+                nameLabel.setToolTipText("\'" + ModificationFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
+                nameTxt.setToolTipText("\'" + ModificationFactory.SINGLE_AA_SUFFIX + "\' should be avoided in modification names.");
             }
         }
 
@@ -1089,7 +1091,7 @@ public class PtmDialog extends javax.swing.JDialog {
                     cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
                 }
 
-                PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
+                Modification newPTM = new Modification(typeCmb.getSelectedIndex(),
                         nameTxt.getText().trim(),
                         nameShortTxt.getText().trim().toLowerCase(),
                         atomChainAdded, atomChainRemoved, pattern, cvTerm);
@@ -1098,7 +1100,7 @@ public class PtmDialog extends javax.swing.JDialog {
 
                 for (String ptm : ptmFactory.getPTMs()) {
                     if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
-                        PTM otherPTM = ptmFactory.getPTM(ptm);
+                        Modification otherPTM = ptmFactory.getModification(ptm);
                         if (newPTM.isSameAs(otherPTM)) {
                             int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + ptm
                                     + "\' presents characteristics similar to your input.\n"

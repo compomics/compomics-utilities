@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.ions.ImmoniumIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
@@ -119,9 +121,9 @@ public class IonFactory {
     public static ArrayList<NeutralLoss> getNeutralLosses(PtmSettings ptmSettings) {
         ArrayList<NeutralLoss> neutralLosses = new ArrayList<>();
         neutralLosses.addAll(IonFactory.getDefaultNeutralLosses());
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
         for (String modification : ptmSettings.getAllModifications()) {
-            PTM currentPtm = ptmFactory.getPTM(modification);
+            Modification currentPtm = ptmFactory.getModification(modification);
             boolean found = false;
             for (NeutralLoss ptmNeutralLoss : currentPtm.getNeutralLosses()) {
                 for (NeutralLoss neutralLoss : neutralLosses) {
@@ -148,9 +150,9 @@ public class IonFactory {
     public static HashSet<Integer> getReporterIons(PtmSettings ptmSettings) {
 
         HashSet<Integer> reporterIons = new HashSet<>();
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
         for (String modification : ptmSettings.getAllModifications()) {
-            PTM currentPtm = ptmFactory.getPTM(modification);
+            Modification currentPtm = ptmFactory.getModification(modification);
             for (ReporterIon reporterIon : currentPtm.getReporterIons()) {
                 reporterIons.add(reporterIon.getSubType());
             }
@@ -191,8 +193,8 @@ public class IonFactory {
 
         HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<>();
         String sequence = peptide.getSequence();
-        HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<>(peptide.getNModifications());
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        HashMap<Integer, ArrayList<Modification>> modifications = new HashMap<>(peptide.getNModifications());
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
         ArrayList<String> processedPtms = null;
         ArrayList<NeutralLoss> possibleNeutralLosses = null;
         if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
@@ -202,12 +204,12 @@ public class IonFactory {
         if (peptide.isModified()) {
             for (ModificationMatch ptmMatch : peptide.getModificationMatches()) {
                 int location = ptmMatch.getModificationSite();
-                String ptmName = ptmMatch.getTheoreticPtm();
-                PTM ptm = ptmFactory.getPTM(ptmName);
+                String ptmName = ptmMatch.getModification();
+                Modification ptm = ptmFactory.getModification(ptmName);
                 if (ptm == null) {
                     throw new IllegalArgumentException("PTM " + ptmName + " not loaded in the PTM factory.");
                 }
-                ArrayList<PTM> modificationsAtSite = modifications.get(location);
+                ArrayList<Modification> modificationsAtSite = modifications.get(location);
                 if (modificationsAtSite == null) {
                     modificationsAtSite = new ArrayList<>(1);
                     modifications.put(location, modificationsAtSite);
@@ -312,7 +314,7 @@ public class IonFactory {
             forwardMass += currentAA.getMonoisotopicMass();
 
             if (modifications.get(faa) != null) {
-                for (PTM ptm : modifications.get(faa)) {
+                for (Modification ptm : modifications.get(faa)) {
                     forwardMass += ptm.getMass();
                 }
             }
@@ -391,7 +393,7 @@ public class IonFactory {
             rewindMass += currentAA.getMonoisotopicMass();
 
             if (modifications.get(raa + 1) != null) {
-                for (PTM ptm : modifications.get(raa + 1)) {
+                for (Modification ptm : modifications.get(raa + 1)) {
                     rewindMass += ptm.getMass();
                 }
             }
@@ -464,7 +466,7 @@ public class IonFactory {
         forwardMass += currentAA.getMonoisotopicMass();
 
         if (modifications.get(sequence.length()) != null) {
-            for (PTM ptm : modifications.get(sequence.length())) {
+            for (Modification ptm : modifications.get(sequence.length())) {
                 forwardMass += ptm.getMass();
             }
         }
@@ -529,8 +531,8 @@ public class IonFactory {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.getMonoisotopicMass();
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
-                            String ptmName = modificationMatch.getTheoreticPtm();
-                            PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                            String ptmName = modificationMatch.getModification();
+                            Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
                             if (processedPtms == null || !processedPtms.contains(ptmName)) {
                                 for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
@@ -766,8 +768,8 @@ public class IonFactory {
 
                     double mass = aminoAcid.getMonoisotopicMass();
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i + 1)) {
-                        String ptmName = modificationMatch.getTheoreticPtm();
-                        PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                        String ptmName = modificationMatch.getModification();
+                        Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
                         if (processedPtms == null || !processedPtms.contains(ptmName)) {
                             for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                 ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
@@ -933,8 +935,8 @@ public class IonFactory {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.getMonoisotopicMass();
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
-                            String ptmName = modificationMatch.getTheoreticPtm();
-                            PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                            String ptmName = modificationMatch.getModification();
+                            Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
                             if (processedPtms == null || !processedPtms.contains(ptmName)) {
                                 for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
@@ -1182,8 +1184,8 @@ public class IonFactory {
 
                     double mass = aminoAcid.getMonoisotopicMass();
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i + 1)) {
-                        String ptmName = modificationMatch.getTheoreticPtm();
-                        PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                        String ptmName = modificationMatch.getModification();
+                        Modification ptm = ModificationFactory.getInstance().getModification(ptmName);
                         if (processedPtms == null || !processedPtms.contains(ptmName)) {
                             for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
                                 ionsMap = result.get(Ion.IonType.REPORTER_ION.index);

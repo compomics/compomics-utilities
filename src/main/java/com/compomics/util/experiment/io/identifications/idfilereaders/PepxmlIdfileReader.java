@@ -191,7 +191,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                     for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
                                         boolean ptmFound = false;
                                         for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
-                                            if (originalMatch.getTheoreticPtm().equals(otherMatch.getTheoreticPtm()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
+                                            if (originalMatch.getModification().equals(otherMatch.getModification()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
                                                 ptmFound = true;
                                                 break;
                                             }
@@ -222,7 +222,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                                 if (previousModificationMatches != null) {
                                     for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
+                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(),
                                                 modificationMatch.getVariable(), modificationMatch.getModificationSite()));
                                     }
                                 }

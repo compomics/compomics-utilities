@@ -3,8 +3,8 @@ package com.compomics.cli.modifications;
 import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
@@ -27,7 +27,7 @@ public class ModificationsCLIInputBean {
         if (aLine.getOptions().length == 0) {
             return false;
         }
-        PTMFactory ptmFactory = null;
+        ModificationFactory ptmFactory = null;
         if (aLine.hasOption(ModificationsCLIParams.IN.id)) {
             String arg = aLine.getOptionValue(ModificationsCLIParams.IN.id);
             if (arg.equals("")) {
@@ -40,7 +40,7 @@ public class ModificationsCLIInputBean {
                 return false;
             }
             try {
-                ptmFactory = PTMFactory.loadFromFile(fileIn);
+                ptmFactory = ModificationFactory.loadFromFile(fileIn);
             } catch (Exception e) {
                 System.out.println(System.getProperty("line.separator") + "An error occurred while parsing " + fileIn + "." + System.getProperty("line.separator"));
                 e.printStackTrace();
@@ -52,7 +52,7 @@ public class ModificationsCLIInputBean {
         }
         if (aLine.hasOption(ModificationsCLIParams.RM.id)) {
             String arg = aLine.getOptionValue(ModificationsCLIParams.RM.id);
-            PTM ptm = ptmFactory.getPTM(arg);
+            Modification ptm = ptmFactory.getModification(arg);
             if (ptm == null) {
                 String file = aLine.getOptionValue(ModificationsCLIParams.IN.id);
                 System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not found in " + file + "." + System.getProperty("line.separator"));
@@ -117,22 +117,18 @@ public class ModificationsCLIInputBean {
                 return false;
             }
             Integer type = new Integer(arg);
-            if (type >= PTM.MODMAX) {
-                System.out.println(System.getProperty("line.separator") + "Invalid PTM type " + arg + "." + System.getProperty("line.separator"));
-                return false;
-            }
-            if (!pattern && (type == PTM.MODAA
-                    || type == PTM.MODCAA
-                    || type == PTM.MODNAA
-                    || type == PTM.MODCPAA
-                    || type == PTM.MODNPAA)) {
+            if (!pattern && (type == Modification.MODAA
+                    || type == Modification.MODCAA
+                    || type == Modification.MODNAA
+                    || type == Modification.MODCPAA
+                    || type == Modification.MODNPAA)) {
                 System.out.println(System.getProperty("line.separator") + "No amino acid pattern found for PTM targetting specific amino acids." + System.getProperty("line.separator"));
                 return false;
             }
-            if (pattern && (type == PTM.MODC
-                    || type == PTM.MODN
-                    || type == PTM.MODCP
-                    || type == PTM.MODNP)) {
+            if (pattern && (type == Modification.MODC
+                    || type == Modification.MODN
+                    || type == Modification.MODCP
+                    || type == Modification.MODNP)) {
                 System.out.println(System.getProperty("line.separator") + "Amino acid pattern found for PTM targetting a terminus." + System.getProperty("line.separator"));
                 return false;
             }
@@ -177,7 +173,7 @@ public class ModificationsCLIInputBean {
     /**
      * The modification to add.
      */
-    private PTM modificationToAdd = null;
+    private Modification modificationToAdd = null;
 
     /**
      * Parses all the arguments from a command line.
@@ -231,7 +227,7 @@ public class ModificationsCLIInputBean {
             }
             aminoAcidPattern.setTarget(target);
             }
-            modificationToAdd = new PTM(index, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
+            modificationToAdd = new Modification(index, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
             if (aLine.hasOption(ModificationsCLIParams.SHORT_NAME.id)) {
                 String arg = aLine.getOptionValue(ModificationsCLIParams.SHORT_NAME.id);
                 modificationToAdd.setShortName(arg);
@@ -282,7 +278,7 @@ public class ModificationsCLIInputBean {
      *
      * @return the modification to add
      */
-    public PTM getModificationToAdd() {
+    public Modification getModificationToAdd() {
         return modificationToAdd;
     }
 

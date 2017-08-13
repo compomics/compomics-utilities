@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.ptm;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
@@ -224,7 +224,7 @@ public class PtmtableContent {
      * interrupted
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, Modification ptm, int nPTM, MSnSpectrum spectrum,
             AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws InterruptedException, MathException {
 
         //@TODO: use Peptide.getNoModPeptide instead
@@ -232,7 +232,7 @@ public class PtmtableContent {
 
         if (peptide.isModified()) {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                if (!modificationMatch.getModification().equals(ptm.getName())) {
                     noModPeptide.addModificationMatch(modificationMatch);
                 }
             }
@@ -290,12 +290,12 @@ public class PtmtableContent {
      * interrupted
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+    public static PtmtableContent getPTMTableContent(Peptide peptide, Modification ptm, int nPTM, MSnSpectrum spectrum,
             AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException, MathException {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 
-        ArrayList<PTM> ptms = new ArrayList<>(1);
+        ArrayList<Modification> ptms = new ArrayList<>(1);
         ptms.add(ptm);
         Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
 

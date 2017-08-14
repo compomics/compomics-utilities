@@ -127,20 +127,15 @@ public class ObjectsDB {
     
     
     public void commit() throws InterruptedException {
-        System.out.println("start commit");
         synchronized(forCommit){
-            System.out.println("commit locked");
 
             blockCommit.acquire();
             blockCommit.release();
-            //while(readWriteCounter > 0){}
 
             pm.currentTransaction().commit();
             pm.currentTransaction().begin();
 
-            System.out.println("commit unlocking");
         }
-        System.out.println("end commit");
     }
     
     /**

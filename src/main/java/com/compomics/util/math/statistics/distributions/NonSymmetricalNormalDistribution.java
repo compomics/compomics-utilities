@@ -3,8 +3,7 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
-import java.util.Collections;
-import org.apache.commons.math.MathException;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a non symmetrical normal distribution.
@@ -20,23 +19,23 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     /**
      * The standard deviation on the right of the distribution.
      */
-    private double stdUp;
+    private final double stdUp;
     /**
      * The standard deviation on the left of the distribution.
      */
-    private double stdDown;
+    private final double stdDown;
     /**
      * The mean.
      */
-    private double mean;
+    private final double mean;
     /**
      * Distribution equivalent to the right of the distribution.
      */
-    private NormalDistribution distributionUp;
+    private final NormalDistribution distributionUp;
     /**
      * Distribution equivalent to the left of the distribution.
      */
-    private NormalDistribution distributionDown;
+    private final NormalDistribution distributionDown;
 
     /**
      * Constructor.
@@ -89,8 +88,9 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * and 84.1% percentiles.
      */
     public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistribution(ArrayList<Double> input) {
-        ArrayList<Double> sortedInput = new ArrayList<>(input);
-        Collections.sort(sortedInput);
+        
+        ArrayList<Double> sortedInput = input.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+        
         return getRobustNonSymmetricalNormalDistributionFromSortedList(sortedInput);
     }
 
@@ -103,14 +103,17 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * and 84.1% percentiles.
      */
     public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistributionFromSortedList(ArrayList<Double> input) {
+        
         double median = BasicMathFunctions.medianSorted(input);
         double percentileDown = BasicMathFunctions.percentileSorted(input, 0.159);
         double percentileUp = BasicMathFunctions.percentileSorted(input, 0.841);
+        
         return new NonSymmetricalNormalDistribution(median, median - percentileDown, percentileUp - median);
     }
 
     @Override
     public Double getProbabilityAt(double x) {
+        
         if (x >= mean) {
             return distributionUp.getProbabilityAt(x);
         } else {
@@ -119,7 +122,8 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) throws MathException {
+    public Double getCumulativeProbabilityAt(double x) {
+        
         if (x >= mean) {
             return distributionUp.getCumulativeProbabilityAt(x);
         } else {
@@ -128,7 +132,8 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
+    public Double getDescendingCumulativeProbabilityAt(double x) {
+        
         if (x > mean) {
             return distributionUp.getDescendingCumulativeProbabilityAt(x);
         } else {
@@ -137,7 +142,8 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getSmallestCumulativeProbabilityAt(double x) throws MathException {
+    public Double getSmallestCumulativeProbabilityAt(double x) {
+        
         if (x > mean) {
             return getDescendingCumulativeProbabilityAt(x);
         } else {
@@ -148,16 +154,19 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public Double getMaxValueForProbability(double p) {
+        
         return distributionUp.getMaxValueForProbability(p);
     }
 
     @Override
     public Double getMinValueForProbability(double p) {
+        
         return distributionDown.getMinValueForProbability(p);
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) throws MathException {
+    public Double getValueAtCumulativeProbability(double p) {
+        
         if (p < 0.5) {
             return distributionDown.getValueAtCumulativeProbability(p);
         } else {
@@ -166,7 +175,8 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
+    public Double getValueAtDescendingCumulativeProbability(double p) {
+        
         if (p < 0.5) {
             return distributionUp.getValueAtDescendingCumulativeProbability(p);
         } else {

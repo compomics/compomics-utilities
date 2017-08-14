@@ -2,8 +2,6 @@ package com.compomics.util.math.statistics.distributions;
 
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
@@ -27,11 +25,11 @@ public class NormalDistribution implements Distribution {
     /**
      * The mean of the distribution.
      */
-    private double mean;
+    private final double mean;
     /**
      * The standard deviation of the distribution.
      */
-    private double std;
+    private final double std;
 
     /**
      * Constructor.
@@ -40,8 +38,10 @@ public class NormalDistribution implements Distribution {
      * @param std the standard deviation
      */
     public NormalDistribution(double mean, double std) {
+
         this.mean = mean;
         this.std = std;
+
         if (std > 0) {
             this.normalDistributionImpl = new NormalDistributionImpl(mean, std);
         }
@@ -76,6 +76,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public Double getProbabilityAt(double x) {
+
         if (std == 0) {
             if (x == mean) {
                 return 1.0;
@@ -83,43 +84,56 @@ public class NormalDistribution implements Distribution {
                 return 0.0;
             }
         }
+
         double xNorm = (x - mean) / std;
         double result = Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5)); //@TODO: verify that xNorm is not too big/small
+
         return result;
     }
 
     @Override
     public Double getMaxValueForProbability(double p) {
+
         if (std == 0) {
             return mean;
         }
+
         if (p >= 1) {
             throw new IllegalArgumentException("Probability >= 1");
         }
+
         if (p <= 0) {
             throw new IllegalArgumentException("Probability <= 0");
         }
+
         double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
+
         return mean + std * x;
     }
 
     @Override
     public Double getMinValueForProbability(double p) {
+
         if (std == 0) {
             return mean;
         }
+
         if (p >= 1) {
             throw new IllegalArgumentException("Probability >= 1");
         }
+
         if (p <= 0) {
             throw new IllegalArgumentException("Probability <= 0");
         }
+
         double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
+
         return mean - std * x;
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) throws MathException {
+    public Double getCumulativeProbabilityAt(double x) {
+
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (x < mean) {
@@ -130,11 +144,19 @@ public class NormalDistribution implements Distribution {
                 return 1.0;
             }
         }
-        return normalDistributionImpl.cumulativeProbability(x);
+
+        try {
+
+            return normalDistributionImpl.cumulativeProbability(x);
+
+        } catch (MathException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) throws MathException {
+    public Double getValueAtCumulativeProbability(double p) {
+        
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
@@ -145,11 +167,19 @@ public class NormalDistribution implements Distribution {
                 return Double.POSITIVE_INFINITY;
             }
         }
+
+        try {
+            
         return normalDistributionImpl.inverseCumulativeProbability(p);
+
+        } catch (MathException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
+    public Double getDescendingCumulativeProbabilityAt(double x) {
+        
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (x > mean) {
@@ -160,21 +190,23 @@ public class NormalDistribution implements Distribution {
                 return 1.0;
             }
         }
+            
         return 1.0 - getCumulativeProbabilityAt(x);
     }
 
     @Override
-    public Double getSmallestCumulativeProbabilityAt(double x) throws MathException {
+    public Double getSmallestCumulativeProbabilityAt(double x) {
+        
         if (x > mean) {
             return getDescendingCumulativeProbabilityAt(x);
         } else {
-            getCumulativeProbabilityAt(x);
+            return getCumulativeProbabilityAt(x);
         }
-        return 0.5;
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
+    public Double getValueAtDescendingCumulativeProbability(double p) {
+        
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
@@ -185,6 +217,7 @@ public class NormalDistribution implements Distribution {
                 return Double.NEGATIVE_INFINITY;
             }
         }
+        
         return getValueAtCumulativeProbability(1 - p);
     }
 }

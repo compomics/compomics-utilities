@@ -2,9 +2,8 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import org.apache.commons.math.MathException;
+import java.util.stream.Collectors;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -27,31 +26,28 @@ public class SimpleNoiseDistribution {
     /**
      * The ordered bins.
      */
-    private int[] orderedBins;
+    private final int[] orderedBins;
     /**
      * The p log values.
      */
-    private double[] pLog;
+    private final double[] pLog;
     /**
      * The noise distribution.
      */
-    private NonSymmetricalNormalDistribution intensityLogDistribution;
+    private final NonSymmetricalNormalDistribution intensityLogDistribution;
 
     /**
      * Constructor.
      * 
      * @param peakList the peak list
-     * 
-     * @throws MathException thrown if a math error occurs
      */
-    public SimpleNoiseDistribution(HashMap<Double, Peak> peakList) throws MathException {
+    public SimpleNoiseDistribution(HashMap<Double, Peak> peakList) {
 
-        ArrayList<Double> intensitiesLog = new ArrayList<>(peakList.size());
-        for (Peak peak : peakList.values()) {
-            double log = FastMath.log10(peak.intensity);
-            intensitiesLog.add(log);
-        }
-        Collections.sort(intensitiesLog);
+        ArrayList<Double> intensitiesLog = peakList.values().stream()
+                .map(peak -> FastMath.log10(peak.intensity))
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+        
         intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
 
         orderedBins = new int[nBins - 1];
@@ -59,10 +55,12 @@ public class SimpleNoiseDistribution {
         binSize = 1.0 / nBins;
 
         for (int i = 1; i < nBins; i++) {
+            
             double p = binSize * i;
             double x = intensityLogDistribution.getValueAtDescendingCumulativeProbability(p);
             orderedBins[i - 1] = (int) FastMath.pow(10, x);
             pLog[i - 1] = FastMath.log10(p);
+            
         }
     }
 
@@ -74,12 +72,18 @@ public class SimpleNoiseDistribution {
      * @return the binned cumulative probability
      */
     public double getBinnedCumulativeProbability(double intensity) {
+        
         for (int i = 0; i < orderedBins.length; i++) {
+            
             int bin = orderedBins[i];
+            
             if (intensity > bin) {
+                
                 return binSize * i;
+                
             }
         }
+        
         return 1.0;
     }
 
@@ -91,12 +95,18 @@ public class SimpleNoiseDistribution {
      * @return the binned cumulative logged probability
      */
     public double getBinnedCumulativeProbabilityLog(double intensity) {
+        
         for (int i = 0; i < orderedBins.length; i++) {
+            
             int bin = orderedBins[i];
+            
             if (intensity > bin) {
+                
                 return pLog[i];
+                
             }
         }
+        
         return 0.0;
     }
     
@@ -106,10 +116,8 @@ public class SimpleNoiseDistribution {
      * @param p the probability
      * 
      * @return the log10 intensity
-     * 
-     * @throws MathException exception thrown if an error occurred while estimating the probability
      */
-    public double getLogIntensityAtP(double p) throws MathException {
+    public double getLogIntensityAtP(double p) {
         return intensityLogDistribution.getValueAtDescendingCumulativeProbability(p);
     }
     
@@ -119,10 +127,8 @@ public class SimpleNoiseDistribution {
      * @param p the probability
      * 
      * @return the intensity
-     * 
-     * @throws MathException exception thrown if an error occurred while estimating the probability
      */
-    public double getIntensityAtP(double p) throws MathException {
+    public double getIntensityAtP(double p) {
         return FastMath.pow(10, getLogIntensityAtP(p));
     }
 }

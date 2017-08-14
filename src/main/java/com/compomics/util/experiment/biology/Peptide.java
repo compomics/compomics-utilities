@@ -13,8 +13,6 @@ import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 

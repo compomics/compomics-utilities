@@ -115,6 +115,29 @@ public class PeptideFragmentIon extends Ion {
         return number;
     }
 
+    /**
+     * Returns the 1 based index of the amino acid which generated this ion.
+     *
+     * @param peptideLength the length of the peptide
+     *
+     * @return the 1 based index of the amino acid which generated this ion
+     */
+    public int getAaNumber(int peptideLength) {
+
+        switch (subType) {
+            case PeptideFragmentIon.A_ION:
+            case PeptideFragmentIon.B_ION:
+            case PeptideFragmentIon.C_ION:
+                return number;
+            case PeptideFragmentIon.X_ION:
+            case PeptideFragmentIon.Y_ION:
+            case PeptideFragmentIon.Z_ION:
+                return peptideLength + 1 - number;
+            default:
+                throw new UnsupportedOperationException("Peptide fragment ion of type " + subType + " not implemented.");
+        }
+    }
+
     @Override
     public NeutralLoss[] getNeutralLosses() {
         return neutralLosses;

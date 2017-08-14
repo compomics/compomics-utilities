@@ -106,14 +106,14 @@ public class ProteinIteratorUtils {
         for (String ptmName : fixedModifications) {
             Modification ptm = ptmFactory.getModification(ptmName);
             switch (ptm.getModificationType()) {
-                case Modification.MODN:
+                case modn_protein:
                     if (fixedProteinNtermModification != null) {
                         throw new IllegalArgumentException("Only one fixed modification supported for the protein N-terminus.");
                     }
                     fixedProteinNtermModification = ptmName;
                     modificationsMasses.put(ptmName, ptm.getMass());
                     break;
-                case Modification.MODC:
+                case modc_protein:
                     if (fixedProteinCtermModification != null) {
                         throw new IllegalArgumentException("Only one fixed modification supported for the protein C-terminus.");
                     }
@@ -124,14 +124,14 @@ public class ProteinIteratorUtils {
                         minCtermMass = ptmMass;
                     }
                     break;
-                case Modification.MODNP:
+                case modn_peptide:
                     if (fixedPeptideNtermModification != null) {
                         throw new IllegalArgumentException("Only one fixed modification supported for the peptide N-terminus.");
                     }
                     fixedPeptideNtermModification = ptmName;
                     modificationsMasses.put(ptmName, ptm.getMass());
                     break;
-                case Modification.MODCP:
+                case modc_peptide:
                     if (fixedPeptideCtermModification != null) {
                         throw new IllegalArgumentException("Only one fixed modification supported for the peptide C-terminus.");
                     }
@@ -142,7 +142,7 @@ public class ProteinIteratorUtils {
                         minCtermMass = ptmMass;
                     }
                     break;
-                case Modification.MODNAA:
+                case modnaa_protein:
                     AminoAcidPattern ptmPattern = ptm.getPattern();
                     for (Character aa : ptmPattern.getAminoAcidsAtTarget()) {
                         String modificationAtAa = fixedProteinNtermModificationsAtAa.get(aa);
@@ -159,7 +159,7 @@ public class ProteinIteratorUtils {
                     }
                     modificationsMasses.put(ptmName, ptm.getMass());
                     break;
-                case Modification.MODCAA:
+                case modcaa_protein:
                     ptmPattern = ptm.getPattern();
                     for (Character aa : ptmPattern.getAminoAcidsAtTarget()) {
                         String modificationAtAa = fixedProteinCtermModificationsAtAa.get(aa);
@@ -180,7 +180,7 @@ public class ProteinIteratorUtils {
                         minCtermMass = ptmMass;
                     }
                     break;
-                case Modification.MODNPAA:
+                case modnaa_peptide:
                     ptmPattern = ptm.getPattern();
                     for (Character aa : ptmPattern.getAminoAcidsAtTarget()) {
                         String modificationAtAa = fixedPeptideNtermModificationsAtAa.get(aa);
@@ -197,7 +197,7 @@ public class ProteinIteratorUtils {
                     }
                     modificationsMasses.put(ptmName, ptm.getMass());
                     break;
-                case Modification.MODCPAA:
+                case modcaa_peptide:
                     ptmPattern = ptm.getPattern();
                     for (Character aa : ptmPattern.getAminoAcidsAtTarget()) {
                         String modificationAtAa = fixedPeptideCtermModificationsAtAa.get(aa);
@@ -218,7 +218,7 @@ public class ProteinIteratorUtils {
                         minCtermMass = ptmMass;
                     }
                     break;
-                case Modification.MODAA:
+                case modaa:
                     ptmPattern = ptm.getPattern();
                     for (Character aa : ptmPattern.getAminoAcidsAtTarget()) {
                         String modificationAtAa = fixedModificationsAtAa.get(aa);

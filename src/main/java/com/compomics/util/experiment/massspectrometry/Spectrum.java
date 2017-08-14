@@ -567,24 +567,15 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the max intensity value.
      *
      * @return the max intensity value. 0 if no peak.
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
-    public double getMaxIntensity() throws InterruptedException {
+    public double getMaxIntensity() {
 
         if (maxIntensity == null) {
 
-            if (maxIntensity == null) {
+            maxIntensity = peakList.values().stream()
+                    .mapToDouble(peak -> peak.intensity)
+                    .max().getAsDouble();
 
-                maxIntensity = 0.0;
-
-                for (Peak currentPeak : peakList.values()) {
-                    if (currentPeak.intensity > maxIntensity) {
-                        maxIntensity = currentPeak.intensity;
-                    }
-                }
-            }
         }
 
         return maxIntensity;
@@ -668,13 +659,8 @@ public abstract class Spectrum extends ExperimentObject {
      * @param intensityFraction the threshold value.
      *
      * @return the intensity limit
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math
-     * exception occurred when estimating the noise level
      */
-    public double getIntensityLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityFraction) throws InterruptedException, MathException {
+    public double getIntensityLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityFraction) {
 
         if (intensityLimit == null || intensityThresholdType != this.intensityThresholdType || intensityLimitLevel != intensityFraction) {
             intensityLimit = estimateIntneistyLimit(intensityThresholdType, intensityFraction);
@@ -691,13 +677,8 @@ public abstract class Spectrum extends ExperimentObject {
      * e.g., 0.75 for the 75% most intense peaks.
      *
      * @return the intensity limit
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math
-     * exception occurred when estimating the noise level
      */
-    private double estimateIntneistyLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityThreshold) throws InterruptedException, MathException {
+    private double estimateIntneistyLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityThreshold) {
 
         if (intensityThreshold == 0) {
             return 0.0;

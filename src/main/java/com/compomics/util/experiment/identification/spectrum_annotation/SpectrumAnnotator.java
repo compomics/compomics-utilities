@@ -71,6 +71,10 @@ public abstract class SpectrumAnnotator {
      */
     protected int precursorCharge;
     /**
+     * The precursor charges to inspect by default.
+     */
+    protected ArrayList<Integer> defaultPrecursorCharges;
+    /**
      * The theoretic fragment ions.
      */
     protected HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> theoreticalFragmentIons;

@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.math.MathException;
 
 /**
@@ -241,13 +243,14 @@ public class PtmtableContent {
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons
                 = spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
-        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>();
+        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>(); //@TODO: refactor using another key for the map
 
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
 
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide)
+                    .collect(Collectors.toCollection(ArrayList::new));
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -309,29 +312,19 @@ public class PtmtableContent {
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge(), specificAnnotationPreferences);
-        PeptideFragmentIon peptideFragmentIon;
-
+        
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
 
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
-
-            for (IonMatch ionMatch : matches) {
-                if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                    peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                    if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
-                        ptmTableContent.addIntensity(i, peptideFragmentIon.getSubType(), peptideFragmentIon.getNumber(), ionMatch.peak.intensity);
-                    } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.X_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
-                        ptmTableContent.addIntensity(i, peptideFragmentIon.getSubType(),
-                                peptide.getSequence().length() - peptideFragmentIon.getNumber() + 1, ionMatch.peak.intensity);
-                    }
-                }
-            }
+            final int index = i;
+            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
+            matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                    .forEach(ionMatch -> {
+                        PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                        ptmTableContent.addIntensity(index, peptideFragmentIon.getSubType(), peptideFragmentIon.getAaNumber(peptide.getSequence().length()), ionMatch.peak.intensity);
+                            });
+            
         }
 
         return ptmTableContent;

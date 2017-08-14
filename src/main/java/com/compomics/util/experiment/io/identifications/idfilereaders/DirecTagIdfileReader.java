@@ -5,13 +5,11 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -141,10 +139,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param tagFile the file to parse
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public DirecTagIdfileReader(File tagFile) throws FileNotFoundException, IOException {
+    public DirecTagIdfileReader(File tagFile) throws IOException {
         this(tagFile, false);
     }
 
@@ -154,10 +151,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @param tagFile the file to parse
      * @param indexResults if true the results section will be indexed
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public DirecTagIdfileReader(File tagFile, boolean indexResults) throws FileNotFoundException, IOException {
+    public DirecTagIdfileReader(File tagFile, boolean indexResults) throws IOException {
         this.tagFile = tagFile;
         bufferedRandomAccessFile = new BufferedRandomAccessFile(tagFile, "r", 1024 * 100);
         parseFile(indexResults);
@@ -188,10 +184,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param indexResults if true the results section will be indexed
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    private void parseFile(boolean indexResults) throws FileNotFoundException, IOException {
+    private void parseFile(boolean indexResults) throws IOException {
         try {
             boolean endOfFile = parseParameters();
             if (!endOfFile) {
@@ -445,7 +440,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
@@ -500,7 +495,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                         lastCharge = new Integer(chargeString);
                     }
                     if (!sId.equals(lastId)) {
-                        if (currentMatch != null && currentMatch.hasAssumption()) {
+                        if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
                             result.add(currentMatch);
                         }
@@ -509,7 +504,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                         if (spectrumFactory.fileLoaded(spectrumFileName)) {
                             spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, utilitiesId);
                         }
-                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                        currentMatch = new SpectrumMatch(spectrumKey);
                         currentMatch.setSpectrumNumber(utilitiesId);
                         lastId = sId;
                     }
@@ -521,11 +517,11 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                     //@TODO: check with the developers if this is correct
                     tagAssumption.setIdentificationCharge(new Charge(Charge.PLUS, lastCharge));
-                    currentMatch.addHit(Advocate.direcTag.getIndex(), tagAssumption, true);
+                    currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
                 }
             }
 
-            if (currentMatch != null && currentMatch.hasAssumption()) {
+            if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
                 result.add(currentMatch);
             }

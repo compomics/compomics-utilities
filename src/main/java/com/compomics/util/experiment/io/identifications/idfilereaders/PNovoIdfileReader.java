@@ -147,7 +147,8 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
             // remove any html from the title
             String decodedTitle = URLDecoder.decode(title, "utf-8");
-            SpectrumMatch currentMatch = new SpectrumMatch(getMgfFileName(), decodedTitle);
+            String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+            SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
             int cpt = 1;
             bufferedRandomAccessFile.seek(index.get(title));
@@ -158,7 +159,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             }
 
             while (line != null && line.startsWith("P")) {
-                currentMatch.addHit(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, cpt, searchParameters), true);
+                currentMatch.addTagAssumption(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, cpt, searchParameters));
                 cpt++;
                 line = bufferedRandomAccessFile.getNextLine();
             }

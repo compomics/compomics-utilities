@@ -246,7 +246,8 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         result.add(currentMatch);
                     }
 
-                    currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                    currentMatch = new SpectrumMatch(spectrumKey);
                     currentMatch.setSpectrumNumber(scanNumber);
                     currentSpectrumTitle = spectrumTitle;
                 }
@@ -299,11 +300,11 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(rawScore);
-                        currentMatch.addHit(Advocate.tide.getIndex(), newAssumption, false);
+                        currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), newAssumption);
                     }
                 } else {
                     //peptideAssumption.addUrParam(scoreParam);
-                    currentMatch.addHit(Advocate.tide.getIndex(), peptideAssumption, false);
+                    currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), peptideAssumption);
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {

@@ -298,7 +298,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     String spectrumFileName = new File(spectraData.getLocation()).getName();
 
                     // set up the yet empty spectrum match
-                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
                     // set spectrum index, used if title is not provided
                     if (spectrumIndex != null) {
@@ -433,10 +434,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                     newAssumption.setRawScore(rawScore);
                                 }
 
-                                currentMatch.addHit(advocate.getIndex(), newAssumption, false);
+                                currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
                             }
                         } else {
-                            currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
+                            currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
                         }
 
                         if (waitingHandler != null) {
@@ -1029,7 +1030,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
 
         // set up the yet empty spectrum match
-        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, "temp");
+        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, "temp");
+        SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
         // set spectrum index, used if title is not provided
         if (spectrumIndex != null) {
@@ -1212,10 +1214,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     if (rawScore != null) {
                         newAssumption.setRawScore(rawScore);
                     }
-                    currentMatch.addHit(advocate.getIndex(), newAssumption, false);
+                    currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
                 }
             } else {
-                currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
+                currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
             }
         }
 
@@ -1254,7 +1256,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-            currentMatch.setKey(spectrumFileName, spectrumTitle); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
+            spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+            currentMatch.setSpectrumKey(spectrumKey); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
         }
 
         result.add(currentMatch);

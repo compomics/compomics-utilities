@@ -280,7 +280,8 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                         result.add(currentMatch);
                     }
 
-                    currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                    currentMatch = new SpectrumMatch(spectrumKey);
                     currentMatch.setSpectrumNumber(id);
                     currentSpectrumTitle = spectrumTitle;
                 }
@@ -391,10 +392,10 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             }
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                        currentMatch.addHit(Advocate.novor.getIndex(), newAssumption, true);
+                        currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), newAssumption);
                     }
                 } else {
-                    currentMatch.addHit(Advocate.novor.getIndex(), peptideAssumption, true);
+                    currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), peptideAssumption);
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {

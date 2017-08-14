@@ -177,7 +177,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
             // remove any html from the title
             String decodedTitle = URLDecoder.decode(title, "utf-8");
-            SpectrumMatch currentMatch = new SpectrumMatch(getMgfFileName(), decodedTitle);
+            String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+            SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
             int cpt = 1;
             bufferedRandomAccessFile.seek(index.get(title));
@@ -191,7 +192,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
             while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.equals("") && !line.startsWith(">>")) {
-                currentMatch.addHit(Advocate.pepnovo.getIndex(), getAssumptionFromLine(line, cpt), true);
+                currentMatch.addTagAssumption(Advocate.pepnovo.getIndex(), getAssumptionFromLine(line, cpt));
                 cpt++;
             }
             if (solutionsFound) {

@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -181,9 +182,8 @@ public class PepxmlIdfileReader implements IdfileReader {
                     String peptideSequence = peptide.getSequence();
                     hasMatch = true;
                     boolean found = false;
-                    if (currentMatch.getAllAssumptions() != null) {
-                        for (SpectrumIdentificationAssumption tempAssumption : currentMatch.getAllAssumptions()) {
-                            PeptideAssumption tempPeptideAssumption = (PeptideAssumption) tempAssumption;
+                    if (currentMatch.getAllPeptideAssumptions().count() > 0) {
+                        for (PeptideAssumption tempPeptideAssumption : currentMatch.getAllPeptideAssumptions().collect(Collectors.toList())) {
                             Peptide tempPeptide = tempPeptideAssumption.getPeptide();
                             if (peptide.getSequence().equals(tempPeptide.getSequence())) {
                                 boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
@@ -229,10 +229,10 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
                                         peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(),
                                         peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                                currentMatch.addHit(advocate.getIndex(), newAssumption, false);
+                                currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
                             }
                         } else {
-                            currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
+                            currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
                         }
                     }
                 }
@@ -502,7 +502,8 @@ public class PepxmlIdfileReader implements IdfileReader {
             }
         }
         Advocate advocate = Advocate.getAdvocate(searchEngine);
-        SpectrumMatch spectrumMatch = new SpectrumMatch(inputFileName, spectrumTitle);
+        String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
+        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
         spectrumMatch.setSpectrumNumber(index);
 
         return spectrumMatch;

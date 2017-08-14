@@ -86,7 +86,6 @@ public interface IdfileReader {
      * @return a list of spectrum matches
      *
      * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws SQLException if an SQLException occurs
      * @throws ClassNotFoundException if an\ ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
@@ -94,7 +93,7 @@ public interface IdfileReader {
      * @throws XmlPullParserException if an XmlPullParserException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
 
     /**
      * Returns a boolean indicating whether the file contains de novo results as tags.

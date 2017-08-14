@@ -212,7 +212,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
                 //double rt = Util.readDoubleAsString(rtAsText); // @TODO: should escape retention times such as PT2700.460000S
                 String fileName = elements[filenameIndex];
-                
+
                 // remove any html from the title
                 spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
 
@@ -224,7 +224,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                         result.add(currentMatch);
                     }
 
-                    currentMatch = new SpectrumMatch(fileName, spectrumTitle);
+                    String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+                    currentMatch = new SpectrumMatch(spectrumKey);
                     currentSpectrumTitle = spectrumTitle;
                 }
 
@@ -295,10 +296,10 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(msAmandaRawScore);
-                        currentMatch.addHit(Advocate.msAmanda.getIndex(), newAssumption, false);
+                        currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
                     }
                 } else {
-                    currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, false);
+                    currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {

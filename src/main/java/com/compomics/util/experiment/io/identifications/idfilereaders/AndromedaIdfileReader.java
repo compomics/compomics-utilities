@@ -15,7 +15,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
@@ -52,10 +51,10 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * Constructor for an Andromeda result file reader.
      *
      * @param resultsFile the Andromeda results file
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if a IOException occurs
      */
-    public AndromedaIdfileReader(File resultsFile) throws FileNotFoundException, IOException {
+    public AndromedaIdfileReader(File resultsFile) throws IOException {
         this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
     }
@@ -67,7 +66,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
@@ -108,7 +107,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     spectrumMatch = spectrumMatchesMap.get(spectrumKey);
                     rank = 0; // the rank is here per charge
                     if (spectrumMatch == null) {
-                        spectrumMatch = new SpectrumMatch(mgfFile, title);
+                        spectrumMatch = new SpectrumMatch(spectrumKey);
                         result.add(spectrumMatch);
                         spectrumMatchesMap.put(spectrumKey, spectrumMatch);
                     }
@@ -130,10 +129,10 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                             }
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                        spectrumMatch.addHit(Advocate.andromeda.getIndex(), newAssumption, true);
+                        spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), newAssumption);
                     }
                 } else {
-                    spectrumMatch.addHit(Advocate.andromeda.getIndex(), peptideAssumption, true);
+                    spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), peptideAssumption);
                 }
             }
         }

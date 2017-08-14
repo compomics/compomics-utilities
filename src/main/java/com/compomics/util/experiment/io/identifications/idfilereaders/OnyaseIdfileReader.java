@@ -182,7 +182,7 @@ public class OnyaseIdfileReader implements IdfileReader {
                 String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
                 if (spectrumMatch == null) {
-                    spectrumMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    spectrumMatch = new SpectrumMatch(spectrumKey);
                     spectrumMatchesMap.put(spectrumKey, spectrumMatch);
                 }
                 String sequence = lineSplit[3];
@@ -193,19 +193,19 @@ public class OnyaseIdfileReader implements IdfileReader {
                 Double eValue = new Double(lineSplit[7]);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
-                spectrumMatch.addHit(Advocate.onyaseEngine.getIndex(), peptideAssumption, true);
+                spectrumMatch.addPeptideAssumption(Advocate.onyaseEngine.getIndex(), peptideAssumption);
             }
         }
 
         LinkedList<SpectrumMatch> result = new LinkedList<>();
         for (SpectrumMatch spectrumMatch : spectrumMatchesMap.values()) {
-            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> assumptionsMap = spectrumMatch.getAllAssumptions(Advocate.onyaseEngine.getIndex());
+            HashMap<Double, ArrayList<PeptideAssumption>> assumptionsMap = spectrumMatch.getAllPeptideAssumptions(Advocate.onyaseEngine.getIndex());
             ArrayList<Double> eValues = new ArrayList<>(assumptionsMap.keySet());
             Collections.sort(eValues);
             int rank = 1;
             int cpt = 1;
             for (Double eValue : eValues) {
-                ArrayList<SpectrumIdentificationAssumption> spectrumIdentificationAssumptions = assumptionsMap.get(eValue);
+                ArrayList<PeptideAssumption> spectrumIdentificationAssumptions = assumptionsMap.get(eValue);
                 for (SpectrumIdentificationAssumption spectrumIdentificationAssumption : spectrumIdentificationAssumptions) {
                     spectrumIdentificationAssumption.setRank(rank);
                     cpt++;

@@ -12,10 +12,12 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
+import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
@@ -1632,24 +1634,33 @@ public class FMIndex implements PeptideMapper {
 
                         if (newPeptide) {
 
-                            ArrayList<VariantMatch> variants = new ArrayList<>();
+                            HashMap<Integer, Variant> variants = new HashMap<>(0);
+                            int lengthDifference = 0;
+
                             // adding variants and adjusting modification sites
                             for (int l = 0, length = 0; l < allVariants.length(); ++l) {
                                 int edit = allVariants.charAt(l);
                                 ++length;
                                 if (edit != '-') {
                                     if (edit == '*') { // insertion
-                                        variants.add(new VariantMatch(new Insertion(peptide.charAt(length - 1)), "-", length));
+                                        Variant variant = new Insertion(peptide.charAt(length - 1));
+                                        variants.put(length, variant);
+                                        lengthDifference--;
                                     } else if ('A' <= edit && edit <= 'Z') { // substitution
-                                        variants.add(new VariantMatch(new Substitution((char) edit, peptide.charAt(length - 1)), "-", length));
+                                        Variant variant = new Substitution((char) edit, peptide.charAt(length - 1));
+                                        variants.put(length, variant);
                                     } else if ('a' <= edit && edit <= 'z') { // deletion
-                                        variants.add(new VariantMatch(new Deletion((char) (edit - 32)), "-", length));
+                                        Variant variant = new Deletion((char) (edit - 32));
+                                        variants.put(length, variant);
+                                        lengthDifference++;
                                         --length;
                                     }
                                 }
                             }
 
-                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, variants);
+                            PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
+
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             allMatches.add(peptideProteinMapping);
                         }
                     }
@@ -1805,24 +1816,33 @@ public class FMIndex implements PeptideMapper {
 
                         if (newPeptide) {
 
-                            ArrayList<VariantMatch> variants = new ArrayList<>();
+                            HashMap<Integer, Variant> variants = new HashMap<>(0);
+                            int lengthDifference = 0;
+
                             // adding variants and adjusting modification sites
                             for (int l = 0, length = 0; l < allVariants.length(); ++l) {
                                 int edit = allVariants.charAt(l);
                                 ++length;
                                 if (edit != '-') {
                                     if (edit == '*') { // insertion
-                                        variants.add(new VariantMatch(new Insertion(peptide.charAt(length - 1)), "-", length));
+                                        Variant variant = new Insertion(peptide.charAt(length - 1));
+                                        variants.put(length, variant);
+                                        lengthDifference--;
                                     } else if ('A' <= edit && edit <= 'Z') { // substitution
-                                        variants.add(new VariantMatch(new Substitution((char) edit, peptide.charAt(length - 1)), "-", length));
+                                        Variant variant = new Substitution((char) edit, peptide.charAt(length - 1));
+                                        variants.put(length, variant);
                                     } else if ('a' <= edit && edit <= 'z') { // deletion
-                                        variants.add(new VariantMatch(new Deletion((char) (edit - 32)), "-", length));
+                                        Variant variant = new Deletion((char) (edit - 32));
+                                        variants.put(length, variant);
+                                        lengthDifference++;
                                         --length;
                                     }
                                 }
                             }
 
-                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, variants);
+                            PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
+
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             allMatches.add(peptideProteinMapping);
                         }
                     }
@@ -4576,7 +4596,9 @@ public class FMIndex implements PeptideMapper {
 
                 String peptide = currentPeptide + currentContent.peptideSequence;
                 allVariants += currentContent.allVariants;
-                ArrayList<VariantMatch> variants = new ArrayList<>();
+
+                HashMap<Integer, Variant> variants = new HashMap<>(0);
+                int lengthDifference = 0;
 
                 if (turned) {
                     leftIndex = 0;
@@ -4618,11 +4640,16 @@ public class FMIndex implements PeptideMapper {
                     ++length;
                     if (edit != '-') {
                         if (edit == '*') { // insertion
-                            variants.add(new VariantMatch(new Insertion(peptide.charAt(length - 1)), "-", length));
+                            Variant variant = new Insertion(peptide.charAt(length - 1));
+                            variants.put(length, variant);
+                            lengthDifference--;
                         } else if ('A' <= edit && edit <= 'Z') { // substitution
-                            variants.add(new VariantMatch(new Substitution((char) edit, peptide.charAt(length - 1)), "-", length));
+                            Variant variant = new Substitution((char) edit, peptide.charAt(length - 1));
+                            variants.put(length, variant);
                         } else if ('a' <= edit && edit <= 'z') { // deletion
-                            variants.add(new VariantMatch(new Deletion((char) (edit - 32)), "-", length));
+                            Variant variant = new Deletion((char) (edit - 32));
+                            variants.put(length, variant);
+                            lengthDifference++;
                             --length;
                         }
                     }
@@ -4645,8 +4672,11 @@ public class FMIndex implements PeptideMapper {
                     }
 
                     if (newPeptide) {
+
+                        PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
+
                         // startPosition +1 because of start counting from one
-                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, modifications, variants);
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, modifications, peptideVariantMatches);
                         if (checkPTMPattern(peptideProteinMapping)) {
                             allMatches.add(peptideProteinMapping);
                         }

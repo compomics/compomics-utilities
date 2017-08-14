@@ -14,12 +14,23 @@ public class PeptideVariantMatches extends DbObject {
     /**
      * The length difference induced by the variants. +1 corresponds at a protein sequence of 1 amino acid longer than the peptide sequence.
      */
-    private int lengthDiff;
+    private final int lengthDiff;
     
     /**
      * The variant matches in a map indexed by 0 based position on the peptide.
      */
-    private HashMap<Integer, Variant> variantMatches;
+    private final HashMap<Integer, Variant> variantMatches;
+    
+    /**
+     * Constructor.
+     * 
+     * @param variantMatches the variants in a map indexed by 0 based position on the peptide
+     * @param lengthDiff the length difference induced by the variants
+     */
+    public PeptideVariantMatches(HashMap<Integer, Variant> variantMatches, int lengthDiff) {
+        this.variantMatches = variantMatches;
+        this.lengthDiff = lengthDiff;
+    }
 
     /**
      * Returns the length difference induced by the variants. +1 corresponds at a protein sequence of 1 amino acid longer than the peptide sequence.
@@ -31,30 +42,12 @@ public class PeptideVariantMatches extends DbObject {
     }
 
     /**
-     * Sets the length difference induced by the variants.
-     * 
-     * @param lengthDiff the length difference induced by the variants
-     */
-    public void setLengthDiff(int lengthDiff) {
-        this.lengthDiff = lengthDiff;
-    }
-
-    /**
      * Returns the map of variants indexed by 0 based position on the peptide.
      * 
      * @return the map of variants 
      */
     public HashMap<Integer, Variant> getVariantMatches() {
         return variantMatches;
-    }
-
-    /**
-     * Sets the map of variants indexed by 0 based position on the peptide.
-     * 
-     * @param variantMatches the map of variants 
-     */
-    public void setVariantMatches(HashMap<Integer, Variant> variantMatches) {
-        this.variantMatches = variantMatches;
     }
 
 }

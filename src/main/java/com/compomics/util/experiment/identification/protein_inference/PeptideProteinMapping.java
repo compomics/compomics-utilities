@@ -1,13 +1,11 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.protein_inference.executable;
+package com.compomics.cli.peptide_mapper;
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.MassGap;
@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Command line peptide mapping.
  *
  * @author Dominik Kopczynski
  */
-public class PeptideMapping {
+public class PeptideMapperCLI {
 
     /**
      * Main class.
@@ -36,6 +37,7 @@ public class PeptideMapping {
      */
     public static void main(String[] args) {
         if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))) {
+
             System.err.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
             System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
             System.err.println();
@@ -60,6 +62,7 @@ public class PeptideMapping {
             sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
         } catch (Exception e) {
             System.err.println("Error: cound not open FASTA file");
+            e.printStackTrace();
             System.exit(-1);
         }
 
@@ -73,6 +76,7 @@ public class PeptideMapping {
                 identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
             } catch (Exception e) {
                 System.err.println("Error: cound not open / parse parameter file");
+                e.printStackTrace();
                 System.exit(-1);
             }
 
@@ -95,11 +99,17 @@ public class PeptideMapping {
             sequenceMatchingPreferences.setLimitX(0.25);
         }
 
-        System.err.println("Start indexing proteome");
+        System.err.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
         PeptideMapper peptideMapper = null;
         if (peptideMapperType == PeptideMapperType.fm_index) {
-            peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+            try {
+                peptideMapper = new FMIndex(waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+            } catch (IOException e) {
+                System.err.println("Error: cound not index the fasta file");
+                e.printStackTrace();
+                System.exit(-1);
+            }
         } else {
             System.err.println("No other peptide mapping supported than FM index, please change settings in setting file.");
             System.exit(-1);
@@ -127,6 +137,7 @@ public class PeptideMapping {
                 br.close();
             } catch (Exception e) {
                 System.err.println("Error: cound not open input list");
+                e.printStackTrace();
                 System.exit(-1);
             }
             waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
@@ -147,7 +158,8 @@ public class PeptideMapping {
                 System.err.println();
                 System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
             } catch (Exception e) {
-                System.err.println("Error: mapping went wrong for unknown reasons");
+                System.err.println("Error: mapping went wrong");
+                e.printStackTrace();
                 System.exit(-1);
             }
 
@@ -162,6 +174,7 @@ public class PeptideMapping {
                 writer.close();
             } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
+                e.printStackTrace();
                 System.exit(-1);
             }
         } else {
@@ -182,6 +195,7 @@ public class PeptideMapping {
                                 tag.addMassGap(mass);
                             } catch (NumberFormatException e) {
                                 System.err.println("Error: line contains no valid tag: '" + line + "'");
+                                e.printStackTrace();
                                 System.exit(-1);
                             }
                         }
@@ -219,6 +233,7 @@ public class PeptideMapping {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Error: an unexpected error happened.");
+                e.printStackTrace();
                 System.exit(-1);
             }
 
@@ -243,6 +258,7 @@ public class PeptideMapping {
                 writer.close();
             } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
+                e.printStackTrace();
                 System.exit(-1);
             }
         }

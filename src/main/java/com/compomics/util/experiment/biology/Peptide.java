@@ -88,9 +88,7 @@ public class Peptide extends ExperimentObject {
         this.modificationMatches = modificationMatches;
 
         if (sanityCheck) {
-
             sanityCheck();
-
         }
     }
 
@@ -108,9 +106,7 @@ public class Peptide extends ExperimentObject {
         this.modificationMatches = modificationMatches;
 
         if (sanityCheck) {
-
             sanityCheck();
-
         }
 
         this.mass = mass;
@@ -123,9 +119,7 @@ public class Peptide extends ExperimentObject {
      * @param modifications the Modification of this peptide
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) {
-
         this(aSequence, modifications, false);
-
     }
 
     /**
@@ -143,9 +137,7 @@ public class Peptide extends ExperimentObject {
         this.variantMatches = variantMatches;
 
         if (sanityCheck) {
-
             sanityCheck();
-
         }
     }
 

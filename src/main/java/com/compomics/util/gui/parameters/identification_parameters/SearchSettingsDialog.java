@@ -2374,84 +2374,91 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         // Adapt X!Tandem options
         XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex());
-        if (xtandemParameters != null) {
-            xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
-            xtandemParameters.setQuickPyrolidone(!pyroConflict);
+        if (xtandemParameters == null) {
+            xtandemParameters = new XtandemParameters();
+            searchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), xtandemParameters);
         }
+        xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
+        xtandemParameters.setQuickPyrolidone(!pyroConflict);
 
         // Adapt Comet options
         CometParameters cometParameters = (CometParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex());
-        if (cometParameters != null) {
-            double binoffset = tempSearchParameters.getFragmentIonAccuracyInDaltons(refMass) / 2;
-            cometParameters.setFragmentBinOffset(binoffset);
-            if (maxIsotope > 0) {
-                cometParameters.setIsotopeCorrection(1);
-            } else {
-                cometParameters.setIsotopeCorrection(0);
-            }
-            if ((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem() == DigestionPreferences.CleavagePreference.enzyme) {
-                DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
-                    switch (specificity) {
-                        case specific:
-                            cometParameters.setEnzymeType(2);
-                            break;
-                        case semiSpecific:
-                            cometParameters.setEnzymeType(1);
-                            break;
-                        case specificNTermOnly:
-                            cometParameters.setEnzymeType(8);
-                            break;
-                        case specificCTermOnly:
-                            cometParameters.setEnzymeType(9);
-                            break;
-                        default:
-                            throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
-                    }
+        if (cometParameters == null) {
+            cometParameters = new CometParameters();
+            searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
+        }
+        double binoffset = tempSearchParameters.getFragmentIonAccuracyInDaltons(refMass) / 2;
+        cometParameters.setFragmentBinOffset(binoffset);
+        if (maxIsotope > 0) {
+            cometParameters.setIsotopeCorrection(1);
+        } else {
+            cometParameters.setIsotopeCorrection(0);
+        }
+        if ((DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem() == DigestionPreferences.CleavagePreference.enzyme) {
+            DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
+            switch (specificity) {
+                case specific:
+                    cometParameters.setEnzymeType(2);
+                    break;
+                case semiSpecific:
+                    cometParameters.setEnzymeType(1);
+                    break;
+                case specificNTermOnly:
+                    cometParameters.setEnzymeType(8);
+                    break;
+                case specificCTermOnly:
+                    cometParameters.setEnzymeType(9);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
         }
 
         // Adapt ms-gf+ options
         MsgfParameters msgfParameters = (MsgfParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex());
-        if (msgfParameters != null) {
-            DigestionPreferences.CleavagePreference cleavagePreference = (DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem();
-            if (cleavagePreference == DigestionPreferences.CleavagePreference.enzyme) {
-                DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
-                    switch (specificity) {
-                        case specific:
-                            msgfParameters.setNumberTolerableTermini(2);
-                            break;
-                        case semiSpecific:
-                        case specificNTermOnly:
-                        case specificCTermOnly:
-                            msgfParameters.setNumberTolerableTermini(1);
-                        default:
-                            throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
-                    }
-            } else if (cleavagePreference == CleavagePreference.unSpecific) {
-                msgfParameters.setNumberTolerableTermini(0);
+        if (msgfParameters == null) {
+            msgfParameters = new MsgfParameters();
+            searchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), msgfParameters);
+        }
+        DigestionPreferences.CleavagePreference cleavagePreference = (DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem();
+        if (cleavagePreference == DigestionPreferences.CleavagePreference.enzyme) {
+            DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
+            switch (specificity) {
+                case specific:
+                    msgfParameters.setNumberTolerableTermini(2);
+                    break;
+                case semiSpecific:
+                case specificNTermOnly:
+                case specificCTermOnly:
+                    msgfParameters.setNumberTolerableTermini(1);
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
+        } else if (cleavagePreference == CleavagePreference.unSpecific) {
+            msgfParameters.setNumberTolerableTermini(0);
         }
 
         // Adapt Myrimatch options
         MyriMatchParameters myriMatchParameters = (MyriMatchParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex());
-        if (myriMatchParameters != null) {
-            DigestionPreferences.CleavagePreference cleavagePreference = (DigestionPreferences.CleavagePreference) digestionCmb.getSelectedItem();
-            if (cleavagePreference == DigestionPreferences.CleavagePreference.enzyme) {
-                DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
-                    switch (specificity) {
-                        case specific:
-                            myriMatchParameters.setMinTerminiCleavages(2);
-                            break;
-                        case semiSpecific:
-                        case specificNTermOnly:
-                        case specificCTermOnly:
-                            myriMatchParameters.setMinTerminiCleavages(1);
-                        default:
-                            throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
-                    }
-            } else if (cleavagePreference == CleavagePreference.unSpecific) {
-                myriMatchParameters.setMinTerminiCleavages(0);
+        if (myriMatchParameters == null) {
+            myriMatchParameters = new MyriMatchParameters();
+            searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
+        }
+        if (cleavagePreference == DigestionPreferences.CleavagePreference.enzyme) {
+            DigestionPreferences.Specificity specificity = (DigestionPreferences.Specificity) specificityComboBox.getSelectedItem();
+            switch (specificity) {
+                case specific:
+                    myriMatchParameters.setMinTerminiCleavages(2);
+                    break;
+                case semiSpecific:
+                case specificNTermOnly:
+                case specificCTermOnly:
+                    myriMatchParameters.setMinTerminiCleavages(1);
+                default:
+                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
+        } else if (cleavagePreference == CleavagePreference.unSpecific) {
+            myriMatchParameters.setMinTerminiCleavages(0);
         }
 
         return tempSearchParameters;

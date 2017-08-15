@@ -14,13 +14,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
-import java.util.concurrent.locks.ReentrantLock;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import org.zoodb.internal.util.SynchronizedROCollection;
+import java.util.concurrent.atomic.*;
 
 import org.zoodb.jdo.ZooJdoHelper;
 import org.zoodb.tools.ZooHelper;
+
 
 /**
  * A database which can easily be used to store objects.
@@ -81,41 +82,39 @@ public class ObjectsDB {
     
     private int currentAdded = 0;
     
-    private final static Object forCommit = new Object();
+    private final static AtomicInteger readWriteCounter = new AtomicInteger(0);
     
-    private final static Object rWObject = new Object();
-    
-    private static int readWriteCounter = 0;
-    
-    private final static Semaphore blockCommit = new Semaphore(1);
+    private final static AtomicBoolean forCommit = new AtomicBoolean(false);
     
     
     
     public static void increaseRWCounter() {
-        synchronized(forCommit) {
-            //System.out.println("inside commit");
+        while (forCommit.get()) {
+            // YOU SHALL NOT PASS
+            // until commit is done
         }
-        synchronized(rWObject) {
-            
-            try {
-                if (readWriteCounter == 0) blockCommit.acquire();
-                readWriteCounter++;
-            }
-            catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
+        readWriteCounter.incrementAndGet();
     }
+    
+    
     
     public static void decreaseRWCounter() {
-        synchronized(rWObject) {
-            readWriteCounter--;
-            if (readWriteCounter == 0) blockCommit.release();
-        }
+        readWriteCounter.decrementAndGet();
     }
     
     
-    
+    public void commit() throws InterruptedException {
+        forCommit.set(true);
+        while (readWriteCounter.get() != 0){
+            // YOU SHALL NOT PASS
+            // while processes are potentially accessing the database
+        }
+
+        pm.currentTransaction().commit();
+        pm.currentTransaction().begin();
+
+        forCommit.set(false);
+    }
     
     public void resetCurrentAdded(){
         currentAdded = 0;
@@ -123,19 +122,6 @@ public class ObjectsDB {
     
     public int getCurrentAdded(){
         return currentAdded;
-    }
-    
-    
-    public void commit() throws InterruptedException {
-        synchronized(forCommit){
-
-            blockCommit.acquire();
-            blockCommit.release();
-
-            pm.currentTransaction().commit();
-            pm.currentTransaction().begin();
-
-        }
     }
     
     /**

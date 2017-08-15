@@ -23,7 +23,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.1;
+    private double memoryShare = 0.8;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
@@ -281,7 +281,6 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
         if (!semaphore) loadedObjectMutex.acquire();
         if (!readOnly) {
-            System.out.println("storing " + numLastEntries + (clearEntries ? " with deleting" : " without deleting"));
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
                 waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
@@ -310,9 +309,6 @@ public class ObjectsCache {
                 if (clearEntries) loadedObjects.remove(key);
             }
             objectsDB.commit();
-            
-            
-            System.out.println("storing out");
         }
         if (!semaphore) loadedObjectMutex.release();
     }

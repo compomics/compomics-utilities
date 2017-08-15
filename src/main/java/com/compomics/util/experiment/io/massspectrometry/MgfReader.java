@@ -21,6 +21,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
+
 public class MgfReader {
 
     /**

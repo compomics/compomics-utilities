@@ -1504,7 +1504,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mgfFile,
+<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;File,
                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Adds missing spectrum titles.</div>
 </td>
@@ -1518,9 +1518,9 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MgfIndex.html" title="class in com.compomics.util.experiment.io.massspectrometry">MgfIndex</a></code></td>
-<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#getIndexMap-java.io.File-com.compomics.util.waiting.WaitingHandler-">getIndexMap</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mgfFile,
+<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#getIndexMap-java.io.File-com.compomics.util.waiting.WaitingHandler-">getIndexMap</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mspFile,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Returns the index of all spectra in the given MGF file.</div>
+<div class="block">Returns the index of all spectra in the given MSP file.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -1539,7 +1539,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#removeZeroes-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeZeroes</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mgfFile,
+<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#removeZeroes-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeZeroes</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;File,
             <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Removes zero intensity peaks.</div>
 </td>
@@ -1553,7 +1553,7 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#renameDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">renameDuplicateSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mgfFile,
+<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#renameDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">renameDuplicateSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mspFile,
                              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Renames duplicate spectrum titles.</div>
 </td>
@@ -1567,10 +1567,10 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MgfIndex.html" title="class in com.compomics.util.experiment.io.massspectrometry">MgfIndex</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#splitFile-java.io.File-int-com.compomics.util.waiting.WaitingHandler-">splitFile</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mgfFile,
+<td class="colLast"><span class="typeNameLabel">MspReader.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#splitFile-java.io.File-int-com.compomics.util.waiting.WaitingHandler-">splitFile</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mspFile,
          int&nbsp;nSpectra,
          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Splits an mgf file into smaller ones and returns the indexes of the
+<div class="block">Splits an msp file into smaller ones and returns the indexes of the
  generated files.</div>
 </td>
 </tr>

@@ -9,9 +9,9 @@ import com.compomics.util.experiment.identification.spectrum_annotation.NeutralL
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -226,7 +226,7 @@ public class PtmtableContent {
      * interrupted
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, Modification ptm, int nPTM, MSnSpectrum spectrum,
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, Modification ptm, int nPTM, Spectrum spectrum,
             AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws InterruptedException, MathException {
 
         //@TODO: use Peptide.getNoModPeptide instead
@@ -293,7 +293,7 @@ public class PtmtableContent {
      * interrupted
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
-    public static PtmtableContent getPTMTableContent(Peptide peptide, Modification ptm, int nPTM, MSnSpectrum spectrum,
+    public static PtmtableContent getPTMTableContent(Peptide peptide, Modification ptm, int nPTM, Spectrum spectrum,
             AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException, MathException {
 
         PtmtableContent ptmTableContent = new PtmtableContent();

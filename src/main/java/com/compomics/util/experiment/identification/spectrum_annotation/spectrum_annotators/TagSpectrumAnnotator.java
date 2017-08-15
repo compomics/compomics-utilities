@@ -14,7 +14,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.biology.MassGap;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
@@ -223,7 +223,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
-            MSnSpectrum spectrum, Tag tag) throws InterruptedException, MathException {
+            Spectrum spectrum, Tag tag) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, true);
     }
 
@@ -246,7 +246,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
-            MSnSpectrum spectrum, Tag tag, boolean useIntensityFilter) throws InterruptedException, MathException {
+            Spectrum spectrum, Tag tag, boolean useIntensityFilter) throws InterruptedException, MathException {
 
         ArrayList<IonMatch> result = new ArrayList<>();
 
@@ -305,7 +305,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }
 }

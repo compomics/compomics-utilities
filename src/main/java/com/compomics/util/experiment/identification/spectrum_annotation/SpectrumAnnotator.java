@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
@@ -243,7 +242,7 @@ public abstract class SpectrumAnnotator {
      * @param spectrum the spectrum to inspect
      * @param intensityLimit the minimal intensity to account for
      */
-    protected void setSpectrum(MSnSpectrum spectrum, double intensityLimit) {
+    protected void setSpectrum(Spectrum spectrum, double intensityLimit) {
         if (spectrumIndex == null || !spectrumKey.equals(spectrum.getSpectrumKey()) || this.intensityLimit != intensityLimit) {
 
             // Save spectrum number and intensity limit
@@ -410,7 +409,7 @@ public abstract class SpectrumAnnotator {
      * @throws org.apache.commons.math.MathException exception thrown if a math
      * exception occurred when estimating the noise level
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
         return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
     }
 
@@ -429,7 +428,7 @@ public abstract class SpectrumAnnotator {
      * @throws org.apache.commons.math.MathException exception thrown if a math
      * exception occurred when estimating the noise level
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException;
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException;
 
     /**
      * Returns the spectrum currently inspected.

@@ -1,4 +1,4 @@
-package com.compomics.util.gui.ptm;
+package com.compomics.util.gui.modification;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;

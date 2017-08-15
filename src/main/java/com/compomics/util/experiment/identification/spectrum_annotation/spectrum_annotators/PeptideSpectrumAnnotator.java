@@ -12,15 +12,12 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Spectrum
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -137,7 +134,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given settings
      */
     public Stream<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
+            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide) {
 
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, true);
     }
@@ -159,7 +156,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given settings
      */
     public Stream<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
+            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
 
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null, useIntensityFilter);
     }
@@ -183,7 +180,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given settings
      */
     public Stream<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide,
+            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide,
             HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, boolean useIntensityFilter) {
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
@@ -237,7 +234,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * acid number in the sequence
      */
     public Map<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
+            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
 
         Stream<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
 
@@ -283,7 +280,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, useIntensityFilter)
                 .collect(Collectors.toCollection(ArrayList::new));
     }

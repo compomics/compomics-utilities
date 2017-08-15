@@ -1,6 +1,7 @@
-package com.compomics.util.experiment.massspectrometry;
+package com.compomics.util.experiment.massspectrometry.spectra;
 
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
+import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashSet;

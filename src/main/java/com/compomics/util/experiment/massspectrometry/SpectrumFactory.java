@@ -1,5 +1,8 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.experiment.io.massspectrometry.MspReader;
@@ -41,7 +44,8 @@ public class SpectrumFactory {
      */
     private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<>();
     /**
-     * Maximal number of spectra in cache. By default 1000000, which corresponds to approx. 110MB.
+     * Maximal number of spectra in cache. By default 1000000, which corresponds
+     * to approx. 110MB.
      */
     private static int nSpectraCache = 1000000;
     /**
@@ -184,7 +188,7 @@ public class SpectrumFactory {
         String fileName = spectrumFile.getName();
         filesMap.put(fileName, spectrumFile);
 
-        if (fileName.toLowerCase().endsWith(".mgf")|| fileName.toLowerCase().endsWith(".msp")) {
+        if (fileName.toLowerCase().endsWith(".mgf") || fileName.toLowerCase().endsWith(".msp")) {
 
             File indexFile = new File(spectrumFile.getParent(), getIndexName(fileName));
             MgfIndex mgfIndex = null;
@@ -209,13 +213,11 @@ public class SpectrumFactory {
             }
 
             if (mgfIndex == null) {
-                 if(fileName.endsWith(".mgf")){
+                if (fileName.endsWith(".mgf")) {
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                }
-                else{
+                } else {
                     mgfIndex = MspReader.getIndexMap(spectrumFile, waitingHandler);
                 }
-                
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return; // return without saving the partial index
@@ -287,7 +289,7 @@ public class SpectrumFactory {
         if (fileSpectrumMap != null) {
             Spectrum spectrum = fileSpectrumMap.get(spectrumTitle);
             if (spectrum != null) {
-                return ((MSnSpectrum) spectrum).getPrecursor();
+                return spectrum.getPrecursor();
             }
         }
         HashMap<String, Precursor> filePrecursorMap = loadedPrecursorsMap.get(fileName);
@@ -653,7 +655,7 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
                 }
             }
-        } else if(fileName.toLowerCase().endsWith(".msp")) {
+        } else if (fileName.toLowerCase().endsWith(".msp")) {
 
             // a special fix for mgf files with strange titles...
             spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
@@ -665,7 +667,7 @@ public class SpectrumFactory {
                 throw new IOException("Spectrum \'" + spectrumTitle + "\' in msp file \'" + fileName + "\' not found.");
             }
             try {
-                
+
                 currentPrecursor = MspReader.getPrecursor(mgfRandomAccessFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
             } catch (Exception e) {
                 if (waitingTime < timeOut) {
@@ -679,7 +681,7 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
                 }
             }
-        }else if (fileName.toLowerCase().endsWith(".mzml")) {
+        } else if (fileName.toLowerCase().endsWith(".mzml")) {
             uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(fileName).getSpectrumById(spectrumTitle);
             int level = 2;
             double mzPrec = 0.0;
@@ -744,9 +746,9 @@ public class SpectrumFactory {
      *
      * @param spectrumFile name of the spectrum file
      * @param spectrumTitle title of the spectrum
-     * 
+     *
      * @return the desired spectrum
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws MzMLUnmarshallerException exception thrown whenever an error
@@ -834,7 +836,7 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
                 }
             }
-        }else if(spectrumFile.toLowerCase().endsWith(".msp")) {
+        } else if (spectrumFile.toLowerCase().endsWith(".msp")) {
 
             // a special fix for mgf files with strange titles...
             spectrumTitle = fixMgfTitle(spectrumTitle, spectrumFile);
@@ -913,15 +915,11 @@ public class SpectrumFactory {
             for (int i = 0; i < mzNumbers.length; i++) {
                 peakList.put(mzNumbers[i].doubleValue(), new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
             }
-            if (level == 1) {
-                currentSpectrum = new MS1Spectrum(spectrumFile, spectrumTitle, scanTime, peakList);
-            } else {
-                //@TODO: is this the correct way to set the precursor..?
-                ArrayList<Charge> charges = new ArrayList<>();
-                charges.add(new Charge(Charge.PLUS, chargePrec));
-                Precursor precursor = new Precursor(scanTime, mzPrec, charges);
-                currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
-            }
+            ArrayList<Charge> charges = new ArrayList<>();
+            charges.add(new Charge(Charge.PLUS, chargePrec));
+            Precursor precursor = level == 1 ? null : new Precursor(scanTime, mzPrec, charges);
+            currentSpectrum = new Spectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
+            
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
@@ -1103,24 +1101,27 @@ public class SpectrumFactory {
 
     /**
      * Returns the file associated to the given name.
-     * 
+     *
      * @param fileName the name of the file
-     * 
+     *
      * @return the file
      */
     public File getMgfFileFromName(String fileName) {
         return filesMap.get(fileName);
     }
-    
+
     /**
-     * Returns a map containing all the precursors of a gven file indexed by spectrum title.
-     * 
+     * Returns a map containing all the precursors of a gven file indexed by
+     * spectrum title.
+     *
      * @param fileName the name of the file
-     * 
+     *
      * @return a map containing all the precursors of a gven file
-     * 
-     * @throws java.io.IOException Exception thrown whenever an error occurs while reading a precursor
-     * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown whenever an error occurs while reading an mzML file
+     *
+     * @throws java.io.IOException Exception thrown whenever an error occurs
+     * while reading a precursor
+     * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown
+     * whenever an error occurs while reading an mzML file
      */
     public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException, MzMLUnmarshallerException {
         HashMap<String, Precursor> precursorMap = new HashMap<>(getNSpectra(fileName));

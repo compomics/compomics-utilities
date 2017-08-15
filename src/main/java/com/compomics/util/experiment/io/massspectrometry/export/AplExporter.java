@@ -3,10 +3,9 @@ package com.compomics.util.experiment.io.massspectrometry.export;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -78,24 +77,16 @@ public class AplExporter {
         ArrayList<Double> masses = new ArrayList<>(precursorMassToTitleMap.keySet());
         Collections.sort(masses);
 
-        FileWriter fileWriter = new FileWriter(destinationFile);
-
-        try {
-            BufferedWriter bw = new BufferedWriter(fileWriter);
-
-            try {
-                for (Double mass : masses) {
-                    HashMap<String, Integer> titles = precursorMassToTitleMap.get(mass);
-                    for (String title : titles.keySet()) {
-                        MSnSpectrum spectrum = (MSnSpectrum) spectrumFactory.getSpectrum(fileName, title);
-                        writeSpectrum(bw, spectrum, fragmentationMethod, titles.get(title));
-                    }
+        try (FileWriter fileWriter = new FileWriter(destinationFile); 
+                BufferedWriter bw = new BufferedWriter(fileWriter)) {
+            
+            for (Double mass : masses) {
+                HashMap<String, Integer> titles = precursorMassToTitleMap.get(mass);
+                for (String title : titles.keySet()) {
+                    Spectrum spectrum = (Spectrum) spectrumFactory.getSpectrum(fileName, title);
+                    writeSpectrum(bw, spectrum, fragmentationMethod, titles.get(title));
                 }
-            } finally {
-                bw.close();
             }
-        } finally {
-            fileWriter.close();
         }
     }
 
@@ -112,7 +103,7 @@ public class AplExporter {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, FragmentationMethod fragmentationMethod, int charge) throws IOException, InterruptedException {
+    public static void writeSpectrum(BufferedWriter bw, Spectrum spectrum, FragmentationMethod fragmentationMethod, int charge) throws IOException, InterruptedException {
 
         bw.write("peaklist start");
         bw.newLine();

@@ -6,9 +6,9 @@
 package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
@@ -27,7 +27,7 @@ public class MspReader extends MgfReader{
     public MspReader() {
     }
 
-    public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
+    public static Spectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
         String line;
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -104,7 +104,7 @@ public class MspReader extends MgfReader{
                 } else {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
-                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
+                Spectrum msnSpectrum = new Spectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 if (scanNumber.length() > 0) {
                     msnSpectrum.setScanNumber(scanNumber);
                 }
@@ -139,12 +139,12 @@ public class MspReader extends MgfReader{
      * cannot be parsed correctly
      */
     @Override
-    public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
+    public ArrayList<Spectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
-        ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
+        ArrayList<Spectrum> spectra = new ArrayList<Spectrum>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         try {
-            MSnSpectrum spectrum;
+            Spectrum spectrum;
             while ((spectrum = getSpectrum(br, aFile.getName())) != null) {
                 spectra.add(spectrum);
             }
@@ -760,7 +760,7 @@ public class MspReader extends MgfReader{
      * @throws IllegalArgumentException Exception thrown whenever the file is
      * not of a compatible format
      */
-    public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+    public static Spectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
          //get fileName from the random access file?
          
@@ -842,7 +842,7 @@ public class MspReader extends MgfReader{
                 } else {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
-                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
+                Spectrum msnSpectrum = new Spectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 if (scanNumber.length() > 0) {
                     msnSpectrum.setScanNumber(scanNumber);
                 }

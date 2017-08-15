@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.massspectrometry;
 
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ public class MgfFileIterator {
     /**
      * The next spectrum in the file.
      */
-    private MSnSpectrum nextSpectrum = null;
+    private Spectrum nextSpectrum = null;
     /**
      * The name of the mgf file.
      */
@@ -78,9 +78,9 @@ public class MgfFileIterator {
      *
      * @throws IOException if an IOException occurs
      */
-    public synchronized MSnSpectrum next() throws IOException {
+    public synchronized Spectrum next() throws IOException {
 
-        MSnSpectrum currentSpectrum = nextSpectrum;
+        Spectrum currentSpectrum = nextSpectrum;
         if (!streamClosed) {
 
             if (mgfFileName.endsWith("mgf")) {

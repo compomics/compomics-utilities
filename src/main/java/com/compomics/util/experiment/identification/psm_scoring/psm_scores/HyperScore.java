@@ -9,8 +9,8 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.Peptid
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.HistogramUtils;

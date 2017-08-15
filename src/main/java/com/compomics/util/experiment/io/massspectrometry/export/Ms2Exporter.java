@@ -2,9 +2,9 @@ package com.compomics.util.experiment.io.massspectrometry.export;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfFileIterator;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,29 +37,20 @@ public class Ms2Exporter {
      */
     public static void mgfToMs2(File mgfFile, File destinationFile, boolean resetScanNumbers) throws IOException, InterruptedException {
 
-        FileWriter fileWriter = new FileWriter(destinationFile);
-
-        try {
-            BufferedWriter bw = new BufferedWriter(fileWriter);
-
-            try {
-                writeHeader(bw);
-                MgfFileIterator mgfFileIterator = new MgfFileIterator(mgfFile);
-                int scanCounter = 1;
-
-                while (mgfFileIterator.hasNext()) {
-                    MSnSpectrum spectrum = mgfFileIterator.next();
-                    if (resetScanNumbers) {
-                        writeSpectrum(bw, spectrum, scanCounter++);
-                    } else {
-                        writeSpectrum(bw, spectrum, null);
-                    }
+        try (FileWriter fileWriter = new FileWriter(destinationFile); 
+                BufferedWriter bw = new BufferedWriter(fileWriter)) {
+            
+            writeHeader(bw);
+            MgfFileIterator mgfFileIterator = new MgfFileIterator(mgfFile);
+            int scanCounter = 1;
+            while (mgfFileIterator.hasNext()) {
+                Spectrum spectrum = mgfFileIterator.next();
+                if (resetScanNumbers) {
+                    writeSpectrum(bw, spectrum, scanCounter++);
+                } else {
+                    writeSpectrum(bw, spectrum, null);
                 }
-            } finally {
-                bw.close();
             }
-        } finally {
-            fileWriter.close();
         }
     }
 
@@ -71,6 +62,7 @@ public class Ms2Exporter {
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file
      */
     public static void writeHeader(BufferedWriter bw) throws IOException {
+        
         bw.write("H\tCreationDate\t" + new Date());
         bw.newLine();
         bw.write("H\tExtractor\tUnknown");
@@ -95,7 +87,7 @@ public class Ms2Exporter {
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
-    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, Integer defaultScanNumber) throws IOException, InterruptedException {
+    public static void writeSpectrum(BufferedWriter bw, Spectrum spectrum, Integer defaultScanNumber) throws IOException, InterruptedException {
 
         String scanNumber = spectrum.getScanNumber(); //@TODO: parse scan ranges?
 

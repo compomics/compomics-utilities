@@ -1,6 +1,6 @@
 package com.compomics.util.test.experiment.spectrum.indexing;
 
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 import java.util.HashMap;

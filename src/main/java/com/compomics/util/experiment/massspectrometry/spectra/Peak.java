@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.massspectrometry;
+package com.compomics.util.experiment.massspectrometry.spectra;
 
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -18,15 +18,15 @@ public class Peak extends ExperimentObject {
     /**
      * The mass over charge ratio of the peak.
      */
-    public double mz;
+    public final double mz;
     /**
      * The retention time when the peak was recorded.
      */
-    public double rt;
+    public final double rt;
     /**
      * The intensity of the peak.
      */
-    public double intensity;
+    public final double intensity;
 
     /**
      * Constructor for a peak.
@@ -35,8 +35,7 @@ public class Peak extends ExperimentObject {
      * @param intensity the intensity of the peak
      */
     public Peak(double mz, double intensity) {
-        this.mz = mz;
-        this.intensity = intensity;
+        this(mz, intensity, -1.0);
     }
 
     /**
@@ -59,7 +58,7 @@ public class Peak extends ExperimentObject {
      * @return true if the peak has the same mz and intensity
      */
     public boolean isSameAs(Peak aPeak) {
-        return mz == aPeak.mz && intensity == aPeak.intensity;
+        return mz == aPeak.mz && intensity == aPeak.intensity && rt == aPeak.rt;
     }
 
     @Override
@@ -93,56 +92,6 @@ public class Peak extends ExperimentObject {
     }
 
     /**
-     * Returns the mz.
-     *
-     * @return the mz
-     */
-    public double getMz() {
-        return mz;
-    }
-
-    /**
-     * Set the mz.
-     *
-     * @param mz the value to set
-     */
-    public void setMz(double mz) {
-        this.mz = mz;
-    }
-
-    /**
-     * Returns the intensity.
-     *
-     * @return the intensity
-     */
-    public double getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Set the intensity.
-     *
-     * @param intensity the intensity to set
-     */
-    public void setIntensity(double intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * Compare two peaks in regards to their intensity.
-     *
-     * @param p the peak to compare against
-     * @return 0 if numerically equal; a value less than 0 if the intensity of
-     * this peak is numerically less than the intensity of the peak we are
-     * comparing against; and a value greater than 0 if the intensity of this
-     * peak is numerically greater than the intensity of the peak we are
-     * comparing against.
-     */
-    public int compareTo(Peak p) {
-        return Double.compare(this.getIntensity(), p.getIntensity());
-    }
-
-    /**
      * Returns the mass of the compound with the given charge.
      *
      * @param chargeValue the value of the charge
@@ -160,7 +109,7 @@ public class Peak extends ExperimentObject {
             = new Comparator<Peak>() {
         @Override
         public int compare(Peak o1, Peak o2) {
-            return o1.getIntensity() < o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+            return o1.intensity < o2.intensity ? -1 : o1.intensity == o2.intensity ? 0 : 1;
         }
     };
 
@@ -171,7 +120,7 @@ public class Peak extends ExperimentObject {
             = new Comparator<Peak>() {
         @Override
         public int compare(Peak o1, Peak o2) {
-            return o1.getIntensity() > o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+            return o1.intensity > o2.intensity ? -1 : o1.intensity == o2.intensity ? 0 : 1;
         }
     };
 
@@ -182,7 +131,21 @@ public class Peak extends ExperimentObject {
             = new Comparator<Peak>() {
         @Override
         public int compare(Peak o1, Peak o2) {
-            return o1.getMz() < o2.getMz() ? -1 : o1.getMz() == o2.getMz() ? 0 : 1;
+            return o1.mz < o2.mz ? -1 : o1.mz == o2.mz ? 0 : 1;
         }
     };
+    
+    @Override
+    public String toString() {
+        
+        StringBuilder sb = new StringBuilder(15);
+        
+        sb.append('[');
+                sb.append(mz);
+                sb.append(',');
+                sb.append(intensity);
+                sb.append(']');
+                
+                return sb.toString();
+    }
 }

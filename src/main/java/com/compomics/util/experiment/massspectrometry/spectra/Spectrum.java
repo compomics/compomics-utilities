@@ -1,21 +1,19 @@
-package com.compomics.util.experiment.massspectrometry;
+package com.compomics.util.experiment.massspectrometry.spectra;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-import org.apache.commons.math.MathException;
 
 /**
  * This class models a spectrum.
@@ -23,7 +21,7 @@ import org.apache.commons.math.MathException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class Spectrum extends ExperimentObject {
+public class Spectrum extends ExperimentObject {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.
@@ -45,6 +43,10 @@ public abstract class Spectrum extends ExperimentObject {
      * The MS level.
      */
     protected int level;
+    /**
+     * The precursor for level > 1.
+     */
+    private Precursor precursor;
     /**
      * mz indexed Peak map.
      */
@@ -121,6 +123,57 @@ public abstract class Spectrum extends ExperimentObject {
      * peaks intensities.
      */
     private SimpleNoiseDistribution binnedCumulativeFunction = null;
+    
+    /**
+     * Constructor for the spectrum.
+     *
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param fileName file name
+     */
+    public Spectrum(int level, Precursor precursor, String spectrumTitle, String fileName) {
+        this.level = level;
+        this.precursor = precursor;
+        this.spectrumTitle = spectrumTitle;
+        this.fileName = fileName;
+    }
+
+    /**
+     * Constructor for the spectrum.
+     *
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param peakMap set of peaks
+     * @param fileName file name
+     */
+    public Spectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName) {
+        this.level = level;
+        this.precursor = precursor;
+        this.spectrumTitle = spectrumTitle;
+        this.peakMap = peakMap;
+        this.fileName = fileName;
+    }
+
+    /**
+     * Constructor for the spectrum.
+     *
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param peakMap set of peaks
+     * @param fileName file name
+     * @param scanStartTime The time point when the spectrum was recorded
+     */
+    public Spectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName, double scanStartTime) {
+        this.level = level;
+        this.precursor = precursor;
+        this.spectrumTitle = spectrumTitle;
+        this.peakMap = peakMap;
+        this.fileName = fileName;
+        this.scanStartTime = scanStartTime;
+    }
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -328,27 +381,16 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public String getPeakListAsString() {
 
-            double[] mzValues = getOrderedMzValues();
+        StringBuilder sb = new StringBuilder();
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
+        sb.append("[");
+        sb.append(
+                peakMap.values().stream()
+                        .sorted(Peak.AscendingMzComparator)
+                        .map(peak -> peak.toString())
+                        .collect(Collectors.joining(",")));
 
-            for (double mzValue : mzValues) {
-
-                if (sb.length() > 1) {
-                    sb.append(",");
-                }
-
-                Peak currentPeak = peakMap.get(mzValue);
-
-                sb.append("[");
-                sb.append(currentPeak.mz);
-                sb.append(",");
-                sb.append(currentPeak.intensity);
-                sb.append("]");
-            }
-
-            sb.append("]");
+        sb.append("]");
 
         return sb.toString();
     }
@@ -380,17 +422,10 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (mzValuesAsArraySorted == null) {
 
-            double[] array = new double[peakMap.size()];
-            int counter = 0;
-
-            for (double currentMz : peakMap.keySet()) {
-
-                array[counter++] = currentMz;
-
-            }
-
-            Arrays.sort(array);
-            mzValuesAsArraySorted = array;
+            mzValuesAsArraySorted = peakMap.keySet().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .sorted()
+                    .toArray();
 
         }
 
@@ -415,16 +450,9 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakMap.size())) {
 
-            double[] array = new double[peakMap.size()];
-            int counter = 0;
-
-            for (Peak currentPeak : peakMap.values()) {
-
-                array[counter++] = currentPeak.intensity;
-
-            }
-
-            intensityValuesAsArray = array;
+            intensityValuesAsArray = peakMap.values().stream()
+                    .mapToDouble(peak -> peak.intensity)
+                    .toArray();
 
         }
 
@@ -544,15 +572,11 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (maxMz == -1.0) {
 
-            if (peakMap.isEmpty()) {
+            maxMz = peakMap.keySet().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .max()
+                    .orElse(0.0);
 
-                maxMz = 0.0;
-
-            } else {
-
-                maxMz = Collections.max(peakMap.keySet());
-
-            }
         }
 
         return maxMz;
@@ -567,15 +591,11 @@ public abstract class Spectrum extends ExperimentObject {
 
         if (minMz == -1.0) {
 
-            if (peakMap.isEmpty()) {
+            minMz = peakMap.keySet().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .min()
+                    .orElse(0.0);
 
-                minMz = 0.0;
-
-            } else {
-
-                minMz = Collections.min(peakMap.keySet());
-
-            }
         }
 
         return minMz;
@@ -787,10 +807,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public int getNPeaks() {
 
-        if (peakMap == null) {
-            return 0;
-        }
-        return peakMap.size();
+        return peakMap == null ? 0 : peakMap.size();
     }
 
     /**
@@ -827,10 +844,126 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the intensity of the log of the peaks intensities
      */
     public SimpleNoiseDistribution getIntensityLogDistribution() {
-        
+
         if (binnedCumulativeFunction == null) {
             binnedCumulativeFunction = new SimpleNoiseDistribution(peakMap);
         }
         return binnedCumulativeFunction;
+    }
+
+    /**
+     * Returns the precursor.
+     *
+     * @return precursor charge
+     */
+    public Precursor getPrecursor() {
+        return precursor;
+    }
+
+    /**
+     * Set the precursor.
+     *
+     * @param precursor the precursor to set
+     */
+    public void setPrecursor(Precursor precursor) {
+        this.precursor = precursor;
+    }
+
+    /**
+     * Returns the peak list as an mgf bloc.
+     *
+     * @return the peak list as an mgf bloc
+     */
+    public String asMgf() {
+        return asMgf(null);
+    }
+
+    /**
+     * Returns the peak list as an mgf bloc. @TODO: move this to the
+     * massspectrometry.export package
+     *
+     * @param additionalTags additional tags which will be added after the BEGIN
+     * IONS tag in alphabetic order
+     * @return the peak list as an mgf bloc
+     */
+    public String asMgf(HashMap<String, String> additionalTags) {
+
+        StringBuilder result = new StringBuilder();
+        String lineBreak = System.getProperty("line.separator");
+
+        result.append("BEGIN IONS").append(lineBreak);
+
+        if (additionalTags != null) {
+            ArrayList<String> additionalTagsKeys = new ArrayList<>(additionalTags.keySet());
+            Collections.sort(additionalTagsKeys);
+            for (String tag : additionalTagsKeys) {
+                String attribute = additionalTags.get(tag);
+                if (attribute != null && !attribute.equals("")) {
+                    result.append(tag).append("=").append(attribute).append(lineBreak);
+                }
+            }
+        }
+
+        result.append("TITLE=").append(spectrumTitle).append(lineBreak);
+        result.append("PEPMASS=").append(precursor.getMz()).append("\t").append(precursor.getIntensity()).append(lineBreak);
+
+        if (precursor.hasRTWindow()) {
+            result.append("RTINSECONDS=").append(precursor.getRtWindow()[0]).append("-").append(precursor.getRtWindow()[1]).append(lineBreak);
+        } else if (precursor.getRt() != -1) {
+            result.append("RTINSECONDS=").append(precursor.getRt()).append(lineBreak);
+        }
+
+        if (!precursor.getPossibleCharges().isEmpty()) {
+            result.append("CHARGE=");
+            result.append(
+                    precursor.getPossibleCharges().stream()
+                            .map(charge -> charge.value)
+                            .sorted()
+                            .map(charge -> charge.toString())
+                            .collect(Collectors.joining(" and "))
+            );
+            result.append(lineBreak);
+        }
+
+        if (scanNumber != null && !scanNumber.equals("")) {
+            result.append("SCANS=").append(scanNumber).append(lineBreak);
+        }
+
+        // export peak list sorted by mz
+        peakMap.values().stream()
+                .sorted(Peak.AscendingMzComparator)
+                .forEach(peak -> result.append(peak.mz).append(' ').append(peak.intensity).append(lineBreak));
+
+        result.append("END IONS").append(lineBreak).append(lineBreak);
+
+        return result.toString();
+    }
+
+    /**
+     * Writes the spectrum in the mgf format using the given writer.
+     *
+     * @param writer1 a buffered writer where the spectrum will be written
+     * @throws IOException if an IOException occurs
+     */
+    public void writeMgf(BufferedWriter writer1) throws IOException {
+        writeMgf(writer1, null);
+    }
+
+    /**
+     * Writes the spectrum in the mgf format using the given writer.
+     *
+     * @param mgfWriter a buffered writer where the spectrum will be written
+     * @param additionalTags additional tags which will be added after the BEGIN
+     * IONS tag in alphabetic order
+     * @throws IOException if an IOException occurs
+     */
+    public void writeMgf(BufferedWriter mgfWriter, HashMap<String, String> additionalTags) throws IOException {
+        String spectrumAsMgf = asMgf(additionalTags);
+        mgfWriter.write(spectrumAsMgf);
+    }
+
+    @Override
+    public String toString() {
+        return getPeakListAsString();
     }
 }

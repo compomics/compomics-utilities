@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ImmoniumIon;
 import com.compomics.util.experiment.biology.ions.RelatedIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 

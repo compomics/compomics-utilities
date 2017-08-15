@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;

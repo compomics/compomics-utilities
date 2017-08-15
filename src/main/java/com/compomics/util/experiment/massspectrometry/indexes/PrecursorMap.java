@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.massspectrometry.indexes;
 
-import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;

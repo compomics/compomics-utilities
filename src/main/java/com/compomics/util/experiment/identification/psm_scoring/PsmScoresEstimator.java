@@ -11,7 +11,7 @@ import com.compomics.util.experiment.identification.psm_scoring.psm_scores.MS2Mz
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.PrecursorAccuracy;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.preferences.IdentificationParameters;
 import org.apache.commons.math.MathException;
 

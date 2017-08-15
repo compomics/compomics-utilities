@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.*;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 

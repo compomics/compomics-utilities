@@ -2,7 +2,7 @@ package com.compomics.util.experiment.massspectrometry.indexes;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.protein_sequences.AaOccurren
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;

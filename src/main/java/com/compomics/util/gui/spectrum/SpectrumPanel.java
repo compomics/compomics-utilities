@@ -23,6 +23,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /*
  * CVS information:
@@ -1432,7 +1433,10 @@ public class SpectrumPanel extends GraphicsPanel {
             }
         }
 
-        ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes(excludeFixedPtms);
+        HashSet<Integer> modifiedIndexes = currentPeptide.getModificationMatches().stream()
+                .filter(modificationMatch -> !excludeFixedPtms | modificationMatch.getVariable())
+                .map(modificationMatch -> modificationMatch.getModificationSite())
+                .collect(Collectors.toCollection(HashSet::new));
 
         // add reverse ion de novo tags (x, y or z)
         if (showRewindTags) {

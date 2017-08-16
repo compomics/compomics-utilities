@@ -17,27 +17,27 @@ public class PeptideVariantsPreferences implements Serializable {
     /**
      * Boolean indicating whether specific variant counts should be used.
      */
-    private Boolean useSpecificCount = false;
+    private boolean useSpecificCount = false;
     /**
      * Total number of variants allowed per peptide.
      */
-    private Integer nVariants = 0;
+    private int nVariants = 0;
     /**
      * The number of amino acid deletions allowed.
      */
-    private Integer nAaDeletions = 0;
+    private int nAaDeletions = 0;
     /**
      * The number of amino acid insertions allowed.
      */
-    private Integer nAaInsertions = 0;
+    private int nAaInsertions = 0;
     /**
      * The number of amino acid substitutions allowed.
      */
-    private Integer nAaSubstitutions = 0;
+    private int nAaSubstitutions = 0;
     /**
      * The number of amino acid swap allowed.
      */
-    private Integer nAaSwap = 0;
+    private int nAaSwap = 0;
     /**
      * The amino acid substitution matrix selected.
      */
@@ -55,7 +55,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @return the number of amino acid deletions allowed
      */
-    public Integer getnAaDeletions() {
+    public int getnAaDeletions() {
         return nAaDeletions;
     }
 
@@ -64,7 +64,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @param nAaDeletions the number of amino acid deletions allowed
      */
-    public void setnAaDeletions(Integer nAaDeletions) {
+    public void setnAaDeletions(int nAaDeletions) {
         this.nAaDeletions = nAaDeletions;
     }
 
@@ -73,7 +73,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @return the number of amino acid insertions allowed
      */
-    public Integer getnAaInsertions() {
+    public int getnAaInsertions() {
         return nAaInsertions;
     }
 
@@ -82,7 +82,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @param nAaInsertions the number of amino acid insertions allowed
      */
-    public void setnAaInsertions(Integer nAaInsertions) {
+    public void setnAaInsertions(int nAaInsertions) {
         this.nAaInsertions = nAaInsertions;
     }
 
@@ -91,7 +91,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @return the number of amino acid substitutions allowed
      */
-    public Integer getnAaSubstitutions() {
+    public int getnAaSubstitutions() {
         return nAaSubstitutions;
     }
 
@@ -100,7 +100,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @param nAaSubstitutions the number of amino acid substitutions allowed
      */
-    public void setnAaSubstitutions(Integer nAaSubstitutions) {
+    public void setnAaSubstitutions(int nAaSubstitutions) {
         this.nAaSubstitutions = nAaSubstitutions;
     }
 
@@ -109,7 +109,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @return the number of amino acid swaps allowed
      */
-    public Integer getnAaSwap() {
+    public int getnAaSwap() {
         return nAaSwap;
     }
 
@@ -118,7 +118,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @param nAaSwap the number of amino acid swaps allowed
      */
-    public void setnAaSwap(Integer nAaSwap) {
+    public void setnAaSwap(int nAaSwap) {
         this.nAaSwap = nAaSwap;
     }
 
@@ -146,7 +146,7 @@ public class PeptideVariantsPreferences implements Serializable {
      * @return a boolean indicating whether the specific variant count
      * limitations should be used
      */
-    public Boolean getUseSpecificCount() {
+    public boolean getUseSpecificCount() {
         return useSpecificCount;
     }
 
@@ -156,7 +156,7 @@ public class PeptideVariantsPreferences implements Serializable {
      * @param useSpecificCount a boolean indicating whether the specific variant
      * count limitations should be used
      */
-    public void setUseSpecificCount(Boolean useSpecificCount) {
+    public void setUseSpecificCount(boolean useSpecificCount) {
         this.useSpecificCount = useSpecificCount;
     }
 
@@ -165,7 +165,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @return the total number of variants allowed
      */
-    public Integer getnVariants() {
+    public int getnVariants() {
         return nVariants;
     }
 
@@ -174,7 +174,7 @@ public class PeptideVariantsPreferences implements Serializable {
      *
      * @param nVariants the total number of variants allowed
      */
-    public void setnVariants(Integer nVariants) {
+    public void setnVariants(int nVariants) {
         this.nVariants = nVariants;
     }
 
@@ -188,22 +188,22 @@ public class PeptideVariantsPreferences implements Serializable {
      * one
      */
     public boolean isSameAs(PeptideVariantsPreferences peptideVariantsPreferences) {
-        if (!nAaDeletions.equals(peptideVariantsPreferences.getnAaDeletions())) {
+        if (nAaDeletions != peptideVariantsPreferences.getnAaDeletions()) {
             return false;
         }
-        if (!nAaInsertions.equals(peptideVariantsPreferences.getnAaInsertions())) {
+        if (nAaInsertions != peptideVariantsPreferences.getnAaInsertions()) {
             return false;
         }
-        if (!nAaSubstitutions.equals(peptideVariantsPreferences.getnAaSubstitutions())) {
+        if (nAaSubstitutions != peptideVariantsPreferences.getnAaSubstitutions()) {
             return false;
         }
-        if (!nAaSwap.equals(peptideVariantsPreferences.getnAaSwap())) {
+        if (nAaSwap != peptideVariantsPreferences.getnAaSwap()) {
             return false;
         }
-        if (!useSpecificCount.equals(peptideVariantsPreferences.getUseSpecificCount())) {
+        if (useSpecificCount != peptideVariantsPreferences.getUseSpecificCount()) {
             return false;
         }
-        if (!nVariants.equals(peptideVariantsPreferences.getnVariants())) {
+        if (nVariants != peptideVariantsPreferences.getnVariants()) {
             return false;
         }
         return aaSubstitutionMatrix.isSameAs(peptideVariantsPreferences.getAaSubstitutionMatrix());

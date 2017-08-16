@@ -103,7 +103,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
         
         scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore());
         
-        if (ptmScoringPreferences.isProbabilitsticScoreCalculation()) {
+        if (ptmScoringPreferences.isProbabilisticScoreCalculation()) {
             scoreCmb.setEnabled(editable);
             neutralLossesCmb.setEnabled(editable);
             if (ptmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
@@ -577,7 +577,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
             idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
 
             PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
-            ptmScoringPreferences.setProbabilitsticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
+            ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
             ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());
             ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
 

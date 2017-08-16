@@ -22,23 +22,23 @@ public class ProteinInferencePreferences implements Serializable {
     /**
      * Simplify protein groups.
      */
-    private Boolean simplifyProteinGroups = true;
+    private boolean simplifyProteinGroups = true;
     /**
      * Simplify groups based on PeptideShaker score.
      */
-    private Boolean simplifyGroupsScore = true;
+    private boolean simplifyGroupsScore = true;
     /**
      * Simplify groups based on UniProt evidence level.
      */
-    private Boolean simplifyGroupsEvidence = true;
+    private boolean simplifyGroupsEvidence = true;
     /**
      * Simplify groups based on enzymaticity.
      */
-    private Boolean simplifyGroupsEnzymaticity = true;
+    private boolean simplifyGroupsEnzymaticity = true;
     /**
      * Simplify groups of uncharacterized proteins.
      */
-    private Boolean simplifyGroupsUncharacterized = true;
+    private boolean simplifyGroupsUncharacterized = true;
 
     /**
      * Returns the path to the database used.
@@ -102,23 +102,23 @@ public class ProteinInferencePreferences implements Serializable {
             return false;
         }
 
-        if (!getSimplifyGroups().equals(otherProteinInferencePreferences.getSimplifyGroups())) {
+        if (getSimplifyGroups() != otherProteinInferencePreferences.getSimplifyGroups()) {
             return false;
         }
 
-        if (!getSimplifyGroupsScore().equals(otherProteinInferencePreferences.getSimplifyGroupsScore())) {
+        if (getSimplifyGroupsScore() != otherProteinInferencePreferences.getSimplifyGroupsScore()) {
             return false;
         }
 
-        if (!getSimplifyGroupsEnzymaticity().equals(otherProteinInferencePreferences.getSimplifyGroupsEnzymaticity())) {
+        if (getSimplifyGroupsEnzymaticity() != otherProteinInferencePreferences.getSimplifyGroupsEnzymaticity()) {
             return false;
         }
 
-        if (!getSimplifyGroupsEvidence().equals(otherProteinInferencePreferences.getSimplifyGroupsEvidence())) {
+        if (getSimplifyGroupsEvidence() != otherProteinInferencePreferences.getSimplifyGroupsEvidence()) {
             return false;
         }
 
-        if (!getSimplifyGroupsUncharacterized().equals(otherProteinInferencePreferences.getSimplifyGroupsUncharacterized())) {
+        if (getSimplifyGroupsUncharacterized() != otherProteinInferencePreferences.getSimplifyGroupsUncharacterized()) {
             return false;
         }
 
@@ -136,10 +136,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @return a boolean indicating whether the protein groups should be
      * simplified
      */
-    public Boolean getSimplifyGroups() {
-        if (simplifyProteinGroups == null) { // Backward compatibility
-            simplifyProteinGroups = true;
-        }
+    public boolean getSimplifyGroups() {
         return simplifyProteinGroups;
     }
 
@@ -150,7 +147,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @param simplifyProteinGroups whether the protein groups should be
      * simplified
      */
-    public void setSimplifyGroups(Boolean simplifyProteinGroups) {
+    public void setSimplifyGroups(boolean simplifyProteinGroups) {
         this.simplifyProteinGroups = simplifyProteinGroups;
     }
 
@@ -161,10 +158,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @return a boolean indicating whether the protein groups should be
      * simplified based on the PeptideShaker score
      */
-    public Boolean getSimplifyGroupsScore() {
-        if (simplifyGroupsScore == null) { // Backward compatibility
-            simplifyGroupsScore = true;
-        }
+    public boolean getSimplifyGroupsScore() {
         return simplifyGroupsScore;
     }
 
@@ -175,7 +169,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @param simplifyGroupsScore whether the protein groups should be
      * simplified based on the PeptideShaker score
      */
-    public void setSimplifyGroupsScore(Boolean simplifyGroupsScore) {
+    public void setSimplifyGroupsScore(boolean simplifyGroupsScore) {
         this.simplifyGroupsScore = simplifyGroupsScore;
     }
 
@@ -186,10 +180,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @return a boolean indicating whether the protein groups should be
      * simplified based on the Uniprot evidence level
      */
-    public Boolean getSimplifyGroupsEvidence() {
-        if (simplifyGroupsEvidence == null) { // Backward compatibility
-            simplifyGroupsEvidence = true;
-        }
+    public boolean getSimplifyGroupsEvidence() {
         return simplifyGroupsEvidence;
     }
 
@@ -200,7 +191,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @param simplifyGroupsEvidence whether the protein groups should be
      * simplified based on the Uniprot evidence level
      */
-    public void setSimplifyGroupsEvidence(Boolean simplifyGroupsEvidence) {
+    public void setSimplifyGroupsEvidence(boolean simplifyGroupsEvidence) {
         this.simplifyGroupsEvidence = simplifyGroupsEvidence;
     }
 
@@ -211,10 +202,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @return a boolean indicating whether the protein groups should be
      * simplified based on the peptide enzymaticity
      */
-    public Boolean getSimplifyGroupsEnzymaticity() {
-        if (simplifyGroupsEnzymaticity == null) { // Backward compatibility
-            simplifyGroupsEnzymaticity = true;
-        }
+    public boolean getSimplifyGroupsEnzymaticity() {
         return simplifyGroupsEnzymaticity;
     }
 
@@ -225,7 +213,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @param simplifyGroupsEnzymaticity whether the protein groups should be
      * simplified based on the peptide enzymaticity
      */
-    public void setSimplifyGroupsEnzymaticity(Boolean simplifyGroupsEnzymaticity) {
+    public void setSimplifyGroupsEnzymaticity(boolean simplifyGroupsEnzymaticity) {
         this.simplifyGroupsEnzymaticity = simplifyGroupsEnzymaticity;
     }
 
@@ -236,10 +224,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @return a boolean indicating whether the protein groups consisting of
      * uncharacterized proteins
      */
-    public Boolean getSimplifyGroupsUncharacterized() {
-        if (simplifyGroupsUncharacterized == null) { // Backward compatibility
-            simplifyGroupsUncharacterized = true;
-        }
+    public boolean getSimplifyGroupsUncharacterized() {
         return simplifyGroupsUncharacterized;
     }
 
@@ -249,7 +234,7 @@ public class ProteinInferencePreferences implements Serializable {
      * @param simplifyGroupsUncharacterized whether the protein groups
      * consisting of uncharacterized proteins
      */
-    public void setSimplifyGroupsUncharacterized(Boolean simplifyGroupsUncharacterized) {
+    public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
         this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
     }
 }

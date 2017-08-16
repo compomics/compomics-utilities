@@ -22,7 +22,7 @@ public class PTMScoringPreferences implements Serializable {
     /**
      * Boolean indicating whether a probabilistic score is to be calculated.
      */
-    private Boolean probabilitsticScoreCalculation = true; // @TODO: typo: probabilistic
+    private boolean probabilisticScoreCalculation = true;
     /**
      * The probabilistic score selected.
      */
@@ -39,15 +39,16 @@ public class PTMScoringPreferences implements Serializable {
      * Boolean indicating whether neutral losses shall be accounted for in the
      * calculation of the probabilistic score.
      */
-    private Boolean probabilisticScoreNeutralLosses = false;
+    private boolean probabilisticScoreNeutralLosses = false;
     /**
      * The preferences to use when matching PTMs to amino acid sequences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
     /**
-     * Boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites.
+     * Boolean indicating whether the non confidently localized PTMs should be
+     * aligned on the confident sites.
      */
-    private Boolean alignNonConfidentPTMs = true;
+    private boolean alignNonConfidentPTMs = true;
 
     /**
      * Constructor.
@@ -63,18 +64,18 @@ public class PTMScoringPreferences implements Serializable {
      * @return a boolean indicating whether a probabilistic PTM score is
      * required
      */
-    public Boolean isProbabilitsticScoreCalculation() {  // @TODO: typo: probabilistic
-        return probabilitsticScoreCalculation;
+    public boolean isProbabilisticScoreCalculation() {
+        return probabilisticScoreCalculation;
     }
 
     /**
      * Sets whether a probabilistic PTM score is required.
      *
-     * @param probabilitsticScoreCalculation a boolean indicating whether a
+     * @param probabilisticScoreCalculation a boolean indicating whether a
      * probabilistic PTM score is required
      */
-    public void setProbabilitsticScoreCalculation(boolean probabilitsticScoreCalculation) { // @TODO: typo: probabilistic
-        this.probabilitsticScoreCalculation = probabilitsticScoreCalculation;
+    public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
+        this.probabilisticScoreCalculation = probabilisticScoreCalculation;
     }
 
     /**
@@ -83,9 +84,6 @@ public class PTMScoringPreferences implements Serializable {
      * @return the selected probabilistic score
      */
     public PtmScore getSelectedProbabilisticScore() {
-        if (selectedProbabilisticScore == null) {
-            return PtmScore.AScore; // backward compatibility
-        }
         return selectedProbabilisticScore;
     }
 
@@ -142,7 +140,7 @@ public class PTMScoringPreferences implements Serializable {
      * into account for spectrum annotation when calculating the probabilistic
      * score
      */
-    public Boolean isProbabilisticScoreNeutralLosses() {
+    public boolean isProbabilisticScoreNeutralLosses() {
         return probabilisticScoreNeutralLosses;
     }
 
@@ -203,26 +201,27 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Indicates whether the non confidently localized PTMs should be aligned on the confident sites.
-     * 
-     * @return boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites
+     * Indicates whether the non confidently localized PTMs should be aligned on
+     * the confident sites.
+     *
+     * @return boolean indicating whether the non confidently localized PTMs
+     * should be aligned on the confident sites
      */
-    public Boolean getAlignNonConfidentPTMs() {
-        if (alignNonConfidentPTMs == null) { // Backward compatibility
-            alignNonConfidentPTMs = true;
-        }
+    public boolean getAlignNonConfidentPTMs() {
         return alignNonConfidentPTMs;
     }
 
     /**
-     * Sets whether the non confidently localized PTMs should be aligned on the confident sites.
-     * 
-     * @param alignNonConfidentPTMs a boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites
+     * Sets whether the non confidently localized PTMs should be aligned on the
+     * confident sites.
+     *
+     * @param alignNonConfidentPTMs a boolean indicating whether the non
+     * confidently localized PTMs should be aligned on the confident sites
      */
-    public void setAlignNonConfidentPTMs(Boolean alignNonConfidentPTMs) {
+    public void setAlignNonConfidentPTMs(boolean alignNonConfidentPTMs) {
         this.alignNonConfidentPTMs = alignNonConfidentPTMs;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
@@ -261,7 +260,7 @@ public class PTMScoringPreferences implements Serializable {
             return false;
         }
 
-        if (probabilitsticScoreCalculation.booleanValue() != otherPtmScoringPreferences.isProbabilitsticScoreCalculation()) {
+        if (probabilisticScoreCalculation != otherPtmScoringPreferences.isProbabilisticScoreCalculation()) {
             return false;
         }
 
@@ -278,10 +277,10 @@ public class PTMScoringPreferences implements Serializable {
             return false;
         }
 
-        if (probabilisticScoreNeutralLosses.booleanValue() != otherPtmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
+        if (probabilisticScoreNeutralLosses != otherPtmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
             return false;
         }
-        
+
         if (!getAlignNonConfidentPTMs() == otherPtmScoringPreferences.getAlignNonConfidentPTMs()) {
             return false;
         }

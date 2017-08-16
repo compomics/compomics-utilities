@@ -33,7 +33,7 @@ public class PsmScoringPreferences implements Serializable {
      * The minimal number of decoys to include in a bin to set the bin size of
      * the score histogram.
      */
-    private Integer minDecoysInBin = 10;
+    private int minDecoysInBin = 10;
 
     /**
      * Constructor.
@@ -292,10 +292,7 @@ public class PsmScoringPreferences implements Serializable {
      * @return the minimal number of decoys to include in a bin to set the bin
      * size of the score histogram
      */
-    public Integer getDecoysInFirstBin() {
-        if (minDecoysInBin == null) {
-            minDecoysInBin = 10;
-        }
+    public int getDecoysInFirstBin() {
         return minDecoysInBin;
     }
 

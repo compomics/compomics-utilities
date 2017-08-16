@@ -3233,9 +3233,9 @@ public class IdentificationParametersInputBean {
             Integer intValue = new Integer(arg);
             PtmScore ptmScore = PtmScore.getScore(intValue);
             if (ptmScore == PtmScore.None) {
-                ptmScoringPreferences.setProbabilitsticScoreCalculation(false);
+                ptmScoringPreferences.setProbabilisticScoreCalculation(false);
             } else {
-                ptmScoringPreferences.setProbabilitsticScoreCalculation(true);
+                ptmScoringPreferences.setProbabilisticScoreCalculation(true);
                 ptmScoringPreferences.setSelectedProbabilisticScore(ptmScore);
             }
         }

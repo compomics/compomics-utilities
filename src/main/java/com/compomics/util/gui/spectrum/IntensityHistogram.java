@@ -2,15 +2,13 @@ package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 import javax.swing.JPanel;
-import org.apache.commons.math.MathException;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -43,7 +41,7 @@ public class IntensityHistogram extends JPanel {
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
+            Spectrum currentSpectrum,
             AnnotationSettings.IntensityThresholdType intensityThresholdType,
             double intensityThreshold) {
         super();

@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import com.compomics.util.gui.renderers.AlignedTableCellRenderer;
 import com.compomics.util.gui.renderers.FragmentIonTableCellRenderer;
 import java.awt.Color;
@@ -71,7 +71,7 @@ public class FragmentIonTable extends JTable {
     /**
      * The list of spectra. Needed for intensity normalization.
      */
-    private ArrayList<MSnSpectrum> allSpectra;
+    private ArrayList<Spectrum> allSpectra;
 
     /**
      * Creates a traditional fragment ion table with the theoretical mz values
@@ -134,7 +134,7 @@ public class FragmentIonTable extends JTable {
     public FragmentIonTable(
             Peptide currentPeptide,
             ArrayList<ArrayList<IonMatch>> allAnnotations,
-            ArrayList<MSnSpectrum> allSpectra,
+            ArrayList<Spectrum> allSpectra,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
             boolean singleCharge, boolean twoCharges) throws InterruptedException {

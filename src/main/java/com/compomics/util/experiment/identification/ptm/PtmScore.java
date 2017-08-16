@@ -10,10 +10,6 @@ import java.util.ArrayList;
 public enum PtmScore {
 
     /**
-     * The A score.
-     */
-    AScore(0, "A-score"),
-    /**
      * The PhosphoRS score.
      */
     PhosphoRS(1, "PhosphoRS"),
@@ -69,8 +65,7 @@ public enum PtmScore {
      * @return a list of the implemented scores
      */
     public static ArrayList<PtmScore> getImplementedPtmScores() {
-        ArrayList<PtmScore> result = new ArrayList<>();
-        result.add(AScore);
+        ArrayList<PtmScore> result = new ArrayList<>(2);
         result.add(PhosphoRS);
         result.add(None);
         return result;

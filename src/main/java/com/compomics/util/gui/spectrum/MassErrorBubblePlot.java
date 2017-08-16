@@ -2,7 +2,7 @@ package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.XYZDataPoint;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<MSnSpectrum> currentSpectra,
+            ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
             boolean addMarkers) throws InterruptedException {
@@ -116,7 +116,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<MSnSpectrum> currentSpectra,
+            ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
             boolean addMarkers,
@@ -145,7 +145,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<MSnSpectrum> currentSpectra,
+            ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             double bubbleScale,
             boolean fragmentIonLabels,
@@ -165,7 +165,7 @@ public class MassErrorBubblePlot extends JPanel {
         for (int j = 0; j < annotations.size(); j++) {
 
             ArrayList<IonMatch> currentAnnotations = annotations.get(j);
-            MSnSpectrum currentSpectrum = currentSpectra.get(j);
+            Spectrum currentSpectrum = currentSpectra.get(j);
 
             // the annotated ion matches
             currentlyUsedIonMatches = currentAnnotations;

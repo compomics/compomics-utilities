@@ -1,7 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -43,7 +43,7 @@ public class MassErrorPlot extends JPanel {
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
+            Spectrum currentSpectrum,
             double massTolerance) throws InterruptedException {
         this(annotations, currentSpectrum, massTolerance, false);
     }
@@ -62,7 +62,7 @@ public class MassErrorPlot extends JPanel {
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
+            Spectrum currentSpectrum,
             double massTolerance,
             boolean useRelativeError) throws InterruptedException {
         super();

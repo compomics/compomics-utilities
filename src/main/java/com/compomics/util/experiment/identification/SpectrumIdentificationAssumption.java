@@ -4,8 +4,8 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 

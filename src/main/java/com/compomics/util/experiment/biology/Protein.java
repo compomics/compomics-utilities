@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
+import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.util.ArrayList;

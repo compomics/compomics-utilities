@@ -1,8 +1,8 @@
 package com.compomics.util.test.experiment.io.spectrum;
 
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.spectra.Precursor;
-import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import junit.framework.Assert;
 import junit.framework.TestCase;

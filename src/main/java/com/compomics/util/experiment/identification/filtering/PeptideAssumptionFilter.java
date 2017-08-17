@@ -10,7 +10,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;

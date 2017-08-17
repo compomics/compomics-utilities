@@ -2,7 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
+import com.compomics.util.experiment.io.biology.sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.GenePreferences;

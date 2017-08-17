@@ -6,7 +6,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;

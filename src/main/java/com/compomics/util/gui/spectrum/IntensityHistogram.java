@@ -2,7 +2,7 @@ package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;

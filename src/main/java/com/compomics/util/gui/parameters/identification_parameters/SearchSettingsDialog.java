@@ -11,7 +11,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;

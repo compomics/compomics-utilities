@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Annotati
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.SimpleNoiseDistribution;
+import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.MathException;

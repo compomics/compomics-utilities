@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.gui.renderers.AlignedTableCellRenderer;
 import com.compomics.util.gui.renderers.FragmentIonTableCellRenderer;
 import java.awt.Color;

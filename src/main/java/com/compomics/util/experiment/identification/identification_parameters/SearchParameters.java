@@ -16,7 +16,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.preferences.DigestionPreferences;

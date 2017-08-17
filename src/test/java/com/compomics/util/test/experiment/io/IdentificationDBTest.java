@@ -12,9 +12,9 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
 import junit.framework.Assert;
 
 import java.io.File;

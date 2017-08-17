@@ -2,8 +2,8 @@ package com.compomics.util.test.experiment.io.identifications;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.io.identifications.IdfileReader;
-import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
+import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;

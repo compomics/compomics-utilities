@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.spectrum.indexing;
 
-import com.compomics.util.experiment.massspectrometry.spectra.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 import java.util.HashMap;
 import junit.framework.Assert;

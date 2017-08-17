@@ -13,7 +13,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.simple_a
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.ImmoniumIonAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.PrecursorAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.ReporterIonAnnotator;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

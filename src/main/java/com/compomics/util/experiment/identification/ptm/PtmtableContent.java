@@ -11,7 +11,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
-import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -3,8 +3,8 @@ package com.compomics.util.experiment.identification.spectrum_annotation.simple_
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.spectra.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 
 /**

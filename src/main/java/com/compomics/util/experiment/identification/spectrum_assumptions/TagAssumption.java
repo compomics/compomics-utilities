@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.biology.MassGap;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 

@@ -2,7 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;

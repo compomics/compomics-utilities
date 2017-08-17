@@ -12,9 +12,9 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.spectra.Peak;
-import com.compomics.util.experiment.massspectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;

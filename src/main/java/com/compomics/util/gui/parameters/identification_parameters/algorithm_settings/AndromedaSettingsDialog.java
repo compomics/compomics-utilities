@@ -4,7 +4,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters.AndromedaDecoyMode;
-import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;

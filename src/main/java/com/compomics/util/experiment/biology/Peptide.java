@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
-import com.compomics.util.experiment.massspectrometry.utils.StandardMasses;
+import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 

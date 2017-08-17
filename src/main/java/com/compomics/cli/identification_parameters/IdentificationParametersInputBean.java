@@ -22,14 +22,14 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.DigestionPreferences.Specificity;
 import com.compomics.util.preferences.FractionSettings;

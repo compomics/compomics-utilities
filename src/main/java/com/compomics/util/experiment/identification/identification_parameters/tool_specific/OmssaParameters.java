@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.identification_parameters.t
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.io.BufferedReader;
 import java.io.File;

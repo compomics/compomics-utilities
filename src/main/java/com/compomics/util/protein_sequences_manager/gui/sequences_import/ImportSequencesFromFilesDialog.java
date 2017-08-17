@@ -1,7 +1,7 @@
 package com.compomics.util.protein_sequences_manager.gui.sequences_import;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
+import com.compomics.util.experiment.io.biology.sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.LastSelectedFolder;

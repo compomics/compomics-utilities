@@ -3,7 +3,7 @@ package com.compomics.util.test.io;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.preferences.DigestionPreferences;
 import java.io.File;

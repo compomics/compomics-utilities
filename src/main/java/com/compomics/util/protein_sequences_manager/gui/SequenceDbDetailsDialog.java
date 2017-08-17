@@ -4,7 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
+import com.compomics.util.experiment.io.biology.sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog;

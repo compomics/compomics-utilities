@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.identification_parameters.t
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import java.util.HashMap;
 
 /**

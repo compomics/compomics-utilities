@@ -26,7 +26,7 @@ public class IdObject extends ZooPC implements Serializable {
     /**
      * indecates if the object is already stored in the db
      */
-    private boolean storedInDB = false;
+    //private boolean storedInDB = false;
     /** 
      * flag if object is a first level object or not
      */
@@ -39,21 +39,12 @@ public class IdObject extends ZooPC implements Serializable {
         this.id = id;
     }
     
-    public boolean getFirstLevel(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return firstLevel;
-    }
-    
-    public void setFirstLevel(boolean firstLevel){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.firstLevel = firstLevel;
-    }
-    
     public long getId(){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return id;
     }
     
+    /*
     public boolean getStoredInDB(){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return storedInDB;
@@ -63,5 +54,16 @@ public class IdObject extends ZooPC implements Serializable {
     public void setStoredInDB(boolean storedInDB){
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.storedInDB = storedInDB;
+    }
+    */
+    
+    public boolean getFirstLevel(){
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        return firstLevel;
+    }
+    
+    public void setFirstLevel(boolean firstLevel){
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        this.firstLevel = firstLevel;
     }
 }

@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.concurrent.Semaphore;
 import javax.jdo.PersistenceManager;
 
 /**
@@ -23,33 +22,35 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.8;
+    private double memoryShare = 0.75;
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, Object> loadedObjects = new HashMap<Long, Object>();
+    private final HashMap<Long, Object> loadedObjects = new HashMap<>();
     /**
-     * Linked list to manage a queue for old entries
+     * Linked list to manage a queue for old entries.
      */
-    private final LinkedList<Long> objectQueue = new LinkedList<Long>();
+    private final LinkedList<Long> objectQueue = new LinkedList<>();
     /**
      * Mutex for the edition of the object keys list.
      */
-    private final Semaphore loadedObjectMutex = new Semaphore(1);
+    private final Object loadedObjectMutex = new Object();
     /**
      * Indicates whether the cache is read only.
      */
     private boolean readOnly = false;
     /**
-     * reference to the objects DB
+     * Reference to the objects DB.
      */
     private ObjectsDB objectsDB = null;
-    
-    private boolean semaphore = false;
-    
-    private final int keepObjectsThreshold = 1000;
-    
-    private final int numToCommit = 1000;
+    /**
+     * Number of objects thats should be at least kept.
+     */
+    private final int keepObjectsThreshold = 10000;
+    /**
+     * If number number of registered objects exceeds value, commit to db should be triggered.
+     */
+    private final int numToCommit = 10000;
 
     /**
      * Constructor.
@@ -70,8 +71,8 @@ public class ObjectsCache {
 
     /**
      * Returns the share of heap size which can be used before emptying the
-     * cache. 0.99 (default) means that objects will be removed from the cache
-     * as long as more than 99% of the heap size is used.
+     * cache. 0.75 (default) means that objects will be removed from the cache
+     * as long as more than 75% of the heap size is used.
      *
      * @return the share of heap size which can be used before emptying the
      * cache
@@ -88,6 +89,12 @@ public class ObjectsCache {
      */
     public void setMemoryShare(double memoryShare) {
         this.memoryShare = memoryShare;
+        try {
+            updateCache();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     
@@ -103,10 +110,10 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public Object getObject(Long objectKey) throws InterruptedException {
-        loadedObjectMutex.acquire();
         Object object = null;
-        if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey);
-        loadedObjectMutex.release();
+        synchronized(loadedObjectMutex){
+            if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey);
+        }
         return object;
     }
     
@@ -120,15 +127,15 @@ public class ObjectsCache {
      */
     public String removeObject(long objectKey) throws InterruptedException {
         String className = null;
-        loadedObjectMutex.acquire();
-        if (!readOnly) {
-            if (loadedObjects.containsKey(objectKey)){
-                className = loadedObjects.get(objectKey).getClass().getSimpleName();
-                loadedObjects.remove(objectKey);
-                objectQueue.removeFirstOccurrence(objectKey);
+        synchronized(loadedObjectMutex){
+            if (!readOnly) {
+                if (loadedObjects.containsKey(objectKey)){
+                    className = loadedObjects.get(objectKey).getClass().getSimpleName();
+                    loadedObjects.remove(objectKey);
+                    objectQueue.removeFirstOccurrence(objectKey);
+                }
             }
         }
-        loadedObjectMutex.release();
         return className;
     }
 
@@ -148,33 +155,21 @@ public class ObjectsCache {
      * writing to the database
      */
     public void addObject(Long objectKey, Object object) throws IOException, SQLException, InterruptedException {
-        loadedObjectMutex.acquire();
-        semaphore = true;
-        if (!readOnly) {            
-            
-            if (!loadedObjects.containsKey(objectKey)){
-                loadedObjects.put(objectKey, object);
-                objectQueue.add(objectKey);
-                
-                
-                
-                if (!((IdObject)object).getStoredInDB()){
-                    ((IdObject)object).setStoredInDB(true);
-                    objectsDB.getDB().makePersistent(object);
-                    Long zooid = (Long)objectsDB.getDB().getObjectId(object);
-                    objectsDB.getIdMap().put(objectKey, zooid);
+        synchronized(loadedObjectMutex){
+            if (!readOnly) {            
+
+                if (!loadedObjects.containsKey(objectKey)){
+                    loadedObjects.put(objectKey, object);
+                    objectQueue.add(objectKey);
+                    
+                    if (objectsDB.getCurrentAdded() > numToCommit){
+                        objectsDB.commit();
+                        objectsDB.resetCurrentAdded();
+                    }
                 }
-                if (objectsDB.getCurrentAdded() > numToCommit){
-                    objectsDB.commit();
-                    objectsDB.resetCurrentAdded();
-                }
-                
-                
+                updateCache();
             }
-            updateCache();
         }
-        semaphore = false;
-        loadedObjectMutex.release();
     }
 
     /**
@@ -192,31 +187,20 @@ public class ObjectsCache {
      * writing to the database
      */
     public void addObjects(HashMap<Long, Object> objects) throws IOException, SQLException, InterruptedException {
-        loadedObjectMutex.acquire();
-        semaphore = true;
-        if (!readOnly) {            
-            
-            loadedObjects.putAll(objects);
-            objectQueue.addAll(objects.keySet());
-            for (Long objectKey : objects.keySet()){
-                Object object = objects.get(objectKey);
-                if (!((IdObject)object).getStoredInDB()){
-                    ((IdObject)object).setStoredInDB(true);
-                    objectsDB.getDB().makePersistent(object);
-                    Long zooid = (Long)objectsDB.getDB().getObjectId(object);
-                    objectsDB.getIdMap().put(objectKey, zooid);
+        synchronized(loadedObjectMutex){
+            if (!readOnly) {            
+
+                loadedObjects.putAll(objects);
+                objectQueue.addAll(objects.keySet());
+                
+                if (objectsDB.getCurrentAdded() > numToCommit){
+                    objectsDB.commit();
+                    objectsDB.resetCurrentAdded();
                 }
+
+                updateCache();
             }
-            
-            if (objectsDB.getCurrentAdded() > numToCommit){
-                objectsDB.commit();
-                objectsDB.resetCurrentAdded();
-            }
-            
-            updateCache();
         }
-        semaphore = false;
-        loadedObjectMutex.release();
     }
 
     /**
@@ -224,7 +208,7 @@ public class ObjectsCache {
      * the heap size.
      *
      * @return a boolean indicating whether the memory used by the application
-     * is lower than 99% of the heap
+     * is lower than 75% of the heap
      */
     private boolean memoryCheck() {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
@@ -279,38 +263,38 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException, InterruptedException {
-        if (!semaphore) loadedObjectMutex.acquire();
-        if (!readOnly) {
-            if (waitingHandler != null) {
-                waitingHandler.resetSecondaryProgressCounter();
-                waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
-            }
+        
+        synchronized(loadedObjectMutex){
             
-            ListIterator<Long> listIterator = objectQueue.listIterator();
-            PersistenceManager pm = objectsDB.getDB();
-            
-            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i){
+            if (!readOnly) {
                 if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
+                    waitingHandler.resetSecondaryProgressCounter();
+                    waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
+                }
+
+                ListIterator<Long> listIterator = objectQueue.listIterator();
+                PersistenceManager pm = objectsDB.getDB();
+
+                for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i){
+                    if (waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressCounter();
+                        if (waitingHandler.isRunCanceled()) {
+                            break;
+                        }
                     }
+                    long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
+
+                    Object obj = loadedObjects.get(key);
+                    if (!((IdObject)obj).jdoZooIsPersistent()){
+                        pm.makePersistent(obj);
+                        objectsDB.getIdMap().put(key, ((IdObject)obj).jdoZooGetOid());
+                    }
+
+                    if (clearEntries) loadedObjects.remove(key);
                 }
-                long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
-                
-                Object obj = loadedObjects.get(key);
-                if (!((IdObject)obj).getStoredInDB()){
-                    ((IdObject)obj).setStoredInDB(true);
-                    pm.makePersistent(obj);
-                    Long zooid = (Long)pm.getObjectId(obj);
-                    objectsDB.getIdMap().put(key, zooid);
-                }
-                
-                if (clearEntries) loadedObjects.remove(key);
+                objectsDB.commit();
             }
-            objectsDB.commit();
         }
-        if (!semaphore) loadedObjectMutex.release();
     }
     
 
@@ -324,13 +308,12 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     private void updateCache() throws IOException, SQLException, InterruptedException {
-        semaphore = true;
-        while (!memoryCheck()){
-            int toRemove = (int) (((double) loadedObjects.size()) * 0.25);
-            if (loadedObjects.size() <= keepObjectsThreshold || toRemove == 0) break;
+        while (loadedObjects.size() > keepObjectsThreshold && !memoryCheck()){
+            System.out.println("mem: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + " " + Runtime.getRuntime().maxMemory() + " " + loadedObjects.size());
+            int toRemove = loadedObjects.size() >> 2;
             saveObjects(toRemove, null, true);
+            System.gc();
         }
-        semaphore = false;
     }
     
     /**
@@ -377,8 +360,8 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException if the thread is interrupted
      */
     public void setReadOnly(boolean readOnly) throws InterruptedException {
-        loadedObjectMutex.acquire();
-        this.readOnly = readOnly;
-        loadedObjectMutex.release();
+        synchronized(loadedObjectMutex){
+            this.readOnly = readOnly;
+        }
     }
 }

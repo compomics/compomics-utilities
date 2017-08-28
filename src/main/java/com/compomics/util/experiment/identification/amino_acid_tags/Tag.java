@@ -11,8 +11,6 @@ import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -535,18 +533,8 @@ public class Tag extends ExperimentObject {
      * for the PTM to amino acid sequence mapping
      *
      * @return a list of potential modification sites
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(Modification ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<Integer> getPotentialModificationSites(Modification ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> possibleSites = new ArrayList<>();
@@ -585,7 +573,7 @@ public class Tag extends ExperimentObject {
             case modcaa_peptide:
             case modcaa_protein:
                 if (content.isEmpty()) {
-                    return new ArrayList<>();
+                    return new ArrayList<>(0);
                 }
                 TagComponent component = content.get(content.size() - 1);
                 if (component instanceof AminoAcidPattern) {
@@ -607,7 +595,7 @@ public class Tag extends ExperimentObject {
             case modnaa_peptide:
             case modnaa_protein:
                 if (content.isEmpty()) {
-                    return new ArrayList<>();
+                    return new ArrayList<>(0);
                 }
                 component = content.get(0);
                 if (component instanceof AminoAcidPattern) {

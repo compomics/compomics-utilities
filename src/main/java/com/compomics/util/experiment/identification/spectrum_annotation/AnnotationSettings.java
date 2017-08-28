@@ -8,10 +8,9 @@ import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,6 +139,7 @@ public class AnnotationSettings implements Serializable {
      * identification assumption.
      *
      * @param spectrumKey the key of the spectrum to annotate
+     * @param sequenceProvider a provider for the protein sequences
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
      * @param sequenceMatchingPreferences the sequence matching preferences for
@@ -149,24 +149,14 @@ public class AnnotationSettings implements Serializable {
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the ProteinTree
      */
-    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption,
-            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider,
+            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
 
         SpecificAnnotationSettings specificAnnotationPreferences = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
         if (neutralLossesAuto) {
-            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
+            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
         } else {
             NeutralLossesMap tempNeutralLossesMap = new NeutralLossesMap();
             for (NeutralLoss neutralLoss : getNeutralLosses()) {

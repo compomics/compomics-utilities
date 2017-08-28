@@ -18,7 +18,6 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,16 +74,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * to peptide mapping
      *
      * @return the expected possible neutral losses
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings)
-            throws IOException, InterruptedException, ClassNotFoundException {
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings) {
 
         ModificationFactory pTMFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -218,12 +209,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
-            Spectrum spectrum, Tag tag) throws InterruptedException, MathException {
+            Spectrum spectrum, Tag tag) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, true);
     }
 
@@ -241,12 +229,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a threading error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
-            Spectrum spectrum, Tag tag, boolean useIntensityFilter) throws InterruptedException, MathException {
+            Spectrum spectrum, Tag tag, boolean useIntensityFilter) {
 
         ArrayList<IonMatch> result = new ArrayList<>();
 
@@ -305,7 +290,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }
 }

@@ -1,6 +1,6 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.experiment.identification.modification.PtmScore;
 import java.io.Serializable;
 
 /**

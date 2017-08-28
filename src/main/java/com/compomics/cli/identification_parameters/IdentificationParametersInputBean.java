@@ -26,7 +26,7 @@ import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
-import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;

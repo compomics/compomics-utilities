@@ -1,6 +1,6 @@
 package com.compomics.util.gui.parameters;
 
-import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.FractionSettings;

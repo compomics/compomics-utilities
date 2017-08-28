@@ -10,7 +10,7 @@ public enum PsmScore {
     /**
      * The native score of the search engine.
      */
-    native_score(-1, "Native", false, "The algorithm native score"),
+    native_score(-1, "Native", false, "The algorithm native scor"),
     /**
      * The precursor accuracy.
      */
@@ -19,32 +19,11 @@ public enum PsmScore {
      * Hyperscore as variation of the score implemented in X!Tandem www.thegpm.org/tandem.
      * See com.compomics.util.experiment.identification.psm_scoring.psm_scores.HyperScore for details.
      */
-    hyperScore(1, "Hyperscore", true, "Hyperscore as variation of the score implemented in X!Tandem."),
+    hyperScore(1, "Hyperscore", true, "Hyperscore as variation of the score implemented in X!Tande."),
     /**
-     * The m/z fidelity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
+     * Signal to noise ratio score.
      */
-    ms2_mz_fidelity(2, "Fragment ion mz fildelity", false, "Fragment ion m/z fidelity score"),
-    /**
-     * The m/z fidelity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
-     */
-    aa_ms2_mz_fidelity(3, "AA fragment ion mz fildelity", false, "Fragment ion m/z fidelity score per amino acid"),
-    /**
-     * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
-     */
-    intensity(4, "Intensity", true, "Intensity score"),
-    /**
-     * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
-     */
-    aa_intensity(5, "AA intensity", false, "Intensity score per amino acid"),
-    /**
-     * The complementarity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
-     */
-    complementarity(6, "Complementarity", true, "Ion complementarity score");
+    snrScore(2, "snr", false, "Signal to noise ratio score");
 
     /**
      * The index of the score of interest.

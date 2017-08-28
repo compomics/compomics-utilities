@@ -19,6 +19,7 @@ import com.compomics.util.experiment.identification.matches.PeptideVariantMatche
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -45,7 +46,7 @@ import java.util.concurrent.Semaphore;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements PeptideMapper {
+public class FMIndex implements PeptideMapper, SequenceProvider {
 
     /**
      * Semaphore for caching.
@@ -4849,14 +4850,9 @@ public class FMIndex implements PeptideMapper {
         cacheMutex.release();
     }
     
-    /**
-     * Returns the sequence of the protein with the given accession as stored in the index.
-     * 
-     * @param accession the accession of the protein
-     * 
-     * @return the sequence of the protein
-     */
-    public String getProteinSequence(String accession) {
+    
+    @Override
+    public String getSequence(String proteinAccession) {
         
         throw new UnsupportedOperationException("Not implemented yet");
     }

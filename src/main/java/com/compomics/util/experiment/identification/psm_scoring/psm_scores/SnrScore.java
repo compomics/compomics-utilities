@@ -8,8 +8,8 @@ import com.compomics.util.experiment.identification.protein_sequences.AaOccurren
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.MathException;
@@ -52,13 +52,8 @@ public class SnrScore {
      * @param peptideSpectrumAnnotator the spectrum annotator to use
      *
      * @return the score of the match
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurs
-     * @throws org.apache.commons.math.MathException exception if an exception
-     * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) throws InterruptedException, MathException {
+    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
         ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, false);
         return getScore(peptide, spectrum, ionMatchesList);
     }
@@ -71,14 +66,9 @@ public class SnrScore {
      * @param ionMatchesList the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurs
-     * @throws org.apache.commons.math.MathException exception if an exception
-     * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, ArrayList<IonMatch> ionMatchesList) throws InterruptedException, MathException {
-        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<Double, ArrayList<IonMatch>>(ionMatchesList.size());
+    public double getScore(Peptide peptide, Spectrum spectrum, ArrayList<IonMatch> ionMatchesList) {
+        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
@@ -100,13 +90,8 @@ public class SnrScore {
      * indexed by mz
      *
      * @return the score of the match
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurs
-     * @throws org.apache.commons.math.MathException exception if an exception
-     * occurs when calculating logs
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) throws InterruptedException, MathException {
+    public double getScore(Peptide peptide, Spectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) {
 
         char[] sequence = peptide.getSequence().toCharArray();
         int sequenceLength = sequence.length;

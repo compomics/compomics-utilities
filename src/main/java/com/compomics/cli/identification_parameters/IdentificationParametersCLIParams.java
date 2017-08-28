@@ -2,7 +2,7 @@ package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
-import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.preferences.DigestionPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import org.apache.commons.cli.Options;

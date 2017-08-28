@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
@@ -19,13 +20,10 @@ import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
-import org.apache.commons.math.MathException;
 
 /**
  * The spectrum annotator annotates peaks in a spectrum.
@@ -403,13 +401,8 @@ public abstract class SpectrumAnnotator {
      * @param specificAnnotationSettings the specific annotation settings
      *
      * @return the currently matched ions with the given settings
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math
-     * exception occurred when estimating the noise level
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) throws InterruptedException, MathException {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
         return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
     }
 
@@ -422,13 +415,8 @@ public abstract class SpectrumAnnotator {
      * @param useIntensityFilter boolean indicating whether intensity filters should be used
      *
      * @return the currently matched ions with the given settings
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurred when estimating the noise level
-     * @throws org.apache.commons.math.MathException exception thrown if a math
-     * exception occurred when estimating the noise level
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) throws InterruptedException, MathException;
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter);
 
     /**
      * Returns the spectrum currently inspected.
@@ -597,27 +585,19 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
+     * @param sequenceProvider a sequence provide able to retrieve the protein sequence for the given peptide
      * @param sequenceMatchingPreferences the sequence matching settings for
      * peptide to protein mapping
      * @param ptmSequenceMatchingPreferences the sequence matching settings for
      * PTM to peptide mapping
      *
      * @return the expected possible neutral losses
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider, SequenceMatchingPreferences sequenceMatchingPreferences,
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
             return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), ptmSequenceMatchingPreferences);
@@ -724,11 +704,8 @@ public abstract class SpectrumAnnotator {
      * @param massTolerance the mass tolerance to use
      *
      * @return a list of all the ion matches
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
-    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) throws InterruptedException {
+    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
         ArrayList<IonMatch> result = new ArrayList<>(1);
         double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {

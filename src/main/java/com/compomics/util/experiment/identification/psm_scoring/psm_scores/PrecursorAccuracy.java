@@ -25,11 +25,8 @@ public class PrecursorAccuracy {
      * @param maxIsotope the maximal isotope
      *
      * @return the score of the match
-     *
-     * @throws java.lang.InterruptedException exception thrown if a thread is
-     * interrupted
      */
-    public double getScore(Peptide peptide, int identificationCharge, Precursor precursor, boolean ppm, int minIsotope, int maxIsotope) throws InterruptedException {
+    public double getScore(Peptide peptide, int identificationCharge, Precursor precursor, boolean ppm, int minIsotope, int maxIsotope) {
         IonMatch ionMatch = new IonMatch(new Peak(precursor.getMz(), 0), new PrecursorIon(peptide.getMass()), identificationCharge);
         return Math.abs(ionMatch.getError(ppm, minIsotope, maxIsotope));
     }

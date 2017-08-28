@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.ptm.ptmscores;
+package com.compomics.util.experiment.identification.modification.scores;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.proteins.Peptide;

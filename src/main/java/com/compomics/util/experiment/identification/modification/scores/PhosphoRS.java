@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.Modification.Modificationscores;
+package com.compomics.util.experiment.identification.modification.scores;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.Ion;
@@ -9,7 +9,6 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
@@ -17,6 +16,7 @@ import com.compomics.util.math.statistics.distributions.BinomialDistribution;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,25 +61,20 @@ public class PhosphoRS {
     private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
 
     /**
-     * Returns the PhosphoRS sequence probabilities for the Modification possible
+     * Returns the PhosphoRS sequence probabilities for the modification possible
      * locations. 1 is the first amino acid. The N-terminus is indexed 0 and the
-     * C-terminus with the peptide length+1. Note that Modifications found on peptides
-     * must be loaded in the Modification factory
-     * (com.compomics.util.experiment.biology.ModificationFactory), and if the scoring
-     * involves protein terminal Modifications, the protein sequences must be loaded in
-     * the sequence factory
-     * (com.compomics.util.experiment.identification.SequenceFactory) and
-     * indexed using the protein tree (see getDefaultProteinTree in
-     * SequenceFactory). Modifications of same mass should be scored together and given
-     * in the Modifications list. Neutral losses of mass equal to the mass of the Modification
+     * C-terminus with the peptide length+1.
+     * Modifications of same mass should be scored together and given
+     * in the modifications list. Neutral losses of mass equal to the mass of the modification
      * will be ignored. Neutral losses to be accounted for should be given in
      * the SpecificAnnotationSettings and will be ignored if
      * accountNeutralLosses is false.
      *
      * @param peptide the peptide of interest
-     * @param Modifications the Modifications to score, for instance different phosphorylations
-     * (the Modifications are considered as indistinguishable, i.e. of same mass)
+     * @param modifications the modifications to score, for instance different phosphorylations
+     * (the modifications are considered as indistinguishable, i.e. of same mass)
      * @param spectrum the corresponding spectrum
+     * @param sequenceProvider a provider for the protein sequences
      * @param annotationSettings the global annotation settings
      * @param specificAnnotationSettings the annotation settings specific to
      * this peptide and spectrum
@@ -87,19 +82,19 @@ public class PhosphoRS {
      * calculation shall account for neutral losses.
      * @param sequenceMatchingPreferences the sequence matching preferences for
      * peptide to protein mapping
-     * @param ModificationSequenceMatchingPreferences the sequence matching preferences
-     * for Modification to peptide mapping
+     * @param modificationSequenceMatchingPreferences the sequence matching preferences
+     * for modification to peptide mapping
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
      *
      * @return a map site &gt; phosphoRS site probability
      */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> Modifications, Spectrum spectrum, AnnotationSettings annotationSettings,
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> modifications, Spectrum spectrum, SequenceProvider sequenceProvider, AnnotationSettings annotationSettings,
             SpecificAnnotationSettings specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ModificationSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator) {
+            SequenceMatchingPreferences modificationSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator) {
 
-        if (Modifications.isEmpty()) {
-            throw new IllegalArgumentException("No Modification given for PhosphoRS calculation.");
+        if (modifications.isEmpty()) {
+            throw new IllegalArgumentException("No modification given for PhosphoRS calculation.");
         }
 
         if (spectrumAnnotator == null) {
@@ -110,8 +105,8 @@ public class PhosphoRS {
         if (peptide.isModified()) {
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                 if (modMatch.getVariable()) {
-                    for (Modification Modification : Modifications) {
-                        if (Modification.getName().equals(modMatch.getModification())) {
+                    for (Modification modification : modifications) {
+                        if (modification.getName().equals(modMatch.getModification())) {
                             nModification++;
                         }
                     }
@@ -119,10 +114,10 @@ public class PhosphoRS {
             }
         }
         if (nModification == 0) {
-            throw new IllegalArgumentException("Given Modifications not found in the peptide for PhosphoRS calculation.");
+            throw new IllegalArgumentException("Given modifications not found in the peptide for PhosphoRS calculation.");
         }
 
-        double ModificationMass = Modifications.get(0).getMass();
+        double modificationMass = modifications.get(0).getMass();
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationSettings.getNeutralLossesMap(),
                 scoringLossesMap = new NeutralLossesMap();
@@ -130,7 +125,7 @@ public class PhosphoRS {
             // here annotation are sequence and modification independant
             for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-                if (Math.abs(neutralLoss.getMass() - ModificationMass) > specificAnnotationSettings.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
+                if (Math.abs(neutralLoss.getMass() - modificationMass) > specificAnnotationSettings.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -149,18 +144,17 @@ public class PhosphoRS {
 
         int peptideLength = peptide.getSequence().length();
         HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
 
-        for (Modification Modification : Modifications) {
-            ModificationSwitch:
-            switch (Modification.getModificationType()) {
+        for (Modification modification : modifications) {
+            modificationSwitch:
+            switch (modification.getModificationType()) {
                 case modaa:
                      for (String accession : proteinMapping.keySet()) {
+                         String proteinSequence = sequenceProvider.getSequence(accession);
                          for (int index : proteinMapping.get(accession)) {
-                             String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
-                             possibleSitesSet.addAll(peptide.getPotentialModificationSites(Modification, proteinSequence, index, ModificationSequenceMatchingPreferences));
-                             if (Modification.getPattern().length() == 1) {
-                                 break ModificationSwitch;
+                             possibleSitesSet.addAll(peptide.getPotentialModificationSites(modification, proteinSequence, index, modificationSequenceMatchingPreferences));
+                             if (modification.getPattern().length() == 1) {
+                                 break modificationSwitch;
                              }
                          }
                      }
@@ -171,9 +165,9 @@ public class PhosphoRS {
                 case modnaa_protein:
                      for (String accession : proteinMapping.keySet()) {
                          for (int index : proteinMapping.get(accession)) {
-                             if (!peptide.getPotentialModificationSites(Modification, accession, index, ModificationSequenceMatchingPreferences).isEmpty()) {
+                             if (!peptide.getPotentialModificationSites(modification, accession, index, modificationSequenceMatchingPreferences).isEmpty()) {
                                  possibleSitesSet.add(0);
-                                 break ModificationSwitch;
+                                 break modificationSwitch;
                              }
                          }
                      }
@@ -184,10 +178,10 @@ public class PhosphoRS {
                 case modcaa_protein:
                      for (String accession : proteinMapping.keySet()) {
                          for (int index : proteinMapping.get(accession)) {
-                             String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
-                             if (!peptide.getPotentialModificationSites(Modification, proteinSequence, index, ModificationSequenceMatchingPreferences).isEmpty()) {
+                             String proteinSequence = sequenceProvider.getSequence(accession);
+                             if (!peptide.getPotentialModificationSites(modification, proteinSequence, index, modificationSequenceMatchingPreferences).isEmpty()) {
                                  possibleSitesSet.add(peptideLength + 1);
-                                 break ModificationSwitch;
+                                 break modificationSwitch;
                              }
                          }
                      }
@@ -203,7 +197,7 @@ public class PhosphoRS {
 
             spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings);
 
-            Peptide noModPeptide = Peptide.getNoModPeptide(peptide, Modifications);
+            Peptide noModPeptide = Peptide.getNoModPeptide(peptide, modifications);
             ArrayList<int[]> possibleProfiles = getPossibleModificationProfiles(possibleSites, nModification);
             ArrayList<String> possibleProfileKeys = new ArrayList<>(possibleProfiles.size());
             for (int[] profile : possibleProfiles) {
@@ -212,11 +206,11 @@ public class PhosphoRS {
                 profileToSitesMap.put(profileKey, profile);
             }
 
-            HashMap<String, Peptide> profileToPeptide = getPossiblePeptidesMap(peptide, Modifications, possibleProfiles);
+            HashMap<String, Peptide> profileToPeptide = getPossiblePeptidesMap(peptide, modifications, possibleProfiles);
             HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> profileToPossibleFragments = getPossiblePeptideFragments(profileToPeptide, scoringAnnotationSetttings);
             HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, profileToPossibleFragments, spectrumAnnotator, scoringAnnotationSetttings);
 
-            HashMap<Double, ArrayList<String>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, Modifications, spectrumAnnotator, scoringAnnotationSetttings);
+            HashMap<Double, ArrayList<String>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, modifications, spectrumAnnotator, scoringAnnotationSetttings);
             ArrayList<Double> siteDeterminingIons = new ArrayList<>(siteDeterminingIonsMap.keySet());
 
             double minMz = spectrum.getMinMz(), maxMz = spectrum.getMaxMz(), tempMax;
@@ -412,7 +406,7 @@ public class PhosphoRS {
             profileToScoreMap.put(profileKey, 100.0);
             profileToSitesMap.put(profileKey, possibleSites);
         } else {
-            throw new IllegalArgumentException("Found less potential modification sites than Modifications during PhosphoRS calculation. Peptide key: " + peptide.getKey());
+            throw new IllegalArgumentException("Found less potential modification sites than modifications during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
         HashMap<Integer, Double> scores = new HashMap<>();
@@ -432,7 +426,7 @@ public class PhosphoRS {
 
         for (int site : possibleSites) {
             if (!scores.keySet().contains(site)) {
-                throw new IllegalArgumentException("Site " + site + " not scored for modification " + ModificationMass + " in spectrum " + spectrum.getSpectrumTitle() + " of file " + spectrum.getFileName() + ".");
+                throw new IllegalArgumentException("Site " + site + " not scored for modification " + modificationMass + " in spectrum " + spectrum.getSpectrumTitle() + " of file " + spectrum.getFileName() + ".");
             }
         }
 
@@ -539,18 +533,18 @@ public class PhosphoRS {
      * profiles.
      *
      * @param peptide the peptide of interest
-     * @param Modifications the Modifications to score
+     * @param modifications the modifications to score
      * @param possibleProfiles the different profiles
      *
      * @return a map of the different peptides for the different profiles
      */
-    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<Modification> Modifications, ArrayList<int[]> possibleProfiles) {
+    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<Modification> modifications, ArrayList<int[]> possibleProfiles) {
 
-        String representativeModification = Modifications.get(0).getName();
+        String representativeModification = modifications.get(0).getName();
         HashMap<String, Peptide> result = new HashMap<>(possibleProfiles.size());
         int peptideLength = peptide.getSequence().length();
         for (int[] profile : possibleProfiles) {
-            Peptide tempPeptide = Peptide.getNoModPeptide(peptide, Modifications);
+            Peptide tempPeptide = Peptide.getNoModPeptide(peptide, modifications);
             for (int pos : profile) {
                 int index = pos;
                 if (index == 0) {
@@ -661,7 +655,7 @@ public class PhosphoRS {
      * @param noModPeptide the version of the peptide which does not contain the
      * modification of interest
      * @param possibleProfiles the possible modification profiles to inspect
-     * @param Modifications the Modifications scored
+     * @param modifications the modifications scored
      * @param spectrumAnnotator the spectrum annotator used throughout the
      * scoring
      * @param scoringAnnotationSetttings the annotation settings specific to
@@ -669,13 +663,13 @@ public class PhosphoRS {
      *
      * @return a map of all potential site determining ions indexed by their m/z
      */
-    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<int[]> possibleProfiles, ArrayList<Modification> Modifications, 
+    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<int[]> possibleProfiles, ArrayList<Modification> modifications, 
             PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         String sequence = noModPeptide.getSequence();
         Peptide peptide = new Peptide(sequence, noModPeptide.getModificationMatches());
         int sequenceLength = sequence.length();
-        String representativeModification = Modifications.get(0).getName();
+        String representativeModification = modifications.get(0).getName();
 
         HashMap<Double, ArrayList<String>> siteDeterminingIons = new HashMap<>();
         HashMap<Double, ArrayList<String>> commonIons = new HashMap<>();

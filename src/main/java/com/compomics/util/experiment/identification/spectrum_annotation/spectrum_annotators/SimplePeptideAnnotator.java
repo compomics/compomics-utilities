@@ -99,11 +99,8 @@ public class SimplePeptideAnnotator {
      * @param peptide the peptide to annotate
      * @param charge the charge of the peptide
      * @param annotationSettings the annotation preferences
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a thread is
-     * interrupted
      */
-    public SimplePeptideAnnotator(Peptide peptide, int charge, AnnotationSettings annotationSettings) throws InterruptedException {
+    public SimplePeptideAnnotator(Peptide peptide, int charge, AnnotationSettings annotationSettings) {
 
         boolean neutralLossesSequence = annotationSettings.areNeutralLossesSequenceAuto();
         ArrayList<NeutralLoss> neutralLosses = annotationSettings.getNeutralLosses();
@@ -191,12 +188,9 @@ public class SimplePeptideAnnotator {
      * @param neutralLosses boolean indicating whether fragment ions with neutral losses should be annotated
      * @param neutralLossesSequenceDependent  boolean indicating whether the neutral losses should be selected depending on the sequence
      * @param reporterIons the reporter ions to annotate
-     * 
-     * @throws java.lang.InterruptedException exception thrown if a thread is
-     * interrupted
      */
     public SimplePeptideAnnotator(Peptide peptide, int charge, boolean a, boolean b, boolean c, boolean x, boolean y, boolean z,
-            boolean precursor, boolean immonium, boolean related, boolean reporter, boolean neutralLosses, boolean neutralLossesSequenceDependent, ReporterIon[] reporterIons) throws InterruptedException {
+            boolean precursor, boolean immonium, boolean related, boolean reporter, boolean neutralLosses, boolean neutralLossesSequenceDependent, ReporterIon[] reporterIons) {
         
         if (a & x) {
             axFragmentAnnotator = new FragmentAnnotator(peptide, IonSeries.ax);

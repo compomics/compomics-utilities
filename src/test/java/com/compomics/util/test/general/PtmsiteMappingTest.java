@@ -1,6 +1,6 @@
 package com.compomics.util.test.general;
 
-import com.compomics.util.experiment.identification.ptm.PtmSiteMapping;
+import com.compomics.util.experiment.identification.modification.PtmSiteMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

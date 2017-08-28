@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.ptm;
+package com.compomics.util.experiment.identification.modification;
 
 import com.compomics.util.Util;
 import java.util.ArrayList;

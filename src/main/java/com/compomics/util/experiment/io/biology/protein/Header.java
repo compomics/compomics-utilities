@@ -74,62 +74,8 @@ public class Header implements Cloneable, Serializable {
      * type is set to unknown by default, and is set to the correct type during
      * the parsing of the header.
      */
-    private DatabaseType databaseType = DatabaseType.Unknown;
+    private ProteinDatabase databaseType = ProteinDatabase.Unknown;
 
-    /**
-     * A list of the database types. As there are no standard database names,
-     * this is only an internally consistent naming scheme included to be able
-     * to later separate the databases. For example when linking to the online
-     * version of the database. The links themselves are not included as these
-     * might change outside the control of the compomics-utilities library.
-     */
-    public enum DatabaseType {
-
-        UniProt("UniProtKB", "14681372"), EnsemblGenomes("Ensembl Genomes", "26578574"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"),
-        PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"),
-        M_Tuberculosis("TBDatabase (TBDB)", "18835847"), H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null),
-        C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null), Listeria("Listeria", null), GAFFA("GAFFA", null),
-        UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null), IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null),
-        NextProt("neXtProt", "22139911"), UniRef("UniRef", null), Unknown(null, null); // @TODO: add support for Ensembl headers?
-
-        /**
-         * The full name of the database.
-         */
-        String fullName;
-        /**
-         * The PubMed id of the database.
-         */
-        String pmid;
-
-        /**
-         * Constructor.
-         *
-         * @param fullName the full name
-         * @param pmid the PubMed ID.
-         */
-        private DatabaseType(String fullName, String pmid) {
-            this.fullName = fullName;
-            this.pmid = pmid;
-        }
-
-        /**
-         * Returns the full name of the database, null if not set.
-         *
-         * @return the full name of the database
-         */
-        public String getFullName() {
-            return fullName;
-        }
-
-        /**
-         * Returns the PubMed id of the database, null if not set.
-         *
-         * @return the PubMed id of the database
-         */
-        public String getPmid() {
-            return pmid;
-        }
-    }
     /**
      * The foreign accession String is an accession String in another database
      * of significance. Most notably used for SwissProt accessions that are kept
@@ -259,7 +205,7 @@ public class Header implements Cloneable, Serializable {
                         throw new IllegalArgumentException("Non-standard or false SwissProt header passed. "
                                 + "Expecting something like: '>sw|Pxxxx|ACTB_HUMAN xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
-                        result.databaseType = DatabaseType.UniProt;
+                        result.databaseType = ProteinDatabase.UniProt;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
 
@@ -304,7 +250,7 @@ public class Header implements Cloneable, Serializable {
                     // We expect to see either two or at least four or more tokens.
                     int tokenCount = lSt.countTokens();
                     if (tokenCount == 3) {
-                        result.databaseType = DatabaseType.NCBI;
+                        result.databaseType = ProteinDatabase.NCBI;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -323,7 +269,7 @@ public class Header implements Cloneable, Serializable {
                         throw new IllegalArgumentException("Non-standard or false NCBInr header passed. "
                                 + "Expecting something like: '>gi|xxxxx|xx|xxxxx|(x) xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
-                        result.databaseType = DatabaseType.NCBI;
+                        result.databaseType = ProteinDatabase.NCBI;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -360,7 +306,7 @@ public class Header implements Cloneable, Serializable {
                 } else if (aFASTAHeader.startsWith("IPI:") || aFASTAHeader.startsWith("ipi:") || aFASTAHeader.startsWith("IPI|") || aFASTAHeader.startsWith("ipi|")) {
                     // An IPI header looks like:
                     // >IPI:IPIxxxxxx.y|REFSEQ_XP:XP_aaaaa[|many more like this can be present] Tax_Id=9606 descr
-                    result.databaseType = DatabaseType.IPI;
+                    result.databaseType = ProteinDatabase.IPI;
                     result.iID = "IPI";
                     result.iAccession = aFASTAHeader.substring(4, aFASTAHeader.indexOf("|", 4));
                     // Check for the presence of a location.
@@ -381,7 +327,7 @@ public class Header implements Cloneable, Serializable {
                         //http://www.h-invitational.jp/
                         // A H-Invitation database entry looks like:
                         // >HIT000000001.10|HIX0021591.10|AB002292.2|NO|NO|HC|cds 185..4219|DH domain containing protein.
-                        result.databaseType = DatabaseType.H_Invitation;
+                        result.databaseType = ProteinDatabase.H_Invitation;
                         result.iID = "";
                         result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
                         // Check for the presence of a location.
@@ -417,7 +363,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.databaseType = DatabaseType.Halobacterium;
+                    result.databaseType = ProteinDatabase.Halobacterium;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -447,7 +393,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.databaseType = DatabaseType.H_Influenza;
+                    result.databaseType = ProteinDatabase.H_Influenza;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -477,7 +423,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.databaseType = DatabaseType.C_Trachomatis;
+                    result.databaseType = ProteinDatabase.C_Trachomatis;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -503,7 +449,7 @@ public class Header implements Cloneable, Serializable {
                         throw new IllegalArgumentException("Non-standard M tuberculosis header passed. "
                                 + "Expecting something like '>M. tub.xxx|Rvxxx| xxx xxx', but was '" + aFASTAHeader + "'!");
                     }
-                    result.databaseType = DatabaseType.M_Tuberculosis;
+                    result.databaseType = ProteinDatabase.M_Tuberculosis;
                     result.iID = aFASTAHeader.substring(0, accessionStartLoc - 1);
                     result.iAccession = aFASTAHeader.substring(accessionStartLoc, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -525,7 +471,7 @@ public class Header implements Cloneable, Serializable {
                     //     up to (and NOT including) " pep:"
                     //   - the description (everything (trimmed) starting from (and including) the " pep:".
                     int pepLoc = aFASTAHeader.indexOf(" pep:");
-                    result.databaseType = DatabaseType.Drosophile;
+                    result.databaseType = ProteinDatabase.Drosophile;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, pepLoc).trim();
                     String possibleDescriptionPrefix = "";
@@ -562,7 +508,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.databaseType = DatabaseType.SGD;
+                    result.databaseType = ProteinDatabase.SGD;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -582,7 +528,7 @@ public class Header implements Cloneable, Serializable {
                     // try to parse as a generic header with splitters
                     // should look something like this: 
                     // >generic_some_tag|proten_accession|a description for this protein
-                    result.databaseType = DatabaseType.Generic_Split_Header;
+                    result.databaseType = ProteinDatabase.Generic_Split_Header;
                     result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
 
                     String subHeader = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
@@ -603,7 +549,7 @@ public class Header implements Cloneable, Serializable {
                     int start = aFASTAHeader.indexOf(" (");
                     int end = aFASTAHeader.indexOf(") ");
                     result.iAccession = aFASTAHeader.substring(start + 2, end);
-                    result.databaseType = DatabaseType.UniProt;
+                    result.databaseType = ProteinDatabase.UniProt;
                     result.iID = "sw"; // @TODO: remove hardcoding?
                     result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end + 2);
 
@@ -628,7 +574,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.databaseType = DatabaseType.UniProt;
+                    result.databaseType = ProteinDatabase.UniProt;
                     result.iID = "sp";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
 
@@ -654,7 +600,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.databaseType = DatabaseType.UniProt;
+                    result.databaseType = ProteinDatabase.UniProt;
                     result.iID = "tr";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
 
@@ -678,7 +624,7 @@ public class Header implements Cloneable, Serializable {
                             result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                             result.iAccession = result.iAccession.substring(0, openBracket).trim();
                         }
-                        result.databaseType = DatabaseType.EnsemblGenomes;
+                        result.databaseType = ProteinDatabase.EnsemblGenomes;
                         result.iID = "en";
                         result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
 
@@ -688,7 +634,7 @@ public class Header implements Cloneable, Serializable {
                 } else if (aFASTAHeader.startsWith("nxp|NX_") && aFASTAHeader.split("\\|").length == 5) { // @TODO: replace by regular expression?
                     // header should look like this:
                     // >nxp|NX_P02768-1|ALB|Serum albumin|Iso 1
-                    result.databaseType = DatabaseType.NextProt;
+                    result.databaseType = ProteinDatabase.NextProt;
                     result.iID = "nxp";
 
                     String[] headerElements = aFASTAHeader.split("\\|");
@@ -701,7 +647,7 @@ public class Header implements Cloneable, Serializable {
 
                     // header should look like this:
                     // >UniRef100_U3PVA8 Protein IroK n=22 Tax=Escherichia coli RepID=IROK_ECOL
-                    result.databaseType = DatabaseType.UniRef;
+                    result.databaseType = ProteinDatabase.UniRef;
                     result.iID = ""; // @TODO: could be UniRef or UniRef100 etc?
 
                     result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf(" "));
@@ -720,7 +666,7 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(aFASTAHeader.substring(openBracket, aFASTAHeader.indexOf(" ", openBracket)).trim());
                         result.iEnd = Integer.parseInt(aFASTAHeader.substring(aFASTAHeader.indexOf(" ", openBracket), aFASTAHeader.indexOf(")")).trim());
                     }
-                    result.databaseType = DatabaseType.UniProt;
+                    result.databaseType = ProteinDatabase.UniProt;
                     result.iID = "sw"; // @TODO: remove hardcoding?
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
 
@@ -736,7 +682,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.databaseType = DatabaseType.Flybase;
+                    result.databaseType = ProteinDatabase.Flybase;
                     result.iID = "";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("type="));
                 } else if (aFASTAHeader.matches(".* [.]*\\[[\\d]+[ ]?\\-[ ]?[\\d]+\\].*")) {
@@ -753,7 +699,7 @@ public class Header implements Cloneable, Serializable {
                         throw new IllegalArgumentException("Incorrect genome to protein sequence header. "
                                 + "Expected something like '>dm345_3L-sense (something) [234353-234359] (something)', but found '" + aFASTAHeader + "'!");
                     }
-                    result.databaseType = DatabaseType.GenomeTranslation;
+                    result.databaseType = ProteinDatabase.GenomeTranslation;
                     result.iID = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
 
@@ -781,7 +727,7 @@ public class Header implements Cloneable, Serializable {
                     //
                     // ex: >AT1G08520.1 | Symbol: PDE166 | magnesium-chelatase subunit chlD, chloroplast, putative / Mg-protoporphyrin IX chelatase, putative (CHLD), similar to Mg-chelatase SP:O24133 from Nicotiana tabacum, GB:AF014399 GI:2318116 from (Pisum sativum) | chr1:2696415-2700961 FORWARD | Aliases: T27G7.20, T27G7_20, PDE166, PIGMENT DEFECTIVE 166
                     int firstPipeLoc = aFASTAHeader.indexOf("|");
-                    result.databaseType = DatabaseType.Arabidopsis_thaliana_TAIR;
+                    result.databaseType = ProteinDatabase.Arabidopsis_thaliana_TAIR;
                     result.iAccession = aFASTAHeader.substring(0, firstPipeLoc).trim();
                     result.iID = "";
                     int secondPipeLoc = aFASTAHeader.indexOf("|", firstPipeLoc + 1);
@@ -814,7 +760,7 @@ public class Header implements Cloneable, Serializable {
                     if (aFASTAHeader.length() > tempLoc && aFASTAHeader.charAt(tempLoc) == ')') {
                         closeBracketLoc = tempLoc;
                     }
-                    result.databaseType = DatabaseType.PSB_Arabidopsis_thaliana;
+                    result.databaseType = ProteinDatabase.PSB_Arabidopsis_thaliana;
                     result.iAccession = aFASTAHeader.substring(openBracketLoc + 1, closeBracketLoc).trim();
                     result.iID = aFASTAHeader.substring(0, openBracketLoc).trim();
                     result.iDescription = aFASTAHeader.substring(closeBracketLoc + 1).trim();
@@ -839,7 +785,7 @@ public class Header implements Cloneable, Serializable {
                     // ex: L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)
                     int firstPipe = aFASTAHeader.indexOf("|");
                     int secondPipe = aFASTAHeader.indexOf("|", firstPipe + 1);
-                    result.databaseType = DatabaseType.Listeria;
+                    result.databaseType = ProteinDatabase.Listeria;
                     result.iID = aFASTAHeader.substring(0, firstPipe).trim();
                     result.iAccession = aFASTAHeader.substring(firstPipe + 1, secondPipe).trim();
                     result.iDescription = aFASTAHeader.substring(secondPipe + 1).trim();
@@ -861,7 +807,7 @@ public class Header implements Cloneable, Serializable {
                     // >GAFFA|"accession"|"species"/unknown
                     // Example:
                     //  >GAFFA|cgb_GMPQSG401A00X3_1_cgb_pilot_F1_1|unknown
-                    result.databaseType = DatabaseType.GAFFA;
+                    result.databaseType = ProteinDatabase.GAFFA;
                     try {
                         result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
                         result.iDescription = aFASTAHeader.substring(aFASTAHeader.lastIndexOf("|") + 1);
@@ -882,7 +828,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.databaseType = DatabaseType.UPS;
+                    result.databaseType = ProteinDatabase.UPS;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -906,7 +852,7 @@ public class Header implements Cloneable, Serializable {
                     // We need to find two elements:
                     //   - the accession String (easily retrieved as the next String until a space is encountered).
                     //   - the description
-                    result.databaseType = DatabaseType.Generic_Header;
+                    result.databaseType = ProteinDatabase.Generic_Header;
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
 
                     // Temporary storage variables.
@@ -1073,7 +1019,7 @@ public class Header implements Cloneable, Serializable {
      * 
      * @return the database type
      */
-    public DatabaseType getDatabaseType() {
+    public ProteinDatabase getDatabaseType() {
         return databaseType;
     }
 
@@ -1082,7 +1028,7 @@ public class Header implements Cloneable, Serializable {
      * 
      * @param aDatabaseType the database type
      */
-    public void setDatabaseType(DatabaseType aDatabaseType) {
+    public void setDatabaseType(ProteinDatabase aDatabaseType) {
         databaseType = aDatabaseType;
     }
 
@@ -1276,7 +1222,7 @@ public class Header implements Cloneable, Serializable {
      * @return a simplified protein description for a UniProt header
      */
     public String getSimpleProteinDescription() {
-        if (databaseType == DatabaseType.UniProt) {
+        if (databaseType == ProteinDatabase.UniProt) {
 
             // get the default simple header
             return  iDescriptionShort + " (" + iDescriptionProteinName + ")";
@@ -1316,20 +1262,20 @@ public class Header implements Cloneable, Serializable {
 
         StringBuffer result = new StringBuffer(">" + this.getCoreHeader() + decoyTag);
 
-        if (this.iID == null || this.databaseType == DatabaseType.Unknown) {
+        if (this.iID == null || this.databaseType == ProteinDatabase.Unknown) {
             // Apparently we have not been able to identify and parse this header.
             // In that case, the core header already contains everything, so don't do anything.
         } else {
             // Some more appending to be done here.
             if (!this.iID.equals("")) {
-                if (this.databaseType == DatabaseType.UniProt
-                        || this.databaseType == DatabaseType.IPI
-                        || this.databaseType == DatabaseType.Listeria
-                        || this.databaseType == DatabaseType.NextProt
-                        || this.databaseType == DatabaseType.EnsemblGenomes) {
+                if (this.databaseType == ProteinDatabase.UniProt
+                        || this.databaseType == ProteinDatabase.IPI
+                        || this.databaseType == ProteinDatabase.Listeria
+                        || this.databaseType == ProteinDatabase.NextProt
+                        || this.databaseType == ProteinDatabase.EnsemblGenomes) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|").append(this.iDescription);
-                } else if (this.databaseType == DatabaseType.NCBI) {
+                } else if (this.databaseType == ProteinDatabase.NCBI) {
                     // NCBI entry.
                     result.append("|");
                     // See if we have a foreign ID.
@@ -1342,18 +1288,18 @@ public class Header implements Cloneable, Serializable {
                     }
                     // Add the Description.
                     result.append(" ").append(this.iDescription);
-                } else if (this.databaseType == DatabaseType.M_Tuberculosis) {
+                } else if (this.databaseType == ProteinDatabase.M_Tuberculosis) {
                     // Mycobacterium tuberculosis entry.
                     result.append("|").append(this.iDescription);
-                } else if (this.databaseType == DatabaseType.GenomeTranslation) {
+                } else if (this.databaseType == ProteinDatabase.GenomeTranslation) {
                     // Genome to protein sequnece translation.
                     result = new StringBuffer(">" + this.iAccession + decoyTag + " " + this.iDescription);
-                } else if (this.databaseType == DatabaseType.PSB_Arabidopsis_thaliana) {
+                } else if (this.databaseType == ProteinDatabase.PSB_Arabidopsis_thaliana) {
                     // Proprietary PSB A. thaliana entry
                     result.append(" ").append(this.iDescription);
                 }
             } else {
-                if (this.databaseType == DatabaseType.H_Invitation) {
+                if (this.databaseType == ProteinDatabase.H_Invitation) {
                     result.append("|").append(this.iDescription);
                 } else {
                     // Just add a space and the description.
@@ -1386,7 +1332,7 @@ public class Header implements Cloneable, Serializable {
 
         String result;
 
-        if (databaseType == DatabaseType.Generic_Split_Header) {
+        if (databaseType == ProteinDatabase.Generic_Split_Header) {
             result = ">" + this.iID + decoyTag + "|" + this.iAccession + "|" + this.iDescription;
         } else {
             if (this.iID == null) {
@@ -1630,7 +1576,7 @@ public class Header implements Cloneable, Serializable {
      * @return the implemented database types as an array of String
      */
     public static String[] getDatabaseTypesAsString() {
-        DatabaseType[] enumValues = DatabaseType.values();
+        ProteinDatabase[] enumValues = ProteinDatabase.values();
         String[] result = new String[enumValues.length];
         for (int i = 0; i < enumValues.length; i++) {
             result[i] = getDatabaseTypeAsString(enumValues[i]);
@@ -1644,7 +1590,7 @@ public class Header implements Cloneable, Serializable {
      * @param databaseType the database type
      * @return the name
      */
-    public static String getDatabaseTypeAsString(DatabaseType databaseType) {
+    public static String getDatabaseTypeAsString(ProteinDatabase databaseType) {
 
         switch (databaseType) {
             case UniProt:

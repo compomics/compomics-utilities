@@ -16,7 +16,6 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import com.compomics.util.gui.modification.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
@@ -53,10 +52,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * A simple progress dialog.
      */
     private static ProgressDialogX progressDialog;
-    /**
-     * The sequence factory.
-     */
-    private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
      * The enzyme factory.
      */
@@ -2128,20 +2123,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     progressDialog.setTitle("Importing Database. Please Wait...");
                     progressDialog.setPrimaryProgressCounterIndeterminate(false);
                     sequenceFactory.loadFastaFile(finalFile, progressDialog);
-                } catch (IOException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SearchSettingsDialog.this,
-                            new String[]{"FASTA Import Error.", "File " + finalFile.getAbsolutePath() + " not found."},
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                } catch (ClassNotFoundException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SearchSettingsDialog.this,
-                            new String[]{"FASTA Import Error.", "File index of " + finalFile.getName() + " could not be imported. Please contact the developers."},
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
                 } catch (StringIndexOutOfBoundsException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SearchSettingsDialog.this,

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.io.biology.protein;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.io.biology.protein.Header.DatabaseType;
+import com.compomics.util.experiment.io.biology.protein.Header.ProteinDatabase;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -46,11 +46,11 @@ public class FastaIndex extends ExperimentObject implements Serializable {
     /**
      * The main database type.
      */
-    private DatabaseType mainDatabaseType = DatabaseType.Unknown;
+    private ProteinDatabase mainDatabaseType = ProteinDatabase.Unknown;
     /**
      * A map of all the database types and how often they occur.
      */
-    private HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<>();
+    private HashMap<ProteinDatabase, Integer> databaseTypes = new HashMap<>();
     /**
      * The version of the database.
      */
@@ -103,7 +103,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
      */
     public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name,
             boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified,
-            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, 
+            ProteinDatabase mainDatabaseType, HashMap<Header.ProteinDatabase, Integer> databaseTypes, String decoyTag, 
             String version, HashMap<String, Integer> speciesOccurrence, int[] aaOccurrence) {
         this.indexes = indexes;
         this.decoyAccessions = decoyAccessions;
@@ -214,7 +214,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
      *
      * @return the main database type.
      */
-    public DatabaseType getMainDatabaseType() {
+    public ProteinDatabase getMainDatabaseType() {
         return mainDatabaseType;
     }
 
@@ -223,7 +223,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
      *
      * @param mainDatabaseType the main database type
      */
-    public void setMainDatabaseType(DatabaseType mainDatabaseType) {
+    public void setMainDatabaseType(ProteinDatabase mainDatabaseType) {
         this.mainDatabaseType = mainDatabaseType;
     }
 
@@ -232,7 +232,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
      *
      * @return the map of the database types
      */
-    public HashMap<Header.DatabaseType, Integer> getDatabaseTypes() {
+    public HashMap<Header.ProteinDatabase, Integer> getDatabaseTypes() {
         return databaseTypes;
     }
 
@@ -241,7 +241,7 @@ public class FastaIndex extends ExperimentObject implements Serializable {
      *
      * @param databaseTypes the database types
      */
-    public void setDatabaseTypes(HashMap<Header.DatabaseType, Integer> databaseTypes) {
+    public void setDatabaseTypes(HashMap<Header.ProteinDatabase, Integer> databaseTypes) {
         this.databaseTypes = databaseTypes;
     }
 

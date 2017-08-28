@@ -20,7 +20,6 @@ import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
 import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -158,15 +157,13 @@ public class SpectrumFactory {
      *
      * @param spectrumFile The spectrum file, can be mgf or mzML
      *
-     * @throws FileNotFoundException Exception thrown whenever the file was not
-     * found
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the file
      * @throws ClassNotFoundException Exception thrown whenever an error
      * occurred while deserializing the index .cui file.
      *
      */
-    public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void addSpectra(File spectrumFile) throws IOException, ClassNotFoundException {
         addSpectra(spectrumFile, null);
     }
 
@@ -176,14 +173,10 @@ public class SpectrumFactory {
      * @param spectrumFile the spectrum file, can be mgf or mzML
      * @param waitingHandler the waiting handler
      *
-     * @throws FileNotFoundException Exception thrown whenever the file was not
-     * found
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the file
-     * @throws IllegalArgumentException Exception thrown if an unknown format
-     * was detected.
      */
-    public void addSpectra(File spectrumFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, IllegalArgumentException {
+    public void addSpectra(File spectrumFile, WaitingHandler waitingHandler) throws IOException {
 
         String fileName = spectrumFile.getName();
         filesMap.put(fileName, spectrumFile);
@@ -266,7 +259,7 @@ public class SpectrumFactory {
      * @throws MzMLUnmarshallerException exception thrown whenever the file was
      * not parsed correctly
      */
-    public Precursor getPrecursor(String fileName, String spectrumTitle) throws IOException, MzMLUnmarshallerException {
+    public Precursor getPrecursor(String fileName, String spectrumTitle) throws IOException {
         return getPrecursor(fileName, spectrumTitle, true);
     }
 
@@ -281,10 +274,8 @@ public class SpectrumFactory {
      *
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) throws IOException, MzMLUnmarshallerException {
+    public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) throws IOException {
         HashMap<String, Spectrum> fileSpectrumMap = currentSpectrumMap.get(fileName);
         if (fileSpectrumMap != null) {
             Spectrum spectrum = fileSpectrumMap.get(spectrumTitle);
@@ -310,10 +301,8 @@ public class SpectrumFactory {
      * @return the corresponding precursor
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException {
+    public Precursor getPrecursor(String spectrumKey) throws IOException {
         return getPrecursor(spectrumKey, true);
     }
 
@@ -326,10 +315,8 @@ public class SpectrumFactory {
      *
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public double getPrecursorMz(String spectrumKey) throws IOException, MzMLUnmarshallerException {
+    public double getPrecursorMz(String spectrumKey) throws IOException {
 
         // get the spectrum title and file name
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
@@ -552,12 +539,8 @@ public class SpectrumFactory {
      * @return the corresponding precursor
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
-     * @throws IllegalArgumentException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public Precursor getPrecursor(String spectrumKey, boolean save) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    public Precursor getPrecursor(String spectrumKey, boolean save) throws IOException {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
         return getPrecursor(fileName, spectrumTitle, save);
@@ -617,12 +600,8 @@ public class SpectrumFactory {
      *
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
-     * @throws IllegalArgumentException exception thrown whenever the file was
-     * not parsed correctly
      */
-    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, long waitingTime) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, long waitingTime) throws IOException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -751,10 +730,8 @@ public class SpectrumFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
-     * @throws MzMLUnmarshallerException exception thrown whenever an error
-     * occurred while parsing the mzML file
      */
-    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException, MzMLUnmarshallerException {
+    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException {
         HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
         if (fileMap != null) {
             Spectrum currentSpectrum = fileMap.get(spectrumTitle);
@@ -772,12 +749,8 @@ public class SpectrumFactory {
      * @return the desired spectrum
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while parsing the file
-     * @throws MzMLUnmarshallerException exception thrown whenever an error
-     * occurred while parsing the file
      */
-    public Spectrum getSpectrum(String spectrumKey) throws IOException, MzMLUnmarshallerException {
+    public Spectrum getSpectrum(String spectrumKey) throws IOException {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
         return getSpectrum(fileName, spectrumTitle);
@@ -798,12 +771,8 @@ public class SpectrumFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while parsing the file
-     * @throws MzMLUnmarshallerException exception thrown whenever an error
-     * occurred while parsing the file
      */
-    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, MzMLUnmarshallerException {
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -960,15 +929,15 @@ public class SpectrumFactory {
      * Deserializes the index of an mgf file.
      *
      * @param mgfIndex the mgf index cui file
+     * 
      * @return the corresponding mgf index object
-     * @throws FileNotFoundException exception thrown whenever the file was not
-     * found
+     * 
      * @throws IOException exception thrown whenever an error was encountered
      * while reading the file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the object
      */
-    public MgfIndex getIndex(File mgfIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public MgfIndex getIndex(File mgfIndex) throws IOException, ClassNotFoundException {
         return (MgfIndex) SerializationUtils.readObject(mgfIndex);
     }
 
@@ -1055,6 +1024,7 @@ public class SpectrumFactory {
      *
      * @param spectrumTitle the spectrum title
      * @param fileName the spectrum file name
+     * 
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
@@ -1120,10 +1090,8 @@ public class SpectrumFactory {
      *
      * @throws java.io.IOException Exception thrown whenever an error occurs
      * while reading a precursor
-     * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown
-     * whenever an error occurs while reading an mzML file
      */
-    public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException, MzMLUnmarshallerException {
+    public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException {
         HashMap<String, Precursor> precursorMap = new HashMap<>(getNSpectra(fileName));
         for (String spectrumtitle : getSpectrumTitles(fileName)) {
             Precursor precursor = getPrecursor(fileName, spectrumtitle);

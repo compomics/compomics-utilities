@@ -2,12 +2,10 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
@@ -19,9 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.stream.Collectors;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -282,12 +277,11 @@ public class PeptideAssumptionFilter implements Serializable {
      * filter
      *
      * @throws IOException if an error occurs while reading the spectrum
-     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
-     * reading while the spectrum
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException, InterruptedException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, InterruptedException {
+        
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {

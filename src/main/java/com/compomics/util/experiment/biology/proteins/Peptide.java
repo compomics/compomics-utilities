@@ -8,7 +8,6 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPatter
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
@@ -1570,21 +1569,6 @@ public class Peptide extends ExperimentObject {
      */
     public static AminoAcidSequence getSequenceAsAminoAcidSequence(String sequence) {
         return new AminoAcidSequence(sequence);
-    }
-
-    /**
-     * Indicates whether a peptide can be derived from a decoy protein.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return whether a peptide can be derived from a decoy protein
-     */
-    public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return proteinMapping.keySet().stream().anyMatch(accession -> SequenceFactory.getInstance().isDecoyAccession(accession));
     }
 
     /**

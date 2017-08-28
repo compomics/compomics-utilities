@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -190,21 +189,6 @@ public class ProteinMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
         
         return peptideMatchesKeys.size();
-    }
-
-    /**
-     * Method indicates if the protein match is a decoy one.
-     *
-     * @return boolean indicating if the protein match is a decoy one
-     */
-    public boolean isDecoy() {
-        
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        
-        return accessions.stream()
-                .anyMatch(accession -> SequenceFactory.getInstance().isDecoyAccession(accession));
     }
 
     @Override

@@ -12,6 +12,7 @@
  */
 package com.compomics.util.protein;
 
+import com.compomics.util.experiment.io.biology.protein.Header;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 

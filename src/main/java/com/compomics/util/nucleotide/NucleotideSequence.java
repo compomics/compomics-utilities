@@ -13,7 +13,7 @@
 package com.compomics.util.nucleotide;
 import org.apache.log4j.Logger;
 
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Protein;
 

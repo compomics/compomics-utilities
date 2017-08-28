@@ -55,15 +55,7 @@ public class PeptideMapperCLI {
         PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
         System.err.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
-        File sequences = new File(args[1]);
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        try {
-            sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
-        } catch (Exception e) {
-            System.err.println("Error: cound not open FASTA file");
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        File fastaFile = new File(args[1]);
 
         SearchParameters searchParameters = null;
         PeptideVariantsPreferences peptideVariantsPreferences = null;

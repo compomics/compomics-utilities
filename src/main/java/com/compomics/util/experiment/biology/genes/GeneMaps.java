@@ -2,7 +2,7 @@ package com.compomics.util.experiment.biology.genes;
 
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -196,24 +196,6 @@ public class GeneMaps implements Serializable {
      */
     public void setGoNamesMap(HashMap<String, String> goNamesMap) {
         this.goNamesMap = goNamesMap;
-    }
-
-    /**
-     * Returns the gene name for a given protein accession. The protein must be
-     * from a Uniprot fasta file loaded in the SequenceFactory.
-     *
-     * @param accession the protein accession
-     *
-     * @return the gene name
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the fasta file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
-     */
-    public String getGeneNameForProtein(String accession) throws IOException, InterruptedException {
-        Header header = SequenceFactory.getInstance().getHeader(accession);
-        return header.getGeneName();
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.biology.proteins.Protein;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.variants.amino_acids.*;
@@ -20,9 +18,12 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
+import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
+import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -493,6 +494,7 @@ public class FMIndex implements PeptideMapper {
      * Constructor. If PTM settings are provided the index will contain
      * modification information, ignored if null.
      *
+     * @param fastaFile the fasta file to index
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param peptideVariantsPreferences contains all parameters for variants
@@ -501,16 +503,17 @@ public class FMIndex implements PeptideMapper {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsPreferences peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
+    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsPreferences peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
         massTolerance = searchParameters.getFragmentIonAccuracy();
         massAccuracyType = searchParameters.getFragmentAccuracyType();
-        init(waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
+        init(fastaFile, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
     }
 
     /**
      * Constructor. If PTM settings are provided the index will contain
      * modification information, ignored if null.
      *
+     * @param fastaFile the fasta file to index
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param ptmSettings contains modification parameters for identification
@@ -519,8 +522,8 @@ public class FMIndex implements PeptideMapper {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
-        init(waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
+    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
+        init(fastaFile, waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
     }
 
     /**
@@ -528,6 +531,7 @@ public class FMIndex implements PeptideMapper {
      * provided the index will contain modification information, ignored if
      * null.
      *
+     * @param fastaFile the fasta file to index
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param ptmSettings contains modification parameters for identification
@@ -537,7 +541,7 @@ public class FMIndex implements PeptideMapper {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    private void init(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
+    private void init(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -971,8 +975,6 @@ public class FMIndex implements PeptideMapper {
         }
         numMasses = aaMassVector.size() + 1; // +1 because of X
 
-        SequenceFactory sf = SequenceFactory.getInstance();
-
         // Prepare alphabet
         char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
         System.arraycopy(AminoAcid.getAminoAcids(), 0, sortedAas, 0, AminoAcid.getAminoAcids().length);
@@ -991,13 +993,13 @@ public class FMIndex implements PeptideMapper {
 
         int indexStringLength = 1;
         int numProteins = 0;
-        ProteinIterator pi = sf.getProteinIterator(false);
-        while (pi.hasNext()) {
+        ProteinIterator pi = new FastaIterator(fastaFile);
+        Protein protein;
+        while ((protein = pi.getNextProtein()) != null) {
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return;
             }
-            Protein currentProtein = pi.getNextProtein();
-            int proteinLen = currentProtein.getLength();
+            int proteinLen = protein.getLength();
             indexStringLength += proteinLen;
             ++numProteins;
             if (indexStringLength > ticker) {
@@ -1018,7 +1020,7 @@ public class FMIndex implements PeptideMapper {
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        pi = sf.getProteinIterator(false);
+        pi = pi = new FastaIterator(fastaFile);
         for (int i = 0; i < tmpLengths.size(); ++i) {
             addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, waitingHandler, displayProgress);
         }
@@ -1091,10 +1093,10 @@ public class FMIndex implements PeptideMapper {
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return;
             }
-            if (!pi.hasNext()) {
+            Protein currentProtein = pi.getNextProtein();
+            if (currentProtein == null) {
                 throw new IllegalArgumentException("More sequences from database requested than contained.");
             }
-            Protein currentProtein = pi.getNextProtein();
             int proteinLen = currentProtein.getLength();
             T[tmpN++] = '/'; // adding the delimiters
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
@@ -4845,5 +4847,17 @@ public class FMIndex implements PeptideMapper {
             cache[indexPart].put(key, cacheElement);
         }
         cacheMutex.release();
+    }
+    
+    /**
+     * Returns the sequence of the protein with the given accession as stored in the index.
+     * 
+     * @param accession the accession of the protein
+     * 
+     * @return the sequence of the protein
+     */
+    public String getProteinSequence(String accession) {
+        
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

@@ -14,7 +14,7 @@ package com.compomics.util.test.protein;
 
 import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import junit.framework.Assert;
 import junit.framework.TestCase;

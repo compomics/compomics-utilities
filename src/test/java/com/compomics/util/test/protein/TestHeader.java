@@ -12,7 +12,7 @@
  */
 package com.compomics.util.test.protein;
 
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  * This class implements all test scenarios for the Header class.
  *
  * @author Lennart Martens
- * @see com.compomics.util.protein.Header
+ * @see com.compomics.util.experiment.io.biology.protein.Header
  */
 public class TestHeader extends TestCase {
 

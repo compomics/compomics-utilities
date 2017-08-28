@@ -10,9 +10,8 @@
  * Date: 7-okt-02
  * Time: 13:43:28
  */
-package com.compomics.util.protein;
+package com.compomics.util.experiment.io.biology.protein;
 
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import java.io.Serializable;
 import org.apache.log4j.Logger;
 
@@ -1280,14 +1279,8 @@ public class Header implements Cloneable, Serializable {
         if (databaseType == DatabaseType.UniProt) {
 
             // get the default simple header
-            String temp = iDescriptionShort + " (" + iDescriptionProteinName + ")";
+            return  iDescriptionShort + " (" + iDescriptionProteinName + ")";
 
-            // see if we need to add a decoy flag
-            if (SequenceFactory.getInstance().isDecoyAccession(iAccession)) {
-                temp = SequenceFactory.getDefaultDecoyDescription(temp);
-            }
-
-            return temp;
         } else if (iDescription != null) {
             return iDescription;
         } else {

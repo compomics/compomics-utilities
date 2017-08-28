@@ -23,7 +23,7 @@ import com.compomics.util.io.PklFile;
 import com.compomics.util.io.filefilters.PdfFileFilter;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Enzyme;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import java.awt.Color;
 import java.awt.Component;

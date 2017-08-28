@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -114,20 +115,54 @@ public class Util {
      * Removes characters from a string.
      *
      * @param string the string of interest
+     * @param forbiddenCharacter the character to remove
+     *
+     * @return a version without forbidden characters
+     */
+    public static String removeCharacters(String string, char forbiddenCharacter) {
+        
+        StringBuilder sb = new StringBuilder(string.length());
+        
+        char[] stringChars = string.toCharArray();
+        
+        for (int i = 0 ; i < stringChars.length ; i++) {
+            
+            char charAtI = stringChars[i];
+            
+            if (charAtI == forbiddenCharacter) {
+                
+                continue;
+                
+            }
+            
+            sb.append(charAtI);
+            
+        }
+        
+        return sb.toString();
+    }
+
+    /**
+     * Removes characters from a string.
+     *
+     * @param string the string of interest
      * @param forbiddenCharacters the characters to remove
      *
      * @return a version without forbidden characters
      */
     public static String removeCharacters(String string, String[] forbiddenCharacters) {
+        
         String result = string;
+        
         for (String fc : forbiddenCharacters) {
+            
             String[] split = result.split(fc);
+            
             if (split.length > 1) {
-                StringBuilder stringBuilder = new StringBuilder(string.length());
-                for (String splitPart : split) {
-                    stringBuilder.append(splitPart);
-                }
-                result = stringBuilder.toString();
+                
+                result = Arrays.stream(split)
+                        .collect(Collectors.joining());
+                
             }
         }
         return result;

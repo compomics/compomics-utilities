@@ -1,4 +1,5 @@
 package com.compomics.util.protein;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import org.apache.log4j.Logger;
 
 import java.util.regex.Pattern;

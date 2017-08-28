@@ -15,7 +15,7 @@ package com.compomics.util.test.nucleotide;
 import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.nucleotide.NucleotideSequenceImpl;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import junit.framework.Assert;
 import junit.framework.TestCase;

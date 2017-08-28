@@ -1,8 +1,7 @@
-package com.compomics.util.experiment.io.biology.sequences;
+package com.compomics.util.experiment.io.biology.protein;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.protein.Header;
-import com.compomics.util.protein.Header.DatabaseType;
+import com.compomics.util.experiment.io.biology.protein.Header.DatabaseType;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;

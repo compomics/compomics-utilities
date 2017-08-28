@@ -120,47 +120,37 @@ public class UniprotTaxonomy {
 
         URLConnection conn = url.openConnection();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        try {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream())); BufferedWriter bw = new BufferedWriter(new FileWriter(mappingFile, true))) {
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(mappingFile, true));
-
-            try {
-
-                String line = br.readLine();
-                while ((line = br.readLine()) != null) {
-
-                    line = line.trim();
-
-                    if (line.length() > 0) {
-
-                        String[] elements = line.split(SEPARATOR);
-                        Integer id = new Integer(elements[0].trim());
-                        String latinName = elements[2].trim();
-                        String commonName = elements[3].trim();
-
-                        if (!idToNameMap.containsKey(id)) {
-                            nameToIdMap.put(latinName, id);
-                            idToNameMap.put(id, latinName);
-                            if (!commonName.equals("")) {
-                                idToCommonNameMap.put(id, commonName);
-                            }
-
-                            // Try to save the new mapping
-                            try {
-                                bw.write(line);
-                                bw.newLine();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+            String line = br.readLine();
+            while ((line = br.readLine()) != null) {
+                
+                line = line.trim();
+                
+                if (line.length() > 0) {
+                    
+                    String[] elements = line.split(SEPARATOR);
+                    Integer id = new Integer(elements[0].trim());
+                    String latinName = elements[2].trim();
+                    String commonName = elements[3].trim();
+                    
+                    if (!idToNameMap.containsKey(id)) {
+                        nameToIdMap.put(latinName, id);
+                        idToNameMap.put(id, latinName);
+                        if (!commonName.equals("")) {
+                            idToCommonNameMap.put(id, commonName);
+                        }
+                        
+                        // Try to save the new mapping
+                        try {
+                            bw.write(line);
+                            bw.newLine();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-            } finally {
-                bw.close();
             }
-        } finally {
-            br.close();
         }
     }
 

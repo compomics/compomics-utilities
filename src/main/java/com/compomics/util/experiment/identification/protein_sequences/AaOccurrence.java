@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import org.apache.commons.math.util.FastMath;
 
 /**

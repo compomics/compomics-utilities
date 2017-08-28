@@ -1,6 +1,6 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;

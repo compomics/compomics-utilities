@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import java.util.ArrayList;
 
 /**

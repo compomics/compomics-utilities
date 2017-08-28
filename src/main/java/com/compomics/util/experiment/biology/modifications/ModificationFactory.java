@@ -1,11 +1,11 @@
 package com.compomics.util.experiment.biology.modifications;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.AtomImpl;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.biology.atoms.AtomImpl;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.io.json.JsonMarshaller;

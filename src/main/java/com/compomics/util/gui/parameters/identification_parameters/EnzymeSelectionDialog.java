@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,8 +1,8 @@
 package com.compomics.util.gui.parameters;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;

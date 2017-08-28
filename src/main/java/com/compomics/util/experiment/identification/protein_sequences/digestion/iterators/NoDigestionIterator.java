@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;

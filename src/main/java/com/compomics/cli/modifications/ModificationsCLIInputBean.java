@@ -1,8 +1,8 @@
 package com.compomics.cli.modifications;
 
 import com.compomics.software.cli.CommandParameter;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;

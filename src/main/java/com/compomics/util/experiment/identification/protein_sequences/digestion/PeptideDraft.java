@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.general.BoxedObject;
 import java.util.ArrayList;

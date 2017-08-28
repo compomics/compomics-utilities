@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;

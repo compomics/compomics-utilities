@@ -1,6 +1,6 @@
 package com.compomics.util.test.experiment.sequences.matching;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import junit.framework.Assert;

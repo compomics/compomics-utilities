@@ -1,6 +1,6 @@
 package com.compomics.software.settings;
 
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;

@@ -1,8 +1,8 @@
 package com.compomics.util.gui.atoms;
 
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.AtomImpl;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.biology.atoms.AtomImpl;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Component;
 import java.awt.Toolkit;

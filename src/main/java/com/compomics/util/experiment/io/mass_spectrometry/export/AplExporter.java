@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.export;
 
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.spectra.MSnSpectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;

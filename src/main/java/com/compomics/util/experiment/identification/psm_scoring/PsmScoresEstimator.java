@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.psm_scoring;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.peptide_fragmentation.PeptideFragmentationModel;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAIntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAMS2MzFidelityScore;

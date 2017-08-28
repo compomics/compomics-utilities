@@ -1,11 +1,11 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;

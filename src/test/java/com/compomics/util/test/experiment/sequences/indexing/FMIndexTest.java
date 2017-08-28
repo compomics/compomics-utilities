@@ -2,10 +2,10 @@ package com.compomics.util.test.experiment.sequences.indexing;
 
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;

@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
 import com.compomics.util.db.object.ObjectsDB;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;

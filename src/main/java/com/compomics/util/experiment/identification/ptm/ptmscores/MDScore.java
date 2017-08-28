@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.preferences.SequenceMatchingPreferences;

@@ -1,6 +1,6 @@
 package com.compomics.util.test.experiment.sequences.matching;
 
-import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;

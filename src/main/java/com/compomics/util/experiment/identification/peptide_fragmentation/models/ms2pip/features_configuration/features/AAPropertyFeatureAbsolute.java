@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 
 /**
  * An amino acid property feature at a fixed position on the peptide sequence. In this feature, a positive index refers to counting from the N-term where the first amino acid is 0. A negative index refers to counting from the C-term where the first amino acid is -1.

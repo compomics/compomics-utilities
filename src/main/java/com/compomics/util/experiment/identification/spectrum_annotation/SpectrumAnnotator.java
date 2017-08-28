@@ -2,12 +2,12 @@ package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.Ion.IonType;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;

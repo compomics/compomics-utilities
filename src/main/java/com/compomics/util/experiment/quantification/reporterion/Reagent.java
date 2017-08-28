@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import java.io.Serializable;
 
 /**

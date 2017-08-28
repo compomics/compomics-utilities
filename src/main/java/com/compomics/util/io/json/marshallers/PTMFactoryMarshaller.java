@@ -1,6 +1,6 @@
 package com.compomics.util.io.json.marshallers;
 
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.io.json.JsonMarshaller;
 
 /**

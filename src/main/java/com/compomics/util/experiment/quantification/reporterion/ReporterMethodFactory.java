@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

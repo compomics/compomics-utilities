@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.*;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;

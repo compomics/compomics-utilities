@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 
 /**
  * An amino acid property feature at a position relative to the end of an ion on the peptide sequence. In this feature, an index of 0 represents the last amino acid of the ion.

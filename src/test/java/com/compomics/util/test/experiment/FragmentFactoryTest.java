@@ -1,13 +1,13 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import junit.framework.Assert;

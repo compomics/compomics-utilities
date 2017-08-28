@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import java.util.HashMap;
 

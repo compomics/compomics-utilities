@@ -3,18 +3,18 @@
  */
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;

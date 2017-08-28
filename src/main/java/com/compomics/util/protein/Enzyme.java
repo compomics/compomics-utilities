@@ -127,7 +127,7 @@ public class Enzyme implements Cloneable {
      * @param enzyme The com.compomics.util.experiment.biology.Enzyme enzyme
      * @param maxMissedCleavages The maximum number of missed cleavages
      */
-    public Enzyme(com.compomics.util.experiment.biology.Enzyme enzyme, int maxMissedCleavages) {
+    public Enzyme(com.compomics.util.experiment.biology.enzymes.Enzyme enzyme, int maxMissedCleavages) {
 
         String position = "", cleavage = "", restrict = "";
 

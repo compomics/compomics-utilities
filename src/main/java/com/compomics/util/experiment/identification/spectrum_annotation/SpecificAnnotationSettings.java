@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import java.util.ArrayList;
 import java.util.HashMap;

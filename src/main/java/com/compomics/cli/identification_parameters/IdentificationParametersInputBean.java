@@ -2,11 +2,11 @@ package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.cli.CommandParameter;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;

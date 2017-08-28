@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 
 /**
  * Interface for the ms2pip features having a single amino acid property.

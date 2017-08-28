@@ -1,9 +1,9 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.experiment.biology.Ion.IonType;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion.IonType;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;

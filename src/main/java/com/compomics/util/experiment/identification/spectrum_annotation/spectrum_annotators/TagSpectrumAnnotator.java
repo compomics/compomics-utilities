@@ -1,10 +1,10 @@
 package com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
@@ -13,7 +13,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;

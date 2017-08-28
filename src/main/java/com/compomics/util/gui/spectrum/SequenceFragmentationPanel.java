@@ -1,7 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.awt.event.MouseEvent;

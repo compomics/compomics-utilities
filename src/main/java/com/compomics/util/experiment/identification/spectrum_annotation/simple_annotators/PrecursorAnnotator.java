@@ -1,13 +1,13 @@
 package com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators;
 
-import com.compomics.util.experiment.biology.ElementaryElement;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.atoms.ElementaryElement;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PrecursorIon;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;

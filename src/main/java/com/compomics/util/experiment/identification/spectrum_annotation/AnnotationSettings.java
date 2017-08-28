@@ -1,10 +1,10 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;

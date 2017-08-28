@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features;
 
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AASequenceFeature;
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 
 /**
  * Feature based on the amino acid properties of the complementary ion.

@@ -1,11 +1,11 @@
 package com.compomics.util.experiment.identification.Modification.Modificationscores;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.modifications.Modification;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;

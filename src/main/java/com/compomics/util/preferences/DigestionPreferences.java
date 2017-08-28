@@ -1,9 +1,9 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;

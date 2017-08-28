@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.biology.variants;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

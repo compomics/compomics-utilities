@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.utils;
 
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.atoms.Atom;
 
 /**
  * Enum of standard masses.

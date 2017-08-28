@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.identification;
 
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.DigestionPreferences;
@@ -148,7 +148,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
                 Boolean semiSpecific = mzIdEnzyme.isSemiSpecific();
                 if (!paramList.getParamGroup().isEmpty()) {
                     String enzymeId = paramList.getParamGroup().get(0).getName();
-                    com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getInstance().getEnzyme(enzymeId);
+                    com.compomics.util.experiment.biology.enzymes.Enzyme utilitiesEnzyme = EnzymeFactory.getInstance().getEnzyme(enzymeId);
                     String enzymeName;
                     if (utilitiesEnzyme != null) {
                         enzymeName = utilitiesEnzyme.getName();

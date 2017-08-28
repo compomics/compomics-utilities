@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SpecificSingleEnzymeIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.NoDigestionCombinationIterator;

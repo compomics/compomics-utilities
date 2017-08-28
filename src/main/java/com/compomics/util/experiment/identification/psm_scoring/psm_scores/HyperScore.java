@@ -1,9 +1,9 @@
 package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.peptide_fragmentation.PeptideFragmentationModel;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;

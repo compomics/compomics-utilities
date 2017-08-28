@@ -1,10 +1,10 @@
 package com.compomics.util.experiment.biology.modifications;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.pride.CvTerm;

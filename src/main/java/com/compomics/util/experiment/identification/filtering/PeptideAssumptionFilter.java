@@ -4,7 +4,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;

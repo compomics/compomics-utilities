@@ -4,7 +4,7 @@ import com.compomics.util.db.object.DbObject;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;

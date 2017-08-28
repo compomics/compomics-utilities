@@ -1,8 +1,12 @@
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.*;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;

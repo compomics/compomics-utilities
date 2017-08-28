@@ -1,7 +1,7 @@
 package com.compomics.util.gui.atoms;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.atoms.Atom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

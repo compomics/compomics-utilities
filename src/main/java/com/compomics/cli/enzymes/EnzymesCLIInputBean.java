@@ -2,9 +2,9 @@ package com.compomics.cli.enzymes;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.cli.CommandParameter;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

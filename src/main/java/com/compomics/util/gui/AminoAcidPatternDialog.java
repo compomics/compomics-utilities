@@ -1,8 +1,8 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;

@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;

@@ -1,7 +1,7 @@
 package com.compomics.cli.peptide_mapper;
 
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.protein_inference.PeptideMap
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.PeptideVariantsPreferences;

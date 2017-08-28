@@ -1,12 +1,12 @@
 package com.compomics.util.experiment.identification.spectrum_assumptions;
 
 import com.compomics.util.db.object.ObjectsDB;
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;

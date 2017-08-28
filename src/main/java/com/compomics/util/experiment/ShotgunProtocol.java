@@ -1,6 +1,6 @@
 package com.compomics.util.experiment;
 
-import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import java.io.Serializable;

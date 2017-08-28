@@ -8,7 +8,6 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.mass_spectrometry.Charge;

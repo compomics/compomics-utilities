@@ -3,10 +3,8 @@ package com.compomics.util.preferences;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaIndex;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

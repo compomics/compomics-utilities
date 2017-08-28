@@ -1,7 +1,6 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.filtering.Filter;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.ValidationQCPreferences;
 import java.awt.Dialog;

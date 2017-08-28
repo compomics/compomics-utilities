@@ -1,6 +1,5 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.LastSelectedFolder;
@@ -457,8 +456,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      */
     private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
 
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-
+        
         // clear the factory
         if (databaseSettingsTxt.getText().trim().length() == 0) {
             try {

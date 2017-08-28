@@ -39,7 +39,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
     /**
      * The gene factory.
      */
-    private GeneFactory geneFactory = GeneFactory.getInstance();
+    private GeneFactory geneFactory = new GeneFactory();
     /**
      * The species factory
      */

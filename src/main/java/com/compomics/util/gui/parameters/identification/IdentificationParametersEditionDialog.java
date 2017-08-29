@@ -19,7 +19,6 @@ import com.compomics.util.gui.parameters.identification.subparameters.SearchPara
 import com.compomics.util.gui.parameters.identification.subparameters.SequenceMatchingParametersDialog;
 import com.compomics.util.gui.parameters.identification.subparameters.ValidationQCParametersDialog;
 import com.compomics.util.gui.parameters.identification.subparameters.ValidationParametersDialog;
-import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.parameters.identification.FractionParameters;
 import com.compomics.util.parameters.identification.GeneParameters;
 import com.compomics.util.parameters.identification.IdMatchValidationParameters;
@@ -71,10 +70,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * Boolean indicating whether the parameters can be edited.
      */
     private boolean editable;
-    /**
-     * The configuration file containing the modification use.
-     */
-    private ConfigurationFile configurationFile;
     /**
      * The peak annotation settings.
      */

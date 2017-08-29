@@ -24,5 +24,14 @@ public interface ProteinDetailsProvider {
      * @return the name of the protein database
      */
     public String getProteinDatabaseName(String accession);
+    
+    /**
+     * Returns the gene name for the given protein.
+     * 
+     * @param accession the accession of the protein
+     * 
+     * @return the gene name for the given protein
+     */
+    public String getGeneName(String accession);
 
 }

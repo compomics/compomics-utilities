@@ -3,7 +3,6 @@ package com.compomics.util.gui.parameters.identification;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.gui.parameters.identification.IdentificationParametersNameDialog;
 import com.compomics.util.gui.parameters.identification.subparameters.SearchParametersDialog;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.io.file.SerializationUtils;

@@ -178,7 +178,7 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
 
         xLbl.setText("Maximum Share of X's");
 
-        matchingCmb.setModel(new DefaultComboBoxModel(com.compomics.util.parameters.SequenceMatchingParameters.MatchingType.values()));
+        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingParameters.MatchingType.values()));
 
         xSpinner.setModel(new javax.swing.SpinnerNumberModel(0.25d, 0.0d, 1.0d, 0.1d));
 

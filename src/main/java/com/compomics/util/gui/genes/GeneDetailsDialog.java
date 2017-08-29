@@ -3,11 +3,11 @@ package com.compomics.util.gui.genes;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import javax.swing.JPanel;
@@ -32,6 +32,10 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * The Gene maps.
      */
     private GeneMaps geneMaps;
+    /**
+     * The protein 
+     */
+    private ProteinDetailsProvider proteinDetailsProvider;
     /**
      * The protein accessions of this match.
      */
@@ -62,13 +66,9 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param proteinMatch the protein match
      * @param geneMaps the gene maps
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover.
+     * @param proteinDetailsProvider a provider for protein details
      */
-    public GeneDetailsDialog(java.awt.Frame parent, ProteinMatch proteinMatch, GeneMaps geneMaps) throws IOException, InterruptedException {
+    public GeneDetailsDialog(java.awt.Frame parent, ProteinMatch proteinMatch, GeneMaps geneMaps, ProteinDetailsProvider proteinDetailsProvider) {
         super(parent, true);
         initComponents();
         this.geneMaps = geneMaps;
@@ -100,13 +100,8 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Set up the GUI.
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover
      */
-    private void setUpGUI() throws IOException, InterruptedException {
+    private void setUpGUI() {
 
         goTable.getColumn("Accession").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
 
@@ -155,7 +150,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             }
             title += accession;
 
-            String geneName = geneMaps.getGeneNameForProtein(accession);
+            String geneName = proteinDetailsProvider.getGeneName(accession);
             geneNames.add(geneName);
         }
 

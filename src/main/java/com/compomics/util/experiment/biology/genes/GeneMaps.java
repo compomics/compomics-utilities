@@ -278,13 +278,8 @@ public class GeneMaps implements Serializable {
      * @param proteinAccession a protein accession
      *
      * @return the go terms names
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover.
      */
-    public HashSet<String> getGoNamesForProtein(String proteinAccession) throws IOException, InterruptedException {
+    public HashSet<String> getGoNamesForProtein(String proteinAccession) {
         HashSet<String> goTerms = getGoTermsForProtein(proteinAccession);
         if (goTerms != null) {
             HashSet<String> goNames = new HashSet<>(goTerms.size());

@@ -73,7 +73,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     /**
      * The PTM localization scoring preferences.
      */
-    private PTMScoringParameters ptmScoringPreferences;
+    private ModificationLocalizationParameters ptmScoringPreferences;
     /**
      * The protein inference preferences.
      */
@@ -123,7 +123,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      */
     public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings,
             SequenceMatchingParameters sequenceMatchingPreferences, PeptideVariantsParameters peptideVariantsPreferences, GeneParameters genePreferences, PsmScoringParameters psmScoringPreferences,
-            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringParameters ptmScoringPreferences, ProteinInferenceParameters proteinInferencePreferences,
+            PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ptmScoringPreferences, ProteinInferenceParameters proteinInferencePreferences,
             IdMatchValidationParameters idValidationPreferences, FractionParameters fractionSettings) {
         this.name = name;
         this.description = description;
@@ -254,7 +254,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      *
      * @return the PTM localization scoring preferences
      */
-    public PTMScoringParameters getPtmScoringPreferences() {
+    public ModificationLocalizationParameters getPtmScoringPreferences() {
         return ptmScoringPreferences;
     }
 
@@ -263,7 +263,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      *
      * @param ptmScoringPreferences the PTM localization scoring preferences
      */
-    public void setPtmScoringPreferences(PTMScoringParameters ptmScoringPreferences) {
+    public void setPtmScoringPreferences(ModificationLocalizationParameters ptmScoringPreferences) {
         this.ptmScoringPreferences = ptmScoringPreferences;
     }
 
@@ -540,7 +540,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             psmScoringPreferences = new PsmScoringParameters();
         }
         if (ptmScoringPreferences == null) {
-            ptmScoringPreferences = new PTMScoringParameters();
+            ptmScoringPreferences = new ModificationLocalizationParameters();
         }
         if (sequenceMatchingPreferences == null) {
             sequenceMatchingPreferences = SequenceMatchingParameters.getDefaultSequenceMatching();

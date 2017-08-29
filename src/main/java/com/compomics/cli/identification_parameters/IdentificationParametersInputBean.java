@@ -36,7 +36,7 @@ import com.compomics.util.parameters.identification.FractionParameters;
 import com.compomics.util.parameters.identification.GeneParameters;
 import com.compomics.util.parameters.identification.IdMatchValidationParameters;
 import com.compomics.util.parameters.identification.IdentificationParameters;
-import com.compomics.util.parameters.identification.PTMScoringParameters;
+import com.compomics.util.parameters.identification.ModificationLocalizationParameters;
 import com.compomics.util.parameters.identification.ProteinInferenceParameters;
 import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.File;
@@ -3223,9 +3223,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // PTM localization parameters
         //////////////////////////////////
-        PTMScoringParameters ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+        ModificationLocalizationParameters ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
         if (ptmScoringPreferences == null) {
-            ptmScoringPreferences = new PTMScoringParameters();
+            ptmScoringPreferences = new ModificationLocalizationParameters();
             identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {

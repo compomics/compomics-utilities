@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 
 /**
  * Interface for a sequence tag component.
@@ -34,7 +34,7 @@ public interface TagComponent {
      * @return a boolean indicating whether the other component is the same as
      * the one of interest
      */
-    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences);
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences);
 
     /**
      * Indicates whether another component is the same as the component of
@@ -46,5 +46,5 @@ public interface TagComponent {
      * @return a boolean indicating whether the other component is the same as
      * the one of interest
      */
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences);
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences);
 }

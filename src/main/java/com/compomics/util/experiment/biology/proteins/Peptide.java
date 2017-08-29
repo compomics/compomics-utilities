@@ -13,8 +13,8 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -441,13 +441,13 @@ public class Peptide extends ExperimentObject {
      *
      * @return the amount of missed cleavages
      */
-    public int getNMissedCleavages(DigestionPreferences digestionPreferences) {
+    public int getNMissedCleavages(DigestionParameters digestionPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme
+        return digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme
                 ? digestionPreferences.getEnzymes().stream().mapToInt(enzyme -> getNMissedCleavages(enzyme)).min().orElse(0) : 0;
     }
 
@@ -489,7 +489,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return a key unique to the given matching type
      */
-    public String getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public String getMatchingKey(SequenceMatchingParameters sequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -697,7 +697,7 @@ public class Peptide extends ExperimentObject {
 
                         Character aa = sequence.charAt(i);
 
-                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideStart + i)) {
+                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, peptideStart + i)) {
 
                             possibleSites.add(i + 1);
 
@@ -755,7 +755,7 @@ public class Peptide extends ExperimentObject {
                             possibleSites.add(sequence.length());
 
                         }
-                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideEnd)) {
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
 
@@ -779,7 +779,7 @@ public class Peptide extends ExperimentObject {
 
                     peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
 
-                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, peptideEnd)) {
+                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
 
@@ -801,7 +801,7 @@ public class Peptide extends ExperimentObject {
                             possibleSites.add(1);
 
                         }
-                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
 
                         possibleSites.add(1);
 
@@ -821,7 +821,7 @@ public class Peptide extends ExperimentObject {
                         possibleSites.add(1);
 
                     }
-                } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingPreferences.defaultStringMatching, 0)) {
+                } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
 
                     possibleSites.add(1);
 
@@ -846,7 +846,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSites(Modification modification, String proteinSequence, int peptideStart, SequenceMatchingPreferences modificationSequenceMatchingPreferences) {
+    public ArrayList<Integer> getPotentialModificationSites(Modification modification, String proteinSequence, int peptideStart, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -1073,7 +1073,7 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether the other peptide has the same
      * sequence and modification status.
      */
-    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
@@ -1090,7 +1090,7 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether the other peptide has the same
      * sequence
      */
-    public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();

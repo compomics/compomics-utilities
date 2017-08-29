@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters;
 
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.ProcessingPreferences;
+import com.compomics.util.parameters.tools.ProcessingParameters;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
@@ -30,7 +30,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingPreferencesDialog(java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
+    public ProcessingPreferencesDialog(java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
         super(parentFrame, true);
         initComponents();
         this.editable = editable;
@@ -48,7 +48,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
+    public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
         super(owner, true);
         initComponents();
         this.editable = editable;
@@ -72,7 +72,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      *
      * @param processingPreferences the processing preferences to display
      */
-    private void populateGUI(ProcessingPreferences processingPreferences) {
+    private void populateGUI(ProcessingParameters processingPreferences) {
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
         nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(processingPreferences.getnThreads(), 1, null, 1));
     }
@@ -100,9 +100,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      *
      * @return the processing preferences as set by the user
      */
-    public ProcessingPreferences getProcessingPreferences() {
-        ProcessingPreferences processingPreferences = new ProcessingPreferences();
-        processingPreferences.setProcessingType((ProcessingPreferences.ProcessingType) processingTypeCmb.getSelectedItem());
+    public ProcessingParameters getProcessingPreferences() {
+        ProcessingParameters processingPreferences = new ProcessingParameters();
+        processingPreferences.setProcessingType((ProcessingParameters.ProcessingType) processingTypeCmb.getSelectedItem());
         processingPreferences.setnThreads((Integer) nThreadsSpinner.getValue());
         return processingPreferences;
     }
@@ -165,7 +165,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
 
         processingTypeLbl.setText("Execution");
 
-        processingTypeCmb.setModel(new DefaultComboBoxModel(ProcessingPreferences.ProcessingType.values()));
+        processingTypeCmb.setModel(new DefaultComboBoxModel(ProcessingParameters.ProcessingType.values()));
         processingTypeCmb.setEnabled(false);
 
         javax.swing.GroupLayout processingTypePanelLayout = new javax.swing.GroupLayout(processingTypePanel);

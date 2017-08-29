@@ -30,15 +30,15 @@ import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.DigestionPreferences.Specificity;
-import com.compomics.util.preferences.FractionSettings;
-import com.compomics.util.preferences.GenePreferences;
-import com.compomics.util.preferences.IdMatchValidationPreferences;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.PTMScoringPreferences;
-import com.compomics.util.preferences.ProteinInferencePreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.DigestionParameters.Specificity;
+import com.compomics.util.parameters.identification.FractionParameters;
+import com.compomics.util.parameters.identification.GeneParameters;
+import com.compomics.util.parameters.identification.IdMatchValidationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.parameters.identification.PTMScoringParameters;
+import com.compomics.util.parameters.identification.ProteinInferenceParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -122,7 +122,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
-            for (DigestionPreferences.CleavagePreference cleavagePreference : DigestionPreferences.CleavagePreference.values()) {
+            for (DigestionParameters.CleavagePreference cleavagePreference : DigestionParameters.CleavagePreference.values()) {
                 possibleValues.add(cleavagePreference.index + "");
             }
             if (!CommandParameter.isInList(IdentificationParametersCLIParams.DIGESTION.id, arg, possibleValues)) {
@@ -1716,15 +1716,15 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             searchParameters.setFragmentIonAccuracy(option);
         }
-        DigestionPreferences digestionPreferences = searchParameters.getDigestionPreferences();
+        DigestionParameters digestionPreferences = searchParameters.getDigestionPreferences();
         if (digestionPreferences == null) {
-            digestionPreferences = DigestionPreferences.getDefaultPreferences();
+            digestionPreferences = DigestionParameters.getDefaultPreferences();
             searchParameters.setDigestionPreferences(digestionPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             Integer option = new Integer(arg);
-            DigestionPreferences.CleavagePreference cleavagePreference = DigestionPreferences.CleavagePreference.getCleavagePreferences(option);
+            DigestionParameters.CleavagePreference cleavagePreference = DigestionParameters.CleavagePreference.getCleavagePreferences(option);
             if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() != cleavagePreference) {
                 digestionPreferences.clear();
             }
@@ -1774,7 +1774,7 @@ public class IdentificationParametersInputBean {
                 }
                 digestionPreferences.setSpecificity(enzymeName, specificity);
             }
-        } else if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme && !digestionPreferences.hasEnzymes()) {
+        } else if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme && !digestionPreferences.hasEnzymes()) {
             String enzymeName = "Trypsin";
             Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
             digestionPreferences.addEnzyme(enzyme);
@@ -1788,7 +1788,7 @@ public class IdentificationParametersInputBean {
 
             // also update the protein inference database if that option is not set
             if (identificationParameters != null && !commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
-                ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+                ProteinInferenceParameters proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
                 proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
             }
         }
@@ -3060,9 +3060,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Gene mapping preferences
         //////////////////////////////////
-        GenePreferences genePreferences = identificationParameters.getGenePreferences();
+        GeneParameters genePreferences = identificationParameters.getGenePreferences();
         if (genePreferences == null) {
-            genePreferences = new GenePreferences();
+            genePreferences = new GeneParameters();
             identificationParameters.setGenePreferences(genePreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.USE_GENE_MAPPING.id)) {
@@ -3137,9 +3137,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Sequence Matching
         //////////////////////////////////
-        SequenceMatchingPreferences sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+        SequenceMatchingParameters sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
         if (sequenceMatchingPreferences == null) {
-            sequenceMatchingPreferences = new SequenceMatchingPreferences();
+            sequenceMatchingPreferences = new SequenceMatchingParameters();
             identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_INDEX_TYPE.id)) {
@@ -3151,7 +3151,7 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id);
             Integer intValue = new Integer(arg);
-            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
+            SequenceMatchingParameters.MatchingType value = SequenceMatchingParameters.MatchingType.getMatchingType(intValue);
             sequenceMatchingPreferences.setSequenceMatchingType(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id)) {
@@ -3223,9 +3223,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // PTM localization parameters
         //////////////////////////////////
-        PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+        PTMScoringParameters ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
         if (ptmScoringPreferences == null) {
-            ptmScoringPreferences = new PTMScoringPreferences();
+            ptmScoringPreferences = new PTMScoringParameters();
             identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {
@@ -3264,8 +3264,8 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id);
             Integer intValue = new Integer(arg);
-            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences = new SequenceMatchingPreferences();
+            SequenceMatchingParameters.MatchingType value = SequenceMatchingParameters.MatchingType.getMatchingType(intValue);
+            SequenceMatchingParameters ptmSequenceMatchingPreferences = new SequenceMatchingParameters();
             ptmSequenceMatchingPreferences.setLimitX(sequenceMatchingPreferences.getLimitX());
             ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
             ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
@@ -3290,7 +3290,7 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Protein inference parameters
         //////////////////////////////////
-        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+        ProteinInferenceParameters proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
             File fastaFile = new File(arg);
@@ -3380,9 +3380,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Validation parameters
         //////////////////////////////////
-        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        IdMatchValidationParameters idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
         if (idMatchValidationPreferences == null) {
-            idMatchValidationPreferences = new IdMatchValidationPreferences();
+            idMatchValidationPreferences = new IdMatchValidationParameters();
             identificationParameters.setIdValidationPreferences(idMatchValidationPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PSM_FDR.id)) {
@@ -3452,9 +3452,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Fraction parameters
         //////////////////////////////////
-        FractionSettings fractionSettings = identificationParameters.getFractionSettings();
+        FractionParameters fractionSettings = identificationParameters.getFractionSettings();
         if (fractionSettings == null) {
-            fractionSettings = new FractionSettings();
+            fractionSettings = new FractionParameters();
             identificationParameters.setFractionSettings(fractionSettings);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id)) {

@@ -6,7 +6,7 @@ import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
 import com.compomics.util.gui.tablemodels.SelfUpdatingTableModel;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.math.statistics.distributions.NormalKernelDensityEstimator;
-import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.io.file.LastSelectedFolder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

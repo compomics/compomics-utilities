@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.variants.aa_substitutions.AaSubstitutionMatrixTableModel;
-import com.compomics.util.preferences.PeptideVariantsPreferences;
+import com.compomics.util.parameters.identification.PeptideVariantsParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
@@ -44,7 +44,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PeptideVariantsSettingsDialog(java.awt.Frame parentFrame, PeptideVariantsPreferences peptideVariantPreferences, boolean editable) {
+    public PeptideVariantsSettingsDialog(java.awt.Frame parentFrame, PeptideVariantsParameters peptideVariantPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -64,7 +64,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PeptideVariantsSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PeptideVariantsPreferences peptideVariantPreferences, boolean editable) {
+    public PeptideVariantsSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PeptideVariantsParameters peptideVariantPreferences, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -111,7 +111,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      *
      * @param fractionSettings the fraction settings to display
      */
-    private void populateGUI(PeptideVariantsPreferences peptideVariantPreferences) {
+    private void populateGUI(PeptideVariantsParameters peptideVariantPreferences) {
 
         totalVariantsSpinner.setValue(peptideVariantPreferences.getnVariants());
         boolean useSpecific = peptideVariantPreferences.getUseSpecificCount();
@@ -152,8 +152,8 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
      *
      * @return the peptide variants settings as set by the user
      */
-    public PeptideVariantsPreferences getPeptideVariantsPreferences() {
-        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+    public PeptideVariantsParameters getPeptideVariantsPreferences() {
+        PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setnVariants((Integer) totalVariantsSpinner.getValue());
         peptideVariantsPreferences.setUseSpecificCount(specificVariantsComboBox.getSelectedIndex() == 0);
         peptideVariantsPreferences.setnAaDeletions((Integer) deletionsSpinner.getValue());

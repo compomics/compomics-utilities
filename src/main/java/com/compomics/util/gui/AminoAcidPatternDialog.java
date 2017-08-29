@@ -3,7 +3,7 @@ package com.compomics.util.gui;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 import java.awt.event.MouseEvent;
@@ -628,7 +628,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingPreferences.defaultStringMatching);
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingParameters.defaultStringMatching);
 
         String result = "";
 

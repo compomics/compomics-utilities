@@ -2,7 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
@@ -38,7 +38,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
+    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingParameters sequenceMatchingPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -59,7 +59,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public SequenceMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
+    public SequenceMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SequenceMatchingParameters sequenceMatchingPreferences, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -87,8 +87,8 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * @param sequenceMatchingPreferences the sequence matching preferences to
      * display
      */
-    private void populateGUI(SequenceMatchingPreferences sequenceMatchingPreferences) {
-        SequenceMatchingPreferences.MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
+    private void populateGUI(SequenceMatchingParameters sequenceMatchingPreferences) {
+        SequenceMatchingParameters.MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
         matchingCmb.setSelectedItem(matchingType);
         PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
         indexTypeCmb.setSelectedItem(peptideMapperType);
@@ -109,10 +109,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      *
      * @return the sequence matching settings as set by the user
      */
-    public SequenceMatchingPreferences getSequenceMatchingPreferences() {
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+    public SequenceMatchingParameters getSequenceMatchingPreferences() {
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setPeptideMapperType((PeptideMapperType) indexTypeCmb.getSelectedItem());
-        sequenceMatchingPreferences.setSequenceMatchingType((SequenceMatchingPreferences.MatchingType) matchingCmb.getSelectedItem());
+        sequenceMatchingPreferences.setSequenceMatchingType((SequenceMatchingParameters.MatchingType) matchingCmb.getSelectedItem());
         sequenceMatchingPreferences.setLimitX((Double) xSpinner.getValue());
         return sequenceMatchingPreferences;
     }
@@ -178,7 +178,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
 
         xLbl.setText("Maximum Share of X's");
 
-        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
+        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingParameters.MatchingType.values()));
 
         xSpinner.setModel(new javax.swing.SpinnerNumberModel(0.25d, 0.0d, 1.0d, 0.1d));
 

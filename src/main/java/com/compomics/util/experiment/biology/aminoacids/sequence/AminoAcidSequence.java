@@ -10,7 +10,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,7 +211,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
@@ -225,7 +225,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matchesIn(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return matchesIn(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
     }
@@ -240,7 +240,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
@@ -255,7 +255,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matches(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matches(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return matches(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
     }
@@ -269,7 +269,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return the first index where the amino acid sequence is found
      */
-    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getAsAminoAcidPattern().firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
     }
@@ -285,7 +285,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!anotherPattern.matches(anotherPattern, sequenceMatchingPreferences)) {
@@ -852,7 +852,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameAs(AminoAcidSequence anotherSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameAs(AminoAcidSequence anotherSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!matches(anotherSequence, sequenceMatchingPreferences)) {
@@ -894,7 +894,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidSequence anotherSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidSequence anotherSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!matches(anotherSequence, sequenceMatchingPreferences)) {
@@ -1139,7 +1139,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!(anotherCompontent instanceof AminoAcidSequence)) {
@@ -1151,7 +1151,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (!(anotherCompontent instanceof AminoAcidSequence)) {

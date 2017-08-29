@@ -3,7 +3,7 @@ package com.compomics.util.experiment.io.identification;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -139,7 +139,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
         // get the enzyme(s)
         parametersReport += "<br><br><b>Digestion:</b> ";
         List<Enzyme> mzIdEnzymes = spectrumIdentificationProtocol.getEnzymes().getEnzyme();
-        DigestionPreferences digestionPreferences = new DigestionPreferences();
+        DigestionParameters digestionPreferences = new DigestionParameters();
         if (!mzIdEnzymes.isEmpty()) {
             digestionPreferences.clear();
             for (Enzyme mzIdEnzyme : mzIdEnzymes) {
@@ -166,10 +166,10 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
                         parametersReport += nMissedCleavages + " (assumed)";
                     }
                     parametersReport += ", ";
-                    DigestionPreferences.Specificity specificity = DigestionPreferences.Specificity.specific;
+                    DigestionParameters.Specificity specificity = DigestionParameters.Specificity.specific;
                     if (semiSpecific != null) {
                         if (semiSpecific) {
-                            specificity = DigestionPreferences.Specificity.semiSpecific;
+                            specificity = DigestionParameters.Specificity.semiSpecific;
                         }
                         parametersReport += specificity;
                     } else {
@@ -178,7 +178,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
                     digestionPreferences.addEnzyme(utilitiesEnzyme);
                     digestionPreferences.setSpecificity(enzymeName, specificity);
                     digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
-                    digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.enzyme);
+                    digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.enzyme);
                 }
             }
         } else {

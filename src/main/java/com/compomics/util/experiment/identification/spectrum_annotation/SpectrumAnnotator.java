@@ -19,7 +19,7 @@ import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -593,8 +593,8 @@ public abstract class SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider, SequenceMatchingParameters sequenceMatchingPreferences,
+            SequenceMatchingParameters ptmSequenceMatchingPreferences) {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
             return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);

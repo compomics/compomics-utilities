@@ -2,8 +2,8 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.LastSelectedFolder;
-import com.compomics.util.preferences.ProteinInferencePreferences;
+import com.compomics.util.io.file.LastSelectedFolder;
+import com.compomics.util.parameters.identification.ProteinInferenceParameters;
 import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import java.awt.Dialog;
 import java.awt.Image;
@@ -57,7 +57,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public ProteinInferenceSettingsDialog(java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences,
+    public ProteinInferenceSettingsDialog(java.awt.Frame parentFrame, ProteinInferenceParameters proteinInferencePreferences,
             Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
@@ -85,7 +85,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public ProteinInferenceSettingsDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences,
+    public ProteinInferenceSettingsDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferenceParameters proteinInferencePreferences,
             Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
@@ -127,7 +127,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param proteinInferencePreferences the protein inference settings to
      * display
      */
-    private void populateGUI(ProteinInferencePreferences proteinInferencePreferences) {
+    private void populateGUI(ProteinInferenceParameters proteinInferencePreferences) {
         if (proteinInferencePreferences.getProteinSequenceDatabase() != null) {
             databaseSettingsTxt.setText(proteinInferencePreferences.getProteinSequenceDatabase().getAbsolutePath());
             okButton.setEnabled(true);
@@ -168,9 +168,9 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      *
      * @return the protein inference preferences
      */
-    public ProteinInferencePreferences getProteinInferencePreferences() {
+    public ProteinInferenceParameters getProteinInferencePreferences() {
 
-        ProteinInferencePreferences proteinInferencePreferences = new ProteinInferencePreferences();
+        ProteinInferenceParameters proteinInferencePreferences = new ProteinInferenceParameters();
         proteinInferencePreferences.setProteinSequenceDatabase(new File(databaseSettingsTxt.getText()));
 
         proteinInferencePreferences.setSimplifyGroups(simplifyGroupsCmb.getSelectedIndex() == 0);

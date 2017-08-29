@@ -10,7 +10,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -534,7 +534,7 @@ public class Tag extends ExperimentObject {
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSites(Modification ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+    public ArrayList<Integer> getPotentialModificationSites(Modification ptm, SequenceMatchingParameters ptmSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         ArrayList<Integer> possibleSites = new ArrayList<>();
@@ -628,7 +628,7 @@ public class Tag extends ExperimentObject {
      *
      * @return a boolean indicating whether the tag is the same as another
      */
-    public boolean isSameAs(Tag anotherTag, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.size() != anotherTag.getContent().size()) {
             return false;
@@ -652,7 +652,7 @@ public class Tag extends ExperimentObject {
      *
      * @return a boolean indicating whether the tag is the same as another
      */
-    public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (content.size() != anotherTag.getContent().size()) {
             return false;

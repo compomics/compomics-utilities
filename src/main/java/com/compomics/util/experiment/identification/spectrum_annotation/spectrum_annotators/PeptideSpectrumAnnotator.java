@@ -14,7 +14,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.ArrayList;
@@ -320,8 +320,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceProvider sequenceProvider, SequenceMatchingPreferences sequenceMatchingSettings,
-            SequenceMatchingPreferences ptmSequenceMatchingSettings) {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceProvider sequenceProvider, SequenceMatchingParameters sequenceMatchingSettings,
+            SequenceMatchingParameters ptmSequenceMatchingSettings) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         

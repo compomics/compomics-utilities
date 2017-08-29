@@ -11,7 +11,7 @@ import com.compomics.util.experiment.identification.matches_iterators.ProteinMat
 import com.compomics.util.experiment.identification.matches_iterators.PsmIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.ArrayList;
@@ -428,7 +428,7 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         String spectrumMatchKey = spectrumMatch.getKey();
 

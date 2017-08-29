@@ -21,8 +21,8 @@ import com.compomics.util.experiment.identification.protein_inference.PeptidePro
 import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
-import com.compomics.util.preferences.PeptideVariantsPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
@@ -504,7 +504,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsPreferences peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
+    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
         massTolerance = searchParameters.getFragmentIonAccuracy();
         massAccuracyType = searchParameters.getFragmentAccuracyType();
         init(fastaFile, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
@@ -523,7 +523,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
+    public FMIndex(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
         init(fastaFile, waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
     }
 
@@ -542,7 +542,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    private void init(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) throws IOException {
+    private void init(File fastaFile, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -1249,16 +1249,16 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param numPositions the number of positions
      * @return a list of all possible amino acids per position in the peptide
      */
-    private ArrayList<String> createPeptideCombinations(String peptide, SequenceMatchingPreferences seqMatchPref) {
+    private ArrayList<String> createPeptideCombinations(String peptide, SequenceMatchingParameters seqMatchPref) {
         ArrayList<String> combinations = new ArrayList<>();
 
-        SequenceMatchingPreferences.MatchingType sequenceMatchingType = seqMatchPref.getSequenceMatchingType();
-        if (sequenceMatchingType == SequenceMatchingPreferences.MatchingType.string) {
+        SequenceMatchingParameters.MatchingType sequenceMatchingType = seqMatchPref.getSequenceMatchingType();
+        if (sequenceMatchingType == SequenceMatchingParameters.MatchingType.string) {
             for (int i = 0; i < peptide.length(); ++i) {
                 combinations.add(peptide.substring(i, i + 1));
             }
-        } else if (sequenceMatchingType == SequenceMatchingPreferences.MatchingType.aminoAcid || sequenceMatchingType == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
-            boolean indistinghuishable = sequenceMatchingType == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids;
+        } else if (sequenceMatchingType == SequenceMatchingParameters.MatchingType.aminoAcid || sequenceMatchingType == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
+            boolean indistinghuishable = sequenceMatchingType == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids;
 
             for (int i = 0; i < peptide.length(); ++i) {
                 String chars = peptide.substring(i, i + 1);
@@ -1298,7 +1298,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param seqMatchPref the sequence matching preferences
      * @return a list of all possible amino acids per position in the peptide
      */
-    private TagElement[] createPeptideCombinations(TagElement[] tagComponents, SequenceMatchingPreferences seqMatchPref) {
+    private TagElement[] createPeptideCombinations(TagElement[] tagComponents, SequenceMatchingParameters seqMatchPref) {
 
         int numElements = 0;
         for (int i = 0; i < tagComponents.length; ++i) {
@@ -1312,8 +1312,8 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         TagElement[] combinations = new TagElement[numElements];
 
         int combinationPosition = 0;
-        SequenceMatchingPreferences.MatchingType sequenceMatchingType = seqMatchPref.getSequenceMatchingType();
-        if (sequenceMatchingType == SequenceMatchingPreferences.MatchingType.string) {
+        SequenceMatchingParameters.MatchingType sequenceMatchingType = seqMatchPref.getSequenceMatchingType();
+        if (sequenceMatchingType == SequenceMatchingParameters.MatchingType.string) {
             for (TagElement tagElement : tagComponents) {
                 if (tagElement.isMass) {
                     combinations[combinationPosition++] = new TagElement(true, "", tagElement.mass, tagElement.xNumLimit);
@@ -1323,8 +1323,8 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                     }
                 }
             }
-        } else if (sequenceMatchingType == SequenceMatchingPreferences.MatchingType.aminoAcid || sequenceMatchingType == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
-            boolean indistinghuishable = sequenceMatchingType == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids;
+        } else if (sequenceMatchingType == SequenceMatchingParameters.MatchingType.aminoAcid || sequenceMatchingType == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
+            boolean indistinghuishable = sequenceMatchingType == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids;
 
             for (TagElement tagElement : tagComponents) {
                 if (!tagElement.isMass) {
@@ -1394,7 +1394,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @return the protein mapping
      */
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref) {
+    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters seqMatchPref) {
         ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             if (genericVariantMatching) {
@@ -1424,7 +1424,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param indexPart the index part
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingParameters seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
@@ -1512,7 +1512,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param indexPart the index part
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsGeneric(String peptide, SequenceMatchingParameters seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
@@ -1687,7 +1687,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param indexPart the index part
      * @return the mapping
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref, int indexPart) {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingParameters seqMatchPref, int indexPart) {
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
@@ -3938,7 +3938,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws SQLException thrown if an SQLException occurs
      */
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         return getProteinMapping(tag, sequenceMatchingPreferences);
     }
 
@@ -3955,7 +3955,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws SQLException thrown if an SQLException occurs
      */
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             for (int i = 0; i < indexParts; ++i) {
@@ -3983,7 +3983,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
@@ -4372,7 +4372,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws ClassNotFoundException thrown if a ClassNotFoundException
      * @throws SQLException thrown if an SQLException occurs
      */
-    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithVariants(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, int indexPart) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);

@@ -2,7 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.ValidationQCPreferences;
+import com.compomics.util.parameters.identification.ValidationQcParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -58,7 +58,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param validationQCPreferences the validation QC preferences
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ValidationQCPreferencesDialog(java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
+    public ValidationQCPreferencesDialog(java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQcParameters validationQCPreferences, boolean editable) {
         super(parentFrame, true);
         initComponents();
 
@@ -109,7 +109,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param validationQCPreferences the validation QC preferences
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ValidationQCPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
+    public ValidationQCPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQcParameters validationQCPreferences, boolean editable) {
         super(owner, true);
         initComponents();
 
@@ -155,7 +155,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      *
      * @param validationQCPreferences the validation QC preferences
      */
-    private void setUpGUI(ValidationQCPreferences validationQCPreferences) {
+    private void setUpGUI(ValidationQcParameters validationQCPreferences) {
         
         dbCheck.setSelected(validationQCPreferences.isDbSize());
         nTargetCheck.setSelected(validationQCPreferences.isFirstDecoy());
@@ -916,8 +916,8 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      *
      * @return the validation QC preferences as set by the user
      */
-    public ValidationQCPreferences getValidationQCPreferences() {
-        ValidationQCPreferences validationQCPreferences = new ValidationQCPreferences();
+    public ValidationQcParameters getValidationQCPreferences() {
+        ValidationQcParameters validationQCPreferences = new ValidationQcParameters();
         validationQCPreferences.setDbSize(dbCheck.isSelected());
         validationQCPreferences.setFirstDecoy(nTargetCheck.isSelected());
         if (!confidenceCheck.isSelected()) {

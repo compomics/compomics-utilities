@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.identification_parameters.t
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
 
 /**
  * The MyriMatch specific parameters.
@@ -567,13 +567,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      *
      * @return the MyriMatch enzyme as a string, or null of no mapping is found
      */
-    public static String enzymeMapping(DigestionPreferences digestionPreferences) {
+    public static String enzymeMapping(DigestionParameters digestionPreferences) {
 
         // Try to map to one of the default Myrimatch enzymes
-        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.unSpecific) {
+        if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.unSpecific) {
             return "unspecific cleavage";
         }
-        if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.wholeProtein) {
+        if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.wholeProtein) {
             return "no cleavage";
         }
         if (digestionPreferences.getEnzymes().size() == 1) {

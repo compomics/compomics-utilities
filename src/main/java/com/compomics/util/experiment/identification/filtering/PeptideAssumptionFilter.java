@@ -9,8 +9,8 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -144,7 +144,7 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, DigestionPreferences digestionPreferences) {
+    public boolean validatePeptide(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, DigestionParameters digestionPreferences) {
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -188,7 +188,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultPeptideMapper());
     }
 
@@ -208,7 +208,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper)
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
@@ -243,8 +243,8 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
+    public boolean validateModifications(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences,
+            SequenceMatchingParameters ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 

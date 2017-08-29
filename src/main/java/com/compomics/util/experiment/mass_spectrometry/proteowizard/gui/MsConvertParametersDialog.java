@@ -6,7 +6,7 @@ import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsConvertPar
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsFormat;
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.ProteoWizardFilter;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserPreferences;
 
     /**
      * Constructor.
@@ -113,7 +113,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         outputFormatCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
@@ -396,7 +396,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         if (formatCheck) {
             utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
             try {
-                UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+                UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
                 dispose();
             } catch (Exception e) {
                 e.printStackTrace();

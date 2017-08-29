@@ -15,7 +15,7 @@ import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -685,7 +685,7 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
+            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
             SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         if (spectrumMatches == null) {
             parseFile(waitingHandler, expandAaCombinations, true);

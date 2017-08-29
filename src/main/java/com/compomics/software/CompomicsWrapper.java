@@ -10,7 +10,7 @@ import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.StreamGobbler;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Image;
 import java.io.*;
 import java.net.URLDecoder;
@@ -58,7 +58,7 @@ public class CompomicsWrapper {
     /**
      * The user preferences.
      */
-    private UtilitiesUserPreferences userPreferences;
+    private UtilitiesUserParameters userPreferences;
     /**
      * A simple progress dialog.
      */
@@ -102,7 +102,7 @@ public class CompomicsWrapper {
 
         try {
             try {
-                userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+                userPreferences = UtilitiesUserParameters.loadUserPreferences();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -318,19 +318,19 @@ public class CompomicsWrapper {
                 if (errorMessage.contains("could not create the java virtual machine") || inputMessage.contains("could not reserve enough space")) {
                     if (userPreferences.getMemoryPreference() > 4 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() / 2);
-                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                        UtilitiesUserParameters.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() > 2 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 1024);
-                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                        UtilitiesUserParameters.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() > 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
-                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                        UtilitiesUserParameters.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() <= 1024) {
                         userPreferences.setMemoryPreference(800); // one last desperate try!
-                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                        UtilitiesUserParameters.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else {
                         if (useStartUpLog) {
@@ -772,7 +772,7 @@ public class CompomicsWrapper {
     private ArrayList<String> getJavaOptions(File confFolder, BufferedWriter bw) throws IOException {
 
         try {
-            userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            userPreferences = UtilitiesUserParameters.loadUserPreferences();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -806,7 +806,7 @@ public class CompomicsWrapper {
                             if (input) {
                                 try {
                                     userPreferences.setMemoryPreference(new Integer(currentOption));
-                                    UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                                    UtilitiesUserParameters.saveUserPreferences(userPreferences);
                                     if (bw != null) {
                                         bw.write("New memory setting saved: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
                                     }
@@ -935,7 +935,7 @@ public class CompomicsWrapper {
             }
         } else {
             try {
-                userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+                userPreferences = UtilitiesUserParameters.loadUserPreferences();
             } catch (Exception e) {
                 e.printStackTrace();
             }

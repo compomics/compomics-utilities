@@ -3,7 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.PTMScoringPreferences;
+import com.compomics.util.parameters.identification.PTMScoringParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
@@ -39,7 +39,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
+    public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringParameters ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -59,7 +59,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
+    public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringParameters ptmScoringPreferences, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -92,7 +92,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      *
      * @param spectrumCountingPreferences the PTM scoring preferences to display
      */
-    private void populateGUI(PTMScoringPreferences ptmScoringPreferences) {
+    private void populateGUI(PTMScoringParameters ptmScoringPreferences) {
 
         scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore());
 
@@ -187,9 +187,9 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      *
      * @return the PTM scoring preferences as set by the user
      */
-    public PTMScoringPreferences getPtmScoringPreferences() {
+    public PTMScoringParameters getPtmScoringPreferences() {
 
-        PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
+        PTMScoringParameters ptmScoringPreferences = new PTMScoringParameters();
 
         ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
         ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());

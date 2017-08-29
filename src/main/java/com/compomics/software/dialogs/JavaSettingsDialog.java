@@ -2,7 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.software.CompomicsWrapper;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Color;
 import java.io.File;
 import javax.swing.JDialog;
@@ -78,7 +78,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         }
 
         try {
-            UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
             int maxMemory = utilitiesUserPreferences.getMemoryPreference();
             memoryLabel.setText("<html>" + Util.roundDouble(maxMemory * 0.000976563, 1) + " GB " + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
 

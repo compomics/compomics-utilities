@@ -7,11 +7,11 @@ import com.compomics.util.gui.parameters.identification_parameters.Identificatio
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialogParent;
 import com.compomics.util.io.ConfigurationFile;
-import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.LastSelectedFolder;
-import com.compomics.util.preferences.MarshallableParameter;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.io.file.LastSelectedFolder;
+import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Image;

@@ -2,7 +2,7 @@ package com.compomics.util.experiment.io.identification;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -92,7 +92,7 @@ public interface IdfileReader {
      * @throws JAXBException if a JAXBException occurs
      * @throws XmlPullParserException if an XmlPullParserException occurs
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
 
     /**

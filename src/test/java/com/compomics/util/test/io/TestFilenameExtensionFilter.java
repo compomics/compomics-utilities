@@ -12,7 +12,7 @@
  */
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.FilenameExtensionFilter;
+import com.compomics.util.io.file.FilenameExtensionFilter;
 import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -31,7 +31,7 @@ import java.io.File;
  * This class implements the test scenario for the FilenameExtensionFilter class.
  *
  * @author Lennart Martens
- * @see com.compomics.util.io.FilenameExtensionFilter
+ * @see com.compomics.util.io.file.FilenameExtensionFilter
  */
 public class TestFilenameExtensionFilter extends TestCase {
 

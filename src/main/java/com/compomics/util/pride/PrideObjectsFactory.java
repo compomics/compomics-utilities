@@ -1,6 +1,6 @@
 package com.compomics.util.pride;
 
-import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.pride.prideobjects.*;
 import java.io.*;
 import java.util.HashMap;

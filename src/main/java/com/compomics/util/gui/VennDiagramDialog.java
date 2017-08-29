@@ -2,7 +2,7 @@ package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
-import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.io.file.LastSelectedFolder;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;

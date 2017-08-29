@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.IteratorFactory;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
 import java.io.IOException;
 import java.util.ArrayList;
 import junit.framework.Assert;
@@ -33,10 +33,10 @@ public class ProteinSequenceIteratorTest extends TestCase {
         String testSequence = "TESTKCTESCTKTEST";
         String testSequenceCombination = "TESTKCTJSCTKTEST";
         
-        DigestionPreferences digestionPreferences = new DigestionPreferences();
+        DigestionParameters digestionPreferences = new DigestionParameters();
         
         // No digestion
-        digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.wholeProtein);
+        digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.wholeProtein);
         
         // No modification
         SequenceIterator sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -98,7 +98,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         
         // Unspecific digestion
-        digestionPreferences.setCleavagePreference(DigestionPreferences.CleavagePreference.unSpecific);
+        digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.unSpecific);
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -174,7 +174,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         
         // Trypsin digestion
-        digestionPreferences = DigestionPreferences.getDefaultPreferences();
+        digestionPreferences = DigestionParameters.getDefaultPreferences();
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);

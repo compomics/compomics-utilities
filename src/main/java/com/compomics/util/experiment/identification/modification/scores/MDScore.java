@@ -4,7 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class MDScore {
      *
      * @return the MD score
      */
-    public static Double getMDScore(ArrayList<SpectrumIdentificationAssumption> mascotAssumptions, Peptide peptideCandidate, ArrayList<String> ptms, SequenceMatchingPreferences sequenceMatchingPreferences, Integer rounding) {
+    public static Double getMDScore(ArrayList<SpectrumIdentificationAssumption> mascotAssumptions, Peptide peptideCandidate, ArrayList<String> ptms, SequenceMatchingParameters sequenceMatchingPreferences, Integer rounding) {
 
         HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<>();
         Double firstScore = null, secondScore = null;

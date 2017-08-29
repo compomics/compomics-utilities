@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters;
 
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.MouseEvent;

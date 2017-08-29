@@ -12,7 +12,7 @@
  */
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.FTPClient;
+import com.compomics.util.io.ftp.FTPClient;
 import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -32,7 +32,7 @@ import java.util.Properties;
  * This class implements the test scenario for an FTPClient.
  *
  * @author Lennart Martens
- * @see com.compomics.util.io.FTPClient
+ * @see com.compomics.util.io.ftp.FTPClient
  */
 public class TestFTPClient extends TestCase {
 

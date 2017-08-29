@@ -5,7 +5,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,7 +66,7 @@ public class TestSearchParameterMarshaller {
         parameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         parameters.setPrecursorAccuracy(0.5);
         parameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
-        parameters.setDigestionPreferences(DigestionPreferences.getDefaultPreferences());
+        parameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
         parameters.setMaxChargeSearched(new Charge(1, 5));
         parameters.setMinChargeSearched(new Charge(1, 1));
         parameters.setPtmSettings(createMockUpPTMSettings());

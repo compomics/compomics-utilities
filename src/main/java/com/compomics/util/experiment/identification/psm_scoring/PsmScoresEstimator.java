@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.psm_scoring.psm_scores.SnrSc
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 
 /**
  * This class can be used to estimate PSM scores.

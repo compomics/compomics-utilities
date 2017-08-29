@@ -2,7 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserPreferences;
     /**
      * The selected folder.
      */
@@ -69,7 +69,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
 
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "ProteoWizard is required to convert raw files. "
@@ -333,7 +333,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

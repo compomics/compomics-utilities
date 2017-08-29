@@ -4,7 +4,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -46,7 +46,7 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-                    SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+                    SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
@@ -127,7 +127,7 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences,
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingParameters sequenceMatchingPreferences,
                 boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;

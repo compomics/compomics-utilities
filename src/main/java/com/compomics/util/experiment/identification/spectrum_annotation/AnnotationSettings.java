@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +151,7 @@ public class AnnotationSettings implements Serializable {
      * identification assumption
      */
     public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider,
-            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) {
+            SequenceMatchingParameters sequenceMatchingPreferences, SequenceMatchingParameters ptmSequenceMatchingPreferences) {
 
         SpecificAnnotationSettings specificAnnotationPreferences = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);

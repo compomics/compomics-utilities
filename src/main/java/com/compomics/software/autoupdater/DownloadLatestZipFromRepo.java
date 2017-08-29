@@ -2,7 +2,7 @@ package com.compomics.software.autoupdater;
 
 import com.compomics.software.settings.UtilitiesPathPreferences;
 import com.compomics.util.Util;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
@@ -234,7 +234,7 @@ public class DownloadLatestZipFromRepo {
 
             // set the new version has the default version
             // @TODO: should be done using enums
-            UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
             if (toolName.equalsIgnoreCase("PeptideShaker")) {
                 utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
             } else if (toolName.equalsIgnoreCase("SearchGUI")) {
@@ -242,7 +242,7 @@ public class DownloadLatestZipFromRepo {
             } else if (toolName.equalsIgnoreCase("Reporter")) {
                 utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
             }
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
 
             // copy path preferences to the new version
             String oldFolder = oldMavenJarFile.getAbsoluteFilePath();
@@ -346,7 +346,7 @@ public class DownloadLatestZipFromRepo {
 
         // set the new version has the default version
         // @TODO: should be done using enums
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
         if (toolName.equalsIgnoreCase("PeptideShaker")) {
             utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
         } else if (toolName.equalsIgnoreCase("SearchGUI")) {
@@ -354,7 +354,7 @@ public class DownloadLatestZipFromRepo {
         } else if (toolName.equalsIgnoreCase("Reporter")) {
             utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
         }
-        UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+        UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
 
         if (startDownloadedVersion) {
             launchJar(downloadedJarFile, args);

@@ -27,7 +27,7 @@ import com.compomics.util.experiment.biology.aminoacids.impl.Z;
 import com.compomics.util.experiment.biology.aminoacids.impl.X;
 import com.compomics.util.experiment.biology.aminoacids.impl.Asparagine;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -339,8 +339,8 @@ public abstract class AminoAcid implements Serializable {
      * @return a matching amino acid using the given matching type and
      * massTolerance
      */
-    public static char getMatchingAminoAcid(char aa, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids
+    public static char getMatchingAminoAcid(char aa, SequenceMatchingParameters sequenceMatchingPreferences) {
+        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids
                 && aa == 'L') {
             return 'I';
         }
@@ -357,9 +357,9 @@ public abstract class AminoAcid implements Serializable {
      *
      * @return the matching sequence
      */
-    public static String getMatchingSequence(String sequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public static String getMatchingSequence(String sequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         
-        if (sequenceMatchingPreferences.getSequenceMatchingType() != SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
+        if (sequenceMatchingPreferences.getSequenceMatchingType() != SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
             return sequence;
         }
         

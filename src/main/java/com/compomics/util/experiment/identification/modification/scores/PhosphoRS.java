@@ -14,7 +14,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.math.statistics.distributions.BinomialDistribution;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.math.BasicMathFunctions;
@@ -90,8 +90,8 @@ public class PhosphoRS {
      * @return a map site &gt; phosphoRS site probability
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> modifications, Spectrum spectrum, SequenceProvider sequenceProvider, AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences modificationSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator) {
+            SpecificAnnotationSettings specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingParameters sequenceMatchingPreferences,
+            SequenceMatchingParameters modificationSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator) {
 
         if (modifications.isEmpty()) {
             throw new IllegalArgumentException("No modification given for PhosphoRS calculation.");

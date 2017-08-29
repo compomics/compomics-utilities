@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;

@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.FractionSettings;
+import com.compomics.util.parameters.identification.FractionParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 
@@ -34,7 +34,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public FractionSettingsDialog(java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
+    public FractionSettingsDialog(java.awt.Frame parentFrame, FractionParameters fractionSettings, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -54,7 +54,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public FractionSettingsDialog(Dialog owner, java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
+    public FractionSettingsDialog(Dialog owner, java.awt.Frame parentFrame, FractionParameters fractionSettings, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -77,7 +77,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      *
      * @param fractionSettings the fraction settings to display
      */
-    private void populateGUI(FractionSettings fractionSettings) {
+    private void populateGUI(FractionParameters fractionSettings) {
         proteinMwSpinner.setValue(fractionSettings.getProteinConfidenceMwPlots());
     }
 
@@ -95,8 +95,8 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      *
      * @return the fraction settings as set by the user
      */
-    public FractionSettings getFractionSettings() {
-        FractionSettings fractionSettings = new FractionSettings();
+    public FractionParameters getFractionSettings() {
+        FractionParameters fractionSettings = new FractionParameters();
         fractionSettings.setProteinConfidenceMwPlots((Double) proteinMwSpinner.getValue());
         return fractionSettings;
     }

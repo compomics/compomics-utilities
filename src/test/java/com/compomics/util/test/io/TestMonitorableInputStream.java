@@ -12,7 +12,7 @@
  */
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.MonitorableInputStream;
+import com.compomics.util.io.file.MonitorableInputStream;
 import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -37,7 +37,7 @@ import java.util.zip.ZipInputStream;
  * class.
  *
  * @author Lennart Martens
- * @see com.compomics.util.io.MonitorableInputStream
+ * @see com.compomics.util.io.file.MonitorableInputStream
  */
 public class TestMonitorableInputStream extends TestCase {
 

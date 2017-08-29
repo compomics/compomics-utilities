@@ -1,5 +1,6 @@
 package com.compomics.util.io;
 
+import com.compomics.util.io.file.FileSystemAccessor;
 import com.compomics.util.enumeration.CompomicsTools;
 import org.apache.log4j.*;
 

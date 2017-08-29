@@ -7,7 +7,7 @@ import com.compomics.util.experiment.io.mass_spectrometry.MgfIndex;
 import com.compomics.util.experiment.io.mass_spectrometry.MgfReader;
 import com.compomics.util.experiment.io.mass_spectrometry.MspReader;
 import com.compomics.util.waiting.WaitingHandler;
-import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.file.SerializationUtils;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;

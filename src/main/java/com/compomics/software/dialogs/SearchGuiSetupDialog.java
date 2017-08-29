@@ -5,7 +5,7 @@ import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserPreferences;
     /**
      * The selected folder.
      */
@@ -87,7 +87,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
 
         if (utilitiesUserPreferences.getSearchGuiPath() == null) {
             boolean downloaded = downloadSearchGUI();
@@ -363,7 +363,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         utilitiesUserPreferences.setSearchGuiPath(searchGuiInstallationJTextField.getText());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

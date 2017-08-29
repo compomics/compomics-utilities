@@ -16,7 +16,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +52,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param precursorCharge the new precursor charge
      */
     public void setTag(Tag newTag, int precursorCharge) {
-        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingPreferences.defaultStringMatching) || this.precursorCharge != precursorCharge) {
+        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingParameters.defaultStringMatching) || this.precursorCharge != precursorCharge) {
 
             // Set new values
             this.tag = newTag;
@@ -75,7 +75,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings) {
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingParameters ptmSequenceMatchingSettings) {
 
         ModificationFactory pTMFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();

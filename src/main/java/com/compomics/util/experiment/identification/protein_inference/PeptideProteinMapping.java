@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -164,7 +164,7 @@ public class PeptideProteinMapping {
      *
      * @return a list of peptides
      */
-    public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingParameters sequenceMatchingPreferences) {
         
         HashMap<String, Peptide> peptidesMap = new HashMap<>(peptideProteinMappings.size());
         HashMap<String, HashMap<String, HashSet<Integer>>> proteinsMap = new HashMap<>(peptideProteinMappings.size());

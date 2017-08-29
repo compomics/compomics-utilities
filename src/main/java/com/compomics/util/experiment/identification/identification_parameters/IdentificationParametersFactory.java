@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.MarshallableParameter;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

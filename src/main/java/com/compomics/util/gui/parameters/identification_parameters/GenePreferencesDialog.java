@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaIndex;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.GenePreferences;
+import com.compomics.util.parameters.identification.GeneParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
     /**
      * The gene preferences.
      */
-    private GenePreferences genePreferences;
+    private GeneParameters genePreferences;
     /**
      * The search parameters.
      */
@@ -59,7 +59,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GenePreferencesDialog(JFrame parentFrame, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GenePreferencesDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -81,7 +81,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GenePreferencesDialog(JDialog owner, java.awt.Frame parentFrame, GenePreferences genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GenePreferencesDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -177,9 +177,9 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
      *
      * @return the gene preferences
      */
-    public GenePreferences getGenePreferences() {
+    public GeneParameters getGenePreferences() {
 
-        GenePreferences tempGenePreferences = new GenePreferences();
+        GeneParameters tempGenePreferences = new GeneParameters();
 
         tempGenePreferences.setUseGeneMapping(useMappingCmb.getSelectedIndex() == 0);
         tempGenePreferences.setAutoUpdate(autoUpdateCmb.getSelectedIndex() == 0);

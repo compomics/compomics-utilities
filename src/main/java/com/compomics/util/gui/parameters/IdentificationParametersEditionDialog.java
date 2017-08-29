@@ -21,17 +21,17 @@ import com.compomics.util.gui.parameters.identification_parameters.ValidationQCP
 import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialogParent;
 import com.compomics.util.gui.parameters.identification_parameters.ValidationSettingsDialog;
 import com.compomics.util.io.ConfigurationFile;
-import com.compomics.util.preferences.FractionSettings;
-import com.compomics.util.preferences.GenePreferences;
-import com.compomics.util.preferences.IdMatchValidationPreferences;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.LastSelectedFolder;
-import com.compomics.util.preferences.PTMScoringPreferences;
-import com.compomics.util.preferences.PeptideVariantsPreferences;
-import com.compomics.util.preferences.ProteinInferencePreferences;
-import com.compomics.util.preferences.PsmScoringPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.preferences.ValidationQCPreferences;
+import com.compomics.util.parameters.identification.FractionParameters;
+import com.compomics.util.parameters.identification.GeneParameters;
+import com.compomics.util.parameters.identification.IdMatchValidationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.io.file.LastSelectedFolder;
+import com.compomics.util.parameters.identification.PTMScoringParameters;
+import com.compomics.util.parameters.identification.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.ProteinInferenceParameters;
+import com.compomics.util.parameters.identification.PsmScoringParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.ValidationQcParameters;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
@@ -86,19 +86,19 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * The peptide to protein matching preferences.
      */
-    private SequenceMatchingPreferences sequenceMatchingPreferences;
+    private SequenceMatchingParameters sequenceMatchingPreferences;
     /**
      * The peptide variants preferences.
      */
-    private PeptideVariantsPreferences peptideVariantsPreferences;
+    private PeptideVariantsParameters peptideVariantsPreferences;
     /**
      * The gene preferences.
      */
-    private GenePreferences genePreferences;
+    private GeneParameters genePreferences;
     /**
      * The PSM scores to use.
      */
-    private PsmScoringPreferences psmScoringPreferences;
+    private PsmScoringParameters psmScoringPreferences;
     /**
      * The PSM filter.
      */
@@ -106,19 +106,19 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * The PTM localization scoring preferences.
      */
-    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
+    private PTMScoringParameters ptmScoringPreferences = new PTMScoringParameters();
     /**
      * The protein inference preferences.
      */
-    private ProteinInferencePreferences proteinInferencePreferences;
+    private ProteinInferenceParameters proteinInferencePreferences;
     /**
      * The identification validation preferences.
      */
-    private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
+    private IdMatchValidationParameters idValidationPreferences = new IdMatchValidationParameters();
     /**
      * The fraction settings.
      */
-    private FractionSettings fractionSettings;
+    private FractionParameters fractionSettings;
     /**
      * A parent handling the edition of QC filters.
      */
@@ -1021,7 +1021,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
         ValidationSettingsDialog validationSettingsDialog = new ValidationSettingsDialog(this, parentFrame, idValidationPreferences, editable);
         if (!validationSettingsDialog.isCanceled()) {
-            ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+            ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
             idValidationPreferences = validationSettingsDialog.getIdMatchValidationPreferences();
             idValidationPreferences.setValidationQCPreferences(validationQCPreferences);
             updateGUI();
@@ -1034,10 +1034,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
-        ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+        ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
         ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
-            idValidationPreferences = new IdMatchValidationPreferences(idValidationPreferences);
+            idValidationPreferences = new IdMatchValidationParameters(idValidationPreferences);
             idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
             updateGUI();
         }

@@ -173,7 +173,7 @@
             <Component class="javax.swing.JComboBox" name="processingTypeCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new DefaultComboBoxModel(ProcessingPreferences.ProcessingType.values())" type="code"/>
+                  <Connection code="new DefaultComboBoxModel(com.compomics.util.parameters.ProcessingParameters.ProcessingType.values())" type="code"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>

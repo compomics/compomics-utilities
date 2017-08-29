@@ -3,7 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.PsmScoringPreferences;
+import com.compomics.util.parameters.identification.PsmScoringParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -68,7 +68,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
+    public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringParameters psmScoringPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -88,7 +88,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public PsmScoringSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
+    public PsmScoringSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PsmScoringParameters psmScoringPreferences, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -126,7 +126,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      *
      * @param psmScoringPreferences the scoring preferences to display
      */
-    private void populateGUI(PsmScoringPreferences psmScoringPreferences) {
+    private void populateGUI(PsmScoringParameters psmScoringPreferences) {
 
         // get all implemented scores
         PsmScore[] psmScores = PsmScore.values();
@@ -177,8 +177,8 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      *
      * @return the PSM scoring preferences as set by the user
      */
-    public PsmScoringPreferences getPsmScoringPreferences() {
-        PsmScoringPreferences psmScoringPreferences = new PsmScoringPreferences();
+    public PsmScoringParameters getPsmScoringPreferences() {
+        PsmScoringParameters psmScoringPreferences = new PsmScoringParameters();
         psmScoringPreferences.clearAllScores();
         for (Integer algorithm : spectrumMatchingScores.keySet()) {
             HashSet<Integer> scores = spectrumMatchingScores.get(algorithm);

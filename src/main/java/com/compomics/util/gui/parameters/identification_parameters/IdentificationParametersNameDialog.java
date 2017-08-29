@@ -1,6 +1,6 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.awt.Dialog;
 import javax.swing.JOptionPane;
 

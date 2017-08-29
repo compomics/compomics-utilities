@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database
      */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
+    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingParameters proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
@@ -60,7 +60,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Returns the protein mappings for the given peptide sequence. Peptide
@@ -83,7 +83,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Empties all caches.

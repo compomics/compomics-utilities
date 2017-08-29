@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.IdMatchValidationPreferences;
+import com.compomics.util.parameters.identification.IdMatchValidationParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
@@ -36,7 +36,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public ValidationSettingsDialog(java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
+    public ValidationSettingsDialog(java.awt.Frame parentFrame, IdMatchValidationParameters idMatchValidationPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -56,7 +56,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public ValidationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
+    public ValidationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, IdMatchValidationParameters idMatchValidationPreferences, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -86,7 +86,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      *
      * @param idMatchValidationPreferences the validation preferences to display
      */
-    private void populateGUI(IdMatchValidationPreferences idMatchValidationPreferences) {
+    private void populateGUI(IdMatchValidationParameters idMatchValidationPreferences) {
         proteinFdrTxt.setText(idMatchValidationPreferences.getDefaultProteinFDR() + "");
         peptideFdrTxt.setText(idMatchValidationPreferences.getDefaultPeptideFDR() + "");
         psmFdrTxt.setText(idMatchValidationPreferences.getDefaultPsmFDR() + "");
@@ -111,8 +111,8 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      *
      * @return the validation settings as set by the user
      */
-    public IdMatchValidationPreferences getIdMatchValidationPreferences() {
-        IdMatchValidationPreferences idMatchValidationPreferences = new IdMatchValidationPreferences();
+    public IdMatchValidationParameters getIdMatchValidationPreferences() {
+        IdMatchValidationParameters idMatchValidationPreferences = new IdMatchValidationParameters();
         idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));

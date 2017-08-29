@@ -11,9 +11,9 @@ import com.compomics.util.experiment.identification.protein_inference.PeptideMap
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.PeptideVariantsPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.parameters.identification.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -58,8 +58,8 @@ public class PeptideMapperCLI {
         File fastaFile = new File(args[1]);
 
         SearchParameters searchParameters = null;
-        PeptideVariantsPreferences peptideVariantsPreferences = null;
-        SequenceMatchingPreferences sequenceMatchingPreferences = null;
+        PeptideVariantsParameters peptideVariantsPreferences = null;
+        SequenceMatchingParameters sequenceMatchingPreferences = null;
         if (args.length >= 5) {
             File parameterFile = new File(args[4]);
             IdentificationParameters identificationParameters = null;
@@ -75,18 +75,18 @@ public class PeptideMapperCLI {
                 peptideMapperType = identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType();
                 System.err.println("New mapping index: " + peptideMapperType.name);
             }
-            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+            peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
             searchParameters = identificationParameters.getSearchParameters();
 
         } else {
-            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+            peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
             searchParameters = new SearchParameters();
             searchParameters.setPtmSettings(new PtmSettings());
             searchParameters.setFragmentIonAccuracy(0.02);
             searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
-            sequenceMatchingPreferences = new SequenceMatchingPreferences();
-            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+            sequenceMatchingPreferences = new SequenceMatchingParameters();
+            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
 

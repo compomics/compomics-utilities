@@ -9,8 +9,8 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters.MatchingType;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -442,7 +442,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the amino acid pattern as java string pattern
      */
-    public Pattern getAsStringPattern(SequenceMatchingPreferences sequenceMatchingPreferences, boolean includeMutations) {
+    public Pattern getAsStringPattern(SequenceMatchingParameters sequenceMatchingPreferences, boolean includeMutations) {
 
         MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
 
@@ -570,7 +570,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public ArrayList<Integer> getIndexes(String input, SequenceMatchingParameters sequenceMatchingPreferences) {
         
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
@@ -594,7 +594,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingParameters sequenceMatchingPreferences) {
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
         while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
@@ -613,7 +613,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         return firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
     }
 
@@ -626,7 +626,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         return firstIndex(aminoAcidSequence.getSequence(), sequenceMatchingPreferences, 0);
     }
 
@@ -639,7 +639,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         return firstIndex(aminoAcidPattern, sequenceMatchingPreferences, 0);
     }
 
@@ -651,7 +651,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean contains(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         AminoAcidPattern pattern = getAminoAcidPatternFromString(aminoAcidSequence);
         return pattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
     }
@@ -664,7 +664,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         return aminoAcidPattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
     }
 
@@ -678,7 +678,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, int startIndex) {
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidSequence.length();
@@ -714,7 +714,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences, int startIndex) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
@@ -756,7 +756,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return true if the given amino acid at the given index of the pattern is
      * targeted
      */
-    public boolean isTargeted(Character aa, int index, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isTargeted(Character aa, int index, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         if (residueTargeted != null) {
 
@@ -810,7 +810,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
@@ -823,7 +823,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         return firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
     }
 
@@ -839,7 +839,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence at the given index
      */
-    public boolean matchesAt(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, int index) {
+    public boolean matchesAt(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences, int index) {
         int startIndex = index;
         int endIndex = length();
         if (startIndex < 0) {
@@ -861,7 +861,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
@@ -874,7 +874,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
     }
 
@@ -887,7 +887,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isStarting(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         int patternLength = length();
         return matchesIn(aminoAcidSequence.substring(0, patternLength), sequenceMatchingPreferences);
     }
@@ -901,7 +901,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         int patternLength = length();
         return matchesIn(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingPreferences);
     }
@@ -915,7 +915,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         int patternLength = length();
         return matchesIn(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingPreferences);
     }
@@ -929,7 +929,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isEnding(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         int patternLength = length();
         return matchesIn(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingPreferences);
     }
@@ -944,7 +944,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         if (anotherPattern == null) {
             return false;
@@ -990,7 +990,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
 
         if (!matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
@@ -1785,7 +1785,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidPattern)) {
             return false;
         } else {
@@ -1795,7 +1795,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidPattern)) {
             return false;
         } else {

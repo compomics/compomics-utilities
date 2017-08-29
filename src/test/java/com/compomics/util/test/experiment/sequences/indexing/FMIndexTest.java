@@ -21,9 +21,9 @@ import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.PeptideVariantsPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.parameters.identification.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -75,12 +75,12 @@ public class FMIndexTest extends TestCase {
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
-        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
 
         FMIndex fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
         ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTAFTEAVLLP", sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.size() == 1);
@@ -89,7 +89,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
         Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
 
-        peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
+        peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingParameters.defaultStringMatching);
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
         Assert.assertTrue(testIndexes.size() == 1);
         HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
@@ -140,7 +140,7 @@ public class FMIndexTest extends TestCase {
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
-        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
         peptideVariantsPreferences.setnVariants(1);
         peptideVariantsPreferences.setUseSpecificCount(false);
 
@@ -150,8 +150,8 @@ public class FMIndexTest extends TestCase {
         boolean isPresent;
 
         // ECTQDRGKTAFTEAVLLP
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
         fmIndex = new FMIndex(null, false, null, peptideVariantsPreferences);
@@ -309,13 +309,13 @@ public class FMIndexTest extends TestCase {
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
-        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
         peptideVariantsPreferences.setUseSpecificCount(true);
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
         peptideVariantsPreferences.setnAaSubstitutions(1);
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
         FMIndex fmIndex;
@@ -485,15 +485,15 @@ public class FMIndexTest extends TestCase {
             return;
         }
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
         ModificationFactory ptmFactory = ModificationFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = ModificationFactory.getInstance();
 
-        PeptideVariantsPreferences peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
@@ -1824,11 +1824,11 @@ public class FMIndexTest extends TestCase {
             return;
         }
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
-        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setnVariants(1);
         peptideVariantsPreferences.setUseSpecificCount(false);
 
@@ -2297,11 +2297,11 @@ public class FMIndexTest extends TestCase {
         if (!testVariantPTMMatching) {
             return;
         }
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
-        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.singleBaseSubstitution);
         peptideVariantsPreferences.setnVariants(1);
         peptideVariantsPreferences.setUseSpecificCount(false);
@@ -2534,11 +2534,11 @@ public class FMIndexTest extends TestCase {
             return;
         }
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
 
-        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setnAaDeletions(0);
         peptideVariantsPreferences.setnAaInsertions(0);
         peptideVariantsPreferences.setnAaSubstitutions(0);

@@ -12,7 +12,7 @@ import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -107,7 +107,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * The sequence matching parameters.
      */
-    private SequenceMatchingPreferences sequenceMatchingPreferences;
+    private SequenceMatchingParameters sequenceMatchingPreferences;
     /**
      * Set if the amino acid combinations are to be expanded. For example
      * replacing X's.
@@ -217,7 +217,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;

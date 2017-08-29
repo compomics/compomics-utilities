@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.protein_sequences.digestion.
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SpecificSingleEnzymeCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.DigestionParameters;
 import java.util.ArrayList;
 
 /**
@@ -60,7 +60,7 @@ public class IteratorFactory {
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
-    public SequenceIterator getSequenceIterator(String sequence, DigestionPreferences digestionPreferences, double massMin, double massMax) throws InterruptedException {
+    public SequenceIterator getSequenceIterator(String sequence, DigestionParameters digestionPreferences, double massMin, double massMax) throws InterruptedException {
         switch (digestionPreferences.getCleavagePreference()) {
             case unSpecific:
                 if (AminoAcidSequence.hasCombination(sequence)) {

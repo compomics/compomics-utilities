@@ -3,11 +3,11 @@ package com.compomics.util.gui.parameters;
 import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.FractionSettings;
-import com.compomics.util.preferences.IdMatchValidationPreferences;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.PTMScoringPreferences;
-import com.compomics.util.preferences.PSProcessingPreferences;
+import com.compomics.util.parameters.identification.FractionParameters;
+import com.compomics.util.parameters.identification.IdMatchValidationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.parameters.identification.PTMScoringParameters;
+import com.compomics.util.parameters.identification.PSProcessingParameters;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
@@ -26,7 +26,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
     /**
      * The processing preferences.
      */
-    private PSProcessingPreferences processingPreferences;
+    private PSProcessingParameters processingPreferences;
     /**
      * The identification parameters
      */
@@ -50,7 +50,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param identificationParameters the identification parameters
      * @param processingPreferences the processing preferences
      */
-    public OldProcessingPreferencesDialog(java.awt.Frame parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingPreferences processingPreferences) {
+    public OldProcessingPreferencesDialog(java.awt.Frame parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingParameters processingPreferences) {
         super(parent, true);
         initComponents();
         this.processingPreferences = processingPreferences;
@@ -70,7 +70,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param identificationParameters the identification parameters
      * @param processingPreferences the processing preferences
      */
-    public OldProcessingPreferencesDialog(JDialog parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingPreferences processingPreferences) {
+    public OldProcessingPreferencesDialog(JDialog parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingParameters processingPreferences) {
         super(parent, true);
         initComponents();
         this.processingPreferences = processingPreferences;
@@ -86,7 +86,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
 
-        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        IdMatchValidationParameters idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
         proteinFdrTxt.setText(idMatchValidationPreferences.getDefaultProteinFDR() + "");
         peptideFdrTxt.setText(idMatchValidationPreferences.getDefaultPeptideFDR() + "");
         psmFdrTxt.setText(idMatchValidationPreferences.getDefaultPsmFDR() + "");
@@ -99,7 +99,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
         psmFdrTxt.setEnabled(editable);
         proteinConfidenceMwTxt.setEnabled(editable);
 
-        PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+        PTMScoringParameters ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
         
         scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore());
         
@@ -129,7 +129,7 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
             thresholdTxt.setEditable(false);
         }
 
-        FractionSettings fractionSettings = identificationParameters.getFractionSettings();
+        FractionParameters fractionSettings = identificationParameters.getFractionSettings();
         proteinConfidenceMwTxt.setText(fractionSettings.getProteinConfidenceMwPlots() + "");
 
         thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
@@ -571,12 +571,12 @@ public class OldProcessingPreferencesDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (editable && validateInput()) {
 
-            IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+            IdMatchValidationParameters idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
             idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
             idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
             idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
 
-            PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+            PTMScoringParameters ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
             ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
             ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());
             ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);

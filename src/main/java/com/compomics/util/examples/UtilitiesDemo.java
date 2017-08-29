@@ -20,7 +20,7 @@ import com.compomics.util.gui.spectrum.IsotopicDistributionPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.io.MascotEnzymeReader;
 import com.compomics.util.io.PklFile;
-import com.compomics.util.io.filefilters.PdfFileFilter;
+import com.compomics.util.io.file.filefilters.PdfFileFilter;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Enzyme;
 import com.compomics.util.experiment.io.biology.protein.Header;

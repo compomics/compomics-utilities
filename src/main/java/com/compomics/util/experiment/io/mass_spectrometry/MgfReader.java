@@ -4,7 +4,7 @@ import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
@@ -639,7 +639,7 @@ public class MgfReader {
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters userPreferences = UtilitiesUserParameters.loadUserPreferences();
 
         BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         String lineBreak = System.getProperty("line.separator");

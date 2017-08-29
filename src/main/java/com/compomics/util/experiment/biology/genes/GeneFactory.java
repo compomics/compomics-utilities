@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.preferences.GenePreferences;
+import com.compomics.util.parameters.identification.GeneParameters;
 import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
@@ -120,7 +120,7 @@ public class GeneFactory {
      * or writing data.
      * @throws java.lang.InterruptedException exception thrown whenever a threading issue occurs.
      */
-    public GeneMaps getGeneMaps(GenePreferences genePreferences, HashMap<String, String> proteinSpeciesMap, HashMap<String, String> proteinGeneMap, WaitingHandler waitingHandler) throws IOException, InterruptedException {
+    public GeneMaps getGeneMaps(GeneParameters genePreferences, HashMap<String, String> proteinSpeciesMap, HashMap<String, String> proteinGeneMap, WaitingHandler waitingHandler) throws IOException, InterruptedException {
 
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
         HashMap<String, GeneMapping> geneMappings = new HashMap<>(proteinSpeciesMap.size());

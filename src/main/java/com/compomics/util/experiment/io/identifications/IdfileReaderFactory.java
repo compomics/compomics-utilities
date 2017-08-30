@@ -121,7 +121,7 @@ public class IdfileReaderFactory {
 
         // Get file name of the idfile to process.
         String name = aFile.getName().toLowerCase();
-
+        
         // Iterator registered IdfileReaders, see who likes this file. First come, first served.
         // @TODO: May want to make this more sophisticated, possibly like the DBLoaders in DBToolkit, 
         //        that get the actual file to read some lines prior to making up their mind; thus constitutes 

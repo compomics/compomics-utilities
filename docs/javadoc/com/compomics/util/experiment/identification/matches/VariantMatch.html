@@ -97,10 +97,13 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
-<li><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
+<li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
 <li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a></li>
 <li>
 <ul class="inheritance">
 <li>com.compomics.util.experiment.identification.matches.VariantMatch</li>
@@ -109,17 +112,25 @@ var activeTableTab = "activeTableTab";
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">VariantMatch</span>
-extends org.zoodb.api.impl.ZooPC</pre>
+extends <a href="../../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a></pre>
 <div class="block">Class capturing the information on a variant.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel, Dominik Kopczynski</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../serialized-form.html#com.compomics.util.experiment.identification.matches.VariantMatch">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -140,7 +151,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html#VariantMatch-com.compomics.util.experiment.biology.variants.Variant-java.lang.String-int-">VariantMatch</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&nbsp;variant,
-            <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
             int&nbsp;site)</code>
 <div class="block">Constructor.</div>
 </td>
@@ -161,7 +172,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html#getProteinAccession--">getProteinAccession</a></span>()</code>
 <div class="block">Returns the protein accession where this variant was found.</div>
 </td>
@@ -180,7 +191,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html#setProteinAccession-java.lang.String-">setProteinAccession</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/VariantMatch.html#setProteinAccession-java.lang.String-">setProteinAccession</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -192,6 +203,13 @@ extends org.zoodb.api.impl.ZooPC</pre>
 </tr>
 </table>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.IdObject">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.compomics.util.<a href="../../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a></h3>
+<code><a href="../../../../../../com/compomics/util/IdObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../../com/compomics/util/IdObject.html#getId--">getId</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../../com/compomics/util/IdObject.html#setId-long-">setId</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
 <!--   -->
 </a>
@@ -202,8 +220,8 @@ extends org.zoodb.api.impl.ZooPC</pre>
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
+<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -226,7 +244,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 <li class="blockList">
 <h4>VariantMatch</h4>
 <pre>public&nbsp;VariantMatch(<a href="../../../../../../com/compomics/util/experiment/biology/variants/Variant.html" title="interface in com.compomics.util.experiment.biology.variants">Variant</a>&nbsp;variant,
-                    <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
+                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
                     int&nbsp;site)</pre>
 <div class="block">Constructor.</div>
 <dl>
@@ -279,7 +297,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinAccession</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getProteinAccession()</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getProteinAccession()</pre>
 <div class="block">Returns the protein accession where this variant was found.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -293,7 +311,7 @@ extends org.zoodb.api.impl.ZooPC</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setProteinAccession</h4>
-<pre>public&nbsp;void&nbsp;setProteinAccession(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
+<pre>public&nbsp;void&nbsp;setProteinAccession(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
 </li>
 </ul>
 <a name="setSite-int-">

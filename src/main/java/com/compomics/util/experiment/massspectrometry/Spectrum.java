@@ -121,7 +121,6 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param spectrumFile the spectrum file
      * @param spectrumTitle the spectrum title
-     * @param algorithmId the algorithmId
      *
      * @return the corresponding spectrum key
      */

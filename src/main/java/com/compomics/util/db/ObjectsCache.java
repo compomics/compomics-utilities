@@ -107,13 +107,21 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      *
      * @return the object of interest, null if not present in the cache
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     *
+     * @throws IOException if an IOException occurs while writing to the
+     * database
+     * @throws SQLException if an SQLException occurs while writing to the
+     * database
+     * @throws java.lang.InterruptedException if a threading error occurs
+     * writing to the database
      */
-    public Object getObject(Long objectKey) throws InterruptedException {
+    public Object getObject(Long objectKey) throws InterruptedException, IOException, SQLException {
+        updateCache();
         Object object = null;
         synchronized(loadedObjectMutex){
             if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey);
         }
+
         return object;
     }
     
@@ -162,10 +170,7 @@ public class ObjectsCache {
                     loadedObjects.put(objectKey, object);
                     objectQueue.add(objectKey);
                     
-                    if (objectsDB.getCurrentAdded() > numToCommit){
-                        objectsDB.commit();
-                        objectsDB.resetCurrentAdded();
-                    }
+                    if (objectsDB.getCurrentAdded() > numToCommit) objectsDB.commit();
                 }
                 updateCache();
             }
@@ -193,10 +198,7 @@ public class ObjectsCache {
                 loadedObjects.putAll(objects);
                 objectQueue.addAll(objects.keySet());
                 
-                if (objectsDB.getCurrentAdded() > numToCommit){
-                    objectsDB.commit();
-                    objectsDB.resetCurrentAdded();
-                }
+                if (objectsDB.getCurrentAdded() > numToCommit) objectsDB.commit();
 
                 updateCache();
             }

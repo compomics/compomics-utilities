@@ -94,7 +94,7 @@ public interface IdfileReader {
      * @throws XmlPullParserException if an XmlPullParserException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
 
     /**
      * Returns a boolean indicating whether the file contains de novo results as tags.

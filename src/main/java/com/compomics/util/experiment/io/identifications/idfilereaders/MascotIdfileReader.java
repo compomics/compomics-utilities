@@ -77,8 +77,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         charges.add(-100000);
         matches.add(-1);
         
-        System.out.println("OWN");
-        
         try {
             FileReader fr = new FileReader(inputFile);
             BufferedReader in = new BufferedReader(fr, 1 << 24);

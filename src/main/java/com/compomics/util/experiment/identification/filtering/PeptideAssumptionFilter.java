@@ -8,12 +8,13 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
+import com.compomics.util.experiment.identification.protein_sequences.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.parameters.identification.DigestionParameters;
 import com.compomics.util.parameters.identification.SequenceMatchingParameters;
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -176,20 +177,18 @@ public class PeptideAssumptionFilter implements Serializable {
 
     /**
      * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before using the default
-     * protein tree of the sequence factory.
+     * peptide to proteins in case it was not done before.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @return a boolean indicating whether the peptide passed the test
+     * @param fmIndex the FM-Index.
      *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultPeptideMapper());
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, FMIndex fmIndex) {
+        
+        return validateProteins(peptide, sequenceMatchingPreferences, fmIndex, fmIndex);
+        
     }
 
     /**
@@ -202,14 +201,8 @@ public class PeptideAssumptionFilter implements Serializable {
      * mapping
      *
      * @return a boolean indicating whether the peptide passed the test
-     *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
 
         HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
 
@@ -217,7 +210,7 @@ public class PeptideAssumptionFilter implements Serializable {
             boolean target = false;
             boolean decoy = false;
             for (String accession : proteinMapping.keySet()) {
-                if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
+                if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
                     decoy = true;
                 } else {
                     target = true;
@@ -275,12 +268,8 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the given assumption passes the
      * filter
-     *
-     * @throws IOException if an error occurs while reading the spectrum
-     * @throws java.lang.InterruptedException exception thrown if a thread is
-     * interrupted
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, InterruptedException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) {
         
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());

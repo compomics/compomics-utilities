@@ -2,7 +2,6 @@ package com.compomics.util.gui.parameters.identification.subparameters;
 
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.io.biology.protein.FastaIndex;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.parameters.identification.GeneParameters;
 import java.awt.Toolkit;
@@ -56,17 +55,18 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
+     * @param speciesOccurrence a map of the occurrence of species
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, HashMap<String, Integer> speciesOccurrence, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
         initComponents();
-        setUpGui();
+        setUpGui(speciesOccurrence);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
@@ -78,25 +78,29 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param parentFrame a parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
+     * @param speciesOccurrence a map of the occurrence of species
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, HashMap<String, Integer> speciesOccurrence, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
         initComponents();
-        setUpGui();
+        setUpGui(speciesOccurrence);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
 
     /**
      * Sets up the GUI.
+     * 
+     * @param speciesOccurrence a map of the occurrence of species
      */
-    private void setUpGui() {
+    private void setUpGui(HashMap<String, Integer> speciesOccurrence) {
+        
         speciesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useMappingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         autoUpdateCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -114,8 +118,6 @@ public class GeneParametersDialog extends javax.swing.JDialog {
             int selectedIndex = 0;
 
             try {
-                FastaIndex fastaIndex = SequenceFactory.getFastaIndex(fastaFile, false, null);
-                HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
 
                 // Select the background species based on occurrence in the factory
                 for (String uniprotTaxonomy : speciesOccurrence.keySet()) {

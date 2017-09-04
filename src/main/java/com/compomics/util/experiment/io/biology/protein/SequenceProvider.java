@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.io.biology.protein;
 
+import java.util.HashSet;
+
 /**
  * Interface for a class able to retrieve the sequence of a given protein.
  *
@@ -7,7 +9,12 @@ package com.compomics.util.experiment.io.biology.protein;
  */
 public interface SequenceProvider {
     
-    
+    /**
+     * Returns the decoy accessions.
+     * 
+     * @return the decoy accessions
+     */
+    public HashSet<String> getDecoyAccessions();
     /**
      * Returns the protein sequence for the given accession.
      * 

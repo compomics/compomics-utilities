@@ -4,7 +4,6 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.parameters.identification.ProteinInferenceParameters;
-import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -455,17 +454,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
-
-        
-        // clear the factory
-        if (databaseSettingsTxt.getText().trim().length() == 0) {
-            try {
-                sequenceFactory.clearFactory();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Failed to clear the sequence factory.", "File Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
 
         SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
 

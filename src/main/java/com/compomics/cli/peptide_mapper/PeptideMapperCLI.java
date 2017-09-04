@@ -95,7 +95,7 @@ public class PeptideMapperCLI {
         PeptideMapper peptideMapper = null;
         if (peptideMapperType == PeptideMapperType.fm_index) {
             try {
-                peptideMapper = new FMIndex(fastaFile, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+                peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
             } catch (IOException e) {
                 System.err.println("Error: cound not index the fasta file");
                 e.printStackTrace();

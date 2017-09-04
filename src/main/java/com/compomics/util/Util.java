@@ -869,12 +869,15 @@ public class Util {
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameLists(ArrayList list1, ArrayList list2) {
+        
         if (list1.size() != list2.size()) {
             return false;
         }
-        HashSet set1 = new HashSet(list1);
+        
         HashSet set2 = new HashSet(list2);
-        return sameSets(set1, set2);
+        
+        return !list1.stream()
+                .anyMatch(element -> !set2.contains(element));
     }
 
     /**
@@ -887,15 +890,13 @@ public class Util {
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameSets(HashSet set1, HashSet set2) {
+        
         if (set1.size() != set2.size()) {
             return false;
         }
-        for (Object object1 : set1) {
-            if (!set2.contains(object1)) {
-                return false;
-            }
-        }
-        return true;
+        
+        return !set1.stream()
+                .anyMatch(element -> !set2.contains(element));
     }
 
     /**

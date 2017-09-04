@@ -16,7 +16,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.parameters.identification.DigestionParameters;
@@ -25,11 +25,10 @@ import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import no.uib.jsparklines.data.XYDataPoint;
+import java.util.stream.Collectors;
 
 /**
  * This class groups the parameters used for identification.
@@ -86,32 +85,20 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The precursor mass tolerance.
      */
-    private Double precursorTolerance = 10.0;
+    private double precursorTolerance = 10.0;
     /**
      * The precursor mass tolerance in Dalton.
      */
-    private Double precursorToleranceDalton = 0.5;
+    private double precursorToleranceDalton = 0.5;
     /**
      * The MS2 ion tolerance.
      */
-    private Double fragmentIonMZTolerance = 0.5;
+    private double fragmentIonMZTolerance = 0.5;
     /**
      * The expected modifications. Modified peptides will be grouped and
      * displayed according to this classification.
      */
     private PtmSettings ptmSettings = new PtmSettings();
-    /**
-     * The enzyme used for digestion.
-     *
-     * @deprecated use the Digestion preferences instead.
-     */
-    private Enzyme enzyme;
-    /**
-     * The allowed number of missed cleavages.
-     *
-     * @deprecated use the Digestion preferences instead.
-     */
-    private Integer nMissedCleavages = 2;
     /**
      * The digestion preferences.
      */
@@ -121,34 +108,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     private File fastaFile;
     /**
-     * The corresponding file.
-     *
-     * @deprecated the file is now handled outside the parameters.
+     * The parameters to use to parse the fasta file.
      */
-    private File parametersFile;
-    /**
-     * The list of fraction molecular weights. The key is the fraction file
-     * path.
-     *
-     * @deprecated moved to the FractionSettings
-     */
-    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges;
-    /**
-     * The forward ions to consider (a, b or c).
-     *
-     * @deprecated use the list allowing multiple ions instead.
-     */
-    private Integer forwardIon;
+    private FastaParameters fastaParameters;
     /**
      * The forward ions to consider (a, b or c).
      */
     private ArrayList<Integer> forwardIons;
-    /**
-     * The rewind ions to consider (x, y or z).
-     *
-     * @deprecated use the list allowing multiple ions instead.
-     */
-    private Integer rewindIon;
     /**
      * The rewind ions to consider (x, y or z).
      */
@@ -156,24 +122,24 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The minimal charge searched (in absolute value).
      */
-    private Charge minChargeSearched = new Charge(Charge.PLUS, 2);
+    private int minChargeSearched = 2;
     /**
      * The minimal charge searched (in absolute value).
      */
-    private Charge maxChargeSearched = new Charge(Charge.PLUS, 4);
+    private int maxChargeSearched = 4;
     /**
      * The minimal isotope correction.
      */
-    private Integer minIsotopicCorrection = 0;
+    private int minIsotopicCorrection = 0;
     /**
      * The maximal isotope correction.
      */
-    private Integer maxIsotopicCorrection = 1;
+    private int maxIsotopicCorrection = 1;
     /**
      * Reference mass for the conversion of the fragment ion tolerance from ppm
      * to Dalton.
      */
-    private Double refMass = 2000.0;
+    private double refMass = 2000.0;
     /**
      * The algorithm specific parameters.
      */
@@ -211,6 +177,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.ptmSettings = new PtmSettings(searchParameters.getPtmSettings());
         this.digestionPreferences = searchParameters.getDigestionPreferences();
         this.fastaFile = searchParameters.getFastaFile();
+        this.fastaParameters = searchParameters.getFastaParameters();
         this.forwardIons = new ArrayList<>(searchParameters.getForwardIons());
         this.rewindIons = new ArrayList<>(searchParameters.getRewindIons());
         this.minChargeSearched = searchParameters.getMinChargeSearched();
@@ -314,22 +281,20 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Returns the reference mass used to convert ppm to Da.
-     * 
+     *
      * @return the reference mass used to convert ppm to Da
      */
-    public Double getRefMass() {
-        if (refMass == null) { // Backward compatibility
-            refMass = 2000.0;
-        }
-        return refMass; 
+    public double getRefMass() {
+
+        return refMass;
     }
 
     /**
      * Sets the reference mass used to convert ppm to Da.
-     * 
+     *
      * @param refMass the reference mass used to convert ppm to Da
      */
-    public void setRefMass(Double refMass) {
+    public void setRefMass(double refMass) {
         this.refMass = refMass;
     }
 
@@ -356,7 +321,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the MS2 ion m/z tolerance
      */
-    public Double getFragmentIonAccuracy() {
+    public double getFragmentIonAccuracy() {
         return fragmentIonMZTolerance;
     }
 
@@ -366,7 +331,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the absolute fragment ion tolerance in Dalton
      */
-    public Double getFragmentIonAccuracyInDaltons() {
+    public double getFragmentIonAccuracyInDaltons() {
         return getFragmentIonAccuracyInDaltons(refMass);
     }
 
@@ -379,7 +344,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the absolute fragment ion tolerance in Dalton
      */
-    public Double getFragmentIonAccuracyInDaltons(Double refMass) {
+    public double getFragmentIonAccuracyInDaltons(double refMass) {
         switch (fragmentAccuracyType) {
             case DA:
                 return fragmentIonMZTolerance;
@@ -395,19 +360,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param fragmentIonMZTolerance the fragment ion m/z tolerance
      */
-    public void setFragmentIonAccuracy(Double fragmentIonMZTolerance) {
+    public void setFragmentIonAccuracy(double fragmentIonMZTolerance) {
         this.fragmentIonMZTolerance = fragmentIonMZTolerance;
-    }
-
-    /**
-     * Returns the enzyme used for digestion.
-     *
-     * @return the enzyme used for digestion
-     *
-     * @deprecated use the PTM Digestion preferences instead.
-     */
-    public Enzyme getEnzyme() {
-        return enzyme;
     }
 
     /**
@@ -416,25 +370,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the digestion preferences
      */
     public DigestionParameters getDigestionPreferences() {
-        if (digestionPreferences == null && enzyme != null) { // Backward compatibility check
-            enzyme.backwardCompatibilityFix();
-            digestionPreferences = new DigestionParameters();
-            if (enzyme.isWholeProtein()) {
-                digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.wholeProtein);
-            } else if (enzyme.isUnspecific()) {
-                digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.unSpecific);
-            } else {
-                digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.enzyme);
-                digestionPreferences.addEnzyme(enzyme);
-                String enzymeName = enzyme.getName();
-                if (enzyme.isSemiSpecific()) {
-                    digestionPreferences.setSpecificity(enzymeName, DigestionParameters.Specificity.semiSpecific);
-                } else {
-                    digestionPreferences.setSpecificity(enzymeName, DigestionParameters.Specificity.specific);
-                }
-                digestionPreferences.setnMissedCleavages(enzymeName, nMissedCleavages);
-            }
-        }
+
         return digestionPreferences;
     }
 
@@ -466,14 +402,21 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Returns the allowed number of missed cleavages.
-     *
-     * @deprecated use the Digestion preferences instead.
-     *
-     * @return the allowed number of missed cleavages
+     * Returns the parameters to use to parse the fasta file.
+     * 
+     * @return the parameters to use to parse the fasta file
      */
-    public Integer getnMissedCleavages() {
-        return nMissedCleavages;
+    public FastaParameters getFastaParameters() {
+        return fastaParameters;
+    }
+
+    /**
+     * Sets the parameters to use to parse the fasta file.
+     * 
+     * @param fastaParameters the parameters to use to parse the fasta file
+     */
+    public void setFastaParameters(FastaParameters fastaParameters) {
+        this.fastaParameters = fastaParameters;
     }
 
     /**
@@ -483,10 +426,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
-        if (forwardIons == null) { // Backward compatibility
-            forwardIons = new ArrayList<>(1);
-            forwardIons.add(forwardIon);
-        }
+
         return forwardIons;
     }
 
@@ -507,10 +447,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
-        if (rewindIons == null) { // Backward compatibility
-            rewindIons = new ArrayList<>(1);
-            rewindIons.add(rewindIon);
-        }
+
         return rewindIons;
     }
 
@@ -545,7 +482,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the precursor tolerance
      */
-    public Double getPrecursorAccuracy() {
+    public double getPrecursorAccuracy() {
         return precursorTolerance;
     }
 
@@ -554,7 +491,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param precursorTolerance the precursor tolerance
      */
-    public void setPrecursorAccuracy(Double precursorTolerance) {
+    public void setPrecursorAccuracy(double precursorTolerance) {
         this.precursorTolerance = precursorTolerance;
     }
 
@@ -563,7 +500,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the precursor tolerance
      */
-    public Double getPrecursorAccuracyDalton() {
+    public double getPrecursorAccuracyDalton() {
         return precursorToleranceDalton;
     }
 
@@ -572,7 +509,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param precursorToleranceDalton the precursor tolerance
      */
-    public void setPrecursorAccuracyDalton(Double precursorToleranceDalton) {
+    public void setPrecursorAccuracyDalton(double precursorToleranceDalton) {
         this.precursorToleranceDalton = precursorToleranceDalton;
     }
 
@@ -626,7 +563,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the maximal charge searched
      */
-    public Charge getMaxChargeSearched() {
+    public int getMaxChargeSearched() {
         return maxChargeSearched;
     }
 
@@ -635,7 +572,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param maxChargeSearched the maximal charge searched
      */
-    public void setMaxChargeSearched(Charge maxChargeSearched) {
+    public void setMaxChargeSearched(int maxChargeSearched) {
         this.maxChargeSearched = maxChargeSearched;
     }
 
@@ -644,7 +581,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the minimal charge searched
      */
-    public Charge getMinChargeSearched() {
+    public int getMinChargeSearched() {
         return minChargeSearched;
     }
 
@@ -653,7 +590,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param minChargeSearched the minimal charge searched
      */
-    public void setMinChargeSearched(Charge minChargeSearched) {
+    public void setMinChargeSearched(int minChargeSearched) {
         this.minChargeSearched = minChargeSearched;
     }
 
@@ -705,7 +642,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Set<Integer> getAlgorithms() {
         if (algorithmParameters == null) {
-            return new HashSet<>();
+            return new HashSet<>(0);
         }
         return algorithmParameters.keySet();
     }
@@ -715,10 +652,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the minimal isotopic correction
      */
-    public Integer getMinIsotopicCorrection() {
-        if (minIsotopicCorrection == null) {
-            minIsotopicCorrection = 0;
-        }
+    public int getMinIsotopicCorrection() {
         return minIsotopicCorrection;
     }
 
@@ -727,7 +661,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param minIsotopicCorrection the minimal isotopic correction
      */
-    public void setMinIsotopicCorrection(Integer minIsotopicCorrection) {
+    public void setMinIsotopicCorrection(int minIsotopicCorrection) {
         this.minIsotopicCorrection = minIsotopicCorrection;
     }
 
@@ -736,10 +670,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the maximal isotopic correction
      */
-    public Integer getMaxIsotopicCorrection() {
-        if (maxIsotopicCorrection == null) {
-            maxIsotopicCorrection = 1;
-        }
+    public int getMaxIsotopicCorrection() {
         return maxIsotopicCorrection;
     }
 
@@ -748,7 +679,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param maxIsotopicCorrection the maximal isotopic correction
      */
-    public void setMaxIsotopicCorrection(Integer maxIsotopicCorrection) {
+    public void setMaxIsotopicCorrection(int maxIsotopicCorrection) {
         this.maxIsotopicCorrection = maxIsotopicCorrection;
     }
 
@@ -899,50 +830,42 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             }
         }
 
-        if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())
-                || !getPrecursorAccuracyType().equals(defaultParameters.getPrecursorAccuracyType())) {
+        if (precursorTolerance != defaultParameters.getPrecursorAccuracy()
+                || getPrecursorAccuracyType() != defaultParameters.getPrecursorAccuracyType()) {
             output.append("Precursor Tolerance: ").append(precursorTolerance).append(" ").append(precursorAccuracyType).append(".").append(newLine);
         }
 
-        if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())
-                || !getFragmentAccuracyType().equals(defaultParameters.getFragmentAccuracyType())) {
+        if (fragmentIonMZTolerance != defaultParameters.getFragmentIonAccuracy()
+                || getFragmentAccuracyType() != defaultParameters.getFragmentAccuracyType()) {
             output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" ").append(fragmentAccuracyType).append(".").append(newLine);
         }
 
         if (!Util.sameLists(forwardIons, defaultParameters.getForwardIons())
                 || !Util.sameLists(rewindIons, defaultParameters.getRewindIons())) {
-            StringBuilder ions1 = new StringBuilder();
-            Collections.sort(forwardIons);
-            for (Integer ion : forwardIons) {
-                if (ions1.length() > 0) {
-                    ions1.append(", ");
-                }
-                ions1.append(PeptideFragmentIon.getSubTypeAsString(ion));
-            }
-            StringBuilder ions2 = new StringBuilder();
-            Collections.sort(rewindIons);
-            for (Integer ion : rewindIons) {
-                if (ions2.length() > 0) {
-                    ions2.append(", ");
-                }
-                ions2.append(PeptideFragmentIon.getSubTypeAsString(ion));
-            }
+            String ions1 = forwardIons.stream()
+                    .sorted()
+                    .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                    .collect(Collectors.joining(","));
+            String ions2 = rewindIons.stream()
+                    .sorted()
+                    .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                    .collect(Collectors.joining(","));
             output.append("Ion Types: ").append(ions1).append(" and ").append(ions2).append(".").append(newLine);
         }
 
-        if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
-                || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
-            output.append("Charge: ").append(minChargeSearched.value).append("-").append(maxChargeSearched.value).append(".").append(newLine);
+        if (minChargeSearched != defaultParameters.getMinChargeSearched()
+                || maxChargeSearched != defaultParameters.getMaxChargeSearched()) {
+            output.append("Charge: ").append(minChargeSearched).append("-").append(maxChargeSearched).append(".").append(newLine);
         }
 
-        if (!getMinIsotopicCorrection().equals(defaultParameters.getMinIsotopicCorrection())
-                || !getMaxIsotopicCorrection().equals(defaultParameters.getMaxIsotopicCorrection())) {
+        if (getMinIsotopicCorrection() != defaultParameters.getMinIsotopicCorrection()
+                || getMaxIsotopicCorrection() != defaultParameters.getMaxIsotopicCorrection()) {
             output.append("Isotopic Correction: ").append(minIsotopicCorrection).append("-").append(maxIsotopicCorrection).append(".").append(newLine);
         }
 
         output.append("DB: ");
         if (fastaFile != null) {
-            output.append(fastaFile.getName());
+            output.append(fastaParameters.getName());
         } else {
             output.append("not set");
         }
@@ -989,10 +912,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 String enzymeName = tempEnzyme.getName();
                 output.append("ENZYME").append(i).append("=");
                 output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
-                Integer nmc = digestionPreferences.getnMissedCleavages(enzymeName);
-                if (nmc != null) {
-                    output.append(", ").append(nmc).append(" missed cleavages");
-                }
+                int nmc = digestionPreferences.getnMissedCleavages(enzymeName);
+                output.append(", ").append(nmc).append(" missed cleavages");
                 output.append(newLine);
             }
         } else {
@@ -1076,7 +997,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(newLine);
 
         output.append("FRAGMENT_MASS_TOLERANCE_UNIT=");
-        if (getFragmentAccuracyType()== MassAccuracyType.PPM) {
+        if (getFragmentAccuracyType() == MassAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");
@@ -1088,26 +1009,18 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(newLine);
 
         output.append("FORWARD_FRAGMENT_ION_TYPE=");
-        StringBuilder ions1 = new StringBuilder();
-        Collections.sort(forwardIons);
-        for (Integer ion : forwardIons) {
-            if (ions1.length() > 0) {
-                ions1.append(", ");
-            }
-            ions1.append(PeptideFragmentIon.getSubTypeAsString(ion));
-        }
+        String ions1 = forwardIons.stream()
+                .sorted()
+                .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                .collect(Collectors.joining(","));
         output.append(ions1);
         output.append(newLine);
 
         output.append("FRAGMENT_ION_TYPE_2=");
-        StringBuilder ions2 = new StringBuilder();
-        Collections.sort(rewindIons);
-        for (Integer ion : rewindIons) {
-            if (ions2.length() > 0) {
-                ions2.append(", ");
-            }
-            ions2.append(PeptideFragmentIon.getSubTypeAsString(ion));
-        }
+        String ions2 = rewindIons.stream()
+                .sorted()
+                .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                .collect(Collectors.joining(","));
         output.append(ions2);
         output.append(newLine);
 
@@ -1151,13 +1064,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (this.getPrecursorAccuracyType() != otherSearchParameters.getPrecursorAccuracyType()) {
             return false;
         }
-        if (!this.getPrecursorAccuracy().equals(otherSearchParameters.getPrecursorAccuracy())) {
+        if (this.getPrecursorAccuracy() != otherSearchParameters.getPrecursorAccuracy()) {
             return false;
         }
         if (!this.getFragmentAccuracyType().equals(otherSearchParameters.getFragmentAccuracyType())) {
             return false;
         }
-        if (!this.getFragmentIonAccuracy().equals(otherSearchParameters.getFragmentIonAccuracy())) {
+        if (this.getFragmentIonAccuracy() != otherSearchParameters.getFragmentIonAccuracy()) {
             return false;
         }
         if ((this.getFastaFile() == null && otherSearchParameters.getFastaFile() != null)
@@ -1169,7 +1082,15 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 return false;
             }
         }
-        if ((this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() == null)
+        if (getFastaParameters() != null && otherSearchParameters.getFastaParameters() == null
+                || getFastaParameters() == null && otherSearchParameters.getFastaParameters() != null) {
+            return false;
+        }
+        if (getFastaParameters() != null && otherSearchParameters.getFastaParameters() != null
+               && !this.getFastaParameters().equals(otherSearchParameters.getFastaParameters())) {
+            return false;
+        }
+        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() == null
                 || this.getDigestionPreferences() == null && otherSearchParameters.getDigestionPreferences() != null) {
             return false;
         }
@@ -1183,16 +1104,16 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (!Util.sameLists(rewindIons, otherSearchParameters.getRewindIons())) {
             return false;
         }
-        if (!this.getMinChargeSearched().equals(otherSearchParameters.getMinChargeSearched())) {
+        if (this.getMinChargeSearched() != otherSearchParameters.getMinChargeSearched()) {
             return false;
         }
-        if (!this.getMaxChargeSearched().equals(otherSearchParameters.getMaxChargeSearched())) {
+        if (this.getMaxChargeSearched() != otherSearchParameters.getMaxChargeSearched()) {
             return false;
         }
-        if (!this.getMinIsotopicCorrection().equals(otherSearchParameters.getMinIsotopicCorrection())) {
+        if (this.getMinIsotopicCorrection() != otherSearchParameters.getMinIsotopicCorrection()) {
             return false;
         }
-        if (!this.getMaxIsotopicCorrection().equals(otherSearchParameters.getMaxIsotopicCorrection())) {
+        if (this.getMaxIsotopicCorrection() != otherSearchParameters.getMaxIsotopicCorrection()) {
             return false;
         }
         if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {

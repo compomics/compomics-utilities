@@ -312,11 +312,8 @@ public class SpectrumFactory {
      *
      * @param spectrumKey the key of the spectrum
      * @return the corresponding precursor mz
-     *
-     * @throws IOException exception thrown whenever the file was not parsed
-     * correctly
      */
-    public double getPrecursorMz(String spectrumKey) throws IOException {
+    public double getPrecursorMz(String spectrumKey) {
 
         // get the spectrum title and file name
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);

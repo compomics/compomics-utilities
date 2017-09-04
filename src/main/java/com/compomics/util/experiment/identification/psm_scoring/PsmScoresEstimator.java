@@ -5,7 +5,7 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.Peptid
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.HyperScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.PrecursorAccuracy;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.SnrScore;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.parameters.identification.IdentificationParameters;
@@ -72,7 +72,7 @@ public class PsmScoresEstimator {
      * @return the score of the match
      */
     public double getDecreasingScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters, 
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
+            SpecificAnnotationParameters specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
         double score = getScore(peptide, peptideCharge, spectrum, identificationParameters, 
                 specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
@@ -98,7 +98,7 @@ public class PsmScoresEstimator {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters, 
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
+            SpecificAnnotationParameters specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
@@ -119,7 +119,7 @@ public class PsmScoresEstimator {
      * @return the score of the match
      */
     public double getScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters, 
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) {
+            SpecificAnnotationParameters specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");

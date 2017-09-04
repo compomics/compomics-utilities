@@ -87,7 +87,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         
         if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
             boolean downloaded = downloadPeptideShaker();
@@ -363,7 +363,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         utilitiesUserPreferences.setPeptideShakerPath(peptideShakernstallationJTextField.getText());
         try {
-            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

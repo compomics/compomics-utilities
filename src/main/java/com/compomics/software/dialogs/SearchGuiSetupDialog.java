@@ -87,7 +87,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserPreferences.getSearchGuiPath() == null) {
             boolean downloaded = downloadSearchGUI();
@@ -363,7 +363,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         utilitiesUserPreferences.setSearchGuiPath(searchGuiInstallationJTextField.getText());
         try {
-            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

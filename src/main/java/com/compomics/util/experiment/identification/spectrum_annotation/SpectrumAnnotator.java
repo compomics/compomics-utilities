@@ -134,7 +134,7 @@ public abstract class SpectrumAnnotator {
      * If provided, the annotator will only look for the ions included in the
      * specific annotation settings.
      */
-    protected SpecificAnnotationSettings specificAnnotationSettings = null;
+    protected SpecificAnnotationParameters specificAnnotationSettings = null;
     /**
      * The cache to use for the ion match keys.
      */
@@ -402,7 +402,7 @@ public abstract class SpectrumAnnotator {
      *
      * @return the currently matched ions with the given settings
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings) {
         return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
     }
 
@@ -416,7 +416,7 @@ public abstract class SpectrumAnnotator {
      *
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter);
 
     /**
      * Returns the spectrum currently inspected.
@@ -615,7 +615,7 @@ public abstract class SpectrumAnnotator {
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
+    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationParameters specificAnnotationSettings, Peak peak) {
 
         ArrayList<IonMatch> result = new ArrayList<>();
 
@@ -660,7 +660,7 @@ public abstract class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings) {
+    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationParameters specificAnnotationSettings) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<>();
 

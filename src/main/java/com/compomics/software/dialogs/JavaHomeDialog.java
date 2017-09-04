@@ -280,7 +280,7 @@ public class JavaHomeDialog extends javax.swing.JDialog {
                     javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setJavaHome(newJavaHome);
 
                     try {
-                        UtilitiesUserParameters.saveUserPreferences(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

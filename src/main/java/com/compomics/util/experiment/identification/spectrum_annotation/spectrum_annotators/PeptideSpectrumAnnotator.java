@@ -13,9 +13,9 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.SequenceMatchingParameters;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param specificAnnotationSettings if provided, only the ions detectable
      * using these settings will be selected
      */
-    public void setPeptide(Peptide peptide, int precursorCharge, SpecificAnnotationSettings specificAnnotationSettings) {
+    public void setPeptide(Peptide peptide, int precursorCharge, SpecificAnnotationParameters specificAnnotationSettings) {
         setPeptide(peptide, null, precursorCharge, specificAnnotationSettings);
     }
 
@@ -66,7 +66,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param specificAnnotationSettings if provided, only the ions detectable
      * using these settings will be selected
      */
-    public void setPeptide(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons, int precursorCharge, SpecificAnnotationSettings specificAnnotationSettings) {
+    public void setPeptide(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons, int precursorCharge, SpecificAnnotationParameters specificAnnotationSettings) {
 
         if (specificAnnotationSettings != null && super.specificAnnotationSettings == null
                 || specificAnnotationSettings == null && super.specificAnnotationSettings != null
@@ -113,7 +113,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param peak the peak to match
      * @return a list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationParameters specificAnnotationSettings, Peak peak) {
         setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
         return matchPeak(specificAnnotationSettings, peak);
     }
@@ -133,8 +133,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public Stream<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide) {
+    public Stream<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide) {
 
         return getSpectrumAnnotationStream(annotationSettings, specificAnnotationSettings, spectrum, peptide, true);
     }
@@ -155,8 +155,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public Stream<IonMatch> getSpectrumAnnotationStream(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
+    public Stream<IonMatch> getSpectrumAnnotationStream(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
 
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null, useIntensityFilter);
     }
@@ -177,8 +177,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
 
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null, useIntensityFilter)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -202,8 +202,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public Stream<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide,
+    public Stream<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide,
             HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, boolean useIntensityFilter) {
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
@@ -256,8 +256,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
      */
-    public Map<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
+    public Map<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, boolean useIntensityFilter) {
 
         Stream<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
 
@@ -279,7 +279,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings, Peptide peptide) {
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationParameters specificAnnotationSettings, Peptide peptide) {
         return getExpectedIons(specificAnnotationSettings, peptide, null);
     }
 
@@ -297,13 +297,13 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings, Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons) {
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationParameters specificAnnotationSettings, Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons) {
         setPeptide(peptide, possibleFragmentIons, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
         return getExpectedIons(specificAnnotationSettings);
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, useIntensityFilter);
     }
 

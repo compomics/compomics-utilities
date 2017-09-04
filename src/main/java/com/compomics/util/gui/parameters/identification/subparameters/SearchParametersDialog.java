@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
@@ -18,11 +17,11 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.modification.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.parameters.identification.DigestionParameters;
 import com.compomics.util.parameters.identification.DigestionParameters.CleavagePreference;
 import com.compomics.util.parameters.identification.DigestionParameters.Specificity;
 import com.compomics.util.io.file.LastSelectedFolder;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
@@ -106,14 +105,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private int waitingTime = 500;
     /**
-     * The configuration file containing the modification use.
-     */
-    private ConfigurationFile configurationFile;
-    /**
-     * The list of the default modifications.
-     */
-    private ArrayList<String> modificationUse = new ArrayList<>();
-    /**
      * The line to use to reference the modification use in the configuration
      * file.
      */
@@ -141,6 +132,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * to Dalton.
      */
     private Double refMass;
+    /**
+     * The utilities user parameters.
+     */
+    private UtilitiesUserParameters utilitiesUserParameters = null;
 
     /**
      * Creates a new SearchSettingsDialog with a frame as owner.
@@ -151,21 +146,19 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param waitingIcon the waiting dialog icon
      * @param setVisible if the dialog is to be visible or not
      * @param modal if the dialog is to be modal
-     * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
      * @param settingsName the name of the settings
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
     public SearchParametersDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
-            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
+            boolean setVisible, boolean modal, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
         super(parentFrame, modal);
 
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
-        this.configurationFile = configurationFile;
         this.editable = editable;
 
         if (searchParameters == null) {
@@ -174,13 +167,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         } else {
             this.searchParameters = searchParameters;
         }
-
-        try {
-            loadModificationUse(configurationFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // ignore
-        }
+        
+        
 
         initComponents();
         setUpGUI();
@@ -208,21 +196,19 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param waitingIcon the waiting dialog icon
      * @param setVisible if the dialog is to be visible or not
      * @param modal if the dialog is to be modal
-     * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
      * @param settingsName the name of the settings
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
     public SearchParametersDialog(Dialog owner, java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
-            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
+            boolean setVisible, boolean modal, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
         super(owner, modal);
 
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
-        this.configurationFile = configurationFile;
         this.editable = editable;
 
         if (searchParameters == null) {
@@ -260,6 +246,22 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (setVisible) {
             setVisible(true);
+        }
+    }
+
+    /**
+     * Loads the user preferences.
+     */
+    public void loadUserPreferences() {
+        
+        try {
+            
+            utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
+            
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            
         }
     }
 

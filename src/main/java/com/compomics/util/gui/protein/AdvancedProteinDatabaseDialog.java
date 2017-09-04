@@ -39,7 +39,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * Initiates the GUI.
      */
     private void initGUI() {
-        userPreferences = UtilitiesUserParameters.loadUserPreferences();
+        userPreferences = UtilitiesUserParameters.loadUserParameters();
         dbFolder = new File(System.getProperty("user.home") + "/.compomics/proteins/indexes/");
         updateText();
     }
@@ -218,10 +218,10 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        UtilitiesUserParameters tempUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        UtilitiesUserParameters tempUserPreferences = UtilitiesUserParameters.loadUserParameters();
         tempUserPreferences.setProteinTreeFolder(dbFolder);
         tempUserPreferences.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
-        UtilitiesUserParameters.saveUserPreferences(tempUserPreferences);
+        UtilitiesUserParameters.saveUserParameters(tempUserPreferences);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

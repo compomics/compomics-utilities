@@ -15,9 +15,9 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.SequenceMatchingParameters;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -210,7 +210,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
             Spectrum spectrum, Tag tag) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, true);
     }
@@ -230,7 +230,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, 
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
             Spectrum spectrum, Tag tag, boolean useIntensityFilter) {
 
         ArrayList<IonMatch> result = new ArrayList<>();
@@ -290,7 +290,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, boolean useIntensityFilter) {
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }
 }

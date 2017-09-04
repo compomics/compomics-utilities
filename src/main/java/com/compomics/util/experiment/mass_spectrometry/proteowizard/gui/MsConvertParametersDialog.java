@@ -113,7 +113,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         outputFormatCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
@@ -396,7 +396,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         if (formatCheck) {
             utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
             try {
-                UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+                UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
                 dispose();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -21,7 +21,7 @@ import java.util.HashSet;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AnnotationSettings implements Serializable {
+public class AnnotationParameters implements Serializable {
 
     /**
      * Enum of the types of intensity thresholds available.
@@ -131,7 +131,7 @@ public class AnnotationSettings implements Serializable {
     /**
      * Constructor.
      */
-    public AnnotationSettings() {
+    public AnnotationParameters() {
     }
 
     /**
@@ -150,10 +150,10 @@ public class AnnotationSettings implements Serializable {
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider,
+    public SpecificAnnotationParameters getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider,
             SequenceMatchingParameters sequenceMatchingPreferences, SequenceMatchingParameters ptmSequenceMatchingPreferences) {
 
-        SpecificAnnotationSettings specificAnnotationPreferences = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
+        SpecificAnnotationParameters specificAnnotationPreferences = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
         if (neutralLossesAuto) {
             specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
@@ -185,7 +185,7 @@ public class AnnotationSettings implements Serializable {
      *
      * @param searchParameters the search parameters
      */
-    public AnnotationSettings(SearchParameters searchParameters) {
+    public AnnotationParameters(SearchParameters searchParameters) {
         setPreferencesFromSearchParameters(searchParameters);
     }
 
@@ -665,8 +665,8 @@ public class AnnotationSettings implements Serializable {
      *
      * @return a clone of this object
      */
-    public AnnotationSettings clone() {
-        AnnotationSettings annotationSettings = new AnnotationSettings();
+    public AnnotationParameters clone() {
+        AnnotationParameters annotationSettings = new AnnotationParameters();
         annotationSettings.setYAxisZoomExcludesBackgroundPeaks(yAxisZoomExcludesBackgroundPeaks);
         annotationSettings.setShowAllPeaks(showAllPeaks);
         annotationSettings.setIntensityLimit(intensityLimit);
@@ -700,7 +700,7 @@ public class AnnotationSettings implements Serializable {
      * @return a boolean indicating whether the given annotation settings are
      * the same as these ones
      */
-    public boolean isSameAs(AnnotationSettings annotationSettings) {
+    public boolean isSameAs(AnnotationParameters annotationSettings) {
         if (yAxisZoomExcludesBackgroundPeaks != annotationSettings.yAxisZoomExcludesBackgroundPeaks()) {
             return false;
         }

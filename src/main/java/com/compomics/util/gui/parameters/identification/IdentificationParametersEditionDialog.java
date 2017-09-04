@@ -6,7 +6,7 @@ import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.gui.parameters.identification.subparameters.AnnotationParametersDialog;
 import com.compomics.util.gui.parameters.identification.subparameters.FractionParametersDialog;
 import com.compomics.util.gui.parameters.identification.subparameters.GeneParametersDialog;
@@ -73,7 +73,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * The peak annotation settings.
      */
-    private AnnotationSettings annotationSettings;
+    private AnnotationParameters annotationSettings;
     /**
      * The parameters used for the spectrum matching.
      */

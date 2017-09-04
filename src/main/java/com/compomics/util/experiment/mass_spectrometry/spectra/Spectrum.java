@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
@@ -117,7 +117,7 @@ public class Spectrum extends ExperimentObject {
     /**
      * The type of intensity threshold.
      */
-    private AnnotationSettings.IntensityThresholdType intensityThresholdType = null;
+    private AnnotationParameters.IntensityThresholdType intensityThresholdType = null;
     /**
      * The binned cumulative function of the distribution of the log of the
      * peaks intensities.
@@ -625,7 +625,7 @@ public class Spectrum extends ExperimentObject {
      *
      * @return the intensity limit
      */
-    public double getIntensityLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityFraction) {
+    public double getIntensityLimit(AnnotationParameters.IntensityThresholdType intensityThresholdType, double intensityFraction) {
 
         if (intensityLimit == -1.0 || intensityThresholdType != this.intensityThresholdType || intensityLimitLevel != intensityFraction) {
 
@@ -646,7 +646,7 @@ public class Spectrum extends ExperimentObject {
      *
      * @return the intensity limit
      */
-    private double estimateIntenistyLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityThreshold) {
+    private double estimateIntenistyLimit(AnnotationParameters.IntensityThresholdType intensityThresholdType, double intensityThreshold) {
 
         if (intensityThreshold == 0) {
 

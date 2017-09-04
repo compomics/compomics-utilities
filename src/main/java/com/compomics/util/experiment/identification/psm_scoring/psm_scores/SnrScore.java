@@ -5,8 +5,8 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.protein_sequences.AaOccurrence;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
@@ -53,7 +53,7 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
         ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, false);
         return getScore(peptide, spectrum, ionMatchesList);
     }

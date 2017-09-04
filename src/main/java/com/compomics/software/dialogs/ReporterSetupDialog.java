@@ -43,7 +43,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
         initComponents();
 
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
 
         // display the current reporter path
         if (utilitiesUserPreferences != null) {
@@ -299,7 +299,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
         // reload the user preferences as these may have been changed by other tools
         try {
-            utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred when reading the user preferences.", "File Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -307,7 +307,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
         utilitiesUserPreferences.setReporterPath(reporterInstallationJTextField.getText());
         try {
-            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

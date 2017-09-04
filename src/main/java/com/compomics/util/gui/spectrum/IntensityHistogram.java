@@ -1,7 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class IntensityHistogram extends JPanel {
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
             Spectrum currentSpectrum,
-            AnnotationSettings.IntensityThresholdType intensityThresholdType,
+            AnnotationParameters.IntensityThresholdType intensityThresholdType,
             double intensityThreshold) {
         super();
 

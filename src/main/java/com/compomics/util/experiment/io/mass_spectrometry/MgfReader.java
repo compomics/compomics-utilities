@@ -639,7 +639,7 @@ public class MgfReader {
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        UtilitiesUserParameters userPreferences = UtilitiesUserParameters.loadUserPreferences();
+        UtilitiesUserParameters userPreferences = UtilitiesUserParameters.loadUserParameters();
 
         BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         String lineBreak = System.getProperty("line.separator");

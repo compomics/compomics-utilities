@@ -5,7 +5,7 @@ import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.io.file.SerializationUtils;
@@ -49,7 +49,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     /**
      * The peak annotation preferences.
      */
-    private AnnotationSettings annotationSettings;
+    private AnnotationParameters annotationSettings;
     /**
      * The peptide to protein matching preferences.
      */
@@ -121,7 +121,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param idValidationPreferences the matches validation preferences
      * @param fractionSettings the fraction settings
      */
-    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings,
+    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationParameters annotationSettings,
             SequenceMatchingParameters sequenceMatchingPreferences, PeptideVariantsParameters peptideVariantsPreferences, GeneParameters genePreferences, PsmScoringParameters psmScoringPreferences,
             PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ptmScoringPreferences, ProteinInferenceParameters proteinInferencePreferences,
             IdMatchValidationParameters idValidationPreferences, FractionParameters fractionSettings) {
@@ -194,9 +194,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      *
      * @return the annotation preferences used for identification
      */
-    public AnnotationSettings getAnnotationPreferences() {
+    public AnnotationParameters getAnnotationPreferences() {
         if (annotationSettings == null) { // Backward compatibility
-            annotationSettings = new AnnotationSettings();
+            annotationSettings = new AnnotationParameters();
             annotationSettings.setPreferencesFromSearchParameters(searchParameters);
         }
         return annotationSettings;
@@ -208,7 +208,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param annotationSettings the annotation preferences used for
      * identification
      */
-    public void setAnnotationSettings(AnnotationSettings annotationSettings) {
+    public void setAnnotationSettings(AnnotationParameters annotationSettings) {
         this.annotationSettings = annotationSettings;
     }
 
@@ -524,7 +524,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
         setSearchParameters(searchParameters);
-        annotationSettings = new AnnotationSettings();
+        annotationSettings = new AnnotationParameters();
         annotationSettings.addNeutralLoss(NeutralLoss.H2O);
         annotationSettings.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {

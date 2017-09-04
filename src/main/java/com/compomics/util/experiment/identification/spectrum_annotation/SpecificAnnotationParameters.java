@@ -13,7 +13,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class SpecificAnnotationSettings {
+public class SpecificAnnotationParameters {
 
     /**
      * The key of the currently annotated spectrum.
@@ -56,7 +56,7 @@ public class SpecificAnnotationSettings {
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
      */
-    public SpecificAnnotationSettings(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
+    public SpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
         this.spectrumKey = spectrumKey;
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
     }
@@ -298,8 +298,8 @@ public class SpecificAnnotationSettings {
     }
 
     @Override
-    public SpecificAnnotationSettings clone() {
-        SpecificAnnotationSettings clone = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
+    public SpecificAnnotationParameters clone() {
+        SpecificAnnotationParameters clone = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         clone.setFragmentIonAccuracy(getFragmentIonAccuracy());
         clone.setFragmentIonPpm(isFragmentIonPpm());
         clone.setNeutralLossesAuto(isNeutralLossesAuto());

@@ -234,7 +234,7 @@ public class DownloadLatestZipFromRepo {
 
             // set the new version has the default version
             // @TODO: should be done using enums
-            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             if (toolName.equalsIgnoreCase("PeptideShaker")) {
                 utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
             } else if (toolName.equalsIgnoreCase("SearchGUI")) {
@@ -242,7 +242,7 @@ public class DownloadLatestZipFromRepo {
             } else if (toolName.equalsIgnoreCase("Reporter")) {
                 utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
             }
-            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
 
             // copy path preferences to the new version
             String oldFolder = oldMavenJarFile.getAbsoluteFilePath();
@@ -346,7 +346,7 @@ public class DownloadLatestZipFromRepo {
 
         // set the new version has the default version
         // @TODO: should be done using enums
-        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         if (toolName.equalsIgnoreCase("PeptideShaker")) {
             utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
         } else if (toolName.equalsIgnoreCase("SearchGUI")) {
@@ -354,7 +354,7 @@ public class DownloadLatestZipFromRepo {
         } else if (toolName.equalsIgnoreCase("Reporter")) {
             utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
         }
-        UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+        UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
 
         if (startDownloadedVersion) {
             launchJar(downloadedJarFile, args);

@@ -252,7 +252,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
                     javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
 
                     try {
-                        UtilitiesUserParameters.saveUserPreferences(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

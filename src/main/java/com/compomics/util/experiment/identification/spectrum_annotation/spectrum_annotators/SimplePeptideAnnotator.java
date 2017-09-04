@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.FragmentAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.FragmentAnnotatorNL;
 import com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators.ImmoniumIonAnnotator;
@@ -100,7 +100,7 @@ public class SimplePeptideAnnotator {
      * @param charge the charge of the peptide
      * @param annotationSettings the annotation preferences
      */
-    public SimplePeptideAnnotator(Peptide peptide, int charge, AnnotationSettings annotationSettings) {
+    public SimplePeptideAnnotator(Peptide peptide, int charge, AnnotationParameters annotationSettings) {
 
         boolean neutralLossesSequence = annotationSettings.areNeutralLossesSequenceAuto();
         ArrayList<NeutralLoss> neutralLosses = annotationSettings.getNeutralLosses();

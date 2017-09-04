@@ -27,7 +27,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.modification.PtmScore;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.parameters.identification.DigestionParameters;
@@ -3101,9 +3101,9 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Spectrum annotation
         //////////////////////////////////
-        AnnotationSettings annotationSettings = identificationParameters.getAnnotationPreferences();
+        AnnotationParameters annotationSettings = identificationParameters.getAnnotationPreferences();
         if (annotationSettings == null) {
-            annotationSettings = new AnnotationSettings(searchParameters);
+            annotationSettings = new AnnotationParameters(searchParameters);
             identificationParameters.setAnnotationSettings(annotationSettings);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id)) {

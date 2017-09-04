@@ -69,7 +69,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
 
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "ProteoWizard is required to convert raw files. "
@@ -333,7 +333,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
         try {
-            UtilitiesUserParameters.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

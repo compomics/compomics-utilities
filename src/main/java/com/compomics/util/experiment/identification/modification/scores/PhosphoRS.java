@@ -13,9 +13,9 @@ import com.compomics.util.experiment.identification.spectrum_annotation.spectrum
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.math.statistics.distributions.BinomialDistribution;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.SequenceMatchingParameters;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
@@ -89,8 +89,8 @@ public class PhosphoRS {
      *
      * @return a map site &gt; phosphoRS site probability
      */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> modifications, Spectrum spectrum, SequenceProvider sequenceProvider, AnnotationSettings annotationSettings,
-            SpecificAnnotationSettings specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingParameters sequenceMatchingPreferences,
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> modifications, Spectrum spectrum, SequenceProvider sequenceProvider, AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingParameters sequenceMatchingPreferences,
             SequenceMatchingParameters modificationSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator) {
 
         if (modifications.isEmpty()) {
@@ -130,7 +130,7 @@ public class PhosphoRS {
                 }
             }
         }
-        SpecificAnnotationSettings scoringAnnotationSetttings = specificAnnotationSettings.clone();
+        SpecificAnnotationParameters scoringAnnotationSetttings = specificAnnotationSettings.clone();
         scoringAnnotationSetttings.setNeutralLossesMap(scoringLossesMap);
         HashMap<Ion.IonType, HashSet<Integer>> ions = specificAnnotationSettings.getIonTypes(),
                 newIons = new HashMap<>(1);
@@ -450,7 +450,7 @@ public class PhosphoRS {
      * @return the phosphoRS score
      */
     private static Double getPhosphoRsScoreP(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, Spectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
-            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings) {
+            AnnotationParameters annotationSettings, SpecificAnnotationParameters scoringAnnotationSettings) {
 
         BinomialDistribution distribution = null;
         HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
@@ -574,7 +574,7 @@ public class PhosphoRS {
      * @return a map of the number of possible fragment ions for every peptide
      */
     private static HashMap<String, Integer> getPossiblePeptideToN(HashMap<String, Peptide> possiblePeptides, HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> possiblePeptideFragments, 
-            PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+            PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationParameters scoringAnnotationSetttings) {
         HashMap<String, Integer> result = new HashMap<>(possiblePeptides.size());
         for (String profileKey : possiblePeptides.keySet()) {
             Peptide peptide = possiblePeptides.get(profileKey);
@@ -598,7 +598,7 @@ public class PhosphoRS {
      *
      * @return a map of the possible ions for every peptide of every profile
      */
-    private static HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> getPossiblePeptideFragments(HashMap<String, Peptide> possiblePeptides, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> getPossiblePeptideFragments(HashMap<String, Peptide> possiblePeptides, SpecificAnnotationParameters scoringAnnotationSetttings) {
         HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> result = new HashMap<>(possiblePeptides.size());
         IonFactory fragmentFactory = IonFactory.getInstance();
         for (String profileKey : possiblePeptides.keySet()) {
@@ -664,7 +664,7 @@ public class PhosphoRS {
      * @return a map of all potential site determining ions indexed by their m/z
      */
     private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<int[]> possibleProfiles, ArrayList<Modification> modifications, 
-            PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+            PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationParameters scoringAnnotationSetttings) {
 
         String sequence = noModPeptide.getSequence();
         Peptide peptide = new Peptide(sequence, noModPeptide.getModificationMatches());
@@ -793,7 +793,7 @@ public class PhosphoRS {
      *
      * @return the filtered spectrum
      */
-    private static Spectrum filterSpectrum(Spectrum spectrum, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static Spectrum filterSpectrum(Spectrum spectrum, SpecificAnnotationParameters scoringAnnotationSetttings) {
 
         Double window;
         Integer maxPeaks;

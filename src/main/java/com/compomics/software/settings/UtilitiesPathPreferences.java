@@ -196,7 +196,7 @@ public class UtilitiesPathPreferences {
                 EnzymeFactory.setSerializationFile(path);
                 return;
             case utilitiesPreferencesKey:
-                UtilitiesUserParameters.setUserPreferencesFolder(path);
+                UtilitiesUserParameters.setUserParametersFolder(path);
                 return;
             case identificationParametersKey:
                 IdentificationParametersFactory.setParentFolder(path);
@@ -224,7 +224,7 @@ public class UtilitiesPathPreferences {
             case enzymeFactoryKey:
                 return EnzymeFactory.getSerializationFile();
             case utilitiesPreferencesKey:
-                return UtilitiesUserParameters.getUserPreferencesFolder();
+                return UtilitiesUserParameters.getUserParametersFolder();
             case identificationParametersKey:
                 return IdentificationParametersFactory.getParentFolder();
             default:
@@ -355,7 +355,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case utilitiesPreferencesKey:
-                toWrite = UtilitiesUserParameters.getUserPreferencesFolder();
+                toWrite = UtilitiesUserParameters.getUserParametersFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }

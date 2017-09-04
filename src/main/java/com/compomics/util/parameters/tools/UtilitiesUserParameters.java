@@ -1,12 +1,12 @@
 package com.compomics.util.parameters.tools;
 
-import com.compomics.util.parameters.tools.SearchGuiOutputParameters;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.io.file.SerializationUtils;
+import com.compomics.util.io.json.JsonMarshaller;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Utilities user preferences will be serialized in the user folder and provide
@@ -24,15 +24,15 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * Location of the user preferences file.
      */
-    private static String USER_PREFERENCES_FILE = System.getProperty("user.home") + "/.compomics/userpreferences.cup";
+    private static String USER_PARAMETERS_FILE = System.getProperty("user.home") + "/.compomics/userpreferences.cup";
     /**
      * The width to use for the annotated peaks.
      */
-    private Float spectrumAnnotatedPeakWidth = 1.0f;
+    private float spectrumAnnotatedPeakWidth = 1.0f;
     /**
      * The width to use for the background peaks.
      */
-    private Float spectrumBackgroundPeakWidth = 1.0f;
+    private float spectrumBackgroundPeakWidth = 1.0f;
     /**
      * The color to use for the annotated peaks.
      */
@@ -76,22 +76,13 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * The memory to use.
      */
-    private Integer memoryPreference = 4 * 1024;
+    private int memoryPreference = 4 * 1024;
     /**
      * The Java Home, for example, C:\Program Files\Java\jdk1.8.0_25\bin. Null
      * if not set. Note that this setting will be ignored of a JavaHome.txt file
      * is found.
      */
     private String javaHome = null;
-    /**
-     * The folder where to store the protein trees.
-     */
-    private File proteinTreeFolder = null;
-    /**
-     * Maps saving the protein trees import time in a map: FASTA file size &gt;
-     * import times.
-     */
-    private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
      * The path to the ProteoWizard installation (if any). Set to null if no
      * path is provided.
@@ -150,20 +141,15 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * Indicates whether the tool should check for updates.
      */
-    private Boolean autoUpdate = true;
-    /**
-     * Indicates whether the tool should notify its start.
-     * @deprecated replaced by autoUpdate only
-     */
-    private Boolean notifyStart = true;
+    private boolean autoUpdate = true;
     /**
      * The last selected folder.
      */
-    private LastSelectedFolder lastSelectedFolder;
+    private LastSelectedFolder lastSelectedFolder = new LastSelectedFolder();
     /**
      * If true, the PSMs are sorted on retention time, false sorts on PSM score.
      */
-    private Boolean sortPsmsOnRt = false;
+    private boolean sortPsmsOnRt = false;
     /**
      * The tag added after adding decoy sequences to a FASTA file.
      */
@@ -171,35 +157,29 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * If true, the selected spectra will be checked for peak picking.
      */
-    private Boolean checkPeakPicking = true;
+    private boolean checkPeakPicking = true;
     /**
      * If true, the selected spectra will be checked for duplicate spectrum
      * titles.
      */
-    private Boolean checkDuplicateTitles = true;
+    private boolean checkDuplicateTitles = true;
     /**
      * If true, the mgf files will be checked for size.
      */
-    private Boolean checkMgfSize = false;
+    private boolean checkMgfSize = false;
     /**
      * If an mgf file exceeds this limit, the user will be asked for a split.
      */
-    private Double mgfMaxSize = 1000.0;
+    private double mgfMaxSize = 1000.0;
     /**
      * Number of spectra allowed in the split file.
      */
-    private Integer mgfNSpectra = 25000;
+    private int mgfNSpectra = 25000;
     /**
      * Reference mass for the conversion of the fragment ion tolerance from ppm
      * to Dalton.
      */
-    private Double refMass = 2000.0;
-    /**
-     * If true the protein tree will be created parallel to the searches.
-     * 
-     * @deprecated no longer used
-     */
-    private Boolean generateProteinTree = false;
+    private double refMass = 2000.0;
     /**
      * The way output files should be exported.
      */
@@ -208,27 +188,31 @@ public class UtilitiesUserParameters implements Serializable {
      * Indicates whether data files (mgf and FASTA) should be copied in the
      * output.
      */
-    private Boolean outputData = false;
+    private boolean outputData = false;
     /**
      * Indicates whether the date should be included in the output.
      */
-    private Boolean includeDateInOutputName = false;
+    private boolean includeDateInOutputName = false;
     /**
      * If true the X! Tandem file will be renamed.
      */
-    private Boolean renameXTandemFile = true;
+    private boolean renameXTandemFile = true;
     /**
      * If true, the spectra will be checked for missing charges.
      */
-    private Boolean checkSpectrumCharges = true;
+    private boolean checkSpectrumCharges = true;
     /**
      * The maximum charge added when the charge is missing for a given spectrum.
      */
-    private Integer minSpectrumChargeRange = 2;
+    private int minSpectrumChargeRange = 2;
     /**
      * The minimum charge added when the charge is missing for a given spectrum.
      */
-    private Integer maxSpectrumChargeRange = 4;
+    private int maxSpectrumChargeRange = 4;
+    /**
+     * The list of the default modifications.
+     */
+    private HashSet<String> defaultModifications = new HashSet<>();
 
     /**
      * Constructor.
@@ -305,9 +289,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the color for a possible sparkline bar chart plots
      */
     public Color getSparklineColorPossible() {
-        if (sparklineColorPossible == null) {
-            sparklineColorPossible = new Color(235, 235, 235);
-        }
         return sparklineColorPossible;
     }
 
@@ -326,9 +307,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the color for a doubtful sparkline bar chart plots
      */
     public Color getSparklineColorDoubtful() {
-        if (sparklineColorDoubtful == null) {
-            sparklineColorDoubtful = new Color(255, 204, 0);
-        }
         return sparklineColorDoubtful;
     }
 
@@ -347,9 +325,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the color for a false positives in sparkline bar chart plots
      */
     public Color getSparklineColorFalsePositives() {
-        if (sparklineColorFalsePositive == null) {
-            sparklineColorFalsePositive = new Color(255, 51, 51);
-        }
         return sparklineColorFalsePositive;
     }
 
@@ -404,9 +379,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the spectrumAnnotatedPeakColor
      */
     public Color getSpectrumAnnotatedPeakColor() {
-        if (spectrumAnnotatedPeakColor == null) {
-            spectrumAnnotatedPeakColor = Color.RED;
-        }
         return spectrumAnnotatedPeakColor;
     }
 
@@ -425,9 +397,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the spectrumAnnotatedMirroredPeakColor
      */
     public Color getSpectrumAnnotatedMirroredPeakColor() {
-        if (spectrumAnnotatedMirroredPeakColor == null) {
-            spectrumAnnotatedMirroredPeakColor = Color.BLUE;
-        }
         return spectrumAnnotatedMirroredPeakColor;
     }
 
@@ -447,9 +416,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the spectrumBackgroundPeakColor
      */
     public Color getSpectrumBackgroundPeakColor() {
-        if (spectrumBackgroundPeakColor == null) {
-            spectrumBackgroundPeakColor = new Color(100, 100, 100, 50);
-        }
         return spectrumBackgroundPeakColor;
     }
 
@@ -467,10 +433,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the spectrumAnnotatedPeakWidth
      */
-    public Float getSpectrumAnnotatedPeakWidth() {
-        if (spectrumAnnotatedPeakWidth == null) {
-            spectrumAnnotatedPeakWidth = 1.0f;
-        }
+    public float getSpectrumAnnotatedPeakWidth() {
         return spectrumAnnotatedPeakWidth;
     }
 
@@ -488,10 +451,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the spectrumBackgroundPeakWidth
      */
-    public Float getSpectrumBackgroundPeakWidth() {
-        if (spectrumBackgroundPeakWidth == null) {
-            spectrumBackgroundPeakWidth = 1.0f;
-        }
+    public float getSpectrumBackgroundPeakWidth() {
         return spectrumBackgroundPeakWidth;
     }
 
@@ -613,49 +573,69 @@ public class UtilitiesUserParameters implements Serializable {
     }
 
     /**
-     * Convenience method saving the user preferences.
+     * Convenience method saving the user parameters. Exceptions are ignored silently and written to the stack trace.
      *
      * @param userPreferences the user preferences
      */
-    public static void saveUserPreferences(UtilitiesUserParameters userPreferences) {
+    public static void saveUserParameters(UtilitiesUserParameters userPreferences) {
 
         try {
-            File file = new File(USER_PREFERENCES_FILE);
+            
+            File file = new File(USER_PARAMETERS_FILE);
+            
             if (!file.getParentFile().exists()) {
+                
                 file.getParentFile().mkdir();
+                
             }
-            SerializationUtils.writeObject(userPreferences, file);
+            
+            JsonMarshaller marshaller = new JsonMarshaller();
+            marshaller.saveObjectToJson(userPreferences, file);
+            
         } catch (Exception e) {
-            System.err.println("An error occurred while saving " + USER_PREFERENCES_FILE + " (see below).");
+            
+            System.err.println("An error occurred while saving " + USER_PARAMETERS_FILE + " (see below).");
             e.printStackTrace();
+            
         }
     }
 
     /**
-     * Loads the user preferences. If an error is encountered, preferences are
+     * Loads the user parameters. If an error is encountered, parameters are
      * set back to default.
      *
      * @return returns the utilities user preferences
      */
-    public static UtilitiesUserParameters loadUserPreferences() {
-        UtilitiesUserParameters userPreferences;
-        File file = new File(UtilitiesUserParameters.USER_PREFERENCES_FILE);
+    public static UtilitiesUserParameters loadUserParameters() {
+        
+        UtilitiesUserParameters userParameters;
+        
+        File file = new File(UtilitiesUserParameters.USER_PARAMETERS_FILE);
 
         if (!file.exists()) {
-            userPreferences = new UtilitiesUserParameters();
-            UtilitiesUserParameters.saveUserPreferences(userPreferences);
+            
+            userParameters = new UtilitiesUserParameters();
+            UtilitiesUserParameters.saveUserParameters(userParameters);
+            
         } else {
+            
             try {
-                userPreferences = (UtilitiesUserParameters) SerializationUtils.readObject(file);
+                
+            JsonMarshaller marshaller = new JsonMarshaller();
+            userParameters = (UtilitiesUserParameters) marshaller.fromJson(UtilitiesUserParameters.class, file);
+                
             } catch (Exception e) {
-                System.err.println("An error occurred while loading " + UtilitiesUserParameters.USER_PREFERENCES_FILE + " (see below). Preferences set back to default.");
+                
+                System.err.println("An error occurred while loading " + UtilitiesUserParameters.USER_PARAMETERS_FILE + " (see below). Preferences set back to default.");
                 e.printStackTrace();
-                userPreferences = new UtilitiesUserParameters();
-                UtilitiesUserParameters.saveUserPreferences(userPreferences);
+                
+                userParameters = new UtilitiesUserParameters();
+                UtilitiesUserParameters.saveUserParameters(userParameters);
+                
             }
         }
 
-        return userPreferences;
+        return userParameters;
     }
 
     /**
@@ -700,12 +680,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the folder to use in the protein sequences manager
      */
     public File getProteinSequencesManagerFolder() {
-        if (proteinSequencesManagerFolder == null) { // Backward compatibility
-            proteinSequencesManagerFolder = new File(System.getProperty("user.home") + "/.compomics/proteins/sequences/");
-            if (!proteinSequencesManagerFolder.exists()) {
-                proteinSequencesManagerFolder.mkdirs();
-            }
-        }
         return proteinSequencesManagerFolder;
     }
 
@@ -733,7 +707,7 @@ public class UtilitiesUserParameters implements Serializable {
      * Removes the db files which do not exist anymore.
      */
     public void checkDbFiles() {
-        ArrayList<File> checkedFiles = new ArrayList<>();
+        ArrayList<File> checkedFiles = new ArrayList<>(1);
         for (File dbFile : favoriteDBs) {
             if (dbFile.exists()) {
                 checkedFiles.add(dbFile);
@@ -749,55 +723,9 @@ public class UtilitiesUserParameters implements Serializable {
      */
     public void addFavoriteDB(File dbFile) {
         if (favoriteDBs == null) {
-            favoriteDBs = new ArrayList<>();
+            favoriteDBs = new ArrayList<>(1);
         }
         favoriteDBs.add(0, dbFile);
-    }
-
-    /**
-     * Sets the protein tree folder.
-     *
-     * @param proteinTreeFolder the protein tree folder
-     */
-    public void setProteinTreeFolder(File proteinTreeFolder) {
-        this.proteinTreeFolder = proteinTreeFolder;
-    }
-
-    /**
-     * Returns the protein tree import times in a map: file size &gt; list of
-     * import sizes.
-     *
-     * @return the protein tree import times
-     */
-    public HashMap<Long, ArrayList<Long>> getProteinTreeImportTime() {
-        if (proteinTreeImportTime == null) {
-            proteinTreeImportTime = new HashMap<>();
-        }
-        return proteinTreeImportTime;
-    }
-
-    /**
-     * Adds a protein tree import time.
-     *
-     * @param fileSize the size of the FASTA file
-     * @param importTime the import time
-     */
-    public void addProteinTreeImportTime(long fileSize, long importTime) {
-        ArrayList<Long> importTimes = getProteinTreeImportTime().get(fileSize);
-        if (importTimes == null) {
-            importTimes = new ArrayList<>();
-            proteinTreeImportTime.put(fileSize, importTimes);
-        }
-        importTimes.add(importTime);
-    }
-
-    /**
-     * Clears the protein tree import times.
-     */
-    public void clearProteinTreeImportTimes() {
-        if (proteinTreeImportTime != null) {
-            proteinTreeImportTime.clear();
-        }
     }
 
     /**
@@ -807,7 +735,7 @@ public class UtilitiesUserParameters implements Serializable {
      */
     public ArrayList<String> getReadTweets() {
         if (readTweets == null) {
-            readTweets = new ArrayList<>();
+            readTweets = new ArrayList<>(0);
         }
         return readTweets;
     }
@@ -828,7 +756,7 @@ public class UtilitiesUserParameters implements Serializable {
      */
     public ArrayList<String> getDisplayedTips() {
         if (displayedTips == null) {
-            displayedTips = new ArrayList<>();
+            displayedTips = new ArrayList<>(0);
         }
         return displayedTips;
     }
@@ -847,8 +775,8 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the user preferences file
      */
-    public static String getUserPreferencesFile() {
-        return USER_PREFERENCES_FILE;
+    public static String getUserParametersFile() {
+        return USER_PARAMETERS_FILE;
     }
 
     /**
@@ -856,19 +784,19 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the user preferences file
      */
-    public static String getUserPreferencesFolder() {
-        File tempFile = new File(getUserPreferencesFile());
+    public static String getUserParametersFolder() {
+        File tempFile = new File(getUserParametersFile());
         return tempFile.getParent();
     }
 
     /**
      * Sets the user preferences file to be used.
      *
-     * @param userPreferencesFolder the user preferences file to be used
+     * @param userParametersFolder the user preferences file to be used
      */
-    public static void setUserPreferencesFolder(String userPreferencesFolder) {
-        File tempFile = new File(userPreferencesFolder, "/utilities_userpreferences.cup");
-        UtilitiesUserParameters.USER_PREFERENCES_FILE = tempFile.getAbsolutePath();
+    public static void setUserParametersFolder(String userParametersFolder) {
+        File tempFile = new File(userParametersFolder, "/utilities_userPreferences.cup");
+        UtilitiesUserParameters.USER_PARAMETERS_FILE = tempFile.getAbsolutePath();
     }
 
     /**
@@ -876,10 +804,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return whether the tools should use the auto update function
      */
-    public Boolean isAutoUpdate() {
-        if (autoUpdate == null) {
-            autoUpdate = true;
-        }
+    public boolean isAutoUpdate() {
         return autoUpdate;
     }
 
@@ -893,35 +818,11 @@ public class UtilitiesUserParameters implements Serializable {
     }
 
     /**
-     * Indicates whether the tools should notify their start.
-     *
-     * @return whether the tools should notify their start
-     */
-    public Boolean isNotifyStart() {
-        if (notifyStart == null) {
-            notifyStart = true;
-        }
-        return notifyStart;
-    }
-
-    /**
-     * Sets whether the tools should notify their start.
-     *
-     * @param notifyStart whether the tools should notify their start
-     */
-    public void setNotifyStart(Boolean notifyStart) {
-        this.notifyStart = notifyStart;
-    }
-
-    /**
      * Returns the last selected folder.
      *
      * @return the last selected folder
      */
     public LastSelectedFolder getLastSelectedFolder() {
-        if (lastSelectedFolder == null) {
-            lastSelectedFolder = new LastSelectedFolder();
-        }
         return lastSelectedFolder;
     }
 
@@ -940,10 +841,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the sortPsmsOnRt
      */
-    public Boolean getSortPsmsOnRt() {
-        if (sortPsmsOnRt == null) {
-            sortPsmsOnRt = false;
-        }
+    public boolean getSortPsmsOnRt() {
         return sortPsmsOnRt;
     }
 
@@ -962,9 +860,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the targetDecoyFileNameSuffix
      */
     public String getTargetDecoyFileNameSuffix() {
-        if (targetDecoyFileNameTag == null) {
-            targetDecoyFileNameTag = "_concatenated_target_decoy";
-        }
         return targetDecoyFileNameTag;
     }
 
@@ -982,10 +877,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return true if the spectra should be checked for peak picking
      */
-    public Boolean checkPeakPicking() {
-        if (checkPeakPicking == null) {
-            checkPeakPicking = true;
-        }
+    public boolean checkPeakPicking() {
         return checkPeakPicking;
     }
 
@@ -1003,10 +895,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return true if the spectra should be checked for duplicate titles
      */
-    public Boolean checkDuplicateTitles() {
-        if (checkDuplicateTitles == null) {
-            checkDuplicateTitles = true;
-        }
+    public boolean checkDuplicateTitles() {
         return checkDuplicateTitles;
     }
 
@@ -1024,10 +913,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return true if the mgf should be checked for size
      */
-    public Boolean checkMgfSize() {
-        if (checkMgfSize == null) {
-            checkMgfSize = false;
-        }
+    public boolean checkMgfSize() {
         return checkMgfSize;
     }
 
@@ -1046,9 +932,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the mgfMaxSize
      */
     public double getMgfMaxSize() {
-        if (mgfMaxSize == null) {
-            mgfMaxSize = 1000.0;
-        }
         return mgfMaxSize;
     }
 
@@ -1067,9 +950,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the mgfNSpectra
      */
     public int getMgfNSpectra() {
-        if (mgfNSpectra == null) {
-            mgfNSpectra = 25000;
-        }
         return mgfNSpectra;
     }
 
@@ -1089,10 +969,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the reference mass for the conversion of the fragment ion
      * tolerance from ppm to Dalton
      */
-    public Double getRefMass() {
-        if (refMass == null) {
-            refMass = 2000.0;
-        }
+    public double getRefMass() {
         return refMass;
     }
 
@@ -1103,32 +980,8 @@ public class UtilitiesUserParameters implements Serializable {
      * @param refMass the reference mass for the conversion of the fragment ion
      * tolerance from ppm to Dalton
      */
-    public void setRefMass(Double refMass) {
+    public void setRefMass(double refMass) {
         this.refMass = refMass;
-    }
-
-    /**
-     * Returns true if the protein tree will be created parallel to the
-     * searches.
-     *
-     * @return true if the protein tree will be created parallel to the searches
-     * @deprecated no longer used
-     */
-    public Boolean generateProteinTree() {
-        if (generateProteinTree == null) {
-            generateProteinTree = false;
-        }
-        return generateProteinTree;
-    }
-
-    /**
-     * Set if the the protein tree will be created parallel to the searches.
-     *
-     * @param generateProteinTree create protein tree?
-     * @deprecated no longer used
-     */
-    public void setGenerateProteinTree(Boolean generateProteinTree) {
-        this.generateProteinTree = generateProteinTree;
     }
 
     /**
@@ -1146,9 +999,6 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the selected SearchGUI output option
      */
     public SearchGuiOutputParameters getOutputOption() {
-        if (outputOption == null) {
-            outputOption = SearchGuiOutputParameters.grouped;
-        }
         return outputOption;
     }
 
@@ -1159,10 +1009,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @return a boolean indicating whether data should be copied along with the
      * identification files in the SearchGUI output
      */
-    public Boolean outputData() {
-        if (outputData == null) {
-            outputData = false;
-        }
+    public boolean outputData() {
         return outputData;
     }
 
@@ -1173,7 +1020,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @param outputData whether data should be copied along with the
      * identification files in the SearchGUI output
      */
-    public void setOutputData(Boolean outputData) {
+    public void setOutputData(boolean outputData) {
         this.outputData = outputData;
     }
 
@@ -1184,10 +1031,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @return a boolean indicating whether the date should be included in the
      * SearchGUI output name
      */
-    public Boolean isIncludeDateInOutputName() {
-        if (includeDateInOutputName == null) {
-            includeDateInOutputName = false;
-        }
+    public boolean isIncludeDateInOutputName() {
         return includeDateInOutputName;
     }
 
@@ -1197,7 +1041,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @param includeDateInOutputName whether the date should be included in the
      * SearchGUI output name
      */
-    public void setIncludeDateInOutputName(Boolean includeDateInOutputName) {
+    public void setIncludeDateInOutputName(boolean includeDateInOutputName) {
         this.includeDateInOutputName = includeDateInOutputName;
     }
 
@@ -1206,10 +1050,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return true if the X! Tandem file should be renamed
      */
-    public Boolean renameXTandemFile() {
-        if (renameXTandemFile == null) {
-            renameXTandemFile = true;
-        }
+    public boolean renameXTandemFile() {
         return renameXTandemFile;
     }
 
@@ -1218,7 +1059,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param renameXTandemFile rename file?
      */
-    public void setRenameXTandemFile(Boolean renameXTandemFile) {
+    public void setRenameXTandemFile(boolean renameXTandemFile) {
         this.renameXTandemFile = renameXTandemFile;
     }
 
@@ -1227,10 +1068,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return true, if the spectra are to be checked for missing charges
      */
-    public Boolean isCheckSpectrumCharges() {
-        if (checkSpectrumCharges == null) {
-            checkSpectrumCharges = true;
-        }
+    public boolean isCheckSpectrumCharges() {
         return checkSpectrumCharges;
     }
 
@@ -1239,7 +1077,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param checkSpectrumCharges the checkSpectrumCharges to set
      */
-    public void setCheckSpectrumCharges(Boolean checkSpectrumCharges) {
+    public void setCheckSpectrumCharges(boolean checkSpectrumCharges) {
         this.checkSpectrumCharges = checkSpectrumCharges;
     }
 
@@ -1250,10 +1088,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the minimum charge added when the charge is missing for a given
      * spectrum
      */
-    public Integer getMinSpectrumChargeRange() {
-        if (minSpectrumChargeRange == null) {
-            minSpectrumChargeRange = 2;
-        }
+    public int getMinSpectrumChargeRange() {
         return minSpectrumChargeRange;
     }
 
@@ -1263,7 +1098,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param minSpectrumChargeRange the minSpectrumChargeRange to set
      */
-    public void setMinSpectrumChargeRange(Integer minSpectrumChargeRange) {
+    public void setMinSpectrumChargeRange(int minSpectrumChargeRange) {
         this.minSpectrumChargeRange = minSpectrumChargeRange;
     }
     
@@ -1274,10 +1109,7 @@ public class UtilitiesUserParameters implements Serializable {
      * @return the maximum charge added when the charge is missing for a given
      * spectrum
      */
-    public Integer getMaxSpectrumChargeRange() {
-        if (maxSpectrumChargeRange == null) {
-            maxSpectrumChargeRange = 4;
-        }
+    public int getMaxSpectrumChargeRange() {
         return maxSpectrumChargeRange;
     }
 
@@ -1287,7 +1119,25 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param maxSpectrumChargeRange the maxSpectrumChargeRange to set
      */
-    public void setMaxSpectrumChargeRange(Integer maxSpectrumChargeRange) {
+    public void setMaxSpectrumChargeRange(int maxSpectrumChargeRange) {
         this.maxSpectrumChargeRange = maxSpectrumChargeRange;
+    }
+
+    /**
+     * Returns the default modifications.
+     * 
+     * @return the default modifications
+     */
+    public HashSet<String> getDefaultModifications() {
+        return defaultModifications;
+    }
+
+    /**
+     * Sets the default modifications.
+     * 
+     * @param defaultModifications the default modifications
+     */
+    public void setDefaultModifications(HashSet<String> defaultModifications) {
+        this.defaultModifications = defaultModifications;
     }
 }

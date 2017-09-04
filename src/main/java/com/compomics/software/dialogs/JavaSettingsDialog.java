@@ -78,7 +78,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         }
 
         try {
-            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserPreferences();
+            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             int maxMemory = utilitiesUserPreferences.getMemoryPreference();
             memoryLabel.setText("<html>" + Util.roundDouble(maxMemory * 0.000976563, 1) + " GB " + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
 

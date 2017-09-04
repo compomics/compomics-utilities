@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import java.awt.Dialog;
 import java.awt.Toolkit;
@@ -64,7 +64,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationParametersDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy,
+    public AnnotationParametersDialog(java.awt.Frame parentFrame, AnnotationParameters annotationSettings, double maxFragmentIonAccuracy,
             ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
@@ -92,7 +92,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationParametersDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy,
+    public AnnotationParametersDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationParameters annotationSettings, double maxFragmentIonAccuracy,
             ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
@@ -151,7 +151,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * @param annotationSettings the annotation settings to display
      * @param possibleNeutralLosses the possible neutral losses
      */
-    private void populateGui(AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
+    private void populateGui(AnnotationParameters annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
 
         neutralLossesMap = new HashMap<>(possibleNeutralLosses.size()); // @TODO: should not use NeutralLoss as key?
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
@@ -263,9 +263,9 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      *
      * @return the annotation settings as set by the user
      */
-    public AnnotationSettings getAnnotationSettings() {
+    public AnnotationParameters getAnnotationSettings() {
 
-        AnnotationSettings annotationSettings = new AnnotationSettings();
+        AnnotationParameters annotationSettings = new AnnotationParameters();
 
         if (aBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.A_ION);
@@ -306,7 +306,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
             annotationSettings.addIonType(IonType.RELATED_ION);
         }
 
-        annotationSettings.setIntensityThresholdType((AnnotationSettings.IntensityThresholdType) intensityThresholdCmb.getSelectedItem());
+        annotationSettings.setIntensityThresholdType((AnnotationParameters.IntensityThresholdType) intensityThresholdCmb.getSelectedItem());
         annotationSettings.setIntensityLimit(((Integer) intensitySpinner.getValue()) / 100.0);
         annotationSettings.setFragmentIonAccuracy((Double) accuracySpinner.getValue());
         SpectrumAnnotator.TiesResolution tiesResolution = highResolutionBox.isSelected() ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
@@ -539,7 +539,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
         highResolutionBox.setText("High Resolution");
         highResolutionBox.setIconTextGap(10);
 
-        intensityThresholdCmb.setModel(new DefaultComboBoxModel(AnnotationSettings.IntensityThresholdType.values()));
+        intensityThresholdCmb.setModel(new DefaultComboBoxModel(AnnotationParameters.IntensityThresholdType.values()));
 
         javax.swing.GroupLayout peakMatchingPanelLayout = new javax.swing.GroupLayout(peakMatchingPanel);
         peakMatchingPanel.setLayout(peakMatchingPanelLayout);

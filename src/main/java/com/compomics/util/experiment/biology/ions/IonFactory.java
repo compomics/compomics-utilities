@@ -18,7 +18,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -190,7 +190,7 @@ public class IonFactory {
      *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide, SpecificAnnotationSettings specificAnnotationSettings) {
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide, SpecificAnnotationParameters specificAnnotationSettings) {
 
         HashMap<Ion.IonType, HashSet<Integer>> selectedIonTypes = null;
         if (specificAnnotationSettings != null) {

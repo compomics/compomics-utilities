@@ -247,7 +247,7 @@
             <Component class="javax.swing.JCheckBox" name="dbCheck">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="&quot;Hits obtained on small databases (&lt;&quot; + SequenceFactory.minProteinCount + &quot; protein sequences)&quot;" type="code"/>
+                  <Connection code="&quot;Hits obtained on small databases (&lt;&quot; + SearchParameters.preferredMinSequences + &quot; protein sequences)&quot;" type="code"/>
                 </Property>
                 <Property name="iconTextGap" type="int" value="15"/>
               </Properties>

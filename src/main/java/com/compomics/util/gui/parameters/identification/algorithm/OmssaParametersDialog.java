@@ -2,7 +2,6 @@ package com.compomics.util.gui.parameters.identification.algorithm;
 
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.tool_specific.OmssaParameters;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -155,203 +154,169 @@ public class OmssaParametersDialog extends javax.swing.JDialog implements Algori
      */
     private void populateGUI(OmssaParameters omssaParameters) {
 
-        if (omssaParameters.getLowIntensityCutOff() != null) {
+        if (omssaParameters.getLowIntensityCutOff() > 0) {
             lowIntensityTxt.setText(omssaParameters.getLowIntensityCutOff() + "");
         }
 
-        if (omssaParameters.getHighIntensityCutOff() != null) {
+        if (omssaParameters.getHighIntensityCutOff() > 0) {
             highIntensityTxt.setText(omssaParameters.getHighIntensityCutOff() + "");
         }
 
-        if (omssaParameters.getIntensityCutOffIncrement() != null) {
+        if (omssaParameters.getIntensityCutOffIncrement() > 0) {
             intensityIncrementTxt.setText(omssaParameters.getIntensityCutOffIncrement() + "");
         }
 
-        if (omssaParameters.getMinPeaks() != null) {
+        if (omssaParameters.getMinPeaks() > 0) {
             nPeaksTxt.setText(omssaParameters.getMinPeaks() + "");
         }
 
-        if (omssaParameters.isRemovePrecursor() != null) {
             if (omssaParameters.isRemovePrecursor()) {
                 eliminatePrecursorCombo.setSelectedIndex(0);
             } else {
                 eliminatePrecursorCombo.setSelectedIndex(1);
             }
-        }
 
-        if (omssaParameters.isEstimateCharge() != null) {
             if (omssaParameters.isEstimateCharge()) {
                 chargeEstimationCombo.setSelectedIndex(0);
             } else {
                 chargeEstimationCombo.setSelectedIndex(1);
             }
-        }
 
-        if (omssaParameters.isDetermineChargePlusOneAlgorithmically() != null) {
             if (omssaParameters.isDetermineChargePlusOneAlgorithmically()) {
                 plusOneChargeCmb.setSelectedIndex(0);
             } else {
                 plusOneChargeCmb.setSelectedIndex(1);
             }
-        }
 
-        if (omssaParameters.getFractionOfPeaksForChargeEstimation() != null) {
+        if (omssaParameters.getFractionOfPeaksForChargeEstimation() > 0) {
             fractionChargeTxt.setText(omssaParameters.getFractionOfPeaksForChargeEstimation() + "");
         }
 
-        if (omssaParameters.getMinPrecPerSpectrum() != null) {
+        if (omssaParameters.getMinPrecPerSpectrum() > 0) {
             minPrecPerSpectrumTxt.setText(omssaParameters.getMinPrecPerSpectrum() + "");
         }
 
-        if (omssaParameters.isScalePrecursor() != null) {
             if (omssaParameters.isScalePrecursor()) {
                 precursorScalingCombo.setSelectedIndex(0);
             } else {
                 precursorScalingCombo.setSelectedIndex(1);
             }
-        } else {
-            precursorScalingCombo.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.isMemoryMappedSequenceLibraries() != null) {
             if (omssaParameters.isMemoryMappedSequenceLibraries()) {
                 sequenceMappingCmb.setSelectedIndex(0);
             } else {
                 sequenceMappingCmb.setSelectedIndex(1);
             }
-        } else {
-            sequenceMappingCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.isCleaveNterMethionine() != null) {
             if (omssaParameters.isCleaveNterMethionine()) {
                 cleaveNterminalMethionineCmb.setSelectedIndex(0);
             } else {
                 cleaveNterminalMethionineCmb.setSelectedIndex(1);
             }
-        } else {
-            cleaveNterminalMethionineCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.getMinPeptideLength() != null) {
+        if (omssaParameters.getMinPeptideLength() > 0) {
             minPepLengthTxt.setText(omssaParameters.getMinPeptideLength() + "");
         }
 
-        if (omssaParameters.getMaxPeptideLength() != null) {
+        if (omssaParameters.getMaxPeptideLength() > 0) {
             maxPepLengthTxt.setText(omssaParameters.getMaxPeptideLength() + "");
         }
 
-        if (omssaParameters.getMaxEValue() != null) {
+        if (omssaParameters.getMaxEValue() > 0) {
             maxEvalueTxt.setText(omssaParameters.getMaxEValue() + "");
         }
 
-        if (omssaParameters.getHitListLength() != null) {
+        if (omssaParameters.getHitListLength() > 0) {
             hitlistTxt.setText(omssaParameters.getHitListLength() + "");
         }
 
         omssaOutputFormatComboBox.setSelectedItem(omssaParameters.getSelectedOutput());
 
-        if (omssaParameters.getMinimalChargeForMultipleChargedFragments() != null) {
-            minPrecChargeMultipleChargedFragmentsTxt.setText(omssaParameters.getMinimalChargeForMultipleChargedFragments().value + "");
+        if (omssaParameters.getMinimalChargeForMultipleChargedFragments() > 0) {
+            minPrecChargeMultipleChargedFragmentsTxt.setText(omssaParameters.getMinimalChargeForMultipleChargedFragments() + "");
         }
 
-        if (omssaParameters.getNeutronThreshold() != null) {
+        if (omssaParameters.getNeutronThreshold() > 0) {
             neutronTxt.setText(omssaParameters.getNeutronThreshold() + "");
         }
 
-        if (omssaParameters.getSingleChargeWindow() != null) {
+        if (omssaParameters.getSingleChargeWindow() > 0) {
             singlyChargedWindowWidthTxt.setText(omssaParameters.getSingleChargeWindow() + "");
         }
 
-        if (omssaParameters.getDoubleChargeWindow() != null) {
+        if (omssaParameters.getDoubleChargeWindow() > 0) {
             doublyChargedWindowWidthTxt.setText(omssaParameters.getDoubleChargeWindow() + "");
         }
 
-        if (omssaParameters.getnPeaksInSingleChargeWindow() != null) {
+        if (omssaParameters.getnPeaksInSingleChargeWindow() > 0) {
             singlyChargedNpeaksTxt.setText(omssaParameters.getnPeaksInSingleChargeWindow() + "");
         }
 
-        if (omssaParameters.getnPeaksInDoubleChargeWindow() != null) {
+        if (omssaParameters.getnPeaksInDoubleChargeWindow() > 0) {
             doublyChargedNpeaksTxt.setText(omssaParameters.getnPeaksInDoubleChargeWindow() + "");
         }
 
-        if (omssaParameters.getnAnnotatedMostIntensePeaks() != null) {
+        if (omssaParameters.getnAnnotatedMostIntensePeaks() > 0) {
             minAnnotatedMostIntensePeaksTxt.setText(omssaParameters.getnAnnotatedMostIntensePeaks() + "");
         }
 
-        if (omssaParameters.getnAnnotatedMostIntensePeaks() != null) {
+        if (omssaParameters.getnAnnotatedMostIntensePeaks() > 0) {
             minAnnotatedPeaksTxt.setText(omssaParameters.getMinAnnotatedPeaks() + "");
         }
 
-        if (omssaParameters.getMaxMzLadders() != null) {
+        if (omssaParameters.getMaxMzLadders() > 0) {
             maxLaddersTxt.setText(omssaParameters.getMaxMzLadders() + "");
         }
 
-        if (omssaParameters.getMaxFragmentCharge() != null) {
+        if (omssaParameters.getMaxFragmentCharge() > 0) {
             maxFragmentChargeTxt.setText(omssaParameters.getMaxFragmentCharge() + "");
         }
-
-        if (omssaParameters.isSearchPositiveIons() != null) {
+        
             if (omssaParameters.isSearchPositiveIons()) {
                 searchPositiveIonsCmb.setSelectedIndex(0);
             } else {
                 searchPositiveIonsCmb.setSelectedIndex(1);
             }
-        } else {
-            searchPositiveIonsCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.isSearchForwardFragmentFirst() != null) {
             if (omssaParameters.isSearchForwardFragmentFirst()) {
                 forwardIonsFirstCmb.setSelectedIndex(0);
             } else {
                 forwardIonsFirstCmb.setSelectedIndex(1);
             }
-        } else {
-            forwardIonsFirstCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.isSearchRewindFragments() != null) {
             if (omssaParameters.isSearchRewindFragments()) {
                 cTermIonsCmb.setSelectedIndex(0);
             } else {
                 cTermIonsCmb.setSelectedIndex(1);
             }
-        } else {
-            cTermIonsCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.getMaxFragmentPerSeries() != null) {
+        if (omssaParameters.getMaxFragmentPerSeries() > 0) {
             maxFragmentsPerSeriesTxt.setText(omssaParameters.getMaxFragmentPerSeries() + "");
         }
 
-        if (omssaParameters.isUseCorrelationCorrectionScore() != null) {
             if (omssaParameters.isUseCorrelationCorrectionScore()) {
                 correlationCorrectionScoreCmb.setSelectedIndex(0);
             } else {
                 correlationCorrectionScoreCmb.setSelectedIndex(1);
             }
-        } else {
-            correlationCorrectionScoreCmb.setSelectedIndex(1);
-        }
 
-        if (omssaParameters.getConsecutiveIonProbability() != null) {
+        if (omssaParameters.getConsecutiveIonProbability() > 0) {
             consecutiveIonProbabilityTxt.setText(omssaParameters.getConsecutiveIonProbability() + "");
         }
 
-        if (omssaParameters.getIterativeSequenceEvalue() != null) {
+        if (omssaParameters.getIterativeSequenceEvalue() > 0) {
             iterativeSequenceEvalueTxt.setText(omssaParameters.getIterativeSequenceEvalue() + "");
         }
 
-        if (omssaParameters.getIterativeSpectrumEvalue() != null) {
+        if (omssaParameters.getIterativeSpectrumEvalue() > 0) {
             iterativeSpectraEvalueTxt.setText(omssaParameters.getIterativeSpectrumEvalue() + "");
         }
 
-        if (omssaParameters.getIterativeReplaceEvalue() != null) {
+        if (omssaParameters.getIterativeReplaceEvalue() > 0) {
             iterativeReplaceEvalueTxt.setText(omssaParameters.getIterativeReplaceEvalue() + "");
         }
 
-        if (omssaParameters.getMaxHitsPerSpectrumPerCharge() != null) {
+        if (omssaParameters.getMaxHitsPerSpectrumPerCharge() > 0) {
             nHitsPerSpectrumPerChargeTxt.setText(omssaParameters.getMaxHitsPerSpectrumPerCharge() + "");
         }
     }
@@ -407,7 +372,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog implements Algori
         tempOmssaParameters.setSelectedOutput(omssaOutputFormatComboBox.getSelectedItem().toString());
         input = minPrecChargeMultipleChargedFragmentsTxt.getText().trim();
         int charge = new Integer(input);
-        tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
+        tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(charge);
         input = neutronTxt.getText().trim();
         tempOmssaParameters.setNeutronThreshold(new Double(input));
         input = singlyChargedWindowWidthTxt.getText().trim();

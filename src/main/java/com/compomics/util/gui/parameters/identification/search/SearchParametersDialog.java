@@ -1320,10 +1320,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         variableModificationsLabel.setText("Variable Modifications (" + variableModifications.length + ")");
 
-        if (variableModifications.length > 6) {
+        if (variableModifications.length > SearchParameters.preferredMaxVariableModifications) {
             
             JOptionPane.showMessageDialog(this,
-                    "It is not recommended to use more than six variable modifications in the same search.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    "It is not recommended to use more than " + SearchParameters.preferredMaxVariableModifications + " variable modifications in the same search.", "Warning", JOptionPane.WARNING_MESSAGE);
         
         }
 

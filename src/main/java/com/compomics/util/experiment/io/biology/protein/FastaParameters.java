@@ -1,5 +1,12 @@
 package com.compomics.util.experiment.io.biology.protein;
 
+import com.compomics.util.Util;
+import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
+import com.compomics.util.waiting.WaitingHandler;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
 /**
  * The parameters used to parse a fasta file.
  *
@@ -7,6 +14,15 @@ package com.compomics.util.experiment.io.biology.protein;
  */
 public class FastaParameters {
 
+    /**
+     * The decoy flags used to infer the fasta parameters.
+     */
+    public static final String[] decoyFlags = {"decoy", "random", "reverse", "rev"};
+    /**
+     * The decoy separators used to infer the fasta parameters.
+     */
+    public static final char[] separators = {'-', '.', '_'};
+    
     /**
      * The name of the database.
      */
@@ -143,6 +159,13 @@ public class FastaParameters {
         this.targetDecoy = targetDecoy;
     }
     
+    /**
+     * Returns a boolean indicating whether the parsing parameters are the same as the given parameters.
+     * 
+     * @param fastaParameters the other parameters
+     * 
+     * @return a boolean indicating whether the parsing parameters are the same as the given parameters
+     */
     public boolean isSameAs(FastaParameters fastaParameters) {
         
         if (name != null && fastaParameters.getName() == null
@@ -186,4 +209,135 @@ public class FastaParameters {
         
         return true;
     } 
+
+    /**
+     * Infers the parameters used to parse the file.
+     * 
+     * @param fastaFile a fasta file
+     * @param waitingHandler a handler to allow canceling the import
+     * 
+     * @return returns fasta parameters inferred from the file
+     * 
+     * @throws IOException exception thrown if an error occurred while iterating the file
+     */
+    public static FastaParameters inferParameters(File fastaFile, WaitingHandler waitingHandler) throws IOException {
+
+        FastaParameters fastaParameters = new FastaParameters();
+
+        fastaParameters.setName(Util.removeExtension(fastaFile.getName()));
+        fastaParameters.setDescription("");
+        fastaParameters.setVersion((new Date(fastaFile.lastModified())).toString());
+
+        HeaderIterator headerIterator = new HeaderIterator(fastaFile);
+        String fastaHeader;
+        int i = 0, offset = 0, offSetIncrease = 100;
+
+        while ((fastaHeader = headerIterator.getNextHeader()) != null) {
+
+            if (i > offset && i < offset + 10) {
+
+                Header header = Header.parseFromFASTA(fastaHeader);
+                String accession = header.getAccession();
+                String accessionLowerCase = accession.toLowerCase();
+
+                for (String decoyFlagLowerCase : decoyFlags) {
+
+                    if (accession.length() > decoyFlagLowerCase.length()) {
+
+                        String subString = accessionLowerCase.substring(0, decoyFlagLowerCase.length());
+
+                        if (subString.equals(decoyFlagLowerCase)) {
+
+                            String decoyFlag = accession.substring(0, decoyFlagLowerCase.length());
+
+                            for (char sep : separators) {
+
+                                if (accession.charAt(decoyFlagLowerCase.length()) == sep) {
+
+                                    decoyFlag += sep;
+
+                                    fastaParameters.setTargetDecoy(true);
+                                    fastaParameters.setDecoySuffix(false);
+                                    fastaParameters.setDecoyFlag(decoyFlag);
+
+                                    headerIterator.close();
+
+                                    return fastaParameters;
+
+                                }
+
+                            }
+
+                            fastaParameters.setTargetDecoy(true);
+                            fastaParameters.setDecoySuffix(false);
+                            fastaParameters.setDecoyFlag(decoyFlag);
+
+                            headerIterator.close();
+
+                            return fastaParameters;
+
+                        }
+
+                        int startIndex = accession.length() - decoyFlagLowerCase.length();
+                        subString = accessionLowerCase.substring(startIndex);
+
+                        if (subString.equals(decoyFlagLowerCase)) {
+
+                            String decoyFlag = accession.substring(startIndex);
+
+                            for (char sep : separators) {
+
+                                if (accession.charAt(startIndex - 1) == sep) {
+
+                                    decoyFlag = sep + decoyFlag;
+
+                                    fastaParameters.setTargetDecoy(true);
+                                    fastaParameters.setDecoySuffix(true);
+                                    fastaParameters.setDecoyFlag(decoyFlag);
+
+                                    headerIterator.close();
+
+                                    return fastaParameters;
+
+                                }
+
+                            }
+
+                            fastaParameters.setTargetDecoy(true);
+                            fastaParameters.setDecoySuffix(true);
+                            fastaParameters.setDecoyFlag(decoyFlag);
+
+                            headerIterator.close();
+
+                            return fastaParameters;
+
+                        }
+                    }
+                }
+
+            } else if (i == offset + 10) {
+
+                if (i > 10 * offSetIncrease) {
+
+                    offSetIncrease *= 10;
+
+                }
+
+                offset += offSetIncrease;
+
+            }
+
+            i++;
+            
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                
+                return null;
+                
+            }
+        }
+        
+        fastaParameters.setTargetDecoy(false);
+        
+        return fastaParameters;
+    }
 }

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.biology.protein.iterators;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
@@ -41,6 +40,10 @@ public class FastaIterator implements ProteinIterator {
      * Placeholder for the next header found during parsing.
      */
     private Header nextHeader = null;
+    /**
+     * The header corresponding to the last protein returned.
+     */
+    private Header lastHeader = null;
     /**
      * Boolean indicating whether the end of the file has been reached.
      */
@@ -137,6 +140,8 @@ public class FastaIterator implements ProteinIterator {
             }
 
             if (sequence.length() > 0) {
+                
+                lastHeader = header;
 
                 return new Protein(header.getAccession(), sequence);
 
@@ -188,4 +193,30 @@ public class FastaIterator implements ProteinIterator {
         return cleanedSequence.toString();
 
     }
+
+    /**
+     * Returns the header corresponding to the last protein. 
+     * 
+     * @return the header corresponding to the last protein
+     */
+    public Header getLastHeader() {
+        return lastHeader;
+    }
+    
+    /**
+     * Closes the iterator.
+     */
+    public void close() {
+        
+        try {
+            
+            br.close();
+            
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            
+        }
+    }
+    
 }

@@ -311,7 +311,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
         generalSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("General Settings"));
         generalSettingsPanel.setOpaque(false);
 
-        dbCheck.setText("Hits obtained on small databases (<" + SequenceFactory.minProteinCount + " protein sequences)");
+        dbCheck.setText("Hits obtained on small databases (<" + SearchParameters.preferredMinSequences + " protein sequences)");
         dbCheck.setIconTextGap(15);
         dbCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

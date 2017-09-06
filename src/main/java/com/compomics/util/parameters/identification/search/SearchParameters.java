@@ -141,6 +141,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     private double refMass = 2000.0;
     /**
+     * The preferred maximal number of variable modifications.
+     */
+    public static final int preferredMaxVariableModifications = 6;
+    /**
+     * The preferred minimal number of protein sequences.
+     */
+    public static final int preferredMinSequences = 1000;
+    /**
      * The algorithm specific parameters.
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;

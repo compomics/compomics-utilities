@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
 
 /**
  * Enum of the supported protein databases.
@@ -33,7 +31,7 @@ public enum ProteinDatabase {
     Generic_Split_Header(null, null),
     NextProt("neXtProt", "22139911"), 
     UniRef("UniRef", null), 
-    Unknown(null, null); // @TODO: add support for Ensembl headers?
+    Unknown(null, null);
 
     /**
      * The full name of the database.

@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.sequences.matching;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;

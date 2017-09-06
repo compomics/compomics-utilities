@@ -45,8 +45,8 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
         this.toolName = toolName;
         initComponents();
 
-        if (javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences() != null) {
-            memoryTxt.setText(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference() + "");
+        if (javaHomeOrMemoryDialogParent.getUtilitiesUserParameters() != null) {
+            memoryTxt.setText(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryPreference() + "");
         } else {
             memoryTxt.setText("(error)");
         }
@@ -89,7 +89,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
                     "Input Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        if (javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences() == null) {
+        if (javaHomeOrMemoryDialogParent.getUtilitiesUserParameters() == null) {
             JOptionPane.showMessageDialog(this, "User preferences where not read correctly. Please solve this first.",
                     "File Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -243,16 +243,16 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
 
             int newValue = new Integer(memoryTxt.getText().trim());
 
-            if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference()) {
+            if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryPreference()) {
 
                 int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
                         "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
 
                 if (outcome == JOptionPane.OK_OPTION) {
-                    javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
+                    javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().setMemoryPreference(newValue);
 
                     try {
-                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

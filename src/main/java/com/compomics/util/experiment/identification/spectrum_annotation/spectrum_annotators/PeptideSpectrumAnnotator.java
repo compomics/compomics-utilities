@@ -14,7 +14,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.ArrayList;

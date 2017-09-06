@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
 /**
  * Interface for a sequence tag component.

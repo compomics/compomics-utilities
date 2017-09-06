@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

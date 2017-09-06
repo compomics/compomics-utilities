@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ public class Precursor extends ExperimentObject {
     /**
      * The charge of the precursor.
      */
-    private ArrayList<Charge> possibleCharges = new ArrayList<Charge>(1);
+    private ArrayList<Integer> possibleCharges = new ArrayList<Integer>(1);
 
     /**
      * Constructor for the precursor.
@@ -50,7 +49,7 @@ public class Precursor extends ExperimentObject {
      * @param mz the m/z
      * @param possibleCharges the possible charges
      */
-    public Precursor(double rt, double mz, ArrayList<Charge> possibleCharges) {
+    public Precursor(double rt, double mz, ArrayList<Integer> possibleCharges) {
         this.rt = rt;
         rtMin = rt;
         rtMax = rt;
@@ -68,7 +67,7 @@ public class Precursor extends ExperimentObject {
      * @param rtMin the minimum of the RT window
      * @param rtMax the maximum of the RT window
      */
-    public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges, double rtMin, double rtMax) {
+    public Precursor(double rt, double mz, double intensity, ArrayList<Integer> possibleCharges, double rtMin, double rtMax) {
         this.rt = rt;
         this.rtMin = rtMin;
         this.rtMax = rtMax;
@@ -86,7 +85,7 @@ public class Precursor extends ExperimentObject {
      * @param rtMin the minimum of the RT window in seconds
      * @param rtMax the maximum of the RT window in seconds
      */
-    public Precursor(double mz, double intensity, ArrayList<Charge> possibleCharges, double rtMin, double rtMax) {
+    public Precursor(double mz, double intensity, ArrayList<Integer> possibleCharges, double rtMin, double rtMax) {
         this.rt = (rtMin + rtMax) / 2;
         this.rtMin = rtMin;
         this.rtMax = rtMax;
@@ -103,7 +102,7 @@ public class Precursor extends ExperimentObject {
      * @param intensity the intensity
      * @param possibleCharges the possible charges
      */
-    public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges) {
+    public Precursor(double rt, double mz, double intensity, ArrayList<Integer> possibleCharges) {
         this.rt = rt;
         rtMin = rt;
         rtMax = rt;
@@ -179,7 +178,7 @@ public class Precursor extends ExperimentObject {
      *
      * @return the possible charges
      */
-    public ArrayList<Charge> getPossibleCharges() {
+    public ArrayList<Integer> getPossibleCharges() {
         return possibleCharges;
     }
     
@@ -191,7 +190,7 @@ public class Precursor extends ExperimentObject {
     public String getPossibleChargesAsString() {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (Charge charge : possibleCharges) {
+        for (Integer charge : possibleCharges) {
             if (first) {
                 first = false;
             } else {

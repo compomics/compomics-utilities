@@ -5,11 +5,11 @@ import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,7 +165,7 @@ public class AnnotationParameters implements Serializable {
             specificAnnotationPreferences.setNeutralLossesMap(tempNeutralLossesMap);
         }
         ArrayList<Integer> charges = new ArrayList<>(4);
-        int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
+        int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge();
         if (precursorCharge == 1) {
             charges.add(precursorCharge);
         } else {

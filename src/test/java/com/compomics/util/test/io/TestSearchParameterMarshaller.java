@@ -1,11 +1,11 @@
 package com.compomics.util.test.io;
 
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;

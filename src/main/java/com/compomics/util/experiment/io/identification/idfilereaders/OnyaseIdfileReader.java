@@ -4,14 +4,13 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -191,7 +190,7 @@ public class OnyaseIdfileReader implements IdfileReader {
                 Integer charge = new Integer(lineSplit[5]);
                 Double score = new Double(lineSplit[6]);
                 Double eValue = new Double(lineSplit[7]);
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), new Charge(Charge.PLUS, charge), eValue, resultFileName);
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), charge, eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addPeptideAssumption(Advocate.onyaseEngine.getIndex(), peptideAssumption);
             }

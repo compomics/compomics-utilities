@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.export;
 
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
@@ -52,8 +51,7 @@ public class AplExporter {
             Precursor precursor = spectrumFactory.getPrecursor(Spectrum.getSpectrumKey(fileName, title));
             Double mz = precursor.getMz();
             if (!precursor.getPossibleCharges().isEmpty()) {
-                for (Charge possibleCharge : precursor.getPossibleCharges()) {
-                    int charge = possibleCharge.value;
+                for (int charge : precursor.getPossibleCharges()) {
                     double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
                     HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
                     if (titlesAtMass == null) {

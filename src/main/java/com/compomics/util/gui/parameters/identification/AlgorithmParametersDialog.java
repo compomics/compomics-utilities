@@ -1,7 +1,5 @@
 package com.compomics.util.gui.parameters.identification;
 
-import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-
 /**
  * Interface for an algorithm settings dialog.
  *

@@ -4,7 +4,6 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * The charge used for identification.
      */
-    protected Charge identificationCharge;
+    protected int identificationCharge;
     /**
      * The (advocate specific) score used to rank this assumption.
      */
@@ -130,7 +129,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the charge used for identification
      */
-    public Charge getIdentificationCharge() {
+    public int getIdentificationCharge() {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return identificationCharge;
     }
@@ -140,7 +139,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param identificationCharge the identification charge
      */
-    public void setIdentificationCharge(Charge identificationCharge) {
+    public void setIdentificationCharge(int identificationCharge) {
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.identificationCharge = identificationCharge;
     }
@@ -159,7 +158,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public double getTheoreticMz() {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
+        return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge) / identificationCharge;
     }
 
     /**
@@ -204,7 +203,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public IonMatch getPrecursorMatch(Peak precursorPeak) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge().value);
+        return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge());
     }
 
     /**

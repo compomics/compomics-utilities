@@ -1,8 +1,8 @@
 package com.compomics.util.gui.parameters.identification.algorithm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
+import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
+import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.gui.GuiUtilities;
 import java.awt.Dialog;
 import javax.swing.SwingConstants;

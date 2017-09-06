@@ -6,7 +6,7 @@ import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 

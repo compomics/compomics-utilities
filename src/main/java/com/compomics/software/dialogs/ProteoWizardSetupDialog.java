@@ -21,7 +21,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserParameters utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
     /**
      * The selected folder.
      */
@@ -69,9 +69,9 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
 
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
+        utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
-        if (utilitiesUserPreferences.getProteoWizardPath() == null) {
+        if (utilitiesUserParameters.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "ProteoWizard is required to convert raw files. "
                     + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
 
@@ -81,9 +81,9 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
         }
 
         // display the current path
-        if (utilitiesUserPreferences != null) {
-            installationJTextField.setText(utilitiesUserPreferences.getProteoWizardPath());
-            lastSelectedFolder = utilitiesUserPreferences.getProteoWizardPath();
+        if (utilitiesUserParameters != null) {
+            installationJTextField.setText(utilitiesUserParameters.getProteoWizardPath());
+            lastSelectedFolder = utilitiesUserParameters.getProteoWizardPath();
         }
 
         setVisible(true);
@@ -331,9 +331,9 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
+        utilitiesUserParameters.setProteoWizardPath(installationJTextField.getText());
         try {
-            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

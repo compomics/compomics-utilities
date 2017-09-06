@@ -19,5 +19,5 @@ public interface JavaHomeOrMemoryDialogParent {
      *
      * @return the utilities user preferences
      */
-    public UtilitiesUserParameters getUtilitiesUserPreferences();
+    public UtilitiesUserParameters getUtilitiesUserParameters();
 }

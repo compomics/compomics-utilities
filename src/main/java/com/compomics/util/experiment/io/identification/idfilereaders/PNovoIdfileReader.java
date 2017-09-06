@@ -3,17 +3,16 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.PNovoParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -241,7 +240,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
         }
         Tag tag = new Tag(0, aminoAcidSequence, 0);
-        TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, new Charge(Charge.PLUS, 1), pNovoScore); // @TODO: how to get the charge?
+        TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, 1, pNovoScore); // @TODO: how to get the charge?
 
         return tagAssumption;
     }

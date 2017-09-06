@@ -1,9 +1,9 @@
 package com.compomics.util.gui.parameters.identification;
 
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.gui.parameters.identification.subparameters.SearchParametersDialog;
+import com.compomics.util.gui.parameters.identification.search.SearchParametersDialog;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
-import com.compomics.util.gui.parameters.identification.subparameters.ValidationQCParametersDialogParent;
+import com.compomics.util.gui.parameters.identification.advanced.ValidationQCParametersDialogParent;
 
 /**
  * IdentificationParametersSelectionDialog.

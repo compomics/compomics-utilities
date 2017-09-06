@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 
 /**

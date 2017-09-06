@@ -85,7 +85,7 @@ public class SpecificAnnotationParameters {
      * @return the charge of the precursor
      */
     public int getPrecursorCharge() {
-        return spectrumIdentificationAssumption.getIdentificationCharge().value;
+        return spectrumIdentificationAssumption.getIdentificationCharge();
     }
 
     /**

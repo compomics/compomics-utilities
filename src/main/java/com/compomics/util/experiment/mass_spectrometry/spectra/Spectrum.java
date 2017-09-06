@@ -917,7 +917,6 @@ public class Spectrum extends ExperimentObject {
             result.append("CHARGE=");
             result.append(
                     precursor.getPossibleCharges().stream()
-                            .map(charge -> charge.value)
                             .sorted()
                             .map(charge -> charge.toString())
                             .collect(Collectors.joining(" and "))

@@ -48,7 +48,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserParameters utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
 
     /**
      * Constructor.
@@ -113,9 +113,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         outputFormatCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
+        utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
-        if (utilitiesUserPreferences.getProteoWizardPath() == null) {
+        if (utilitiesUserParameters.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
 
             if (option == JOptionPane.YES_OPTION) {
@@ -124,9 +124,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         }
 
         // display the current path
-        if (utilitiesUserPreferences != null) {
-            installationJTextField.setText(utilitiesUserPreferences.getProteoWizardPath());
-            lastSelectedFolder = utilitiesUserPreferences.getProteoWizardPath();
+        if (utilitiesUserParameters != null) {
+            installationJTextField.setText(utilitiesUserParameters.getProteoWizardPath());
+            lastSelectedFolder = utilitiesUserParameters.getProteoWizardPath();
         }
     }
 
@@ -394,9 +394,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         }
 
         if (formatCheck) {
-            utilitiesUserPreferences.setProteoWizardPath(installationJTextField.getText());
+            utilitiesUserParameters.setProteoWizardPath(installationJTextField.getText());
             try {
-                UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
+                UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
                 dispose();
             } catch (Exception e) {
                 e.printStackTrace();

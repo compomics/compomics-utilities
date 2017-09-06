@@ -7,15 +7,13 @@ import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -452,7 +450,7 @@ public class PepxmlIdfileReader implements IdfileReader {
 
         Peptide peptide = new Peptide(sequence, modificationMatches, true);
         Advocate advocate = Advocate.getAdvocate(searchEngine);
-        return new PeptideAssumption(peptide, rank, advocate.getIndex(), new Charge(Charge.PLUS, charge), score, idFile.getName());
+        return new PeptideAssumption(peptide, rank, advocate.getIndex(), charge, score, idFile.getName());
     }
 
     /**

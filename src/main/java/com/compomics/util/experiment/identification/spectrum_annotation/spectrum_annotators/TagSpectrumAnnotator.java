@@ -16,7 +16,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -3,7 +3,7 @@ package com.compomics.util.gui.spectrum;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;

@@ -17,7 +17,7 @@ import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;

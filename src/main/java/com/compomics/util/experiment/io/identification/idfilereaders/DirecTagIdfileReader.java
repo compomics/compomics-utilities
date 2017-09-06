@@ -4,22 +4,20 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
+import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -516,7 +514,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     ++rank;
                     TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                     //@TODO: check with the developers if this is correct
-                    tagAssumption.setIdentificationCharge(new Charge(Charge.PLUS, lastCharge));
+                    tagAssumption.setIdentificationCharge(lastCharge);
                     currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
                 }
             }
@@ -603,7 +601,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         }
         double eValue = new Double(components[eValueIndex]);
 
-        return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), eValue);
+        return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, charge, eValue);
     }
 
     /**

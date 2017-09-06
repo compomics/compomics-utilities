@@ -1,14 +1,13 @@
 package com.compomics.util.experiment.io.identification;
 
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.Enzyme;
@@ -188,10 +187,10 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
 
         // set the min/max precursor charge
         parametersReport += "<br><br><b>Min Precusor Charge:</b> ";
-        parametersReport += searchParameters.getMinChargeSearched().value + " (default)";
+        parametersReport += searchParameters.getMinChargeSearched() + " (default)";
 
         parametersReport += "<br><b>Max Precusor Charge:</b> ";
-        parametersReport += searchParameters.getMaxChargeSearched().value + " (default)";
+        parametersReport += searchParameters.getMaxChargeSearched() + " (default)";
 
         // taxonomy and species
         parametersReport += "<br><br><b>Species:</b> ";

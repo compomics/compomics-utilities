@@ -5,14 +5,13 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
@@ -165,7 +164,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         String sequence = temp[0];
         Peptide peptide = new Peptide(sequence, modMatches, true);
 
-        Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
+        int charge = Integer.parseInt(temp[6]);
         Double score = new Double(temp[1]);
         Double p = FastMath.pow(10, -(score / 10));
         PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);

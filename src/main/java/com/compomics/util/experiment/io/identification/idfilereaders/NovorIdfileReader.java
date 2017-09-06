@@ -4,17 +4,16 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -344,9 +343,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                     peptideSequence = peptideSequenceWithMods;
                 }
 
-                // set up the charge
-                Charge peptideCharge = new Charge(Charge.PLUS, charge);
-
                 //@TODO: do we want to leave the option of using tags?
                 // create the tag assumption
 //                AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
@@ -375,7 +371,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //                }
                 // Create the peptide assumption
                 Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), peptideCharge, novorScore, novorCsvFile.getName());
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), charge, novorScore, novorCsvFile.getName());
                 peptideAssumption.setAminoAcidScores(aminoAcidScores);
                 //peptideAssumption.setRawScore(novorScore);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {

@@ -1,5 +1,15 @@
 package com.compomics.util.parameters.identification;
 
+import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.parameters.identification.advanced.ValidationQcParameters;
+import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
+import com.compomics.util.parameters.identification.advanced.FractionParameters;
+import com.compomics.util.parameters.identification.advanced.PsmScoringParameters;
+import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
+import com.compomics.util.parameters.identification.advanced.GeneParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.IdMatchValidationParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.db.object.DbObject;
@@ -7,7 +17,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;

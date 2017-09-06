@@ -9,36 +9,35 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
-import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
+import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters;
+import com.compomics.util.parameters.identification.tool_specific.CometParameters;
+import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
+import com.compomics.util.parameters.identification.tool_specific.MsAmandaParameters;
+import com.compomics.util.parameters.identification.tool_specific.MsgfParameters;
+import com.compomics.util.parameters.identification.tool_specific.MyriMatchParameters;
+import com.compomics.util.parameters.identification.tool_specific.OmssaParameters;
+import com.compomics.util.parameters.identification.tool_specific.PNovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.PepnovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.TideParameters;
+import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
+import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
-import com.compomics.util.parameters.identification.DigestionParameters;
-import com.compomics.util.parameters.identification.DigestionParameters.Specificity;
-import com.compomics.util.parameters.identification.FractionParameters;
-import com.compomics.util.parameters.identification.GeneParameters;
-import com.compomics.util.parameters.identification.IdMatchValidationParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
+import com.compomics.util.parameters.identification.advanced.FractionParameters;
+import com.compomics.util.parameters.identification.advanced.GeneParameters;
+import com.compomics.util.parameters.identification.advanced.IdMatchValidationParameters;
 import com.compomics.util.parameters.identification.IdentificationParameters;
-import com.compomics.util.parameters.identification.ModificationLocalizationParameters;
-import com.compomics.util.parameters.identification.ProteinInferenceParameters;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
+import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1814,12 +1813,12 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MIN_CHARGE.id);
             Integer option = new Integer(arg);
-            searchParameters.setMinChargeSearched(new Charge(Charge.PLUS, option));
+            searchParameters.setMinChargeSearched(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MAX_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MAX_CHARGE.id);
             Integer option = new Integer(arg);
-            searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, option));
+            searchParameters.setMaxChargeSearched(option);
         }
 
         PtmSettings ptmSettings = searchParameters.getPtmSettings();
@@ -1935,52 +1934,52 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setSingleChargeWindow(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setDoubleChargeWindow(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setnPeaksInSingleChargeWindow(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setnPeaksInDoubleChargeWindow(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setnAnnotatedMostIntensePeaks(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMinAnnotatedPeaks(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMinPeaks(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setCleaveNterMethionine(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMaxMzLadders(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMaxFragmentCharge(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id)) {
@@ -1990,37 +1989,37 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setDetermineChargePlusOneAlgorithmically(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setSearchPositiveIons(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMinPrecPerSpectrum(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setSearchForwardFragmentFirst(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setSearchRewindFragments(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setUseCorrelationCorrectionScore(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
@@ -2045,7 +2044,7 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id);
-            Integer option = new Integer(arg);
+            int option = Integer.parseInt(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
 

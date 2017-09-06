@@ -575,9 +575,9 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * Convenience method saving the user parameters. Exceptions are ignored silently and written to the stack trace.
      *
-     * @param userPreferences the user preferences
+     * @param userParameters the user preferences
      */
-    public static void saveUserParameters(UtilitiesUserParameters userPreferences) {
+    public static void saveUserParameters(UtilitiesUserParameters userParameters) {
 
         try {
             
@@ -590,7 +590,7 @@ public class UtilitiesUserParameters implements Serializable {
             }
             
             JsonMarshaller marshaller = new JsonMarshaller();
-            marshaller.saveObjectToJson(userPreferences, file);
+            marshaller.saveObjectToJson(userParameters, file);
             
         } catch (Exception e) {
             

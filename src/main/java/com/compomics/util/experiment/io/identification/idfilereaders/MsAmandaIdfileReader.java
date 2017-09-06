@@ -5,14 +5,13 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -274,11 +273,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 // create the peptide
                 Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
 
-                // set up the charge
-                Charge peptideCharge = new Charge(Charge.PLUS, charge);
-
                 // create the peptide assumption
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaTransformedScore, Util.getFileName(msAmandaCsvFile));
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), charge, msAmandaTransformedScore, Util.getFileName(msAmandaCsvFile));
                 peptideAssumption.setRawScore(msAmandaRawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {

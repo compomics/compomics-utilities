@@ -3,7 +3,7 @@ package com.compomics.util.gui;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 import java.awt.event.MouseEvent;

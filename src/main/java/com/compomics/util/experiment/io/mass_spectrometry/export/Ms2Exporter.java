@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.export;
 
 import com.compomics.util.experiment.io.mass_spectrometry.MgfFileIterator;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
@@ -100,9 +99,9 @@ public class Ms2Exporter {
         bw.write("S\t" + scanNumber + "\t" + scanNumber + "\t" + precursor.getMz());
         bw.newLine();
 
-        ArrayList<Charge> charges = precursor.getPossibleCharges();
-        for (Charge charge : charges) {
-            bw.write("Z\t" + charge.value + "\t" + precursor.getMassPlusProton(charge.value));
+        ArrayList<Integer> charges = precursor.getPossibleCharges();
+        for (int charge : charges) {
+            bw.write("Z\t" + charge + "\t" + precursor.getMassPlusProton(charge));
             bw.newLine();
         }
 

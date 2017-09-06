@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.mass_spectrometry;
 
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
@@ -49,7 +48,7 @@ public class MgfReader {
         double rt = -1.0;
         double rt1 = -1.0;
         double rt2 = -1.0;
-        ArrayList<Charge> precursorCharges = new ArrayList<>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
         String scanNumber = "";
         String spectrumTitle = "";
         boolean insideSpectrum = false;
@@ -278,10 +277,10 @@ public class MgfReader {
                 indexes.put(title, currentIndex);
                 spectrumIndexes.put(title, spectrumCounter - 1);
             } else if (line.startsWith("CHARGE")) {
-                ArrayList<Charge> precursorCharges = parseCharges(line);
-                for (Charge charge : precursorCharges) {
-                    if (charge.value > maxCharge) {
-                        maxCharge = charge.value;
+                ArrayList<Integer> precursorCharges = parseCharges(line);
+                for (int charge : precursorCharges) {
+                    if (charge > maxCharge) {
+                        maxCharge = charge;
                     }
                 }
                 chargeTagFound = true;
@@ -1053,7 +1052,7 @@ public class MgfReader {
         // @TODO get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Charge> precursorCharges = new ArrayList<>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<>();
         String line;
@@ -1162,9 +1161,9 @@ public class MgfReader {
      * @return the possible charges found
      * @throws IllegalArgumentException
      */
-    private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
+    private static ArrayList<Integer> parseCharges(String chargeLine) throws IllegalArgumentException {
 
-        ArrayList<Charge> result = new ArrayList<>(1);
+        ArrayList<Integer> result = new ArrayList<>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] chargesAnd = tempLine.split(" and ");
         ArrayList<String> chargesAsString = new ArrayList<>();
@@ -1182,14 +1181,11 @@ public class MgfReader {
 
             if (!chargeAsString.isEmpty()) {
                 try {
-                    if (chargeAsString.endsWith("+")) {
+                    if (!chargeAsString.equalsIgnoreCase("Mr")) {
+                        result.add(new Integer(chargeAsString));
+                    } else {
                         value = new Integer(chargeAsString.substring(0, chargeAsString.length() - 1));
-                        result.add(new Charge(Charge.PLUS, value));
-                    } else if (chargeAsString.endsWith("-")) {
-                        value = new Integer(chargeAsString.substring(0, chargeAsString.length() - 1));
-                        result.add(new Charge(Charge.MINUS, value));
-                    } else if (!chargeAsString.equalsIgnoreCase("Mr")) {
-                        result.add(new Charge(Charge.PLUS, new Integer(chargeAsString)));
+                        result.add(value);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -1200,7 +1196,7 @@ public class MgfReader {
 
         // if empty, add a default charge of 1
         if (result.isEmpty()) {
-            result.add(new Charge(Charge.PLUS, 1));
+            result.add(1);
         }
 
         return result;
@@ -1225,7 +1221,7 @@ public class MgfReader {
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Charge> precursorCharges = new ArrayList<>(1);
+        ArrayList<Integer> precursorCharges = new ArrayList<>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
@@ -1328,7 +1324,7 @@ public class MgfReader {
                 aplWriter.write("peaklist start\n");
                 aplWriter.write("mz=" + mz + "\n");
                 aplWriter.write("fragmentation=" + fragmentation + "\n");
-                aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0).value + "\n"); //@TODO what if many/no charge is present?
+                aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0) + "\n"); //@TODO what if many/no charge is present?
                 aplWriter.write("header=" + spectrum.getSpectrumTitle() + "\n");
                 HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
                 ArrayList<Double> fragmentMasses = new ArrayList<>(peakMap.keySet());

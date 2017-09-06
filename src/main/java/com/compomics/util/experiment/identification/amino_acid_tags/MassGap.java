@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.amino_acid_tags;
 
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
 /**
  * An undefined mass gap.

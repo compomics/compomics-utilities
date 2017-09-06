@@ -277,10 +277,10 @@ public class JavaHomeDialog extends javax.swing.JDialog {
 
                 if (outcome == JOptionPane.OK_OPTION) {
 
-                    javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setJavaHome(newJavaHome);
+                    javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().setJavaHome(newJavaHome);
 
                     try {
-                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -2,12 +2,12 @@ package com.compomics.util.experiment.identification.spectrum_assumptions;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @param identificationCharge the identified charge
      * @param score the score
      */
-    public TagAssumption(int advocate, int rank, Tag tag, Charge identificationCharge, double score) {
+    public TagAssumption(int advocate, int rank, Tag tag, int identificationCharge, double score) {
         this.advocate = advocate;
         this.rank = rank;
         this.tag = tag;
@@ -97,7 +97,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
+        return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge * ElementaryIon.proton.getTheoreticMass()) / identificationCharge;
     }
 
     /**
@@ -118,7 +118,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
         ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
-        int refCharge = identificationCharge.value;
+        int refCharge = identificationCharge;
         for (int charge = minCharge; charge <= maxCharge; charge++) {
             for (int isotope = 0; isotope <= maxIsotope; isotope++) {
                 if (charge != refCharge || isotope > 0) {
@@ -133,7 +133,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
                         Tag newTag = new Tag(tag);
                         MassGap terminalGap = (MassGap) newTag.getContent().get(index);
                         terminalGap.setMass(terminalComponent.getMass() + deltaMass);
-                        TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, new Charge(Charge.PLUS, charge), score);
+                        TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, charge, score);
                         results.add(tagAssumption);
                     }
                 }
@@ -159,7 +159,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     @Override
     public String toString() {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";
+        return tag.asSequence() + ", " + Charge.toString(identificationCharge) + " (" + score + ")";
     }
 
     @Override

@@ -20,7 +20,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     /**
      * The user preferences.
      */
-    private UtilitiesUserParameters utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
 
     /**
      * Creates a new PrivacySettingsDialog.
@@ -41,22 +41,22 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
      */
     private void loadPreferencesOnGUI() {
         try {
-            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
+            utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred while loading the user preferences.", "User Preferences Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
-            utilitiesUserPreferences = new UtilitiesUserParameters();
+            utilitiesUserParameters = new UtilitiesUserParameters();
         }
-        updatesCheck.setSelected(utilitiesUserPreferences.isAutoUpdate());
+        updatesCheck.setSelected(utilitiesUserParameters.isAutoUpdate());
     }
 
     /**
      * Saves the input in the utilities user preferences.
      */
     private void savePreferences() {
-        utilitiesUserPreferences.setAutoUpdate(updatesCheck.isSelected());
+        utilitiesUserParameters.setAutoUpdate(updatesCheck.isSelected());
         try {
-            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the user preferences.", "User Preferences Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();

@@ -218,10 +218,9 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        UtilitiesUserParameters tempUserPreferences = UtilitiesUserParameters.loadUserParameters();
-        tempUserPreferences.setProteinTreeFolder(dbFolder);
-        tempUserPreferences.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
-        UtilitiesUserParameters.saveUserParameters(tempUserPreferences);
+        UtilitiesUserParameters tempUserParameters = UtilitiesUserParameters.loadUserParameters();
+        tempUserParameters.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
+        UtilitiesUserParameters.saveUserParameters(tempUserParameters);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

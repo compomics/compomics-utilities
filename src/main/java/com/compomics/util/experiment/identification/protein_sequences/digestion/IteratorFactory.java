@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.protein_sequences.digestion.
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.SpecificSingleEnzymeCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificCombinationIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.iterators.UnspecificIterator;
-import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.util.ArrayList;
 
 /**

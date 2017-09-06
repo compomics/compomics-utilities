@@ -10,11 +10,11 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
-import com.compomics.util.parameters.identification.DigestionParameters;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
 import java.util.*;
 import java.util.stream.Collectors;

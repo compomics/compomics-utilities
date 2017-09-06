@@ -6,18 +6,17 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
+import com.compomics.util.parameters.identification.tool_specific.PepnovoParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -340,7 +339,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
         }
         Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
-        TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), pepNovoScore);
+        TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, charge, pepNovoScore);
         PepnovoAssumptionDetails pepnovoAssumptionDetails = new PepnovoAssumptionDetails();
         pepnovoAssumptionDetails.setRankScore(rankScore);
         pepnovoAssumptionDetails.setMH(mH);

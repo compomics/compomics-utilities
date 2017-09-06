@@ -1,7 +1,7 @@
 package com.compomics.software.cli;
 
 import com.compomics.util.Util;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

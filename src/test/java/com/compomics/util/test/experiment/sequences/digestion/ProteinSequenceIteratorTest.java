@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.IteratorFactory;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
-import com.compomics.util.parameters.identification.DigestionParameters;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.IOException;
 import java.util.ArrayList;
 import junit.framework.Assert;

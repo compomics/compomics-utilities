@@ -5,14 +5,13 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -406,11 +405,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         Double eValue = tempEValue.getEValue();
                         Double rawScore = tempEValue.getRawScore();
 
-                        // get the charge
-                        Charge peptideCharge = new Charge(Charge.PLUS, spectrumIdentItem.getChargeState());
-
                         // create the peptide assumption
-                        PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), peptideCharge, eValue, mzIdentMLFileName);
+                        PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), spectrumIdentItem.getChargeState(), eValue, mzIdentMLFileName);
 
                         if (rawScore != null) {
                             peptideAssumption.setRawScore(rawScore);
@@ -1187,11 +1183,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
             Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches, true);
 
-            // get the charge
-            Charge peptideCharge = new Charge(Charge.PLUS, chargeState);
-
             // create the peptide assumption
-            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), peptideCharge, eValue, mzIdentMLFileName);
+            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), chargeState, eValue, mzIdentMLFileName);
 
             if (rawScore != null) {
                 peptideAssumption.setRawScore(rawScore);

@@ -1,7 +1,6 @@
 
 package com.compomics.util.experiment.io.mass_spectrometry;
 
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
@@ -43,7 +42,7 @@ public class MspReader extends MgfReader{
         double rt = -1.0;//not assigned in msp file format case
         double rt1 = -1.0;//not assigned in msp file format case
         double rt2 = -1.0;//not assigned in msp file format case
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
@@ -72,7 +71,7 @@ public class MspReader extends MgfReader{
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                    
                     int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
-                    precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                    precursorCharges.add(val);
                    
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
@@ -256,13 +255,13 @@ public class MspReader extends MgfReader{
                 spectrumIndexes.put(title, spectrumCounter - 1);
                 
                 
-                ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+                ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
                 int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
-                precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                precursorCharges.add(val);
                 
-                for (Charge charge : precursorCharges) {
-                    if (charge.value > maxCharge) {
-                        maxCharge = charge.value;
+                for (int charge : precursorCharges) {
+                    if (charge > maxCharge) {
+                        maxCharge = charge;
                     }
                 }
                 chargeTagFound = true;
@@ -784,7 +783,7 @@ public class MspReader extends MgfReader{
         double rt = -1.0;//not assigned in msp file format case
         double rt1 = -1.0;//not assigned in msp file format case
         double rt2 = -1.0;//not assigned in msp file format case
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
@@ -811,7 +810,7 @@ public class MspReader extends MgfReader{
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");                    
                     int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
-                    precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                    precursorCharges.add(val);
                   
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
@@ -897,7 +896,7 @@ public class MspReader extends MgfReader{
         String line;
        // String spectrumName=null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
+        ArrayList<Integer> precursorCharges = new ArrayList<Integer>(1);
 
         do {
             line = bufferedRandomAccessFile.readLine();
@@ -911,7 +910,7 @@ public class MspReader extends MgfReader{
                 
                 
                 int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
-                precursorCharges.add(new Charge(Charge.NEUTRAL, val));
+                precursorCharges.add(val);
 
                 try {
                     line = URLDecoder.decode(line, "utf-8");

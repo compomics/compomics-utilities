@@ -58,7 +58,7 @@ public class CompomicsWrapper {
     /**
      * The user preferences.
      */
-    private UtilitiesUserParameters userPreferences;
+    private UtilitiesUserParameters userParameters;
     /**
      * A simple progress dialog.
      */
@@ -102,7 +102,7 @@ public class CompomicsWrapper {
 
         try {
             try {
-                userPreferences = UtilitiesUserParameters.loadUserParameters();
+                userParameters = UtilitiesUserParameters.loadUserParameters();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -126,7 +126,7 @@ public class CompomicsWrapper {
                 FileWriter fw = new FileWriter(debugOutput);
                 bw = new BufferedWriter(fw);
 
-                bw.write("Memory settings read from the user preferences: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
+                bw.write("Memory settings read from the user preferences: " + userParameters.getMemoryPreference() + System.getProperty("line.separator"));
                 String arguments = "args: ";
                 if (args != null) {
                     for (String arg : args) {
@@ -316,25 +316,25 @@ public class CompomicsWrapper {
 
                 // if needed, try re-launching with reduced memory settings
                 if (errorMessage.contains("could not create the java virtual machine") || inputMessage.contains("could not reserve enough space")) {
-                    if (userPreferences.getMemoryPreference() > 4 * 1024) {
-                        userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() / 2);
-                        UtilitiesUserParameters.saveUserParameters(userPreferences);
+                    if (userParameters.getMemoryPreference() > 4 * 1024) {
+                        userParameters.setMemoryPreference(userParameters.getMemoryPreference() / 2);
+                        UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
-                    } else if (userPreferences.getMemoryPreference() > 2 * 1024) {
-                        userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 1024);
-                        UtilitiesUserParameters.saveUserParameters(userPreferences);
+                    } else if (userParameters.getMemoryPreference() > 2 * 1024) {
+                        userParameters.setMemoryPreference(userParameters.getMemoryPreference() - 1024);
+                        UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
-                    } else if (userPreferences.getMemoryPreference() > 1024) {
-                        userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
-                        UtilitiesUserParameters.saveUserParameters(userPreferences);
+                    } else if (userParameters.getMemoryPreference() > 1024) {
+                        userParameters.setMemoryPreference(userParameters.getMemoryPreference() - 512);
+                        UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
-                    } else if (userPreferences.getMemoryPreference() <= 1024) {
-                        userPreferences.setMemoryPreference(800); // one last desperate try!
-                        UtilitiesUserParameters.saveUserParameters(userPreferences);
+                    } else if (userParameters.getMemoryPreference() <= 1024) {
+                        userParameters.setMemoryPreference(800); // one last desperate try!
+                        UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else {
                         if (useStartUpLog) {
-                            bw.write("Memory Limit: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
+                            bw.write("Memory Limit: " + userParameters.getMemoryPreference() + System.getProperty("line.separator"));
                             bw.close();
                         }
 
@@ -772,7 +772,7 @@ public class CompomicsWrapper {
     private ArrayList<String> getJavaOptions(File confFolder, BufferedWriter bw) throws IOException {
 
         try {
-            userPreferences = UtilitiesUserParameters.loadUserParameters();
+            userParameters = UtilitiesUserParameters.loadUserParameters();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -805,15 +805,15 @@ public class CompomicsWrapper {
                             }
                             if (input) {
                                 try {
-                                    userPreferences.setMemoryPreference(new Integer(currentOption));
-                                    UtilitiesUserParameters.saveUserParameters(userPreferences);
+                                    userParameters.setMemoryPreference(new Integer(currentOption));
+                                    UtilitiesUserParameters.saveUserParameters(userParameters);
                                     if (bw != null) {
-                                        bw.write("New memory setting saved: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
+                                        bw.write("New memory setting saved: " + userParameters.getMemoryPreference() + System.getProperty("line.separator"));
                                     }
                                 } catch (Exception e) {
                                     javax.swing.JOptionPane.showMessageDialog(null,
                                             "Could not parse the memory setting: " + currentOption
-                                            + ". The value was reset to" + userPreferences.getMemoryPreference() + ".",
+                                            + ". The value was reset to" + userParameters.getMemoryPreference() + ".",
                                             "Wrong memory settings", JOptionPane.WARNING_MESSAGE);
                                 }
                             }
@@ -855,7 +855,7 @@ public class CompomicsWrapper {
                 b.close();
                 f.close();
 
-                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M"); // @TODO: should also support GB?
+                options.add("-Xmx" + userParameters.getMemoryPreference() + "M"); // @TODO: should also support GB?
 
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
@@ -935,15 +935,15 @@ public class CompomicsWrapper {
             }
         } else {
             try {
-                userPreferences = UtilitiesUserParameters.loadUserParameters();
+                userParameters = UtilitiesUserParameters.loadUserParameters();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             // see if the user has set the java home via the gui
-            if (userPreferences.getJavaHome() != null && new File(userPreferences.getJavaHome()).exists()
-                    && (new File(userPreferences.getJavaHome(), "java.exe").exists() || new File(userPreferences.getJavaHome(), "java").exists())) {
-                javaHome = userPreferences.getJavaHome();
+            if (userParameters.getJavaHome() != null && new File(userParameters.getJavaHome()).exists()
+                    && (new File(userParameters.getJavaHome(), "java.exe").exists() || new File(userParameters.getJavaHome(), "java").exists())) {
+                javaHome = userParameters.getJavaHome();
                 usingStandardJavaHome = false;
             }
         }

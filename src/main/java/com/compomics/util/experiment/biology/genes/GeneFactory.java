@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.parameters.identification.GeneParameters;
+import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;

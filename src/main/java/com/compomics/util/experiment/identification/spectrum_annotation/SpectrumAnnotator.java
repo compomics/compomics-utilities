@@ -19,7 +19,7 @@ import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

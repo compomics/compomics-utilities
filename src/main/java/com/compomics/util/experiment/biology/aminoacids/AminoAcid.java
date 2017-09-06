@@ -27,7 +27,7 @@ import com.compomics.util.experiment.biology.aminoacids.impl.Z;
 import com.compomics.util.experiment.biology.aminoacids.impl.X;
 import com.compomics.util.experiment.biology.aminoacids.impl.Asparagine;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
-import com.compomics.util.parameters.identification.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

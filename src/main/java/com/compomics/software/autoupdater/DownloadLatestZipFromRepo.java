@@ -234,15 +234,15 @@ public class DownloadLatestZipFromRepo {
 
             // set the new version has the default version
             // @TODO: should be done using enums
-            UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
+            UtilitiesUserParameters utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
             if (toolName.equalsIgnoreCase("PeptideShaker")) {
-                utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
+                utilitiesUserParameters.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
             } else if (toolName.equalsIgnoreCase("SearchGUI")) {
-                utilitiesUserPreferences.setSearchGuiPath(downloadedJarFile.getAbsoluteFilePath());
+                utilitiesUserParameters.setSearchGuiPath(downloadedJarFile.getAbsoluteFilePath());
             } else if (toolName.equalsIgnoreCase("Reporter")) {
-                utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
+                utilitiesUserParameters.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
             }
-            UtilitiesUserParameters.saveUserParameters(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
 
             // copy path preferences to the new version
             String oldFolder = oldMavenJarFile.getAbsoluteFilePath();

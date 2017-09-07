@@ -4853,6 +4853,6 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
 
     @Override
     public HashSet<String> getDecoyAccessions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return decoyAccessions;
     }
 }

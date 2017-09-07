@@ -134,13 +134,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#FragmentAnnotator-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-">FragmentAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#FragmentAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-">FragmentAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                  <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.IonSeries.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">SimplePeptideAnnotator.IonSeries</a>&nbsp;ionSeries)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#FragmentAnnotator-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-boolean-boolean-">FragmentAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#FragmentAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-boolean-boolean-">FragmentAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                  <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.IonSeries.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">SimplePeptideAnnotator.IonSeries</a>&nbsp;ionSeries,
                  boolean&nbsp;forward,
                  boolean&nbsp;complementary)</code>
@@ -164,7 +164,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/FragmentAnnotator.html#getIonMatches-com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex-int-">getIonMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.mass_spectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
              int&nbsp;peptideCharge)</code>
 <div class="block">Returns the ions matched in the given spectrum at the given charge.</div>
 </td>
@@ -191,37 +191,32 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="FragmentAnnotator-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-">
+<a name="FragmentAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>FragmentAnnotator</h4>
-<pre>public&nbsp;FragmentAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.IonSeries.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">SimplePeptideAnnotator.IonSeries</a>&nbsp;ionSeries)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;FragmentAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.IonSeries.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">SimplePeptideAnnotator.IonSeries</a>&nbsp;ionSeries)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>ionSeries</code> - the ion series to annotate</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a thread is
- interrupted</dd>
 </dl>
 </li>
 </ul>
-<a name="FragmentAnnotator-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-boolean-boolean-">
+<a name="FragmentAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries-boolean-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>FragmentAnnotator</h4>
-<pre>public&nbsp;FragmentAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<pre>public&nbsp;FragmentAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                          <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.IonSeries.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">SimplePeptideAnnotator.IonSeries</a>&nbsp;ionSeries,
                          boolean&nbsp;forward,
-                         boolean&nbsp;complementary)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                         boolean&nbsp;complementary)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -231,9 +226,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  annotated</dd>
 <dd><code>complementary</code> - boolean indicating whether complementary ions should
  be annotated</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a thread is
- interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -245,13 +237,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getIonMatches-com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex-int-">
+<a name="getIonMatches-com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getIonMatches</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;getIonMatches(<a href="../../../../../../../com/compomics/util/experiment/massspectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.massspectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;getIonMatches(<a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.mass_spectrometry.indexes">SpectrumIndex</a>&nbsp;spectrumIndex,
                                          int&nbsp;peptideCharge)</pre>
 <div class="block">Returns the ions matched in the given spectrum at the given charge.</div>
 <dl>

@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -126,13 +126,9 @@ var activeTableTab = "activeTableTab";
 <dt>All Implemented Interfaces:</dt>
 <dd><a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../com/compomics/util/experiment/identification/identifications/Ms2Identification.html" title="class in com.compomics.util.experiment.identification.identifications">Ms2Identification</a></dd>
-</dl>
 <hr>
 <br>
-<pre>public abstract class <span class="typeNameLabel">Identification</span>
+<pre>public class <span class="typeNameLabel">Identification</span>
 extends <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></pre>
 <div class="block">This class contains identification results.</div>
 <dl>
@@ -166,33 +162,21 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#methodUsed">methodUsed</a></span></code>
-<div class="block">The method used.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#peptideIdentification">peptideIdentification</a></span></code>
 <div class="block">List of the keys of all imported peptides.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#proteinIdentification">proteinIdentification</a></span></code>
 <div class="block">List of the keys of all imported proteins.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#proteinMap">proteinMap</a></span></code>
 <div class="block">A map linking protein accessions to all their protein matches keys.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#reference">reference</a></span></code>
-<div class="block">The reference of the identification.</div>
 </td>
 </tr>
 </table>
@@ -224,7 +208,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -246,179 +230,170 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.preferences.SequenceMatchingPreferences-">buildPeptidesAndProteins</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
-                        <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">buildPeptidesAndProteins</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
+                        <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)</code>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.waiting.WaitingHandler-com.compomics.util.preferences.SequenceMatchingPreferences-">buildPeptidesAndProteins</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                        <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
-<div class="block">Creates the peptides and protein instances based on the spectrum matches.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#close--">close</a></span>()</code>
 <div class="block">Closes the database connection.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#contains-java.lang.String-">contains</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Checks if database contains a certain object.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#fillSpectraPerFile--">fillSpectraPerFile</a></span>()</code>
 <div class="block">Fills the spectra per file map</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getClassObjects-java.lang.Class-">getClassObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getClassObjects-java.lang.Class-">getClassObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</code>
+<div class="block">Returns the keys of the objects of the given class,</div>
+</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getDatabaseDirectory--">getDatabaseDirectory</a></span>()</code>
 <div class="block">Returns the database directory.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getDefaultReference-java.lang.String-">getDefaultReference</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;experimentReference)</code>
-<div class="block">Returns the default reference for an identification.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getIterator-java.lang.Class-java.lang.String-">getIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
 <div class="block">Returns an iterator of all objects of a given class</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getNumber-java.lang.Class-">getNumber</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</code>
 <div class="block">Returns the number of objects of a given class</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getObjectsDB--">getObjectsDB</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getObjectsDB--">getObjectsDB</a></span>()</code>
+<div class="block">Returns the objects database used in this class.</div>
+</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getOrderedSpectrumFileNames--">getOrderedSpectrumFileNames</a></span>()</code>
 <div class="block">Returns the ordered list of spectrum file names.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideIdentification--">getPeptideIdentification</a></span>()</code>
 <div class="block">Returns a list of the keys of all encountered peptides.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinIdentification--">getProteinIdentification</a></span>()</code>
 <div class="block">Returns a list of the keys of all encountered proteins.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMap--">getProteinMap</a></span>()</code>
 <div class="block">Returns a map of all the protein matches which can be ascribed to a
  protein indexed by its accession.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatches-com.compomics.util.experiment.biology.Peptide-">getProteinMatches</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatches-com.compomics.util.experiment.biology.proteins.Peptide-">getProteinMatches</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>
 <div class="block">Returns the keys of the protein matches where a peptide can be found.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumKeys,
               <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a psm iterator for a given key list.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumFiles--">getSpectrumFiles</a></span>()</code>
 <div class="block">Returns the names of the mgf files used in the spectrum identification
  map as a list.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentification--">getSpectrumIdentification</a></span>()</code>
 <div class="block">Returns the keys of the spectrum identifications</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentificationSize--">getSpectrumIdentificationSize</a></span>()</code>
 <div class="block">Returns the number of spectrum identifications.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#isConnectionActive--">isConnectionActive</a></span>()</code>
 <div class="block">Indicates whether the connection to the DB is active.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#isUniqueInDatabase-com.compomics.util.experiment.biology.Peptide-">isUniqueInDatabase</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#isUniqueProteinGroup-com.compomics.util.experiment.biology.proteins.Peptide-">isUniqueProteinGroup</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>
 <div class="block">Indicates whether a peptide is found in a single protein match.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -426,7 +401,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Loads all objects of given keys in cache.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -434,33 +409,19 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Loads all objects of the class in cache.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#matchExists-java.lang.String-">matchExists</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchKey)</code>
 <div class="block">Indicates whether a match indexed by the given key exists.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#peptideDetailsInCache-java.lang.String-">peptideDetailsInCache</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideKey)</code>
-<div class="block">Indicates whether the peptide and spectrum matches corresponding to a
- peptide match key are loaded in the cache.</div>
-</td>
-</tr>
-<tr id="i34" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#proteinDetailsInCache-java.lang.String-">proteinDetailsInCache</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinKey)</code>
-<div class="block">Indicates whether the protein, peptide and spectrum matches corresponding
- to a protein match key are loaded in the cache.</div>
-</td>
-</tr>
-<tr id="i35" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#removeObject-java.lang.String-">removeObject</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Removes an object from the database.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -468,19 +429,19 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Remove a list of objects from the database.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObject-long-">retrieveObject</a></span>(long&nbsp;longKey)</code>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObject-java.lang.String-">retrieveObject</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -488,7 +449,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -496,7 +457,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Returns an array of all objects of a given class</div>
 </td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#setOrderedListOfSpectrumFileNames-java.util.ArrayList-">setOrderedListOfSpectrumFileNames</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;orderedSpectrumFileNames)</code>
 <div class="block">Set the ordered list of spectrum file names.</div>
@@ -575,34 +536,14 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">A map linking protein accessions to all their protein matches keys.</div>
 </li>
 </ul>
-<a name="methodUsed">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>methodUsed</h4>
-<pre>protected&nbsp;int methodUsed</pre>
-<div class="block">The method used.</div>
-</li>
-</ul>
 <a name="dbDirectory">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>dbDirectory</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> dbDirectory</pre>
-<div class="block">The directory where the database stored.</div>
-</li>
-</ul>
-<a name="reference">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>reference</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> reference</pre>
-<div class="block">The reference of the identification.</div>
+<h4>dbDirectory</h4>
+<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> dbDirectory</pre>
+<div class="block">The directory where the database stored.</div>
 </li>
 </ul>
 </li>
@@ -623,7 +564,8 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>objectsDB</code> - the database for storing all objects on disk when memory is too low</dd>
+<dd><code>objectsDB</code> - the database for storing all objects on disk when memory
+ is too low</dd>
 </dl>
 </li>
 </ul>
@@ -642,19 +584,10 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getObjectsDB</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a>&nbsp;getObjectsDB()</pre>
-</li>
-</ul>
-<a name="getOrderedSpectrumFileNames--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getOrderedSpectrumFileNames</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getOrderedSpectrumFileNames()</pre>
-<div class="block">Returns the ordered list of spectrum file names.</div>
+<div class="block">Returns the objects database used in this class.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ordered list of spectrum file names</dd>
+<dd>the objects database used in this class</dd>
 </dl>
 </li>
 </ul>
@@ -664,17 +597,23 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>setOrderedListOfSpectrumFileNames</h4>
-<pre>public&nbsp;void&nbsp;setOrderedListOfSpectrumFileNames(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;orderedSpectrumFileNames)
-                                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></pre>
+<pre>public&nbsp;void&nbsp;setOrderedListOfSpectrumFileNames(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;orderedSpectrumFileNames)</pre>
 <div class="block">Set the ordered list of spectrum file names. Note that the list provided
  has to be the same size as the number of spectrum files used.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>orderedSpectrumFileNames</code> - the ordered list of spectrum file names</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - thrown if the length of the ordered file
- names as to be the same as the number of spectrum files</dd>
 </dl>
+</li>
+</ul>
+<a name="fillSpectraPerFile--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fillSpectraPerFile</h4>
+<pre>public&nbsp;void&nbsp;fillSpectraPerFile()</pre>
+<div class="block">Fills the spectra per file map</div>
 </li>
 </ul>
 <a name="getSpectrumFiles--">
@@ -693,28 +632,17 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="fillSpectraPerFile--">
+<a name="getOrderedSpectrumFileNames--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>fillSpectraPerFile</h4>
-<pre>public&nbsp;void&nbsp;fillSpectraPerFile()
-                        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Fills the spectra per file map</div>
+<h4>getOrderedSpectrumFileNames</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getOrderedSpectrumFileNames()</pre>
+<div class="block">Returns the ordered list of spectrum file names.</div>
 <dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the ordered list of spectrum file names</dd>
 </dl>
 </li>
 </ul>
@@ -738,26 +666,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getNumber</h4>
-<pre>public&nbsp;int&nbsp;getNumber(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)
-              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;int&nbsp;getNumber(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</pre>
 <div class="block">Returns the number of objects of a given class</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>className</code> - the class name of a given class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the number of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -768,11 +683,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getIterator</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;getIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)
-                        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
 <div class="block">Returns an iterator of all objects of a given class</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -780,15 +691,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>filters</code> - filters for the class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -798,17 +700,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getClassObjects</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;getClassObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)
-                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;getClassObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className)</pre>
+<div class="block">Returns the keys of the objects of the given class,</div>
 <dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code></dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code></dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>className</code> - the class</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the keys of the objects</dd>
 </dl>
 </li>
 </ul>
@@ -820,11 +718,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>loadObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                                    <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                   boolean&nbsp;displayProgress)
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                   boolean&nbsp;displayProgress)</pre>
 <div class="block">Loads all objects of the class in cache.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -835,15 +729,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>returns the list of hashed keys</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -855,11 +740,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>loadObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
                                    <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                   boolean&nbsp;displayProgress)
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                   boolean&nbsp;displayProgress)</pre>
 <div class="block">Loads all objects of given keys in cache.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -870,15 +751,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>returns the list of hashed keys</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -888,26 +760,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>retrieveObject</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(long&nbsp;longKey)
-                      throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(long&nbsp;longKey)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>longKey</code> - the hash key</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -917,26 +776,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>retrieveObject</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)
-                      throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -948,11 +794,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -963,15 +805,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -983,11 +816,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">Returns an array of all objects of a given class</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -998,15 +827,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1017,21 +837,12 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>addObject</h4>
 <pre>public&nbsp;void&nbsp;addObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)
-               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)</pre>
 <div class="block">Adds an object into the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key of the object</dd>
 <dd><code>object</code> - the object</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- adding the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- writing the object</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -1043,10 +854,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>addObjects</h4>
 <pre>public&nbsp;void&nbsp;addObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;objects,
                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                       boolean&nbsp;displayProgress)
-                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                       <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                       <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                       boolean&nbsp;displayProgress)</pre>
 <div class="block">Adds a list of objects into the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1055,12 +863,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- adding the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- writing the object</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -1070,22 +872,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>removeObject</h4>
-<pre>public&nbsp;void&nbsp;removeObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
+<pre>public&nbsp;void&nbsp;removeObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Removes an object from the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key of the object</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- adding the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- writing the object</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if class not found</dd>
 </dl>
 </li>
 </ul>
@@ -1095,24 +886,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>contains</h4>
-<pre>public&nbsp;boolean&nbsp;contains(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                        <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
+<pre>public&nbsp;boolean&nbsp;contains(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Checks if database contains a certain object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key of the object</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if database contains a certain object otherwise false</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- adding the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- writing the object</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if class not found</dd>
 </dl>
 </li>
 </ul>
@@ -1124,11 +904,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>removeObjects</h4>
 <pre>public&nbsp;void&nbsp;removeObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                           <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                          boolean&nbsp;displayProgress)
-                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
+                          boolean&nbsp;displayProgress)</pre>
 <div class="block">Remove a list of objects from the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1137,13 +913,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- adding the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- writing the object</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if class not found</dd>
 </dl>
 </li>
 </ul>
@@ -1175,68 +944,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether a match indexed by the given key
  exists</dd>
-</dl>
-</li>
-</ul>
-<a name="proteinDetailsInCache-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>proteinDetailsInCache</h4>
-<pre>public&nbsp;boolean&nbsp;proteinDetailsInCache(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinKey)
-                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Indicates whether the protein, peptide and spectrum matches corresponding
- to a protein match key are loaded in the cache. Note, only one peptide
- and one spectrum match is tested.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>proteinKey</code> - the key of the protein match</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if everything is loaded in memory</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
-</dl>
-</li>
-</ul>
-<a name="peptideDetailsInCache-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>peptideDetailsInCache</h4>
-<pre>public&nbsp;boolean&nbsp;peptideDetailsInCache(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideKey)
-                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Indicates whether the peptide and spectrum matches corresponding to a
- peptide match key are loaded in the cache. Note, only one one spectrum
- match is tested.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>peptideKey</code> - the peptide key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if everything is loaded in the cache</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1283,51 +990,14 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="buildPeptidesAndProteins-com.compomics.util.waiting.WaitingHandler-com.compomics.util.preferences.SequenceMatchingPreferences-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>buildPeptidesAndProteins</h4>
-<pre>public&nbsp;void&nbsp;buildPeptidesAndProteins(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                     <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)
-                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Creates the peptides and protein instances based on the spectrum matches.
- Note that the attribute bestAssumption should be set for every spectrum
- match at this point. This operation will be very slow if the cache is
- already full.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>waitingHandler</code> - the waiting handler displaying the progress. Can be
- null. The progress will be displayed as secondary.</dd>
-<dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
-</dl>
-</li>
-</ul>
-<a name="buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.preferences.SequenceMatchingPreferences-">
+<a name="buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildPeptidesAndProteins</h4>
 <pre>public&nbsp;void&nbsp;buildPeptidesAndProteins(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
-                                     <a href="../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)
-                              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                     <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)</pre>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match. Note that only the best peptide assumption is used, the method has
  no effect if it is null. This operation will be very slow if the cache is
@@ -1338,15 +1008,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>spectrumMatch</code> - the spectrum match to add</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1372,22 +1033,8 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>close</h4>
-<pre>public&nbsp;void&nbsp;close()
-           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                  <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
+<pre>public&nbsp;void&nbsp;close()</pre>
 <div class="block">Closes the database connection.</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- closing the database connection</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-</dl>
 </li>
 </ul>
 <a name="isConnectionActive--">
@@ -1404,78 +1051,35 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="getDefaultReference-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getDefaultReference</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getDefaultReference(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;experimentReference)</pre>
-<div class="block">Returns the default reference for an identification.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>experimentReference</code> - the experiment reference</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the default reference</dd>
-</dl>
-</li>
-</ul>
-<a name="getProteinMatches-com.compomics.util.experiment.biology.Peptide-">
+<a name="getProteinMatches-com.compomics.util.experiment.biology.proteins.Peptide-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMatches</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getProteinMatches(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the keys of the protein matches where a peptide can be found.
- Note: proteins have to be set for the peptide.</div>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getProteinMatches(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</pre>
+<div class="block">Returns the keys of the protein matches where a peptide can be found.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the keys of the protein matches</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
-<a name="isUniqueInDatabase-com.compomics.util.experiment.biology.Peptide-">
+<a name="isUniqueProteinGroup-com.compomics.util.experiment.biology.proteins.Peptide-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>isUniqueInDatabase</h4>
-<pre>public&nbsp;boolean&nbsp;isUniqueInDatabase(<a href="../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<h4>isUniqueProteinGroup</h4>
+<pre>public&nbsp;boolean&nbsp;isUniqueProteinGroup(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</pre>
 <div class="block">Indicates whether a peptide is found in a single protein match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if peptide is found in a single protein match</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1486,11 +1090,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getPsmIterator</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a>&nbsp;getPsmIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumKeys,
-                                  <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                  <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a psm iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1498,15 +1098,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1516,26 +1107,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getPsmIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1546,11 +1124,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getPsmIterator</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1558,15 +1132,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>filters</code> - filters for the class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1577,11 +1142,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getPeptideMatchesIterator</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideKeys,
-                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1589,15 +1150,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1607,26 +1159,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a peptide matches iterator for all PeptideMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1637,11 +1176,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getProteinMatchesIterator</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinKeys,
-                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1649,15 +1184,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1667,26 +1193,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getProteinMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a protein matches iterator for all PeptideMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever an error occurred while
- loading the object from the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
- reading the object in the database</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - exception thrown whenever an error
- occurred while casting the database input in the desired match class</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown whenever a threading issue occurred
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>

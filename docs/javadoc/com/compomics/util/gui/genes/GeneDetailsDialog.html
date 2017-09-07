@@ -251,9 +251,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.ht
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/genes/GeneDetailsDialog.html#GeneDetailsDialog-java.awt.Frame-java.lang.String-com.compomics.util.experiment.biology.genes.GeneMaps-">GeneDetailsDialog</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a>&nbsp;parent,
-                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinMatchKey,
-                 <a href="../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/genes/GeneDetailsDialog.html#GeneDetailsDialog-java.awt.Frame-com.compomics.util.experiment.identification.matches.ProteinMatch-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">GeneDetailsDialog</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a>&nbsp;parent,
+                 <a href="../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;proteinMatch,
+                 <a href="../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+                 <a href="../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>
 <div class="block">Creates a new GeneDetailsDialog.</div>
 </td>
 </tr>
@@ -351,28 +352,23 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.ht
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="GeneDetailsDialog-java.awt.Frame-java.lang.String-com.compomics.util.experiment.biology.genes.GeneMaps-">
+<a name="GeneDetailsDialog-java.awt.Frame-com.compomics.util.experiment.identification.matches.ProteinMatch-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>GeneDetailsDialog</h4>
 <pre>public&nbsp;GeneDetailsDialog(<a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a>&nbsp;parent,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinMatchKey,
-                         <a href="../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                         <a href="../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;proteinMatch,
+                         <a href="../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</pre>
 <div class="block">Creates a new GeneDetailsDialog.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>parent</code> - the parent frame</dd>
-<dd><code>proteinMatchKey</code> - the protein match key</dd>
+<dd><code>proteinMatch</code> - the protein match</dd>
 <dd><code>geneMaps</code> - the gene maps</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred
- while reading the FASTA file.</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever an error
- occurred while waiting for the connection to the FASTA file to recover.</dd>
+<dd><code>proteinDetailsProvider</code> - a provider for protein details</dd>
 </dl>
 </li>
 </ul>

@@ -109,13 +109,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></dd>
+<dd><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>, <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">FMIndex</span>
 extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
-implements <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></pre>
+implements <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>, <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></pre>
 <div class="block">The FM index.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -205,18 +205,22 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#FMIndex-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.preferences.PeptideVariantsPreferences-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">FMIndex</a></span>(<a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#FMIndex-java.io.File-com.compomics.util.experiment.io.biology.protein.FastaParameters-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters-com.compomics.util.parameters.identification.search.SearchParameters-">FMIndex</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;fastaFile,
+       <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+       <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
        boolean&nbsp;displayProgress,
-       <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)</code>
+       <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences,
+       <a href="../../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#FMIndex-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.experiment.identification.identification_parameters.PtmSettings-com.compomics.util.preferences.PeptideVariantsPreferences-">FMIndex</a></span>(<a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#FMIndex-java.io.File-com.compomics.util.experiment.io.biology.protein.FastaParameters-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.parameters.identification.search.PtmSettings-com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters-">FMIndex</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;fastaFile,
+       <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+       <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
        boolean&nbsp;displayProgress,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/PtmSettings.html" title="class in com.compomics.util.experiment.identification.identification_parameters">PtmSettings</a>&nbsp;ptmSettings,
-       <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences)</code>
+       <a href="../../../../../../../com/compomics/util/parameters/identification/search/PtmSettings.html" title="class in com.compomics.util.parameters.identification.search">PtmSettings</a>&nbsp;ptmSettings,
+       <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
@@ -237,116 +241,116 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#addPTMPattern-com.compomics.util.experiment.biology.PTM-">addPTMPattern</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a>&nbsp;ptm)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#addPTMPattern-com.compomics.util.experiment.biology.modifications.Modification-">addPTMPattern</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a>&nbsp;ptm)</code>
 <div class="block">Adds a PTM pattern for bitwise pattern search.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#checkPTMPattern-com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping-">checkPTMPattern</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&nbsp;peptideProteinMapping)</code>
-<div class="block">Checking if peptide-protein should be discarded due to pattern PTM conflict.</div>
+<div class="block">Checking if peptide-protein should be discarded due to pattern PTM
+ conflict.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#close--">close</a></span>()</code>
-<div class="block">Closes all connections to files, tries to delete corrupted and deprecated
- indexes.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeInverseMassValue-double-double-">computeInverseMassValue</a></span>(double&nbsp;currentMass,
                        double&nbsp;refMass)</code>
 <div class="block">Compute the inverse mass value.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMappingRanges-double-">computeMappingRanges</a></span>(double&nbsp;mass)</code>
 <div class="block">Compute mapping ranges.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMassValue-double-double-">computeMassValue</a></span>(double&nbsp;currentMass,
                 double&nbsp;refMass)</code>
 <div class="block">Compute the mass value.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#emptyCache--">emptyCache</a></span>()</code>
-<div class="block">Empties all caches.</div>
-</td>
-</tr>
-<tr id="i7" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getAllocatedBytes--">getAllocatedBytes</a></span>()</code>
 <div class="block">Computes the number of allocated bytes.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getDecoyAccessions--">getDecoyAccessions</a></span>()</code>
+<div class="block">Returns the decoy accessions.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-">getProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                 <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                 <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref)</code>
 <div class="block">Main method for mapping a peptide with all variants against all
  registered proteins in the experiment.</div>
 </td>
 </tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                 <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)</code>
+<div class="block">Mapping tags against the proteome.</div>
+</td>
+</tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-">getProteinMapping</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                 <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.lang.Double-">getProteinMapping</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                 <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massTolerance)</code>
 <div class="block">Mapping tags against the proteome.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-java.lang.Double-">getProteinMapping</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                 <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massTolerance)</code>
-<div class="block">Mapping tags against the proteome.</div>
-</td>
-</tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithoutVariants-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">getProteinMappingWithoutVariants</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithoutVariants-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithoutVariants</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                                <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                 int&nbsp;indexPart)</code>
 <div class="block">Exact mapping peptides against the proteome.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithoutVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-int-">getProteinMappingWithoutVariants</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                                <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithoutVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithoutVariants</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                                <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
                                 int&nbsp;indexPart)</code>
 <div class="block">Mapping tags against proteome without variants.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-int-">getProteinMappingWithVariants</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                             <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariants</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                             <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
                              int&nbsp;indexPart)</code>
 <div class="block">Mapping tags against proteome with variants.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">getProteinMappingWithVariantsGeneric</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                    <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsGeneric</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                                    <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                     int&nbsp;indexPart)</code>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">getProteinMappingWithVariantsSpecific</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                     <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsSpecific</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                                     <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                      int&nbsp;indexPart)</code>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
+</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getSequence-java.lang.String-">getSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>
+<div class="block">Returns the protein sequence for the given accession.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
@@ -359,7 +363,8 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#withinMassTolerance-double-int-">withinMassTolerance</a></span>(double&nbsp;mass,
                    int&nbsp;numX)</code>
-<div class="block">Lookup, if mass can be described a combination of numX different amino acids</div>
+<div class="block">Lookup, if mass can be described a combination of numX different amino
+ acids</div>
 </td>
 </tr>
 </table>
@@ -442,45 +447,61 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="FMIndex-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.preferences.PeptideVariantsPreferences-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">
+<a name="FMIndex-java.io.File-com.compomics.util.experiment.io.biology.protein.FastaParameters-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters-com.compomics.util.parameters.identification.search.SearchParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>FMIndex</h4>
-<pre>public&nbsp;FMIndex(<a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+<pre>public&nbsp;FMIndex(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;fastaFile,
+               <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+               <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress,
-               <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences,
-               <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)</pre>
+               <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences,
+               <a href="../../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)
+        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Constructor. If PTM settings are provided the index will contain
  modification information, ignored if null.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fastaFile</code> - the fasta file to index</dd>
+<dd><code>fastaParameters</code> - the parameters for the fasta file parsing</dd>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dd><code>displayProgress</code> - if true, the progress is displayed</dd>
 <dd><code>peptideVariantsPreferences</code> - contains all parameters for variants</dd>
 <dd><code>searchParameters</code> - the search parameters</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown if an error occurs while iterating
+ the fasta file.</dd>
 </dl>
 </li>
 </ul>
-<a name="FMIndex-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.experiment.identification.identification_parameters.PtmSettings-com.compomics.util.preferences.PeptideVariantsPreferences-">
+<a name="FMIndex-java.io.File-com.compomics.util.experiment.io.biology.protein.FastaParameters-com.compomics.util.waiting.WaitingHandler-boolean-com.compomics.util.parameters.identification.search.PtmSettings-com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>FMIndex</h4>
-<pre>public&nbsp;FMIndex(<a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+<pre>public&nbsp;FMIndex(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;fastaFile,
+               <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+               <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                boolean&nbsp;displayProgress,
-               <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/PtmSettings.html" title="class in com.compomics.util.experiment.identification.identification_parameters">PtmSettings</a>&nbsp;ptmSettings,
-               <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences)</pre>
+               <a href="../../../../../../../com/compomics/util/parameters/identification/search/PtmSettings.html" title="class in com.compomics.util.parameters.identification.search">PtmSettings</a>&nbsp;ptmSettings,
+               <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences)
+        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Constructor. If PTM settings are provided the index will contain
  modification information, ignored if null.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fastaFile</code> - the fasta file to index</dd>
+<dd><code>fastaParameters</code> - the parameters for the fasta file parsing</dd>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dd><code>displayProgress</code> - if true, the progress is displayed</dd>
 <dd><code>ptmSettings</code> - contains modification parameters for identification</dd>
 <dd><code>peptideVariantsPreferences</code> - contains all parameters for variants</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown if an error occurs while iterating
+ the fasta file.</dd>
 </dl>
 </li>
 </ul>
@@ -528,13 +549,13 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="addPTMPattern-com.compomics.util.experiment.biology.PTM-">
+<a name="addPTMPattern-com.compomics.util.experiment.biology.modifications.Modification-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addPTMPattern</h4>
-<pre>public&nbsp;void&nbsp;addPTMPattern(<a href="../../../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a>&nbsp;ptm)</pre>
+<pre>public&nbsp;void&nbsp;addPTMPattern(<a href="../../../../../../../com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a>&nbsp;ptm)</pre>
 <div class="block">Adds a PTM pattern for bitwise pattern search.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -549,7 +570,8 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <li class="blockList">
 <h4>checkPTMPattern</h4>
 <pre>public&nbsp;boolean&nbsp;checkPTMPattern(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&nbsp;peptideProteinMapping)</pre>
-<div class="block">Checking if peptide-protein should be discarded due to pattern PTM conflict.</div>
+<div class="block">Checking if peptide-protein should be discarded due to pattern PTM
+ conflict.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptideProteinMapping</code> - the peptide protein mapping</dd>
@@ -588,20 +610,20 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="getProteinMapping-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-">
+<a name="getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMapping</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMapping(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                                          <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref)</pre>
+                                                          <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref)</pre>
 <div class="block">Main method for mapping a peptide with all variants against all
  registered proteins in the experiment. This method is implementing the
  backward search.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
+<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>seqMatchPref</code> - the sequence matching preferences</dd>
@@ -610,14 +632,14 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="getProteinMappingWithoutVariants-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">
+<a name="getProteinMappingWithoutVariants-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMappingWithoutVariants</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithoutVariants(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                                                         <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+                                                                         <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                                                          int&nbsp;indexPart)</pre>
 <div class="block">Exact mapping peptides against the proteome.</div>
 <dl>
@@ -630,14 +652,14 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">
+<a name="getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMappingWithVariantsGeneric</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithVariantsGeneric(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                                                             <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+                                                                             <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                                                              int&nbsp;indexPart)</pre>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 <dl>
@@ -650,14 +672,14 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.preferences.SequenceMatchingPreferences-int-">
+<a name="getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMappingWithVariantsSpecific</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithVariantsSpecific(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
-                                                                              <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;seqMatchPref,
+                                                                              <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                                                               int&nbsp;indexPart)</pre>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 <dl>
@@ -667,44 +689,6 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <dd><code>indexPart</code> - the index part</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the mapping</dd>
-</dl>
-</li>
-</ul>
-<a name="emptyCache--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>emptyCache</h4>
-<pre>public&nbsp;void&nbsp;emptyCache()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#emptyCache--">PeptideMapper</a></code></span></div>
-<div class="block">Empties all caches.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#emptyCache--">emptyCache</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
-</dl>
-</li>
-</ul>
-<a name="close--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>close</h4>
-<pre>public&nbsp;void&nbsp;close()
-           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                  <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#close--">PeptideMapper</a></code></span></div>
-<div class="block">Closes all connections to files, tries to delete corrupted and deprecated
- indexes.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#close--">close</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurs while
- reading or writing a file.</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - exception thrown whenever a problem occurred while
- interacting with a database.</dd>
 </dl>
 </li>
 </ul>
@@ -732,7 +716,8 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <h4>withinMassTolerance</h4>
 <pre>public&nbsp;boolean&nbsp;withinMassTolerance(double&nbsp;mass,
                                    int&nbsp;numX)</pre>
-<div class="block">Lookup, if mass can be described a combination of numX different amino acids</div>
+<div class="block">Lookup, if mass can be described a combination of numX different amino
+ acids</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>mass</code> - to be described</dd>
@@ -742,79 +727,57 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-java.lang.Double-">
+<a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.lang.Double-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMapping</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMapping(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                                                          <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massTolerance)
-                                                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></pre>
+                                                          <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massTolerance)</pre>
 <div class="block">Mapping tags against the proteome.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-java.lang.Double-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
+<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.lang.Double-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tag</code> - information about the identified peptide</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
 <dd><code>massTolerance</code> - the mass tolerance</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the protein mapping</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - thrown if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if an InterruptedException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - thrown if a ClassNotFoundException</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - thrown if an SQLException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-">
+<a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMapping</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMapping(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                                                          <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)
-                                                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></pre>
+                                                          <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)</pre>
 <div class="block">Mapping tags against the proteome.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
+<dd><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tag</code> - information about the identified peptide</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the protein mapping</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - thrown if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if an InterruptedException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - thrown if a ClassNotFoundException</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - thrown if an SQLException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="getProteinMappingWithoutVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-int-">
+<a name="getProteinMappingWithoutVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMappingWithoutVariants</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithoutVariants(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                                                                         <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                                                                         int&nbsp;indexPart)
-                                                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></pre>
+                                                                         <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                                                         int&nbsp;indexPart)</pre>
 <div class="block">Mapping tags against proteome without variants.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -823,27 +786,18 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <dd><code>indexPart</code> - the index part</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the protein mapping</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - thrown if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if an InterruptedException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - thrown if a ClassNotFoundException</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - thrown if an SQLException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="getProteinMappingWithVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.preferences.SequenceMatchingPreferences-int-">
+<a name="getProteinMappingWithVariants-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getProteinMappingWithVariants</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithVariants(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                                                                      <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                                                                      int&nbsp;indexPart)
-                                                               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></pre>
+                                                                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                                                      int&nbsp;indexPart)</pre>
 <div class="block">Mapping tags against proteome with variants.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -852,11 +806,42 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <dd><code>indexPart</code> - the index part</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the protein mapping</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - thrown if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if an InterruptedException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - thrown if a ClassNotFoundException</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - thrown if an SQLException occurs</dd>
+</dl>
+</li>
+</ul>
+<a name="getSequence-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSequence</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSequence(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getSequence-java.lang.String-">SequenceProvider</a></code></span></div>
+<div class="block">Returns the protein sequence for the given accession.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getSequence-java.lang.String-">getSequence</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>proteinAccession</code> - the accession of the protein</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the sequence of the protein</dd>
+</dl>
+</li>
+</ul>
+<a name="getDecoyAccessions--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getDecoyAccessions</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getDecoyAccessions()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getDecoyAccessions--">SequenceProvider</a></code></span></div>
+<div class="block">Returns the decoy accessions.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getDecoyAccessions--">getDecoyAccessions</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the decoy accessions</dd>
 </dl>
 </li>
 </ul>

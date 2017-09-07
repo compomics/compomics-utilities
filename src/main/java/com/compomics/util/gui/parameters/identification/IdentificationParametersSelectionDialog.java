@@ -153,8 +153,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters selected
      * @param startupMode the edition mode to use at startup
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder

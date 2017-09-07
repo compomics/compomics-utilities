@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":10,"i5":10,"i6":9,"i7":9,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":9,"i14":9,"i15":10,"i16":10,"i17":10,"i18":9,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":9,"i25":10,"i26":10,"i27":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -201,7 +201,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#ProteinMatch-com.compomics.util.experiment.biology.Peptide-java.lang.String-">ProteinMatch</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#ProteinMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">ProteinMatch</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideMatchKey)</code>
 <div class="block">Constructor for the protein match.</div>
 </td>
@@ -233,171 +233,77 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#addTheoreticProtein-java.lang.String-">addTheoreticProtein</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>
-<div class="block">Setter for the matching protein.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#clearCache--">clearCache</a></span>()</code>
-<div class="block">Clears the cache.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#contains-java.util.HashSet-java.util.ArrayList-">contains</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;sharedAccessions,
-        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;uniqueKeys)</code>
-<div class="block">Returns a boolean indicating whether a protein match contains another set
- of matches.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#contains-com.compomics.util.experiment.identification.matches.ProteinMatch-">contains</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;proteinMatch)</code>
-<div class="block">Returns a boolean indicating whether the protein match contains another
- set of theoretic proteins.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#contains-java.lang.String-">contains</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aProtein)</code>
 <div class="block">Returns a boolean indicating whether a protein was found in this protein
  match.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#contains-java.lang.String-java.lang.String-">contains</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sharedKey,
-        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uniqueKey)</code>
-<div class="block">Returns a boolean indicating whether a protein match contains another set
- of matches.</div>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getAccessions--">getAccessions</a></span>()</code>
+<div class="block">Returns the accessions of the proteins in this match.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getAccessions-java.lang.String-">getAccessions</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;groupKey)</code>
-<div class="block">Returns a list of accessions from the given key.</div>
-</td>
-</tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getCacheSize--">getCacheSize</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getCommonProteins-java.lang.String-java.lang.String-">getCommonProteins</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group1,
-                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group2)</code>
-<div class="block">Returns the common proteins between two protein groups.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getKey--">getKey</a></span>()</code>
 <div class="block">Returns the key of a match.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getMainMatch--">getMainMatch</a></span>()</code>
-<div class="block">Returns the main match accession after protein inference.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getLeadingAccession--">getLeadingAccession</a></span>()</code>
+<div class="block">Returns the leading accession for this match.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getNProteins--">getNProteins</a></span>()</code>
 <div class="block">Returns the number of proteins for this match.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
-<td class="colFirst"><code>static int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getNProteins-java.lang.String-">getNProteins</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchKey)</code>
-<div class="block">Returns the number of proteins for the match corresponding to the given.</div>
-</td>
-</tr>
-<tr id="i14" class="altColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getOtherProteins-java.lang.String-java.lang.String-">getOtherProteins</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group1,
-                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group2)</code>
-<div class="block">Returns the proteins in a group (group1) which are not in another group
- (group2).</div>
-</td>
-</tr>
-<tr id="i15" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getPeptideCount--">getPeptideCount</a></span>()</code>
 <div class="block">Returns the number of peptides found.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getPeptideMatchesKeys--">getPeptideMatchesKeys</a></span>()</code>
 <div class="block">Getter for the peptide keys.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getProteinGroupCache--">getProteinGroupCache</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i18" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getProteinMatchKey-com.compomics.util.experiment.biology.Peptide-">getProteinMatchKey</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</code>
-<div class="block">Convenience method which returns the protein key of a peptide.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getProteinMatchKey-com.compomics.util.experiment.biology.proteins.Peptide-">getProteinMatchKey</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>
+<div class="block">Convenience method which returns the protein key from a peptide.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getSizeOfProteinsInCache--">getSizeOfProteinsInCache</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i20" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getTheoreticProtein--">getTheoreticProtein</a></span>()</code>
-<div class="block">Returns the accessions of the possible theoretic proteins.</div>
-</td>
-</tr>
-<tr id="i21" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.MatchType.html" title="enum in com.compomics.util.experiment.identification">IdentificationMatch.MatchType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#getType--">getType</a></span>()</code>
 <div class="block">Returns the type of match.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#hasEnzymaticPeptide-java.lang.String-java.util.ArrayList-com.compomics.util.preferences.SequenceMatchingPreferences-">hasEnzymaticPeptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;accession,
-                   <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/biology/Enzyme.html" title="class in com.compomics.util.experiment.biology">Enzyme</a>&gt;&nbsp;enzymes,
-                   <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
-<div class="block">Indicates whether the protein group has an enzymatic peptide when
- considering the given accession as main accession.</div>
-</td>
-</tr>
-<tr id="i23" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#isDecoy--">isDecoy</a></span>()</code>
-<div class="block">Method indicates if the protein match is a decoy one.</div>
-</td>
-</tr>
-<tr id="i24" class="altColor">
-<td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#isDecoy-java.lang.String-">isDecoy</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
-<div class="block">Convenience method indicating whether a match is decoy based on the match
- key.</div>
-</td>
-</tr>
-<tr id="i25" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setMainMatch-java.lang.String-">setMainMatch</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;mainMatch)</code>
-<div class="block">Sets the main protein accession after protein inference.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setAccessions-java.util.ArrayList-">setAccessions</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;newAccessions)</code>
+<div class="block">Sets the accessions of the proteins in this group.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-java.util.ArrayList-">setPeptideMatchesKeys</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideMatchKeys)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setLeadingAccession-java.lang.String-">setLeadingAccession</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;leadingAccession)</code>
+<div class="block">Sets the leading accession for this match.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-java.util.HashSet-">setPeptideMatchesKeys</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideMatchKeys)</code>
 <div class="block">Sets the peptide keys for this protein match.</div>
 </td>
-</tr>
-<tr id="i27" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setTheoreticProtein-java.util.ArrayList-">setTheoreticProtein</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;theoreticProtein)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -480,40 +386,28 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>ProteinMatch</h4>
-<pre>public&nbsp;ProteinMatch(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)
-             throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></pre>
+<pre>public&nbsp;ProteinMatch(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
 <div class="block">Constructor for the protein match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>proteinAccession</code> - the matching protein</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang">IllegalArgumentException</a></code> - if an IllegalArgumentException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="ProteinMatch-com.compomics.util.experiment.biology.Peptide-java.lang.String-">
+<a name="ProteinMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ProteinMatch</h4>
-<pre>public&nbsp;ProteinMatch(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideMatchKey)
-             throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                    <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;ProteinMatch(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideMatchKey)</pre>
 <div class="block">Constructor for the protein match. Note: proteins must be set for the
  peptide.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the corresponding peptide match</dd>
 <dd><code>peptideMatchKey</code> - the key of the peptide match</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if a ClassNotFoundException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -525,77 +419,59 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="setTheoreticProtein-java.util.ArrayList-">
+<a name="setAccessions-java.util.ArrayList-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setTheoreticProtein</h4>
-<pre>public&nbsp;void&nbsp;setTheoreticProtein(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;theoreticProtein)</pre>
-</li>
-</ul>
-<a name="getCacheSize--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCacheSize</h4>
-<pre>public&nbsp;int&nbsp;getCacheSize()</pre>
-</li>
-</ul>
-<a name="getTheoreticProtein--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getTheoreticProtein</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getTheoreticProtein()</pre>
-<div class="block">Returns the accessions of the possible theoretic proteins.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the accessions of the possible theoretic proteins</dd>
-</dl>
-</li>
-</ul>
-<a name="addTheoreticProtein-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>addTheoreticProtein</h4>
-<pre>public&nbsp;void&nbsp;addTheoreticProtein(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
-<div class="block">Setter for the matching protein.</div>
+<h4>setAccessions</h4>
+<pre>public&nbsp;void&nbsp;setAccessions(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;newAccessions)</pre>
+<div class="block">Sets the accessions of the proteins in this group.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>proteinAccession</code> - the matching protein</dd>
+<dd><code>newAccessions</code> - the accessions of the proteins in this group</dd>
 </dl>
 </li>
 </ul>
-<a name="getMainMatch--">
+<a name="getAccessions--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getMainMatch</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getMainMatch()</pre>
-<div class="block">Returns the main match accession after protein inference.</div>
+<h4>getAccessions</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getAccessions()</pre>
+<div class="block">Returns the accessions of the proteins in this match.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the main match accession after protein inference</dd>
+<dd>the accessions of the proteins in this match</dd>
 </dl>
 </li>
 </ul>
-<a name="setMainMatch-java.lang.String-">
+<a name="getLeadingAccession--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setMainMatch</h4>
-<pre>public&nbsp;void&nbsp;setMainMatch(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;mainMatch)</pre>
-<div class="block">Sets the main protein accession after protein inference.</div>
+<h4>getLeadingAccession</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getLeadingAccession()</pre>
+<div class="block">Returns the leading accession for this match.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the leading accession for this match</dd>
+</dl>
+</li>
+</ul>
+<a name="setLeadingAccession-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setLeadingAccession</h4>
+<pre>public&nbsp;void&nbsp;setLeadingAccession(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;leadingAccession)</pre>
+<div class="block">Sets the leading accession for this match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mainMatch</code> - the main match</dd>
+<dd><code>leadingAccession</code> - the leading accession for this match</dd>
 </dl>
 </li>
 </ul>
@@ -605,30 +481,12 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideMatchesKeys</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getPeptideMatchesKeys()</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getPeptideMatchesKeys()</pre>
 <div class="block">Getter for the peptide keys.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>subordinated peptide keys</dd>
 </dl>
-</li>
-</ul>
-<a name="getProteinGroupCache--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getProteinGroupCache</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&gt;&nbsp;getProteinGroupCache()</pre>
-</li>
-</ul>
-<a name="getSizeOfProteinsInCache--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSizeOfProteinsInCache</h4>
-<pre>public&nbsp;int&nbsp;getSizeOfProteinsInCache()</pre>
 </li>
 </ul>
 <a name="addPeptideMatchKey-java.lang.String-">
@@ -645,13 +503,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="setPeptideMatchesKeys-java.util.ArrayList-">
+<a name="setPeptideMatchesKeys-java.util.HashSet-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeptideMatchesKeys</h4>
-<pre>public&nbsp;void&nbsp;setPeptideMatchesKeys(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideMatchKeys)</pre>
+<pre>public&nbsp;void&nbsp;setPeptideMatchesKeys(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;peptideMatchKeys)</pre>
 <div class="block">Sets the peptide keys for this protein match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -673,40 +531,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="isDecoy--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isDecoy</h4>
-<pre>public&nbsp;boolean&nbsp;isDecoy()</pre>
-<div class="block">Method indicates if the protein match is a decoy one.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>boolean indicating if the protein match is a decoy one</dd>
-</dl>
-</li>
-</ul>
-<a name="isDecoy-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isDecoy</h4>
-<pre>public static&nbsp;boolean&nbsp;isDecoy(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
-<div class="block">Convenience method indicating whether a match is decoy based on the match
- key. A match is considered decoy if at least one of its accessions is
- decoy.
-
- Note: the sequence database should be loaded in the sequence factory</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - the match key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether a match is decoy</dd>
-</dl>
-</li>
-</ul>
 <a name="getKey--">
 <!--   -->
 </a>
@@ -724,46 +548,20 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="getProteinMatchKey-com.compomics.util.experiment.biology.Peptide-">
+<a name="getProteinMatchKey-com.compomics.util.experiment.biology.proteins.Peptide-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMatchKey</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getProteinMatchKey(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)
-                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Convenience method which returns the protein key of a peptide. Note:
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getProteinMatchKey(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</pre>
+<div class="block">Convenience method which returns the protein key from a peptide. Note:
  proteins must be set for the peptide.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the considered peptide</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the protein match key</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if a ClassNotFoundException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
-</dl>
-</li>
-</ul>
-<a name="getNProteins-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getNProteins</h4>
-<pre>public static&nbsp;int&nbsp;getNProteins(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchKey)</pre>
-<div class="block">Returns the number of proteins for the match corresponding to the given.
- key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>matchKey</code> - the given key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the number of proteins for this match</dd>
 </dl>
 </li>
 </ul>
@@ -778,102 +576,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the number of proteins for this match</dd>
-</dl>
-</li>
-</ul>
-<a name="contains-java.lang.String-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>contains</h4>
-<pre>public static&nbsp;boolean&nbsp;contains(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sharedKey,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uniqueKey)</pre>
-<div class="block">Returns a boolean indicating whether a protein match contains another set
- of matches.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>sharedKey</code> - the key of the protein of interest</dd>
-<dd><code>uniqueKey</code> - the key of the protein supposedly contained</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether a protein match contains another set
- of matches.</dd>
-</dl>
-</li>
-</ul>
-<a name="contains-java.util.HashSet-java.util.ArrayList-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>contains</h4>
-<pre>public static&nbsp;boolean&nbsp;contains(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;sharedAccessions,
-                               <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;uniqueKeys)</pre>
-<div class="block">Returns a boolean indicating whether a protein match contains another set
- of matches.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>sharedAccessions</code> - the accessions of the shared protein match</dd>
-<dd><code>uniqueKeys</code> - the keys of the unique protein match</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether a protein match contains another set
- of matches.</dd>
-</dl>
-</li>
-</ul>
-<a name="getOtherProteins-java.lang.String-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getOtherProteins</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getOtherProteins(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group1,
-                                                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group2)</pre>
-<div class="block">Returns the proteins in a group (group1) which are not in another group
- (group2).</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>group1</code> - the key of the shared group</dd>
-<dd><code>group2</code> - the key of the unique group</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>list of the accessions in the search group which are not in the
- unique group</dd>
-</dl>
-</li>
-</ul>
-<a name="getCommonProteins-java.lang.String-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCommonProteins</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getCommonProteins(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group1,
-                                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;group2)</pre>
-<div class="block">Returns the common proteins between two protein groups.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>group1</code> - key of the first group</dd>
-<dd><code>group2</code> - key of the second group</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a list of common keys</dd>
-</dl>
-</li>
-</ul>
-<a name="contains-com.compomics.util.experiment.identification.matches.ProteinMatch-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>contains</h4>
-<pre>public&nbsp;boolean&nbsp;contains(<a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;proteinMatch)</pre>
-<div class="block">Returns a boolean indicating whether the protein match contains another
- set of theoretic proteins.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>proteinMatch</code> - another protein match</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether the protein match contains another
- set of theoretic proteins</dd>
 </dl>
 </li>
 </ul>
@@ -892,60 +594,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether a protein was found in this protein
  match</dd>
-</dl>
-</li>
-</ul>
-<a name="getAccessions-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getAccessions</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;getAccessions(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;groupKey)</pre>
-<div class="block">Returns a list of accessions from the given key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>groupKey</code> - the given key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the corresponding list of accessions</dd>
-</dl>
-</li>
-</ul>
-<a name="clearCache--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>clearCache</h4>
-<pre>public static&nbsp;void&nbsp;clearCache()</pre>
-<div class="block">Clears the cache.</div>
-</li>
-</ul>
-<a name="hasEnzymaticPeptide-java.lang.String-java.util.ArrayList-com.compomics.util.preferences.SequenceMatchingPreferences-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>hasEnzymaticPeptide</h4>
-<pre>public&nbsp;boolean&nbsp;hasEnzymaticPeptide(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;accession,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/biology/Enzyme.html" title="class in com.compomics.util.experiment.biology">Enzyme</a>&gt;&nbsp;enzymes,
-                                   <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></pre>
-<div class="block">Indicates whether the protein group has an enzymatic peptide when
- considering the given accession as main accession.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>accession</code> - the candidate main accession</dd>
-<dd><code>enzymes</code> - the enzymes used</dd>
-<dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the main accession generates an enzymatic peptide</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if a ClassNotFoundException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -994,7 +642,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

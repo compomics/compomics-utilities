@@ -942,9 +942,5 @@ public class MspReader extends MgfReader{
 
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + line);
     }
-
- 
-    
-    
     
 }

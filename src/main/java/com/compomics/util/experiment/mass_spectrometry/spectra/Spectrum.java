@@ -44,7 +44,7 @@ public class Spectrum extends ExperimentObject {
      */
     protected int level;
     /**
-     * The precursor for level > 1.
+     * The precursor if any.
      */
     private Precursor precursor;
     /**

@@ -143,48 +143,23 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Enum.html?is
 <th class="colOne" scope="col">Enum Constant and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#aa_intensity">aa_intensity</a></span></code>
-<div class="block">The intensity sub-score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#aa_ms2_mz_fidelity">aa_ms2_mz_fidelity</a></span></code>
-<div class="block">The m/z fidelity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#complementarity">complementarity</a></span></code>
-<div class="block">The complementarity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#hyperScore">hyperScore</a></span></code>
 <div class="block">Hyperscore as variation of the score implemented in X!Tandem www.thegpm.org/tandem.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#intensity">intensity</a></span></code>
-<div class="block">The intensity sub-score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
-</td>
-</tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#ms2_mz_fidelity">ms2_mz_fidelity</a></span></code>
-<div class="block">The m/z fidelity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#native_score">native_score</a></span></code>
 <div class="block">The native score of the search engine.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#precursor_accuracy">precursor_accuracy</a></span></code>
 <div class="block">The precursor accuracy.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#snrScore">snrScore</a></span></code>
+<div class="block">Signal to noise ratio score.</div>
 </td>
 </tr>
 </table>
@@ -326,59 +301,14 @@ the order they are declared.</div>
  See com.compomics.util.experiment.identification.psm_scoring.psm_scores.HyperScore for details.</div>
 </li>
 </ul>
-<a name="ms2_mz_fidelity">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ms2_mz_fidelity</h4>
-<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> ms2_mz_fidelity</pre>
-<div class="block">The m/z fidelity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
-</li>
-</ul>
-<a name="aa_ms2_mz_fidelity">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>aa_ms2_mz_fidelity</h4>
-<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> aa_ms2_mz_fidelity</pre>
-<div class="block">The m/z fidelity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.</div>
-</li>
-</ul>
-<a name="intensity">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>intensity</h4>
-<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> intensity</pre>
-<div class="block">The intensity sub-score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
-</li>
-</ul>
-<a name="aa_intensity">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>aa_intensity</h4>
-<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> aa_intensity</pre>
-<div class="block">The intensity sub-score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.</div>
-</li>
-</ul>
-<a name="complementarity">
+<a name="snrScore">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>complementarity</h4>
-<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> complementarity</pre>
-<div class="block">The complementarity score as adapted from the DirecTag paper
- (http://www.ncbi.nlm.nih.gov/pubmed/18630943).</div>
+<h4>snrScore</h4>
+<pre>public static final&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a> snrScore</pre>
+<div class="block">Signal to noise ratio score.</div>
 </li>
 </ul>
 </li>

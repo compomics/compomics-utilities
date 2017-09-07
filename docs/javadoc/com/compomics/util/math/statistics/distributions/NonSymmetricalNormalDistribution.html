@@ -396,8 +396,7 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <ul class="blockList">
 <li class="blockList">
 <h4>getCumulativeProbabilityAt</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getCumulativeProbabilityAt(double&nbsp;x)
-                                  throws org.apache.commons.math.MathException</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getCumulativeProbabilityAt(double&nbsp;x)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../com/compomics/util/math/statistics/Distribution.html#getCumulativeProbabilityAt-double-">Distribution</a></code></span></div>
 <div class="block">Returns the cumulative density function value at a given position.</div>
 <dl>
@@ -407,8 +406,6 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <dd><code>x</code> - the position of interest</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value of the density function at the give position</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.commons.math.MathException</code> - if a MathException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -418,8 +415,7 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <ul class="blockList">
 <li class="blockList">
 <h4>getDescendingCumulativeProbabilityAt</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getDescendingCumulativeProbabilityAt(double&nbsp;x)
-                                            throws org.apache.commons.math.MathException</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getDescendingCumulativeProbabilityAt(double&nbsp;x)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../com/compomics/util/math/statistics/Distribution.html#getDescendingCumulativeProbabilityAt-double-">Distribution</a></code></span></div>
 <div class="block">Returns the cumulative density function value at a given position when
  starting from the high values.</div>
@@ -430,8 +426,6 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <dd><code>x</code> - the position of interest</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value of the density function at the give position</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.commons.math.MathException</code> - if a MathException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -441,8 +435,7 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <ul class="blockList">
 <li class="blockList">
 <h4>getSmallestCumulativeProbabilityAt</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getSmallestCumulativeProbabilityAt(double&nbsp;x)
-                                          throws org.apache.commons.math.MathException</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getSmallestCumulativeProbabilityAt(double&nbsp;x)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../com/compomics/util/math/statistics/Distribution.html#getSmallestCumulativeProbabilityAt-double-">Distribution</a></code></span></div>
 <div class="block">Returns the cumulative density function value at a given position, starting from the low values if before the median, from the high otherwise.</div>
 <dl>
@@ -452,8 +445,6 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <dd><code>x</code> - the position of interest</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value of the density function at the give position</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.commons.math.MathException</code> - if a MathException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -502,8 +493,7 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <ul class="blockList">
 <li class="blockList">
 <h4>getValueAtCumulativeProbability</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getValueAtCumulativeProbability(double&nbsp;p)
-                                       throws org.apache.commons.math.MathException</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getValueAtCumulativeProbability(double&nbsp;p)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../com/compomics/util/math/statistics/Distribution.html#getValueAtCumulativeProbability-double-">Distribution</a></code></span></div>
 <div class="block">The value after which the cumulative density function will be smaller
  than p.</div>
@@ -515,8 +505,6 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value after which the cumulative density function will be
  smaller than p</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.commons.math.MathException</code> - if a MathException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -526,8 +514,7 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getValueAtDescendingCumulativeProbability</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getValueAtDescendingCumulativeProbability(double&nbsp;p)
-                                                 throws org.apache.commons.math.MathException</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;getValueAtDescendingCumulativeProbability(double&nbsp;p)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../com/compomics/util/math/statistics/Distribution.html#getValueAtDescendingCumulativeProbability-double-">Distribution</a></code></span></div>
 <div class="block">The value after which the cumulative density function will be smaller
  than p when starting from high values.</div>
@@ -539,8 +526,6 @@ implements <a href="../../../../../../com/compomics/util/math/statistics/Distrib
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value after which the cumulative density function will be
  smaller than p</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.commons.math.MathException</code> - if a MathException occurs</dd>
 </dl>
 </li>
 </ul>

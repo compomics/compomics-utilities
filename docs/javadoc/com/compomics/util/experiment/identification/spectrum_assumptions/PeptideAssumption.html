@@ -178,26 +178,26 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption--">PeptideAssumption</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.Charge-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                 <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                 int&nbsp;identificationCharge)</code>
 <div class="block">Constructor for a simple peptide assumption containing only the
  information necessary for spectrum annotation.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-int-int-double-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                  int&nbsp;rank,
                  int&nbsp;advocate,
-                 <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
+                 int&nbsp;identificationCharge,
                  double&nbsp;score)</code>
 <div class="block">Constructor for a peptide assumption.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-java.lang.String-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-int-int-double-java.lang.String-">PeptideAssumption</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                  int&nbsp;rank,
                  int&nbsp;advocate,
-                 <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
+                 int&nbsp;identificationCharge,
                  double&nbsp;score,
                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;identificationFile)</code>
 <div class="block">Constructor for a peptide assumption.</div>
@@ -219,7 +219,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#getPeptide--">getPeptide</a></span>()</code>
 <div class="block">Get the theoretic peptide.</div>
 </td>
@@ -232,7 +232,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#setPeptide-com.compomics.util.experiment.biology.Peptide-">setPeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html#setPeptide-com.compomics.util.experiment.biology.proteins.Peptide-">setPeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -240,7 +240,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.experiment.identification.<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a></h3>
-<code><a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAdvocate--">getAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAminoAcidScores--">getAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getDeltaMass-double-boolean-int-int-">getDeltaMass</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationCharge--">getIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationFile--">getIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIsotopeNumber-double-int-int-">getIsotopeNumber</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getPrecursorMatch-com.compomics.util.experiment.massspectrometry.Peak-">getPrecursorMatch</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRank--">getRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRawScore--">getRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getScore--">getScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getTheoreticMz--">getTheoreticMz</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAdvocate-int-">setAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAminoAcidScores-java.util.ArrayList-">setAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationCharge-com.compomics.util.experiment.massspectrometry.Charge-">setIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationFile-java.lang.String-">setIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRank-int-">setRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRawScore-double-">setRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setScore-double-">setScore</a></code></li>
+<code><a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAdvocate--">getAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getAminoAcidScores--">getAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getDeltaMass-double-boolean-int-int-">getDeltaMass</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationCharge--">getIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIdentificationFile--">getIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getIsotopeNumber-double-int-int-">getIsotopeNumber</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getPrecursorMatch-com.compomics.util.experiment.mass_spectrometry.spectra.Peak-">getPrecursorMatch</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRank--">getRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getRawScore--">getRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getScore--">getScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#getTheoreticMz--">getTheoreticMz</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAdvocate-int-">setAdvocate</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAminoAcidScores-java.util.ArrayList-">setAminoAcidScores</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationCharge-int-">setIdentificationCharge</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setIdentificationFile-java.lang.String-">setIdentificationFile</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRank-int-">setRank</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setRawScore-double-">setRawScore</a>, <a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setScore-double-">setScore</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
@@ -284,16 +284,16 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-java.lang.String-">
+<a name="PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-int-int-double-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                          int&nbsp;rank,
                          int&nbsp;advocate,
-                         <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
+                         int&nbsp;identificationCharge,
                          double&nbsp;score,
                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;identificationFile)</pre>
 <div class="block">Constructor for a peptide assumption.</div>
@@ -311,16 +311,16 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="PeptideAssumption-com.compomics.util.experiment.biology.Peptide-int-int-com.compomics.util.experiment.massspectrometry.Charge-double-">
+<a name="PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-int-int-double-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                          int&nbsp;rank,
                          int&nbsp;advocate,
-                         <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge,
+                         int&nbsp;identificationCharge,
                          double&nbsp;score)</pre>
 <div class="block">Constructor for a peptide assumption.</div>
 <dl>
@@ -335,14 +335,14 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="PeptideAssumption-com.compomics.util.experiment.biology.Peptide-com.compomics.util.experiment.massspectrometry.Charge-">
+<a name="PeptideAssumption-com.compomics.util.experiment.biology.proteins.Peptide-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>PeptideAssumption</h4>
-<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                         <a href="../../../../../../com/compomics/util/experiment/massspectrometry/Charge.html" title="class in com.compomics.util.experiment.massspectrometry">Charge</a>&nbsp;identificationCharge)</pre>
+<pre>public&nbsp;PeptideAssumption(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                         int&nbsp;identificationCharge)</pre>
 <div class="block">Constructor for a simple peptide assumption containing only the
  information necessary for spectrum annotation.</div>
 <dl>
@@ -376,7 +376,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptide</h4>
-<pre>public&nbsp;<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;getPeptide()</pre>
+<pre>public&nbsp;<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;getPeptide()</pre>
 <div class="block">Get the theoretic peptide.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -384,13 +384,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="setPeptide-com.compomics.util.experiment.biology.Peptide-">
+<a name="setPeptide-com.compomics.util.experiment.biology.proteins.Peptide-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeptide</h4>
-<pre>public&nbsp;void&nbsp;setPeptide(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide)</pre>
+<pre>public&nbsp;void&nbsp;setPeptide(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</pre>
 </li>
 </ul>
 <a name="getTheoreticMass--">

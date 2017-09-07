@@ -61,7 +61,8 @@ public class BlobObject extends DbObject {
     
     /**
      * Sets the byte representation of the object.
-     * @param blob 
+     * 
+     * @param blob the blob as byte array
      */
     public void setBlob(byte[] blob){
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();

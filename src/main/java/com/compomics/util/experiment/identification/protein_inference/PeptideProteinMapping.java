@@ -152,9 +152,9 @@ public class PeptideProteinMapping {
                                                 .mapToInt(peptideProteinMapping -> peptideProteinMapping.getIndex())
                                                 .sorted()
                                                 .toArray(),
-                                        (a, b) -> null,
+                                        (a, b) -> {throw new IllegalStateException("Duplicate key in groupingBy.");},
                                         HashMap::new)),
-                        (a, b) -> null,
+                        (a, b) -> {throw new IllegalStateException("Duplicate key in groupingBy.");},
                         HashMap::new));
 
         return resultMap;
@@ -170,9 +170,15 @@ public class PeptideProteinMapping {
      */
     public static HashMap<String, HashSet<String>> getPeptideProteinMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
 
-        return peptideProteinMappings.stream()
-                .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence), HashMap::new,
-                        Collectors.mapping(PeptideProteinMapping::getProteinAccession, HashSet::new));
+      return peptideProteinMappings.stream()
+                .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence)).entrySet().stream()
+              .collect(Collectors.toMap(
+                      Entry::getKey, 
+                      entry -> entry.getValue().stream()
+                              .map(peptideProteinMapping -> peptideProteinMapping.getProteinAccession())
+                              .collect(Collectors.toCollection(HashSet::new)), 
+                      (a,b) -> {throw new IllegalStateException("Duplicate key in groupingBy.");}, 
+                      HashMap::new));
     }
 
     /**

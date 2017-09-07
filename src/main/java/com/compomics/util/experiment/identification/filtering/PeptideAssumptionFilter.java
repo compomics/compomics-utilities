@@ -17,7 +17,6 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -199,6 +198,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param peptideMapper the peptide mapper to use for peptide to protein
      * mapping
+     * @param sequenceProvider a sequence provider
      *
      * @return a boolean indicating whether the peptide passed the test
      */

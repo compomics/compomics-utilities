@@ -83,21 +83,9 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.biology">com.compomics.util.experiment.biology</a></td>
-<td class="colLast">
-<div class="block">Experiment classes related to biological entities.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.filtering">com.compomics.util.experiment.identification.filtering</a></td>
 <td class="colLast">
 <div class="block">Classes for the filtering of identification objects.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches</a></td>
-<td class="colLast">
-<div class="block">Experiment classes related to matches.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -106,47 +94,11 @@
 <div class="block">Protein sequence database indexing classes based on Burrows-Wheeler transform.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.identification.protein_sequences">com.compomics.util.experiment.identification.protein_sequences</a></td>
-<td class="colLast">
-<div class="block">Protein sequence handling related classes.</div>
-</td>
-</tr>
 </tbody>
 </table>
 </li>
 <li class="blockList">
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.biology">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a> in <a href="../../../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html#getParentProteins-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">getParentProteins</a></span>(<a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                 <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)</code>
-<div class="block">Returns the parent proteins and remaps the peptide to the protein if no
- protein mapping was set.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html#mapParentProteins-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">mapParentProteins</a></span>(<a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                 <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)</code>
-<div class="block">Maps the peptides to the proteins in the sequence database loaded in the
- sequence factory.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
 <li class="blockList"><a name="com.compomics.util.experiment.identification.filtering">
 <!--   -->
 </a>
@@ -160,35 +112,11 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">PeptideAssumptionFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">validateProteins</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)</code>
+<td class="colLast"><span class="typeNameLabel">PeptideAssumptionFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">validateProteins</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
+                <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</code>
 <div class="block">Validates a peptide depending on its protein inference status.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="com.compomics.util.experiment.identification.matches">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SpectrumMatch.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getPeptidesFromTags-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.preferences.SequenceMatchingPreferences-java.lang.Double-boolean-boolean-">getPeptidesFromTags</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
-                   <a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massTolerance,
-                   boolean&nbsp;scoreInAscendingOrder,
-                   boolean&nbsp;ascendingScore)</code>
-<div class="block">Creates a peptide based spectrum match where peptide assumptions are
- deduced from tag assumptions.</div>
 </td>
 </tr>
 </tbody>
@@ -209,60 +137,6 @@
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></span></code>
 <div class="block">The FM index.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_sequences">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/package-summary.html">com.compomics.util.experiment.identification.protein_sequences</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/package-summary.html">com.compomics.util.experiment.identification.protein_sequences</a> that return <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SequenceFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#getDefaultPeptideMapper--">getDefaultPeptideMapper</a></span>()</code>
-<div class="block">Returns the default peptide mapper.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SequenceFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#getDefaultPeptideMapper-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-com.compomics.util.preferences.PeptideVariantsPreferences-com.compomics.util.waiting.WaitingHandler-com.compomics.util.exceptions.ExceptionHandler-">getDefaultPeptideMapper</a></span>(<a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters,
-                       <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences,
-                       <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                       <a href="../../../../../../../com/compomics/util/exceptions/ExceptionHandler.html" title="class in com.compomics.util.exceptions">ExceptionHandler</a>&nbsp;exceptionHandler)</code>
-<div class="block">Returns the default peptide to protein mapper for the database loaded in
- factory according to the sequence matching preferences.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SequenceFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#getDefaultPeptideMapper-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-com.compomics.util.preferences.PeptideVariantsPreferences-com.compomics.util.waiting.WaitingHandler-com.compomics.util.exceptions.ExceptionHandler-boolean-int-">getDefaultPeptideMapper</a></span>(<a href="../../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters,
-                       <a href="../../../../../../../com/compomics/util/preferences/PeptideVariantsPreferences.html" title="class in com.compomics.util.preferences">PeptideVariantsPreferences</a>&nbsp;peptideVariantsPreferences,
-                       <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                       <a href="../../../../../../../com/compomics/util/exceptions/ExceptionHandler.html" title="class in com.compomics.util.exceptions">ExceptionHandler</a>&nbsp;exceptionHandler,
-                       boolean&nbsp;displayProgress,
-                       int&nbsp;nThreads)</code>
-<div class="block">Returns the default peptide to protein mapper for the database loaded in
- factory according to the sequence matching preferences.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SequenceFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/SequenceFactory.html#getDefaultPeptideMapper-com.compomics.util.waiting.WaitingHandler-com.compomics.util.exceptions.ExceptionHandler-int-com.compomics.util.preferences.IdentificationParameters-">getDefaultPeptideMapper</a></span>(<a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                       <a href="../../../../../../../com/compomics/util/exceptions/ExceptionHandler.html" title="class in com.compomics.util.exceptions">ExceptionHandler</a>&nbsp;exceptionHandler,
-                       int&nbsp;nThreads,
-                       <a href="../../../../../../../com/compomics/util/preferences/IdentificationParameters.html" title="class in com.compomics.util.preferences">IdentificationParameters</a>&nbsp;identificationParameters)</code>
-<div class="block">Returns the default peptide to protein mapper for the database loaded in
- factory according to the sequence matching preferences.</div>
 </td>
 </tr>
 </tbody>

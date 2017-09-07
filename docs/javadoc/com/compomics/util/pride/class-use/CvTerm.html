@@ -83,9 +83,9 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.biology">com.compomics.util.experiment.biology</a></td>
+<td class="colFirst"><a href="#com.compomics.util.experiment.biology.enzymes">com.compomics.util.experiment.biology.enzymes</a></td>
 <td class="colLast">
-<div class="block">Experiment classes related to biological entities.</div>
+<div class="block">Classes related to enzymes.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -93,6 +93,16 @@
 <td class="colLast">
 <div class="block">Experiment classes related to ions.</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.biology.ions.impl">com.compomics.util.experiment.biology.ions.impl</a></td>
+<td class="colLast">
+<div class="block">Ion implementations.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.biology.modifications">com.compomics.util.experiment.biology.modifications</a></td>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches</a></td>
@@ -117,12 +127,12 @@
 </li>
 <li class="blockList">
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.biology">
+<li class="blockList"><a name="com.compomics.util.experiment.biology.enzymes">
 <!--   -->
 </a>
-<h3>Uses of <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> in <a href="../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a></h3>
+<h3>Uses of <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> in <a href="../../../../../com/compomics/util/experiment/biology/enzymes/package-summary.html">com.compomics.util.experiment.biology.enzymes</a></h3>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a> that return <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/enzymes/package-summary.html">com.compomics.util.experiment.biology.enzymes</a> that return <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -130,38 +140,14 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">PTM.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTM.html#getCvTerm--">getCvTerm</a></span>()</code>
-<div class="block">Returns the CV term associated with this PTM.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Enzyme.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Enzyme.html#getCvTerm--">getCvTerm</a></span>()</code>
+<td class="colLast"><span class="typeNameLabel">Enzyme.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/enzymes/Enzyme.html#getCvTerm--">getCvTerm</a></span>()</code>
 <div class="block">Returns the CV term associated with this enzyme.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>abstract <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Ion.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Ion.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>
-<div class="block">Returns the CV term adapted to the fragment ion.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">NeutralLoss.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/NeutralLoss.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>
-<div class="block">Returns the CV term for the neutral loss.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>abstract <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Ion.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Ion.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>
-<div class="block">Returns the CV term adapted to the fragment ion.</div>
-</td>
-</tr>
 </tbody>
 </table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a> with parameters of type <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/enzymes/package-summary.html">com.compomics.util.experiment.biology.enzymes</a> with parameters of type <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -169,33 +155,8 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">PTM.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTM.html#setCvTerm-com.compomics.util.pride.CvTerm-">setCvTerm</a></span>(<a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
-<div class="block">Set the CV term associated with this PTM.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Enzyme.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/Enzyme.html#setCvTerm-com.compomics.util.pride.CvTerm-">setCvTerm</a></span>(<a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
+<td class="colLast"><span class="typeNameLabel">Enzyme.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/enzymes/Enzyme.html#setCvTerm-com.compomics.util.pride.CvTerm-">setCvTerm</a></span>(<a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
 <div class="block">Sets the CV term associated with this enzyme.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing constructors, and an explanation">
-<caption><span>Constructors in <a href="../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a> with parameters of type <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colOne" scope="col">Constructor and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTM.html#PTM-int-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.AtomChain-com.compomics.util.experiment.biology.AtomChain-com.compomics.util.experiment.biology.AminoAcidPattern-com.compomics.util.pride.CvTerm-">PTM</a></span>(int&nbsp;type,
-   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
-   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;shortName,
-   <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;atomChainAdded,
-   <a href="../../../../../com/compomics/util/experiment/biology/AtomChain.html" title="class in com.compomics.util.experiment.biology">AtomChain</a>&nbsp;atomChainRemoved,
-   <a href="../../../../../com/compomics/util/experiment/biology/AminoAcidPattern.html" title="class in com.compomics.util.experiment.biology">AminoAcidPattern</a>&nbsp;aminoAcidPattern,
-   <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
-<div class="block">Constructor for a reference modification.</div>
 </td>
 </tr>
 </tbody>
@@ -213,68 +174,154 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">TagFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/TagFragmentIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>abstract <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
+<td class="colLast"><span class="typeNameLabel">Ion.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/Ion.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>
+<div class="block">Returns the CV term adapted to the fragment ion.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ReporterIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ReporterIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">NeutralLoss.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/NeutralLoss.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>
+<div class="block">Returns the CV term for the neutral loss.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>abstract <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
+<td class="colLast"><span class="typeNameLabel">Ion.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/Ion.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>
+<div class="block">Returns the CV term adapted to the fragment ion.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.biology.ions.impl">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> in <a href="../../../../../com/compomics/util/experiment/biology/ions/impl/package-summary.html">com.compomics.util.experiment.biology.ions.impl</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/ions/impl/package-summary.html">com.compomics.util.experiment.biology.ions.impl</a> that return <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
+<td class="colLast"><span class="typeNameLabel">TagFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
+<td class="colLast"><span class="typeNameLabel">ReporterIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ReporterIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">RelatedIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/RelatedIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">RelatedIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/RelatedIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">PrecursorIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/PrecursorIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">PrecursorIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/PrecursorIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">PeptideFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/PeptideFragmentIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">PeptideFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ImmoniumIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ImmoniumIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">ImmoniumIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ImmoniumIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Glycan.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/Glycan.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">Glycan.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/Glycan.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ElementaryIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ElementaryIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">ElementaryIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ElementaryIon.html#getPrideCvTerm--">getPrideCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">TagFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/TagFragmentIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">TagFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ReporterIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ReporterIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">ReporterIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ReporterIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">RelatedIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/RelatedIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">RelatedIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/RelatedIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">PrecursorIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/PrecursorIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">PrecursorIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/PrecursorIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">PeptideFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/PeptideFragmentIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">PeptideFragmentIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ImmoniumIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ImmoniumIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">ImmoniumIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ImmoniumIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">Glycan.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/Glycan.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">Glycan.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/Glycan.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ElementaryIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/ElementaryIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">ElementaryIon.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/ions/impl/ElementaryIon.html#getPsiMsCvTerm--">getPsiMsCvTerm</a></span>()</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.biology.modifications">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> in <a href="../../../../../com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a> that return <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></code></td>
+<td class="colLast"><span class="typeNameLabel">Modification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/modifications/Modification.html#getCvTerm--">getCvTerm</a></span>()</code>
+<div class="block">Returns the CV term associated with this PTM.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a> with parameters of type <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">Modification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/modifications/Modification.html#setCvTerm-com.compomics.util.pride.CvTerm-">setCvTerm</a></span>(<a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
+<div class="block">Set the CV term associated with this PTM.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing constructors, and an explanation">
+<caption><span>Constructors in <a href="../../../../../com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a> with parameters of type <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern-com.compomics.util.pride.CvTerm-">Modification</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a>&nbsp;modificationType,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
+            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;shortName,
+            <a href="../../../../../com/compomics/util/experiment/biology/atoms/AtomChain.html" title="class in com.compomics.util.experiment.biology.atoms">AtomChain</a>&nbsp;atomChainAdded,
+            <a href="../../../../../com/compomics/util/experiment/biology/atoms/AtomChain.html" title="class in com.compomics.util.experiment.biology.atoms">AtomChain</a>&nbsp;atomChainRemoved,
+            <a href="../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html" title="class in com.compomics.util.experiment.biology.aminoacids.sequence">AminoAcidPattern</a>&nbsp;aminoAcidPattern,
+            <a href="../../../../../com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a>&nbsp;cvTerm)</code>
+<div class="block">Constructor for a reference modification.</div>
+</td>
 </tr>
 </tbody>
 </table>

@@ -91,22 +91,12 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/gui/parameters/IdentificationParametersSelectionDialog.html" title="class in com.compomics.util.gui.parameters">com.compomics.util.gui.parameters.IdentificationParametersSelectionDialog</a>
+<td class="colOne"><a href="com/compomics/util/gui/parameters/identification/IdentificationParametersSelectionDialog.html" title="class in com.compomics.util.gui.parameters.identification">com.compomics.util.gui.parameters.identification.IdentificationParametersSelectionDialog</a>
 <div class="block"><span class="deprecationComment">no longer used</span></div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/mutations/Mutation.html" title="class in com.compomics.util.experiment.biology.mutations">com.compomics.util.experiment.biology.mutations.Mutation</a>
-<div class="block"><span class="deprecationComment">replaced by com.compomics.util.experiment.biology.variants.AminoAcidSubstitution instead</span></div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/mutations/MutationMatrix.html" title="class in com.compomics.util.experiment.biology.mutations">com.compomics.util.experiment.biology.mutations.MutationMatrix</a>
-<div class="block"><span class="deprecationComment">replaced by com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix</span></div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/preferences/PSProcessingPreferences.html" title="class in com.compomics.util.preferences">com.compomics.util.preferences.PSProcessingPreferences</a>
+<td class="colOne"><a href="com/compomics/util/parameters/tools/PSProcessingParameters.html" title="class in com.compomics.util.parameters.tools">com.compomics.util.parameters.tools.PSProcessingParameters</a>
 <div class="block"><span class="deprecationComment">replaced by utilities processing preferences and fraction preferences</span></div>
 </td>
 </tr>
@@ -131,22 +121,7 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/preferences/GenePreferences.html#GENE_MAPPING_FILE_SUFFIX">com.compomics.util.preferences.GenePreferences.GENE_MAPPING_FILE_SUFFIX</a>
-<div class="block"><span class="deprecationComment">use the gene factory.</span></div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/preferences/GenePreferences.html#GO_MAPPING_FILE_SUFFIX">com.compomics.util.preferences.GenePreferences.GO_MAPPING_FILE_SUFFIX</a>
-<div class="block"><span class="deprecationComment">use the gene factory.</span></div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/AminoAcid.html#monoisotopicMass">com.compomics.util.experiment.biology.AminoAcid.monoisotopicMass</a>
-<div class="block"><span class="deprecationComment">use the atomchain</span></div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/Ion.html#theoreticMass">com.compomics.util.experiment.biology.Ion.theoreticMass</a>
+<td class="colOne"><a href="com/compomics/util/experiment/biology/ions/Ion.html#theoreticMass">com.compomics.util.experiment.biology.ions.Ion.theoreticMass</a>
 <div class="block"><span class="deprecationComment">use the double value instead.</span></div>
 </td>
 </tr>
@@ -195,73 +170,53 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/preferences/UtilitiesUserPreferences.html#generateProteinTree--">com.compomics.util.preferences.UtilitiesUserPreferences.generateProteinTree()</a>
-<div class="block"><span class="deprecationComment">no longer used</span></div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colOne"><a href="com/compomics/util/experiment/identification/Advocate.html#getAdvocateFromFile-java.lang.String-">com.compomics.util.experiment.identification.Advocate.getAdvocateFromFile(String)</a>
 <div class="block"><span class="deprecationComment">no longer used</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colOne"><a href="com/compomics/util/pride/PtmToPrideMap.html#getDefaultCVTerm-java.lang.String-">com.compomics.util.pride.PtmToPrideMap.getDefaultCVTerm(String)</a>
 <div class="block"><span class="deprecationComment">use the getCvTerm method for the PTM instead</span></div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html#getEnzyme--">com.compomics.util.experiment.identification.identification_parameters.SearchParameters.getEnzyme()</a>
-<div class="block"><span class="deprecationComment">use the PTM Digestion preferences instead.</span></div>
-</td>
-</tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html#getnMissedCleavages--">com.compomics.util.experiment.identification.identification_parameters.SearchParameters.getnMissedCleavages()</a>
-<div class="block"><span class="deprecationComment">use the Digestion preferences instead.</span></div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/identification_parameters/tool_specific/CometParameters.html#getUseSparseMatrix--">com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters.getUseSparseMatrix()</a>
+<td class="colOne"><a href="com/compomics/util/parameters/identification/tool_specific/CometParameters.html#getUseSparseMatrix--">com.compomics.util.parameters.identification.tool_specific.CometParameters.getUseSparseMatrix()</a>
 <div class="block"><span class="deprecationComment">from Comet release 2015.02 all searches use this internal
  data representation by default</span></div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html#isHighResolutionAnnotation--">com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.isHighResolutionAnnotation()</a>
+<tr class="altColor">
+<td class="colOne"><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html#isHighResolutionAnnotation--">com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.isHighResolutionAnnotation()</a>
 <div class="block"><span class="deprecationComment">use tiesResolution instead</span></div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/Enzyme.html#isSemiSpecific--">com.compomics.util.experiment.biology.Enzyme.isSemiSpecific()</a>
-<div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
-</td>
-</tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/Enzyme.html#isUnspecific--">com.compomics.util.experiment.biology.Enzyme.isUnspecific()</a>
+<td class="colOne"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isSemiSpecific--">com.compomics.util.experiment.biology.enzymes.Enzyme.isSemiSpecific()</a>
 <div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/biology/Enzyme.html#isWholeProtein--">com.compomics.util.experiment.biology.Enzyme.isWholeProtein()</a>
+<td class="colOne"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isUnspecific--">com.compomics.util.experiment.biology.enzymes.Enzyme.isUnspecific()</a>
 <div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/pride/PtmToPrideMap.html#loadPtmToPrideMap-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">com.compomics.util.pride.PtmToPrideMap.loadPtmToPrideMap(SearchParameters)</a>
+<td class="colOne"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isWholeProtein--">com.compomics.util.experiment.biology.enzymes.Enzyme.isWholeProtein()</a>
+<div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="com/compomics/util/pride/PtmToPrideMap.html#loadPtmToPrideMap-com.compomics.util.parameters.identification.search.SearchParameters-">com.compomics.util.pride.PtmToPrideMap.loadPtmToPrideMap(SearchParameters)</a>
 <div class="block"><span class="deprecationComment">the CV term is now part of the PTM object</span></div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/preferences/UtilitiesUserPreferences.html#setGenerateProteinTree-java.lang.Boolean-">com.compomics.util.preferences.UtilitiesUserPreferences.setGenerateProteinTree(Boolean)</a>
-<div class="block"><span class="deprecationComment">no longer used</span></div>
-</td>
-</tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.html#setHighResolutionAnnotation-boolean-">com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.setHighResolutionAnnotation(boolean)</a>
+<td class="colOne"><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html#setHighResolutionAnnotation-boolean-">com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.setHighResolutionAnnotation(boolean)</a>
 <div class="block"><span class="deprecationComment">use tiesResolution instead</span></div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><a href="com/compomics/util/experiment/identification/identification_parameters/tool_specific/CometParameters.html#setUseSparseMatrix-java.lang.Boolean-">com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters.setUseSparseMatrix(Boolean)</a>
+<td class="colOne"><a href="com/compomics/util/parameters/identification/tool_specific/CometParameters.html#setUseSparseMatrix-java.lang.Boolean-">com.compomics.util.parameters.identification.tool_specific.CometParameters.setUseSparseMatrix(Boolean)</a>
 <div class="block"><span class="deprecationComment">from Comet release 2015.02 all searches use this internal
  data representation by default</span></div>
 </td>
@@ -287,7 +242,7 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.experiment.identification.identification_parameters.PtmSettings-">com.compomics.util.gui.spectrum.SequenceFragmentationPanel(String, ArrayList&lt;IonMatch&gt;, boolean, boolean, PtmSettings)</a>
+<td class="colOne"><a href="com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.PtmSettings-">com.compomics.util.gui.spectrum.SequenceFragmentationPanel(String, ArrayList&lt;IonMatch&gt;, boolean, boolean, PtmSettings)</a>
 <div class="block"><span class="deprecationComment">use the panel with ion selection instead</span></div>
 </td>
 </tr>

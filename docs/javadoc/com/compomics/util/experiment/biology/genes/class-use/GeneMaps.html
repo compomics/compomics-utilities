@@ -112,9 +112,11 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a></code></td>
-<td class="colLast"><span class="typeNameLabel">GeneFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneFactory.html#getGeneMaps-com.compomics.util.preferences.GenePreferences-com.compomics.util.waiting.WaitingHandler-">getGeneMaps</a></span>(<a href="../../../../../../../com/compomics/util/preferences/GenePreferences.html" title="class in com.compomics.util.preferences">GenePreferences</a>&nbsp;genePreferences,
+<td class="colLast"><span class="typeNameLabel">GeneFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneFactory.html#getGeneMaps-com.compomics.util.parameters.identification.advanced.GeneParameters-java.util.HashMap-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-">getGeneMaps</a></span>(<a href="../../../../../../../com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a>&nbsp;genePreferences,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinSpeciesMap,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;proteinGeneMap,
            <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Returns the gene maps for the FASTA file loaded in the factory.</div>
+<div class="block">Returns the gene maps for the given proteins.</div>
 </td>
 </tr>
 </tbody>
@@ -131,9 +133,10 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/genes/GeneDetailsDialog.html#GeneDetailsDialog-java.awt.Frame-java.lang.String-com.compomics.util.experiment.biology.genes.GeneMaps-">GeneDetailsDialog</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a>&nbsp;parent,
-                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinMatchKey,
-                 <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/genes/GeneDetailsDialog.html#GeneDetailsDialog-java.awt.Frame-com.compomics.util.experiment.identification.matches.ProteinMatch-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">GeneDetailsDialog</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a>&nbsp;parent,
+                 <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;proteinMatch,
+                 <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+                 <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>
 <div class="block">Creates a new GeneDetailsDialog.</div>
 </td>
 </tr>

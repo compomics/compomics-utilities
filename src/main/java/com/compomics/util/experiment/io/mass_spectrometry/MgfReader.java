@@ -1176,15 +1176,18 @@ public class MgfReader {
 
         for (String chargeAsString : chargesAsString) {
 
-            Integer value;
             chargeAsString = chargeAsString.trim();
 
             if (!chargeAsString.isEmpty()) {
                 try {
-                    if (!chargeAsString.equalsIgnoreCase("Mr")) {
-                        result.add(new Integer(chargeAsString));
-                    } else {
-                        value = new Integer(chargeAsString.substring(0, chargeAsString.length() - 1));
+                    if (chargeAsString.endsWith("+")) {
+                        int value = Integer.parseInt(chargeAsString.substring(0, chargeAsString.length() - 1));
+                        result.add(value);
+                    } else if (chargeAsString.endsWith("-")) {
+                        int value = Integer.parseInt(chargeAsString.substring(0, chargeAsString.length() - 1));
+                        result.add(value);
+                    } else if (!chargeAsString.equalsIgnoreCase("Mr")) {
+                        int value = Integer.parseInt(chargeAsString);
                         result.add(value);
                     }
                 } catch (NumberFormatException e) {

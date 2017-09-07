@@ -241,7 +241,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#setFilterFromSearchParameters-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">setFilterFromSearchParameters</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#setFilterFromSearchParameters-com.compomics.util.parameters.identification.search.SearchParameters-">setFilterFromSearchParameters</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)</code>
 <div class="block">Updates the filter based on the search parameters.</div>
 </td>
 </tr>
@@ -301,43 +301,45 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateModifications-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.identification_parameters.PtmSettings-">validateModifications</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                     <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                     <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;ptmSequenceMatchingPreferences,
-                     <a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/PtmSettings.html" title="class in com.compomics.util.experiment.identification.identification_parameters">PtmSettings</a>&nbsp;modificationProfile)</code>
-<div class="block">Validates the modifications of a peptide.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateModifications-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.search.PtmSettings-">validateModifications</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences,
+                     <a href="../../../../../../com/compomics/util/parameters/identification/search/PtmSettings.html" title="class in com.compomics.util.parameters.identification.search">PtmSettings</a>&nbsp;modificationProfile)</code>
+<div class="block">Verifies that the definition of every modification name is available.</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validatePeptide-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.preferences.DigestionPreferences-">validatePeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-               <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-               <a href="../../../../../../com/compomics/util/preferences/DigestionPreferences.html" title="class in com.compomics.util.preferences">DigestionPreferences</a>&nbsp;digestionPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validatePeptide-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.search.DigestionParameters-">validatePeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+               <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+               <a href="../../../../../../com/compomics/util/parameters/identification/search/DigestionParameters.html" title="class in com.compomics.util.parameters.identification.search">DigestionParameters</a>&nbsp;digestionPreferences)</code>
 <div class="block">Validates the peptide based on the peptide length, the share of X's in
  the sequence and the allowed number of missed cleavages.</div>
 </td>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validatePrecursor-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption-java.lang.String-com.compomics.util.experiment.massspectrometry.SpectrumFactory-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">validatePrecursor</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">PeptideAssumption</a>&nbsp;assumption,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validatePrecursor-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption-java.lang.String-com.compomics.util.experiment.mass_spectrometry.SpectrumFactory-com.compomics.util.parameters.identification.search.SearchParameters-">validatePrecursor</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">PeptideAssumption</a>&nbsp;assumption,
                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey,
-                 <a href="../../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry">SpectrumFactory</a>&nbsp;spectrumFactory,
-                 <a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)</code>
+                 <a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.mass_spectrometry">SpectrumFactory</a>&nbsp;spectrumFactory,
+                 <a href="../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)</code>
 <div class="block">Validates the mass deviation of a peptide assumption.</div>
 </td>
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a>&nbsp;fmIndex)</code>
 <div class="block">Validates a peptide depending on its protein inference status.</div>
 </td>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
+                <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</code>
 <div class="block">Validates a peptide depending on its protein inference status.</div>
 </td>
 </tr>
@@ -419,13 +421,13 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="setFilterFromSearchParameters-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">
+<a name="setFilterFromSearchParameters-com.compomics.util.parameters.identification.search.SearchParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setFilterFromSearchParameters</h4>
-<pre>public&nbsp;void&nbsp;setFilterFromSearchParameters(<a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)</pre>
+<pre>public&nbsp;void&nbsp;setFilterFromSearchParameters(<a href="../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)</pre>
 <div class="block">Updates the filter based on the search parameters.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -434,15 +436,15 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="validatePeptide-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.preferences.DigestionPreferences-">
+<a name="validatePeptide-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.search.DigestionParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>validatePeptide</h4>
-<pre>public&nbsp;boolean&nbsp;validatePeptide(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                               <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                               <a href="../../../../../../com/compomics/util/preferences/DigestionPreferences.html" title="class in com.compomics.util.preferences">DigestionPreferences</a>&nbsp;digestionPreferences)</pre>
+<pre>public&nbsp;boolean&nbsp;validatePeptide(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                               <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                               <a href="../../../../../../com/compomics/util/parameters/identification/search/DigestionParameters.html" title="class in com.compomics.util.parameters.identification.search">DigestionParameters</a>&nbsp;digestionPreferences)</pre>
 <div class="block">Validates the peptide based on the peptide length, the share of X's in
  the sequence and the allowed number of missed cleavages.</div>
 <dl>
@@ -456,48 +458,37 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="validateProteins-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-">
+<a name="validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>validateProteins</h4>
-<pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                                <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences)
-                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a>&nbsp;fmIndex)</pre>
 <div class="block">Validates a peptide depending on its protein inference status. Maps the
- peptide to proteins in case it was not done before using the default
- protein tree of the sequence factory.</div>
+ peptide to proteins in case it was not done before.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
+<dd><code>fmIndex</code> - the FM-Index.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the peptide passed the test</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if a ClassNotFoundException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="validateProteins-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-">
+<a name="validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>validateProteins</h4>
-<pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                                <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper)
-                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a>,
-                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
+                                <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</pre>
 <div class="block">Validates a peptide depending on its protein inference status. Maps the
  peptide to proteins in case it was not done before.</div>
 <dl>
@@ -506,27 +497,23 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
 <dd><code>peptideMapper</code> - the peptide mapper to use for peptide to protein
  mapping</dd>
+<dd><code>sequenceProvider</code> - a sequence provider</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the peptide passed the test</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/sql/SQLException.html?is-external=true" title="class or interface in java.sql">SQLException</a></code> - if an SQLException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ClassNotFoundException.html?is-external=true" title="class or interface in java.lang">ClassNotFoundException</a></code> - if a ClassNotFoundException occurs</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
 </dl>
 </li>
 </ul>
-<a name="validateModifications-com.compomics.util.experiment.biology.Peptide-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.preferences.SequenceMatchingPreferences-com.compomics.util.experiment.identification.identification_parameters.PtmSettings-">
+<a name="validateModifications-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.search.PtmSettings-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>validateModifications</h4>
-<pre>public&nbsp;boolean&nbsp;validateModifications(<a href="../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
-                                     <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;sequenceMatchingPreferences,
-                                     <a href="../../../../../../com/compomics/util/preferences/SequenceMatchingPreferences.html" title="class in com.compomics.util.preferences">SequenceMatchingPreferences</a>&nbsp;ptmSequenceMatchingPreferences,
-                                     <a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/PtmSettings.html" title="class in com.compomics.util.experiment.identification.identification_parameters">PtmSettings</a>&nbsp;modificationProfile)</pre>
-<div class="block">Validates the modifications of a peptide.</div>
+<pre>public&nbsp;boolean&nbsp;validateModifications(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences,
+                                     <a href="../../../../../../com/compomics/util/parameters/identification/search/PtmSettings.html" title="class in com.compomics.util.parameters.identification.search">PtmSettings</a>&nbsp;modificationProfile)</pre>
+<div class="block">Verifies that the definition of every modification name is available.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest</dd>
@@ -540,7 +527,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="validatePrecursor-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption-java.lang.String-com.compomics.util.experiment.massspectrometry.SpectrumFactory-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-">
+<a name="validatePrecursor-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption-java.lang.String-com.compomics.util.experiment.mass_spectrometry.SpectrumFactory-com.compomics.util.parameters.identification.search.SearchParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -548,11 +535,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <h4>validatePrecursor</h4>
 <pre>public&nbsp;boolean&nbsp;validatePrecursor(<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">PeptideAssumption</a>&nbsp;assumption,
                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey,
-                                 <a href="../../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry">SpectrumFactory</a>&nbsp;spectrumFactory,
-                                 <a href="../../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters)
-                          throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                                 uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException,
-                                 <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                 <a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.mass_spectrometry">SpectrumFactory</a>&nbsp;spectrumFactory,
+                                 <a href="../../../../../../com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)</pre>
 <div class="block">Validates the mass deviation of a peptide assumption.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -564,12 +548,6 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the given assumption passes the
  filter</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an error occurs while reading the spectrum</dd>
-<dd><code>uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException</code> - if an MzMLUnmarshallerException occurs
- reading while the spectrum</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a thread is
- interrupted</dd>
 </dl>
 </li>
 </ul>

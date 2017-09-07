@@ -83,56 +83,61 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.biology">com.compomics.util.experiment.biology</a></td>
-<td class="colLast">
-<div class="block">Experiment classes related to biological entities.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.biology.ions">com.compomics.util.experiment.biology.ions</a></td>
 <td class="colLast">
 <div class="block">Experiment classes related to ions.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.identification.ptm">com.compomics.util.experiment.identification.ptm</a></td>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.biology.ions.impl">com.compomics.util.experiment.biology.ions.impl</a></td>
 <td class="colLast">
-<div class="block">Additional PSM scoring classes.</div>
+<div class="block">Ion implementations.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.biology.modifications">com.compomics.util.experiment.biology.modifications</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches</a></td>
+<td class="colLast">
+<div class="block">Experiment classes related to matches.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.peptide_fragmentation">com.compomics.util.experiment.identification.peptide_fragmentation</a></td>
+<td class="colLast">
+<div class="block">Peptide fragment intensities.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators">com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators</a></td>
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.peptide_fragmentation.models">com.compomics.util.experiment.identification.peptide_fragmentation.models</a></td>
 <td class="colLast">
-<div class="block">This package contains implementations of the SimpleAnnotator allowing the annotation of specific sets of ions.</div>
+<div class="block">Predictors for peptide fragment intensities.</div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation">com.compomics.util.experiment.identification.spectrum_annotation</a></td>
+<td class="colLast">
+<div class="block">Classes used for ms2 spectrum annotation.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a></td>
 <td class="colLast">
 <div class="block">This package contains implementations of the SpectrumAnnotator allowing the annotation of all ions.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.quantification.reporterion">com.compomics.util.experiment.quantification.reporterion</a></td>
+<tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.gui.parameters.identification.advanced">com.compomics.util.gui.parameters.identification.advanced</a></td>
 <td class="colLast">
-<div class="block">Experiment classes related to reporter ions.</div>
+<div class="block">Dialogs for advanced identification parameters.</div>
 </td>
 </tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="com.compomics.util.experiment.biology">
-<!--   -->
-</a>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
-<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/biology/package-summary.html">com.compomics.util.experiment.biology</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colOne" scope="col">Class and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ReporterIon.html#com.compomics.util.experiment.biology">ReporterIon</a>
-<div class="block">This class models a reporter ion and is its own factory.</div>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.gui.spectrum">com.compomics.util.gui.spectrum</a></td>
+<td class="colLast">
+<div class="block">Spectrum and Chromatogram visualization GUI classes.</div>
 </td>
 </tr>
 </tbody>
@@ -148,58 +153,150 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ElementaryIon.html#com.compomics.util.experiment.biology.ions">ElementaryIon</a>
-<div class="block">This class represents an elementary ion.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.biology.ions">Ion</a>
+<div class="block">This class models an ion.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ImmoniumIon.html#com.compomics.util.experiment.biology.ions">ImmoniumIon</a>
-<div class="block">Represents an immonium ion.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.IonType.html#com.compomics.util.experiment.biology.ions">Ion.IonType</a>
+<div class="block">An enumerator of the supported ion types.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/RelatedIon.html#com.compomics.util.experiment.biology.ions">RelatedIon</a>
-<div class="block">Represents a related ion, i.e., an ion that is related to a given amino acid,
- and is its own factory.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/IonFactory.html#com.compomics.util.experiment.biology.ions">IonFactory</a>
+<div class="block">This factory generates the expected ions from a peptide.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ReporterIon.html#com.compomics.util.experiment.biology.ions">ReporterIon</a>
-<div class="block">This class models a reporter ion and is its own factory.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.experiment.biology.ions">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLossCombination.html#com.compomics.util.experiment.biology.ions">NeutralLossCombination</a>
+<div class="block">This class represents a combination of multiple neutral losses.</div>
 </td>
 </tr>
 </tbody>
 </table>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.identification.ptm">
+<li class="blockList"><a name="com.compomics.util.experiment.biology.ions.impl">
 <!--   -->
 </a>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
-<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/ptm/package-summary.html">com.compomics.util.experiment.identification.ptm</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/biology/ions/impl/package-summary.html">com.compomics.util.experiment.biology.ions.impl</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colOne" scope="col">Class and Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/PeptideFragmentIon.html#com.compomics.util.experiment.identification.ptm">PeptideFragmentIon</a>
-<div class="block">This class models a peptide fragment ion.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.biology.ions.impl">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.experiment.biology.ions.impl">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
 </td>
 </tr>
 </tbody>
 </table>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators">
+<li class="blockList"><a name="com.compomics.util.experiment.biology.modifications">
 <!--   -->
 </a>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
-<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colOne" scope="col">Class and Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ReporterIon.html#com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators">ReporterIon</a>
-<div class="block">This class models a reporter ion and is its own factory.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.experiment.biology.modifications">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.matches">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.identification.matches">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.peptide_fragmentation">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/package-summary.html">com.compomics.util.experiment.identification.peptide_fragmentation</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.identification.peptide_fragmentation">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.peptide_fragmentation.models">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/models/package-summary.html">com.compomics.util.experiment.identification.peptide_fragmentation.models</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.identification.peptide_fragmentation.models">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.spectrum_annotation">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.identification.spectrum_annotation">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.IonType.html#com.compomics.util.experiment.identification.spectrum_annotation">Ion.IonType</a>
+<div class="block">An enumerator of the supported ion types.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/IonFactory.html#com.compomics.util.experiment.identification.spectrum_annotation">IonFactory</a>
+<div class="block">This factory generates the expected ions from a peptide.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.experiment.identification.spectrum_annotation">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
 </td>
 </tr>
 </tbody>
@@ -215,25 +312,52 @@
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ReporterIon.html#com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">ReporterIon</a>
-<div class="block">This class models a reporter ion and is its own factory.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">Ion</a>
+<div class="block">This class models an ion.</div>
 </td>
 </tr>
 </tbody>
 </table>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.quantification.reporterion">
+<li class="blockList"><a name="com.compomics.util.gui.parameters.identification.advanced">
 <!--   -->
 </a>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
-<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/experiment/quantification/reporterion/package-summary.html">com.compomics.util.experiment.quantification.reporterion</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/package-summary.html">com.compomics.util.gui.parameters.identification.advanced</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colOne" scope="col">Class and Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/ReporterIon.html#com.compomics.util.experiment.quantification.reporterion">ReporterIon</a>
-<div class="block">This class models a reporter ion and is its own factory.</div>
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.gui.parameters.identification.advanced">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.gui.spectrum">
+<!--   -->
+</a>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/biology/ions/package-summary.html">com.compomics.util.experiment.biology.ions</a> used by <a href="../../../../../../com/compomics/util/gui/spectrum/package-summary.html">com.compomics.util.gui.spectrum</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.html#com.compomics.util.gui.spectrum">Ion</a>
+<div class="block">This class models an ion.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/Ion.IonType.html#com.compomics.util.gui.spectrum">Ion.IonType</a>
+<div class="block">An enumerator of the supported ion types.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><a href="../../../../../../com/compomics/util/experiment/biology/ions/class-use/NeutralLoss.html#com.compomics.util.gui.spectrum">NeutralLoss</a>
+<div class="block">This class represents a neutral loss.</div>
 </td>
 </tr>
 </tbody>

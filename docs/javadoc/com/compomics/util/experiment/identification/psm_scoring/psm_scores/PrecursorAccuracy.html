@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/MS2MzFidelityScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/HyperScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -153,9 +153,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/PrecursorAccuracy.html#getScore-com.compomics.util.experiment.biology.Peptide-int-com.compomics.util.experiment.massspectrometry.Precursor-boolean-int-int-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/PrecursorAccuracy.html#getScore-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.mass_spectrometry.spectra.Precursor-boolean-int-int-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
         int&nbsp;identificationCharge,
-        <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/Precursor.html" title="class in com.compomics.util.experiment.massspectrometry">Precursor</a>&nbsp;precursor,
+        <a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Precursor</a>&nbsp;precursor,
         boolean&nbsp;ppm,
         int&nbsp;minIsotope,
         int&nbsp;maxIsotope)</code>
@@ -202,19 +202,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getScore-com.compomics.util.experiment.biology.Peptide-int-com.compomics.util.experiment.massspectrometry.Precursor-boolean-int-int-">
+<a name="getScore-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.mass_spectrometry.spectra.Precursor-boolean-int-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getScore</h4>
-<pre>public&nbsp;double&nbsp;getScore(<a href="../../../../../../../com/compomics/util/experiment/biology/Peptide.html" title="class in com.compomics.util.experiment.biology">Peptide</a>&nbsp;peptide,
+<pre>public&nbsp;double&nbsp;getScore(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                        int&nbsp;identificationCharge,
-                       <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/Precursor.html" title="class in com.compomics.util.experiment.massspectrometry">Precursor</a>&nbsp;precursor,
+                       <a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Precursor</a>&nbsp;precursor,
                        boolean&nbsp;ppm,
                        int&nbsp;minIsotope,
-                       int&nbsp;maxIsotope)
-                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                       int&nbsp;maxIsotope)</pre>
 <div class="block">Scores the match between the given peptide and spectrum using the
  precursor m/z accuracy.</div>
 <dl>
@@ -227,9 +226,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>maxIsotope</code> - the maximal isotope</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the score of the match</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a thread is
- interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -261,7 +257,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/MS2MzFidelityScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/HyperScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

@@ -24,8 +24,6 @@ public class Proline extends AminoAcid {
         singleLetterCode = "P";
         threeLetterCode = "Pro";
         name = "Proline";
-        averageMass = 97.1152;
-        monoisotopicMass = 97.052764;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 5);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 7);

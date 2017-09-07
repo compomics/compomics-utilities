@@ -24,8 +24,6 @@ public class Isoleucine extends AminoAcid {
         singleLetterCode = "I";
         threeLetterCode = "Ile";
         name = "Isoleucine";
-        averageMass = 113.1576;
-        monoisotopicMass = 113.084064;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 6);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 11);

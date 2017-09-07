@@ -24,8 +24,6 @@ public class Glycine extends AminoAcid {
         singleLetterCode = "G";
         threeLetterCode = "Gly";
         name = "Glycine";
-        averageMass = 57.0513;
-        monoisotopicMass = 57.021464;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 2);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 3);

@@ -23,8 +23,6 @@ public class B extends AminoAcid {
         singleLetterCode = "B";
         threeLetterCode = "Asx";
         name = "Asparagine or Aspartic Acid";
-        averageMass = 114.595;
-        monoisotopicMass = 114.534935;
         subAminoAcidsWithoutCombination = new char[]{'N', 'D'};
         subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
         aminoAcidCombinations = new char[]{'X'};

@@ -24,8 +24,6 @@ public class Asparagine extends AminoAcid {
         singleLetterCode = "N";
         threeLetterCode = "Asn";
         name = "Asparagine";
-        averageMass = 114.1026;
-        monoisotopicMass = 114.042927;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 4);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 6);

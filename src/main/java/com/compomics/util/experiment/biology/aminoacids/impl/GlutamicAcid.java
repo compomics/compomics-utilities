@@ -24,8 +24,6 @@ public class GlutamicAcid extends AminoAcid {
         singleLetterCode = "E";
         threeLetterCode = "Glu";
         name = "Glutamic Acid";
-        averageMass = 129.114;
-        monoisotopicMass = 129.042593;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 5);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 7);

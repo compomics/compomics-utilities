@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -234,7 +236,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } else {
 
                     TreeMap<Integer, TreeSet<ProteinDatabase>> occurrenceToDBMap = databaseType.entrySet().stream()
-                            .collect(Collectors.groupingBy(Entry::getValue, TreeMap::new, Collectors.mapping(Entry::getKey, TreeSet::new)));
+                            .collect(Collectors.groupingBy(Entry::getValue)).entrySet().stream()
+                            .collect(Collectors.toMap(
+                                    Entry::getKey, 
+                                    entry -> entry.getValue().stream()
+                                        .map(entry2 -> entry2.getKey())
+                                        .collect(Collectors.toCollection(TreeSet::new)),
+                                    (a,b) -> {a.addAll(b); return a;},
+                                    TreeMap::new));
+                            
 
                     String dbOccurrenceText = occurrenceToDBMap.descendingMap().values().stream()
                             .flatMap(dbs -> dbs.stream())

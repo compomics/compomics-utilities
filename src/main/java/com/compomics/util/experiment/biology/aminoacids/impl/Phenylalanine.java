@@ -24,8 +24,6 @@ public class Phenylalanine extends AminoAcid {
         singleLetterCode = "F";
         threeLetterCode = "Phe";
         name = "Phenylalanine";
-        averageMass = 147.1739;
-        monoisotopicMass = 147.068414;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 9);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 9);

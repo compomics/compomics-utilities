@@ -86,16 +86,6 @@ public abstract class AminoAcid implements Serializable {
      */
     public String name;
     /**
-     * Average mass of the amino acid.
-     */
-    public double averageMass;
-    /**
-     * Monoisotopic mass of the amino acid.
-     * 
-     * @deprecated use the atomchain
-     */
-    protected Double monoisotopicMass;
-    /**
      * The monoisotopic atom chain.
      */
     protected AtomChain monoisotopicAtomChain;
@@ -480,9 +470,6 @@ public abstract class AminoAcid implements Serializable {
      * @return the mass of the amino acid
      */
     public double getMonoisotopicMass() {
-        if (monoisotopicAtomChain == null) {
-            return monoisotopicMass;
-        }
         return monoisotopicAtomChain.getMass();
     }
     

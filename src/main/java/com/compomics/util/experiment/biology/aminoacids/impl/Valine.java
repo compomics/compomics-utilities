@@ -24,8 +24,6 @@ public class Valine extends AminoAcid {
         singleLetterCode = "V";
         threeLetterCode = "Val";
         name = "Valine";
-        averageMass = 99.1311;
-        monoisotopicMass = 99.068414;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 5);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 9);

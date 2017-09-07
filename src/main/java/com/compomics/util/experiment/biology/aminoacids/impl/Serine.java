@@ -24,8 +24,6 @@ public class Serine extends AminoAcid {
         singleLetterCode = "S";
         threeLetterCode = "Ser";
         name = "Serine";
-        averageMass = 87.0773;
-        monoisotopicMass = 87.032028;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 3);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 5);

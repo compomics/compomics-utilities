@@ -24,8 +24,6 @@ public class Cysteine extends AminoAcid {
         singleLetterCode = "C";
         threeLetterCode = "Cys";
         name = "Cysteine";
-        averageMass = 103.1429;
-        monoisotopicMass = 103.009185;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 3);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 5);

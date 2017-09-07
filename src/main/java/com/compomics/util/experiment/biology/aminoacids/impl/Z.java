@@ -21,8 +21,6 @@ public class Z extends AminoAcid {
         singleLetterCode = "Z";
         threeLetterCode = "Glx";
         name = "Glutamine or Glutamic Acid";
-        averageMass = 128.6216;
-        monoisotopicMass = 128.5505855;
         subAminoAcidsWithoutCombination = new char[]{'Q', 'E'};
         subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
         aminoAcidCombinations = new char[]{'X'};

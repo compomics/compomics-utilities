@@ -24,8 +24,6 @@ public class Tryptophan extends AminoAcid {
         singleLetterCode = "W";
         threeLetterCode = "Trp";
         name = "Tryptophan";
-        averageMass = 186.2099;
-        monoisotopicMass = 186.079313;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 11);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 10);

@@ -24,8 +24,6 @@ public class AsparticAcid extends AminoAcid {
         singleLetterCode = "D";
         threeLetterCode = "Asp";
         name = "Aspartic Acid";
-        averageMass = 115.0874;
-        monoisotopicMass = 115.026943;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 4);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 5);

@@ -24,8 +24,6 @@ public class Methionine extends AminoAcid {
         singleLetterCode = "M";
         threeLetterCode = "Met";
         name = "Methionine";
-        averageMass = 131.1961;
-        monoisotopicMass = 131.040485;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 5);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 9);

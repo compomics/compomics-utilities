@@ -21,8 +21,6 @@ public class J extends AminoAcid {
         singleLetterCode = "J";
         threeLetterCode = "I/L";
         name = "Isoleucine or Leucine";
-        averageMass = 113.15980;
-        monoisotopicMass = 113.08407;
         subAminoAcidsWithoutCombination = new char[]{'I', 'L'};
         subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
         aminoAcidCombinations = new char[]{'X'};

@@ -24,8 +24,6 @@ public class Histidine extends AminoAcid {
         singleLetterCode = "H";
         threeLetterCode = "His";
         name = "Histidine";
-        averageMass = 137.1393;
-        monoisotopicMass = 137.058912;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 6);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 7);

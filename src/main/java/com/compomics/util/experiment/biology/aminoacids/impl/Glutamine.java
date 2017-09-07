@@ -24,8 +24,6 @@ public class Glutamine extends AminoAcid {
         singleLetterCode = "Q";
         threeLetterCode = "Gln";
         name = "Glutamine";
-        averageMass = 128.1292;
-        monoisotopicMass = 128.058578;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 5);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 8);

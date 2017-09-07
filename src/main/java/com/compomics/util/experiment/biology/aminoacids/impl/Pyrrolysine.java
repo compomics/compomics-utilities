@@ -24,8 +24,6 @@ public class Pyrrolysine extends AminoAcid {
         singleLetterCode = "O";
         threeLetterCode = "Pyl";
         name = "Pyrrolysine";
-        averageMass = 237.1477; //@TODO: what is the average mass in this case??
-        monoisotopicMass = 237.1477;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 12);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 19);

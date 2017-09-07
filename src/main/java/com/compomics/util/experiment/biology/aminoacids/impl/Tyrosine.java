@@ -24,8 +24,6 @@ public class Tyrosine extends AminoAcid {
         singleLetterCode = "Y";
         threeLetterCode = "Tyr";
         name = "Tyrosine";
-        averageMass = 163.1733;
-        monoisotopicMass = 163.06332;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 9);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 9);

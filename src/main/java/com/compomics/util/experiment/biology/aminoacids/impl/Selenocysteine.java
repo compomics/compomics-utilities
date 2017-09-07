@@ -24,8 +24,6 @@ public class Selenocysteine extends AminoAcid {
         singleLetterCode = "U";
         threeLetterCode = "Sec";
         name = "Selenocysteine";
-        averageMass = 150.0379;
-        monoisotopicMass = 150.95363;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 3);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 5);

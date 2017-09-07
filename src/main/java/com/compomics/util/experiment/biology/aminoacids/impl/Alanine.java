@@ -24,8 +24,6 @@ public class Alanine extends AminoAcid {
         singleLetterCode = "A";
         threeLetterCode = "Ala";
         name = "Alanine";
-        averageMass = 71.0779;
-        monoisotopicMass = 71.037114;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 3);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 5);

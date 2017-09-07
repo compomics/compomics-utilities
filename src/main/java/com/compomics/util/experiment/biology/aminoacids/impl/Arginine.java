@@ -24,8 +24,6 @@ public class Arginine extends AminoAcid {
         singleLetterCode = "R";
         threeLetterCode = "Arg";
         name = "Arginine";
-        averageMass = 156.1857;
-        monoisotopicMass = 156.101111;
         monoisotopicAtomChain = new AtomChain();
         monoisotopicAtomChain.append(new AtomImpl(Atom.C, 0), 6);
         monoisotopicAtomChain.append(new AtomImpl(Atom.H, 0), 12);

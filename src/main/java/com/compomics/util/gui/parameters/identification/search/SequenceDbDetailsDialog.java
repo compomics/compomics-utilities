@@ -9,7 +9,7 @@ import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.experiment.io.biology.protein.ProteinDatabase;
-import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
+import com.compomics.util.experiment.io.biology.protein.converters.DecoyConverter;
 import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog;
@@ -25,9 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -95,19 +92,23 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Accessions of the sampled proteins.
      */
-    private ArrayList<String> accessionsSample = new ArrayList<String>(sampleBatchSize);
+    private ArrayList<String> accessionsSample = new ArrayList<>(sampleBatchSize);
     /**
      * Sample of proteins from the database.
      */
-    private HashMap<String, Protein> proteinsSample = new HashMap<String, Protein>(sampleBatchSize);
+    private HashMap<String, Protein> proteinsSample = new HashMap<>(sampleBatchSize);
     /**
      * Sample of protein headers from the database.
      */
-    private HashMap<String, Header> headersSample = new HashMap<String, Header>(sampleBatchSize);
+    private HashMap<String, Header> headersSample = new HashMap<>(sampleBatchSize);
     /**
      * A protein iterator to fill the sample.
      */
     private FastaIterator proteinIterator;
+    /**
+     * Boolean indicating whether the database selection was canceled by the user.
+     */
+    private boolean canceled = false;
 
     /**
      * Creates a new SequenceDbDetailsDialog with a dialog as owner.
@@ -116,13 +117,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param selectedFastaFile the selected fasta file
      * @param fastaParameters the parameters used to parse the fasta file
-     * @param fastaSummary summary information on the fasta file content
      * @param lastSelectedFolder the last selected folder
      * @param dbEditable if the database is editable
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Dialog owner, Frame parent, File selectedFastaFile, FastaParameters fastaParameters, FastaSummary fastaSummary, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(Dialog owner, Frame parent, File selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
 
         super(owner, true);
         initComponents();
@@ -137,6 +137,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         this.utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
+        if (this.selectedFastaFile != null) {
+
+            loadFastaFile(selectedFastaFile, fastaParameters == null);
+
+        }
+
         setUpGUI();
         setLocationRelativeTo(owner);
 
@@ -149,12 +155,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param selectedFastaFile the selected fasta file
      * @param fastaParameters the parameters used to parse the fasta file
      * @param lastSelectedFolder the last selected folder
-     * @param fastaSummary summary information on the fasta file content
      * @param dbEditable if the database is editable
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Frame parent, File selectedFastaFile, FastaParameters fastaParameters, FastaSummary fastaSummary, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(Frame parent, File selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
 
         super(parent, true);
 
@@ -171,6 +176,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         this.utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
+        if (this.selectedFastaFile != null) {
+
+            loadFastaFile(selectedFastaFile, fastaParameters == null);
+
+        }
+
         setUpGUI();
         setLocationRelativeTo(parent);
     }
@@ -183,55 +194,76 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         if (selectedFastaFile != null) {
 
             fileTxt.setText(selectedFastaFile.getAbsolutePath());
-
-            dbNameTxt.setText(fastaParameters.getName());
-
-// Show the species present in the database
-            speciesJTextField.setText(SpeciesFactory.getSpeciesDescription(fastaSummary.speciesOccurrence));
-
-            // show the database type information
-            HashMap<ProteinDatabase, Integer> databaseType = fastaSummary.databaseType;
-
-            if (databaseType.size() == 1) {
-
-                ProteinDatabase proteinDatabase = databaseType.keySet().stream().findFirst().get();
-                typeJTextField.setText(proteinDatabase.getFullName());
-
-            } else {
-
-                TreeMap<Integer, TreeSet<ProteinDatabase>> occurrenceToDBMap = databaseType.entrySet().stream()
-                        .collect(Collectors.groupingBy(Entry::getValue, TreeMap::new, Collectors.mapping(Entry::getKey, TreeSet::new)));
-
-                String dbOccurrenceText = occurrenceToDBMap.descendingMap().values().stream()
-                        .flatMap(dbs -> dbs.stream())
-                        .map(db -> db.getFullName() + " (" + databaseType.get(db) + ")")
-                        .collect(Collectors.joining(", "));
-
-                typeJTextField.setText(dbOccurrenceText);
-
-            }
-
-            versionTxt.setText(fastaParameters.getVersion());
             lastModifiedTxt.setText(new Date(selectedFastaFile.lastModified()).toString());
-            String nSequences = fastaSummary.nSequences + " sequences";
 
-            if (fastaParameters.isTargetDecoy()) {
+            if (fastaParameters != null) {
 
-                nSequences += " (" + fastaSummary.nTarget + " target)";
+                dbNameTxt.setText(fastaParameters.getName());
+
+                versionTxt.setText(fastaParameters.getVersion());
 
                 decoyFlagTxt.setEditable(true);
                 decoyFlagTxt.setText(fastaParameters.getDecoyFlag());
 
+                decoyButton.setEnabled(!fastaParameters.isTargetDecoy() && dbEditable);
+
             } else {
 
+                dbNameTxt.setText("");
+                versionTxt.setText("");
                 decoyFlagTxt.setText("");
                 decoyFlagTxt.setEditable(false);
+                decoyButton.setEnabled(true);
 
             }
 
-            sizeTxt.setText(nSequences);
+            if (fastaSummary != null) {
 
-            decoyButton.setEnabled(!fastaParameters.isTargetDecoy() && dbEditable);
+                // Show the species present in the database
+                speciesJTextField.setText(SpeciesFactory.getSpeciesDescription(fastaSummary.speciesOccurrence));
+
+                // show the database type information
+                HashMap<ProteinDatabase, Integer> databaseType = fastaSummary.databaseType;
+
+                // The origin of the sequence information
+                if (databaseType.size() == 1) {
+
+                    ProteinDatabase proteinDatabase = databaseType.keySet().stream().findFirst().get();
+                    typeJTextField.setText(proteinDatabase.getFullName());
+
+                } else {
+
+                    TreeMap<Integer, TreeSet<ProteinDatabase>> occurrenceToDBMap = databaseType.entrySet().stream()
+                            .collect(Collectors.groupingBy(Entry::getValue, TreeMap::new, Collectors.mapping(Entry::getKey, TreeSet::new)));
+
+                    String dbOccurrenceText = occurrenceToDBMap.descendingMap().values().stream()
+                            .flatMap(dbs -> dbs.stream())
+                            .map(db -> db.getFullName() + " (" + databaseType.get(db) + ")")
+                            .collect(Collectors.joining(", "));
+
+                    typeJTextField.setText(dbOccurrenceText);
+
+                }
+
+                // The number of sequences
+                String nSequences = fastaSummary.nSequences + " sequences";
+
+                if (fastaParameters != null && fastaParameters.isTargetDecoy()) {
+
+                    nSequences += " (" + fastaSummary.nTarget + " target)";
+
+                }
+
+                sizeTxt.setText(nSequences);
+
+            } else {
+
+                speciesJTextField.setText("");
+                typeJTextField.setText("");
+                sizeTxt.setText("");
+
+            }
+
             browseButton.setEnabled(dbEditable);
             decoyFlagTxt.setEditable(dbEditable);
 
@@ -365,7 +397,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 }
             }
 
-            loadFastaFile(file);
+            loadFastaFile(file, true);
+
+            if (!progressDialog.isRunCanceled()) {
+
+                setUpGUI();
+
+            }
 
             return true;
 
@@ -379,11 +417,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Loads the given fasta file and updates the GUI.
+     * Loads the given fasta file.
      *
      * @param fastaFile a fasta file
      */
-    private void loadFastaFile(File fastaFile) {
+    private void loadFastaFile(File fastaFile, boolean inferParameters) {
 
         this.selectedFastaFile = fastaFile;
 
@@ -391,21 +429,22 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 normalImange,
                 waitingImage,
                 true);
+
         progressDialog.setPrimaryProgressCounterIndeterminate(true);
 
-        progressDialog.setTitle("Inferring Database Format. Please Wait...");
-        inferParameters();
+        if (inferParameters) {
 
-        if (!progressDialog.isRunCanceled()) {
+            progressDialog.setTitle("Inferring Database Format. Please Wait...");
 
-            progressDialog.setTitle("Getting Summary Data. Please Wait...");
-            getSummaryData();
+            inferParameters();
 
         }
 
         if (!progressDialog.isRunCanceled()) {
 
-            setUpGUI();
+            progressDialog.setTitle("Getting Summary Data. Please Wait...");
+
+            getSummaryData();
 
         }
 
@@ -438,7 +477,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            "File " + finalFile.getAbsolutePath() + " not found.",
+                            "File " + selectedFastaFile.getAbsolutePath() + " not found.",
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
@@ -454,9 +493,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 }
 
                 if (!progressDialog.isRunCanceled()) {
-                    
+
                     setUpGUI();
-                    
+
                 }
                 progressDialog.setRunFinished();
             }
@@ -488,7 +527,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            "File " + finalFile.getAbsolutePath() + " not found.",
+                            "File " + selectedFastaFile.getAbsolutePath() + " not found.",
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
@@ -512,9 +551,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param targetFile the target database file
      * @param progressDialog the progress dialog
      */
-    public void generateTargetDecoyDatabase(File targetFile, ProgressDialogX progressDialog) {
+    private void generateTargetDecoyDatabase() {
 
-        String fastaInput = targetFile.getAbsolutePath();
+        String fastaInput = selectedFastaFile.getAbsolutePath();
 
         // set up the new fasta file name
         String newFasta = fastaInput;
@@ -528,13 +567,25 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         newFasta += utilitiesUserParameters.getTargetDecoyFileNameSuffix() + ".fasta";
 
         try {
+
             File newFile = new File(newFasta);
+
             progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
-            sequenceFactory.appendDecoySequences(newFile, progressDialog);
-            sequenceFactory.clearFactory();
+            progressDialog.setPrimaryProgressCounterIndeterminate(false);
+            progressDialog.setMaxPrimaryProgressCounter(fastaSummary.nSequences);
+
+            DecoyConverter.appendDecoySequences(selectedFastaFile, newFile, progressDialog);
+
             progressDialog.setTitle("Getting Database Details. Please Wait...");
-            sequenceFactory.loadFastaFile(newFile, progressDialog);
+
+            progressDialog.setPrimaryProgressCounterIndeterminate(true);
+
+            selectedFastaFile = newFile;
+            fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
+            fastaSummary = DecoyConverter.getDecoySummary(selectedFastaFile, fastaSummary);
+
         } catch (OutOfMemoryError error) {
+
             Runtime.getRuntime().gc();
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
                     "The tool used up all the available memory and had to be stopped.\n"
@@ -543,16 +594,21 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     JOptionPane.ERROR_MESSAGE);
             System.out.println("Ran out of memory!");
             error.printStackTrace();
+
         } catch (FileNotFoundException e) {
+
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
                     new String[]{"FASTA Import Error.", "File " + fastaInput + " not found."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
+
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
                     new String[]{"FASTA Import Error.", "File " + fastaInput + " could not be imported."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
+
         }
     }
 
@@ -565,7 +621,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @return the renamed FASTA file
      */
     public File renameFastaFileName(File file) {
-        
+
         String tempName = file.getName();
         tempName = tempName.replaceAll(" ", "_");
 
@@ -574,33 +630,33 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         boolean success = false;
 
         try {
-            
+
             success = renamedFile.createNewFile();
-            
+
             if (success) {
-                
+
                 Util.copyFile(file, renamedFile);
-                
+
             }
-            
+
         } catch (IOException e) {
-            
+
             JOptionPane.showMessageDialog(this, "An error occurred while renaming the file.",
                     "Please Rename File", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
             success = false;
-            
+
         }
 
         if (success) {
-            
+
             JOptionPane.showMessageDialog(this, "Your FASTA file name contained white space and has been renamed to:\n"
                     + file.getParentFile().getAbsolutePath() + File.separator + tempName, "Renamed File", JOptionPane.WARNING_MESSAGE);
-            
+
             return renamedFile;
-            
+
         }
-        
+
         return null;
     }
 
@@ -953,10 +1009,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+
         UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
-            dispose();
-            
+        dispose();
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -965,7 +1021,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        
+        canceled = true;
+        
         dispose();
+        
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
@@ -1003,10 +1063,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         new Thread("DecoyThread") {
             public void run() {
-                
-                generateTargetDecoyDatabase(selectedFastaFile, progressDialog);
+
+                generateTargetDecoyDatabase();
                 progressDialog.setRunFinished();
-                
+
             }
         }.start();
 
@@ -1126,5 +1186,32 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         accessionsSpinner.setModel(new SpinnerListModel(accessionsSample));
         accessionsSpinner.setValue(accessionsSample.get(previousSize));
 
+    }
+
+    /**
+     * Returns the selected fasta file.
+     * 
+     * @return the selected fasta file
+     */
+    public File getSelectedFastaFile() {
+        return selectedFastaFile;
+    }
+
+    /**
+     * Returns the fasta parameters.
+     * 
+     * @return the fasta parameters
+     */
+    public FastaParameters getFastaParameters() {
+        return fastaParameters;
+    }
+
+    /**
+     * Returns a boolean indicating whether the database selection was canceled by the user.
+     * 
+     * @return a boolean indicating whether the database selection was canceled by the user
+     */
+    public boolean isCanceled() {
+        return canceled;
     }
 }

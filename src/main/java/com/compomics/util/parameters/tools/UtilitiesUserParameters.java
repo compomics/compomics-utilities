@@ -123,14 +123,6 @@ public class UtilitiesUserParameters implements Serializable {
      */
     private File dbFolder = null;
     /**
-     * The folder used to store fasta files.
-     */
-    private File proteinSequencesManagerFolder = null;
-    /**
-     * The user last used databases.
-     */
-    private ArrayList<File> favoriteDBs = null;
-    /**
      * The list of already read tweets.
      */
     private ArrayList<String> readTweets = null;
@@ -675,60 +667,6 @@ public class UtilitiesUserParameters implements Serializable {
     }
 
     /**
-     * returns the folder to use in the protein sequences manager.
-     *
-     * @return the folder to use in the protein sequences manager
-     */
-    public File getProteinSequencesManagerFolder() {
-        return proteinSequencesManagerFolder;
-    }
-
-    /**
-     * Sets the folder to use in the protein sequences manager.
-     *
-     * @param proteinSequencesManagerFolder the folder to use in the protein
-     * sequences manager
-     */
-    public void setProteinSequencesManagerFolder(File proteinSequencesManagerFolder) {
-        this.proteinSequencesManagerFolder = proteinSequencesManagerFolder;
-    }
-
-    /**
-     * Returns the last used databases. The most recent ones first.
-     *
-     * @return the last used databases.
-     */
-    public ArrayList<File> getFavoriteDBs() {
-        checkDbFiles();
-        return favoriteDBs;
-    }
-
-    /**
-     * Removes the db files which do not exist anymore.
-     */
-    public void checkDbFiles() {
-        ArrayList<File> checkedFiles = new ArrayList<>(1);
-        for (File dbFile : favoriteDBs) {
-            if (dbFile.exists()) {
-                checkedFiles.add(dbFile);
-            }
-        }
-        favoriteDBs = checkedFiles;
-    }
-
-    /**
-     * Sets the last used databases.
-     *
-     * @param dbFile the last used databases.
-     */
-    public void addFavoriteDB(File dbFile) {
-        if (favoriteDBs == null) {
-            favoriteDBs = new ArrayList<>(1);
-        }
-        favoriteDBs.add(0, dbFile);
-    }
-
-    /**
      * Returns the list of read tweets.
      *
      * @return the list of read tweets
@@ -1139,5 +1077,15 @@ public class UtilitiesUserParameters implements Serializable {
      */
     public void setDefaultModifications(HashSet<String> defaultModifications) {
         this.defaultModifications = defaultModifications;
+    }
+    
+    /**
+     * Returns the folder where fasta files summary statistics are stored.
+     * 
+     * @return the folder where fasta files summary statistics are stored
+     */
+    public File getDbSummaryFolder() {
+        
+        return new File(getUserParametersFolder(), "fastaSummary");
     }
 }

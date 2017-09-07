@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.CometParameters;
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
@@ -131,6 +132,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * The utilities user parameters.
      */
     private UtilitiesUserParameters utilitiesUserParameters = null;
+    /**
+     * The selected fasta file.
+     */
+    private File selectedFastaFile = null;
+    /**
+     * The parameters used to parse the fasta file.
+     */
+    private FastaParameters fastaParameters = null;
 
     /**
      * Creates a new SearchSettingsDialog with a frame as owner.
@@ -161,6 +170,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             this.searchParameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
+            this.selectedFastaFile = searchParameters.getFastaFile();
+            this.fastaParameters = searchParameters.getFastaParameters();
         }
 
         loadUserPreferences();
@@ -281,8 +292,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         removeFixedModification.setEnabled(editable);
         addVariableModification.setEnabled(editable);
         removeVariableModification.setEnabled(editable);
+        
         if (!editable) {
+            
             editDatabaseDetailsButton.setText("View");
+            
         }
 
         modificationTypesSplitPane.setDividerLocation(0.5);
@@ -1124,7 +1138,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
 
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(this, parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
+        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(this, parentFrame, selectedFastaFile, fastaParameters, lastSelectedFolder, editable, normalIcon, waitingIcon);
 
         loadUserPreferences();
         
@@ -1133,12 +1147,15 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         if (success) {
             
             sequenceDbDetailsDialog.setVisible(true);
-        
-        }
-
-        if (sequenceFactory.getCurrentFastaFile() != null) {
             
-            databaseSettingsTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
+            if (!sequenceDbDetailsDialog.isCanceled()) {
+            
+                selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
+                fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
+            
+            databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
+            
+            }
         
         }
 
@@ -2024,49 +2041,65 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private void setScreenProps() {
 
-        File fastaFile = searchParameters.getFastaFile();
-        if (fastaFile != null) {
-            String fastaPath = fastaFile.getAbsolutePath();
+        if (selectedFastaFile != null) {
+            
+            String fastaPath = selectedFastaFile.getAbsolutePath();
             databaseSettingsTxt.setText(fastaPath);
-            if (!fastaFile.equals(sequenceFactory.getCurrentFastaFile()) && fastaFile.exists()) {
-                loadFastaFile(fastaFile);
-            }
+            
         }
 
         ArrayList<String> missingPtms = new ArrayList<>();
         PtmSettings modificationProfile = searchParameters.getPtmSettings();
+        
         if (modificationProfile != null) {
+            
             ArrayList<String> fixedMods = modificationProfile.getFixedModifications();
 
             for (String modificationName : fixedMods) {
+                
                 if (!modificationFactory.containsModification(modificationName)) {
+                    
                     missingPtms.add(modificationName);
+                    
                 }
             }
 
             for (String missing : missingPtms) {
+                
                 fixedMods.remove(missing);
+                
             }
 
             if (!missingPtms.isEmpty()) {
+                
                 if (missingPtms.size() == 1) {
+                    
                     JOptionPane.showMessageDialog(this, "The following modification is currently not recognized by SearchGUI: "
                             + missingPtms.get(0) + ".\nPlease import it in the Modification Editor.", "Modification Not Found", JOptionPane.WARNING_MESSAGE);
+                
                 } else {
+                    
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
                     for (String modification : missingPtms) {
+                        
                         if (first) {
+                            
                             first = false;
+                            
                         } else {
+                            
                             output += ", ";
+                            
                         }
+                        
                         output += modification;
                     }
 
                     output += ".\nPlease import them in the Modification Editor.";
                     JOptionPane.showMessageDialog(this, output, "Modification Not Found", JOptionPane.WARNING_MESSAGE);
+                    
                 }
             }
 
@@ -2074,8 +2107,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             fixedModel.getDataVector().removeAllElements();
 
             for (String fixedMod : fixedMods) {
+                
                 ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
+            
             }
+            
             ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
             fixedModsTable.repaint();
             fixedModificationsLabel.setText("Fixed Modifications (" + fixedMods.size() + ")");
@@ -2083,29 +2119,44 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             ArrayList<String> variableMods = modificationProfile.getVariableModifications();
 
             for (String modificationName : variableMods) {
+                
                 if (!modificationFactory.containsModification(modificationName)) {
+                    
                     missingPtms.add(modificationName);
+                    
                 }
             }
 
             for (String missing : missingPtms) {
+                
                 variableMods.remove(missing);
+                
             }
 
             if (!missingPtms.isEmpty()) {
+                
                 if (missingPtms.size() == 1) {
+                    
                     JOptionPane.showMessageDialog(this, "The following modification is currently not recognized by SearchGUI: "
                             + missingPtms.get(0) + ".\nPlease import it in the Modification Editor.", "Modification Not Found", JOptionPane.WARNING_MESSAGE);
+                
                 } else {
+                    
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
                     for (String modification : missingPtms) {
+                        
                         if (first) {
+                            
                             first = false;
+                            
                         } else {
+                            
                             output += ", ";
+                            
                         }
+                        
                         output += modification;
                     }
 
@@ -2113,25 +2164,34 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, output, "Modification Not Found", JOptionPane.WARNING_MESSAGE);
                 }
             }
+            
             DefaultTableModel variableModel = (DefaultTableModel) variableModsTable.getModel();
             variableModel.getDataVector().removeAllElements();
             for (String variableMod : variableMods) {
+                
                 ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variableMod), variableMod, modificationFactory.getModification(variableMod).getMass()});
+            
             }
+            
             ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
             variableModsTable.repaint();
             variableModificationsLabel.setText("Variable Modifications (" + variableMods.size() + ")");
 
             updateModificationList();
+            
         }
 
         DigestionParameters digestionPreferences = searchParameters.getDigestionPreferences();
+        
         if (digestionPreferences.getCleavagePreference() != null) {
+            
             digestionCmb.setSelectedItem(digestionPreferences.getCleavagePreference());
+            
         }
 
         // set enzyme
         if (digestionPreferences.getCleavagePreference() == CleavagePreference.enzyme) {
+            
             if (digestionPreferences.hasEnzymes()) {
 
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0);  // @TODO: allow the selection of multiple enzymes?
@@ -2140,16 +2200,24 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 // set missed cleavages
                 Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+                
                 if (nMissedCleavages != null) {
+                    
                     maxMissedCleavagesTxt.setText(nMissedCleavages + "");
+                    
                 } else {
+                    
                     maxMissedCleavagesTxt.setText("Not set");
+                    
                 }
 
                 // set specificity
                 specificityComboBox.setSelectedItem(digestionPreferences.getSpecificity(enzymeName));
+                
             } else {
+                
                 enzymesCmb.setSelectedIndex(0);
+                
             }
         }
 
@@ -2157,13 +2225,17 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         digestionCmbActionPerformed(null);
 
         if (searchParameters.getForwardIons() != null && !searchParameters.getForwardIons().isEmpty()) {
+            
             Integer ionSearched = searchParameters.getForwardIons().get(0);
             fragmentIon1Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
+            
         }
 
         if (searchParameters.getRewindIons() != null && !searchParameters.getRewindIons().isEmpty()) {
+            
             Integer ionSearched = searchParameters.getRewindIons().get(0);
             fragmentIon2Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
+            
         }
 
         if (searchParameters.getPrecursorAccuracy() > 0.0) {
@@ -2227,56 +2299,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             isotopeMaxTxt.setText(searchParameters.getMaxIsotopicCorrection() + "");
             
         }
-    }
-
-    /**
-     * Loads the FASTA file in the factory.
-     *
-     * @param file the FASTA file
-     */
-    private void loadFastaFile(File file) {
-
-        final File finalFile = file;
-
-        progressDialog = new ProgressDialogX(this, parentFrame, normalIcon, waitingIcon, true);
-        progressDialog.setPrimaryProgressCounterIndeterminate(true);
-        progressDialog.setTitle("Loading Database. Please Wait...");
-
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    progressDialog.setVisible(true);
-                } catch (IndexOutOfBoundsException e) {
-                    // ignore
-                }
-            }
-        }, "ProgressDialog").start();
-
-        new Thread("importThread") {
-            public void run() {
-
-                try {
-                    progressDialog.setTitle("Importing Database. Please Wait...");
-                    progressDialog.setPrimaryProgressCounterIndeterminate(false);
-                    sequenceFactory.loadFastaFile(finalFile, progressDialog);
-                } catch (StringIndexOutOfBoundsException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SearchParametersDialog.this,
-                            e.getMessage(),
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                } catch (IllegalArgumentException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SearchParametersDialog.this,
-                            e.getMessage(),
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                }
-                progressDialog.setRunFinished();
-            }
-        }.start();
     }
 
     /**

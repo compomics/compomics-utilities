@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification.advanced;
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.parameters.identification.advanced.ValidationQcParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;

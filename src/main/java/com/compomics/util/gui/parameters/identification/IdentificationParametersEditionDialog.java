@@ -137,8 +137,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      *
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -147,7 +145,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
-            ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
             ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
@@ -160,7 +158,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
@@ -185,8 +182,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -195,7 +190,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
-            ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
             ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
@@ -208,7 +203,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
@@ -898,35 +892,50 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
+        
         String name = nameTxt.getText();
         SearchParametersDialog searchSettingsDialog = new SearchParametersDialog(this, parentFrame, searchParameters,
-                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, name, editable);
+                normalIcon, waitingIcon, true, true, lastSelectedFolder, name, editable);
+        
         if (!searchSettingsDialog.isCanceled()) {
+            
             SearchParameters oldSearchParameters = searchParameters;
             searchParameters = searchSettingsDialog.getSearchParameters();
 
             boolean extactParameters = false;
+            
             if (oldSearchParameters == null) {
+                
                 extactParameters = true;
+                
             } else if (!searchParameters.equals(oldSearchParameters)) {
+                
                 // @TODO: check if the question is really needed..?
                 int value = JOptionPane.showConfirmDialog(this, "Spectrum matching settings changed. Update advanced settings accordingly?", "Update Advanced Parameters?", JOptionPane.YES_NO_OPTION);
+                
                 if (value == JOptionPane.YES_OPTION) {
+                    
                     extactParameters = true;
+                    
                 }
             }
 
             if (extactParameters) {
+                
                 IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
                 extractParameters(identificationParameters);
+                
             }
 
             if (!nameTxt.getText().isEmpty()) {
+                
                 saveButton.setEnabled(true);
+                
             }
 
             updateGUI();
             validateInput();
+            
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
@@ -949,10 +958,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
+        
         GeneParametersDialog genePreferencesDialog = new GeneParametersDialog(this, parentFrame, genePreferences, searchParameters, editable);
+        
         if (!genePreferencesDialog.isCanceled()) {
+            
             genePreferences = genePreferencesDialog.getGenePreferences();
             updateGUI();
+            
         }
     }//GEN-LAST:event_geneMappingButtonActionPerformed
 
@@ -1305,7 +1318,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         String name = nameTxt.getText();
         SearchParametersDialog searchSettingsDialog = new SearchParametersDialog(this, parentFrame, searchParameters,
-                normalIcon, waitingIcon, false, true, configurationFile, lastSelectedFolder, name, editable);
+                normalIcon, waitingIcon, false, true, lastSelectedFolder, name, editable);
 
         boolean valid = searchSettingsDialog.validateParametersInput(false);
         int columnWidth = 150;

@@ -1,6 +1,7 @@
 package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.io.File;
 import java.io.Serializable;
@@ -137,9 +138,9 @@ public class GeneParameters implements Serializable {
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
             
             try {
-                
-                
-                HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
+
+                FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile, searchParameters.getFastaParameters(), null);
+                HashMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
                 Integer occurrenceMax = null;
 
                 // Select the background species based on occurrence in the factory

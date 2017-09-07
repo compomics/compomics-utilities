@@ -4,7 +4,6 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.gui.parameters.identification.search.SearchParametersDialog;
-import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.parameters.identification.IdentificationParameters;
@@ -57,10 +56,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private boolean editable;
     /**
-     * The configuration file containing the modification use.
-     */
-    private ConfigurationFile configurationFile;
-    /**
      * A parent handling the edition of QC filters.
      */
     private ValidationQCParametersDialogParent validationQCPreferencesDialogParent;
@@ -95,8 +90,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param owner the owner
      * @param identificationParameters the identification parameters selected
      * @param startupMode the edition mode to use at startup
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -105,7 +98,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters,
-            StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            StartupMode startupMode, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
             ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
@@ -113,7 +106,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
 
@@ -171,7 +163,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
-            StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon,
+            StartupMode startupMode, Image normalIcon, Image waitingIcon,
             LastSelectedFolder lastSelectedFolder, ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
@@ -179,7 +171,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
 
@@ -227,8 +218,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * displayed and its settings saved in the factory.
      *
      * @param parentFrame the parent frame
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -237,14 +226,13 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param searchSettingsDialog a dialog containing the settings to edit and
      * save
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon,
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Image normalIcon, Image waitingIcon,
             LastSelectedFolder lastSelectedFolder, ValidationQCParametersDialogParent validationQCPreferencesDialogParent, SearchParametersDialog searchSettingsDialog) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
 
@@ -793,7 +781,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private void addFromSearchSettings() {
         SearchParameters defaultParameters = new SearchParameters();
         SearchParametersDialog searchSettingsDialog = new SearchParametersDialog(this, parentFrame, defaultParameters,
-                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, null, editable);
+                normalIcon, waitingIcon, true, true, lastSelectedFolder, null, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
             IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
@@ -914,7 +902,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                     SearchParametersDialog settingsDialog = new SearchParametersDialog(this, parentFrame, searchParameters,
                             normalIcon,
                             waitingIcon,
-                            false, true, configurationFile, lastSelectedFolder, fileName, true);
+                            false, true, lastSelectedFolder, fileName, true);
                     boolean valid = settingsDialog.validateParametersInput(false);
 
                     if (!valid) {
@@ -945,7 +933,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private void addAdvanced() {
         SearchParameters searchParameters = new SearchParameters();
         IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
-        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
         if (!identificationParametersEditionDialog.isCanceled()) {
             identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
             updateParametersInFactory(identificationParameters);
@@ -981,7 +969,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         String parametersName = identificationParameters.getName();
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
         SearchParametersDialog searchSettingsDialog = new SearchParametersDialog(this, parentFrame, searchParameters, 
-                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, parametersName, editable);
+                normalIcon, waitingIcon, true, true, lastSelectedFolder, parametersName, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters newSearchParameters = searchSettingsDialog.getSearchParameters();
             if (!searchParameters.equals(newSearchParameters)) {
@@ -1013,7 +1001,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         } else {
             String oldName = identificationParameters.getName();
             IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(
-                    this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+                    this, parentFrame, identificationParameters, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
             if (!identificationParametersEditionDialog.isCanceled()) {
                 identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
                 updateParametersInFactory(identificationParameters, oldName);

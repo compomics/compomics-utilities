@@ -1,6 +1,7 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
@@ -55,18 +56,17 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
-     * @param speciesOccurrence a map of the occurrence of species
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, HashMap<String, Integer> speciesOccurrence, boolean editable) {
+    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
         initComponents();
-        setUpGui(speciesOccurrence);
+        setUpGui();
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
@@ -78,29 +78,26 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param parentFrame a parent frame
      * @param genePreferences the gene preferences
      * @param searchParameters the search parameters
-     * @param speciesOccurrence a map of the occurrence of species
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, HashMap<String, Integer> speciesOccurrence, boolean editable) {
+    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
         this.genePreferences = genePreferences;
         this.searchParameters = searchParameters;
         initComponents();
-        setUpGui(speciesOccurrence);
+        setUpGui();
         setLocationRelativeTo(owner);
         setVisible(true);
     }
 
     /**
      * Sets up the GUI.
-     * 
-     * @param speciesOccurrence a map of the occurrence of species
      */
-    private void setUpGui(HashMap<String, Integer> speciesOccurrence) {
-        
+    private void setUpGui() {
+
         speciesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useMappingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         autoUpdateCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -118,6 +115,9 @@ public class GeneParametersDialog extends javax.swing.JDialog {
             int selectedIndex = 0;
 
             try {
+
+                FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile, searchParameters.getFastaParameters(), null); // @TODO use a progress bar?
+                HashMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
 
                 // Select the background species based on occurrence in the factory
                 for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
@@ -419,9 +419,9 @@ public class GeneParametersDialog extends javax.swing.JDialog {
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-            "Gene Annotation - Help");
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                "Gene Annotation - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

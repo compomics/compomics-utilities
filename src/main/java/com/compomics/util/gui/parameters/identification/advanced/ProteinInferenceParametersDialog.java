@@ -1,5 +1,6 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.gui.parameters.identification.search.SequenceDbDetailsDialog;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
@@ -43,6 +44,14 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
+    /**
+     * The selected fasta file.
+     */
+    private File selectedFastaFile = null;
+    /**
+     * The parameters used to parse the fasta file.
+     */
+    private FastaParameters fastaParameters = null;
 
     /**
      * Creates a new ProteinInferenceSettingsDialog with a frame as owner.
@@ -58,17 +67,24 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      */
     public ProteinInferenceParametersDialog(java.awt.Frame parentFrame, ProteinInferenceParameters proteinInferencePreferences,
             Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+
         super(parentFrame, true);
+
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
         this.editable = editable;
+
+        selectedFastaFile = proteinInferencePreferences.getProteinSequenceDatabase();
+        fastaParameters = proteinInferencePreferences.getFastaParameters();
+
         initComponents();
         setUpGui();
         populateGUI(proteinInferencePreferences);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
+
     }
 
     /**
@@ -170,7 +186,8 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     public ProteinInferenceParameters getProteinInferencePreferences() {
 
         ProteinInferenceParameters proteinInferencePreferences = new ProteinInferenceParameters();
-        proteinInferencePreferences.setProteinSequenceDatabase(new File(databaseSettingsTxt.getText()));
+        proteinInferencePreferences.setProteinSequenceDatabase(selectedFastaFile);
+        proteinInferencePreferences.setFastaParameters(fastaParameters);
 
         proteinInferencePreferences.setSimplifyGroups(simplifyGroupsCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsScore(simplifyScoreCmb.getSelectedIndex() == 0);
@@ -455,16 +472,23 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      */
     private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
 
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
+        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, selectedFastaFile, fastaParameters, lastSelectedFolder, editable, normalIcon, waitingIcon);
 
         boolean success = sequenceDbDetailsDialog.selectDB(true);
-        if (success) {
-            sequenceDbDetailsDialog.setVisible(true);
-            okButton.setEnabled(true);
-        }
 
-        if (sequenceFactory.getCurrentFastaFile() != null) {
-            databaseSettingsTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
+        if (success) {
+
+            sequenceDbDetailsDialog.setVisible(true);
+
+            if (!sequenceDbDetailsDialog.isCanceled()) {
+
+                selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
+                fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
+
+                databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
+                okButton.setEnabled(true);
+
+            }
         }
     }//GEN-LAST:event_editDatabaseDetailsButtonActionPerformed
 
@@ -515,9 +539,9 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/ProteinInferencePreferences.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-            "Protein Inference - Help");
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                "Protein Inference - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 

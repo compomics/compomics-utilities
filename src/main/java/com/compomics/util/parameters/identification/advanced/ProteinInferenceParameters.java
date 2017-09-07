@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import java.io.File;
 import java.io.Serializable;
 
@@ -19,6 +20,10 @@ public class ProteinInferenceParameters implements Serializable {
      * The database to use for protein inference.
      */
     private File proteinSequenceDatabase;
+    /**
+     * The parameters used to parse the fasta file.
+     */
+    private FastaParameters fastaParameters = null;
     /**
      * Simplify protein groups.
      */
@@ -236,5 +241,23 @@ public class ProteinInferenceParameters implements Serializable {
      */
     public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
         this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
+    }
+
+    /**
+     * Returns the parameters to use to parse the fasta file.
+     * 
+     * @return the parameters to use to parse the fasta file
+     */
+    public FastaParameters getFastaParameters() {
+        return fastaParameters;
+    }
+
+    /**
+     * Sets the parameters to use to parse the fasta file.
+     * 
+     * @param fastaParameters the parameters to use to parse the fasta file
+     */
+    public void setFastaParameters(FastaParameters fastaParameters) {
+        this.fastaParameters = fastaParameters;
     }
 }

@@ -1,7 +1,7 @@
 package com.compomics.util.gui.parameters.tools;
 
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.parameters.tools.ProcessingParameters;
+import com.compomics.util.parameters.tools.ProcessingParameters.ProcessingType;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
@@ -165,7 +165,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
 
         processingTypeLbl.setText("Execution");
 
-        processingTypeCmb.setModel(new DefaultComboBoxModel(com.compomics.util.parameters.ProcessingParameters.ProcessingType.values()));
+        processingTypeCmb.setModel(new DefaultComboBoxModel(ProcessingType.values()));
         processingTypeCmb.setEnabled(false);
 
         javax.swing.GroupLayout processingTypePanelLayout = new javax.swing.GroupLayout(processingTypePanel);

@@ -143,7 +143,7 @@ public class PhosphoRS {
         HashSet<Integer> possibleSitesSet = new HashSet<>(2);
 
         int peptideLength = peptide.getSequence().length();
-        HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
+        HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         for (Modification modification : modifications) {
             modificationSwitch:

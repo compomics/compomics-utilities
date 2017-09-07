@@ -357,7 +357,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         if (peptide.isModified()) {
 
-            HashMap<String, HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
+            HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
 

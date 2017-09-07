@@ -204,20 +204,30 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
 
-        HashMap<String,HashSet<Integer>> proteinMapping = peptide.getProteinMapping();
+        HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
+            
             boolean target = false;
             boolean decoy = false;
+            
             for (String accession : proteinMapping.keySet()) {
+                
                 if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
+                    
                     decoy = true;
+                    
                 } else {
+                    
                     target = true;
+                    
                 }
             }
+            
             if (target && decoy) {
+                
                 return false;
+                
             }
         }
 

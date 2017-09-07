@@ -3,7 +3,6 @@ package com.compomics.util.test.io;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.parameters.identification.search.PtmSettings;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.File;
@@ -67,8 +66,8 @@ public class TestSearchParameterMarshaller {
         parameters.setPrecursorAccuracy(0.5);
         parameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
         parameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
-        parameters.setMaxChargeSearched(new Charge(1, 5));
-        parameters.setMinChargeSearched(new Charge(1, 1));
+        parameters.setMaxChargeSearched(5);
+        parameters.setMinChargeSearched(1);
         parameters.setPtmSettings(createMockUpPTMSettings());
         parameters.setFastaFile(new File("T:/HIS/IS/A/FAKE/FASTA.FASTA"));
         return parameters;

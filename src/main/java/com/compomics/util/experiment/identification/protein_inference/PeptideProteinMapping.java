@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
@@ -230,7 +231,17 @@ public class PeptideProteinMapping {
             Peptide peptide = peptidesMap.get(peptideKey);
             
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
-            peptide.setProteinMapping(proteinMapping);
+            HashMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
+                    .collect(Collectors.toMap(Entry::getKey, 
+                            entry -> entry.getValue().stream()
+                            .mapToInt(Integer::intValue)
+                            .sorted()
+                            .toArray(), 
+                            null, 
+                            HashMap::new));
+                    
+                    
+            peptide.setProteinMapping(proteinMappingArray);
             
             HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMapping = variantsMap.get(peptideKey);
             peptide.setVariantMatches(variantMapping);

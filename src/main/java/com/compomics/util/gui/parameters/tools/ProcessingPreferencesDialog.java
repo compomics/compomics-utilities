@@ -1,6 +1,7 @@
 package com.compomics.util.gui.parameters.tools;
 
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
+import com.compomics.util.parameters.tools.ProcessingParameters;
 import com.compomics.util.parameters.tools.ProcessingParameters.ProcessingType;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;

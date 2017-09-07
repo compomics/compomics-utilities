@@ -52,7 +52,7 @@ public class Peptide extends ExperimentObject {
      * The mapping of this peptide on proteins as a map, accession to position.
      * Position on protein sequences is 0 based.
      */
-    private HashMap<String, HashSet<Integer>> proteinMapping = null;
+    private HashMap<String, int[]> proteinMapping = null;
     /**
      * The modifications carried by the peptide.
      */
@@ -204,7 +204,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping
      */
-    public HashMap<String, HashSet<Integer>> getProteinMapping() {
+    public HashMap<String, int[]> getProteinMapping() {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -218,7 +218,7 @@ public class Peptide extends ExperimentObject {
      * 
      * @param proteinMapping the proteins mapping
      */
-    public void setProteinMapping(HashMap<String, HashSet<Integer>> proteinMapping) {
+    public void setProteinMapping(HashMap<String, int[]> proteinMapping) {
         this.proteinMapping = proteinMapping;
     }
 

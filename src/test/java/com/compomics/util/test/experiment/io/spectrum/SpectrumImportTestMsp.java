@@ -5,8 +5,6 @@
  */
 package com.compomics.util.test.experiment.io.spectrum;
 
-
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -29,12 +27,8 @@ public class SpectrumImportTestMsp extends TestCase {
 
         Precursor precursor = spectrumFactory.getPrecursor("test.msp", " YDDMAAAMK/2");
 
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).value == 2);
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).sign == Charge.NEUTRAL);
-//        Assert.assertTrue(precursor.getPossibleCharges().get(1).value == 3);
-//        Assert.assertTrue(precursor.getPossibleCharges().get(1).sign == Charge.PLUS);
-//        Assert.assertTrue(precursor.getPossibleCharges().get(2).value == 4);
-//        Assert.assertTrue(precursor.getPossibleCharges().get(2).sign == Charge.MINUS);
+        Assert.assertTrue(precursor.getPossibleCharges().get(0) == 2);
+        
         Assert.assertTrue(precursor.getMz() == 498.5731);
         //Assert.assertTrue(precursor.getRt() == 218.6808);
 
@@ -42,8 +36,7 @@ public class SpectrumImportTestMsp extends TestCase {
 
 //        double rtMin = precursor.getRtWindow()[0];
 //        double rtMax = precursor.getRtWindow()[1];
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).value==3);
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).sign == Charge.NEUTRAL);
+        Assert.assertTrue(precursor.getPossibleCharges().get(0)==3);
         Assert.assertTrue(precursor.getMz() == 332.3821);
         
     }

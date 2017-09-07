@@ -12,4 +12,4 @@ derby.log
 /src/test/resources/*
 /docs
 =======
-/src/test/resources/
+!/src/test/resources/

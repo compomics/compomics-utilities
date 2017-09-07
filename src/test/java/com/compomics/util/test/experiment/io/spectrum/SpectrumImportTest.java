@@ -1,6 +1,5 @@
 package com.compomics.util.test.experiment.io.spectrum;
 
-import com.compomics.util.experiment.mass_spectrometry.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -25,12 +24,9 @@ public class SpectrumImportTest extends TestCase {
 
         Precursor precursor = spectrumFactory.getPrecursor("test.mgf", "controllerType=0 controllerNumber=1 scan=159");
 
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).value == 2);
-        Assert.assertTrue(precursor.getPossibleCharges().get(0).sign == Charge.PLUS);
-        Assert.assertTrue(precursor.getPossibleCharges().get(1).value == 3);
-        Assert.assertTrue(precursor.getPossibleCharges().get(1).sign == Charge.PLUS);
-        Assert.assertTrue(precursor.getPossibleCharges().get(2).value == 4);
-        Assert.assertTrue(precursor.getPossibleCharges().get(2).sign == Charge.MINUS);
+        Assert.assertTrue(precursor.getPossibleCharges().get(0) == 2);
+        Assert.assertTrue(precursor.getPossibleCharges().get(1) == 3);
+        Assert.assertTrue(precursor.getPossibleCharges().get(2) == 4);
         Assert.assertTrue(precursor.getMz() == 1060.86962890625);
         Assert.assertTrue(precursor.getRt() == 218.6808);
 

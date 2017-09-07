@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author Marc Vaudel
  */
-public abstract class Identification extends ExperimentObject {
+public class Identification extends ExperimentObject {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

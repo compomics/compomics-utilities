@@ -20,6 +20,7 @@ import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
 import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -159,11 +160,9 @@ public class SpectrumFactory {
      *
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the file
-     * @throws ClassNotFoundException Exception thrown whenever an error
-     * occurred while deserializing the index .cui file.
      *
      */
-    public void addSpectra(File spectrumFile) throws IOException, ClassNotFoundException {
+    public void addSpectra(File spectrumFile) throws IOException {
         addSpectra(spectrumFile, null);
     }
 
@@ -253,13 +252,8 @@ public class SpectrumFactory {
      * @param spectrumTitle the title of the spectrum
      *
      * @return the corresponding precursor
-     *
-     * @throws IOException exception thrown whenever the file was not parsed
-     * correctly
-     * @throws MzMLUnmarshallerException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public Precursor getPrecursor(String fileName, String spectrumTitle) throws IOException {
+    public Precursor getPrecursor(String fileName, String spectrumTitle) {
         return getPrecursor(fileName, spectrumTitle, true);
     }
 
@@ -271,26 +265,44 @@ public class SpectrumFactory {
      * @param save if true the precursor will be saved in cache
      *
      * @return the corresponding precursor
-     *
-     * @throws IOException exception thrown whenever the file was not parsed
-     * correctly
      */
-    public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) throws IOException {
+    public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) {
+        
         HashMap<String, Spectrum> fileSpectrumMap = currentSpectrumMap.get(fileName);
+        
         if (fileSpectrumMap != null) {
+            
             Spectrum spectrum = fileSpectrumMap.get(spectrumTitle);
+            
             if (spectrum != null) {
+                
                 return spectrum.getPrecursor();
+                
             }
         }
+        
         HashMap<String, Precursor> filePrecursorMap = loadedPrecursorsMap.get(fileName);
+        
         if (filePrecursorMap != null) {
+            
             Precursor currentPrecursor = filePrecursorMap.get(spectrumTitle);
+            
             if (currentPrecursor != null) {
+                
                 return currentPrecursor;
+                
             }
         }
+        
+        try {
+        
         return getPrecursor(fileName, spectrumTitle, save, 1);
+        
+        } catch (Exception e) {
+            
+            throw new RuntimeException(e);
+            
+        }
     }
 
     /**
@@ -298,11 +310,10 @@ public class SpectrumFactory {
      * cache.
      *
      * @param spectrumKey the key of the spectrum
+     * 
      * @return the corresponding precursor
-     * @throws IOException exception thrown whenever the file was not parsed
-     * correctly
      */
-    public Precursor getPrecursor(String spectrumKey) throws IOException {
+    public Precursor getPrecursor(String spectrumKey) {
         return getPrecursor(spectrumKey, true);
     }
 
@@ -311,6 +322,7 @@ public class SpectrumFactory {
      * in cache.
      *
      * @param spectrumKey the key of the spectrum
+     * 
      * @return the corresponding precursor mz
      */
     public double getPrecursorMz(String spectrumKey) {
@@ -339,6 +351,7 @@ public class SpectrumFactory {
      * Returns the maximum m/z for the desired file.
      *
      * @param fileName the file of interest
+     * 
      * @return the max m/z
      */
     public Double getMaxMz(String fileName) {
@@ -367,6 +380,7 @@ public class SpectrumFactory {
      * Returns the max precursor charge encountered for the given mgf file.
      *
      * @param fileName the name of the mgf file
+     * 
      * @return the max precursor charge encountered
      */
     public Integer getMaxCharge(String fileName) {
@@ -533,11 +547,10 @@ public class SpectrumFactory {
      * @param spectrumKey the key of the spectrum
      * @param save boolean indicating whether the loaded precursor should be
      * stored in the factory. False by default
+     * 
      * @return the corresponding precursor
-     * @throws IOException exception thrown whenever the file was not parsed
-     * correctly
      */
-    public Precursor getPrecursor(String spectrumKey, boolean save) throws IOException {
+    public Precursor getPrecursor(String spectrumKey, boolean save) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
         return getPrecursor(fileName, spectrumTitle, save);
@@ -598,7 +611,7 @@ public class SpectrumFactory {
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
      */
-    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, long waitingTime) throws IOException {
+    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, long waitingTime) throws IOException, MzMLUnmarshallerException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -698,8 +711,8 @@ public class SpectrumFactory {
                 throw new IllegalArgumentException("MS1 spectrum");
             } else {
                 //@TODO: is this correct..?
-                ArrayList<Charge> charges = new ArrayList<>();
-                charges.add(new Charge(Charge.PLUS, chargePrec));
+                ArrayList<Integer> charges = new ArrayList<>();
+                charges.add(chargePrec);
                 currentPrecursor = new Precursor(scanTime, mzPrec, charges);
             }
         } else {
@@ -724,30 +737,41 @@ public class SpectrumFactory {
      * @param spectrumTitle title of the spectrum
      *
      * @return the desired spectrum
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
      */
-    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException {
+    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) {
+        
         HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
+        
         if (fileMap != null) {
+            
             Spectrum currentSpectrum = fileMap.get(spectrumTitle);
+            
             if (currentSpectrum != null) {
+                
                 return currentSpectrum;
+                
             }
         }
-        return getSpectrum(spectrumFile, spectrumTitle, 1);
+        
+        try {
+        
+            return getSpectrum(spectrumFile, spectrumTitle, 1);
+        
+        } catch (Exception e) {
+            
+            throw new RuntimeException(e);
+            
+        }
     }
 
     /**
      * Returns the desired spectrum.
      *
      * @param spectrumKey key of the spectrum
+     * 
      * @return the desired spectrum
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
      */
-    public Spectrum getSpectrum(String spectrumKey) throws IOException {
+    public Spectrum getSpectrum(String spectrumKey) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
         return getSpectrum(fileName, spectrumTitle);
@@ -769,7 +793,7 @@ public class SpectrumFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException {
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, MzMLUnmarshallerException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -881,8 +905,8 @@ public class SpectrumFactory {
             for (int i = 0; i < mzNumbers.length; i++) {
                 peakList.put(mzNumbers[i].doubleValue(), new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
             }
-            ArrayList<Charge> charges = new ArrayList<>();
-            charges.add(new Charge(Charge.PLUS, chargePrec));
+            ArrayList<Integer> charges = new ArrayList<>();
+            charges.add(chargePrec);
             Precursor precursor = level == 1 ? null : new Precursor(scanTime, mzPrec, charges);
             currentSpectrum = new Spectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
             
@@ -914,6 +938,7 @@ public class SpectrumFactory {
      *
      * @param mgfIndex the mgf file index
      * @param directory the destination directory
+     * 
      * @throws IOException exception thrown whenever an error is encountered
      * while writing the file
      */
@@ -1084,11 +1109,8 @@ public class SpectrumFactory {
      * @param fileName the name of the file
      *
      * @return a map containing all the precursors of a gven file
-     *
-     * @throws java.io.IOException Exception thrown whenever an error occurs
-     * while reading a precursor
      */
-    public HashMap<String, Precursor> getPrecursorMap(String fileName) throws IOException {
+    public HashMap<String, Precursor> getPrecursorMap(String fileName) {
         HashMap<String, Precursor> precursorMap = new HashMap<>(getNSpectra(fileName));
         for (String spectrumtitle : getSpectrumTitles(fileName)) {
             Precursor precursor = getPrecursor(fileName, spectrumtitle);

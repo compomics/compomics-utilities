@@ -208,7 +208,20 @@ public class FastaParameters {
         }
         
         return true;
-    } 
+    }
+    
+    /**
+     * Sets default name and version from the given fasta file.
+     * 
+     * @param fastaFile the fasta file
+     */
+    public void setDefaultAttributes(File fastaFile) {
+
+        setName(Util.removeExtension(fastaFile.getName()));
+        setDescription(fastaFile.getAbsolutePath());
+        setVersion((new Date(fastaFile.lastModified())).toString());
+        
+    }
 
     /**
      * Infers the parameters used to parse the file.
@@ -223,10 +236,8 @@ public class FastaParameters {
     public static FastaParameters inferParameters(File fastaFile, WaitingHandler waitingHandler) throws IOException {
 
         FastaParameters fastaParameters = new FastaParameters();
-
-        fastaParameters.setName(Util.removeExtension(fastaFile.getName()));
-        fastaParameters.setDescription("");
-        fastaParameters.setVersion((new Date(fastaFile.lastModified())).toString());
+        
+        fastaParameters.setDefaultAttributes(fastaFile);
 
         HeaderIterator headerIterator = new HeaderIterator(fastaFile);
         String fastaHeader;

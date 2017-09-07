@@ -93,31 +93,29 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(sequence.equals("MASSSLQSLFSLFCLALFSLPLIVSSIGINYGQVANBLPPPKNVIPLLKSVGATKVKLYDADPQALRAFAGSGFELTVALGNEYLAQMSDPIKAQGWVKENVANDLPNTKIVAILVAIIVALLVALALTAALFPAMQSIHGALVDCGLNKQIFVTTAHSLAILDVSYPPSATSFRRDLLGSLTPILDFHVKTGSPILINAYPFFAYEENPKHVSLDFVLFQPNQGFTDPGSNFHYDNMLFAQVDAVYHALDAVGISYKKVPIVVSETGWPSNGDPQEVGATCDNARKYNGNLIKMMMSKKMRTPIRPECDLTIFVFALFNENMKPGPTSERNYGLFNPDGTPVYSLGIKTSSTHSSGSGSSNSTGGSSSGGGGNTGGSSSGGGIYQPVTGNPSPDYMSISSAGGKGRFVECVLFFFLLCIIKLRL"));
 
         peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingParameters.defaultStringMatching);
-        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
+        HashMap<String, HashMap<String, int[]>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
         Assert.assertTrue(testIndexes.size() == 1);
-        HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
+        HashMap<String, int[]> proteinMapping = testIndexes.get("SSS");
         Assert.assertTrue(proteinMapping.size() == 2);
-        ArrayList<Integer> indexes = proteinMapping.get("Q9FHX5");
-        Assert.assertTrue(indexes.size() == 3);
-        Collections.sort(indexes);
+        int[] indexes = proteinMapping.get("Q9FHX5");
+        Assert.assertTrue(indexes.length == 3);
         int index = sequence.indexOf("SSS");
-        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(indexes[0] == index);
         index += sequence.substring(index + 1).indexOf("SSS") + 1;
-        Assert.assertTrue(indexes.get(1) == index);
+        Assert.assertTrue(indexes[1] == index);
         index = sequence.lastIndexOf("SSS");
-        Assert.assertTrue(indexes.get(2) == index);
+        Assert.assertTrue(indexes[2] == index);
         indexes = proteinMapping.get("Q9FHX5_REVERSED");
         
         sequence = fmIndex.getSequence("Q9FHX5_REVERSED");
         Assert.assertTrue(sequence.equals("LRLKIICLLFFFLVCEVFRGKGGASSISMYDPSPNGTVPQYIGGGSSSGGTNGGGGSSSGGTSNSSGSGSSHTSSTKIGLSYVPTGDPNFLGYNRESTPGPKMNENFLAFVFITLDCEPRIPTRMKKSMMMKILNGNYKRANDCTAGVEQPDGNSPWGTESVVIPVKKYSIGVADLAHYVADVQAFLMNDYHFNSGPDTFGQNPQFLVFDLSVHKPNEEYAFFPYANILIPSGTKVHFDLIPTLSGLLDRRFSTASPPYSVDLIALSHATTVFIQKNLGCDVLAGHISQMAPFLAATLALAVLLAVIIAVLIAVIKTNPLDNAVNEKVWGQAKIPDSMQALYENGLAVTLEFGSGAFARLAQPDADYLKVKTAGVSKLLPIVNKPPPLBNAVQGYNIGISSVILPLSFLALCFLSFLSQLSSSAM"));
-        Assert.assertTrue(indexes.size() == 3);
-        Collections.sort(indexes);
+        Assert.assertTrue(indexes.length == 3);
         index = sequence.indexOf("SSS");
-        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(indexes[0] == index);
         index += sequence.substring(index + 1).indexOf("SSS") + 1;
-        Assert.assertTrue(indexes.get(1) == index);
+        Assert.assertTrue(indexes[1] == index);
         index = sequence.lastIndexOf("SSS");
-        Assert.assertTrue(indexes.get(2) == index);
+        Assert.assertTrue(indexes[2] == index);
 
     }
 

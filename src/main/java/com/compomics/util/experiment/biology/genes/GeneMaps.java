@@ -2,8 +2,7 @@ package com.compomics.util.experiment.biology.genes;
 
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -46,12 +45,12 @@ public class GeneMaps implements Serializable {
      * Creates new maps.
      */
     public GeneMaps() {
-        ensemblVersionsMap = new HashMap<String, String>();
-        geneNameToEnsemblIdMap = new HashMap<String, String>();
-        geneNameToChromosomeMap = new HashMap<String, String>();
-        proteinToGoMap = new HashMap<String, HashSet<String>>();
-        goAccessionToProteinMap = new HashMap<String, HashSet<String>>();
-        goNamesMap = new HashMap<String, String>();
+        ensemblVersionsMap = new HashMap<>();
+        geneNameToEnsemblIdMap = new HashMap<>();
+        geneNameToChromosomeMap = new HashMap<>();
+        proteinToGoMap = new HashMap<>();
+        goAccessionToProteinMap = new HashMap<>();
+        goNamesMap = new HashMap<>();
     }
 
     /**
@@ -75,7 +74,7 @@ public class GeneMaps implements Serializable {
         for (String accession : otherMap.keySet()) {
             HashSet<String> goTerms = proteinToGoMap.get(accession);
             if (goTerms == null) {
-                goTerms = new HashSet<String>();
+                goTerms = new HashSet<>();
                 proteinToGoMap.put(accession, goTerms);
             }
             goTerms.addAll(otherMap.get(accession));
@@ -84,7 +83,7 @@ public class GeneMaps implements Serializable {
         for (String accession : otherMap.keySet()) {
             HashSet<String> proteins = goAccessionToProteinMap.get(accession);
             if (proteins == null) {
-                proteins = new HashSet<String>();
+                proteins = new HashSet<>();
                 proteinToGoMap.put(accession, proteins);
             }
             proteins.addAll(otherMap.get(accession));
@@ -200,24 +199,6 @@ public class GeneMaps implements Serializable {
     }
 
     /**
-     * Returns the gene name for a given protein accession. The protein must be
-     * from a Uniprot fasta file loaded in the SequenceFactory.
-     *
-     * @param accession the protein accession
-     *
-     * @return the gene name
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the fasta file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
-     */
-    public String getGeneNameForProtein(String accession) throws IOException, InterruptedException {
-        Header header = SequenceFactory.getInstance().getHeader(accession);
-        return header.getGeneName();
-    }
-
-    /**
      * Returns the Ensembl ID corresponding to the given gene name. Null if not
      * found.
      *
@@ -297,16 +278,11 @@ public class GeneMaps implements Serializable {
      * @param proteinAccession a protein accession
      *
      * @return the go terms names
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover.
      */
-    public HashSet<String> getGoNamesForProtein(String proteinAccession) throws IOException, InterruptedException {
+    public HashSet<String> getGoNamesForProtein(String proteinAccession) {
         HashSet<String> goTerms = getGoTermsForProtein(proteinAccession);
         if (goTerms != null) {
-            HashSet<String> goNames = new HashSet<String>(goTerms.size());
+            HashSet<String> goNames = new HashSet<>(goTerms.size());
             for (String goTerm : goTerms) {
                 String goName = getNameForGoTerm(goTerm);
                 if (goName != null) {

@@ -1,10 +1,10 @@
 package com.compomics.software.settings;
 
-import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.pride.PrideObjectsFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -190,13 +190,13 @@ public class UtilitiesPathPreferences {
                 PrideObjectsFactory.setPrideFolder(path);
                 return;
             case ptmFactoryKey:
-                PTMFactory.setSerializationFolder(path);
+                ModificationFactory.setSerializationFolder(path);
                 return;
             case enzymeFactoryKey:
                 EnzymeFactory.setSerializationFile(path);
                 return;
             case utilitiesPreferencesKey:
-                UtilitiesUserPreferences.setUserPreferencesFolder(path);
+                UtilitiesUserParameters.setUserParametersFolder(path);
                 return;
             case identificationParametersKey:
                 IdentificationParametersFactory.setParentFolder(path);
@@ -220,11 +220,11 @@ public class UtilitiesPathPreferences {
             case prideAnnotationKey:
                 return PrideObjectsFactory.getPrideFolder();
             case ptmFactoryKey:
-                return PTMFactory.getSerializationFolder();
+                return ModificationFactory.getSerializationFolder();
             case enzymeFactoryKey:
                 return EnzymeFactory.getSerializationFile();
             case utilitiesPreferencesKey:
-                return UtilitiesUserPreferences.getUserPreferencesFolder();
+                return UtilitiesUserParameters.getUserParametersFolder();
             case identificationParametersKey:
                 return IdentificationParametersFactory.getParentFolder();
             default:
@@ -341,7 +341,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case ptmFactoryKey:
-                toWrite = PTMFactory.getSerializationFolder();
+                toWrite = ModificationFactory.getSerializationFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }
@@ -355,7 +355,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case utilitiesPreferencesKey:
-                toWrite = UtilitiesUserPreferences.getUserPreferencesFolder();
+                toWrite = UtilitiesUserParameters.getUserParametersFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }
@@ -427,7 +427,7 @@ public class UtilitiesPathPreferences {
      * loading the path configuration
      */
     public static ArrayList<PathKey> getErrorKeys() throws IOException {
-        ArrayList<PathKey> result = new ArrayList<PathKey>();
+        ArrayList<PathKey> result = new ArrayList<>();
         for (UtilitiesPathPreferences.UtilitiesPathKey utilitiesPathKey : UtilitiesPathPreferences.UtilitiesPathKey.values()) {
             String folder = UtilitiesPathPreferences.getPathPreference(utilitiesPathKey);
             if (folder != null && !testPath(folder)) {

@@ -1,12 +1,14 @@
 package com.compomics.util.gui.atoms;
 
-import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.AtomImpl;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.biology.atoms.AtomImpl;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import no.uib.jsparklines.renderers.util.Util;
@@ -110,41 +112,48 @@ public class AtomChainDialog extends javax.swing.JDialog {
         }
 
         if (!atomChainAdded.getAtomChain().isEmpty()) {
-            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
 
-            for (AtomImpl tempAtom : atomChainAdded.getAtomChain()) {
-                if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                            atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = new ArrayList<Integer>();
-                    tempList.add(tempAtom.getIsotope());
-                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                            atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
-                    tempList.add(tempAtom.getIsotope());
-                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+            HashMap<String, HashSet<Integer>> atomsAdded = new HashMap<String, HashSet<Integer>>(4);
+
+            for (AtomImpl tempAtomImpl : atomChainAdded.getAtomChain()) {
+
+                String atomSymbol = tempAtomImpl.getAtomSymbol();
+                Atom atom = Atom.getAtom(atomSymbol);
+                HashSet<Integer> isotopeList = atomsAdded.get(atomSymbol);
+
+                if (isotopeList == null) {
+                    elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
+                            atomChainAdded.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
+                    isotopeList = new HashSet<Integer>(2);
+                    isotopeList.add(tempAtomImpl.getIsotope());
+                    atomsAdded.put(atomSymbol, isotopeList);
+                } else if (!isotopeList.contains(tempAtomImpl.getIsotope())) {
+                    elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
+                            atomChainAdded.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
+                    isotopeList.add(tempAtomImpl.getIsotope());
                 }
             }
         }
 
         if (!atomChainRemoved.getAtomChain().isEmpty()) {
-            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
+            HashMap<String, HashSet<Integer>> atomsRemoved = new HashMap<String, HashSet<Integer>>(4);
 
-            for (AtomImpl tempAtom : atomChainRemoved.getAtomChain()) {
-                if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                            -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = new ArrayList<Integer>();
-                    tempList.add(tempAtom.getIsotope());
-                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
-                } else if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
-                            -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
-                    ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
-                    tempList.add(tempAtom.getIsotope());
-                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+            for (AtomImpl tempAtomImpl : atomChainRemoved.getAtomChain()) {
+
+                String atomSymbol = tempAtomImpl.getAtomSymbol();
+                Atom atom = Atom.getAtom(atomSymbol);
+                HashSet<Integer> isotopeList = atomsRemoved.get(atomSymbol);
+
+                if (isotopeList == null) {
+                    elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
+                            -atomChainRemoved.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
+                    isotopeList = new HashSet<Integer>(2);
+                    isotopeList.add(tempAtomImpl.getIsotope());
+                    atomsRemoved.put(atomSymbol, isotopeList);
+                } else if (!isotopeList.contains(tempAtomImpl.getIsotope())) {
+                    elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
+                            -atomChainRemoved.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
+                    isotopeList.add(tempAtomImpl.getIsotope());
                 }
             }
         }

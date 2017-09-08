@@ -1,8 +1,8 @@
 package com.compomics.util.experiment;
 
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,7 +167,7 @@ public class ShotgunProtocol implements Serializable {
      */
     public void addLabel(String ptmName, boolean complete) {
         if (labellingPtms == null) {
-            labellingPtms = new HashMap<String, Boolean>(1);
+            labellingPtms = new HashMap<>(1);
         }
         labellingPtms.put(ptmName, complete);
     }

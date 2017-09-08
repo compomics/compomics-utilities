@@ -19,12 +19,12 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * The sample assignment to the various reporter ions indexed by their name.
      */
-    private HashMap<String, Sample> sampleAssignement = new HashMap<String, Sample>();
+    private HashMap<String, Sample> sampleAssignement = new HashMap<>();
     /**
      * The sample index map. The key is the sample reference and the element the
      * index as a zero based integer.
      */
-    private HashMap<String, Integer> sampleIndexes = new HashMap<String, Integer>();
+    private HashMap<String, Integer> sampleIndexes = new HashMap<>();
     /**
      * List of control samples. The index should be the same as for the sample
      * assignment.
@@ -67,7 +67,7 @@ public class ReporterIonQuantification extends Quantification {
      */
     public Integer getSampleIndex(String sampleReference) {
         if (sampleIndexes == null) {
-            sampleIndexes = new HashMap<String, Integer>();
+            sampleIndexes = new HashMap<>();
         }
         return sampleIndexes.get(sampleReference);
     }
@@ -80,7 +80,7 @@ public class ReporterIonQuantification extends Quantification {
      */
     public void setSampleIndex(String sampleReference, Integer index) {
         if (sampleIndexes == null) {
-            sampleIndexes = new HashMap<String, Integer>();
+            sampleIndexes = new HashMap<>();
         }
         sampleIndexes.put(sampleReference, index);
     }

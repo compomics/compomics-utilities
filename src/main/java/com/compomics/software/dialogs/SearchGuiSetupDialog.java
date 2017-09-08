@@ -5,7 +5,7 @@ import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
     /**
      * The selected folder.
      */
@@ -87,17 +87,17 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
-        if (utilitiesUserPreferences.getSearchGuiPath() == null) {
+        if (utilitiesUserParameters.getSearchGuiPath() == null) {
             boolean downloaded = downloadSearchGUI();
             if (downloaded) {
                 dialogCanceled = false;
             } else {
                 // display the current searchgui path
-                if (utilitiesUserPreferences != null) {
-                    searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
-                    lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
+                if (utilitiesUserParameters != null) {
+                    searchGuiInstallationJTextField.setText(utilitiesUserParameters.getSearchGuiPath());
+                    lastSelectedFolder = utilitiesUserParameters.getSearchGuiPath();
                 }
 
                 setVisible(true);
@@ -105,9 +105,9 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
         } else {
 
             // display the current searchgui path
-            if (utilitiesUserPreferences != null) {
-                searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
-                lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
+            if (utilitiesUserParameters != null) {
+                searchGuiInstallationJTextField.setText(utilitiesUserParameters.getSearchGuiPath());
+                lastSelectedFolder = utilitiesUserParameters.getSearchGuiPath();
             }
 
             setVisible(true);
@@ -361,9 +361,9 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        utilitiesUserPreferences.setSearchGuiPath(searchGuiInstallationJTextField.getText());
+        utilitiesUserParameters.setSearchGuiPath(searchGuiInstallationJTextField.getText());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -482,10 +482,10 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
             String installPath = "user.home";
             
-            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
-                if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
-                        && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
-                    installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();
+            if (utilitiesUserParameters.getPeptideShakerPath() != null) {
+                if (new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile() != null
+                        && new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
+                    installPath = new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile().getParent();
                 }
             }
 

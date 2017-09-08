@@ -12,7 +12,7 @@ public abstract class ExceptionHandler {
     /**
      * List of caught exceptions.
      */
-    protected HashSet<String> exceptionCaught = new HashSet<String>();
+    protected HashSet<String> exceptionCaught = new HashSet<>();
     /**
      * If true exceptions will be ignored.
      */

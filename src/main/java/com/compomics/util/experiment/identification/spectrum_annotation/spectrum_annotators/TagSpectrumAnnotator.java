@@ -1,28 +1,28 @@
 package com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.biology.MassGap;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
-import java.io.IOException;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.MathException;
 
 /**
  * Annotates a spectrum with information from a tag.
@@ -52,7 +52,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param precursorCharge the new precursor charge
      */
     public void setTag(Tag newTag, int precursorCharge) {
-        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingPreferences.defaultStringMatching) || this.precursorCharge != precursorCharge) {
+        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingParameters.defaultStringMatching) || this.precursorCharge != precursorCharge) {
 
             // Set new values
             this.tag = newTag;
@@ -74,18 +74,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * to peptide mapping
      *
      * @return the expected possible neutral losses
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings)
-            throws IOException, InterruptedException, ClassNotFoundException {
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingParameters ptmSequenceMatchingSettings) {
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        ModificationFactory pTMFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
         int tagLength = tag.getLengthInAminoAcid();
@@ -180,9 +172,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
                 for (int i = 1; i <= aminoAcidPattern.length(); i++) {
                     for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
-                        PTM ptm = pTMFactory.getPTM(modificationMatch.getTheoreticPtm());
+                        Modification ptm = pTMFactory.getModification(modificationMatch.getModification());
                         if (ptm == null) {
-                            throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
+                            throw new IllegalArgumentException("PTM " + modificationMatch.getModification() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                             ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings); // @TODO: could end in a null pointer?
@@ -205,7 +197,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     /**
-     * Returns the spectrum annotations of a spectrum in a list of IonMatches.
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches using an intensity filter.
      *
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
@@ -218,17 +210,39 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
+            Spectrum spectrum, Tag tag) {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, true);
+    }
 
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+    /**
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches.
+     *
+     * Note that, except for +1 precursors, fragments ions will be expected to
+     * have a charge strictly smaller than the precursor ion charge.
+     *
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param spectrum the spectrum to match
+     * @param tag the tag of interest
+     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     *
+     * @return an ArrayList of IonMatch containing the ion matches with the
+     * given settings
+     */
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
+            Spectrum spectrum, Tag tag, boolean useIntensityFilter) {
+
+        ArrayList<IonMatch> result = new ArrayList<>();
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
+            double intensityLimit = useIntensityFilter ? spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()) : 0.0;
+            setSpectrum(spectrum, intensityLimit);
         }
         setTag(tag, specificAnnotationSettings.getPrecursorCharge());
 
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
 
         // we have to keep the precursor charges separate from the fragment ion charges
         for (int i = 1; i <= precursorCharge; i++) {
@@ -276,7 +290,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
-        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag);
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter) {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }
 }

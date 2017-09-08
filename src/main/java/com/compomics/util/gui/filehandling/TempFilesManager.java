@@ -32,7 +32,7 @@ public class TempFilesManager {
      * @throws IOException if an IOException occurs
      */
     public static void deleteTempFolders() throws IOException {
-        ArrayList<String> exceptions = new ArrayList<String>();
+        ArrayList<String> exceptions = new ArrayList<>();
         for (File tempFolder : tempFolders) {
             try {
                 if (tempFolder.exists()) {

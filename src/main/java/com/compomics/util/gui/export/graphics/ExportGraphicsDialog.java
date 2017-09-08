@@ -4,7 +4,7 @@ import com.compomics.util.Export;
 import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.export.ExportWriter;
-import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.io.file.LastSelectedFolder;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;

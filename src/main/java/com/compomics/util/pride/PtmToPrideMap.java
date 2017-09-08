@@ -1,7 +1,7 @@
 package com.compomics.util.pride;
 
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Map of the CV terms indexed by modification user name.
      */
-    private HashMap<String, CvTerm> modToCvMap = new HashMap<String, CvTerm>();
+    private HashMap<String, CvTerm> modToCvMap = new HashMap<>();
 
     /**
      * Constructor.

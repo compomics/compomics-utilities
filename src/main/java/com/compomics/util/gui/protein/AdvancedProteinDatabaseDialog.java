@@ -1,7 +1,7 @@
 package com.compomics.util.gui.protein;
 
 import com.compomics.util.Util;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -20,7 +20,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     /**
      * The user preferences.
      */
-    private UtilitiesUserPreferences userPreferences;
+    private UtilitiesUserParameters userPreferences;
 
     /**
      * Creates a new AdvancedProteinDatabaseDialog.
@@ -39,7 +39,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * Initiates the GUI.
      */
     private void initGUI() {
-        userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        userPreferences = UtilitiesUserParameters.loadUserParameters();
         dbFolder = new File(System.getProperty("user.home") + "/.compomics/proteins/indexes/");
         updateText();
     }
@@ -218,10 +218,9 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        UtilitiesUserPreferences tempUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        tempUserPreferences.setProteinTreeFolder(dbFolder);
-        tempUserPreferences.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
-        UtilitiesUserPreferences.saveUserPreferences(tempUserPreferences);
+        UtilitiesUserParameters tempUserParameters = UtilitiesUserParameters.loadUserParameters();
+        tempUserParameters.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
+        UtilitiesUserParameters.saveUserParameters(tempUserParameters);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -255,7 +254,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         int outcome = JOptionPane.showConfirmDialog(this, "This operation cannot be undone, continue?", "Warning", JOptionPane.WARNING_MESSAGE);
 
         if (outcome == JOptionPane.YES_OPTION) {
-            ArrayList<String> notDeleted = new ArrayList<String>();
+            ArrayList<String> notDeleted = new ArrayList<>();
             for (File file : dbFolder.listFiles()) {
                 boolean success = false;
                 try {

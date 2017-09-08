@@ -12,6 +12,7 @@
  */
 package com.compomics.util.protein;
 
+import com.compomics.util.experiment.io.biology.protein.Header;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
@@ -127,7 +128,7 @@ public class Enzyme implements Cloneable {
      * @param enzyme The com.compomics.util.experiment.biology.Enzyme enzyme
      * @param maxMissedCleavages The maximum number of missed cleavages
      */
-    public Enzyme(com.compomics.util.experiment.biology.Enzyme enzyme, int maxMissedCleavages) {
+    public Enzyme(com.compomics.util.experiment.biology.enzymes.Enzyme enzyme, int maxMissedCleavages) {
 
         String position = "", cleavage = "", restrict = "";
 

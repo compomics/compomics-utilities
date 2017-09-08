@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation;
 
-import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.SequestFragmentationModel;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.UniformFragmentation;
 

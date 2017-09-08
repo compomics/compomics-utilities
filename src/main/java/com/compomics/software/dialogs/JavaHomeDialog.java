@@ -1,7 +1,7 @@
 package com.compomics.software.dialogs;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -277,10 +277,10 @@ public class JavaHomeDialog extends javax.swing.JDialog {
 
                 if (outcome == JOptionPane.OK_OPTION) {
 
-                    javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setJavaHome(newJavaHome);
+                    javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().setJavaHome(newJavaHome);
 
                     try {
-                        UtilitiesUserPreferences.saveUserPreferences(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

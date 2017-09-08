@@ -399,7 +399,7 @@
             <version>2.2</version>
         </dependency>
         
-        <!-- ZooDB as the new backend -->
+        <!-- ZooDB as object database -->
         <dependency>
             <groupId>org.zoodb</groupId>
             <artifactId>zoodb</artifactId>

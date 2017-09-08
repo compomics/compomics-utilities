@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.AmbiguousSequenceIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
@@ -130,7 +130,7 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
         
         // Get the next sequence
         char[] sequence = ambiguousSequenceIterator.getNextSequence();

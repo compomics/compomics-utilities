@@ -2,7 +2,7 @@ package com.compomics.util.gui.error_handlers;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.io.file.LastSelectedFolder;
 import java.io.*;
 import java.util.Date;
 import javax.swing.JDialog;

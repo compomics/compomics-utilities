@@ -6,11 +6,9 @@ import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
-import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.preferences.GenePreferences;
-import com.compomics.util.protein.Header;
+import com.compomics.util.parameters.identification.advanced.GeneParameters;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,6 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 /**
  * Class used to map proteins to gene information.
@@ -34,11 +33,7 @@ import java.util.HashSet;
  * @author Harald Barsnes
  */
 public class GeneFactory {
-
-    /**
-     * The instance of the factory.
-     */
-    private static GeneFactory instance = null;
+    
     /**
      * The separator used to separate line contents.
      */
@@ -78,21 +73,9 @@ public class GeneFactory {
     private final String PADDING = "    ";
 
     /**
-     * Static method returning the instance of the factory.
-     *
-     * @return the instance of the factory
-     */
-    public static GeneFactory getInstance() {
-        if (instance == null) {
-            instance = new GeneFactory();
-        }
-        return instance;
-    }
-
-    /**
      * Constructor.
      */
-    private GeneFactory() {
+    public GeneFactory() {
     }
 
     /**
@@ -111,7 +94,7 @@ public class GeneFactory {
         if (ensemblVersionsFile.exists()) {
             loadEnsemblSpeciesVersions(ensemblVersionsFile);
         } else {
-            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap = new HashMap<>();
         }
 
         createDefaultGeneMappingFiles(
@@ -123,9 +106,11 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the gene maps for the FASTA file loaded in the factory.
+     * Returns the gene maps for the given proteins. For every protein, the species must be given as well as the gene name, in the format used in a Uniprot fasta file.
      *
      * @param genePreferences the gene preferences
+     * @param proteinSpeciesMap the protein to species map
+     * @param proteinGeneMap the protein to gene map
      * @param waitingHandler waiting handler displaying progress for the
      * download and allowing canceling of the progress.
      *
@@ -135,21 +120,21 @@ public class GeneFactory {
      * or writing data.
      * @throws java.lang.InterruptedException exception thrown whenever a threading issue occurs.
      */
-    public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException, InterruptedException {
+    public GeneMaps getGeneMaps(GeneParameters genePreferences, HashMap<String, String> proteinSpeciesMap, HashMap<String, String> proteinGeneMap, WaitingHandler waitingHandler) throws IOException, InterruptedException {
 
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
-        HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
-        HashMap<String, GeneMapping> geneMappings = new HashMap<String, GeneMapping>(speciesOccurrence.size());
-        HashMap<String, GoMapping> goMappings = new HashMap<String, GoMapping>(speciesOccurrence.size());
+        HashMap<String, GeneMapping> geneMappings = new HashMap<>(proteinSpeciesMap.size());
+        HashMap<String, GoMapping> goMappings = new HashMap<>(proteinSpeciesMap.size());
 
+        HashSet<String> species = new HashSet<>(proteinSpeciesMap.values());
+        
         // download/update species mapping, put them in maps per species
-        for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+        for (String uniprotTaxonomy : species) {
 
             if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
 
                 try {
+                    
                     Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
 
                     if (taxon != null) {
@@ -214,21 +199,24 @@ public class GeneFactory {
 
         // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
+        
         if (ensemblVersionsMap == null) {
-            ensemblVersionsMap = new HashMap<String, String>();
+            
+            ensemblVersionsMap = new HashMap<>(1);
+            
         }
-        HashMap<String, String> ensemblVersionsUsed = new HashMap<String, String>(ensemblVersionsMap);
-        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<String, String>();
-        HashMap<String, String> geneNameToChromosomeMap = new HashMap<String, String>();
-        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<String, HashSet<String>>();
-        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<String, HashSet<String>>();
-        HashMap<String, String> goNamesMap = new HashMap<String, String>();
-        SequenceFactory.HeaderIterator it = sequenceFactory.getHeaderIterator(true);
+        
+        HashMap<String, String> ensemblVersionsUsed = new HashMap<>(ensemblVersionsMap);
+        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<>(proteinGeneMap.size());
+        HashMap<String, String> geneNameToChromosomeMap = new HashMap<>(proteinGeneMap.size());
+        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<>(proteinGeneMap.size());
+        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<>(proteinGeneMap.size());
+        HashMap<String, String> goNamesMap = new HashMap<>(proteinGeneMap.size());
 
-        while (it.hasNext()) {
+        for (Entry<String, String> entry : proteinSpeciesMap.entrySet()) {
 
-            Header header = it.getNext();
-            String uniprotTaxonomy = header.getTaxonomy();
+            String accession = entry.getKey();
+            String uniprotTaxonomy = entry.getValue();
 
             if (uniprotTaxonomy != null && !uniprotTaxonomy.equals("")) {
 
@@ -239,51 +227,81 @@ public class GeneFactory {
 
                         String speciesName = speciesFactory.getName(taxon);
 
-                        String geneName = header.getGeneName();
+                        String geneName = proteinGeneMap.get(accession);
+                        
                         if (geneName != null) {
+                            
                             GeneMapping geneMapping = geneMappings.get(speciesName);
+                            
                             if (geneMapping != null) {
+                                
                                 String chromosome = geneMapping.getChromosome(geneName);
+                                
                                 if (chromosome != null) {
+                                    
                                     geneNameToChromosomeMap.put(geneName, chromosome);
+                                    
                                 }
+                                
                                 String ensemblId = geneMapping.getEnsemblAccession(geneName);
+                                
                                 if (ensemblId != null) {
+                                    
                                     geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                                    
                                 }
                             }
                         }
 
                         GoMapping goMapping = goMappings.get(speciesName);
+                        
                         if (goMapping != null) {
-                            String accession = header.getAccession();
+                            
                             HashSet<String> goTerms = proteinToGoMap.get(accession);
+                            
                             if (goTerms == null) {
-                                goTerms = new HashSet<String>();
+                                
+                                goTerms = new HashSet<>(1);
                                 proteinToGoMap.put(accession, goTerms);
+                                
                             }
+                            
                             HashSet<String> newTerms = goMapping.getGoAccessions(accession);
+                            
                             if (newTerms != null) {
+                                
                                 goTerms.addAll(newTerms);
+                                
                                 for (String goTerm : newTerms) {
+                                    
                                     String goName = goMapping.getTermName(goTerm);
+                                    
                                     if (goName != null) {
+                                        
                                         goNamesMap.put(goTerm, goName);
+                                        
                                     }
 
                                     HashSet<String> proteins = goToProteinMap.get(goTerm);
+                                    
                                     if (proteins == null) {
-                                        proteins = new HashSet<String>();
+                                        
+                                        proteins = new HashSet<>(1);
                                         goToProteinMap.put(goTerm, proteins);
+                                        
                                     }
+                                    
                                     proteins.add(accession);
+                                    
                                 }
                             }
                         }
                     }
                 } catch (Exception e) {
+                    
                     // Taxon not available, ignore
                     e.printStackTrace();
+                    
                 }
             }
         }
@@ -329,6 +347,7 @@ public class GeneFactory {
                 + "</Query>";
 
         String waitingText = "Downloading gene sequences. Please Wait...";
+        
         return queryEnsembl(requestXml, waitingText, destinationFile, ensemblType, waitingHandler);
     }
 
@@ -759,7 +778,7 @@ public class GeneFactory {
     public void updateEnsemblVersion(String ensemblDatasetName, String ensemblVersion) throws IOException {
 
         if (ensemblVersionsMap == null) {
-            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap = new HashMap<>();
         }
         ensemblVersionsMap.put(ensemblDatasetName, ensemblVersion);
 
@@ -828,7 +847,7 @@ public class GeneFactory {
         try {
             BufferedReader br = new BufferedReader(r);
             try {
-                ensemblVersionsMap = new HashMap<String, String>();
+                ensemblVersionsMap = new HashMap<>();
                 String line = br.readLine();
 
                 while (line != null) {
@@ -848,20 +867,33 @@ public class GeneFactory {
      * Returns the Ensembl URL for the given Ensembl (sub-)version.
      *
      * @param ensemblType the Ensembl type, e.g., fungi or plants
+     * 
      * @return the Ensembl URL
-     * @throws MalformedURLException
+     * 
+     * @throws MalformedURLException exception thrown if the URL is malformed
      */
     private URL getEnsemblUrl(String ensemblType) throws MalformedURLException {
+        
         if (ensemblType.equalsIgnoreCase("fungi")) {
+            
             return new URL("http://fungi.ensembl.org/biomart/martservice/result");
+            
         } else if (ensemblType.equalsIgnoreCase("plants")) {
+            
             return new URL("http://plants.ensembl.org/biomart/martservice/result");
+            
         } else if (ensemblType.equalsIgnoreCase("protists")) {
+            
             return new URL("http://protists.ensembl.org/biomart/martservice/result");
+            
         } else if (ensemblType.equalsIgnoreCase("metazoa")) {
+            
             return new URL("http://metazoa.ensembl.org/biomart/martservice/result");
+            
         } else {
+            
             return new URL("http://www.ensembl.org/biomart/martservice/result");
+            
         }
     }
 

@@ -3,18 +3,18 @@
  */
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.biology.MassGap;
+import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
@@ -23,6 +23,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /*
  * CVS information:
@@ -545,8 +546,8 @@ public class SpectrumPanel extends GraphicsPanel {
     private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
         if (dataSetCounter == 0) {
-            iXAxisData = new ArrayList<double[]>();
-            iYAxisData = new ArrayList<double[]>();
+            iXAxisData = new ArrayList<>();
+            iYAxisData = new ArrayList<>();
         }
 
         iDataPointAndLineColor.add(dataPointAndLineColor);
@@ -831,10 +832,10 @@ public class SpectrumPanel extends GraphicsPanel {
      */
     public static void setIonColor(Ion ion, Color color) {
         if (!colorMap.containsKey(ion.getType())) {
-            colorMap.put(ion.getType(), new HashMap<Integer, HashMap<String, Color>>());
+            colorMap.put(ion.getType(), new HashMap<>());
         }
         if (!colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
-            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<String, Color>());
+            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<>());
         }
         colorMap.get(ion.getType()).get(ion.getSubType()).put(ion.getNeutralLossesAsString(), color);
     }
@@ -1432,7 +1433,10 @@ public class SpectrumPanel extends GraphicsPanel {
             }
         }
 
-        ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes(excludeFixedPtms);
+        HashSet<Integer> modifiedIndexes = currentPeptide.getModificationMatches().stream()
+                .filter(modificationMatch -> !excludeFixedPtms | modificationMatch.getVariable())
+                .map(modificationMatch -> modificationMatch.getModificationSite())
+                .collect(Collectors.toCollection(HashSet::new));
 
         // add reverse ion de novo tags (x, y or z)
         if (showRewindTags) {
@@ -1530,8 +1534,8 @@ public class SpectrumPanel extends GraphicsPanel {
         int rewindIon = aRewindIon;
         int deNovoCharge = aDeNovoCharge;
         // @TODO: include multiple ions
-        HashMap<Integer, IonMatch> forwardMap = new HashMap<Integer, IonMatch>();
-        HashMap<Integer, IonMatch> rewindMap = new HashMap<Integer, IonMatch>();
+        HashMap<Integer, IonMatch> forwardMap = new HashMap<>();
+        HashMap<Integer, IonMatch> rewindMap = new HashMap<>();
         for (IonMatch ionMatch : annotations) {
             if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
                     && !ionMatch.ion.hasNeutralLosses()
@@ -1620,7 +1624,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
         }
 
-        ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
+        ArrayList<TagComponent> reversedTag = new ArrayList<>(tag.getContent());
         Collections.reverse(reversedTag);
 
         // add reverse annotation

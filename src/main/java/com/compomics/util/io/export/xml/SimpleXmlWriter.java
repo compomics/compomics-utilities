@@ -19,7 +19,7 @@ public class SimpleXmlWriter {
     /**
      * Cache for the indents.
      */
-    private HashMap<Integer, String> indentMap = new HashMap<Integer, String>();
+    private HashMap<Integer, String> indentMap = new HashMap<>();
     /**
      * The indent characters to use, e.g. tab or space.
      */

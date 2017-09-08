@@ -12,10 +12,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -113,20 +115,54 @@ public class Util {
      * Removes characters from a string.
      *
      * @param string the string of interest
+     * @param forbiddenCharacter the character to remove
+     *
+     * @return a version without forbidden characters
+     */
+    public static String removeCharacters(String string, char forbiddenCharacter) {
+        
+        StringBuilder sb = new StringBuilder(string.length());
+        
+        char[] stringChars = string.toCharArray();
+        
+        for (int i = 0 ; i < stringChars.length ; i++) {
+            
+            char charAtI = stringChars[i];
+            
+            if (charAtI == forbiddenCharacter) {
+                
+                continue;
+                
+            }
+            
+            sb.append(charAtI);
+            
+        }
+        
+        return sb.toString();
+    }
+
+    /**
+     * Removes characters from a string.
+     *
+     * @param string the string of interest
      * @param forbiddenCharacters the characters to remove
      *
      * @return a version without forbidden characters
      */
     public static String removeCharacters(String string, String[] forbiddenCharacters) {
+        
         String result = string;
+        
         for (String fc : forbiddenCharacters) {
+            
             String[] split = result.split(fc);
+            
             if (split.length > 1) {
-                StringBuilder stringBuilder = new StringBuilder(string.length());
-                for (String splitPart : split) {
-                    stringBuilder.append(splitPart);
-                }
-                result = stringBuilder.toString();
+                
+                result = Arrays.stream(split)
+                        .collect(Collectors.joining());
+                
             }
         }
         return result;
@@ -833,12 +869,15 @@ public class Util {
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameLists(ArrayList list1, ArrayList list2) {
+        
         if (list1.size() != list2.size()) {
             return false;
         }
-        HashSet set1 = new HashSet(list1);
+        
         HashSet set2 = new HashSet(list2);
-        return sameSets(set1, set2);
+        
+        return !list1.stream()
+                .anyMatch(element -> !set2.contains(element));
     }
 
     /**
@@ -851,15 +890,13 @@ public class Util {
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameSets(HashSet set1, HashSet set2) {
+        
         if (set1.size() != set2.size()) {
             return false;
         }
-        for (Object object1 : set1) {
-            if (!set2.contains(object1)) {
-                return false;
-            }
-        }
-        return true;
+        
+        return !set1.stream()
+                .anyMatch(element -> !set2.contains(element));
     }
 
     /**
@@ -913,7 +950,7 @@ public class Util {
      */
     public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
         Pattern pattern = Pattern.compile(smallString);
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         Matcher matcher = pattern.matcher(bigString);
         matcher.matches();
         int index = 0;
@@ -1108,15 +1145,49 @@ public class Util {
      */
     public static char[] mergeCharArrays(char[] array1, char[] array2) {
         char[] result = new char[array1.length + array2.length];
-        int count = 0;
-        for (int i = 0; i < array1.length; i++) {
-            result[count] = array1[i];
-            count++;
-        }
-        for (int i = 0; i < array2.length; i++) {
-            result[count] = array2[i];
-            count++;
-        }
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
         return result;
+    }
+    
+    /**
+     * Returns an array containing the unique characters of the given array.
+     * 
+     * @param array the array
+     * 
+     * @return the unique array
+     */
+    public static char[] makeUnique(char[] array) {
+        
+        char[] arrayUnique = new char[array.length];
+        int index = 0;
+        char aa = array[index];
+        arrayUnique[index] = aa;
+        for (int i = 1; i < array.length; i++) {
+            
+            aa = array[i];
+            boolean duplicate = false;
+            
+            for (int j = 0; j < i; j++) {
+                
+                char aaTemp = array[j];
+                
+                if (aa == aaTemp) {
+                    
+                    duplicate = true;
+                    break;
+                    
+                }
+            }
+            
+            if (!duplicate) {
+                
+                arrayUnique[index] = aa;
+                
+            }
+        }
+        
+        System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
+        return arrayUnique;
     }
 }

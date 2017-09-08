@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;

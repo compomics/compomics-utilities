@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.sequences.matching;
 
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -33,24 +33,24 @@ public class SequenceMatchingTest extends TestCase {
         String test2Mutations = "TESTLKTETS";
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence("TESTIKTEST");
 
-        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.string);
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.string);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
 
-        sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.aminoAcid);
+        sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.aminoAcid);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
 
-        sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));

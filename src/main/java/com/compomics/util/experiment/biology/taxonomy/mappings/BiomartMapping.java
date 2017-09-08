@@ -26,7 +26,7 @@ public class BiomartMapping {
      * Constructor.
      */
     public BiomartMapping() {
-        assemblyToDataset = new HashMap<String, String>();
+        assemblyToDataset = new HashMap<>();
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -15,10 +15,10 @@ public class ModificationMatch extends ExperimentObject {
      */
     static final long serialVersionUID = 7129515983284796207L;
     /**
-     * The theoretic modification name. The modification can be accessed via
-     * the PTM factory.
+     * The modification name. The modification can be accessed via
+     * the factory.
      */
-    private String theoreticPtm;
+    private String modification;
     /**
      * Is the modification variable?
      */
@@ -47,9 +47,11 @@ public class ModificationMatch extends ExperimentObject {
      * is the first residue
      */
     public ModificationMatch(String theoreticPtm, boolean variable, int modifiedSite) {
-        this.theoreticPtm = theoreticPtm;
+        
+        this.modification = theoreticPtm;
         this.variable = variable;
         this.modifiedSite = modifiedSite;
+        
     }
 
     /**
@@ -64,7 +66,9 @@ public class ModificationMatch extends ExperimentObject {
      * @return a boolean indicating if the modification is variable
      */
     public boolean getVariable() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return variable;
     }
 
@@ -73,9 +77,11 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @return the theoretic PTM name
      */
-    public String getTheoreticPtm() {
+    public String getModification() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return theoreticPtm;
+        
+        return modification;
     }
 
     /**
@@ -83,9 +89,11 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @param ptm the theoretic PTM name
      */
-    public void setTheoreticPtm(String ptm) {
+    public void setModification(String ptm) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.theoreticPtm = ptm;
+        
+        this.modification = ptm;
     }
 
     /**
@@ -94,7 +102,9 @@ public class ModificationMatch extends ExperimentObject {
      * @return the index of the modification in the sequence
      */
     public int getModificationSite() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return modifiedSite;
     }
 
@@ -104,7 +114,9 @@ public class ModificationMatch extends ExperimentObject {
      * @param site the index of the modification in the sequence
      */
     public void setModificationSite(int site) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.modifiedSite = site;
     }
 
@@ -116,7 +128,9 @@ public class ModificationMatch extends ExperimentObject {
      * localized on the sequence
      */
     public boolean getConfident() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return confident;
     }
 
@@ -127,7 +141,9 @@ public class ModificationMatch extends ExperimentObject {
      * confidently localized on the sequence
      */
     public void setConfident(boolean confident) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.confident = confident;
     }
 
@@ -139,7 +155,9 @@ public class ModificationMatch extends ExperimentObject {
      * another peptide
      */
     public boolean getInferred() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return inferred;
     }
 
@@ -150,12 +168,16 @@ public class ModificationMatch extends ExperimentObject {
      * from another peptide
      */
     public void setInferred(boolean inferred) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.inferred = inferred;
     }
     
     public void setVariable(boolean variable){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.variable = variable;
     }
 
@@ -170,8 +192,10 @@ public class ModificationMatch extends ExperimentObject {
      * same.
      */
     public boolean isSameAs(ModificationMatch anotherModificationMatch) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        if (!theoreticPtm.equals(anotherModificationMatch.getTheoreticPtm())) {
+        
+        if (!modification.equals(anotherModificationMatch.getModification())) {
             return false;
         }
         return variable == anotherModificationMatch.getVariable();
@@ -183,8 +207,10 @@ public class ModificationMatch extends ExperimentObject {
      * @return a new modification match with the same attributes
      */
     public ModificationMatch clone() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        ModificationMatch newMatch = new ModificationMatch(theoreticPtm, variable, modifiedSite);
+        
+        ModificationMatch newMatch = new ModificationMatch(modification, variable, modifiedSite);
         newMatch.setConfident(confident);
         newMatch.setInferred(inferred);
         return newMatch;

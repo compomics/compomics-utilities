@@ -48,7 +48,7 @@ public class ExcelWriter extends ExportWriter {
     /**
      * Map of the rows for depth change: depth &gt; starting row.
      */
-    private final HashMap<Integer, Integer> collapsedRow = new HashMap<Integer, Integer>();
+    private final HashMap<Integer, Integer> collapsedRow = new HashMap<>();
     /**
      * The current row number.
      */

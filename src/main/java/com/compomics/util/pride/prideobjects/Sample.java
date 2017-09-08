@@ -79,8 +79,8 @@ public class Sample implements PrideObject, Serializable {
      * @return a list of default samples
      */
     public static ArrayList<Sample> getDefaultSamples() {
-        ArrayList<Sample> result = new ArrayList<Sample>();
-        result.add(new Sample("Example sample set", new ArrayList<CvTerm>(Arrays.asList(
+        ArrayList<Sample> result = new ArrayList<>();
+        result.add(new Sample("Example sample set", new ArrayList<>(Arrays.asList(
                 new CvTerm("NEWT", "9606", "Homo sapiens (Human)", null),
                 new CvTerm("BTO", "BTO:0000763", "lung", null),
                 new CvTerm("BTO", "BTO:0000762", "lung cancer cell line", null)))));

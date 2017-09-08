@@ -2,7 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
     /**
      * The selected folder.
      */
@@ -43,12 +43,12 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
         initComponents();
 
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
         // display the current reporter path
-        if (utilitiesUserPreferences != null) {
-            reporterInstallationJTextField.setText(utilitiesUserPreferences.getReporterPath());
-            lastSelectedFolder = utilitiesUserPreferences.getReporterPath();
+        if (utilitiesUserParameters != null) {
+            reporterInstallationJTextField.setText(utilitiesUserParameters.getReporterPath());
+            lastSelectedFolder = utilitiesUserParameters.getReporterPath();
         }
 
         setLocationRelativeTo(parent);
@@ -299,15 +299,15 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
         // reload the user preferences as these may have been changed by other tools
         try {
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred when reading the user preferences.", "File Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
-        utilitiesUserPreferences.setReporterPath(reporterInstallationJTextField.getText());
+        utilitiesUserParameters.setReporterPath(reporterInstallationJTextField.getText());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();

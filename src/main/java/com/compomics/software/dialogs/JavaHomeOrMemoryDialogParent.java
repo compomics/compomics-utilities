@@ -1,6 +1,6 @@
 package com.compomics.software.dialogs;
 
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 
 /**
  * Interface for parents of JavaMemoryDialog and JavaHomeDialog.
@@ -19,5 +19,5 @@ public interface JavaHomeOrMemoryDialogParent {
      *
      * @return the utilities user preferences
      */
-    public UtilitiesUserPreferences getUtilitiesUserPreferences();
+    public UtilitiesUserParameters getUtilitiesUserParameters();
 }

@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.spectrum.indexing;
 
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
 import java.util.HashMap;
 import junit.framework.Assert;
@@ -19,7 +19,7 @@ public class SpectrumAnnotationTest extends TestCase {
      */
     public void testFindPeak() {
         
-        HashMap<Double, Peak> peakList = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> peakList = new HashMap<>();
         peakList.put(1012.5, new Peak(1012.5, 12345));
         peakList.put(1012.8, new Peak(1012.8, 54321));
         

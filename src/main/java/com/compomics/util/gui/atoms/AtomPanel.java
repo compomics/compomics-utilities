@@ -1,7 +1,7 @@
 package com.compomics.util.gui.atoms;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.atoms.Atom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class AtomPanel extends javax.swing.JPanel {
             Atom atom = Atom.getAtom(atomShortName);
             ArrayList<Integer> isotopesList = atom.getImplementedIsotopes();
             Collections.sort(isotopesList);
-            isotopesMap = new HashMap<String, Integer>(isotopesList.size());
+            isotopesMap = new HashMap<>(isotopesList.size());
             String[] itemsArray = new String[isotopesList.size()];
             int zeroIndex = 0;
             for (int i = 0; i < isotopesList.size(); i++) {

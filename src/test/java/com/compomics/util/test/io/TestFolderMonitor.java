@@ -12,7 +12,7 @@
  */
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.FolderMonitor;
+import com.compomics.util.io.file.FolderMonitor;
 import com.compomics.util.junit.TestCaseLM;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
@@ -31,7 +31,7 @@ import java.util.HashMap;
  * This class implements the test scenario for the FolderMonitor class.
  *
  * @author Lennart Martens
- * @see com.compomics.util.io.FolderMonitor
+ * @see com.compomics.util.io.file.FolderMonitor
  */
 public class TestFolderMonitor extends TestCase {
 

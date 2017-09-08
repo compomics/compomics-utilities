@@ -1,11 +1,13 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.*;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.atoms.Atom;
+import com.compomics.util.experiment.biology.ions.Charge;
+import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 
@@ -32,10 +34,6 @@ public class IonMatch extends ExperimentObject {
      * The inferred charge of the ion.
      */
     public Integer charge;
-    /**
-     * The sign of the charge.
-     */
-    public Integer chargeSign = Charge.PLUS;
     
     /**
      * Constructor for an ion peak.
@@ -158,7 +156,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
-        return getPeakAnnotation(false, ion, new Charge(chargeSign, charge));
+        return getPeakAnnotation(false, ion, charge);
     }
 
     /**
@@ -168,7 +166,7 @@ public class IonMatch extends ExperimentObject {
      * @param charge the given charge
      * @return the annotation to use for the given ion match
      */
-    public static String getPeakAnnotation(Ion ion, Charge charge) {
+    public static String getPeakAnnotation(Ion ion, int charge) {
         return getPeakAnnotation(false, ion, charge);
     }
 
@@ -243,7 +241,7 @@ public class IonMatch extends ExperimentObject {
      * @param charge the given charge
      * @return the annotation to use for the given ion match
      */
-    public static String getPeakAnnotation(boolean html, Ion ion, Charge charge) {
+    public static String getPeakAnnotation(boolean html, Ion ion, int charge) {
 
         StringBuilder result = new StringBuilder();
 
@@ -263,7 +261,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(charge.getChargeAsFormattedString());
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -300,7 +298,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(charge.getChargeAsFormattedString());
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -328,7 +326,7 @@ public class IonMatch extends ExperimentObject {
                 result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
-                result.append(charge.getChargeAsFormattedString());
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();
@@ -366,7 +364,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation(boolean html) {
-        return getPeakAnnotation(html, ion, new Charge(chargeSign, charge));
+        return getPeakAnnotation(html, ion, charge);
     }
 
     /**

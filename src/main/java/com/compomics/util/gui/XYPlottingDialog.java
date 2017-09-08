@@ -6,7 +6,7 @@ import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
 import com.compomics.util.gui.tablemodels.SelfUpdatingTableModel;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.math.statistics.distributions.NormalKernelDensityEstimator;
-import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.io.file.LastSelectedFolder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -177,7 +177,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The data filters.
      */
-    private HashMap<String, String> filters = new HashMap<String, String>();
+    private HashMap<String, String> filters = new HashMap<>();
     /**
      * The column names.
      */
@@ -185,7 +185,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The rows remaining after applying the data filters.
      */
-    private ArrayList<Integer> rowsAfterDataFiltering = new ArrayList<Integer>();
+    private ArrayList<Integer> rowsAfterDataFiltering = new ArrayList<>();
     /**
      * The plotting dialog types.
      */
@@ -228,9 +228,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
 
-        cellRenderers = new HashMap<Integer, TableCellRenderer>();
-        maxColumnWidths = new HashMap<Integer, Integer>();
-        minColumnWidths = new HashMap<Integer, Integer>();
+        cellRenderers = new HashMap<>();
+        maxColumnWidths = new HashMap<>();
+        minColumnWidths = new HashMap<>();
 
         if (table.getRowCount() > 0) {
             for (int i = 0; i < table.getColumnCount(); i++) {
@@ -273,8 +273,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     private void setUpGUI() {
 
         // @TODO: only show the values of the supported types for each drop down menu...
-        colummnNames = new Vector<String>();
-        Vector<String> colummnNamesExtended = new Vector<String>();
+        colummnNames = new Vector<>();
+        Vector<String> colummnNamesExtended = new Vector<>();
         colummnNamesExtended.add(0, "[user defined]");
 
         int columnCount = tableModel.getColumnCount();
@@ -296,8 +296,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
         selectedValuesTable.setModel(tableModel);
 
-        allTableColumns = new ArrayList<TableColumn>();
-        visibleColumns = new HashMap<Integer, Boolean>();
+        allTableColumns = new ArrayList<>();
+        visibleColumns = new HashMap<>();
 
         for (int i = 0; i < selectedValuesTable.getColumnCount(); i++) {
             allTableColumns.add(selectedValuesTable.getColumn(selectedValuesTable.getColumnName(i)));
@@ -1615,9 +1615,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     public void updatePlot() {
 
         if (!isPlotting) {
-            selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
-            dataPointToRowNumber = new HashMap<String, Integer>();
-            selectedModelRows = new ArrayList<Integer>();
+            selectedDataPoints = new HashMap<>();
+            dataPointToRowNumber = new HashMap<>();
+            selectedModelRows = new ArrayList<>();
 
             isPlotting = true;
 
@@ -1791,8 +1791,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
 
-                        ArrayList<String> datasetNames = new ArrayList<String>();
-                        HashMap<String, ArrayList<Integer>> datasets = new HashMap<String, ArrayList<Integer>>();
+                        ArrayList<String> datasetNames = new ArrayList<>();
+                        HashMap<String, ArrayList<Integer>> datasets = new HashMap<>();
 
                         int colorIndex = colorsComboBox.getSelectedIndex();
                         double minColorValue = Double.MAX_VALUE;
@@ -1810,7 +1810,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                                 ArrayList<Integer> tempArray;
                                 if (!datasets.containsKey(tableModel.getValueAt(i, colorIndex).toString())) {
-                                    tempArray = new ArrayList<Integer>();
+                                    tempArray = new ArrayList<>();
                                     datasetNames.add(tableModel.getValueAt(i, colorIndex).toString());
                                 } else {
                                     tempArray = datasets.get(tableModel.getValueAt(i, colorIndex).toString());
@@ -1889,7 +1889,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         int yAxisIndex = yAxisComboBox.getSelectedIndex();
                         int bubbleSizeIndex = bubbleSizeComboBox.getSelectedIndex();
-                        HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
+                        HashMap<Integer, Color> datasetColors = new HashMap<>();
 
                         progressDialog.setPrimaryProgressCounterIndeterminate(false);
                         progressDialog.setMaxPrimaryProgressCounter(tableModel.getRowCount());
@@ -2291,15 +2291,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     dragEnd = e.getPoint();
 
                                     // clear the old selection
-                                    selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
-                                    selectedModelRows = new ArrayList<Integer>();
+                                    selectedDataPoints = new HashMap<>();
+                                    selectedModelRows = new ArrayList<>();
 
                                     double dragStartX = (dragStart.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
                                     double dragStartY = (dragStart.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
                                     double dragEndX = (dragEnd.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
                                     double dragEndY = (dragEnd.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
 
-                                    ArrayList<XYItemEntity> entitiesFound = new ArrayList<XYItemEntity>();
+                                    ArrayList<XYItemEntity> entitiesFound = new ArrayList<>();
                                     EntityCollection entities = chartPanel.getChartRenderingInfo().getEntityCollection();
                                     Iterator<ChartEntity> iterator = entities.iterator();
 
@@ -2373,8 +2373,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
         // if no data points were selected then clear the selection
         if (!dataPointsSelected) {
-            selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
-            selectedModelRows = new ArrayList<Integer>();
+            selectedDataPoints = new HashMap<>();
+            selectedModelRows = new ArrayList<>();
         }
 
         filterTable();
@@ -2406,7 +2406,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                 selectedModelRows.add(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
             }
         } else {
-            ArrayList<Integer> itemList = new ArrayList<Integer>();
+            ArrayList<Integer> itemList = new ArrayList<>();
             itemList.add(itemIndex);
             selectedDataPoints.put(seriesIndex, itemList);
             if (!selectedModelRows.contains(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex))) {
@@ -2449,7 +2449,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      */
     public ArrayList<ChartEntity> getEntitiesForPoint(int viewX, int viewY) {
 
-        ArrayList<ChartEntity> entitiesForPoint = new ArrayList<ChartEntity>();
+        ArrayList<ChartEntity> entitiesForPoint = new ArrayList<>();
         ChartRenderingInfo info = chartPanel.getChartRenderingInfo();
 
         if (info != null) {
@@ -2598,7 +2598,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      */
     private void filterData() {
 
-        rowsAfterDataFiltering = new ArrayList<Integer>();
+        rowsAfterDataFiltering = new ArrayList<>();
 
         boolean filterError = false,
                 selfUpdating = true;

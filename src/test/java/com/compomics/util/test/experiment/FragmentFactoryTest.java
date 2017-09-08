@@ -1,13 +1,13 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import junit.framework.Assert;
@@ -39,9 +39,9 @@ public class FragmentFactoryTest extends TestCase {
     public void testPeptideFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        Peptide peptide = new Peptide(sequence, new ArrayList<ModificationMatch>());
+        Peptide peptide = new Peptide(sequence, new ArrayList<>());
 
-        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
+        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
@@ -377,7 +377,7 @@ public class FragmentFactoryTest extends TestCase {
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
         Tag tag = new Tag(0, AminoAcidPattern.getAminoAcidPatternFromString(sequence), 0);
 
-        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
+        HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();

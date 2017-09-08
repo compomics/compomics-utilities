@@ -4,7 +4,7 @@ import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -100,19 +100,19 @@ public class ToolFactory {
      */
     public static void startPeptideShaker(JFrame parent, File cpsFile) throws IOException, ClassNotFoundException, InterruptedException {
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openPeptideShaker = true;
 
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
             PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
         }
         if (openPeptideShaker) {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (cpsFile != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerFileOption);
                     args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
@@ -140,19 +140,19 @@ public class ToolFactory {
      */
     public static void startReshake(JFrame parent, String pxAccession) throws IOException, ClassNotFoundException, InterruptedException {
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openPeptideShaker = true;
 
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
             PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
         }
         if (openPeptideShaker) {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (pxAccession != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerPxAccessionOption);
                     args.add(pxAccession);
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
@@ -184,19 +184,19 @@ public class ToolFactory {
      */
     public static void startPeptideShakerFromURL(JFrame parent, String zipUrl, String downloadUrlFolder) throws IOException, ClassNotFoundException, InterruptedException {
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openPeptideShaker = true;
 
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
             PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
         }
         if (openPeptideShaker) {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (zipUrl != null) {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     args.add(peptideShakerUrlOption);
                     args.add(CommandLineUtils.getQuoteType() + zipUrl + CommandLineUtils.getQuoteType());
                     args.add(peptideShakerUrlDownloadFolderOption);
@@ -224,12 +224,12 @@ public class ToolFactory {
      */
     public static void startReporter(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openReporter = true;
 
         if (utilitiesUserPreferences.getReporterPath() == null || !(new File(utilitiesUserPreferences.getReporterPath()).exists())) {
             ReporterSetupDialog reporterSetupDialog = new ReporterSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openReporter = !reporterSetupDialog.isDialogCanceled();
         }
         if (openReporter) {
@@ -278,12 +278,12 @@ public class ToolFactory {
     public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType, String projectName)
             throws IOException, ClassNotFoundException, InterruptedException {
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openSearchGUI = true;
 
         if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
             SearchGuiSetupDialog searchGuiSetupDialog = new SearchGuiSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openSearchGUI = !searchGuiSetupDialog.isDialogCanceled();
         }
         if (openSearchGUI) {
@@ -292,7 +292,7 @@ public class ToolFactory {
                 if (mgfFiles == null && rawFiles == null && searchParameters == null && species == null) {
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
                 } else {
-                    ArrayList<String> args = new ArrayList<String>();
+                    ArrayList<String> args = new ArrayList<>();
                     if (mgfFiles != null && !mgfFiles.isEmpty()) {
                         args.add(searchGuiSpectrumFileOption);
                         args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));

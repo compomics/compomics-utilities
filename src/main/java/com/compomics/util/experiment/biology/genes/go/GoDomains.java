@@ -30,7 +30,7 @@ public class GoDomains {
      * Constructor.
      */
     public GoDomains() {
-        goAccessionToDomainMap = new HashMap<String, String>();
+        goAccessionToDomainMap = new HashMap<>();
     }
 
     /**

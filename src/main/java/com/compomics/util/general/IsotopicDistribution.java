@@ -73,10 +73,10 @@ public class IsotopicDistribution {
      */
     public void calculate(){
 
-        Vector<Vector<Double>> lPerc = new Vector<Vector<Double>>();
-        Vector<Integer> lNumbers = new Vector<Integer>();
-        Vector<Integer> lDaltonDifferences = new Vector<Integer>();
-        Vector<BinomialDistributionImpl> lBinomDistributions = new Vector<BinomialDistributionImpl>();
+        Vector<Vector<Double>> lPerc = new Vector<>();
+        Vector<Integer> lNumbers = new Vector<>();
+        Vector<Integer> lDaltonDifferences = new Vector<>();
+        Vector<BinomialDistributionImpl> lBinomDistributions = new Vector<>();
         Vector<IsotopicElement> lElements = IsotopicElement.getAllIsotopicElements(this.getClass(), logger);
 
         for(int e = 0; e<lElements.size(); e ++){
@@ -84,7 +84,7 @@ public class IsotopicDistribution {
             int lCount = iMolecularFormula.getElementCount(lElmnt.getElement());
             if(lCount > 0){
                 lNumbers.add(lCount);
-                Vector<Double> lPercElement = new Vector<Double>();
+                Vector<Double> lPercElement = new Vector<>();
                 lPerc.add(lPercElement);
                 lBinomDistributions.add(new BinomialDistributionImpl(lCount, lElmnt.getOccurrence()));
                 lDaltonDifferences.add(lElmnt.getDaltonDifference());
@@ -109,7 +109,7 @@ public class IsotopicDistribution {
             }
         }
 
-        Vector<Double> lPercTotal = new Vector<Double>();
+        Vector<Double> lPercTotal = new Vector<>();
 
         for(int i = 0 ; i<lPerc.size(); i ++){
             if(i==0){
@@ -118,7 +118,7 @@ public class IsotopicDistribution {
                 }
             } else {
                 if(lNumbers.get(i) != 0){
-                    Vector<Double> lTempTotal = new Vector<Double>();
+                    Vector<Double> lTempTotal = new Vector<>();
                     for(int k = 1; k<=lPercTotal.size(); k ++){
                         double lTempValue = 0.0;
                         for(int l = 0; l<k; l ++){
@@ -144,7 +144,7 @@ public class IsotopicDistribution {
         }
         if(iLabel){
             lMax = 0.0;
-            Vector<Double> lTempPercTotal = new Vector<Double>();
+            Vector<Double> lTempPercTotal = new Vector<>();
             for(int i = 0; i<lPercTotal.size(); i ++){
                 double lTempPeak1 = lPercTotal.get(i);
                 double lTempPeak2 = 0.0;
@@ -163,7 +163,7 @@ public class IsotopicDistribution {
         }
 
         iPercTot = lPercTotal;
-        iPercMax = new Vector<Double>();
+        iPercMax = new Vector<>();
         for(int k = 0; k<iPercTot.size(); k ++){
             iPercMax.add(iPercTot.get(k)/lMax);
         }

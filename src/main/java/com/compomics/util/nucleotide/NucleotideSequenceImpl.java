@@ -17,7 +17,7 @@ import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.general.MassCalc;
 import com.compomics.util.general.UnknownElementMassException;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 
 import java.util.Properties;
 import java.util.Vector;

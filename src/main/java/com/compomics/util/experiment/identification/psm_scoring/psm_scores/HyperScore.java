@@ -1,17 +1,16 @@
 package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.peptide_fragmentation.PeptideFragmentationModel;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.HistogramUtils;
 import com.compomics.util.math.statistics.linear_regression.LinearRegression;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -46,11 +46,11 @@ public class HyperScore {
     /**
      * Histogram of the values found for a in the fitting.
      */
-    private HashMap<Double, Integer> as = new HashMap<Double, Integer>();
+    private HashMap<Double, Integer> as = new HashMap<>();
     /**
      * Histogram of the values found for b in the fitting.
      */
-    private HashMap<Double, Integer> bs = new HashMap<Double, Integer>();
+    private HashMap<Double, Integer> bs = new HashMap<>();
 
     /**
      * Constructor.
@@ -80,28 +80,26 @@ public class HyperScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
-        return getScore(peptide, spectrum, annotationSettings, specificAnnotationSettings, ionMatches);
+    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide).collect(Collectors.toCollection(ArrayList::new));
+        return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
     }
 
     /**
      * Returns the hyperscore.
      *
      * @param peptide the peptide of interest
+     * @param charge the charge
      * @param spectrum the spectrum of interest
-     * @param annotationSettings the general spectrum annotation settings
-     * @param specificAnnotationSettings the annotation settings specific to
-     * this PSM
      * @param ionMatches the ion matches obtained from spectrum annotation
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, ArrayList<IonMatch> ionMatches) {
+    public double getScore(Peptide peptide, int charge, Spectrum spectrum, ArrayList<IonMatch> ionMatches) {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
-        HashSet<Double> coveredMz = new HashSet<Double>(2);
+        HashSet<Double> coveredMz = new HashSet<>(2);
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
             Peak peak = ionMatch.peak;
@@ -121,21 +119,12 @@ public class HyperScore {
             return 0.0;
         }
 
-        SpectrumIndex spectrumIndex = new SpectrumIndex();
-        spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
-        if (spectrumIndex == null) {
-            // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()),
-                    annotationSettings.getFragmentIonAccuracy(), annotationSettings.isFragmentIonPpm());
-            spectrum.addUrParam(spectrumIndex);
-        }
-
-        Double totalIntensity = spectrumIndex.getTotalIntensity() - coveredIntensity;
+        Double consideredIntensity = spectrum.getTotalIntensity() - coveredIntensity;
 
         double xCorr = 0;
-        HashSet<Integer> ionsForward = new HashSet<Integer>(1);
-        HashSet<Integer> ionsRewind = new HashSet<Integer>(1);
-        HashSet<Double> accountedFor = new HashSet<Double>(ionMatches.size());
+        HashSet<Integer> ionsForward = new HashSet<>(1);
+        HashSet<Integer> ionsRewind = new HashSet<>(1);
+        HashSet<Double> accountedFor = new HashSet<>(ionMatches.size());
         for (IonMatch ionMatch : ionMatches) {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;
@@ -145,7 +134,7 @@ public class HyperScore {
                 int number = peptideFragmentIon.getNumber();
                 if (number > 1) {
                     accountedFor.add(mz);
-                    Double x0I = peakI.intensity / totalIntensity;
+                    Double x0I = peakI.intensity / consideredIntensity;
                     xCorr += x0I;
                     if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
                         if (ion.getSubType() == PeptideFragmentIon.X_ION
@@ -161,8 +150,8 @@ public class HyperScore {
                 }
             }
         }
-        int nForward = ionsForward.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
-        int nRewind = ionsRewind.size() / (Math.max(specificAnnotationSettings.getPrecursorCharge() - 1, 1));
+        int nForward = ionsForward.size() / (Math.max(charge - 1, 1));
+        int nRewind = ionsRewind.size() / (Math.max(charge - 1, 1));
         nForward = nForward > 20 ? 20 : nForward;
         nRewind = nRewind > 20 ? 20 : nRewind;
         long forwardFactorial = BasicMathFunctions.factorial(nForward);
@@ -195,7 +184,7 @@ public class HyperScore {
      * @return the e-values corresponding to the given scores
      */
     public HashMap<Double, Double> getEValueMap(ArrayList<Double> hyperScores, boolean useCache) {
-        HashMap<Integer, Integer> histogram = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> histogram = new HashMap<>();
         Double maxScore = 0.0;
         Double minScore = Double.MAX_VALUE;
         for (Double score : hyperScores) {
@@ -232,7 +221,7 @@ public class HyperScore {
                 }
             }
         }
-        ArrayList<Integer> bins = new ArrayList<Integer>(histogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(histogram.keySet());
         for (Integer bin : bins) {
             if (bin > secondEmptybin) {
                 histogram.remove(bin);
@@ -257,7 +246,7 @@ public class HyperScore {
      * @return the interpolation values for the given scores
      */
     public double[] getInterpolationValues(int[] scores, boolean useCache) {
-        HashMap<Integer, Integer> scoreHistogram = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> scoreHistogram = new HashMap<>();
         int maxScore = 0;
         int minScore = Integer.MAX_VALUE;
         for (int score : scores) {
@@ -291,7 +280,7 @@ public class HyperScore {
                 }
             }
         }
-        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(scoreHistogram.keySet());
         for (Integer bin : bins) {
             if (bin > secondEmptybin) {
                 scoreHistogram.remove(bin);
@@ -314,10 +303,10 @@ public class HyperScore {
      */
     public double[] getInterpolationValues(HashMap<Integer, Integer> scoreHistogram, boolean useCache) {
 
-        ArrayList<Integer> bins = new ArrayList<Integer>(scoreHistogram.keySet());
+        ArrayList<Integer> bins = new ArrayList<>(scoreHistogram.keySet());
         Collections.sort(bins, Collections.reverseOrder());
-        ArrayList<Double> evalueFunctionX = new ArrayList<Double>(scoreHistogram.size());
-        ArrayList<Double> evalueFunctionY = new ArrayList<Double>(scoreHistogram.size());
+        ArrayList<Double> evalueFunctionX = new ArrayList<>(scoreHistogram.size());
+        ArrayList<Double> evalueFunctionY = new ArrayList<>(scoreHistogram.size());
         Integer currentSum = 0;
         for (Integer bin : bins) {
             Integer nInBin = scoreHistogram.get(bin);
@@ -369,7 +358,7 @@ public class HyperScore {
      * @return the interpolation for every score in a map.
      */
     public HashMap<Double, Double> getInterpolation(ArrayList<Double> hyperScores, Double a, Double b) {
-        HashMap<Double, Double> result = new HashMap<Double, Double>();
+        HashMap<Double, Double> result = new HashMap<>();
         for (Double hyperScore : hyperScores) {
             if (!result.containsKey(hyperScore)) {
                 if (hyperScore > 0) {

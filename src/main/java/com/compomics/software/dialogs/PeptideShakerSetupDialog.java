@@ -5,7 +5,7 @@ import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     /**
      * The utilities preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
     /**
      * The selected folder.
      */
@@ -87,17 +87,17 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
         
-        if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
+        if (utilitiesUserParameters.getPeptideShakerPath() == null) {
             boolean downloaded = downloadPeptideShaker();
             if (downloaded) {
                 dialogCanceled = false;
             } else {
                 // display the current peptideshaker path
-                if (utilitiesUserPreferences != null) {
-                    peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
-                    lastSelectedFolder = utilitiesUserPreferences.getPeptideShakerPath();
+                if (utilitiesUserParameters != null) {
+                    peptideShakernstallationJTextField.setText(utilitiesUserParameters.getPeptideShakerPath());
+                    lastSelectedFolder = utilitiesUserParameters.getPeptideShakerPath();
                 }
 
                 setVisible(true);
@@ -105,9 +105,9 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         } else {
 
             // display the current peptideshaker path
-            if (utilitiesUserPreferences != null) {
-                peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
-                lastSelectedFolder = utilitiesUserPreferences.getPeptideShakerPath();
+            if (utilitiesUserParameters != null) {
+                peptideShakernstallationJTextField.setText(utilitiesUserParameters.getPeptideShakerPath());
+                lastSelectedFolder = utilitiesUserParameters.getPeptideShakerPath();
             }
 
             setVisible(true);
@@ -361,9 +361,9 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        utilitiesUserPreferences.setPeptideShakerPath(peptideShakernstallationJTextField.getText());
+        utilitiesUserParameters.setPeptideShakerPath(peptideShakernstallationJTextField.getText());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
             dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -484,10 +484,10 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
 
             String installPath = "user.home";
 
-            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
-                if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
-                        && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
-                    installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();
+            if (utilitiesUserParameters.getPeptideShakerPath() != null) {
+                if (new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile() != null
+                        && new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
+                    installPath = new File(utilitiesUserParameters.getPeptideShakerPath()).getParentFile().getParent();
                 }
             }
 

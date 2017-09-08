@@ -95,12 +95,12 @@ public class BinningFilter {
     private static ArrayList<ArrayList<Double>> getFilteredInput(ArrayList<Double> x, ArrayList<Double> y, int binSize, int rest) {
 
         int currentBin = 0;
-        ArrayList<Double> sortedX = new ArrayList<Double>(x);
+        ArrayList<Double> sortedX = new ArrayList<>(x);
         Collections.sort(sortedX);
-        ArrayList<Double> currentX = new ArrayList<Double>(binSize + 1);
-        ArrayList<Double> currentY = new ArrayList<Double>(binSize + 1);
-        ArrayList<Double> filteredX = new ArrayList<Double>(x.size());
-        ArrayList<Double> filteredY = new ArrayList<Double>(y.size());
+        ArrayList<Double> currentX = new ArrayList<>(binSize + 1);
+        ArrayList<Double> currentY = new ArrayList<>(binSize + 1);
+        ArrayList<Double> filteredX = new ArrayList<>(x.size());
+        ArrayList<Double> filteredY = new ArrayList<>(y.size());
         Double x0 = x.get(0);
         boolean newX = false;
 
@@ -135,7 +135,7 @@ public class BinningFilter {
             throw new IllegalArgumentException("Not all points in bins.");
         }
 
-        ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>(2);
+        ArrayList<ArrayList<Double>> result = new ArrayList<>(2);
         result.add(filteredX);
         result.add(filteredY);
         return result;

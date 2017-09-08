@@ -1,7 +1,6 @@
 package com.compomics.util.math.statistics;
 
 import java.io.Serializable;
-import org.apache.commons.math.MathException;
 
 /**
  * This class represents a statistical distribution model like a Gaussian
@@ -26,10 +25,8 @@ public interface Distribution extends Serializable {
      * @param x the position of interest
      * 
      * @return the value of the density function at the give position
-     * 
-     * @throws MathException if a MathException occurs
      */
-    public Double getCumulativeProbabilityAt(double x) throws MathException;
+    public Double getCumulativeProbabilityAt(double x);
 
     /**
      * Returns the cumulative density function value at a given position when
@@ -38,10 +35,8 @@ public interface Distribution extends Serializable {
      * @param x the position of interest
      * 
      * @return the value of the density function at the give position
-     * 
-     * @throws MathException if a MathException occurs
      */
-    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException;
+    public Double getDescendingCumulativeProbabilityAt(double x);
 
     /**
      * Returns the cumulative density function value at a given position, starting from the low values if before the median, from the high otherwise.
@@ -49,10 +44,8 @@ public interface Distribution extends Serializable {
      * @param x the position of interest
      * 
      * @return the value of the density function at the give position
-     * 
-     * @throws MathException if a MathException occurs
      */
-    public Double getSmallestCumulativeProbabilityAt(double x) throws MathException;
+    public Double getSmallestCumulativeProbabilityAt(double x);
 
     /**
      * The value after which the density function will be smaller than p.
@@ -81,10 +74,8 @@ public interface Distribution extends Serializable {
      * 
      * @return the value after which the cumulative density function will be
      * smaller than p
-     * 
-     * @throws MathException if a MathException occurs
      */
-    public Double getValueAtCumulativeProbability(double p) throws MathException;
+    public Double getValueAtCumulativeProbability(double p);
 
     /**
      * The value after which the cumulative density function will be smaller
@@ -94,8 +85,6 @@ public interface Distribution extends Serializable {
      * 
      * @return the value after which the cumulative density function will be
      * smaller than p
-     * 
-     * @throws MathException if a MathException occurs
      */
-    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException;
+    public Double getValueAtDescendingCumulativeProbability(double p);
 }

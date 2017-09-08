@@ -79,7 +79,7 @@ public class PklFile {
         precursorIntensity = new Double(precursorDetails[1]);
         precurorCharge = new Integer(precursorDetails[2]);
 
-        HashMap<Double, Double> peaks = new HashMap<Double, Double>();
+        HashMap<Double, Double> peaks = new HashMap<>();
 
         String peakLine = b.readLine();
 

@@ -1,11 +1,10 @@
 package com.compomics.util.test.io;
 
-import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.preferences.DigestionPreferences;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,9 +65,9 @@ public class TestSearchParameterMarshaller {
         parameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         parameters.setPrecursorAccuracy(0.5);
         parameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
-        parameters.setDigestionPreferences(DigestionPreferences.getDefaultPreferences());
-        parameters.setMaxChargeSearched(new Charge(1, 5));
-        parameters.setMinChargeSearched(new Charge(1, 1));
+        parameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
+        parameters.setMaxChargeSearched(5);
+        parameters.setMinChargeSearched(1);
         parameters.setPtmSettings(createMockUpPTMSettings());
         parameters.setFastaFile(new File("T:/HIS/IS/A/FAKE/FASTA.FASTA"));
         return parameters;
@@ -79,9 +78,9 @@ public class TestSearchParameterMarshaller {
      */
     private PtmSettings createMockUpPTMSettings() {
         PtmSettings settings = new PtmSettings();
-        PTMFactory instance = PTMFactory.getInstance();
-        settings.addFixedModification(instance.getPTM("Carboxymethylation of C"));
-        settings.addVariableModification(instance.getPTM("Oxidation of M"));
+        ModificationFactory instance = ModificationFactory.getInstance();
+        settings.addFixedModification(instance.getModification("Carboxymethylation of C"));
+        settings.addVariableModification(instance.getModification("Oxidation of M"));
         return settings;
     }
 }

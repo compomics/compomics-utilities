@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
@@ -60,7 +60,7 @@ public class UnspecificIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
 
         // Increase indices
         if (!increaseIndex()) {
@@ -71,7 +71,7 @@ public class UnspecificIterator implements SequenceIterator {
         char[] sequence = Arrays.copyOfRange(proteinSequenceAsCharArray, index1, index2);
 
         // Construct the peptide
-        BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
+        BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax, smallMass);
 
         // Skip too heavy peptides

@@ -1,9 +1,8 @@
 package com.compomics.util.experiment.identification.spectrum_assumptions;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
  * This object will models the assumption made by an advocate.
@@ -35,7 +34,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * class)
      * @param identificationFile the identification file
      */
-    public PeptideAssumption(Peptide peptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
+    public PeptideAssumption(Peptide peptide, int rank, int advocate, int identificationCharge, double score, String identificationFile) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
@@ -55,7 +54,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param score the score (whether the score is ascending or descending can
      * be known from the SearchEngine class)
      */
-    public PeptideAssumption(Peptide peptide, int rank, int advocate, Charge identificationCharge, double score) {
+    public PeptideAssumption(Peptide peptide, int rank, int advocate, int identificationCharge, double score) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
@@ -71,7 +70,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param identificationCharge the charge used by the search engine for
      * identification
      */
-    public PeptideAssumption(Peptide peptide, Charge identificationCharge) {
+    public PeptideAssumption(Peptide peptide, int identificationCharge) {
         this.peptide = peptide;
         super.identificationCharge = identificationCharge;
     }

@@ -3,10 +3,10 @@ package com.compomics.util.examples;
 import com.compomics.util.Export;
 import com.compomics.util.Util;
 import com.compomics.util.enumeration.ImageType;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.Ion.IonType;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.events.RescalingEvent;
@@ -20,10 +20,10 @@ import com.compomics.util.gui.spectrum.IsotopicDistributionPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.io.MascotEnzymeReader;
 import com.compomics.util.io.PklFile;
-import com.compomics.util.io.filefilters.PdfFileFilter;
+import com.compomics.util.io.file.filefilters.PdfFileFilter;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Enzyme;
-import com.compomics.util.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import java.awt.Color;
 import java.awt.Component;
@@ -150,7 +150,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Sequence annotation column header tooltips.
      */
-    private ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<String>();
+    private ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<>();
     /**
      * The color used for the sparkline bar chart plots.
      */
@@ -162,8 +162,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     public UtilitiesDemo() {
         initComponents();
 
-        keyValuePairs = new TreeMap<String, String>();
-        selectedAnnotationTypes = new HashMap<String, Color>();
+        keyValuePairs = new TreeMap<>();
+        selectedAnnotationTypes = new HashMap<>();
 
         // set the title including version number
         this.setTitle(this.getTitle() + " " + Util.getVersion() + " - Demo");
@@ -466,8 +466,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         // get data for the chromatogram
         File chromatogramFile = new File(getJarFilePath() + "/exampleFiles/exampleChromatogram.txt");
 
-        ArrayList<Double> xValuesAsArray = new ArrayList<Double>();
-        ArrayList<Double> yValuesAsArray = new ArrayList<Double>();
+        ArrayList<Double> xValuesAsArray = new ArrayList<>();
+        ArrayList<Double> yValuesAsArray = new ArrayList<>();
 
         try {
             FileReader f = new FileReader(chromatogramFile);
@@ -531,8 +531,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private void setUpSpectrumPanelDemo() {
 
-        linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
-        allAnnotations = new HashMap<Integer, Vector<SpectrumAnnotation>>();
+        linkedSpectrumPanels = new HashMap<>();
+        allAnnotations = new HashMap<>();
 
         try {
             // create and add two spectra to the view
@@ -2750,12 +2750,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 if (peffFormat) {
                     keyValuePairs = getHeaderValuePairsPeffFormat(fullHeader);
                 } else {
-                    keyValuePairs = new TreeMap<String, String>();
+                    keyValuePairs = new TreeMap<>();
                     getHeaderValuesFastaFormat(protein.getHeader());
                 }
 
                 // get the tag colors
-                selectedAnnotationTypes = new HashMap<String, Color>();
+                selectedAnnotationTypes = new HashMap<>();
 
                 for (int i = 0; i < peffAnnotationsJTable.getRowCount(); i++) {
 
@@ -2820,7 +2820,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private TreeMap<String, String> getHeaderValuePairsPeffFormat(String header) {
 
-        TreeMap<String, String> map = new TreeMap<String, String>();
+        TreeMap<String, String> map = new TreeMap<>();
 
         String[] valuePairs = header.split("\\\\");
 
@@ -3078,7 +3078,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 int colorCounter = 0;
 
                 // set up the color maps
-                peffAnnotationsColorMap = new HashMap<Integer, Color>();
+                peffAnnotationsColorMap = new HashMap<>();
                 peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
                 peffAnnotationsColorMap.put(colorCounter++, new Color(102, 153, 255));
                 peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
@@ -3091,7 +3091,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 peffAnnotationsColorMap.put(colorCounter++, Color.ORANGE);
 
                 // set up the protein inference tooltip map
-                peffAnnotationsTooltipMap = new HashMap<Integer, String>();
+                peffAnnotationsTooltipMap = new HashMap<>();
 
                 for (int i = 0; i < colorCounter; i++) {
                     peffAnnotationsTooltipMap.put(i, "Double click to change color");
@@ -3290,7 +3290,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             if (column == 4) {
 
-                selectedAnnotationTypes = new HashMap<String, Color>();
+                selectedAnnotationTypes = new HashMap<>();
 
                 for (int i = 0; i < peffAnnotationsJTable.getRowCount(); i++) {
                     if ((Boolean) peffAnnotationsJTable.getValueAt(i, column)) {
@@ -3316,7 +3316,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                             new JSparklinesIntegerColorTableCellRenderer(Color.PINK, peffAnnotationsColorMap, peffAnnotationsTooltipMap));
 
                     // get the tag colors
-                    selectedAnnotationTypes = new HashMap<String, Color>();
+                    selectedAnnotationTypes = new HashMap<>();
 
                     for (int i = 0; i < peffAnnotationsJTable.getRowCount(); i++) {
                         if ((Boolean) peffAnnotationsJTable.getValueAt(i, 4)) {
@@ -3395,7 +3395,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @return an ArrayList containing the selected neutral losses
      */
     private ArrayList<NeutralLoss> getNeutralLosses() {
-        ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+        ArrayList<NeutralLoss> neutralLosses = new ArrayList<>();
         if (H2OIonsJCheckBox.isSelected()) {
             neutralLosses.add(NeutralLoss.H2O);
         }
@@ -3417,8 +3417,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private HashMap<IonType, ArrayList<Integer>> getCurrentFragmentIonTypes() {
 
-        HashMap<IonType, ArrayList<Integer>> fragmentIontypes = new HashMap<IonType, ArrayList<Integer>>();
-        fragmentIontypes.put(IonType.PEPTIDE_FRAGMENT_ION, new ArrayList<Integer>());
+        HashMap<IonType, ArrayList<Integer>> fragmentIontypes = new HashMap<>();
+        fragmentIontypes.put(IonType.PEPTIDE_FRAGMENT_ION, new ArrayList<>());
 
         if (aIonsJCheckBox.isSelected()) {
             fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.A_ION);

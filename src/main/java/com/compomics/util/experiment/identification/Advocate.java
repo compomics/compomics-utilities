@@ -454,7 +454,7 @@ public class Advocate {
     public static HashMap<Integer, java.awt.Color> getAdvocateColorMap() {
 
         if (advocateColorMap == null) {
-            advocateColorMap = new HashMap<Integer, Color>();
+            advocateColorMap = new HashMap<>();
 
             for (Advocate advocate : values()) {
                 advocateColorMap.put(advocate.getIndex(), advocate.getColor());
@@ -473,7 +473,7 @@ public class Advocate {
     public static HashMap<Integer, String> getAdvocateToolTipMap() {
 
         if (advocateToolTipMap == null) {
-            advocateToolTipMap = new HashMap<Integer, String>();
+            advocateToolTipMap = new HashMap<>();
 
             for (Advocate tempAdvoate : values()) {
                 advocateToolTipMap.put(tempAdvoate.getIndex(), tempAdvoate.getName());

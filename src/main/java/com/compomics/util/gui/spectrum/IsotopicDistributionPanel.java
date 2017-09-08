@@ -79,10 +79,10 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         // validate the peptide sequence
         AASequenceImpl validatedPeptideSequence = validatePeptideSequence(peptideSequence);
 
-        peptideSequences = new ArrayList<AASequenceImpl>();
+        peptideSequences = new ArrayList<>();
         peptideSequences.add(validatedPeptideSequence);
 
-        peptideCharges = new ArrayList<Integer>();
+        peptideCharges = new ArrayList<>();
         peptideCharges.add(peptideCharge);
 
         // calculate the isotopic distribution
@@ -250,7 +250,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
     private void getElements() {
 
         //get the elements
-        iElements = new HashMap<String, MolecularFormula>();
+        iElements = new HashMap<>();
 
         //get the elements that can be used
         try {
@@ -311,8 +311,8 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
     private void processIsotopicDistribution(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
         if (dataSetCounter == 0) {
-            iXAxisData = new ArrayList<double[]>();
-            iYAxisData = new ArrayList<double[]>();
+            iXAxisData = new ArrayList<>();
+            iYAxisData = new ArrayList<>();
         }
 
         iDataPointAndLineColor.add(dataPointAndLineColor);

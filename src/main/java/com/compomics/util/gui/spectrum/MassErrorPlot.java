@@ -1,7 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -43,7 +43,7 @@ public class MassErrorPlot extends JPanel {
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
+            Spectrum currentSpectrum,
             double massTolerance) throws InterruptedException {
         this(annotations, currentSpectrum, massTolerance, false);
     }
@@ -62,7 +62,7 @@ public class MassErrorPlot extends JPanel {
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
+            Spectrum currentSpectrum,
             double massTolerance,
             boolean useRelativeError) throws InterruptedException {
         super();
@@ -76,7 +76,7 @@ public class MassErrorPlot extends JPanel {
 
             boolean useIntensityGrading = false;  // @TODO: make this selectable by the user?
             DefaultXYDataset xyDataset = new DefaultXYDataset();
-            ArrayList<Color> colors = new ArrayList<Color>();
+            ArrayList<Color> colors = new ArrayList<>();
 
             // find the most intense annotated peak
             double maxAnnotatedIntensity = 0.0;

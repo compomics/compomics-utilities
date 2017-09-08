@@ -207,7 +207,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public void initiateSorter() {
         int nRows = getRowCount();
-        viewIndexes = new ArrayList<Integer>(nRows);
+        viewIndexes = new ArrayList<>(nRows);
         for (int row = 0; row < nRows; row++) {
             viewIndexes.add(row);
         }
@@ -344,7 +344,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                     initiateSorter();
                     lastColumnSorted = 0;
 
-                    HashMap<Comparable, ArrayList<Integer>> valueToRowMap = new HashMap<Comparable, ArrayList<Integer>>();
+                    HashMap<Comparable, ArrayList<Integer>> valueToRowMap = new HashMap<>();
                     boolean comparable = false, string = false;
 
                     for (int row = 0; row < getRowCount() && (progressDialog != null && !progressDialog.isRunCanceled()); row++) {
@@ -359,7 +359,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                         }
                         ArrayList<Integer> rows = valueToRowMap.get(key);
                         if (rows == null) {
-                            rows = new ArrayList<Integer>();
+                            rows = new ArrayList<>();
                             valueToRowMap.put(key, rows);
                         }
                         rows.add(row);
@@ -373,9 +373,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                         return;
                     }
 
-                    ArrayList<Comparable> keys = new ArrayList<Comparable>(valueToRowMap.keySet());
+                    ArrayList<Comparable> keys = new ArrayList<>(valueToRowMap.keySet());
                     if (string && comparable) {
-                        ArrayList<Comparable> stringValues = new ArrayList<Comparable>();
+                        ArrayList<Comparable> stringValues = new ArrayList<>();
                         for (Comparable value : keys) {
                             stringValues.add(value.toString());
                         }
@@ -383,7 +383,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                     }
 
                     if (progressDialog == null || !progressDialog.isRunCanceled()) {
-                        viewIndexes = new ArrayList<Integer>();
+                        viewIndexes = new ArrayList<>();
                         Collections.sort(keys);
                         for (Comparable key : keys) {
                             viewIndexes.addAll(valueToRowMap.get(key));
@@ -478,7 +478,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         @Override
         public synchronized void run() {
             try {
-                ArrayList<Integer> viewIndexes = new ArrayList<Integer>(batchSize);
+                ArrayList<Integer> viewIndexes = new ArrayList<>(batchSize);
                 for (int row = rowStartLoading; row <= rowEndLoading; row++) {
                     viewIndexes.add(getViewIndex(row));
                 }

@@ -60,12 +60,12 @@ public abstract class GraphicsPanel extends JPanel {
      * A hashmap of the current x-axis reference areas. Key is the name of the
      * reference area.
      */
-    private HashMap<String, ReferenceArea> referenceAreasXAxis = new HashMap<String, ReferenceArea>();
+    private HashMap<String, ReferenceArea> referenceAreasXAxis = new HashMap<>();
     /**
      * A hashmap of the current y-axis reference areas. Key is the name of the
      * reference area.
      */
-    private HashMap<String, ReferenceArea> referenceAreasYAxis = new HashMap<String, ReferenceArea>();
+    private HashMap<String, ReferenceArea> referenceAreasYAxis = new HashMap<>();
     /**
      * If set to true, the y-axis is removed, the y- and x-axis tags are
      * removed, and any annotations are hidden. All to make the graphics panel
@@ -164,22 +164,22 @@ public abstract class GraphicsPanel extends JPanel {
      * Colors in which the data points and peaks are rendered. Indexed by
      * dataset.
      */
-    protected ArrayList<Color> iDataPointAndLineColor = new ArrayList<Color>();
+    protected ArrayList<Color> iDataPointAndLineColor = new ArrayList<>();
     /**
      * Colors in which the data points and peaks are rendered for the mirrored
      * spectra. Indexed by dataset.
      */
-    protected ArrayList<Color> iDataPointAndLineColorMirroredSpectra = new ArrayList<Color>();
+    protected ArrayList<Color> iDataPointAndLineColorMirroredSpectra = new ArrayList<>();
     /**
      * Colors in which the chromatogram polyline is rendered. Indexed by
      * dataset.
      */
-    protected ArrayList<Color> iAreaUnderCurveColor = new ArrayList<Color>();
+    protected ArrayList<Color> iAreaUnderCurveColor = new ArrayList<>();
     /**
      * Colors in which the chromatogram polyline is rendered for the mirrored
      * spectra. Indexed by dataset.
      */
-    protected ArrayList<Color> iAreaUnderCurveColorMirroredSpectra = new ArrayList<Color>();
+    protected ArrayList<Color> iAreaUnderCurveColorMirroredSpectra = new ArrayList<>();
     /**
      * Size for the point on a polygon.
      */
@@ -1180,7 +1180,7 @@ public abstract class GraphicsPanel extends JPanel {
         if (annotations != null && annotations.size() > 0 && !miniature) {
             // This HashMap will contain the indices of the points that already carry an annotation
             // as keys (datasetIndex_peakIndex), and the number of annotations as values.
-            HashMap<String, Integer> annotatedPeaks = new HashMap<String, Integer>();
+            HashMap<String, Integer> annotatedPeaks = new HashMap<>();
             for (Object o : annotations) {
                 if (o instanceof SpectrumAnnotation) {
                     SpectrumAnnotation sa = (SpectrumAnnotation) o;
@@ -1853,7 +1853,7 @@ public abstract class GraphicsPanel extends JPanel {
      * Removes all the x-axis reference areas.
      */
     public void removeAllReferenceAreasXAxis() {
-        referenceAreasXAxis = new HashMap<String, ReferenceArea>();
+        referenceAreasXAxis = new HashMap<>();
     }
 
     /**
@@ -1889,7 +1889,7 @@ public abstract class GraphicsPanel extends JPanel {
      * Removes all the y-axis reference areas.
      */
     public void removeAllReferenceAreasYAxis() {
-        referenceAreasYAxis = new HashMap<String, ReferenceArea>();
+        referenceAreasYAxis = new HashMap<>();
     }
 
     /**
@@ -2049,8 +2049,8 @@ public abstract class GraphicsPanel extends JPanel {
 
         // if first dataset, create the dataset array lists
         if (dataSetCounter == 0) {
-            iXAxisData = new ArrayList<double[]>();
-            iYAxisData = new ArrayList<double[]>();
+            iXAxisData = new ArrayList<>();
+            iYAxisData = new ArrayList<>();
         }
 
         // set the data colors
@@ -2112,8 +2112,8 @@ public abstract class GraphicsPanel extends JPanel {
         // create the dataset array lists
         // if first mirrored dataset, create the dataset array lists
         if (dataSetCounterMirroredSpectra == 0) {
-            iXAxisDataMirroredSpectrum = new ArrayList<double[]>();
-            iYAxisDataMirroredSpectrum = new ArrayList<double[]>();
+            iXAxisDataMirroredSpectrum = new ArrayList<>();
+            iYAxisDataMirroredSpectrum = new ArrayList<>();
         }
 
         // set the data colors
@@ -2975,7 +2975,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                 // look for combinations of two mass deltas
                 Iterator iter1 = iKnownMassDeltas.keySet().iterator();
-                ArrayList<String> addedMassDeltas = new ArrayList<String>();
+                ArrayList<String> addedMassDeltas = new ArrayList<>();
 
                 while (iter1.hasNext()) {
                     Double mass1 = (Double) iter1.next();
@@ -3103,8 +3103,8 @@ public abstract class GraphicsPanel extends JPanel {
         Color originalColor = g.getColor();
 
         // Init an array that holds pixel coordinates for each peak.
-        iXAxisDataInPixelsMirroredSpectrum = new ArrayList<int[]>();
-        iYAxisDataInPixelsMirroredSpectrum = new ArrayList<int[]>();
+        iXAxisDataInPixelsMirroredSpectrum = new ArrayList<>();
+        iYAxisDataInPixelsMirroredSpectrum = new ArrayList<>();
 
         // cycle the datasets
         for (int j = 0; j < iXAxisDataMirroredSpectrum.size(); j++) {
@@ -3216,8 +3216,8 @@ public abstract class GraphicsPanel extends JPanel {
         Color originalColor = g.getColor();
 
         // Init an array that holds pixel coordinates for each peak.
-        iXAxisDataInPixels = new ArrayList<int[]>();
-        iYAxisDataInPixels = new ArrayList<int[]>();
+        iXAxisDataInPixels = new ArrayList<>();
+        iYAxisDataInPixels = new ArrayList<>();
 
         // cycle the datasets
         for (int j = 0; j < iXAxisData.size(); j++) {
@@ -3338,8 +3338,8 @@ public abstract class GraphicsPanel extends JPanel {
         Composite originalComposite = g2d.getComposite();
 
         // init an array that holds pixel coordinates for each point.
-        iXAxisDataInPixels = new ArrayList<int[]>();
-        iYAxisDataInPixels = new ArrayList<int[]>();
+        iXAxisDataInPixels = new ArrayList<>();
+        iYAxisDataInPixels = new ArrayList<>();
 
         // cycle the datasets
         for (int j = 0; j < iXAxisData.size(); j++) {
@@ -3348,8 +3348,8 @@ public abstract class GraphicsPanel extends JPanel {
             iYAxisDataInPixels.add(new int[iYAxisData.get(j).length]);
 
             // These arrays only contain the visible points.
-            ArrayList<Integer> xAxisPointsShown = new ArrayList<Integer>();
-            ArrayList<Integer> yAxisPointsShown = new ArrayList<Integer>();
+            ArrayList<Integer> xAxisPointsShown = new ArrayList<>();
+            ArrayList<Integer> yAxisPointsShown = new ArrayList<>();
 
             // cycle the datapoints
             for (int i = 0; i < iXAxisData.get(j).length; i++) {

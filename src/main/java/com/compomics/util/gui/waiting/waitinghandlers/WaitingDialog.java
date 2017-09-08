@@ -58,7 +58,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * An array list of the tip of the day.
      */
-    private ArrayList<String> tips = new ArrayList<String>();
+    private ArrayList<String> tips = new ArrayList<>();
     /**
      * The current tip index.
      */

@@ -53,9 +53,9 @@ public class MapMutex<K> {
             this.cacheLimitSize = cacheLimitSize;
         }
         if (initialSize != null) {
-            this.semaphoreMap = new HashMap<K, Semaphore>(initialSize);
+            this.semaphoreMap = new HashMap<>(initialSize);
         } else {
-            this.semaphoreMap = new HashMap<K, Semaphore>();
+            this.semaphoreMap = new HashMap<>();
         }
     }
 
@@ -129,7 +129,7 @@ public class MapMutex<K> {
             writing = true;
             mutex.acquire();
             writing = true;
-            HashSet<K> keys = new HashSet<K>(semaphoreMap.keySet());
+            HashSet<K> keys = new HashSet<>(semaphoreMap.keySet());
             for (K tempKey : keys) {
                 Semaphore tempSemaphore = semaphoreMap.get(tempKey);
                 if (!tempSemaphore.hasQueuedThreads() && tempSemaphore.availablePermits() == permits) {

@@ -30,11 +30,11 @@ public class ExportScheme implements Serializable {
     /**
      * Ordered list of the features in that scheme.
      */
-    private ArrayList<String> sectionList = new ArrayList<String>();
+    private ArrayList<String> sectionList = new ArrayList<>();
     /**
      * Map of the features to export indexed by feature type.
      */
-    private HashMap<String, ArrayList<ExportFeature>> exportFeaturesMap = new HashMap<String, ArrayList<ExportFeature>>();
+    private HashMap<String, ArrayList<ExportFeature>> exportFeaturesMap = new HashMap<>();
     /**
      * The separator used to separate columns.
      */
@@ -257,7 +257,7 @@ public class ExportScheme implements Serializable {
     public void addExportFeature(String section, ExportFeature exportFeature) {
         ArrayList<ExportFeature> sectionFeatures = exportFeaturesMap.get(section);
         if (sectionFeatures == null) {
-            sectionFeatures = new ArrayList<ExportFeature>();
+            sectionFeatures = new ArrayList<>();
             exportFeaturesMap.put(section, sectionFeatures);
             sectionList.add(section);
         }

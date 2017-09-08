@@ -1,6 +1,6 @@
 package com.compomics.util.gui;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import java.awt.event.KeyEvent;
 
 /**

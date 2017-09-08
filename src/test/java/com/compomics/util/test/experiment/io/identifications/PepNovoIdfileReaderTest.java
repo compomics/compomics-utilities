@@ -1,6 +1,6 @@
 package com.compomics.util.test.experiment.io.identifications;
 
-import com.compomics.util.experiment.io.identifications.idfilereaders.PepNovoIdfileReader;
+import com.compomics.util.experiment.io.identification.idfilereaders.PepNovoIdfileReader;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import java.io.File;
 import java.io.IOException;

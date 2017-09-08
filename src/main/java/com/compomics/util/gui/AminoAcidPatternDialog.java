@@ -1,9 +1,9 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 import java.awt.event.MouseEvent;
@@ -84,7 +84,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             cancelButton.setEnabled(false);
         }
 
-        patternDesignTableToolTips = new ArrayList<String>();
+        patternDesignTableToolTips = new ArrayList<>();
         patternDesignTableToolTips.add(null);
         patternDesignTableToolTips.add("Reference Index");
         patternDesignTableToolTips.add("The targeted amino acids");
@@ -441,7 +441,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
-        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<Character>(1));
+        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<>(1));
         repaintTable();
     }//GEN-LAST:event_addJMenuItemActionPerformed
 
@@ -595,7 +595,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @return the corresponding list of amino acids
      */
     private ArrayList<Character> getAAfromString(String aminoAcids) {
-        ArrayList<Character> result = new ArrayList<Character>();
+        ArrayList<Character> result = new ArrayList<>();
         for (String aa : aminoAcids.split(",")) {
             String input = aa.trim();
             input = input.toUpperCase();
@@ -628,7 +628,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingPreferences.defaultStringMatching);
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingParameters.defaultStringMatching);
 
         String result = "";
 

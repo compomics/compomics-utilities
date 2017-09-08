@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
@@ -28,8 +28,11 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param sequence the sequence to iterate
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, Double massMin, Double massMax) {
+    public NoDigestionIterator(ProteinIteratorUtils proteinIteratorUtils, String sequence, double massMin, double massMax) throws InterruptedException {
 
         this.proteinIteratorUtils = proteinIteratorUtils;
         setPeptide(sequence, massMin, massMax);
@@ -52,14 +55,17 @@ public class NoDigestionIterator implements SequenceIterator {
      * @param sequence the amino acid sequence
      * @param massMin the minimal mass
      * @param massMax the maximal mass
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    private void setPeptide(String sequence, Double massMin, Double massMax) {
+    private void setPeptide(String sequence, double massMin, double massMax) throws InterruptedException {
 
         Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, 0, massMin, massMax);
 
         if (peptide != null
-                && (massMin == null || peptide.getMass() >= massMin)
-                && (massMax == null || peptide.getMass() <= massMax)) {
+                && peptide.getMass() >= massMin
+                && peptide.getMass() <= massMax) {
             peptideWithPosition = new PeptideWithPosition(peptide, 0);
         }
     }

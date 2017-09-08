@@ -35,9 +35,9 @@ public class EnsemblSpecies {
      * Constructor.
      */
     public EnsemblSpecies() {
-        idToNameMap = new HashMap<Integer, String>();
-        idToCommonNameMap = new HashMap<Integer, String>();
-        idToAssemblyMap = new HashMap<Integer, String>();
+        idToNameMap = new HashMap<>();
+        idToCommonNameMap = new HashMap<>();
+        idToAssemblyMap = new HashMap<>();
     }
 
     /**
@@ -134,6 +134,6 @@ public class EnsemblSpecies {
      * @return the taxons in this map
      */
     public HashSet<Integer> getTaxons() {
-        return new HashSet<Integer>(idToAssemblyMap.keySet());
+        return new HashSet<>(idToAssemblyMap.keySet());
     }
 }

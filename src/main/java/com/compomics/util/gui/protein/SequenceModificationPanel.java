@@ -98,7 +98,7 @@ public class SequenceModificationPanel extends JPanel {
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
         this.setMaximumSize(new Dimension(estimateWidth(), estimateHeight()));
 
-        fragmentIonRectangles = new HashMap<String, Rectangle>();
+        fragmentIonRectangles = new HashMap<>();
 
         addMouseMotionListener(new MouseMotionAdapter() {
 

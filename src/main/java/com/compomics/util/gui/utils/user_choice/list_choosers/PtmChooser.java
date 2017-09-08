@@ -1,7 +1,7 @@
 package com.compomics.util.gui.utils.user_choice.list_choosers;
 
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.gui.utils.user_choice.ListChooser;
 import java.util.ArrayList;
 import javax.swing.JTable;
@@ -20,11 +20,11 @@ public class PtmChooser extends ListChooser {
     /**
      * The post translational modifications factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * List of PTMs to display.
      */
-    private ArrayList<String> ptmList = new ArrayList<String>();
+    private ArrayList<String> ptmList = new ArrayList<>();
 
     /**
      * Constructor. Null values will be replaced by default.
@@ -68,7 +68,7 @@ public class PtmChooser extends ListChooser {
         double minMass = 0;
         double maxMass = 0;
         for (String modification : ptmList) {
-            PTM ptm = ptmFactory.getPTM(modification);
+            Modification ptm = ptmFactory.getModification(modification);
             double mass = ptm.getMass();
             if (mass < minMass) {
                 minMass = mass;
@@ -130,7 +130,7 @@ public class PtmChooser extends ListChooser {
                 case 1:
                     return ptmName;
                 case 2:
-                    PTM ptm = ptmFactory.getPTM(ptmName);
+                    Modification ptm = ptmFactory.getModification(ptmName);
                     return ptm.getMass();
                 default:
                     return "";

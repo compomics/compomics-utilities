@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,12 +35,12 @@ public class NeutralLossesMap implements Serializable {
      * Map indicating for each neutral loss when they should start being
      * accounted for the forward ions (b ions for instance).
      */
-    private HashMap<String, Integer> forwardBoundaries = new HashMap<String, Integer>();
+    private HashMap<String, Integer> forwardBoundaries = new HashMap<String, Integer>(2);
     /**
      * Map indicating for each neutral loss when they should start being
      * accounted for the reverse ions (y ions for instance).
      */
-    private HashMap<String, Integer> rewindBoundaries = new HashMap<String, Integer>();
+    private HashMap<String, Integer> rewindBoundaries = new HashMap<String, Integer>(2);
     /**
      * Cache for the accounted neutral losses.
      */
@@ -58,7 +58,7 @@ public class NeutralLossesMap implements Serializable {
      */
     public void backwardCompatibilityFix() {
         if (forwardBoundaries == null) {
-            forwardBoundaries = new HashMap<String, Integer>();
+            forwardBoundaries = new HashMap<>();
             if (bBoundaries != null) {
                 for (NeutralLoss neutralLoss : bBoundaries.keySet()) {
                     Integer boundary = bBoundaries.get(neutralLoss);
@@ -69,7 +69,7 @@ public class NeutralLossesMap implements Serializable {
             }
         }
         if (rewindBoundaries == null) {
-            rewindBoundaries = new HashMap<String, Integer>();
+            rewindBoundaries = new HashMap<>();
             if (yBoundaries != null) {
                 for (NeutralLoss neutralLoss : yBoundaries.keySet()) {
                     Integer boundary = yBoundaries.get(neutralLoss);
@@ -158,7 +158,7 @@ public class NeutralLossesMap implements Serializable {
     public ArrayList<String> getAccountedNeutralLosses() {
         backwardCompatibilityFix();
         if (accountedNeutralLosses == null) {
-            accountedNeutralLosses = new ArrayList<String>(forwardBoundaries.keySet());
+            accountedNeutralLosses = new ArrayList<>(forwardBoundaries.keySet());
         }
         return accountedNeutralLosses;
     }

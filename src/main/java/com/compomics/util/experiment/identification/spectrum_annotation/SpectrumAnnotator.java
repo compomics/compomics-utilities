@@ -2,28 +2,24 @@ package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.Ion.IonType;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
-import com.compomics.util.experiment.massspectrometry.indexes.SpectrumIndex;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.IOException;
-import java.sql.SQLException;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,17 +42,35 @@ public abstract class SpectrumAnnotator {
          * The most intense peak is retained. If two peaks have the same
          * intensity, the one with the most accurate m/z is retained.
          */
-        mostIntense,
+        mostIntense("Higest intensity"),
         /**
          * The peak of most accurate m/z is retained. If two peaks have the same
          * error the most intense is retained.
          */
-        mostAccurateMz;
+        mostAccurateMz("Most accurate m/z");
+
+        /**
+         * The description.
+         */
+        public final String description;
+
+        /**
+         * Constructor.
+         *
+         * @param description the description
+         */
+        private TiesResolution(String description) {
+            this.description = description;
+        }
     }
     /**
      * The precursor charge as deduced by the search engine.
      */
     protected int precursorCharge;
+    /**
+     * The precursor charges to inspect by default.
+     */
+    protected ArrayList<Integer> defaultPrecursorCharges;
     /**
      * The theoretic fragment ions.
      */
@@ -120,7 +134,7 @@ public abstract class SpectrumAnnotator {
      * If provided, the annotator will only look for the ions included in the
      * specific annotation settings.
      */
-    protected SpecificAnnotationSettings specificAnnotationSettings = null;
+    protected SpecificAnnotationParameters specificAnnotationSettings = null;
     /**
      * The cache to use for the ion match keys.
      */
@@ -226,7 +240,7 @@ public abstract class SpectrumAnnotator {
      * @param spectrum the spectrum to inspect
      * @param intensityLimit the minimal intensity to account for
      */
-    protected void setSpectrum(MSnSpectrum spectrum, double intensityLimit) {
+    protected void setSpectrum(Spectrum spectrum, double intensityLimit) {
         if (spectrumIndex == null || !spectrumKey.equals(spectrum.getSpectrumKey()) || this.intensityLimit != intensityLimit) {
 
             // Save spectrum number and intensity limit
@@ -238,8 +252,10 @@ public abstract class SpectrumAnnotator {
             spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
 
             // Create new index
-            spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
-            spectrum.addUrParam(spectrumIndex);
+            if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit) {
+                spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
+                spectrum.addUrParam(spectrumIndex);
+            }
         }
     }
 
@@ -378,7 +394,7 @@ public abstract class SpectrumAnnotator {
     }
 
     /**
-     * Returns the currently matched ions with the given settings.
+     * Returns the currently matched ions with the given settings using the intensity filter.
      *
      * @param spectrum the spectrum of interest
      * @param annotationSettings the annotation settings
@@ -386,7 +402,21 @@ public abstract class SpectrumAnnotator {
      *
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings);
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings) {
+        return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
+    }
+
+    /**
+     * Returns the currently matched ions with the given settings.
+     *
+     * @param spectrum the spectrum of interest
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     *
+     * @return the currently matched ions with the given settings
+     */
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter);
 
     /**
      * Returns the spectrum currently inspected.
@@ -555,27 +585,19 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
+     * @param sequenceProvider a sequence provide able to retrieve the protein sequence for the given peptide
      * @param sequenceMatchingPreferences the sequence matching settings for
      * peptide to protein mapping
      * @param ptmSequenceMatchingPreferences the sequence matching settings for
      * PTM to peptide mapping
      *
      * @return the expected possible neutral losses
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider, SequenceMatchingParameters sequenceMatchingPreferences,
+            SequenceMatchingParameters ptmSequenceMatchingPreferences) {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
             return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), ptmSequenceMatchingPreferences);
@@ -593,9 +615,9 @@ public abstract class SpectrumAnnotator {
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
+    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationParameters specificAnnotationSettings, Peak peak) {
 
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        ArrayList<IonMatch> result = new ArrayList<>();
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
@@ -638,9 +660,9 @@ public abstract class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings) {
+    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationParameters specificAnnotationSettings) {
 
-        HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
+        HashMap<Integer, ArrayList<Ion>> result = new HashMap<>();
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
@@ -656,7 +678,7 @@ public abstract class SpectrumAnnotator {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         ArrayList<Ion> resultsAtCharge = result.get(charge);
                                         if (resultsAtCharge == null) {
-                                            resultsAtCharge = new ArrayList<Ion>();
+                                            resultsAtCharge = new ArrayList<>();
                                             result.put(charge, resultsAtCharge);
                                         }
                                         resultsAtCharge.add(ion);
@@ -682,12 +704,9 @@ public abstract class SpectrumAnnotator {
      * @param massTolerance the mass tolerance to use
      *
      * @return a list of all the ion matches
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
-    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) throws InterruptedException {
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>(1);
+    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
+        ArrayList<IonMatch> result = new ArrayList<>(1);
         double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {
             if (Math.abs(mz - targetMass) <= massTolerance) {

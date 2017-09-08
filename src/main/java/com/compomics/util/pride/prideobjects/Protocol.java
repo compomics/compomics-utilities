@@ -79,10 +79,10 @@ public class Protocol implements PrideObject, Serializable {
      * @return a list of default protocols
      */
     public static ArrayList<Protocol> getDefaultProtocols() {
-        ArrayList<Protocol> result = new ArrayList<Protocol>();
+        ArrayList<Protocol> result = new ArrayList<>();
 
         result.add(new Protocol("In Gel Protein Digestion",
-                new ArrayList<CvTerm>(Arrays.asList(
+                new ArrayList<>(Arrays.asList(
                 new CvTerm("PRIDE", "PRIDE:0000025", "Reduction", "DTT"),
                 new CvTerm("PRIDE", "PRIDE:0000026", "Alkylation", "iodoacetamide"),
                 new CvTerm("PRIDE", "PRIDE:0000160", "Enzyme", "Trypsin")))));

@@ -77,7 +77,7 @@ public class ReferenceGroup implements PrideObject, Serializable {
      * @return the default references
      */
     public static ArrayList<ReferenceGroup> getDefaultReferences() {
-        ArrayList<ReferenceGroup> result = new ArrayList<ReferenceGroup>();
+        ArrayList<ReferenceGroup> result = new ArrayList<>();
         return result;
     }
 

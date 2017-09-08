@@ -2,9 +2,9 @@ package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
-import com.compomics.util.experiment.identification.ptm.PtmScore;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.experiment.identification.modification.PtmScore;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import org.apache.commons.cli.Options;
 
 /**
@@ -40,10 +40,10 @@ public enum IdentificationParametersCLIParams {
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance, default is '0.5'.", false, true),
-    DIGESTION("digestion", "The type of digestion to consider: " + DigestionPreferences.CleavagePreference.getCommandLineDescription() + ". Default is 0.", false, true),
+    DIGESTION("digestion", "The type of digestion to consider: " + DigestionParameters.CleavagePreference.getCommandLineDescription() + ". Default is 0.", false, true),
     ENZYME("enzyme", "Enzyme used, default is 'Trypsin'. If more than one enzyme was used, please provide them as comma separated list with quotes, e.g. \"Trypsin, Glu-C\". See EnzymesCLI to list and edit the enzymes.", false, true),
     MC("mc", "Number of allowed missed cleavages, default is '2'. If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"2, 1\".", false, true),
-    SPECIFICITY("specificity", "Specificity of the enzyme." + DigestionPreferences.Specificity.getCommandLineDescription() + ". If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"0, 1\".", false, true),
+    SPECIFICITY("specificity", "Specificity of the enzyme." + DigestionParameters.Specificity.getCommandLineDescription() + ". If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"0, 1\".", false, true),
     FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false, true),
     VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\". See ModificationsCLI to list and edit the enzymes", false, true),
     MIN_CHARGE("min_charge", "Minimal charge to search for, default is '2'.", false, true),
@@ -299,8 +299,8 @@ public enum IdentificationParametersCLIParams {
     // Sequence matching
     //////////////////////////////////
     SEQUENCE_INDEX_TYPE("sequence_index_type", "The protein database index type. (" + PeptideMapperType.getCommandLineOptions() + ", default is " + PeptideMapperType.fm_index.index + ")", false, true),
-    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() 
-            + ", default is " + SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids + ")", false, true),
+    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
+            + ", default is " + SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids + ")", false, true),
     SEQUENCE_MATCHING_X("sequence_matching_x", "The maximum share of X's in a sequence, 0.25 means 25% of X's, default is 0.25.", false, true),
     //////////////////////////////////
     // Import filters
@@ -318,8 +318,8 @@ public enum IdentificationParametersCLIParams {
     PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + PtmScore.getCommandLineOptions() + ", default is '1').", false, true),
     PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
-    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() 
-            + ", default is " + SequenceMatchingPreferences.MatchingType.aminoAcid + ")", false, true),
+    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
+            + ", default is " + SequenceMatchingParameters.MatchingType.aminoAcid + ")", false, true),
     PTM_ALIGNMENT("ptm_alignment", "Align peptide ambiguously localized PTMs on confident sites (1: true, 0: false, default is '1').", false, true),
     //////////////////////////////////
     // Protein inference parameters

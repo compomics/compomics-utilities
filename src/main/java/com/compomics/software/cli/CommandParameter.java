@@ -1,7 +1,7 @@
 package com.compomics.software.cli;
 
 import com.compomics.util.Util;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -149,8 +149,8 @@ public class CommandParameter {
      * @return true of the input is in the list
      */
     public static boolean isSequenceMatchingType(String argType, String arg) {
-        List<String> supportedInput = new ArrayList<String>(SequenceMatchingPreferences.MatchingType.values().length);
-        for (SequenceMatchingPreferences.MatchingType tempMatchType : SequenceMatchingPreferences.MatchingType.values()) {
+        List<String> supportedInput = new ArrayList<>(SequenceMatchingParameters.MatchingType.values().length);
+        for (SequenceMatchingParameters.MatchingType tempMatchType : SequenceMatchingParameters.MatchingType.values()) {
             supportedInput.add("" + tempMatchType.index);
         }
         return isInList(argType, arg, supportedInput);
@@ -275,7 +275,7 @@ public class CommandParameter {
         if (formats != null) {
             String extension = Util.getExtension(input);
             if (!formats.contains(extension)) {
-                ArrayList<String> sortedFormats = new ArrayList<String>(formats);
+                ArrayList<String> sortedFormats = new ArrayList<>(formats);
                 Collections.sort(sortedFormats);
                 StringBuilder supportedExtensions = new StringBuilder();
                 for (String format : sortedFormats) {

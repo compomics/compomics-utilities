@@ -62,7 +62,7 @@ public class DataRoc implements ROC {
         }
         this.rocInterpolation = rocInterpolation;
         // values map: value -> {# control, # patients}
-        HashMap<Double, int[]> valuesMap = new HashMap<Double, int[]>();
+        HashMap<Double, int[]> valuesMap = new HashMap<>();
         int nControls = 0;
         for (Double value : controlValues) {
             int[] n = valuesMap.get(value);
@@ -85,9 +85,9 @@ public class DataRoc implements ROC {
             }
             nPatients++;
         }
-        xValues = new ArrayList<Double>();
-        yValues = new ArrayList<Double>();
-        ArrayList<Double> values = new ArrayList<Double>(valuesMap.keySet());
+        xValues = new ArrayList<>();
+        yValues = new ArrayList<>();
+        ArrayList<Double> values = new ArrayList<>(valuesMap.keySet());
         Collections.sort(values);
         int patientCpt = 0;
         int controlCpt = 0;

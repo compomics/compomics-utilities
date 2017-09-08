@@ -1,10 +1,10 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.AmbiguousSequenceIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
@@ -36,11 +36,11 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
     /**
      * The minimal mass to consider.
      */
-    private Double massMin;
+    private double massMin;
     /**
      * The maximal mass to consider.
      */
-    private Double massMax;
+    private double massMax;
     /**
      * The enzyme to use to digest the sequence.
      */
@@ -100,7 +100,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public SpecificSingleEnzymeCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Enzyme enzyme, int nMissedCleavages, Double massMin, Double massMax) {
+    public SpecificSingleEnzymeCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Enzyme enzyme, int nMissedCleavages, double massMin, double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
@@ -108,16 +108,16 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
         this.nMissedCleavages = nMissedCleavages;
         this.massMin = massMin;
         this.massMax = massMax;
-        this.peptideStartMap = new HashMap<Integer, Integer>(nMissedCleavages + 1);
-        this.result = new ArrayList<PeptideWithPosition>(nMissedCleavages + 1);
-        this.ambiguousPeptidesStartMap = new HashMap<String, Integer>(nMissedCleavages + 1);
-        this.ambiguousPeptidesMC = new HashMap<String, Integer>(nMissedCleavages + 1);
-        this.ambiguousPeptidesXs = new HashMap<String, Integer>(nMissedCleavages + 1);
+        this.peptideStartMap = new HashMap<>(nMissedCleavages + 1);
+        this.result = new ArrayList<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesStartMap = new HashMap<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesMC = new HashMap<>(nMissedCleavages + 1);
+        this.ambiguousPeptidesXs = new HashMap<>(nMissedCleavages + 1);
         this.ambiguousPeptides = new String[0];
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
 
         // Return the next result if any
         resultIndex++;
@@ -147,8 +147,8 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
             int startIndex = ambiguousPeptidesStartMap.get(ambiguousSequence);
             Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, startIndex, massMin, massMax);
             if (peptide != null
-                    && (massMin == null || peptide.getMass() >= massMin)
-                    && (massMax == null || peptide.getMass() <= massMax)) {
+                    && (peptide.getMass() >= massMin)
+                    && (peptide.getMass() <= massMax)) {
                 return new PeptideWithPosition(peptide, startIndex);
             }
             return getNextPeptide();
@@ -172,12 +172,15 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
     /**
      * Iterates the sequence to the next missed cleavage and stores the peptides
      * found in the result list.
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    private void iterateSequence() {
+    private void iterateSequence() throws InterruptedException {
 
         int initialIndex = sequenceIndex;
 
-        ArrayList<Character> firstAaCombination = new ArrayList<Character>(1);
+        ArrayList<Character> firstAaCombination = new ArrayList<>(1);
         if (sequenceIndex > 0) {
             char aaAfter = proteinSequenceAsCharArray[sequenceIndex];
             AminoAcid aminoAcidAfter = AminoAcid.getAminoAcid(aaAfter);
@@ -197,7 +200,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
             firstAaCombination.add(proteinSequenceAsCharArray[sequenceIndex]);
         }
 
-        ArrayList<Character> lastAaCombination = new ArrayList<Character>(1);
+        ArrayList<Character> lastAaCombination = new ArrayList<>(1);
         int nX = 0;
         while (++sequenceIndex < proteinSequenceAsCharArray.length) {
 
@@ -233,25 +236,25 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
         }
 
         result.clear();
-        HashMap<String, Integer> newAmbiguousPeptidesStartMap = new HashMap<String, Integer>(ambiguousPeptidesStartMap.size());
-        HashMap<String, Integer> newambiguousPeptidesMC = new HashMap<String, Integer>(ambiguousPeptidesMC.size());
-        HashMap<String, Integer> newambiguousPeptidesXs = new HashMap<String, Integer>(ambiguousPeptidesXs.size());
-        HashMap<Integer, Integer> newPeptideStartMap = new HashMap<Integer, Integer>(peptideStartMap.size());
+        HashMap<String, Integer> newAmbiguousPeptidesStartMap = new HashMap<>(ambiguousPeptidesStartMap.size());
+        HashMap<String, Integer> newambiguousPeptidesMC = new HashMap<>(ambiguousPeptidesMC.size());
+        HashMap<String, Integer> newambiguousPeptidesXs = new HashMap<>(ambiguousPeptidesXs.size());
+        HashMap<Integer, Integer> newPeptideStartMap = new HashMap<>(peptideStartMap.size());
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
         for (char firstAa : firstAaCombination) {
             newSequence[0] = firstAa;
             for (char lastAa : lastAaCombination) {
                 newSequence[newSequence.length - 1] = lastAa;
-                BoxedObject<Boolean> smallMass = new BoxedObject<Boolean>(Boolean.TRUE);
+                BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
                 if (!AminoAcidSequence.hasCombination(newSequence)) {
                     Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
                     if (peptide != null
-                            && (massMin == null || peptide.getMass() >= massMin)
-                            && (massMax == null || peptide.getMass() <= massMax)) {
+                            && peptide.getMass() >= massMin
+                            && peptide.getMass() <= massMax) {
                         result.add(new PeptideWithPosition(peptide, initialIndex));
                     }
                 } else if (nX <= proteinIteratorUtils.getMaxXsInSequence()) {
-                    smallMass.setObject(massMax == null || AminoAcidSequence.getMinMass(newSequence) <= massMax);
+                    smallMass.setObject(AminoAcidSequence.getMinMass(newSequence) <= massMax);
                     if (smallMass.getObject()) {
                         String newSequenceAsString = new String(newSequence);
                         newAmbiguousPeptidesStartMap.put(newSequenceAsString, initialIndex);
@@ -269,8 +272,8 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
                                 smallMass.setObject(Boolean.TRUE);
                                 Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, peptideStart, massMin, massMax, smallMass);
                                 if (peptide != null
-                                        && (massMin == null || peptide.getMass() >= massMin)
-                                        && (massMax == null || peptide.getMass() <= massMax)) {
+                                        && peptide.getMass() >= massMin
+                                        && peptide.getMass() <= massMax) {
                                     result.add(new PeptideWithPosition(peptide, initialIndex));
                                 }
                                 int peptideMissedCleavages = peptideStartMap.get(peptideStart);

@@ -3,11 +3,11 @@ package com.compomics.util.gui.genes;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import javax.swing.JPanel;
@@ -33,14 +33,18 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      */
     private GeneMaps geneMaps;
     /**
+     * The protein 
+     */
+    private ProteinDetailsProvider proteinDetailsProvider;
+    /**
      * The protein accessions of this match.
      */
-    private ArrayList<String> proteinAccessions = new ArrayList<String>();
+    private ArrayList<String> proteinAccessions = new ArrayList<>();
     /**
      * The protein accession column in the table. Only used if more than one
      * accession.
      */
-    private ArrayList<String> proteinAccessionColumn = new ArrayList<String>();
+    private ArrayList<String> proteinAccessionColumn = new ArrayList<>();
     /**
      * The GO term descriptions attached to this protein match.
      */
@@ -60,43 +64,34 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * Creates a new GeneDetailsDialog.
      *
      * @param parent the parent frame
-     * @param proteinMatchKey the protein match key
+     * @param proteinMatch the protein match
      * @param geneMaps the gene maps
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file.
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover.
+     * @param proteinDetailsProvider a provider for protein details
      */
-    public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey, GeneMaps geneMaps) throws IOException, InterruptedException {
+    public GeneDetailsDialog(java.awt.Frame parent, ProteinMatch proteinMatch, GeneMaps geneMaps, ProteinDetailsProvider proteinDetailsProvider) {
         super(parent, true);
         initComponents();
         this.geneMaps = geneMaps;
-        proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
+        proteinAccessions = proteinMatch.getAccessions();
         goTable.setModel(new GOTableModel());
         if (geneMaps != null) {
-            goTermDescriptions = new ArrayList<String>();
+            goTermDescriptions = new ArrayList<>();
 
-            if (proteinAccessions.size() == 1) {
-                goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
-                Collections.sort(goTermDescriptions);
-            } else {
-                for (String accession : proteinAccessions) {
+            for (String accession : proteinAccessions) {
 
-                    HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
-                    ArrayList<String> tempGoNameAccessionsArray = new ArrayList<String>();
-                    tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
-                    Collections.sort(tempGoNameAccessionsArray);
+                HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
+                ArrayList<String> tempGoNameAccessionsArray = new ArrayList<>();
+                tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
+                Collections.sort(tempGoNameAccessionsArray);
 
-                    goTermDescriptions.addAll(tempGoNameAccessionsArray);
+                goTermDescriptions.addAll(tempGoNameAccessionsArray);
 
-                    for (int i = 0; i < tempGoNameAccessionsArray.size(); i++) {
-                        proteinAccessionColumn.add(accession);
-                    }
+                for (int i = 0; i < tempGoNameAccessionsArray.size(); i++) {
+                    proteinAccessionColumn.add(accession);
                 }
             }
         } else {
-            goTermDescriptions = new ArrayList<String>(0);
+            goTermDescriptions = new ArrayList<>(0);
         }
         setUpGUI();
         setLocationRelativeTo(parent);
@@ -105,13 +100,8 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Set up the GUI.
-     *
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the FASTA file
-     * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the FASTA file to recover
      */
-    private void setUpGUI() throws IOException, InterruptedException {
+    private void setUpGUI() {
 
         goTable.getColumn("Accession").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
 
@@ -151,7 +141,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         goTableScrollPane.getViewport().setOpaque(false);
 
         String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
-        ArrayList<String> geneNames = new ArrayList<String>();
+        ArrayList<String> geneNames = new ArrayList<>();
         for (String accession : proteinAccessions) {
             if (title.isEmpty()) {
                 title += "Gene details for ";
@@ -160,11 +150,11 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             }
             title += accession;
 
-            String geneName = geneMaps.getGeneNameForProtein(accession);
+            String geneName = proteinDetailsProvider.getGeneName(accession);
             geneNames.add(geneName);
         }
 
-        ArrayList<String> chromosomes = new ArrayList<String>();
+        ArrayList<String> chromosomes = new ArrayList<>();
 
         for (String geneName : geneNames) {
             if (!geneIdsTxt.equals("")) {

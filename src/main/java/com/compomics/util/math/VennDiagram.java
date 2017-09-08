@@ -21,28 +21,28 @@ public class VennDiagram {
      */
     public static HashMap<String, ArrayList<String>> vennDiagramMaker(ArrayList<String> groupA, ArrayList<String> groupB, ArrayList<String> groupC, ArrayList<String> groupD) {
 
-        HashMap<String, ArrayList<String>> tempVennDiagramResults = new HashMap<String, ArrayList<String>>();
+        HashMap<String, ArrayList<String>> tempVennDiagramResults = new HashMap<>();
 
-        ArrayList<String> a = new ArrayList<String>();
-        ArrayList<String> b = new ArrayList<String>();
-        ArrayList<String> c = new ArrayList<String>();
-        ArrayList<String> d = new ArrayList<String>();
+        ArrayList<String> a = new ArrayList<>();
+        ArrayList<String> b = new ArrayList<>();
+        ArrayList<String> c = new ArrayList<>();
+        ArrayList<String> d = new ArrayList<>();
 
-        ArrayList<String> ab = new ArrayList<String>();
-        ArrayList<String> ac = new ArrayList<String>();
-        ArrayList<String> ad = new ArrayList<String>();
-        ArrayList<String> bc = new ArrayList<String>();
-        ArrayList<String> bd = new ArrayList<String>();
-        ArrayList<String> cd = new ArrayList<String>();
+        ArrayList<String> ab = new ArrayList<>();
+        ArrayList<String> ac = new ArrayList<>();
+        ArrayList<String> ad = new ArrayList<>();
+        ArrayList<String> bc = new ArrayList<>();
+        ArrayList<String> bd = new ArrayList<>();
+        ArrayList<String> cd = new ArrayList<>();
 
-        ArrayList<String> abc = new ArrayList<String>();
-        ArrayList<String> abd = new ArrayList<String>();
-        ArrayList<String> acd = new ArrayList<String>();
-        ArrayList<String> bcd = new ArrayList<String>();
+        ArrayList<String> abc = new ArrayList<>();
+        ArrayList<String> abd = new ArrayList<>();
+        ArrayList<String> acd = new ArrayList<>();
+        ArrayList<String> bcd = new ArrayList<>();
 
-        ArrayList<String> abcd = new ArrayList<String>();
+        ArrayList<String> abcd = new ArrayList<>();
 
-        ArrayList<String> allDataPoints = new ArrayList<String>();
+        ArrayList<String> allDataPoints = new ArrayList<>();
 
         for (String temp : groupA) {
 

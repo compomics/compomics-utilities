@@ -143,7 +143,7 @@ public class CommandLineUtils {
      * @return an arraylist containing the results, empty list if empty string
      */
     public static ArrayList<String> splitInput(String cliInput) {
-        ArrayList<String> results = new ArrayList<String>();
+        ArrayList<String> results = new ArrayList<>();
 
         // empty input, return the empty list
         if (cliInput == null || cliInput.trim().length() == 0) {
@@ -168,7 +168,7 @@ public class CommandLineUtils {
      * found
      */
     public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtentions) throws FileNotFoundException {
-        ArrayList<File> result = new ArrayList<File>();
+        ArrayList<File> result = new ArrayList<>();
         ArrayList<String> files = splitInput(optionInput);
         if (files.size() == 1) {
             File testFile = new File(files.get(0));
@@ -226,7 +226,7 @@ public class CommandLineUtils {
      * @return the list if integers
      */
     public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         for (String component : aString.split(separator)) {
             try {
                 Integer input = new Integer(component.trim());
@@ -247,7 +247,7 @@ public class CommandLineUtils {
      * @return the list if doubles
      */
     public static ArrayList<Double> getDoubleListFromString(String aString, String separator) {
-        ArrayList<Double> result = new ArrayList<Double>();
+        ArrayList<Double> result = new ArrayList<>();
         for (String component : aString.split(separator)) {
             result.add(new Double(component.trim()));
         }

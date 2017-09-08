@@ -32,7 +32,7 @@ public class ReportEditor extends javax.swing.JDialog {
     /**
      * The original selection.
      */
-    private HashMap<String, ArrayList<ExportFeature>> selection = new HashMap<String, ArrayList<ExportFeature>>();
+    private HashMap<String, ArrayList<ExportFeature>> selection = new HashMap<>();
     /**
      * The selected section name.
      */
@@ -57,11 +57,11 @@ public class ReportEditor extends javax.swing.JDialog {
         this.editable = editable;
         initComponents();
         oldName = exportSchemeName;
-        selection = new HashMap<String, ArrayList<ExportFeature>>();
+        selection = new HashMap<>();
         ExportScheme exportScheme = exportFactory.getExportScheme(exportSchemeName);
         for (String section : exportScheme.getSections()) {
             if (!selection.containsKey(section)) {
-                selection.put(section, new ArrayList<ExportFeature>());
+                selection.put(section, new ArrayList<>());
             }
             selection.get(section).addAll(exportScheme.getExportFeatures(section));
         }
@@ -593,7 +593,7 @@ public class ReportEditor extends javax.swing.JDialog {
                 separator = " ";
             }
 
-            HashMap<String, ArrayList<ExportFeature>> features = new HashMap<String, ArrayList<ExportFeature>>(selection);
+            HashMap<String, ArrayList<ExportFeature>> features = new HashMap<>(selection);
 
             if (maintTitleCheckBox.isSelected()) {
                 ExportScheme exportScheme = new ExportScheme(newName, true, features, separator,
@@ -710,7 +710,7 @@ public class ReportEditor extends javax.swing.JDialog {
     private void setSelected(String section, ExportFeature exportFeature, Boolean selected) {
         if (selected) {
             if (!selection.containsKey(section)) {
-                selection.put(section, new ArrayList<ExportFeature>());
+                selection.put(section, new ArrayList<>());
             }
             if (!selection.get(section).contains(exportFeature)) {
                 selection.get(section).add(exportFeature);
@@ -729,7 +729,7 @@ public class ReportEditor extends javax.swing.JDialog {
      * Updates the feature table content based on the section name.
      */
     private void updateFeatureTableContent() {
-        featuresList = new ArrayList<ExportFeature>();
+        featuresList = new ArrayList<>();
         if (sectionName != null) {
             if (advancedFeaturesCheck.isSelected()) {
                 featuresList.addAll(exportFactory.getExportFeatures(sectionName, subFeaturesCheck.isSelected()));
@@ -758,7 +758,7 @@ public class ReportEditor extends javax.swing.JDialog {
          * Constructor.
          */
         public SectionsTableModel() {
-            sectionList = new ArrayList<String>();
+            sectionList = new ArrayList<>();
             sectionList.addAll(exportFactory.getImplementedSections());
         }
 

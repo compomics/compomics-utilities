@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_fragmentation.models;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 
 /**
  * Fragmentation model originally described in the Sequest algorithm

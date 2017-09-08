@@ -1,7 +1,7 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
@@ -20,7 +20,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     /**
      * The user preferences.
      */
-    private UtilitiesUserPreferences utilitiesUserPreferences;
+    private UtilitiesUserParameters utilitiesUserParameters;
 
     /**
      * Creates a new PrivacySettingsDialog.
@@ -41,22 +41,22 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
      */
     private void loadPreferencesOnGUI() {
         try {
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred while loading the user preferences.", "User Preferences Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
-            utilitiesUserPreferences = new UtilitiesUserPreferences();
+            utilitiesUserParameters = new UtilitiesUserParameters();
         }
-        updatesCheck.setSelected(utilitiesUserPreferences.isAutoUpdate());
+        updatesCheck.setSelected(utilitiesUserParameters.isAutoUpdate());
     }
 
     /**
      * Saves the input in the utilities user preferences.
      */
     private void savePreferences() {
-        utilitiesUserPreferences.setAutoUpdate(updatesCheck.isSelected());
+        utilitiesUserParameters.setAutoUpdate(updatesCheck.isSelected());
         try {
-            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the user preferences.", "User Preferences Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();

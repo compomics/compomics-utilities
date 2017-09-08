@@ -1,9 +1,13 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -32,56 +36,41 @@ public class IntensityHistogram extends JPanel {
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
-     * @param intensityLevel annotation intensity level, e.g., 0.75 for 75%
-     * 
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
+     * @param intensityThresholdType the type of intensity threshold
+     * @param intensityThreshold the intensity threshold
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
-            MSnSpectrum currentSpectrum,
-            double intensityLevel) throws InterruptedException {
+            Spectrum currentSpectrum,
+            AnnotationParameters.IntensityThresholdType intensityThresholdType,
+            double intensityThreshold) {
         super();
 
         setOpaque(false);
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        // the non annotated intensities
-        ArrayList<Double> nonAnnotatedPeakIntensities =
-                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityLevel));
-
         // the annotated intensities
-        ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();
+        double[] annotatedPeakIntensities = annotations.stream()
+                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+                .toArray();
+        HashSet<Double> annotatedPeakIntensitiesSet = Arrays.stream(annotatedPeakIntensities)
+                .boxed().collect(Collectors.toCollection(HashSet::new));
 
-        // get the list of annotated and not annotated intensities
-        for (IonMatch ionMatch : annotations) {
-            annotatedPeakIntensities.add(ionMatch.peak.intensity);
-            nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
-        }
+        // the non annotated intensities above threshold
+        double[] nonAnnotatedPeakIntensities
+                = currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityThresholdType, intensityThreshold))
+                        .filter(intensity -> !annotatedPeakIntensitiesSet.contains(intensity))
+                        .toArray();
 
         // create the peak histograms
         int bins = 30; // @TODO: make this a user selection! // @TODO use the Freedman-Diaconis rule
 
-        // the non annotated peaks histogram
-        double[] nonAnnotatedIntensities = new double[nonAnnotatedPeakIntensities.size()];
-
-        // the annotated peaks histogram
-        double[] annotatedIntensities = new double[annotatedPeakIntensities.size()];
-
-        if (nonAnnotatedIntensities.length > 0) {
-
-            for (int i = 0; i < nonAnnotatedPeakIntensities.size(); i++) {
-                nonAnnotatedIntensities[i] = nonAnnotatedPeakIntensities.get(i);
-            }
-
-            for (int i = 0; i < annotatedPeakIntensities.size(); i++) {
-                annotatedIntensities[i] = annotatedPeakIntensities.get(i);
-            }
+        if (nonAnnotatedPeakIntensities.length > 0) {
 
             HistogramDataset dataset = new HistogramDataset();
             dataset.setType(HistogramType.RELATIVE_FREQUENCY); // @TODO: use SCALE_AREA_TO_1 instead??
-            dataset.addSeries("Not Annotated", nonAnnotatedIntensities, bins, 0, currentSpectrum.getMaxIntensity());
-            dataset.addSeries("Annotated", annotatedIntensities, bins, 0, currentSpectrum.getMaxIntensity());
+            dataset.addSeries("Not Annotated", nonAnnotatedPeakIntensities, bins, 0, currentSpectrum.getMaxIntensity());
+            dataset.addSeries("Annotated", annotatedPeakIntensities, bins, 0, currentSpectrum.getMaxIntensity());
 
             JFreeChart chart = ChartFactory.createHistogram(null, null, null,
                     dataset, PlotOrientation.VERTICAL, false, true, false);

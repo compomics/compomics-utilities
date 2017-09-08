@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
-import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class ReporterMethod implements Serializable {
      */
     public ReporterMethod(String name, ArrayList<Reagent> reagents) {
         this.name = name;
-        this.reagents = new HashMap<String, Reagent>(reagents.size());
-        reporterIonsMap = new HashMap<String, ReporterIon>(reagents.size());
+        this.reagents = new HashMap<>(reagents.size());
+        reporterIonsMap = new HashMap<>(reagents.size());
         for (Reagent reagent : reagents) {
             String reagentName = reagent.getName();
             if (this.reagents.containsKey(reagentName)) {
@@ -88,19 +88,19 @@ public class ReporterMethod implements Serializable {
      * @return the list of reagents sorted by ascending mass
      */
     public ArrayList<String> getReagentsSortedByMass() {
-        HashMap<Double, ArrayList<String>> reagentsMap = new HashMap<Double, ArrayList<String>>();
+        HashMap<Double, ArrayList<String>> reagentsMap = new HashMap<>();
         for (String reagentName : reagents.keySet()) {
             double mass = reagents.get(reagentName).getReporterIon().getTheoreticMass();
             ArrayList<String> reagentNames = reagentsMap.get(mass);
             if (reagentNames == null) {
-                reagentNames = new ArrayList<String>();
+                reagentNames = new ArrayList<>();
                 reagentsMap.put(mass, reagentNames);
             }
             reagentNames.add(reagentName);
         }
-        ArrayList<Double> masses = new ArrayList<Double>(reagentsMap.keySet());
+        ArrayList<Double> masses = new ArrayList<>(reagentsMap.keySet());
         Collections.sort(masses);
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for (Double mass : masses) {
             ArrayList<String> reagentNames = reagentsMap.get(mass);
             Collections.sort(reagentNames);

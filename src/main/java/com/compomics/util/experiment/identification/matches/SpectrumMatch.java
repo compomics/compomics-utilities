@@ -1,23 +1,13 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
-import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.IOException;
-import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 /**
  * This class models a spectrum match.
@@ -31,94 +21,105 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     static final long serialVersionUID = 3227760855215444318L;
     /**
-     * The index of the matched spectrum.
+     * The key of the spectrum.
      */
-    private String spectrumFile;
+    private String spectrumKey;
     /**
-     * The index of the matched spectrum.
+     * The number of the spectrum.
      */
-    private String spectrumTitle;
+    private int spectrumNumber;
     /**
-     * Map of the identification algorithm assumption: advocate number &gt;
+     * Map of the identification algorithm peptide assumptions: advocate number &gt;
      * score &gt; assumptions.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = null;
-    /**
-     * The size of the keys used for the tag assumptions map.
-     */
-    private int tagAssumptionsMapKeySize = -1;
+    private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap = new HashMap<>(0);
     /**
      * The best peptide assumption.
      */
     private PeptideAssumption bestPeptideAssumption;
     /**
+     * Map of the identification algorithm tag assumptions: advocate number &gt;
+     * score &gt; assumptions.
+     */
+    private HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap = new HashMap<>(0);
+    /**
      * The best tag assumption.
      */
     private TagAssumption bestTagAssumption;
-    /**
-     * The spectrum number in the mgf file. Will be used in case the spectrum
-     * title does not match.
-     */
-    private int spectrumNumber = 0;
 
     /**
      * Constructor for the spectrum match.
      */
     public SpectrumMatch() {
     }
-    
-    public void setTagAssumptionMapKeySize(int tagAssumptionsMapKeySize){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.tagAssumptionsMapKeySize = tagAssumptionsMapKeySize;
-    }
-    
+
     /**
-     * Constructor for the spectrum match.
+     * Sets the peptide assumption map.
      *
-     * @param spectrumFile the matched spectrum file name
-     * @param spectrumTitle the matched spectrum title
-     * @param assumption the matching assumption
+     * @param peptideAssumptionsMap the peptide assumption map
      */
-    public SpectrumMatch(String spectrumFile, String spectrumTitle, SpectrumIdentificationAssumption assumption) {
-        int advocateId = assumption.getAdvocate();
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
-        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
-        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
-        assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
+    public void setPeptideAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
         
-        this.spectrumFile = spectrumFile;
-        this.spectrumTitle = spectrumTitle;
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        this.peptideAssumptionsMap = peptideAssumptionsMap;
     }
-    
-    public int getTagAssumptionMapKeySize(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return tagAssumptionsMapKeySize;
-    }
-    
-    public void setAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.assumptionsMap = assumptionsMap;
+
+    /**
+     * Sets the tag assumption map.
+     *
+     * @param tagAssumptionsMap the tag assumption map
+     */
+    public void setTagAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        this.tagAssumptionsMap = tagAssumptionsMap;
     }
 
     /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumFile the matched spectrum file name
-     * @param spectrumTitle the matched spectrum title
+     * @param spectrumKey the key of the spectrum
      */
-    public SpectrumMatch(String spectrumFile, String spectrumTitle) {
-        this.spectrumFile = spectrumFile;
-        this.spectrumTitle = spectrumTitle;
-        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(1);
+    public SpectrumMatch(String spectrumKey) {
+        this.spectrumKey = spectrumKey;
+        peptideAssumptionsMap = new HashMap<>(1);
     }
 
+    /**
+     * Returns the spectrum number.
+     * 
+     * @return the spectrum number
+     */
+    public int getSpectrumNumber() {
+        return spectrumNumber;
+    }
+
+    /**
+     * Sets the spectrum number.
+     * 
+     * @param spectrumNumber the spectrum number
+     */
+    public void setSpectrumNumber(int spectrumNumber) {
+        this.spectrumNumber = spectrumNumber;
+    }
+    
     /**
      * Getter for the best peptide assumption.
      *
      * @return the best peptide assumption for the spectrum
      */
     public PeptideAssumption getBestPeptideAssumption() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
         return bestPeptideAssumption;
     }
 
@@ -128,11 +129,13 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestPeptideAssumption the best peptide assumption for the spectrum
      */
     public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.bestPeptideAssumption = bestPeptideAssumption;
     }
-    
-    
 
     /**
      * Getter for the best tag assumption.
@@ -140,7 +143,11 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best tag assumption for the spectrum
      */
     public TagAssumption getBestTagAssumption() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
         return bestTagAssumption;
     }
 
@@ -150,273 +157,339 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestTagAssumption the best tag assumption for the spectrum
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.bestTagAssumption = bestTagAssumption;
     }
 
     @Override
     public String getKey() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return spectrumKey;
     }
 
     /**
-     * Return all assumptions for the specified search engine indexed by their
-     * e-value. Null if none found.
+     * Returns all peptide assumptions for the specified search engine indexed by their
+     * score. Null if none found.
      *
      * @param advocateId the desired advocate ID
      *
      * @return all assumptions
      */
-    public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        if (assumptionsMap == null) {
-            return null;
-        }
-        return assumptionsMap.get(advocateId);
+    public HashMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return peptideAssumptionsMap.get(advocateId);
     }
 
     /**
-     * Return all assumptions for all identification algorithms as a list. Null
-     * if none found.
+     * Returns all tag assumptions for the specified search engine indexed by their
+     * score. Null if none found.
+     *
+     * @param advocateId the desired advocate ID
      *
      * @return all assumptions
      */
-    public ArrayList<SpectrumIdentificationAssumption> getAllAssumptions() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        if (getAssumptionsMap() == null) {
-            return null;
-        }
-        ArrayList<SpectrumIdentificationAssumption> result = new ArrayList<SpectrumIdentificationAssumption>();
-        for (HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> seMap : getAssumptionsMap().values()) {
-            for (double eValue : seMap.keySet()) {
-                result.addAll(seMap.get(eValue));
-            }
-        }
-        return result;
+    public HashMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return tagAssumptionsMap.get(advocateId);
     }
 
     /**
-     * Returns the assumptions map: advocate id &gt; score &gt; list of
+     * Returns a stream of all peptide assumptions
+     *
+     * @return a stream of all peptide assumptions
+     */
+    public Stream<PeptideAssumption> getAllPeptideAssumptions() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return peptideAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
+                .flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns a stream of all tag assumptions
+     *
+     * @return a stream of all tag assumptions
+     */
+    public Stream<TagAssumption> getAllTagAssumptions() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return tagAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
+                .flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns the peptide assumptions map: advocate id &gt; score &gt; list of
      * assumptions.
      *
      * @return the assumptions map
      */
-    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return assumptionsMap;
+    public HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return peptideAssumptionsMap;
     }
 
     /**
-     * Add a first hit.
+     * Returns the tag assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
      *
-     * @param otherAdvocateId the index of the new advocate
-     * @param otherAssumption the new identification assumption
-     * @param ascendingScore indicates whether the score is ascending when hits
-     * get better
+     * @return the assumptions map
      */
-    public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMap = assumptionsMap.get(otherAdvocateId);
+    public HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return tagAssumptionsMap;
+    }
+
+    /**
+     * Add a hit.
+     *
+     * @param advocateId the index of the advocate of the new hit
+     * @param peptideAssumption the new identification assumption
+     */
+    public void addPeptideAssumption(int advocateId, PeptideAssumption peptideAssumption) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        HashMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
+        
         if (advocateMap == null) {
-            advocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>();
-            assumptionsMap.put(otherAdvocateId, advocateMap);
+            
+            advocateMap = new HashMap<>(1);
+            peptideAssumptionsMap.put(advocateId, advocateMap);
+            
         }
-        Double score = otherAssumption.getScore();
-        ArrayList<SpectrumIdentificationAssumption> assumptionList = advocateMap.get(score);
+        
+        Double score = peptideAssumption.getScore();
+        ArrayList<PeptideAssumption> assumptionList = advocateMap.get(score);
+        
         if (assumptionList == null) {
-            assumptionList = new ArrayList<SpectrumIdentificationAssumption>();
+            
+            assumptionList = new ArrayList<>(1);
             advocateMap.put(score, assumptionList);
+            
         }
-        assumptionList.add(otherAssumption);
+        
+        assumptionList.add(peptideAssumption);
+    }
+
+    /**
+     * Add a hit.
+     *
+     * @param advocateId the index of the advocate of the new hit
+     * @param tagAssumption the new identification assumption
+     */
+    public void addTagAssumption(int advocateId, TagAssumption tagAssumption) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        HashMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
+        
+        if (advocateMap == null) {
+            
+            advocateMap = new HashMap<>(1);
+            tagAssumptionsMap.put(advocateId, advocateMap);
+            
+        }
+        
+        double score = tagAssumption.getScore();
+        ArrayList<TagAssumption> assumptionList = advocateMap.get(score);
+        
+        if (assumptionList == null) {
+            
+            assumptionList = new ArrayList<>(1);
+            advocateMap.put(score, assumptionList);
+            
+        }
+        
+        assumptionList.add(tagAssumption);
     }
 
     @Override
     public MatchType getType() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
         return MatchType.Spectrum;
     }
 
     /**
-     * Replaces the new key. The key of the PSM should always be the same as the
+     * Sets the match key. The key of the PSM should always be the same as the
      * spectrum key it links to.
      *
-     * @param spectrumFile the spectrum file
-     * @param spectrumTitle the spectrum tile
+     * @param spectrumKey the key of the spectrum match
      */
-    public void setKey(String spectrumFile, String spectrumTitle) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.spectrumFile = spectrumFile;
-        this.spectrumTitle = spectrumTitle;
-    }
-    
-    public void setSpectrumFile(String spectrumFile){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.spectrumFile = spectrumFile;
-    }
-    
-    public void setSpectrumTitle(String spectrumTitle){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.spectrumTitle = spectrumTitle;
-    }
-    
-    public String getSpectrumFile(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return spectrumFile;
-    }
-    
-    public String getSpectrumTitle(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return spectrumTitle;
-    }
-
-    /**
-     * Returns the spectrum number in the spectrum file. Returns null if not
-     * implemented (versions older than 3.4.17). 1 is the first spectrum.
-     *
-     * @return the spectrum number in the spectrum file
-     */
-    public int getSpectrumNumber() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return spectrumNumber;
-    }
-
-    /**
-     * Sets the spectrum number in the spectrum file. 1 is the first spectrum.
-     *
-     * @param spectrumNumber the spectrum number in the spectrum file
-     */
-    public void setSpectrumNumber(int spectrumNumber) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.spectrumNumber = spectrumNumber;
+    public void setSpectrumKey(String spectrumKey) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        this.spectrumKey = spectrumKey;
     }
 
     /**
      * Removes an assumption from the mapping.
      *
-     * @param assumption the peptide assumption to remove
+     * @param peptideAssumption the peptide assumption to remove
      */
-    public void removeAssumption(SpectrumIdentificationAssumption assumption) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        ArrayList<Integer> seToRemove = new ArrayList<Integer>();
-        for (int se : assumptionsMap.keySet()) {
-            ArrayList<Double> eValueToRemove = new ArrayList<Double>();
-            for (double eValue : assumptionsMap.get(se).keySet()) {
-                assumptionsMap.get(se).get(eValue).remove(assumption);
-                if (assumptionsMap.get(se).get(eValue).isEmpty()) {
-                    eValueToRemove.add(eValue);
-                }
-            }
-            for (double eValue : eValueToRemove) {
-                assumptionsMap.get(se).remove(eValue);
-            }
-            if (assumptionsMap.get(se).isEmpty()) {
-                seToRemove.add(se);
-            }
+    public void removePeptideAssumption(PeptideAssumption peptideAssumption) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        int se = peptideAssumption.getAdvocate();
+        HashMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
+        ArrayList<PeptideAssumption> assumptionsList = algorithmMap.get(peptideAssumption.getScore());
+        assumptionsList.remove(peptideAssumption);
+        
+        if (assumptionsList.isEmpty()) {
+            
+            algorithmMap.remove(peptideAssumption.getScore());
+            
         }
-        for (int se : seToRemove) {
-            assumptionsMap.remove(se);
+        if (algorithmMap.isEmpty()) {
+            
+            peptideAssumptionsMap.remove(se);
+            
         }
     }
 
     /**
-     * Indicates whether the spectrum match contains a peptide assumption from a
-     * search engine.
+     * Removes an assumption from the mapping.
      *
-     * @return a boolean indicating whether the spectrum match contains an
+     * @param tagAssumption the tag assumption to remove
+     */
+    public void removeTagAssumption(TagAssumption tagAssumption) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
+        int se = tagAssumption.getAdvocate();
+        HashMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
+        ArrayList<TagAssumption> assumptionsList = algorithmMap.get(tagAssumption.getScore());
+        assumptionsList.remove(tagAssumption);
+        
+        if (assumptionsList.isEmpty()) {
+            
+            algorithmMap.remove(tagAssumption.getScore());
+            
+        }
+        
+        if (algorithmMap.isEmpty()) {
+            
+            tagAssumptionsMap.remove(se);
+            
+        }
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a peptide
      * assumption
      */
-    public boolean hasAssumption() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        for (int se : assumptionsMap.keySet()) {
-            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptionsMap.get(se).values()) {
-                if (!assumptionsAtScore.isEmpty()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean hasPeptideAssumption() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        return peptideAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+                .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a tag assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a tag
+     * assumption
+     */
+    public boolean hasTagAssumption() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+                .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
     }
 
     /**
      * Indicates whether the spectrum match contains a peptide assumption for
-     * the given advocate (for example a search engine, see the Advocate class)
+     * the given advocate (see the Advocate class).
      *
      * @param advocateId The index of the advocate
-     * @return a boolean indicating whether the spectrum match contains a
-     * peptide assumption for the given advocate
+     *
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption for the given advocate
      */
-    public boolean hasAssumption(int advocateId) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        if (assumptionsMap.containsKey(advocateId)) {
-            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptionsMap.get(advocateId).values()) {
-                if (!assumptionsAtEvalue.isEmpty()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean hasPeptideAssumption(int advocateId) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        HashMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
+
+        return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }
 
     /**
-     * Creates a peptide based spectrum match where peptide assumptions are
-     * deduced from tag assumptions. The original tag assumption is added to the
-     * peptide match as refinement parameter
+     * Indicates whether the spectrum match contains a tag assumption for
+     * the given advocate (see the Advocate class).
      *
-     * @param peptideMapper the selected peptide mapper
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the MS2 mass tolerance to use
-     * @param scoreInAscendingOrder boolean indicating whether the tag score is
-     * in the ascending order; ie the higher the score, the better the match.
-     * @param tagMatcher the tag matcher to use
-     * @param ascendingScore indicates whether the score is ascending when hits
-     * get better
+     * @param advocateId The index of the advocate
      *
-     * @return a new spectrum match containing the peptide assumptions made from
-     * the tag assumptions.
-     *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption for the given advocate
      */
-    public SpectrumMatch getPeptidesFromTags(PeptideMapper peptideMapper, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
-            boolean scoreInAscendingOrder, boolean ascendingScore)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+    public boolean hasTagAssumption(int advocateId) {
         
-        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
-        for (int advocateId : assumptionsMap.keySet()) {
+        HashMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
 
-            int rank = 1;
-            ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
-
-            if (scoreInAscendingOrder) {
-                Collections.sort(scores);
-            } else {
-                Collections.sort(scores, Collections.reverseOrder());
-            }
-
-            for (double score : scores) {
-                ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptionsMap.get(advocateId).get(score);
-                for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
-                    if (assumption instanceof TagAssumption) {
-                        TagAssumption tagAssumption = (TagAssumption) assumption;
-                        ArrayList<PeptideProteinMapping> proteinMapping
-                                = peptideMapper.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
-                        for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping, sequenceMatchingPreferences)) {
-                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
-                                    assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
-                            peptideAssumption.setRawScore(score);
-                            peptideAssumption.addUrParam(tagAssumption);
-                            spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
-                        }
-                    }
-                }
-            }
-        }
-
-        return spectrumMatch;
+        return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }
 }

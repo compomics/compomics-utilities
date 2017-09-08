@@ -41,7 +41,7 @@ public class MedianRegression {
         Double medianY = BasicMathFunctions.median(y);
         Double quantileY1 = BasicMathFunctions.percentile(y, 0.25);
         Double quantileY2 = BasicMathFunctions.percentile(y, 0.75);
-        ArrayList<Double> slopes = new ArrayList<Double>(n);
+        ArrayList<Double> slopes = new ArrayList<>(n);
         Double x0 = x.get(0);
         Double meanY = 0.0;
         boolean newX = false;
@@ -71,7 +71,7 @@ public class MedianRegression {
         Double b = medianY - (a * medianX);
         Double ssTot = 0.0;
         Double ssRes = 0.0;
-        ArrayList<Double> deltasSquare = new ArrayList<Double>(x.size());
+        ArrayList<Double> deltasSquare = new ArrayList<>(x.size());
 
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);

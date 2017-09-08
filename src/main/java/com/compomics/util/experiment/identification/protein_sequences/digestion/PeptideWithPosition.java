@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion;
 
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 
 /**
  * This class packages together a peptide and its position on the protein.

@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
-import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.MarshallableParameter;
+import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class IdentificationParametersFactory {
     /**
      * A map of the parsed parameters indexed by their name.
      */
-    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<String, IdentificationParameters>();
+    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
 
     /**
      * Constructor for the factory.
@@ -67,7 +67,7 @@ public class IdentificationParametersFactory {
      * @return an ordered list of the names of the implemented parameters
      */
     public ArrayList<String> getParametersList() {
-        ArrayList<String> names = new ArrayList<String>(identificationParametersMap.keySet());
+        ArrayList<String> names = new ArrayList<>(identificationParametersMap.keySet());
         Collections.sort(names);
         return names;
     }

@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.TagFragmentIon;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import java.util.HashMap;
 
@@ -18,7 +18,7 @@ public class IonMatchKeysCache {
     /**
      * Cache for the ion type keys.
      */
-    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<String, HashMap<Integer, String>>>>> ionKeysCache = new HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<String, HashMap<Integer, String>>>>>(8);
+    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<String, HashMap<Integer, String>>>>> ionKeysCache = new HashMap<>(8);
 
     /**
      * Constructor.
@@ -54,22 +54,22 @@ public class IonMatchKeysCache {
 
         HashMap<Integer, HashMap<Integer, HashMap<String, HashMap<Integer, String>>>> ionTypeMap = ionKeysCache.get(ionTypeIndex);
         if (ionTypeMap == null) {
-            ionTypeMap = new HashMap<Integer, HashMap<Integer, HashMap<String, HashMap<Integer, String>>>>(8);
+            ionTypeMap = new HashMap<>(8);
             ionKeysCache.put(ionTypeIndex, ionTypeMap);
         }
         HashMap<Integer, HashMap<String, HashMap<Integer, String>>> ionSubTypeMap = ionTypeMap.get(ionSubType);
         if (ionSubTypeMap == null) {
-            ionSubTypeMap = new HashMap<Integer, HashMap<String, HashMap<Integer, String>>>(2);
+            ionSubTypeMap = new HashMap<>(2);
             ionTypeMap.put(ionSubType, ionSubTypeMap);
         }
         HashMap<String, HashMap<Integer, String>> ionNumberMap = ionSubTypeMap.get(fragmentIonNumber);
         if (ionNumberMap == null) {
-            ionNumberMap = new HashMap<String, HashMap<Integer, String>>(8);
+            ionNumberMap = new HashMap<>(8);
             ionSubTypeMap.put(fragmentIonNumber, ionNumberMap);
         }
         HashMap<Integer, String> ionNeutralLossesMap = ionNumberMap.get(neutralLossesAsString);
         if (ionNeutralLossesMap == null) {
-            ionNeutralLossesMap = new HashMap<Integer, String>(4);
+            ionNeutralLossesMap = new HashMap<>(4);
             ionNumberMap.put(neutralLossesAsString, ionNeutralLossesMap);
         }
         String key = ionNeutralLossesMap.get(charge);

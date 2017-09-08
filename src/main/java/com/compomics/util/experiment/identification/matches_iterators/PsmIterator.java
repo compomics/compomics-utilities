@@ -23,17 +23,8 @@ public class PsmIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * 
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public PsmIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PsmIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         this(null, identification, waitingHandler, displayProgress);
     }
     
@@ -46,17 +37,8 @@ public class PsmIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * 
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -70,17 +52,8 @@ public class PsmIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      * @param filters filters for the class
-     * 
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, filters);
     }
     
@@ -91,17 +64,8 @@ public class PsmIterator extends MatchesIterator {
      * done iterating.
      *
      * @return the next match
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws IOException exception thrown whenever an error occurred while
-     * interacting with the matches database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match from the database
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while retrieving the match
      */
-    public SpectrumMatch next() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public SpectrumMatch next() {
         
         return (SpectrumMatch)nextObject();
     }

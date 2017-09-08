@@ -1,10 +1,11 @@
 package com.compomics.cli.modifications;
 
 import com.compomics.software.cli.CommandParameter;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AtomChain;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
@@ -27,7 +28,7 @@ public class ModificationsCLIInputBean {
         if (aLine.getOptions().length == 0) {
             return false;
         }
-        PTMFactory ptmFactory = null;
+        ModificationFactory ptmFactory = null;
         if (aLine.hasOption(ModificationsCLIParams.IN.id)) {
             String arg = aLine.getOptionValue(ModificationsCLIParams.IN.id);
             if (arg.equals("")) {
@@ -40,7 +41,7 @@ public class ModificationsCLIInputBean {
                 return false;
             }
             try {
-                ptmFactory = PTMFactory.loadFromFile(fileIn);
+                ptmFactory = ModificationFactory.loadFromFile(fileIn);
             } catch (Exception e) {
                 System.out.println(System.getProperty("line.separator") + "An error occurred while parsing " + fileIn + "." + System.getProperty("line.separator"));
                 e.printStackTrace();
@@ -52,7 +53,7 @@ public class ModificationsCLIInputBean {
         }
         if (aLine.hasOption(ModificationsCLIParams.RM.id)) {
             String arg = aLine.getOptionValue(ModificationsCLIParams.RM.id);
-            PTM ptm = ptmFactory.getPTM(arg);
+            Modification ptm = ptmFactory.getModification(arg);
             if (ptm == null) {
                 String file = aLine.getOptionValue(ModificationsCLIParams.IN.id);
                 System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not found in " + file + "." + System.getProperty("line.separator"));
@@ -117,22 +118,18 @@ public class ModificationsCLIInputBean {
                 return false;
             }
             Integer type = new Integer(arg);
-            if (type >= PTM.MODMAX) {
-                System.out.println(System.getProperty("line.separator") + "Invalid PTM type " + arg + "." + System.getProperty("line.separator"));
+            if (type >= ModificationType.values().length || type < 0) {
+                System.out.println(System.getProperty("line.separator") + "No modification type found for index " + type + "." + System.getProperty("line.separator"));
                 return false;
             }
-            if (!pattern && (type == PTM.MODAA
-                    || type == PTM.MODCAA
-                    || type == PTM.MODNAA
-                    || type == PTM.MODCPAA
-                    || type == PTM.MODNPAA)) {
+            if (!pattern && (type == ModificationType.modaa.index
+                    || type == ModificationType.modcaa_peptide.index
+                    || type == ModificationType.modcaa_protein.index
+                    || type == ModificationType.modnaa_peptide.index
+                    || type == ModificationType.modnaa_protein.index)) {
                 System.out.println(System.getProperty("line.separator") + "No amino acid pattern found for PTM targetting specific amino acids." + System.getProperty("line.separator"));
                 return false;
-            }
-            if (pattern && (type == PTM.MODC
-                    || type == PTM.MODN
-                    || type == PTM.MODCP
-                    || type == PTM.MODNP)) {
+            } else if (pattern) {
                 System.out.println(System.getProperty("line.separator") + "Amino acid pattern found for PTM targetting a terminus." + System.getProperty("line.separator"));
                 return false;
             }
@@ -177,7 +174,7 @@ public class ModificationsCLIInputBean {
     /**
      * The modification to add.
      */
-    private PTM modificationToAdd = null;
+    private Modification modificationToAdd = null;
 
     /**
      * Parses all the arguments from a command line.
@@ -225,13 +222,14 @@ public class ModificationsCLIInputBean {
                 String arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN.id);
                 aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(arg);
                 Integer target = 0;
-            if (aLine.hasOption(ModificationsCLIParams.PATTERN_INDEX.id)) {
-                arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN_INDEX.id);
-                target = new Integer(arg);
+                if (aLine.hasOption(ModificationsCLIParams.PATTERN_INDEX.id)) {
+                    arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN_INDEX.id);
+                    target = new Integer(arg);
+                }
+                aminoAcidPattern.setTarget(target);
             }
-            aminoAcidPattern.setTarget(target);
-            }
-            modificationToAdd = new PTM(index, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
+            ModificationType modificationType = ModificationType.values()[index];
+            modificationToAdd = new Modification(modificationType, enzymeName, enzymeName, atomChainAdded, atomChainRemoved, aminoAcidPattern);
             if (aLine.hasOption(ModificationsCLIParams.SHORT_NAME.id)) {
                 String arg = aLine.getOptionValue(ModificationsCLIParams.SHORT_NAME.id);
                 modificationToAdd.setShortName(arg);
@@ -282,7 +280,7 @@ public class ModificationsCLIInputBean {
      *
      * @return the modification to add
      */
-    public PTM getModificationToAdd() {
+    public Modification getModificationToAdd() {
         return modificationToAdd;
     }
 

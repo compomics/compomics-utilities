@@ -112,7 +112,7 @@ public class IsotopeDistributionGui extends JFrame {
         }
 
         //get the elements
-        iElements = new HashMap<String, MolecularFormula>();
+        iElements = new HashMap<>();
         //get the elements that can be used
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("elements.txt")));

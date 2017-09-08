@@ -47,10 +47,10 @@ public class GoMapping {
      * Constructor.
      */
     public GoMapping() {
-        proteinToGoMap = new HashMap<String, HashSet<String>>();
-        goToProteinMap = new HashMap<String, HashSet<String>>();
-        goAccessionsToNamesMap = new HashMap<String, String>();
-        goNamesToAccessionsMap = new HashMap<String, String>();
+        proteinToGoMap = new HashMap<>();
+        goToProteinMap = new HashMap<>();
+        goAccessionsToNamesMap = new HashMap<>();
+        goNamesToAccessionsMap = new HashMap<>();
     }
 
     /**
@@ -90,14 +90,14 @@ public class GoMapping {
 
                         HashSet<String> goTerms = proteinToGoMap.get(proteinAccession);
                         if (goTerms == null) {
-                            goTerms = new HashSet<String>();
+                            goTerms = new HashSet<>();
                             proteinToGoMap.put(proteinAccession, goTerms);
                         }
                         goTerms.add(goTermAccession);
 
                         HashSet<String> proteinAccessions = goToProteinMap.get(goTermAccession);
                         if (proteinAccessions == null) {
-                            proteinAccessions = new HashSet<String>();
+                            proteinAccessions = new HashSet<>();
                             goToProteinMap.put(goTermAccession, proteinAccessions);
                         }
                         proteinAccessions.add(proteinAccession);
@@ -201,7 +201,7 @@ public class GoMapping {
      */
     public ArrayList<String> getSortedTermNames() {
         if (sortedTermNames == null) {
-            HashSet<String> goNames = new HashSet<String>(goAccessionsToNamesMap.size());
+            HashSet<String> goNames = new HashSet<>(goAccessionsToNamesMap.size());
             for (HashSet<String> goAccessions : proteinToGoMap.values()) {
                 for (String goAccession : goAccessions) {
                     String goName = getTermName(goAccession);
@@ -210,7 +210,7 @@ public class GoMapping {
                     }
                 }
             }
-            sortedTermNames = new ArrayList<String>(goNames);
+            sortedTermNames = new ArrayList<>(goNames);
             Collections.sort(sortedTermNames);
         }
         return sortedTermNames;

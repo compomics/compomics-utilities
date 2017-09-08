@@ -1,10 +1,10 @@
 package com.compomics.util.test.experiment.io.identifications;
 
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.io.identifications.IdfileReader;
-import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -46,7 +46,7 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-                    SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+                    SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
@@ -63,8 +63,8 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-                HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-                ArrayList<String> versions = new ArrayList<String>();
+                HashMap<String, ArrayList<String>> result = new HashMap<>();
+                ArrayList<String> versions = new ArrayList<>();
                 versions.add("X.Y.Z");
                 result.put("testIdfileReaderRegistration", versions);
                 return result;
@@ -127,7 +127,7 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences,
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingParameters sequenceMatchingPreferences,
                 boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
@@ -145,8 +145,8 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-            HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-            ArrayList<String> versions = new ArrayList<String>();
+            HashMap<String, ArrayList<String>> result = new HashMap<>();
+            ArrayList<String> versions = new ArrayList<>();
             versions.add("X.Y.Z");
             result.put("testIdfileReaderRegistration", versions);
             return result;

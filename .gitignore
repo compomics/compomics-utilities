@@ -3,6 +3,19 @@ derby.log
 /.idea/
 *.html
 /src/main/java/com/compomics/scripts_marc/
+<<<<<<< HEAD
 /src/test/resources/*
 /docs
 /docs/
+=======
+/target/
+derby.log
+/.idea/
+*.iml
+/src/main/java/com/compomics/scripts_marc/
+
+/src/test/resources/*
+/docs
+=======
+!/src/test/resources/
+>>>>>>> f0e412886bb79fbfd3e6e8345212244b23492fd0

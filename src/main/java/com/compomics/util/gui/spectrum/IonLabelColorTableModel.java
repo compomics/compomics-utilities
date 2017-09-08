@@ -1,10 +1,10 @@
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.NeutralLossCombination;
+import com.compomics.util.experiment.biology.ions.Ion;
+import com.compomics.util.experiment.biology.ions.Ion.IonType;
+import com.compomics.util.experiment.biology.ions.IonFactory;
+import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.NeutralLossCombination;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,8 +38,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      */
     public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
 
-        ionMap = new HashMap<String, Ion>();
-        keys = new ArrayList<String>();
+        ionMap = new HashMap<>();
+        keys = new ArrayList<>();
         Ion currentIon;
 
         for (IonType ionType : iontypes.keySet()) {
@@ -90,8 +90,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      *
      */
     public IonLabelColorTableModel() {
-        ionMap = new HashMap<String, Ion>();
-        keys = new ArrayList<String>();
+        ionMap = new HashMap<>();
+        keys = new ArrayList<>();
     }
 
     @Override

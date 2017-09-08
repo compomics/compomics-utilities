@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
-import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -72,8 +72,8 @@ public class AmbiguousSequenceIterator {
 
         // Find amino acid combinations and store them in a map
         int initialSize = Math.min(expectedNumberOfCombinations, 16);
-        aaCombinations = new ArrayList<char[]>(initialSize);
-        ArrayList<Integer> indicesList = new ArrayList<Integer>(initialSize);
+        aaCombinations = new ArrayList<>(initialSize);
+        ArrayList<Integer> indicesList = new ArrayList<>(initialSize);
         for (int i = 0; i < sequenceAsCharArray.length; i++) {
             char aa = sequenceAsCharArray[i];
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);

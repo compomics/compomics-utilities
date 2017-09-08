@@ -1,11 +1,11 @@
 package com.compomics.cli.identification_parameters;
 
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
@@ -128,9 +128,9 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
         System.out.println("----------------------");
         System.out.println("Default Modifications:");
         System.out.println("----------------------");
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
         for (String ptmName : ptmFactory.getDefaultModificationsOrdered()) {
-            PTM ptm = ptmFactory.getPTM(ptmName);
+            Modification ptm = ptmFactory.getModification(ptmName);
             System.out.println(ptm);
         }
         System.out.println();
@@ -139,7 +139,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             System.out.println("User Modifications:");
             System.out.println("-------------------");
             for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
-                PTM ptm = ptmFactory.getPTM(ptmName);
+                Modification ptm = ptmFactory.getModification(ptmName);
             System.out.println(ptm);
             }
         }

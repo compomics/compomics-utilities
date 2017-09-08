@@ -1,24 +1,22 @@
 package com.compomics.util.experiment.identification.filtering;
 
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.parameters.identification.search.PtmSettings;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
-import com.compomics.util.preferences.DigestionPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.IOException;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
+import com.compomics.util.experiment.identification.protein_sequences.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
+import com.compomics.util.parameters.identification.search.DigestionParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -146,7 +144,7 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, DigestionPreferences digestionPreferences) {
+    public boolean validatePeptide(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, DigestionParameters digestionPreferences) {
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -178,20 +176,18 @@ public class PeptideAssumptionFilter implements Serializable {
 
     /**
      * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before using the default
-     * protein tree of the sequence factory.
+     * peptide to proteins in case it was not done before.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @return a boolean indicating whether the peptide passed the test
+     * @param fmIndex the FM-Index.
      *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
+     * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultPeptideMapper());
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, FMIndex fmIndex) {
+        
+        return validateProteins(peptide, sequenceMatchingPreferences, fmIndex, fmIndex);
+        
     }
 
     /**
@@ -202,31 +198,36 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param peptideMapper the peptide mapper to use for peptide to protein
      * mapping
+     * @param sequenceProvider a sequence provider
      *
      * @return a boolean indicating whether the peptide passed the test
-     *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
 
-        ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, peptideMapper);
+        HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
-        if (accessions != null && accessions.size() > 1) {
+        if (proteinMapping != null && proteinMapping.size() > 1) {
+            
             boolean target = false;
             boolean decoy = false;
-            for (String accession : accessions) {
-                if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
+            
+            for (String accession : proteinMapping.keySet()) {
+                
+                if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
+                    
                     decoy = true;
+                    
                 } else {
+                    
                     target = true;
+                    
                 }
             }
+            
             if (target && decoy) {
+                
                 return false;
+                
             }
         }
 
@@ -234,7 +235,7 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Validates the modifications of a peptide.
+     * Verifies that the definition of every modification name is available.
      *
      * @param peptide the peptide of interest
      * @param sequenceMatchingPreferences the sequence matching preferences for
@@ -245,51 +246,21 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
+    public boolean validateModifications(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences,
+            SequenceMatchingParameters ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
+
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         // check if it is an unknown peptide
         if (unknownPtm) {
             ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
             if (modificationMatches != null) {
                 for (ModificationMatch modMatch : modificationMatches) {
-                    String ptmName = modMatch.getTheoreticPtm();
-                    if (ptmName.equals(PTMFactory.unknownPTM.getName())) {
+                    String ptmName = modMatch.getModification();
+                    if (!modificationFactory.containsModification(ptmName)) {
                         return false;
                     }
                 }
-            }
-        }
-
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-
-        // get the variable ptms and the number of times they occur
-        HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>(peptide.getNModifications());
-        if (peptide.isModified()) {
-            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (modMatch.getVariable()) {
-                    String modName = modMatch.getTheoreticPtm();
-                    PTM ptm = ptmFactory.getPTM(modName);
-                    double mass = ptm.getMass();
-                    if (!modMatches.containsKey(mass)) {
-                        modMatches.put(mass, 1);
-                    } else {
-                        modMatches.put(mass, modMatches.get(mass) + 1);
-                    }
-                }
-            }
-        }
-
-        // check if there are more ptms than ptm sites
-        for (double mass : modMatches.keySet()) {
-            try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, sequenceMatchingPreferences, ptmSequenceMatchingPreferences, modificationProfile);
-                if (possiblePositions.size() < modMatches.get(mass)) {
-                    return false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
             }
         }
 
@@ -307,12 +278,9 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @return a boolean indicating whether the given assumption passes the
      * filter
-     *
-     * @throws IOException if an error occurs while reading the spectrum
-     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
-     * reading while the spectrum
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) {
+        
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {

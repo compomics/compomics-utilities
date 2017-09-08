@@ -1,10 +1,10 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +111,7 @@ public class SequenceSegment {
                     if (mutation == null) {
                         return previousMutations;
                     } else {
-                        HashMap<Integer, Character> tempMutations = new HashMap<Integer, Character>(previousMutations.size());
+                        HashMap<Integer, Character> tempMutations = new HashMap<>(previousMutations.size());
                         tempMutations.put(mutationIndex, mutation);
                         return tempMutations;
                     }
@@ -121,7 +121,7 @@ public class SequenceSegment {
         }
         if (mutation != null) {
             if (mutations == null) {
-                HashMap<Integer, Character> tempMutations = new HashMap<Integer, Character>(1);
+                HashMap<Integer, Character> tempMutations = new HashMap<>(1);
                 tempMutations.put(mutationIndex, mutation);
                 return tempMutations;
             }
@@ -144,7 +144,7 @@ public class SequenceSegment {
                     if (modificationAtTerminus == null) {
                         return previousModifications;
                     } else {
-                        HashMap<Integer, String> tempModifications = new HashMap<Integer, String>(previousModifications.size());
+                        HashMap<Integer, String> tempModifications = new HashMap<>(previousModifications.size());
                         tempModifications.put(length, modificationAtTerminus);
                         return tempModifications;
                     }
@@ -154,7 +154,7 @@ public class SequenceSegment {
         }
         if (modificationAtTerminus != null) {
             if (modificationMatches == null) {
-                HashMap<Integer, String> tempModifications = new HashMap<Integer, String>(1);
+                HashMap<Integer, String> tempModifications = new HashMap<>(1);
                 tempModifications.put(length, modificationAtTerminus);
                 return tempModifications;
             }
@@ -230,7 +230,7 @@ public class SequenceSegment {
         HashMap<Integer, Character> otherMutations = sequenceSegment.getMutations();
         if (otherMutations != null) {
             if (mutations == null) {
-                mutations = new HashMap<Integer, Character>(otherMutations.size());
+                mutations = new HashMap<>(otherMutations.size());
             }
             for (int index : otherMutations.keySet()) {
                 mutations.put(index + length, otherMutations.get(index));
@@ -239,7 +239,7 @@ public class SequenceSegment {
         HashMap<Integer, String> otherModifications = sequenceSegment.getModificationMatches();
         if (otherModifications != null) {
             if (modificationMatches == null) {
-                modificationMatches = new HashMap<Integer, String>(otherModifications.size());
+                modificationMatches = new HashMap<>(otherModifications.size());
             }
             for (int index : otherModifications.keySet()) {
                 modificationMatches.put(index + length, otherModifications.get(index));
@@ -258,7 +258,7 @@ public class SequenceSegment {
                 mutation = sequenceSegment.getMutation();
             } else {
                 if (mutations == null) {
-                    mutations = new HashMap<Integer, Character>();
+                    mutations = new HashMap<>();
                     mutations.put(otherMutationIndex, mutation);
                 }
             }
@@ -275,14 +275,14 @@ public class SequenceSegment {
         HashMap<Integer, ArrayList<ModificationMatch>> otherModifications = aminoAcidSequence.getModificationMatches();
         if (otherModifications != null) {
             if (modificationMatches == null) {
-                modificationMatches = new HashMap<Integer, String>(otherModifications.size());
+                modificationMatches = new HashMap<>(otherModifications.size());
             }
             for (int index : otherModifications.keySet()) {
                 ArrayList<ModificationMatch> modificationMatchesList = otherModifications.get(index);
                 if (modificationMatches.size() > 1) {
                     throw new IllegalArgumentException("Two PTMs found on the same amino acid when mapping tags. Only one supported.");
                 }
-                modificationMatches.put(index + length, modificationMatchesList.get(0).getTheoreticPtm());
+                modificationMatches.put(index + length, modificationMatchesList.get(0).getModification());
             }
         }
         length += aminoAcidSequence.length();
@@ -303,14 +303,14 @@ public class SequenceSegment {
         HashMap<Integer, ArrayList<ModificationMatch>> otherModifications = aminoAcidPattern.getModificationMatches();
         if (otherModifications != null) {
             if (modificationMatches == null) {
-                modificationMatches = new HashMap<Integer, String>(otherModifications.size());
+                modificationMatches = new HashMap<>(otherModifications.size());
             }
             for (int index : otherModifications.keySet()) {
                 ArrayList<ModificationMatch> modificationMatchesList = otherModifications.get(index);
                 if (modificationMatches.size() > 1) {
                     throw new IllegalArgumentException("Two PTMs found on the same amino acid when mapping tags. Only one supported.");
                 }
-                modificationMatches.put(index + length, modificationMatchesList.get(0).getTheoreticPtm());
+                modificationMatches.put(index + length, modificationMatchesList.get(0).getModification());
             }
         }
         length += aminoAcidPattern.length();
@@ -343,7 +343,7 @@ public class SequenceSegment {
      * @param modification the modification
      */
     public void addModificationTerminus(String modification) {
-        PTM ptm = PTMFactory.getInstance().getPTM(modification);
+        Modification ptm = ModificationFactory.getInstance().getModification(modification);
         addModificationTerminus(modification, ptm.getMass());
     }
 
@@ -370,7 +370,7 @@ public class SequenceSegment {
             mutation = aa;
         } else {
             if (mutations == null) {
-                mutations = new HashMap<Integer, Character>(1);
+                mutations = new HashMap<>(1);
             }
             mutations.put(index, aa);
         }

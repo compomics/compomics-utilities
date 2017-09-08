@@ -57,7 +57,7 @@ public class ProteinSequencePane {
      * @return                          the calculated sequence coverage in percent (0-100)
      */
     public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int[] coverage) {
-        return formatProteinSequence(editorPane, cleanSequence, -1, -1, coverage, new TreeMap<String, String>(), new HashMap<String, Color>());
+        return formatProteinSequence(editorPane, cleanSequence, -1, -1, coverage, new TreeMap<>(), new HashMap<>());
     }
 
     /**
@@ -74,7 +74,7 @@ public class ProteinSequencePane {
      * @return                          the calculated sequence coverage in percent (0-100)
      */
     public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int selectedPeptideStart, int selectedPeptideEnd, int[] coverage) {
-        return formatProteinSequence(editorPane, cleanSequence, selectedPeptideStart, selectedPeptideEnd, coverage, new TreeMap<String, String>(), new HashMap<String, Color>());
+        return formatProteinSequence(editorPane, cleanSequence, selectedPeptideStart, selectedPeptideEnd, coverage, new TreeMap<>(), new HashMap<>());
     }
 
     /**
@@ -122,7 +122,7 @@ public class ProteinSequencePane {
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
         
-        ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
+        ArrayList<Integer> referenceMarkers = new ArrayList<>();
 
         boolean previousAminoAcidWasCovered = false;
         boolean previousAminoAcidWasSelected = false;
@@ -318,7 +318,7 @@ public class ProteinSequencePane {
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 
-        ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
+        ArrayList<Integer> referenceMarkers = new ArrayList<>();
 
         String[] modificationMap = new String[coverage.length];
         String[] variantMap = new String[coverage.length];

@@ -222,7 +222,7 @@ public class BasicMathFunctions {
         if (length == 0) {
             throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
         }
-        ArrayList<Double> sortedInput = new ArrayList<Double>(input);
+        ArrayList<Double> sortedInput = new ArrayList<>(input);
         Collections.sort(sortedInput);
         return percentileSorted(sortedInput, percentile);
     }
@@ -491,7 +491,7 @@ public class BasicMathFunctions {
      * @return a list of n random indexes between min and max included
      */
     public static ArrayList<Integer> getRandomIndexes(int n, int min, int max) {
-        ArrayList<Integer> result = new ArrayList<Integer>(n);
+        ArrayList<Integer> result = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             result.add(getRandomInteger(min, max));
         }

@@ -52,7 +52,7 @@ public class IsotopicElement {
      * @return a Vector of IsotopicElement 
      */
     public static Vector<IsotopicElement> getAllIsotopicElements(Class lClass, Logger lLogger){
-        Vector<IsotopicElement> lResult = new Vector<IsotopicElement>();
+        Vector<IsotopicElement> lResult = new Vector<>();
         //read the isotopicElement.txt file
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(lClass.getClassLoader().getResourceAsStream("isotopicElement.txt")));

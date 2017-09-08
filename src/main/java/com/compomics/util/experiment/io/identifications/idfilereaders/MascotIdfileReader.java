@@ -54,7 +54,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     /**
-     * Constructor for an MS Amanda csv result file reader.
+     * Constructor for an Mascot dat result file reader.
      *
      * @param inputFile the Mascot dat file
      * @throws FileNotFoundException if a FileNotFoundException occurs
@@ -65,7 +65,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     /**
-     * Constructor for an MS Amanda csv result file reader.
+     * Constructor for an Mascot dat csv result file reader.
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
@@ -157,12 +157,31 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         
-        LinkedList<SpectrumMatch> spectrumList = new LinkedList<>();
-        ArrayList<Integer> keys = new ArrayList<>(allMatches.keySet());
-        Collections.sort(keys);
-        for (int key : keys) spectrumList.add(allMatches.get(key));
-                
-        return spectrumList;
+        
+        if (expandAaCombinations)
+            for (SpectrumMatch currentMatch : allMatches.values()){
+                for (SpectrumIdentificationAssumption assumption : currentMatch.getAllAssumptions()){
+                    PeptideAssumption currentAssumption = (PeptideAssumption)assumption;
+                    Peptide peptide = currentAssumption.getPeptide();
+                    ArrayList<ModificationMatch> foundModifications = peptide.getModificationMatches();
+                    String peptideSequence = peptide.getSequence();
+                    if (AminoAcidSequence.hasCombination(peptideSequence)) {
+                    for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                        String newSequence = expandedSequence.toString();
+                        if (newSequence.equals(peptideSequence)) continue;
+                        Peptide newPeptide = new Peptide(newSequence, new ArrayList<ModificationMatch>(foundModifications.size()));
+                        for (ModificationMatch modificationMatch : foundModifications) {
+                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
+                        }
+                        PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
+                        currentMatch.addHit(Advocate.mascot.getIndex(), newAssumption, false);
+                    }
+                }
+            }
+        }
+        
+        
+        return new LinkedList<>(allMatches.values());
     }
     
     @Override
@@ -289,7 +308,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     
     private void parsePeptides(BufferedReader in, String boundary, String sourceFile) throws Exception {
         String line;
-        boolean expandAaCombinations = true;
         
         if (fileName == null){
             throw new Exception("File format not parsable.");
@@ -353,20 +371,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 Peptide peptide = new Peptide(peptideSequence, foundModifications);
                 PeptideAssumption currentAssumption = new PeptideAssumption(peptide, rank, Advocate.mascot.getIndex(), charge, expectancy, sourceFile);
                 currentAssumption.setRawScore(ionScore);
+                currentMatch.addHit(Advocate.mascot.getIndex(), currentAssumption, false);
                 
                 
-                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                    for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(foundModifications.size()));
-                        for (ModificationMatch modificationMatch : foundModifications) {
-                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                        }
-                        PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
-                        currentMatch.addHit(Advocate.mascot.getIndex(), newAssumption, false);
-                    }
-                } else {
-                    currentMatch.addHit(Advocate.mascot.getIndex(), currentAssumption, false);
-                }
                 
             }
         }

@@ -58,7 +58,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * Constructor for an MS Amanda csv result file reader.
+     * Constructor for an X!Tandem xml result file reader.
      *
      * @param inputFile the Mascot dat file
      * @throws FileNotFoundException if a FileNotFoundException occurs
@@ -69,7 +69,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * Constructor for an MS Amanda csv result file reader.
+     * Constructor for an X!Tandem xml result file reader.
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler

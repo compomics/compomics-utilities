@@ -6,6 +6,7 @@ import com.compomics.util.experiment.identification.matches.PeptideVariantMatche
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -138,7 +139,7 @@ public class PeptideProteinMapping {
      * @return a map of the mapping
      */
     public static HashMap<String, HashMap<String, int[]>> getPeptideProteinIndexesMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
-
+        /*
         HashMap<String, HashMap<String, int[]>> resultMap = peptideProteinMappings.stream()
                 .collect(Collectors.groupingBy(PeptideProteinMapping::getProteinAccession)).entrySet().stream()
                 .collect(Collectors.toMap(
@@ -156,7 +157,36 @@ public class PeptideProteinMapping {
                                         HashMap::new)),
                         (a, b) -> {throw new IllegalStateException("Duplicate key in groupingBy.");},
                         HashMap::new));
-
+        */
+        
+        HashMap<String, HashMap<String, ArrayList<Integer>>> resultMapTmp = new HashMap<>();
+        
+        for (int i = 0; i < peptideProteinMappings.size(); ++i){
+            PeptideProteinMapping ppm = peptideProteinMappings.get(i);
+            String accession = ppm.getProteinAccession();
+            String sec = ppm.getPeptideSequence();
+            int index = ppm.getIndex();
+            if (!resultMapTmp.containsKey(sec)) resultMapTmp.put(sec, new HashMap<String, ArrayList<Integer>>());
+            HashMap<String, ArrayList<Integer>> accessions = resultMapTmp.get(sec);
+            if (!accessions.containsKey(accession)) accessions.put(accession, new ArrayList<Integer>());
+            ArrayList<Integer> indexes = accessions.get(accession);
+            indexes.add(index);
+        }
+        
+        
+        HashMap<String, HashMap<String, int[]>> resultMap = new HashMap<>();
+        for (String sec : resultMapTmp.keySet()){
+            HashMap<String, int[]> accessions = new HashMap<>();
+            for (String accession : resultMapTmp.get(sec).keySet()){
+                ArrayList<Integer> list = resultMapTmp.get(sec).get(accession);
+                Collections.sort(list);
+                int[] indexes = new int[list.size()];
+                for (int i = 0; i < list.size(); ++i) indexes[i] = list.get(i);
+                accessions.put(accession, indexes);
+            }
+            resultMap.put(sec, accessions);
+        }
+        
         return resultMap;
     }
 

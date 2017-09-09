@@ -110,9 +110,9 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      */
     private final HashSet<String> decoyAccessions = new HashSet<>();
     /**
-     * The accessions dictionary containing index part, start position and end position per accession
+     * The accessions ending positions in the index, important for getSequences function
      */
-    private final HashMap<String, int[]> accessions_dict = new HashMap<>();
+    private final HashMap<String, int[]> accessionsIndexPos = new HashMap<>();
     /**
      * List of all amino acid masses.
      */
@@ -1032,7 +1032,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         tmpLengths.add(indexStringLength);
         tmpProteins.add(numProteins);
 
-        int maxProgressBar = 10 * tmpLengths.size();
+        int maxProgressBar = 11 * tmpLengths.size();
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -1111,6 +1111,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         // reading proteins in a second pass to store their amino acid sequences and their accession numbers
         int tmpN = 0;
         int tmpNumProtein = 0;
+        HashMap <String, Integer> accessionEndings = new HashMap<>();
 
         for (int i = 0; i < numProteins; ++i) {
             
@@ -1135,8 +1136,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             int proteinLen = currentProtein.getLength();
             
             T[tmpN++] = '/'; // adding the delimiters
-            int[] accession_data = {indexPart, tmpN, tmpN + proteinLen};
-            accessions_dict.put(accession, accession_data);
+            accessionEndings.put(accession, tmpN + proteinLen);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
             accssions[tmpNumProtein++] = currentProtein.getAccession();
@@ -1156,8 +1156,25 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
-        }
+        }            
         T_int = null;
+        
+        
+        
+        // compute end positions of all accessions in the index
+        int[] inversedSampledSuffixArray = new int[indexStringLength];
+        for (int i = 0; i < indexStringLength; ++i) {
+            inversedSampledSuffixArray[suffixArrayPrimary[i]] = i;
+        }
+        for (String accession : accessionEndings.keySet()){
+            int truePos = accessionEndings.get(accession);
+            accessionsIndexPos.put(accession, new int[]{inversedSampledSuffixArray[truePos], indexPart});
+        }
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
+        inversedSampledSuffixArray = null;
+        
 
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[indexStringLength];
@@ -1178,6 +1195,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             sampledSuffixArray[sampledIndex++] = suffixArrayPrimary[i];
         }
         suffixArraysPrimary.add(sampledSuffixArray);
+        
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
@@ -4861,11 +4879,24 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     
     @Override
     public String getSequence(String proteinAccession) {
-        int[] accession_data = accessions_dict.get(proteinAccession);
-        if (accession_data != null){
-            System.out.println(proteinAccession + " " + accession_data[0] + " " + accession_data[1] + " " + accession_data[2]);
+        int[] accessionIndexPos = accessionsIndexPos.get(proteinAccession);
+        if (accessionIndexPos != null){
+            int index = accessionIndexPos[0];
+            int indexPart = accessionIndexPos[1];
+            int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
+            int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+            WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
+            StringBuilder stringBuilder = new StringBuilder();
+            
+            while (true) {
+                int[] aminoInfo = occurrenceTablePrimary.getCharacterInfo(index);
+                index = lessTablePrimary[aminoInfo[0]] + aminoInfo[1];
+                if (aminoInfo[0] == '/') break;
+                stringBuilder.append((char)aminoInfo[0]);
+            }
+            return stringBuilder.reverse().toString();
         }        
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException("Protein accession '" + proteinAccession + "' not found in index.");
     }
 
     @Override

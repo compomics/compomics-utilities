@@ -100,7 +100,7 @@ public class FastaIterator implements ProteinIterator {
             while ((line = br.readLine()) != null) {
 
                 line = line.trim();
-
+                
                 if (line.length() > 0) {
                     if (line.charAt(0) == '>') {
 
@@ -122,7 +122,7 @@ public class FastaIterator implements ProteinIterator {
                 }
             }
 
-            if (nextHeader == null) {
+            if (line == null) {
 
                 br.close();
                 endOfFileReached = true;
@@ -132,12 +132,12 @@ public class FastaIterator implements ProteinIterator {
             bufferingMutex.release();
 
             String sequence = sequenceBuilder.toString();
-
             if (sanityCheck) {
 
                 sequence = getCleanedSequence(sequence);
 
             }
+
 
             if (sequence.length() > 0) {
                 

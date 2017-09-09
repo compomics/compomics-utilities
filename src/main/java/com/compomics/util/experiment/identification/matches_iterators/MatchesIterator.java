@@ -66,8 +66,10 @@ public abstract class MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
-    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         this(null, className, identification, waitingHandler, displayProgress, null);
     }
 
@@ -83,8 +85,10 @@ public abstract class MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      * @param filters filters for the class
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
-    public MatchesIterator(ArrayList<String> keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
+    public MatchesIterator(ArrayList<String> keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws InterruptedException {
         if (keys != null) {
             num = keys.size();
             this.keys = keys;
@@ -111,9 +115,11 @@ public abstract class MatchesIterator {
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.
      *
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      * @return the next match
      */
-    public Object nextObject() {
+    public Object nextObject() throws InterruptedException {
 
         Object obj = null;
         int currentIndex = getIndex();

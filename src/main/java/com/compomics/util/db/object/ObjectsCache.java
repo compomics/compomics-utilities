@@ -171,9 +171,10 @@ public class ObjectsCache {
      * will be silently overwritten.
      *
      * @param objects the key / objects to store in the cache
+     * @throws java.lang.InterruptedException if the thread is interrupted
      *
      */
-    public void addObjects(HashMap<Long, Object> objects) {
+    public void addObjects(HashMap<Long, Object> objects) throws InterruptedException {
         synchronized(loadedObjectMutex){
             if (!readOnly) {            
 

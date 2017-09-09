@@ -165,16 +165,10 @@ public class ObjectsDB {
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
      *
-     * @throws SQLException exception thrown whenever a problem occurred when
-     * establishing the connection to the database
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading or writing a file
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ObjectsDB(String folder, String dbName) throws InterruptedException {
         this(folder, dbName, true);
     }
     
@@ -185,16 +179,10 @@ public class ObjectsDB {
      * @param dbName name of the database
      * @param overwrite overwriting old database
      *
-     * @throws SQLException exception thrown whenever a problem occurred when
-     * establishing the connection to the database
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading or writing a file
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName, boolean overwrite) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ObjectsDB(String folder, String dbName, boolean overwrite) throws InterruptedException {
         if (debugInteractions){
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
@@ -203,7 +191,7 @@ public class ObjectsDB {
         
         if (!dbFolder.exists()){
             if (!dbFolder.mkdirs()){
-                throw new IOException("cannot create database folder");
+                throw new InterruptedException("cannot create database folder");
             }
         }
         
@@ -305,14 +293,10 @@ public class ObjectsDB {
      * @param objectKey the key of the object
      * @param object the object to store
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred while interacting with the database
      */
-    public void insertObject(String objectKey, Object object) throws SQLException, IOException, InterruptedException {
+    public void insertObject(String objectKey, Object object) throws InterruptedException {
         synchronized(dbMutex){
             long longKey = createLongKey(objectKey);
 
@@ -357,14 +341,10 @@ public class ObjectsDB {
      * @param filters filters for the class
      * @return the iterator
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred
      */
-    public Iterator<?> getObjectsIterator(Class className, String filters) throws IOException, InterruptedException, SQLException{
+    public Iterator<?> getObjectsIterator(Class className, String filters) throws InterruptedException {
         Query q;
         synchronized(dbMutex){
             dumpToDB();
@@ -383,14 +363,10 @@ public class ObjectsDB {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
      * @throws InterruptedException exception thrown whenever a threading error
      * occurred
      */
-    public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, InterruptedException {
+    public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         synchronized(dbMutex){
             HashMap<Long, Object> objectsToAdd = new HashMap<>(objects.size());
@@ -437,16 +413,10 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      * @return returns the list of hashed keys
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Long> loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Long> loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         
         ArrayList<Long> hashedKeys = new ArrayList<>();
@@ -491,7 +461,7 @@ public class ObjectsDB {
      * @return returns the list of hashed keys
      *
      */
-    public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+    public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
         if (hashedKeys == null) return new ArrayList<>();
@@ -524,16 +494,10 @@ public class ObjectsDB {
      * @param longKey the keys of the object to load
      * @return the retrived objcets
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public Object retrieveObject(long longKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public Object retrieveObject(long longKey) throws InterruptedException {
         
         Object obj = null;
         synchronized(dbMutex){
@@ -559,16 +523,10 @@ public class ObjectsDB {
      * @param key the keys of the object to load
      * @return the retrieved objcets
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public Object retrieveObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public Object retrieveObject(String key) throws InterruptedException {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving one objects with key: " + key);
         }
@@ -600,14 +558,10 @@ public class ObjectsDB {
     /**
      * Triggers a dump of all objects within the cache into the database
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void dumpToDB() throws IOException, SQLException, InterruptedException {
+    public void dumpToDB() throws InterruptedException {
         synchronized(dbMutex){
             objectsCache.saveCache(null, false);
         }
@@ -624,16 +578,10 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      * @return a list of objcets
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Object> retrieveObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         ArrayList<Object> retrievingObjects = new ArrayList<>();
         synchronized(dbMutex){
@@ -673,16 +621,10 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      * @return the list of objects
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         ArrayList<Object> retrievingObjects = new ArrayList<>();
         synchronized(dbMutex){
@@ -726,16 +668,10 @@ public class ObjectsDB {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         
         synchronized(dbMutex){
         
@@ -769,16 +705,10 @@ public class ObjectsDB {
      *
      * @param key the object key
      *
-     * @throws SQLException exception thrown whenever an error occurs while
-     * interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a file from the database
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void removeObject(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void removeObject(String key) throws InterruptedException {
         synchronized(dbMutex){
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " removing object: " + key);
@@ -809,11 +739,9 @@ public class ObjectsDB {
      *
      * @return a boolean indicating whether an object is loaded
      *
-     * @throws SQLException exception thrown whenever an exception occurred
-     * while interrogating the database
      * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean inCache(String objectKey) throws SQLException, InterruptedException {
+    public boolean inCache(String objectKey) throws InterruptedException {
         boolean isInCache;
         synchronized(dbMutex){
             isInCache = objectsCache.inCache(createLongKey(objectKey));
@@ -852,15 +780,9 @@ public class ObjectsDB {
     /**
      * Closes the db connection.
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * closing the database connection
      * @throws InterruptedException exception thrown if a threading error occurs
-     * @throws java.io.IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      */
-    public void close() throws SQLException, InterruptedException, IOException, ClassNotFoundException {
+    public void close() throws InterruptedException {
         close(true);
     }
 
@@ -868,15 +790,9 @@ public class ObjectsDB {
      * Closes the db connection.
      *
      * @param clearing clearing all database structures
-     * @throws SQLException exception thrown whenever an error occurred while
-     * closing the database connection
      * @throws InterruptedException exception thrown if a threading error occurs
-     * @throws java.io.IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      */
-    public void close(boolean clearing) throws SQLException, InterruptedException, IOException, ClassNotFoundException {
+    public void close(boolean clearing) throws InterruptedException {
         synchronized(dbMutex){
             if (debugInteractions){
                 System.out.println("closing database");
@@ -898,16 +814,10 @@ public class ObjectsDB {
     /**
      * Establishes connection to the database.
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection to the database
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading or writing a file
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    private void establishConnection() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    private void establishConnection() throws InterruptedException {
         establishConnection(true);
         
     }
@@ -916,16 +826,10 @@ public class ObjectsDB {
      * Establishes connection to the database.
      *
      * @param loading load all objects from database
-     * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection to the database
-     * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading or writing a file
-     * @throws java.lang.ClassNotFoundException exception thrown whenever an
-     * error occurred while deserializing a file
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading error occurred while establishing the connection
      */
-    public void establishConnection(boolean loading) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void establishConnection(boolean loading) throws InterruptedException {
         
         synchronized(dbMutex){
             if (debugInteractions){

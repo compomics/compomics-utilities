@@ -110,6 +110,10 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      */
     private final HashSet<String> decoyAccessions = new HashSet<>();
     /**
+     * The accessions dictionary containing index part, start position and end position per accession
+     */
+    private final HashMap<String, int[]> accessions_dict = new HashMap<>();
+    /**
      * List of all amino acid masses.
      */
     private double[] aaMasses = null;
@@ -511,9 +515,16 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * the fasta file.
      */
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
-        massTolerance = searchParameters.getFragmentIonAccuracy();
-        massAccuracyType = searchParameters.getFragmentAccuracyType();
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
+        if (searchParameters != null){
+            massTolerance = searchParameters.getFragmentIonAccuracy();
+            massAccuracyType = searchParameters.getFragmentAccuracyType();
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
+        }
+        else {
+            massTolerance = 0.02;
+            massAccuracyType = SearchParameters.MassAccuracyType.DA;
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
+        }
     }
 
     /**
@@ -1093,6 +1104,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         int[] bndaries = new int[numProteins + 1];
         boundaries.add(bndaries);
         String[] accssions = new String[numProteins];
+        int indexPart = accessions.size();
         accessions.add(accssions);
         boundaries.get(0)[0] = 1;
 
@@ -1123,6 +1135,8 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             int proteinLen = currentProtein.getLength();
             
             T[tmpN++] = '/'; // adding the delimiters
+            int[] accession_data = {indexPart, tmpN, tmpN + proteinLen};
+            accessions_dict.put(accession, accession_data);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
             accssions[tmpNumProtein++] = currentProtein.getAccession();
@@ -4847,7 +4861,10 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     
     @Override
     public String getSequence(String proteinAccession) {
-        
+        int[] accession_data = accessions_dict.get(proteinAccession);
+        if (accession_data != null){
+            System.out.println(proteinAccession + " " + accession_data[0] + " " + accession_data[1] + " " + accession_data[2]);
+        }        
         throw new UnsupportedOperationException("Not implemented yet");
     }
 

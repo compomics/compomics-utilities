@@ -22,8 +22,10 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
-    public PeptideMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public PeptideMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         this(null, identification, waitingHandler, displayProgress);
     }
     
@@ -36,8 +38,10 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
-    public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public PeptideMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         super(keys, PeptideMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -46,9 +50,11 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.
      *
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      * @return the next match
      */
-    public PeptideMatch next() {
+    public PeptideMatch next() throws InterruptedException {
         return (PeptideMatch)nextObject();
     }
 }

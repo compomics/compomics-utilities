@@ -13,15 +13,10 @@ import org.zoodb.api.impl.ZooPC;
 public class DbObject extends ZooPC implements Serializable {
     
     private static final long serialVersionUID = -7906158551970915613l;
-    
     /**
      * unique identifier
      */
     private long id;
-    /**
-     * Indicates if the object is already stored in the db
-     */
-    //private boolean storedInDB = false;
     /** 
      * flag if object is a first level object or not
      */
@@ -49,30 +44,21 @@ public class DbObject extends ZooPC implements Serializable {
         this.id = id;
     }
     
-    /*
-    public boolean getStoredInDB(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        return storedInDB;
-    }
-    */
     
     /**
-     * Sets whether the object is stored in the database.
-     * 
-     * @param storedInDB a boolean indicating whether the object is stored in the database
+     * Gets whether an object is a first level object or not i.e. attribute within another object
+     * @return first level flag
      */
-    /*
-    public void setStoredInDB(boolean storedInDB){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        this.storedInDB = storedInDB;
-    }
-    */
-    
     public boolean getFirstLevel(){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return firstLevel;
     }
     
+    
+    /**
+     * Sets whether an object is a first level object or not i.e. attribute within another object
+     * @param firstLevel first level flag 
+     */
     public void setFirstLevel(boolean firstLevel){
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.firstLevel = firstLevel;

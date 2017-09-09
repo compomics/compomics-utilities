@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!-- NewPage -->
 <html lang="de">
@@ -50,8 +49,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Prev&nbsp;Class</li>
+<li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/compomics/util/experiment/massspectrometry/Spectrum.html" target="_top">Frames</a></li>
@@ -104,7 +103,7 @@ var activeTableTab = "activeTableTab";
 <li>org.zoodb.api.impl.ZooPC</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">com.compomics.util.IdObject</a></li>
+<li><a href="../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a></li>
 <li>
 <ul class="inheritance">
 <li><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a></li>
@@ -126,10 +125,6 @@ var activeTableTab = "activeTableTab";
 <dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
-</dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../com/compomics/util/experiment/massspectrometry/MS1Spectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MS1Spectrum</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a></dd>
 </dl>
 <hr>
 <br>
@@ -167,7 +162,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;</code></td>
+<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#intensityPeakMap">intensityPeakMap</a></span></code>
 <div class="block">Intensity indexed Peak map.</div>
 </td>
@@ -179,7 +174,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#peakList">peakList</a></span></code>
 <div class="block">mz indexed Peak list.</div>
 </td>
@@ -243,12 +238,12 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#addPeak-com.compomics.util.experiment.massspectrometry.Peak-">addPeak</a></span>(<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&nbsp;aPeak)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#addPeak-com.compomics.util.experiment.mass_spectrometry.spectra.Peak-">addPeak</a></span>(<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&nbsp;aPeak)</code>
 <div class="block">Adds a peak to the spectrum peak list.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getDesignaledPeakList-java.util.ArrayList-">getDesignaledPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</code>
 <div class="block">Returns the peak list of this spectrum without matched peaks.</div>
 </td>
@@ -266,13 +261,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry">SimpleNoiseDistribution</a></code></td>
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry">SimpleNoiseDistribution</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityLogDistribution--">getIntensityLogDistribution</a></span>()</code>
 <div class="block">Returns the intensity of the log of the peaks intensities.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityMap--">getIntensityMap</a></span>()</code>
 <div class="block">Returns the peak list in a map where peaks are indexed by their
  intensity.</div>
@@ -347,7 +342,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i17" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeakList--">getPeakList</a></span>()</code>
 <div class="block">Returns the peak list.</div>
 </td>
@@ -360,7 +355,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeakMap--">getPeakMap</a></span>()</code>
 <div class="block">Returns a peak map where peaks are indexed by their m/z.</div>
 </td>
@@ -373,7 +368,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i21" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getRecalibratedPeakList-java.util.HashMap-">getRecalibratedPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;mzCorrections)</code>
 <div class="block">Returns a recalibrated peak list.</div>
 </td>
@@ -423,7 +418,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i29" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSubSpectrum-double-double-">getSubSpectrum</a></span>(double&nbsp;mzMin,
               double&nbsp;mzMax)</code>
 <div class="block">Returns the part of the spectrum contained between mzMin (inclusive) and
@@ -463,13 +458,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeakList-java.util.HashMap-">setPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peakList)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeakList-java.util.HashMap-">setPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;peakList)</code>
 <div class="block">Sets the peak list.</div>
 </td>
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeaks-java.util.ArrayList-">setPeaks</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeaks-java.util.ArrayList-">setPeaks</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;peaks)</code>
 <div class="block">Set the peaks.</div>
 </td>
 </tr>
@@ -500,11 +495,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <code><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.IdObject">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;com.compomics.util.<a href="../../../../../com/compomics/util/IdObject.html" title="class in com.compomics.util">IdObject</a></h3>
-<code><a href="../../../../../com/compomics/util/IdObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../com/compomics/util/IdObject.html#getId--">getId</a>, <a href="../../../../../com/compomics/util/IdObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../com/compomics/util/IdObject.html#setId-long-">setId</a></code></li>
+<h3>Methods inherited from class&nbsp;com.compomics.util.db.object.<a href="../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></h3>
+<code><a href="../../../../../com/compomics/util/db/object/DbObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#getId--">getId</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#setId-long-">setId</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
@@ -570,7 +565,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>peakList</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt; peakList</pre>
+<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt; peakList</pre>
 <div class="block">mz indexed Peak list.</div>
 </li>
 </ul>
@@ -580,7 +575,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>intensityPeakMap</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt; intensityPeakMap</pre>
+<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&gt; intensityPeakMap</pre>
 <div class="block">Intensity indexed Peak map.</div>
 </li>
 </ul>
@@ -761,7 +756,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeakMap</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getPeakMap()</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;getPeakMap()</pre>
 <div class="block">Returns a peak map where peaks are indexed by their m/z.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -769,13 +764,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="addPeak-com.compomics.util.experiment.massspectrometry.Peak-">
+<a name="addPeak-com.compomics.util.experiment.mass_spectrometry.spectra.Peak-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addPeak</h4>
-<pre>public&nbsp;void&nbsp;addPeak(<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&nbsp;aPeak)</pre>
+<pre>public&nbsp;void&nbsp;addPeak(<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&nbsp;aPeak)</pre>
 <div class="block">Adds a peak to the spectrum peak list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -789,7 +784,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeaks</h4>
-<pre>public&nbsp;void&nbsp;setPeaks(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks)</pre>
+<pre>public&nbsp;void&nbsp;setPeaks(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;peaks)</pre>
 <div class="block">Set the peaks.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -873,7 +868,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getPeakList()</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;getPeakList()</pre>
 <div class="block">Returns the peak list.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -887,7 +882,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>setPeakList</h4>
-<pre>public&nbsp;void&nbsp;setPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peakList)</pre>
+<pre>public&nbsp;void&nbsp;setPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;peakList)</pre>
 <div class="block">Sets the peak list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1173,7 +1168,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getRecalibratedPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getRecalibratedPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;mzCorrections)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;getRecalibratedPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;mzCorrections)</pre>
 <div class="block">Returns a recalibrated peak list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1189,7 +1184,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getDesignaledPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getDesignaledPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;getDesignaledPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</pre>
 <div class="block">Returns the peak list of this spectrum without matched peaks.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1205,7 +1200,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getSubSpectrum</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getSubSpectrum(double&nbsp;mzMin,
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&nbsp;getSubSpectrum(double&nbsp;mzMin,
                                            double&nbsp;mzMax)
                                     throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Returns the part of the spectrum contained between mzMin (inclusive) and
@@ -1229,7 +1224,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getIntensityMap</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;&nbsp;getIntensityMap()
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;&gt;&nbsp;getIntensityMap()
                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Returns the peak list in a map where peaks are indexed by their
  intensity.</div>
@@ -1276,7 +1271,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getIntensityLogDistribution</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry">SimpleNoiseDistribution</a>&nbsp;getIntensityLogDistribution()
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry">SimpleNoiseDistribution</a>&nbsp;getIntensityLogDistribution()
                                                     throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
                                                            org.apache.commons.math.MathException</pre>
 <div class="block">Returns the intensity of the log of the peaks intensities.</div>
@@ -1319,8 +1314,8 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Prev&nbsp;Class</li>
+<li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/compomics/util/experiment/massspectrometry/Spectrum.html" target="_top">Frames</a></li>
@@ -1363,1377 +1358,3 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <p class="legalCopy"><small>Copyright &#169; 2017. All rights reserved.</small></p>
 </body>
 </html>
-=======
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- NewPage -->
-<html lang="en">
-<head>
-<!-- Generated by javadoc -->
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Spectrum (computational omics utilities 5.0.1-SNAPSHOT API)</title>
-<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
-<script type="text/javascript" src="../../../../../script.js"></script>
-</head>
-<body>
-<script type="text/javascript"><!--
-    try {
-        if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Spectrum (computational omics utilities 5.0.1-SNAPSHOT API)";
-        }
-    }
-    catch(err) {
-    }
-//-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":9,"i25":10,"i26":9,"i27":10,"i28":9,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
-var altColor = "altColor";
-var rowColor = "rowColor";
-var tableTab = "tableTab";
-var activeTableTab = "activeTableTab";
-</script>
-<noscript>
-<div>JavaScript is disabled on your browser.</div>
-</noscript>
-<!-- ========= START OF TOP NAVBAR ======= -->
-<div class="topNav"><a name="navbar.top">
-<!--   -->
-</a>
-<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
-<a name="navbar.top.firstrow">
-<!--   -->
-</a>
-<ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
-<li><a href="package-summary.html">Package</a></li>
-<li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Spectrum.html">Use</a></li>
-<li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
-<li><a href="../../../../../index-all.html">Index</a></li>
-<li><a href="../../../../../help-doc.html">Help</a></li>
-</ul>
-</div>
-<div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?com/compomics/util/experiment/massspectrometry/Spectrum.html" target="_top">Frames</a></li>
-<li><a href="Spectrum.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
-<ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
-</ul>
-<div>
-<script type="text/javascript"><!--
-  allClassesLink = document.getElementById("allclasses_navbar_top");
-  if(window==top) {
-    allClassesLink.style.display = "block";
-  }
-  else {
-    allClassesLink.style.display = "none";
-  }
-  //-->
-</script>
-</div>
-<div>
-<ul class="subNavList">
-<li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
-</ul>
-<ul class="subNavList">
-<li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
-</ul>
-</div>
-<a name="skip.navbar.top">
-<!--   -->
-</a></div>
-<!-- ========= END OF TOP NAVBAR ========= -->
-<!-- ======== START OF CLASS DATA ======== -->
-<div class="header">
-<div class="subTitle">com.compomics.util.experiment.massspectrometry</div>
-<h2 title="Class Spectrum" class="title">Class Spectrum</h2>
-</div>
-<div class="contentContainer">
-<ul class="inheritance">
-<li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
-<li>
-<ul class="inheritance">
-<li>org.zoodb.api.impl.ZooPC</li>
-<li>
-<ul class="inheritance">
-<li><a href="../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a></li>
-<li>
-<ul class="inheritance">
-<li><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a></li>
-<li>
-<ul class="inheritance">
-<li>com.compomics.util.experiment.massspectrometry.Spectrum</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<div class="description">
-<ul class="blockList">
-<li class="blockList">
-<dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
-</dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../com/compomics/util/experiment/massspectrometry/MS1Spectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MS1Spectrum</a>, <a href="../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a></dd>
-</dl>
-<hr>
-<br>
-<pre>public abstract class <span class="typeNameLabel">Spectrum</span>
-extends <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></pre>
-<div class="block">This class models a spectrum.</div>
-<dl>
-<dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Marc Vaudel, Harald Barsnes</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../serialized-form.html#com.compomics.util.experiment.massspectrometry.Spectrum">Serialized Form</a></dd>
-</dl>
-</li>
-</ul>
-</div>
-<div class="summary">
-<ul class="blockList">
-<li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#fileName">fileName</a></span></code>
-<div class="block">Spectrum file name.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#intensityPeakMap">intensityPeakMap</a></span></code>
-<div class="block">Intensity indexed Peak map.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#level">level</a></span></code>
-<div class="block">The MS level.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#peakList">peakList</a></span></code>
-<div class="block">mz indexed Peak list.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#scanNumber">scanNumber</a></span></code>
-<div class="block">Scan number or range.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#scanStartTime">scanStartTime</a></span></code>
-<div class="block">The time point when the spectrum was recorded (scan start time in mzML
- files).</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#SPECTRUM_KEY_SPLITTER">SPECTRUM_KEY_SPLITTER</a></span></code>
-<div class="block">The splitter in the key between spectrumFile and spectrumTitle.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#spectrumTitle">spectrumTitle</a></span></code>
-<div class="block">Spectrum title.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<ul class="blockList">
-<li class="blockList"><a name="constructor.summary">
-<!--   -->
-</a>
-<h3>Constructor Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
-<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colOne" scope="col">Constructor and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#Spectrum--">Spectrum</a></span>()</code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
-<!-- ========== METHOD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="method.summary">
-<!--   -->
-</a>
-<h3>Method Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#addPeak-com.compomics.util.experiment.massspectrometry.Peak-">addPeak</a></span>(<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&nbsp;aPeak)</code>
-<div class="block">Adds a peak to the spectrum peak list.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getDesignaledPeakList-java.util.ArrayList-">getDesignaledPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</code>
-<div class="block">Returns the peak list of this spectrum without matched peaks.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getFileName--">getFileName</a></span>()</code>
-<div class="block">Returns the file name.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityLimit-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.IntensityThresholdType-double-">getIntensityLimit</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings.IntensityThresholdType</a>&nbsp;intensityThresholdType,
-                 double&nbsp;intensityFraction)</code>
-<div class="block">Returns the limit in intensity according to the given threshold.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry">SimpleNoiseDistribution</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityLogDistribution--">getIntensityLogDistribution</a></span>()</code>
-<div class="block">Returns the intensity of the log of the peaks intensities.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityMap--">getIntensityMap</a></span>()</code>
-<div class="block">Returns the peak list in a map where peaks are indexed by their
- intensity.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>double[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityValuesAsArray--">getIntensityValuesAsArray</a></span>()</code>
-<div class="block">Returns the intensity values as an array.</div>
-</td>
-</tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>double[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getIntensityValuesNormalizedAsArray--">getIntensityValuesNormalizedAsArray</a></span>()</code>
-<div class="block">Returns the intensity values as an array normalized against the largest
- peak.</div>
-</td>
-</tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code>double[][]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getJFreePeakList--">getJFreePeakList</a></span>()</code>
-<div class="block">Format the peaks so that they can be plotted in JFreeChart.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getLevel--">getLevel</a></span>()</code>
-<div class="block">Returns at which level the spectrum was recorded.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getMaxIntensity--">getMaxIntensity</a></span>()</code>
-<div class="block">Returns the max intensity value.</div>
-</td>
-</tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getMaxMz--">getMaxMz</a></span>()</code>
-<div class="block">Returns the max mz value.</div>
-</td>
-</tr>
-<tr id="i12" class="altColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getMinMz--">getMinMz</a></span>()</code>
-<div class="block">Returns the min mz value.</div>
-</td>
-</tr>
-<tr id="i13" class="rowColor">
-<td class="colFirst"><code>double[][]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getMzAndIntensityAsArray--">getMzAndIntensityAsArray</a></span>()</code>
-<div class="block">Returns the m/z and intensity values as an array in increasing order
- sorted on m/z value.</div>
-</td>
-</tr>
-<tr id="i14" class="altColor">
-<td class="colFirst"><code>double[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getMzValuesAsArray--">getMzValuesAsArray</a></span>()</code>
-<div class="block">Returns the mz values as an array.</div>
-</td>
-</tr>
-<tr id="i15" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getNPeaks--">getNPeaks</a></span>()</code>
-<div class="block">Returns the number of peaks in the spectrum.</div>
-</td>
-</tr>
-<tr id="i16" class="altColor">
-<td class="colFirst"><code>double[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getOrderedMzValues--">getOrderedMzValues</a></span>()</code>
-<div class="block">Returns a list of the m/z values sorted in ascending order.</div>
-</td>
-</tr>
-<tr id="i17" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeakList--">getPeakList</a></span>()</code>
-<div class="block">Returns the peak list.</div>
-</td>
-</tr>
-<tr id="i18" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeakListAsString--">getPeakListAsString</a></span>()</code>
-<div class="block">Returns the peak list as an array list formatted as text, e.g.</div>
-</td>
-</tr>
-<tr id="i19" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeakMap--">getPeakMap</a></span>()</code>
-<div class="block">Returns a peak map where peaks are indexed by their m/z.</div>
-</td>
-</tr>
-<tr id="i20" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getPeaksAboveIntensityThreshold-double-">getPeaksAboveIntensityThreshold</a></span>(double&nbsp;threshold)</code>
-<div class="block">Returns an array containing the intensity of all peaks strictly above the
- provided threshold.</div>
-</td>
-</tr>
-<tr id="i21" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getRecalibratedPeakList-java.util.HashMap-">getRecalibratedPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;mzCorrections)</code>
-<div class="block">Returns a recalibrated peak list.</div>
-</td>
-</tr>
-<tr id="i22" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getScanNumber--">getScanNumber</a></span>()</code>
-<div class="block">Getter for the scan number.</div>
-</td>
-</tr>
-<tr id="i23" class="rowColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getScanStartTime--">getScanStartTime</a></span>()</code>
-<div class="block">Returns the scan start time.</div>
-</td>
-</tr>
-<tr id="i24" class="altColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSpectrumFile-java.lang.String-">getSpectrumFile</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</code>
-<div class="block">Convenience method to retrieve the name of a file from the spectrum key.</div>
-</td>
-</tr>
-<tr id="i25" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSpectrumKey--">getSpectrumKey</a></span>()</code>
-<div class="block">Returns the key of the spectrum.</div>
-</td>
-</tr>
-<tr id="i26" class="altColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSpectrumKey-java.lang.String-java.lang.String-">getSpectrumKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumFile,
-              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumTitle)</code>
-<div class="block">Convenience method returning the key for a spectrum.</div>
-</td>
-</tr>
-<tr id="i27" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSpectrumTitle--">getSpectrumTitle</a></span>()</code>
-<div class="block">Returns the spectrum title.</div>
-</td>
-</tr>
-<tr id="i28" class="altColor">
-<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSpectrumTitle-java.lang.String-">getSpectrumTitle</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</code>
-<div class="block">Convenience method to retrieve the name of a spectrum from the spectrum
- key.</div>
-</td>
-</tr>
-<tr id="i29" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getSubSpectrum-double-double-">getSubSpectrum</a></span>(double&nbsp;mzMin,
-              double&nbsp;mzMax)</code>
-<div class="block">Returns the part of the spectrum contained between mzMin (inclusive) and
- mzMax (exclusive) as a peak list</div>
-</td>
-</tr>
-<tr id="i30" class="altColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getTotalIntensity--">getTotalIntensity</a></span>()</code>
-<div class="block">Returns the total intensity of the spectrum.</div>
-</td>
-</tr>
-<tr id="i31" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#isEmpty--">isEmpty</a></span>()</code>
-<div class="block">Returns a boolean indicating whether the spectrum is empty.</div>
-</td>
-</tr>
-<tr id="i32" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#removePeakList--">removePeakList</a></span>()</code>
-<div class="block">This method will remove the peak list in order to reduce memory
- consumption of the model.</div>
-</td>
-</tr>
-<tr id="i33" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setFileName-java.lang.String-">setFileName</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>
-<div class="block">Sets the file name.</div>
-</td>
-</tr>
-<tr id="i34" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setIntensityValuesAsArray-double:A-">setIntensityValuesAsArray</a></span>(double[]&nbsp;intensityValuesAsArray)</code>
-<div class="block">Setter for the intensityValuesAsArray.</div>
-</td>
-</tr>
-<tr id="i35" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeakList-java.util.HashMap-">setPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peakList)</code>
-<div class="block">Sets the peak list.</div>
-</td>
-</tr>
-<tr id="i36" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setPeaks-java.util.ArrayList-">setPeaks</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks)</code>
-<div class="block">Set the peaks.</div>
-</td>
-</tr>
-<tr id="i37" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setScanNumber-java.lang.String-">setScanNumber</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;scanNumber)</code>
-<div class="block">Setter for the scan number or range.</div>
-</td>
-</tr>
-<tr id="i38" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setScanStartTime-double-">setScanStartTime</a></span>(double&nbsp;scanStartTime)</code>
-<div class="block">Sets the scan start time.</div>
-</td>
-</tr>
-<tr id="i39" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#setSpectrumTitle-java.lang.String-">setSpectrumTitle</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumTitle)</code>
-<div class="block">Set the spectrum title.</div>
-</td>
-</tr>
-</table>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
-<code><a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a>, <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;com.compomics.util.db.object.<a href="../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></h3>
-<code><a href="../../../../../com/compomics/util/db/object/DbObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#getId--">getId</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#getStoredInDB--">getStoredInDB</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#setId-long-">setId</a>, <a href="../../../../../com/compomics/util/db/object/DbObject.html#setStoredInDB-boolean-">setStoredInDB</a></code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
-<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="details">
-<ul class="blockList">
-<li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="spectrumTitle">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>spectrumTitle</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumTitle</pre>
-<div class="block">Spectrum title.</div>
-</li>
-</ul>
-<a name="fileName">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>fileName</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> fileName</pre>
-<div class="block">Spectrum file name.</div>
-</li>
-</ul>
-<a name="level">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>level</h4>
-<pre>protected&nbsp;int level</pre>
-<div class="block">The MS level.</div>
-</li>
-</ul>
-<a name="peakList">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>peakList</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt; peakList</pre>
-<div class="block">mz indexed Peak list.</div>
-</li>
-</ul>
-<a name="intensityPeakMap">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>intensityPeakMap</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt; intensityPeakMap</pre>
-<div class="block">Intensity indexed Peak map.</div>
-</li>
-</ul>
-<a name="scanNumber">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>scanNumber</h4>
-<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> scanNumber</pre>
-<div class="block">Scan number or range.</div>
-</li>
-</ul>
-<a name="scanStartTime">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>scanStartTime</h4>
-<pre>protected&nbsp;double scanStartTime</pre>
-<div class="block">The time point when the spectrum was recorded (scan start time in mzML
- files).</div>
-</li>
-</ul>
-<a name="SPECTRUM_KEY_SPLITTER">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>SPECTRUM_KEY_SPLITTER</h4>
-<pre>public static final&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> SPECTRUM_KEY_SPLITTER</pre>
-<div class="block">The splitter in the key between spectrumFile and spectrumTitle.</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../constant-values.html#com.compomics.util.experiment.massspectrometry.Spectrum.SPECTRUM_KEY_SPLITTER">Constant Field Values</a></dd>
-</dl>
-</li>
-</ul>
-</li>
-</ul>
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<ul class="blockList">
-<li class="blockList"><a name="constructor.detail">
-<!--   -->
-</a>
-<h3>Constructor Detail</h3>
-<a name="Spectrum--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>Spectrum</h4>
-<pre>public&nbsp;Spectrum()</pre>
-</li>
-</ul>
-</li>
-</ul>
-<!-- ============ METHOD DETAIL ========== -->
-<ul class="blockList">
-<li class="blockList"><a name="method.detail">
-<!--   -->
-</a>
-<h3>Method Detail</h3>
-<a name="getSpectrumKey-java.lang.String-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSpectrumKey</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSpectrumKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumFile,
-                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumTitle)</pre>
-<div class="block">Convenience method returning the key for a spectrum.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumFile</code> - the spectrum file</dd>
-<dd><code>spectrumTitle</code> - the spectrum title</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the corresponding spectrum key</dd>
-</dl>
-</li>
-</ul>
-<a name="getSpectrumFile-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSpectrumFile</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSpectrumFile(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</pre>
-<div class="block">Convenience method to retrieve the name of a file from the spectrum key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumKey</code> - the spectrum key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the name of the file containing the spectrum</dd>
-</dl>
-</li>
-</ul>
-<a name="getSpectrumTitle-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSpectrumTitle</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSpectrumTitle(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumKey)</pre>
-<div class="block">Convenience method to retrieve the name of a spectrum from the spectrum
- key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumKey</code> - the spectrum key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the title of the spectrum</dd>
-</dl>
-</li>
-</ul>
-<a name="setSpectrumTitle-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setSpectrumTitle</h4>
-<pre>public&nbsp;void&nbsp;setSpectrumTitle(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumTitle)</pre>
-<div class="block">Set the spectrum title.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>spectrumTitle</code> - the title to set</dd>
-</dl>
-</li>
-</ul>
-<a name="getSpectrumKey--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSpectrumKey</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSpectrumKey()</pre>
-<div class="block">Returns the key of the spectrum.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the key of the spectrum</dd>
-</dl>
-</li>
-</ul>
-<a name="getSpectrumTitle--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSpectrumTitle</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getSpectrumTitle()</pre>
-<div class="block">Returns the spectrum title.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>spectrum title</dd>
-</dl>
-</li>
-</ul>
-<a name="getJFreePeakList--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getJFreePeakList</h4>
-<pre>public&nbsp;double[][]&nbsp;getJFreePeakList()
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Format the peaks so that they can be plotted in JFreeChart.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a table containing the peaks</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getPeakMap--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPeakMap</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getPeakMap()</pre>
-<div class="block">Returns a peak map where peaks are indexed by their m/z.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a peak map</dd>
-</dl>
-</li>
-</ul>
-<a name="addPeak-com.compomics.util.experiment.massspectrometry.Peak-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>addPeak</h4>
-<pre>public&nbsp;void&nbsp;addPeak(<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&nbsp;aPeak)</pre>
-<div class="block">Adds a peak to the spectrum peak list.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aPeak</code> - the peak to add</dd>
-</dl>
-</li>
-</ul>
-<a name="setPeaks-java.util.ArrayList-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setPeaks</h4>
-<pre>public&nbsp;void&nbsp;setPeaks(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peaks)</pre>
-<div class="block">Set the peaks.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>peaks</code> - the peaks to set</dd>
-</dl>
-</li>
-</ul>
-<a name="getScanNumber--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getScanNumber</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getScanNumber()</pre>
-<div class="block">Getter for the scan number.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the spectrum scan number</dd>
-</dl>
-</li>
-</ul>
-<a name="setScanNumber-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setScanNumber</h4>
-<pre>public&nbsp;void&nbsp;setScanNumber(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;scanNumber)</pre>
-<div class="block">Setter for the scan number or range.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>scanNumber</code> - or range</dd>
-</dl>
-</li>
-</ul>
-<a name="getFileName--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getFileName</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getFileName()</pre>
-<div class="block">Returns the file name.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the file name</dd>
-</dl>
-</li>
-</ul>
-<a name="setFileName-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setFileName</h4>
-<pre>public&nbsp;void&nbsp;setFileName(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</pre>
-<div class="block">Sets the file name.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fileName</code> - the file name</dd>
-</dl>
-</li>
-</ul>
-<a name="getLevel--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLevel</h4>
-<pre>public&nbsp;int&nbsp;getLevel()</pre>
-<div class="block">Returns at which level the spectrum was recorded.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>at which level the spectrum was recorded</dd>
-</dl>
-</li>
-</ul>
-<a name="getPeakList--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getPeakList()</pre>
-<div class="block">Returns the peak list.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the peak list</dd>
-</dl>
-</li>
-</ul>
-<a name="setPeakList-java.util.HashMap-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setPeakList</h4>
-<pre>public&nbsp;void&nbsp;setPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;peakList)</pre>
-<div class="block">Sets the peak list.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>peakList</code> - HashSet of peaks containing the peaks of the spectrum</dd>
-</dl>
-</li>
-</ul>
-<a name="getPeakListAsString--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPeakListAsString</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getPeakListAsString()
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the peak list as an array list formatted as text, e.g.
- [[303.17334 3181.14],[318.14542 37971.93], ... ].</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the peak list as an array list formatted as text</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getScanStartTime--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getScanStartTime</h4>
-<pre>public&nbsp;double&nbsp;getScanStartTime()</pre>
-<div class="block">Returns the scan start time.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the scan start time</dd>
-</dl>
-</li>
-</ul>
-<a name="setScanStartTime-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setScanStartTime</h4>
-<pre>public&nbsp;void&nbsp;setScanStartTime(double&nbsp;scanStartTime)</pre>
-<div class="block">Sets the scan start time.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>scanStartTime</code> - the time point when the spectrum was recorded</dd>
-</dl>
-</li>
-</ul>
-<a name="removePeakList--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>removePeakList</h4>
-<pre>public&nbsp;void&nbsp;removePeakList()</pre>
-<div class="block">This method will remove the peak list in order to reduce memory
- consumption of the model.</div>
-</li>
-</ul>
-<a name="getMzValuesAsArray--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMzValuesAsArray</h4>
-<pre>public&nbsp;double[]&nbsp;getMzValuesAsArray()
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the mz values as an array. Note: the array is not necessarily
- ordered.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the mz values as an array</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getOrderedMzValues--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getOrderedMzValues</h4>
-<pre>public&nbsp;double[]&nbsp;getOrderedMzValues()
-                            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns a list of the m/z values sorted in ascending order.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a list of the m/z values sorted in ascending order</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="setIntensityValuesAsArray-double:A-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setIntensityValuesAsArray</h4>
-<pre>public&nbsp;void&nbsp;setIntensityValuesAsArray(double[]&nbsp;intensityValuesAsArray)</pre>
-<div class="block">Setter for the intensityValuesAsArray.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>intensityValuesAsArray</code> - the intensity values array</dd>
-</dl>
-</li>
-</ul>
-<a name="getIntensityValuesAsArray--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIntensityValuesAsArray</h4>
-<pre>public&nbsp;double[]&nbsp;getIntensityValuesAsArray()
-                                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the intensity values as an array.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the intensity values as an array</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getIntensityValuesNormalizedAsArray--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIntensityValuesNormalizedAsArray</h4>
-<pre>public&nbsp;double[]&nbsp;getIntensityValuesNormalizedAsArray()
-                                             throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the intensity values as an array normalized against the largest
- peak.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the normalized intensity values as an array</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getMzAndIntensityAsArray--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMzAndIntensityAsArray</h4>
-<pre>public&nbsp;double[][]&nbsp;getMzAndIntensityAsArray()
-                                    throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the m/z and intensity values as an array in increasing order
- sorted on m/z value.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the m/z and intensity values as an array</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getTotalIntensity--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getTotalIntensity</h4>
-<pre>public&nbsp;double&nbsp;getTotalIntensity()
-                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the total intensity of the spectrum.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the total intensity. 0 if no peak.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getMaxIntensity--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMaxIntensity</h4>
-<pre>public&nbsp;double&nbsp;getMaxIntensity()
-                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the max intensity value.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the max intensity value. 0 if no peak.</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getMaxMz--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMaxMz</h4>
-<pre>public&nbsp;double&nbsp;getMaxMz()
-                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the max mz value.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the max mz value</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getMinMz--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMinMz</h4>
-<pre>public&nbsp;double&nbsp;getMinMz()
-                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the min mz value.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the min mz value</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getPeaksAboveIntensityThreshold-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPeaksAboveIntensityThreshold</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;getPeaksAboveIntensityThreshold(double&nbsp;threshold)</pre>
-<div class="block">Returns an array containing the intensity of all peaks strictly above the
- provided threshold.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>threshold</code> - the lower threshold</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>an array containing the intensity of all peak above the provided
- threshold</dd>
-</dl>
-</li>
-</ul>
-<a name="getIntensityLimit-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings.IntensityThresholdType-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIntensityLimit</h4>
-<pre>public&nbsp;double&nbsp;getIntensityLimit(<a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationSettings.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationSettings.IntensityThresholdType</a>&nbsp;intensityThresholdType,
-                                double&nbsp;intensityFraction)
-                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                org.apache.commons.math.MathException</pre>
-<div class="block">Returns the limit in intensity according to the given threshold.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>intensityThresholdType</code> - the type of intensity threshold</dd>
-<dd><code>intensityFraction</code> - the threshold value.</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the intensity limit</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading
- error occurred when estimating the noise level</dd>
-<dd><code>org.apache.commons.math.MathException</code> - exception thrown if a math
- exception occurred when estimating the noise level</dd>
-</dl>
-</li>
-</ul>
-<a name="getRecalibratedPeakList-java.util.HashMap-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRecalibratedPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getRecalibratedPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;mzCorrections)</pre>
-<div class="block">Returns a recalibrated peak list.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mzCorrections</code> - the m/z corrections to apply</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the recalibrated list of peaks indexed by m/z</dd>
-</dl>
-</li>
-</ul>
-<a name="getDesignaledPeakList-java.util.ArrayList-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getDesignaledPeakList</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getDesignaledPeakList(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</pre>
-<div class="block">Returns the peak list of this spectrum without matched peaks.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>matches</code> - the ion matches</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a peak list which does not contain the peak matched</dd>
-</dl>
-</li>
-</ul>
-<a name="getSubSpectrum-double-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSubSpectrum</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&nbsp;getSubSpectrum(double&nbsp;mzMin,
-                                           double&nbsp;mzMax)
-                                    throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the part of the spectrum contained between mzMin (inclusive) and
- mzMax (exclusive) as a peak list</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mzMin</code> - the minimum m/z value</dd>
-<dd><code>mzMax</code> - the maximum m/z value</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the part of the spectrum contained between mzMin (inclusive) and
- mzMax (exclusive)</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getIntensityMap--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIntensityMap</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/massspectrometry/Peak.html" title="class in com.compomics.util.experiment.massspectrometry">Peak</a>&gt;&gt;&nbsp;getIntensityMap()
-                                                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns the peak list in a map where peaks are indexed by their
- intensity.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the peak list in a map where peaks are indexed by their intensity</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
-</dl>
-</li>
-</ul>
-<a name="getNPeaks--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getNPeaks</h4>
-<pre>public&nbsp;int&nbsp;getNPeaks()</pre>
-<div class="block">Returns the number of peaks in the spectrum.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the number of peaks in the spectrum</dd>
-</dl>
-</li>
-</ul>
-<a name="isEmpty--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isEmpty</h4>
-<pre>public&nbsp;boolean&nbsp;isEmpty()</pre>
-<div class="block">Returns a boolean indicating whether the spectrum is empty.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether the spectrum is empty</dd>
-</dl>
-</li>
-</ul>
-<a name="getIntensityLogDistribution--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getIntensityLogDistribution</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry">SimpleNoiseDistribution</a>&nbsp;getIntensityLogDistribution()
-                                                    throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a>,
-                                                           org.apache.commons.math.MathException</pre>
-<div class="block">Returns the intensity of the log of the peaks intensities.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the intensity of the log of the peaks intensities</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading
- issue occurs</dd>
-<dd><code>org.apache.commons.math.MathException</code> - exception thrown whenever
- an error occurred while estimating probabilities.</dd>
-</dl>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<!-- ========= END OF CLASS DATA ========= -->
-<!-- ======= START OF BOTTOM NAVBAR ====== -->
-<div class="bottomNav"><a name="navbar.bottom">
-<!--   -->
-</a>
-<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
-<a name="navbar.bottom.firstrow">
-<!--   -->
-</a>
-<ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
-<li><a href="package-summary.html">Package</a></li>
-<li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Spectrum.html">Use</a></li>
-<li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
-<li><a href="../../../../../index-all.html">Index</a></li>
-<li><a href="../../../../../help-doc.html">Help</a></li>
-</ul>
-</div>
-<div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/compomics/util/experiment/massspectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.massspectrometry"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?com/compomics/util/experiment/massspectrometry/Spectrum.html" target="_top">Frames</a></li>
-<li><a href="Spectrum.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
-<ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
-</ul>
-<div>
-<script type="text/javascript"><!--
-  allClassesLink = document.getElementById("allclasses_navbar_bottom");
-  if(window==top) {
-    allClassesLink.style.display = "block";
-  }
-  else {
-    allClassesLink.style.display = "none";
-  }
-  //-->
-</script>
-</div>
-<div>
-<ul class="subNavList">
-<li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.summary">Method</a></li>
-</ul>
-<ul class="subNavList">
-<li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
-</ul>
-</div>
-<a name="skip.navbar.bottom">
-<!--   -->
-</a></div>
-<!-- ======== END OF BOTTOM NAVBAR ======= -->
-<p class="legalCopy"><small>Copyright &#169; 2017. All rights reserved.</small></p>
-</body>
-</html>
->>>>>>> f0e412886bb79fbfd3e6e8345212244b23492fd0

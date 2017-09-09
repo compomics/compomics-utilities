@@ -178,13 +178,7 @@ public class FMIndexTest extends TestCase {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
-
-                for (Entry<Integer, Variant> variantEntry : peptideVariantMatches.getVariantMatches().entrySet()) {
-                    
-                        ++correctVariants;
-                    
-                }
-                
+                Assert.assertTrue(peptideVariantMatches == null);
                 isPresent = true;
             }
         }
@@ -399,15 +393,11 @@ public class FMIndexTest extends TestCase {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
-
-                for (Entry<Integer, Variant> variantEntry : peptideVariantMatches.getVariantMatches().entrySet()) {
-                    ++correctVariants;
-                }
+                Assert.assertTrue(peptideVariantMatches == null);
                 isPresent = true;
             }
         }
         Assert.assertTrue(isPresent);
-        Assert.assertTrue(correctVariants == 0);
 
         // ECTQDRGKTAFTEAVLLP two substitutions
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.allSubstitutions);

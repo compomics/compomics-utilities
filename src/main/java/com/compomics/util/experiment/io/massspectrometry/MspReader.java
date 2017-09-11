@@ -14,14 +14,14 @@ import java.util.LinkedHashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- * This class reads NIST .msp file
+ * This class reads NIST .msp files.
  *
  * @author Genet Abay Shiferaw
  */
 public class MspReader extends MgfReader {
 
     /**
-     * General Constructor for .msp file format reader
+     * General Constructor for .msp file format reader.
      */
     public MspReader() {
     }

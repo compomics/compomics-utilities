@@ -1,6 +1,5 @@
 package com.compomics.util.db.object;
 
-
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.concurrent.atomic.*;
 
 import org.zoodb.jdo.ZooJdoHelper;
 import org.zoodb.tools.ZooHelper;
-
 
 /**
  * A database which can easily be used to store objects.
@@ -50,36 +48,48 @@ public class ObjectsDB {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private static boolean debugInteractions = false;    
+    private static boolean debugInteractions = false;
     /**
-     * OrientDB database connection
+     * OrientDB database connection.
      */
     PersistenceManager pm = null;
     /**
-     * HashMap to map hash IDs of entries into DB ids
+     * HashMap to map hash IDs of entries into DB ids.
      */
     private final HashMap<Long, Long> idMap = new HashMap<>();
     /**
-     * path of the database folder
+     * Path to the database folder.
      */
     private File dbFolder = null;
     /**
-     * the actual db file
+     * The actual db file.
      */
     private File dbFile = null;
-    
+    /**
+     * Boolean indicating if the connection is active.
+     */
     private boolean connectionActive = false;
-    
+    /**
+     * The class counter.
+     */
     private final HashMap<String, HashSet<Long>> classCounter = new HashMap<>();
-    
+    /**
+     * The current number of added objects.
+     */
     private int currentAdded = 0;
-    
+    /**
+     * The access counter.
+     */
     private final static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
-    
+    /**
+     * The commit counter.
+     */
     private final static AtomicBoolean COMMITBLOCKER = new AtomicBoolean(false);
-    
+    /**
+     * The hash values list.
+     */
     private final static long[] HASHVALUELIST = {
-        -4785187655948605440L, 2351437082613919744L, -7620983146772158464L, -8747902906952306688L, 
+        -4785187655948605440L, 2351437082613919744L, -7620983146772158464L, -8747902906952306688L,
         -4496485731609829376L, -4047692981156677632L, 5720028397227347968L, -4748060763626276864L,
         2063365725770047488L, -5756543758428897280L, -134698081630425088L, 867726525032218624L,
         -526450428666544128L, 4146020926348189696L, 4362296343029680128L, -672990070253072384L,
@@ -111,9 +121,10 @@ public class ObjectsDB {
         8658129466298726400L, 2854559136171276288L, 106897466552897536L, 5590481524594866176L,
         -4319460978758043648L, 1896969526688425984L, -2860223852340688896L, -2273634011107659776L,
         -6830438329227218944L, -1024496407927033856L, -1561168395559655424L, -1430574524350681088L};
-    
+
     /**
-     * Function for increasing the counter of processes accessing objects from the db
+     * Function for increasing the counter of processes accessing objects from
+     * the db.
      */
     public static void increaseRWCounter() {
         while (COMMITBLOCKER.get()) {
@@ -122,23 +133,24 @@ public class ObjectsDB {
         }
         ACCESSCOUNTER.incrementAndGet();
     }
-    
-    
+
     /**
-     * Function for decreasing the counter of processes accessing objects from the db
+     * Function for decreasing the counter of processes accessing objects from
+     * the db.
      */
     public static void decreaseRWCounter() {
         ACCESSCOUNTER.decrementAndGet();
     }
-    
+
     /**
-     * Committing all changes into the database
-     * @throws InterruptedException  exception thrown whenever a
-     * threading error occurred while establishing the connection
+     * Committing all changes into the database.
+     *
+     * @throws InterruptedException exception thrown whenever a threading error
+     * occurred while establishing the connection
      */
     public void commit() throws InterruptedException {
         COMMITBLOCKER.set(true);
-        while (ACCESSCOUNTER.get() != 0){
+        while (ACCESSCOUNTER.get() != 0) {
             // YOU SHALL NOT PASS
             // while processes are potentially accessing the database
         }
@@ -146,18 +158,19 @@ public class ObjectsDB {
         pm.currentTransaction().commit();
         pm.currentTransaction().begin();
         currentAdded = 0;
-        
+
         COMMITBLOCKER.set(false);
     }
-    
+
     /**
      * Getter for the current number of added objects.
+     *
      * @return the current number of added objects.
      */
-    public int getCurrentAdded(){
+    public int getCurrentAdded() {
         return currentAdded;
     }
-    
+
     /**
      * Constructor.
      *
@@ -170,7 +183,7 @@ public class ObjectsDB {
     public ObjectsDB(String folder, String dbName) throws InterruptedException {
         this(folder, dbName, true);
     }
-    
+
     /**
      * Constructor.
      *
@@ -182,79 +195,81 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public ObjectsDB(String folder, String dbName, boolean overwrite) throws InterruptedException {
-        if (debugInteractions){
+        if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
-        
+
         dbFolder = new File("/" + folder);
-        
-        if (!dbFolder.exists()){
-            if (!dbFolder.mkdirs()){
+
+        if (!dbFolder.exists()) {
+            if (!dbFolder.mkdirs()) {
                 throw new InterruptedException("cannot create database folder");
             }
         }
-        
+
         dbFile = new File(dbFolder, dbName);
         if (dbFile.exists() && overwrite) {
             ZooHelper.removeDb(dbFile.getAbsolutePath());
         }
-        
+
         establishConnection();
         objectsCache = new ObjectsCache(this);
-        
     }
-    
+
     /**
      * Getter for the id map mapping the hashed keys into zoo db ids.
+     *
      * @return The id map.
      */
-    public HashMap<Long, Long> getIdMap(){
+    public HashMap<Long, Long> getIdMap() {
         return idMap;
     }
-    
+
     /**
      * Getter for the database file.
+     *
      * @return the database file.
      */
-    public File getDbFile(){
+    public File getDbFile() {
         return dbFile;
     }
-    
+
     /**
      * Getter for the database folder.
+     *
      * @return the database folder.
      */
-    public File getDbFolder(){
+    public File getDbFolder() {
         return dbFolder;
     }
-    
-    /** 
+
+    /**
      * Getter for the persistence manager.
+     *
      * @return the persistence manager.
      */
-    public PersistenceManager getDB(){
+    public PersistenceManager getDB() {
         return pm;
     }
-    
+
     /**
-     * Creating a unique 64 bit hash key from the original key of arbitrary length.
-     * The hashed key allows to search entries in the database or in dictionaries
-     * in constant time.
-     * 
+     * Creating a unique 64 bit hash key from the original key of arbitrary
+     * length. The hashed key allows to search entries in the database or in
+     * dictionaries in constant time.
+     *
      * @param key the original key
      * @return the hashed key
      */
-    public long createLongKey(String key){
+    public long createLongKey(String key) {
         long longKey = 0;
-        for (int i = 0; i < key.length(); ++i){
+        for (int i = 0; i < key.length(); ++i) {
             long val = HASHVALUELIST[key.charAt(i)]; // create a hash val of char
             int sft = ((i * 11) & 63); // determine a shift length of cyclic shift depending on char position in key
             val = (val << sft) | (val >>> (64 - sft)); // do the cyclic shift
             longKey ^= val; // xor it with remaining
-        }        
+        }
         return longKey;
     }
-    
 
     /**
      * Returns the database name.
@@ -282,8 +297,6 @@ public class ObjectsDB {
     public void setObjectCache(ObjectsCache objectCache) {
         this.objectsCache = objectCache;
     }
-    
-    
 
     /**
      * Stores an object in the desired table. When multiple objects are to be
@@ -296,46 +309,47 @@ public class ObjectsDB {
      * occurred while interacting with the database
      */
     public void insertObject(String objectKey, Object object) throws InterruptedException {
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             long longKey = createLongKey(objectKey);
 
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey + "  /  " + longKey);
             }
-            if (object == null){
+            if (object == null) {
                 throw new InterruptedException("error: null insertion: " + objectKey);
             }
 
-            ((DbObject)object).setId(longKey);
-            ((DbObject)object).setFirstLevel(true);
-            if (!idMap.containsKey(longKey)){
+            ((DbObject) object).setId(longKey);
+            ((DbObject) object).setFirstLevel(true);
+            if (!idMap.containsKey(longKey)) {
                 idMap.put(longKey, 0l);
                 String simpleName = object.getClass().getSimpleName();
-                if(!classCounter.containsKey(simpleName)){
+                if (!classCounter.containsKey(simpleName)) {
                     classCounter.put(simpleName, new HashSet<>());
                 }
                 classCounter.get(simpleName).add(longKey);
 
-            }
-            else {
+            } else {
                 throw new InterruptedException("error double insertion: " + objectKey);
             }
             currentAdded += 1;
             objectsCache.addObject(longKey, object);
         }
     }
-    
+
     /**
-     * Returns an iterator of all objects of a given class
+     * Returns an iterator of all objects of a given class.
+     *
      * @param className the class name
      * @return the iterator
      */
-    public HashSet<Long> getClassObjects(Class className){
+    public HashSet<Long> getClassObjects(Class className) {
         return classCounter.get(className.getSimpleName());
     }
-    
+
     /**
-     * Returns an iterator of all objects of a given class
+     * Returns an iterator of all objects of a given class.
+     *
      * @param className the class name
      * @param filters filters for the class
      * @return the iterator
@@ -345,13 +359,12 @@ public class ObjectsDB {
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) throws InterruptedException {
         Query q;
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             dumpToDB();
             q = pm.newQuery(className, filters);
         }
-        return ((SynchronizedROCollection<?>)q.execute()).iterator();
+        return ((SynchronizedROCollection<?>) q.execute()).iterator();
     }
-    
 
     /**
      * Inserts a set of objects in the given table.
@@ -366,8 +379,8 @@ public class ObjectsDB {
      * occurred
      */
     public void insertObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
-        synchronized(dbMutex){
+
+        synchronized (dbMutex) {
             HashMap<Long, Object> objectsToAdd = new HashMap<>(objects.size());
             for (String objectKey : objects.keySet()) {
                 Object object = objects.get(objectKey);
@@ -375,23 +388,22 @@ public class ObjectsDB {
                     System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
                 }
 
-                if (object == null){
+                if (object == null) {
                     throw new InterruptedException("error: null insertion: " + objectKey);
                 }
 
                 long longKey = createLongKey(objectKey);
-                ((DbObject)object).setId(longKey);
-                ((DbObject)object).setFirstLevel(true);
-                if (!idMap.containsKey(longKey)){
+                ((DbObject) object).setId(longKey);
+                ((DbObject) object).setFirstLevel(true);
+                if (!idMap.containsKey(longKey)) {
                     idMap.put(longKey, 0l);
                     String simpleName = object.getClass().getSimpleName();
-                    if(!classCounter.containsKey(simpleName)){
+                    if (!classCounter.containsKey(simpleName)) {
                         classCounter.put(simpleName, new HashSet<>());
                     }
                     classCounter.get(simpleName).add(longKey);
                     objectsToAdd.put(longKey, object);
-                }
-                else {
+                } else {
                     throw new InterruptedException("error double insertion: " + objectKey);
                 }
             }
@@ -399,8 +411,6 @@ public class ObjectsDB {
             objectsCache.addObjects(objectsToAdd);
         }
     }
-    
-    
 
     /**
      * Loads some objects from a table in the cache.
@@ -416,38 +426,37 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Long> loadObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
-        
+
         ArrayList<Long> hashedKeys = new ArrayList<>();
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
             }
 
             HashMap<Long, Object> allObjects = new HashMap<>();
-            for (String objectKey : keys){
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
+            for (String objectKey : keys) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
                 long longKey = createLongKey(objectKey);
                 hashedKeys.add(longKey);
                 Long zooid = idMap.get(longKey);
-                if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0){
+                if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0) {
                     Object obj = pm.getObjectById(zooid);
                     allObjects.put(longKey, obj);
                 }
 
             }
-            if (hashedKeys.size() != keys.size()){
+            if (hashedKeys.size() != keys.size()) {
                 throw new InterruptedException("Array sizes in function do not match, " + keys.size() + " vs. " + hashedKeys.size());
             }
-            if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            if (waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 objectsCache.addObjects(allObjects);
             }
-        
+
         }
         return hashedKeys;
     }
-    
-    
 
     /**
      * Loads all objects from a given class.
@@ -459,54 +468,58 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      * @return returns the list of hashed keys
      *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurs while interacting with the database
      */
     public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
+
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
-        if (hashedKeys == null) return new ArrayList<>();
-        synchronized(dbMutex){
+        if (hashedKeys == null) {
+            return new ArrayList<>();
+        }
+        synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
             }
 
-
             HashMap<Long, Object> allObjects = new HashMap<>();
-            for (Long longKey : hashedKeys){
-                if (waitingHandler.isRunCanceled()) break;
+            for (Long longKey : hashedKeys) {
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
                 Long zooid = idMap.get(longKey);
-                if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0){
+                if (!objectsCache.inCache(longKey) && zooid != null && zooid != 0) {
                     allObjects.put(longKey, pm.getObjectById(zooid));
                 }
 
             }
-            if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            if (waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 objectsCache.addObjects(allObjects);
             }
         }
         return new ArrayList<>(hashedKeys);
     }
-    
-    
+
     /**
-     * retrieves some objects from the database or cache.
+     * Retrieves some objects from the database or cache.
      *
      * @param longKey the keys of the object to load
-     * @return the retrived objcets
+     * @return the retrieved objects
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
     public Object retrieveObject(long longKey) throws InterruptedException {
-        
+
         Object obj = null;
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
             }
 
-            if (idMap.containsKey(longKey)){                
+            if (idMap.containsKey(longKey)) {
                 obj = objectsCache.getObject(longKey);
-                if (obj == null){
+                if (obj == null) {
                     obj = pm.getObjectById(idMap.get(longKey));
                     objectsCache.addObject(longKey, obj);
                 }
@@ -514,13 +527,12 @@ public class ObjectsDB {
         }
         return obj;
     }
-    
-    
+
     /**
      * retrieves some objects from the database or cache.
      *
      * @param key the keys of the object to load
-     * @return the retrieved objcets
+     * @return the retrieved objects
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
@@ -531,11 +543,9 @@ public class ObjectsDB {
         }
         return retrieveObject(createLongKey(key));
     }
-    
-    
 
     /**
-     * Returns the number of instances of a given class stored in the db
+     * Returns the number of instances of a given class stored in the db.
      *
      * @param className the class name of the objects to be load
      * @return the number of objects
@@ -543,7 +553,7 @@ public class ObjectsDB {
      */
     public int getNumber(Class className) {
         HashSet counter;
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
             }
@@ -552,21 +562,19 @@ public class ObjectsDB {
         }
         return (counter != null ? counter.size() : 0);
     }
-    
-    
+
     /**
-     * Triggers a dump of all objects within the cache into the database
+     * Triggers a dump of all objects within the cache into the database.
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
     public void dumpToDB() throws InterruptedException {
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             objectsCache.saveCache(null, false);
         }
     }
-    
-    
+
     /**
      * retrieves some objects from the database or cache.
      *
@@ -575,40 +583,40 @@ public class ObjectsDB {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @return a list of objcets
+     * @return a list of objects
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
     public ArrayList<Object> retrieveObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
+
         ArrayList<Object> retrievingObjects = new ArrayList<>();
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (true || debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
             }
 
             HashMap<Long, Object> allObjects = new HashMap<>();
-            for (String objectKey : keys){
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
+            for (String objectKey : keys) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
                 long longKey = createLongKey(objectKey);
-                if (idMap.containsKey(longKey)){
+                if (idMap.containsKey(longKey)) {
                     Object obj = objectsCache.getObject(longKey);
-                    if (obj == null){
+                    if (obj == null) {
                         obj = pm.getObjectById(idMap.get(longKey));
                         allObjects.put(longKey, obj);
                     }
                     retrievingObjects.add(obj);
                 }
             }
-            if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            if (waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 objectsCache.addObjects(allObjects);
             }
         }
         return retrievingObjects;
     }
-    
-    
 
     /**
      * Retrieves all objects from a given class.
@@ -624,20 +632,21 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
+
         ArrayList<Object> retrievingObjects = new ArrayList<>();
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (true || debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
             }
 
-
             HashMap<Long, Object> allObjects = new HashMap<>();
-            for (long longKey : classCounter.get(className.getSimpleName())){
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) break;
-                if (idMap.containsKey(longKey)){
+            for (long longKey : classCounter.get(className.getSimpleName())) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
+                if (idMap.containsKey(longKey)) {
                     Object obj = objectsCache.getObject(longKey);
-                    if (obj == null){
+                    if (obj == null) {
 
                         Long zooid = idMap.get(longKey);
                         obj = pm.getObjectById(zooid);
@@ -648,15 +657,12 @@ public class ObjectsDB {
                 }
 
             }
-            if (waitingHandler != null && !waitingHandler.isRunCanceled()){
+            if (waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 objectsCache.addObjects(allObjects);
             }
         }
         return retrievingObjects;
     }
-    
-    
-    
 
     /**
      * Removing an object from.
@@ -671,20 +677,22 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        
-        synchronized(dbMutex){
-        
+
+        synchronized (dbMutex) {
+
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
             }
 
-            for (String key : keys){
-                if (waitingHandler.isRunCanceled()) break;
+            for (String key : keys) {
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
                 long longKey = createLongKey(key);
                 Long zooid = idMap.get(longKey);
-                if (zooid != null){
+                if (zooid != null) {
                     String className = objectsCache.removeObject(longKey);
-                    if (zooid != 0){
+                    if (zooid != 0) {
                         Object obj = pm.getObjectById((zooid));
                         pm.deletePersistent(obj);
                         className = obj.getClass().getSimpleName();
@@ -695,9 +703,6 @@ public class ObjectsDB {
             }
         }
     }
-    
-    
-    
 
     /**
      * Removing an object from.
@@ -708,16 +713,16 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void removeObject(String key) throws InterruptedException {
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " removing object: " + key);
             }
 
             long longKey = createLongKey(key);
             Long zooid = idMap.get(longKey);
-            if (zooid != null){
+            if (zooid != null) {
                 String className = objectsCache.removeObject(longKey);
-                if (zooid != 0){
+                if (zooid != 0) {
                     Object obj = pm.getObjectById(zooid);
                     pm.deletePersistent(obj);
                     className = obj.getClass().getSimpleName();
@@ -727,9 +732,6 @@ public class ObjectsDB {
             }
         }
     }
-    
-    
-    
 
     /**
      * Indicates whether an object is loaded.
@@ -742,13 +744,11 @@ public class ObjectsDB {
      */
     public boolean inCache(String objectKey) throws InterruptedException {
         boolean isInCache;
-        synchronized(dbMutex){
+        synchronized (dbMutex) {
             isInCache = objectsCache.inCache(createLongKey(objectKey));
         }
         return isInCache;
     }
-    
-    
 
     /**
      * Indicates whether an object is loaded.
@@ -763,9 +763,7 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
         return idMap.containsKey(createLongKey(objectKey));
-    }   
-
-
+    }
 
     /**
      * Indicates whether the connection to the DB is active.
@@ -792,11 +790,11 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public void close(boolean clearing) throws InterruptedException {
-        synchronized(dbMutex){
-            if (debugInteractions){
+        synchronized (dbMutex) {
+            if (debugInteractions) {
                 System.out.println("closing database");
             }
-            
+
             objectsCache.saveCache(null, clearing);
 
             connectionActive = false;
@@ -806,10 +804,12 @@ public class ObjectsDB {
             }
             pm.close();
             pm.getPersistenceManagerFactory().close();
-            if (clearing) idMap.clear();
+            if (clearing) {
+                idMap.clear();
+            }
         }
     }
-    
+
     /**
      * Establishes connection to the database.
      *
@@ -818,7 +818,7 @@ public class ObjectsDB {
      */
     private void establishConnection() throws InterruptedException {
         establishConnection(true);
-        
+
     }
 
     /**
@@ -829,9 +829,9 @@ public class ObjectsDB {
      * threading error occurred while establishing the connection
      */
     public void establishConnection(boolean loading) throws InterruptedException {
-        
-        synchronized(dbMutex){
-            if (debugInteractions){
+
+        synchronized (dbMutex) {
+            if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
             }
             idMap.clear();
@@ -841,24 +841,23 @@ public class ObjectsDB {
             pm.currentTransaction().begin();
             connectionActive = true;
 
-
-            if (loading){
+            if (loading) {
                 Query q = pm.newQuery(DbObject.class, "firstLevel == true");
-                for (Object obj : (Collection<?>) q.execute()){
-                    DbObject idObj = (DbObject)obj;
+                for (Object obj : (Collection<?>) q.execute()) {
+                    DbObject idObj = (DbObject) obj;
                     long id = idObj.getId();
                     long zooId = idObj.jdoZooGetOid();
-                    idMap.put(id, zooId);     
+                    idMap.put(id, zooId);
 
                     String simpleName = obj.getClass().getSimpleName();
-                    if(!classCounter.containsKey(simpleName)) classCounter.put(obj.getClass().getSimpleName(), new HashSet<>());
+                    if (!classCounter.containsKey(simpleName)) {
+                        classCounter.put(obj.getClass().getSimpleName(), new HashSet<>());
+                    }
                     classCounter.get(simpleName).add(id);
                 }
             }
         }
     }
-    
-    
 
     /**
      * Returns the path to the database.
@@ -878,9 +877,6 @@ public class ObjectsDB {
         debugInteractions = debug;
     }
 }
-
-
-
 
 //package com.compomics.util.db.object;
 //

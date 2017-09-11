@@ -291,7 +291,7 @@ public class PeptideDraft {
      *
      * @return the peptide built from the peptide draft
      */
-    public Peptide getPeptide(Double massMin, Double massMax) {
+    public Peptide getPeptide(double massMin, double massMax) {
         return getPeptide(massMin, massMax, new BoxedObject<Boolean>(Boolean.FALSE));
     }
 
@@ -305,16 +305,16 @@ public class PeptideDraft {
      *
      * @return the peptide built from the peptide draft
      */
-    public Peptide getPeptide(Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
+    public Peptide getPeptide(double massMin, double massMax, BoxedObject<Boolean> smallMass) {
 
         double peptideMass = getMass();
         double tempMass = peptideMass + ProteinIteratorUtils.WATER_MASS;
 
-        if (massMax == null || tempMass <= massMax) {
+        if (massMax == 0.0 || tempMass <= massMax) {
 
             smallMass.setObject(Boolean.TRUE);
 
-            if (massMin == null || tempMass >= massMin) {
+            if (tempMass >= massMin) {
 
                 ArrayList<ModificationMatch> modificationMatches = null;
 
@@ -342,7 +342,7 @@ public class PeptideDraft {
                     modificationMatches.add(new ModificationMatch(modificationName, false, site));
                 }
 
-                Peptide peptide = new Peptide(new String(getSequence()), modificationMatches, false);
+                Peptide peptide = new Peptide(new String(getSequence()), modificationMatches, false, tempMass);
                 return peptide;
             }
         }

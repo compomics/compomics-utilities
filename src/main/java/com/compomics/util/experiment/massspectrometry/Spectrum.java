@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
@@ -115,6 +116,10 @@ public abstract class Spectrum extends ExperimentObject {
      * Intensity level corresponding to the value in cache.
      */
     private double intensityLimitLevel = -1.0;
+    /**
+     * The type of intensity threshold.
+     */
+    private AnnotationSettings.IntensityThresholdType intensityThresholdType = null;
     /**
      * The binned cumulative function of the distribution of the log of the
      * peaks intensities.
@@ -288,10 +293,10 @@ public abstract class Spectrum extends ExperimentObject {
     public String getFileName() {
         return fileName;
     }
-    
+
     /**
      * Sets the file name.
-     * 
+     *
      * @param fileName the file name
      */
     public void setFileName(String fileName) {
@@ -695,18 +700,24 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the intensity limit in intensity from a given percentile.
+     * Returns the limit in intensity according to the given threshold.
      *
-     * @param intensityFraction the fraction of the intensity to use as limit,
-     * e.g., 0.75 for the 75% most intense peaks.
+     * @param intensityThresholdType the type of intensity threshold
+     * @param intensityFraction the threshold value.
      *
      * @return the intensity limit
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
      */
-    public double getIntensityLimit(double intensityFraction) {
+    public double getIntensityLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityFraction) throws InterruptedException, MathException {
 
-        if (intensityLimit == null || intensityLimitLevel != intensityFraction) {
-            intensityLimit = estimateIntneistyLimit(intensityFraction);
+        if (intensityLimit == null || intensityThresholdType != this.intensityThresholdType || intensityLimitLevel != intensityFraction) {
+            intensityLimit = estimateIntneistyLimit(intensityThresholdType, intensityFraction);
             intensityLimitLevel = intensityFraction;
+            this.intensityThresholdType = intensityThresholdType;
         }
         return intensityLimit;
     }
@@ -714,27 +725,51 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * Estimates the intensity limit in intensity from a given percentile.
      *
-     * @param intensityFraction the fraction of the intensity to use as limit,
+     * @param intensityThreshold the fraction of the intensity to use as limit,
      * e.g., 0.75 for the 75% most intense peaks.
      *
      * @return the intensity limit
+     *
+     * @throws java.lang.InterruptedException exception thrown if a threading
+     * error occurred when estimating the noise level
+     * @throws org.apache.commons.math.MathException exception thrown if a math
+     * exception occurred when estimating the noise level
      */
-    private double estimateIntneistyLimit(double intensityFraction) {
-        ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
+    private double estimateIntneistyLimit(AnnotationSettings.IntensityThresholdType intensityThresholdType, double intensityThreshold) throws InterruptedException, MathException {
 
-        for (Peak peak : peakList.values()) {
-            double mz = peak.mz;
-            // Skip the low mass region of the spectrum @TODO: skip precursor as well
-            if (mz > 200) {
-                intensities.add(peak.intensity);
-            }
+        if (intensityThreshold == 0) {
+            return 0.0;
+        } else if (intensityThreshold == 1.0) {
+            return getMaxIntensity();
         }
+        switch (intensityThresholdType) {
 
-        if (intensities.isEmpty()) {
-            return 0;
+            case snp:
+
+                SimpleNoiseDistribution binnedCumulativeFunction = getIntensityLogDistribution();
+                return binnedCumulativeFunction.getIntensityAtP(1 - intensityThreshold);
+
+            case percentile:
+
+                ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
+
+                for (Peak peak : peakList.values()) {
+                    double mz = peak.mz;
+                    // Skip the low mass region of the spectrum @TODO: skip precursor as well
+                    if (mz > 200) {
+                        intensities.add(peak.intensity);
+                    }
+                }
+
+                if (intensities.isEmpty()) {
+                    return 0;
+                }
+
+                return BasicMathFunctions.percentile(intensities, intensityThreshold);
+
+            default:
+                throw new UnsupportedOperationException("Threshold of type " + intensityThresholdType + " not supported.");
         }
-
-        return BasicMathFunctions.percentile(intensities, intensityFraction);
     }
 
     /**
@@ -911,6 +946,7 @@ public abstract class Spectrum extends ExperimentObject {
         minMz = null;
         intensityPeakMap = null;
         intensityLimit = null;
+        intensityThresholdType = null;
     }
 
     /**

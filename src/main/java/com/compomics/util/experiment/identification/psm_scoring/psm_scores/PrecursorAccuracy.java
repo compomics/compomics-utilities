@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 
@@ -26,8 +25,11 @@ public class PrecursorAccuracy {
      * @param maxIsotope the maximal isotope
      *
      * @return the score of the match
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public double getScore(Peptide peptide, int identificationCharge, Precursor precursor, boolean ppm, int minIsotope, int maxIsotope) {
+    public double getScore(Peptide peptide, int identificationCharge, Precursor precursor, boolean ppm, int minIsotope, int maxIsotope) throws InterruptedException {
         IonMatch ionMatch = new IonMatch(new Peak(precursor.getMz(), 0), new PrecursorIon(peptide.getMass()), identificationCharge);
         return Math.abs(ionMatch.getError(ppm, minIsotope, maxIsotope));
     }

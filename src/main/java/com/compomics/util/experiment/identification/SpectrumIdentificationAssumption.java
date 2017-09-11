@@ -125,15 +125,21 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * Returns the theoretic mass of the given assumption.
      *
      * @return the theoretic mass of the given assumption
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public abstract Double getTheoreticMass();
+    public abstract Double getTheoreticMass() throws InterruptedException;
 
     /**
      * Returns the theoretic m/z.
      *
      * @return the theoretic m/z
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public Double getTheoreticMz() {
+    public Double getTheoreticMz() throws InterruptedException {
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
     }
 
@@ -150,8 +156,11 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param maxIsotope the maximal isotope
      * 
      * @return the precursor mass error (in ppm or Da)
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public Double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+    public Double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) throws InterruptedException {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 
@@ -163,8 +172,11 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param maxIsotope the maximal isotope
      * 
      * @return the precursor isotope number according to the number of protons
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) {
+    public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) throws InterruptedException {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber(minIsotope, maxIsotope);
     }
 
@@ -172,9 +184,13 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * Returns the ion match.
      *
      * @param precursorPeak the precursor peak
+     * 
      * @return the ion match
+     *
+     * @throws java.lang.InterruptedException exception thrown if a thread is
+     * interrupted
      */
-    public IonMatch getPrecursorMatch(Peak precursorPeak) {
+    public IonMatch getPrecursorMatch(Peak precursorPeak) throws InterruptedException {
         return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge().value);
     }
 

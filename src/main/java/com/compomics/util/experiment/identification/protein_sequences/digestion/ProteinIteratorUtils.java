@@ -387,7 +387,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, double massMin, double massMax) {
         return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), indexOnProtein, massMin, massMax);
     }
 
@@ -404,7 +404,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, double massMin, double massMax) {
         return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<Boolean>(Boolean.TRUE));
     }
 

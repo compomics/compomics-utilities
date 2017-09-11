@@ -21,6 +21,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
+
 public class MgfReader {
 
     /**
@@ -49,6 +50,7 @@ public class MgfReader {
         double rt1 = -1.0;
         double rt2 = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        
         String scanNumber = "";
         String spectrumTitle = "";
         boolean insideSpectrum = false;

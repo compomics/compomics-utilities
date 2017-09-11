@@ -60,7 +60,7 @@ public class UnspecificIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
+    public PeptideWithPosition getNextPeptide() throws InterruptedException {
 
         // Increase indices
         if (!increaseIndex()) {

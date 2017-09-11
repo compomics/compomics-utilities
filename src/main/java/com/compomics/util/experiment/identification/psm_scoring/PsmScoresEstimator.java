@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.preferences.IdentificationParameters;
+import org.apache.commons.math.MathException;
 
 /**
  * This class can be used to estimate PSM scores.
@@ -103,10 +104,11 @@ public class PsmScoresEstimator {
      *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
             SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) 
-            throws InterruptedException {
+            throws InterruptedException, MathException {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
         double score = getScore(peptide, peptideCharge, spectrum, identificationParameters, 
                 specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
@@ -133,10 +135,11 @@ public class PsmScoresEstimator {
      *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
             SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) 
-            throws InterruptedException {
+            throws InterruptedException, MathException {
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
@@ -158,10 +161,11 @@ public class PsmScoresEstimator {
      *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
+     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
      */
     public double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, IdentificationParameters identificationParameters, 
             SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) 
-            throws InterruptedException {
+            throws InterruptedException, MathException {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");

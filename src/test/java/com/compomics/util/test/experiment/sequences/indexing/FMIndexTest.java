@@ -9,6 +9,7 @@ import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
+import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.biology.variants.amino_acids.Deletion;
@@ -22,7 +23,9 @@ import com.compomics.util.experiment.identification.matches.PeptideVariantMatche
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
+import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
 import com.compomics.util.experiment.io.biology.protein.converters.DecoyConverter;
+import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters;
@@ -48,14 +51,53 @@ import org.xmlpull.v1.XmlPullParserException;
  * @author Dominik Kopczynski
  */
 public class FMIndexTest extends TestCase {
+    
+    public void testWhatHasToBeTested(){
+        try {
+            getSequences();
+            peptideToProteinMapping();
+            peptideToProteinMappingWithVariants();
+            peptideToProteinMappingWithVariantsSpecific();
+            tagToProteinMapping();
+            tagToProteinMappingWithPTMsAndVariants();
+            tagToProteinMappingWithVariantsGeneric();
+            tagToProteinMappingWithVariantsSpecific();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    
 
-    boolean testSequenceMatching = true;
-    boolean testSequenceMatchingWithVariants = true;
-    boolean testSequenceMatchingWithVariantsSpecific = true;
-    boolean testTagMatching = true;
-    boolean testVariantMatchingGeneric = true;
-    boolean testVariantPTMMatching = true;
-    boolean testVariantMatchingSpecific = true;
+    /**
+     * Tests the retrieving of protein sequences from the index
+     *
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     */
+    public void getSequences() throws IOException {
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        
+        File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
+        FastaParameters fastaParameters = new FastaParameters();
+        fastaParameters.setDefaultAttributes(fastaFile);
+        fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
+        
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
+
+        FMIndex fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, null);
+
+        ProteinIterator pi = new FastaIterator(fastaFile);
+        Protein protein;
+        while ((protein = pi.getNextProtein()) != null) {
+            String accession = protein.getAccession();
+            String originalSequence = protein.getSequence().toUpperCase();
+            String sequence = fmIndex.getSequence(accession);
+            Assert.assertTrue(originalSequence.equals(sequence));
+        }
+    }    
 
     /**
      * Tests the import and the mapping of a few peptide sequences.
@@ -63,10 +105,7 @@ public class FMIndexTest extends TestCase {
      * @throws IOException thrown whenever an error occurs while reading or
      * writing a file
      */
-    public void testPeptideToProteinMapping() throws IOException {
-        if (!testSequenceMatching) {
-            return;
-        }
+    public void peptideToProteinMapping() throws IOException {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         
@@ -90,12 +129,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
         
         
-        String sequence = fmIndex.getSequence("Q9FI94-REVERSED");
-        Assert.assertTrue(sequence.equals("TKSECTQDRKTAFTEAVLLPFAITADCYVKVTKASGRIKGWSVAEDPRAGSDSGDFEQGTNIFVAYDAGNRMMNANCIHHKPLGGGLIIMGTKKPNAHVAEGNMARIDQVVDIILGSTRFSHFYLMDGLSGDTLGPCFVPINMKYAWYLYSSENNIEKGLRALLKSPTWLVNEEKQEKLMEDFIPIIWDEFKCYNDNPVLLNGIRNLGKSRLYAGPLSFDGKFTPALCKILDEEVGGTTTVIVDVMHHQVLYRITDRVGSSVLNSTFGLFIKCKVSERFSPNKEEESCDEAVTTEDALRWDLMQNVVDIAEGLNSAQFGTTLMSRMLKPYDVGQNFDYGEIKDCKGELSESEKFVTSHVSSFVRDDEM"));
-        sequence = fmIndex.getSequence("TEST_ACCESSION-REVERSED");
-        Assert.assertTrue(sequence.equals("SMLTTGFQASNLGKTGMIILGGGLPKHHICNANMMRNGADYDGLSGDTLGXPCVVPINMKILDEEVGGTTTVIVDVMHHQVLYRITDRVKTAFXTEAVLLPFAITADCY"));
-        sequence = fmIndex.getSequence("Q9FHX5");
-        Assert.assertTrue(sequence.equals("MASSSLQSLFSLFCLALFSLPLIVSSIGINYGQVANBLPPPKNVIPLLKSVGATKVKLYDADPQALRAFAGSGFELTVALGNEYLAQMSDPIKAQGWVKENVANDLPNTKIVAILVAIIVALLVALALTAALFPAMQSIHGALVDCGLNKQIFVTTAHSLAILDVSYPPSATSFRRDLLGSLTPILDFHVKTGSPILINAYPFFAYEENPKHVSLDFVLFQPNQGFTDPGSNFHYDNMLFAQVDAVYHALDAVGISYKKVPIVVSETGWPSNGDPQEVGATCDNARKYNGNLIKMMMSKKMRTPIRPECDLTIFVFALFNENMKPGPTSERNYGLFNPDGTPVYSLGIKTSSTHSSGSGSSNSTGGSSSGGGGNTGGSSSGGGIYQPVTGNPSPDYMSISSAGGKGRFVECVLFFFLLCIIKLRL"));
+        String sequence = fmIndex.getSequence("Q9FHX5");
         
         
         peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingParameters.defaultStringMatching);
@@ -140,11 +174,8 @@ public class FMIndexTest extends TestCase {
      * @throws SQLException if an SQLException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testPeptideToProteinMappingWithVariants() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        if (!testSequenceMatchingWithVariants) {
-            return;
-        }
-
+    public void peptideToProteinMappingWithVariants() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+        
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         
@@ -354,10 +385,7 @@ public class FMIndexTest extends TestCase {
      * @throws SQLException if an SQLException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testPeptideToProteinMappingWithVariantsSpecific() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        if (!testSequenceMatchingWithVariantsSpecific) {
-            return;
-        }
+    public void peptideToProteinMappingWithVariantsSpecific() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
@@ -574,11 +602,8 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        if (!testTagMatching) {
-            return;
-        }
-
+    public void tagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
@@ -1915,11 +1940,9 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testTagToProteinMappingWithVariantsGeneric() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        if (!testVariantMatchingGeneric) {
-            return;
-        }
-
+    public void tagToProteinMappingWithVariantsGeneric() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        
+        
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
@@ -2522,10 +2545,8 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testTagToProteinMappingWithPTMsAndVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        if (!testVariantPTMMatching) {
-            return;
-        }
+    public void tagToProteinMappingWithPTMsAndVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
@@ -2760,11 +2781,8 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void testTagToProteinMappingWithVariantsSpecific() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        if (!testVariantMatchingSpecific) {
-            return;
-        }
-
+    public void tagToProteinMappingWithVariantsSpecific() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);

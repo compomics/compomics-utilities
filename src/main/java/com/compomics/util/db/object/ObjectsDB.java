@@ -3,7 +3,6 @@ package com.compomics.util.db.object;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

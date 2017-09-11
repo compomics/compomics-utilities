@@ -105,7 +105,7 @@ public class ObjectsCache {
      *
      * @return the object of interest, null if not present in the cache
      * 
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public Object getObject(Long objectKey) throws InterruptedException{
         updateCache();
@@ -123,7 +123,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @return the class name of the object
      *
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public String removeObject(long objectKey) throws InterruptedException {
         String className = null;
@@ -147,7 +147,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      *
-     * @throws java.lang.InterruptedException if a threading error occurs
+     * @throws InterruptedException if a threading error occurs
      * writing to the database
      */
     public void addObject(Long objectKey, Object object) throws InterruptedException {
@@ -171,7 +171,7 @@ public class ObjectsCache {
      * will be silently overwritten.
      *
      * @param objects the key / objects to store in the cache
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      *
      */
     public void addObjects(HashMap<Long, Object> objects) throws InterruptedException {
@@ -205,7 +205,7 @@ public class ObjectsCache {
      *
      * @param numLastEntries number of keys of the entries
      *
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public void saveObjects(int numLastEntries) throws InterruptedException {
         saveObjects(numLastEntries, null, true);
@@ -218,7 +218,7 @@ public class ObjectsCache {
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
      *
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) throws InterruptedException {
         saveObjects(numLastEntries, waitingHandler, true);
@@ -233,7 +233,7 @@ public class ObjectsCache {
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
      *
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws InterruptedException {
         
@@ -274,13 +274,16 @@ public class ObjectsCache {
     /**
      * Updates the cache according to the memory settings.
      *
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     private void updateCache() throws InterruptedException {
         while (loadedObjects.size() > keepObjectsThreshold && !memoryCheck()){
-            System.out.println("mem: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + " " + Runtime.getRuntime().maxMemory() + " " + loadedObjects.size());
             int toRemove = loadedObjects.size() >> 2;
             saveObjects(toRemove, null, true);
+            
+            // turning on the garbage collector from time to time
+            // helps to keep the memory clean. Performance becomes
+            // better, the mass for cleaning is lower
             System.gc();
         }
     }
@@ -322,7 +325,7 @@ public class ObjectsCache {
      *
      * @param readOnly boolean indicating whether the cache should be in read
      * only
-     * @throws java.lang.InterruptedException if the thread is interrupted
+     * @throws InterruptedException if the thread is interrupted
      */
     public void setReadOnly(boolean readOnly) throws InterruptedException {
         synchronized(loadedObjectMutex){

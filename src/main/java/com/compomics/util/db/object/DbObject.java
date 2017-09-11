@@ -8,7 +8,7 @@ import org.zoodb.api.impl.ZooPC;
  * All classes that are stored in the backend need a unique identifier,
  * all further classes inherit from this class.
  * 
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class DbObject extends ZooPC implements Serializable {
     

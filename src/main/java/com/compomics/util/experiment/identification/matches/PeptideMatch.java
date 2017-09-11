@@ -3,13 +3,13 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
  * This class models a peptide match.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class PeptideMatch extends IdentificationMatch {
 

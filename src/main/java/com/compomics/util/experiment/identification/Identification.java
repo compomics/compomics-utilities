@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  * This class contains identification results.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class Identification extends ExperimentObject {
 

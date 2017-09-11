@@ -495,7 +495,12 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     public long getAllocatedBytes() {
         long bytes = 0;
         for (int indexPart = 0; indexPart < indexParts; ++indexPart) {
-            bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + suffixArraysPrimary.get(indexPart).length * 4;
+            bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + suffixArraysPrimary.get(indexPart).length * 4; // four bytes per int, hopefully
+            
+            String[] accessionsPart = accessions.get(indexPart);
+            for (int j = 0; j < accessionsPart.length; ++j){
+                bytes += accessionsPart[j].length() * 2; // two bytes per character, don't ask me, Java.
+            }
         }
         return bytes;
     }
@@ -521,8 +526,6 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
         }
         else {
-            massTolerance = 0.02;
-            massAccuracyType = SearchParameters.MassAccuracyType.DA;
             init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
         }
     }
@@ -1040,7 +1043,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             waitingHandler.setSecondaryProgressCounter(0);
         }
 
-        pi = pi = new FastaIterator(fastaFile);
+        pi = new FastaIterator(fastaFile);
         for (int i = 0; i < tmpLengths.size(); ++i) {
             addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, fastaParameters, waitingHandler, displayProgress);
         }

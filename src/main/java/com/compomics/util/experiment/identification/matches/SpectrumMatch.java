@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * This class models a spectrum match.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class SpectrumMatch extends IdentificationMatch {
 

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * This class models a protein match.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class ProteinMatch extends IdentificationMatch {
 

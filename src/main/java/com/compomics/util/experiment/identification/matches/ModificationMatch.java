@@ -7,6 +7,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  * This class models the match between theoretic PTM and identification results.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class ModificationMatch extends ExperimentObject {
 

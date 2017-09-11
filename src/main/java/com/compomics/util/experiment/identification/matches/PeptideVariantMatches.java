@@ -8,6 +8,7 @@ import java.util.HashMap;
  * This class represents a set of variants found on a peptide.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class PeptideVariantMatches extends DbObject {
     

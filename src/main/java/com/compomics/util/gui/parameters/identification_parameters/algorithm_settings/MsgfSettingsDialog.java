@@ -562,6 +562,11 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         validateInput(false);
     }//GEN-LAST:event_maxPtmsTxtKeyReleased
 
+    /**
+     * Update the fragmentation method based on the instrument selected.
+     * 
+     * @param evt 
+     */
     private void instrumentCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instrumentCmbActionPerformed
         
         String selectedValue = (String) instrumentCmb.getSelectedItem();

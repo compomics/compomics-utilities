@@ -1,4 +1,3 @@
-
 package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -15,25 +14,27 @@ import java.util.LinkedHashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- *This class reads NIST .msp file
- * @author Genet
+ * This class reads NIST .msp file
+ *
+ * @author Genet Abay Shiferaw
  */
-public class MspReader extends MgfReader{
-    
+public class MspReader extends MgfReader {
+
     /**
      * General Constructor for .msp file format reader
      */
     public MspReader() {
     }
-    
+
     /**
-     * The function returns the next spectrum found in the msp file. Null if none found.
+     * The function returns the next spectrum found in the msp file. Null if
+     * none found.
+     *
      * @param br a buffered reader
      * @param fileName name of the msp file
      * @return next spectrum found in msp file
      * @throws IOException if an IOException occurs
      */
-
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
         String line;
@@ -47,14 +48,13 @@ public class MspReader extends MgfReader{
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
-     
         int numberofPeaks = 0;//added for msp format
         double molecularWeight = 0.0;//added for msp format
 
         boolean insideSpectrum = false;
 
         //while ((line = br.readLine()) != null)
-        do{
+        do {
 
             line = br.readLine();
             // fix for lines ending with \r
@@ -65,15 +65,14 @@ public class MspReader extends MgfReader{
             if (line.startsWith("Name:")) {
                 // reset the spectrum details
                 insideSpectrum = true;
-                spectrumTitle =line;// line.substring(line.indexOf(':') +1);
+                spectrumTitle = line;// line.substring(line.indexOf(':') +1);
 
-              
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                   
-                    int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
+
+                    int val = Integer.parseInt(line.substring(line.indexOf('/') + 1));
                     precursorCharges.add(new Charge(Charge.NEUTRAL, val));
-                   
+
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
                     e.printStackTrace();
@@ -86,15 +85,14 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                 }
             } else if (line.startsWith("Comment")) {
-              
-                String temp=line.substring(line.indexOf("Parent"));
-                temp = temp.substring(temp.indexOf("=")+1);
+
+                String temp = line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=") + 1);
                 precursorMz = Double.parseDouble(temp);
                 if (line.contains("Scan")) {
                     scanNumber = line.substring(line.indexOf("Scan=" + 5), line.indexOf(""));
 
                 }
-               
 
             } else if (line.startsWith("Num peaks:")) {
                 String temp = line.substring(line.indexOf(':') + 2);
@@ -105,7 +103,7 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
-            } else if (line.equals("") || line==null) {
+            } else if (line.equals("") || line == null) {
                 insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
@@ -128,13 +126,11 @@ public class MspReader extends MgfReader{
                     // ignore comments and all other lines
                 }
             }
-        }while(line!=null);
+        } while (line != null);
 
         return null;
+    }
 
-    }   
-       
-    
     /**
      * Reads an MSP file and retrieves a list of spectra.
      *
@@ -163,8 +159,7 @@ public class MspReader extends MgfReader{
         return spectra;
     }
 
-     
-     /**
+    /**
      * Returns the index of all spectra in the given MSP file.
      *
      * @param mspFile the given MSP file
@@ -175,7 +170,7 @@ public class MspReader extends MgfReader{
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-   public static MgfIndex getIndexMap(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public static MgfIndex getIndexMap(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
@@ -185,15 +180,13 @@ public class MspReader extends MgfReader{
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mspFile, "r", 1024 * 100);
         long currentIndex = 0;
         String title = null;
-        
+
         int spectrumCounter = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
         int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
         boolean peakPicked = true;
         boolean precursorChargesMissing = false;
-        
-        
-        
+
         int numberofPeaks = 0;//added for msp format
         double molecularWeight = 0.0;//added for msp format
 
@@ -220,7 +213,7 @@ public class MspReader extends MgfReader{
             if (line.startsWith("Name")) {
                 insideSpectrum = true;
                 chargeTagFound = false;
-                currentIndex = (bufferedRandomAccessFile.getFilePointer()-line.length())-1;
+                currentIndex = (bufferedRandomAccessFile.getFilePointer() - line.length()) - 1;
                 spectrumCounter++;
                 peakCount = 0;
                 if (waitingHandler != null) {
@@ -229,9 +222,8 @@ public class MspReader extends MgfReader{
                     }
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
-                
-                
-               title = line;
+
+                title = line;
 
                 try {
                     title = URLDecoder.decode(title, "utf-8");
@@ -254,12 +246,11 @@ public class MspReader extends MgfReader{
                 spectrumTitles.add(title);
                 indexes.put(title, currentIndex);
                 spectrumIndexes.put(title, spectrumCounter - 1);
-                
-                
+
                 ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
-                int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
+                int val = Integer.parseInt(line.substring(line.indexOf('/') + 1));
                 precursorCharges.add(new Charge(Charge.NEUTRAL, val));
-                
+
                 for (Charge charge : precursorCharges) {
                     if (charge.value > maxCharge) {
                         maxCharge = charge.value;
@@ -267,8 +258,7 @@ public class MspReader extends MgfReader{
                 }
                 chargeTagFound = true;
 
-            } 
-            else if (line.startsWith("MW:")) {
+            } else if (line.startsWith("MW:")) {
                 try {
                     molecularWeight = Double.parseDouble(line.substring(line.indexOf(':') + 2));
                 } catch (Exception e) {
@@ -276,15 +266,15 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                 }
             } else if (line.startsWith("Comment")) {
-                String temp=line.substring(line.indexOf("Parent"));
-                temp = temp.substring(temp.indexOf("=")+1);
+                String temp = line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=") + 1);
                 //String[] values = temp.split("\\s");
                 double precursorMz = Double.parseDouble(temp);
-                 if (precursorMz > maxMz) {
+                if (precursorMz > maxMz) {
                     maxMz = precursorMz;
                 }
-                 
-                 precursorMzMap.put(spectrumCounter - 1, precursorMz);
+
+                precursorMzMap.put(spectrumCounter - 1, precursorMz);
 
             } else if (line.startsWith("Num peaks:")) {
                 String temp = line.substring(line.indexOf(':') + 2);
@@ -295,7 +285,7 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
-            } else if (line.equals("") || line==null) {
+            } else if (line.equals("") || line == null) {
                 insideSpectrum = false;
                 if (title != null) {
                     if (peakCount > maxPeakCount) {
@@ -319,7 +309,7 @@ public class MspReader extends MgfReader{
                     // ignore comments and all other lines
                 }
             }
-        }while(line!=null);
+        } while (line != null);
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
@@ -340,9 +330,6 @@ public class MspReader extends MgfReader{
         return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, precursorMzMap, mspFile.getName(), minRT, maxRT,
                 maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, precursorChargesMissing, mspFile.lastModified(), spectrumCounter);
     }
-
-    
-    
 
     /**
      * Adds missing spectrum titles.
@@ -385,7 +372,7 @@ public class MspReader extends MgfReader{
                     String title = null;
                     int spectrumCounter = 0;
 
-                    do{
+                    do {
 
                         line = br.readLine();
                         if (line.startsWith("Name:")) {
@@ -395,13 +382,12 @@ public class MspReader extends MgfReader{
                             title = line;
                             try {
                                 title = URLDecoder.decode(title, "utf-8");
-                               
+
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                                 throw new UnsupportedEncodingException("An exception was thrown when trying to decode an  title: " + title);
                             }
-                              spectrumTitles.add(title);
-                            
+                            spectrumTitles.add(title);
 
                             if (waitingHandler != null) {
                                 if (waitingHandler.isRunCanceled()) {
@@ -410,9 +396,9 @@ public class MspReader extends MgfReader{
                                 waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
                             }
 
-                        }else if (line.startsWith("") || line==null) {
+                        } else if (line.startsWith("") || line == null) {
 
-                           bw.write("Name: ");
+                            bw.write("Name: ");
 
                             if (title == null) {
                                 title = "Spectrum " + spectrumCounter;
@@ -430,7 +416,7 @@ public class MspReader extends MgfReader{
                         } else {
                             currentSpectrum += line + lineBreak;
                         }
-                    }while(line!=null);
+                    } while (line != null);
                 } finally {
                     bw.close();
                 }
@@ -459,8 +445,6 @@ public class MspReader extends MgfReader{
             throw new IOException("Failed to replace the original spectrum file.");
         }
     }
-
-    
 
     /**
      * Removes zero intensity peaks.
@@ -511,7 +495,7 @@ public class MspReader extends MgfReader{
                                 waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
                             }
 
-                        } else if (line.startsWith("") || line==null) {
+                        } else if (line.startsWith("") || line == null) {
                             spectrum = false;
                         }
 
@@ -546,7 +530,7 @@ public class MspReader extends MgfReader{
                             bw.write(line);
                             bw.newLine();
                         }
-                    }while(line!=null);
+                    } while (line != null);
                 } finally {
                     bw.close();
                 }
@@ -602,7 +586,7 @@ public class MspReader extends MgfReader{
 
         String line;
 
-        do{
+        do {
             line = br.readLine();
             if (line.startsWith("Name:")) {
 
@@ -634,8 +618,7 @@ public class MspReader extends MgfReader{
                 bw.write(line + lineBreak);
             }
 
-            
-        }while(line!=null);
+        } while (line != null);
 
         br.close();
         fr.close();
@@ -774,8 +757,7 @@ public class MspReader extends MgfReader{
      */
     public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
-         //get fileName from the random access file?
-         
+        //get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         String line;
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -788,14 +770,12 @@ public class MspReader extends MgfReader{
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
-       
         int numberofPeaks = 0;//added for msp format
         double molecularWeight = 0.0;//added for msp format
-        
-       
+
         boolean insideSpectrum = false;
 
-        do{
+        do {
 
             line = bufferedRandomAccessFile.getNextLine();
             // fix for lines ending with \r
@@ -806,13 +786,13 @@ public class MspReader extends MgfReader{
             if (line.startsWith("Name:")) {
                 // reset the spectrum details
                 insideSpectrum = true;
-                spectrumTitle =  line;
+                spectrumTitle = line;
 
                 try {
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");                    
-                    int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                    int val = Integer.parseInt(line.substring(line.indexOf('/') + 1));
                     precursorCharges.add(new Charge(Charge.NEUTRAL, val));
-                  
+
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode the msp title '" + spectrumTitle + "'.");
                     e.printStackTrace();
@@ -825,9 +805,9 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                 }
             } else if (line.startsWith("Comment")) {
-                
-                String temp=line.substring(line.indexOf("Parent"));
-                temp = temp.substring(temp.indexOf("=")+1);
+
+                String temp = line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=") + 1);
                 //String[] values = temp.split("\\s");
                 precursorMz = Double.parseDouble(temp);
                 if (line.contains("Scan")) {
@@ -847,7 +827,7 @@ public class MspReader extends MgfReader{
                     e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
-            } else if (line.equals("") || line==null) {
+            } else if (line.equals("") || line == null) {
                 insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
@@ -870,12 +850,10 @@ public class MspReader extends MgfReader{
                     // ignore comments and all other lines
                 }
             }
-        }while(line!=null);
+        } while (line != null);
 
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
     }
-
-  
 
     /**
      * Returns the next precursor starting from the given index.
@@ -895,40 +873,39 @@ public class MspReader extends MgfReader{
         // @TODO: get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         String line;
-       // String spectrumName=null;
+        // String spectrumName=null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         do {
             line = bufferedRandomAccessFile.readLine();
-            
+
             // fix for lines ending with \r
             if (line.endsWith("\r")) {
                 line = line.replace("\r", "");
             }
-            
+
             if (line.startsWith("Name:")) {
-                
-                
-                int val=Integer.parseInt(line.substring(line.indexOf('/')+1));
+
+                int val = Integer.parseInt(line.substring(line.indexOf('/') + 1));
                 precursorCharges.add(new Charge(Charge.NEUTRAL, val));
 
                 try {
                     line = URLDecoder.decode(line, "utf-8");
-                   
+
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode an msp title: " + line);
                     e.printStackTrace();
                 }
-            }  else if (line.startsWith("Comment")) {
-                
-                String temp=line.substring(line.indexOf("Parent"));
-                temp = temp.substring(temp.indexOf("=")+1);
-               
-                precursorMz = Double.parseDouble(temp);                
+            } else if (line.startsWith("Comment")) {
+
+                String temp = line.substring(line.indexOf("Parent"));
+                temp = temp.substring(temp.indexOf("=") + 1);
+
+                precursorMz = Double.parseDouble(temp);
                 precursorIntensity = 0.0;
-               
-            }  else if (line.equals("") || line==null) {
+
+            } else if (line.equals("") || line == null) {
                 return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
 //                if (line.equals("")) {
 //                    if (rt1 != -1 && rt2 != -1) {
@@ -938,14 +915,9 @@ public class MspReader extends MgfReader{
 //                }
 
             }
-        
-        }while(line!=null);
+
+        } while (line != null);
 
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + line);
     }
-
- 
-    
-    
-    
 }

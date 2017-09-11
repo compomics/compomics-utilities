@@ -116,6 +116,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">MspReader</span>
 extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MgfReader.html" title="class in com.compomics.util.experiment.io.massspectrometry">MgfReader</a></pre>
+<div class="block">This class reads NIST .msp file</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Genet</dd>
@@ -138,7 +139,9 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#MspReader--">MspReader</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#MspReader--">MspReader</a></span>()</code>
+<div class="block">General Constructor for .msp file format reader</div>
+</td>
 </tr>
 </table>
 </li>
@@ -157,7 +160,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;File,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mspFile,
                         <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Adds missing spectrum titles.</div>
 </td>
@@ -194,7 +197,9 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/io/massspectrometry/MspReader.html#getSpectrum-java.io.BufferedReader-java.lang.String-">getSpectrum</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/BufferedReader.html?is-external=true" title="class or interface in java.io">BufferedReader</a>&nbsp;br,
-           <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>&nbsp;</td>
+           <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</code>
+<div class="block">The function returns the next spectrum found in the msp file.</div>
+</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static void</code></td>
@@ -255,6 +260,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 <li class="blockList">
 <h4>MspReader</h4>
 <pre>public&nbsp;MspReader()</pre>
+<div class="block">General Constructor for .msp file format reader</div>
 </li>
 </ul>
 </li>
@@ -274,9 +280,15 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 <pre>public static&nbsp;<a href="../../../../../../com/compomics/util/experiment/massspectrometry/MSnSpectrum.html" title="class in com.compomics.util.experiment.massspectrometry">MSnSpectrum</a>&nbsp;getSpectrum(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/BufferedReader.html?is-external=true" title="class or interface in java.io">BufferedReader</a>&nbsp;br,
                                       <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)
                                throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block">The function returns the next spectrum found in the msp file. Null if none found.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>br</code> - a buffered reader</dd>
+<dd><code>fileName</code> - name of the msp file</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>next spectrum found in msp file</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
 </dl>
 </li>
 </ul>
@@ -339,7 +351,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/io/massspectrom
 <ul class="blockList">
 <li class="blockList">
 <h4>addMissingSpectrumTitles</h4>
-<pre>public static&nbsp;void&nbsp;addMissingSpectrumTitles(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;File,
+<pre>public static&nbsp;void&nbsp;addMissingSpectrumTitles(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;mspFile,
                                             <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
                                      throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/FileNotFoundException.html?is-external=true" title="class or interface in java.io">FileNotFoundException</a>,
                                             <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,

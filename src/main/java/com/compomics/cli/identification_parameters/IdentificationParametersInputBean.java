@@ -648,9 +648,57 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id, arg, 0, 10)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id, arg, 0, 10)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id, arg, 0, 20)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id, arg, 0, 5)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id, arg, 0, 5)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id, arg, 1000, 500000)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id, arg, 1000, 500000)) {
                 return false;
             }
         }
@@ -2397,10 +2445,50 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msAmandaParameters.setMonoIsotopic(option == 1);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id);
             Integer option = new Integer(arg);
-            msAmandaParameters.setLowMemoryMode(option == 1);
+            msAmandaParameters.setPerformDeisotoping(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxModifications(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxVariableModifications(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxModificationSites(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxNeutralLosses(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxNeutralLossesPerModification(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxLoadedProteins(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxLoadedSpectra(option);
         }
 
         ///////////////////////////////////

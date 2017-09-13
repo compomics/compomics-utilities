@@ -138,7 +138,15 @@ public enum IdentificationParametersCLIParams {
     MS_AMANDA_INSTRUMENT("ms_amanda_instrument", "MS Amanda instrument id option. Available enzymes are listed in the GUI. (Note: case sensitive.).", false, true),
     MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '10'.", false, true),
     MS_AMANDA_MONOISOTOPIC("ms_amanda_mono", "MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.", false, true),
-    MS_AMANDA_LOW_MEM_MODE("ms_low_mem_mode", "MS Amanda use low memory mode option, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_PERFORM_DEISOTOPING("ms_amanda_perform_deisotoping", "MS Amanda perform deisotoping, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_MAX_MOD("ms_amanda_max_mod", "MS Amanda maximum number of occurrences of a specific modification on a peptide (0-10), default is '3'", false, true),
+    MS_AMANDA_MAX_VAR_MOD("ms_amanda_max_var_mod", "MS Amanda maximum number of variable modifications per peptide (0-10), default is '4'", false, true),
+    MS_AMANDA_MAX_MOD_SITES("ms_amanda_max_mod_sites", "MS Amanda maximum number of potential modification sites per modification per peptide (0-20), default is '6'", false, true),
+    MS_AMANDA_MAX_NEUTRAL_LOSSES("ms_amanda_max_neutraul_losses", "MS Amanda maximum number of water and ammonia losses per peptide (0-5), default is '1'", false, true),
+    MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS("ms_amanda_max_neutral_losses_mod", "MS Amanda maximum number identical modification specific losses per peptide (0-5), default is '2'", false, true),
+    MS_AMANDA_MIN_PEPTIDE_LENGTH("ms_amanda_min_pep_length", "MS Amanda minimum peptide length, default is '6'", false, true),
+    MS_AMANDA_LOADED_PROTEINS("ms_amanda_loaded_proteins", "MS Amanda maximum number of proteins loaded into memory (1000-500000), default is '100000'", false, true),
+    MS_AMANDA_LOADED_SPECTRA("ms_amanda_loaded_spectra", "MS Amanda maximum number of spectra loaded into memory (1000-500000), default is '2000'", false, true),
     //////////////////////////////////
     // MyriMatch specific parameters
     //////////////////////////////////
@@ -477,7 +485,15 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_PERFORM_DEISOTOPING.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_VAR_MOD.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_MOD_SITES.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS   .description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.description + "\n";
 
         output += "\n\nMS-GF+ advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_DECOY.id) + " " + IdentificationParametersCLIParams.MSGF_DECOY.description + "\n";

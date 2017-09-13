@@ -35,8 +35,48 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     private boolean monoisotopic = true;
     /**
      * Defines whether the low memory mode is used.
+     *
+     * @deprecated since MS Amanda 2.0
      */
     private Boolean lowMemoryMode = true;
+    /**
+     * Defines whether deisotoping is to be performed.
+     */
+    private Boolean performDeisotoping = true;
+    /**
+     * Maximum number of occurrences of a specific modification on a peptide
+     * (0-10).
+     */
+    private Integer maxModifications = 3;
+    /**
+     * Maximum number of variable modifications per peptide (0-10).
+     */
+    private Integer maxVariableModifications = 4;
+    /**
+     * Maximum number of potential modification sites per modification per
+     * peptide (0-20).
+     */
+    private Integer maxModificationSites = 6;
+    /**
+     * Maximum number of water and ammonia losses per peptide (0-5).
+     */
+    private Integer maxNeutralLosses = 1;
+    /**
+     * Maximum number identical modification specific losses per peptide (0-5).
+     */
+    private Integer maxNeutralLossesPerModification = 2;
+    /**
+     * Minimum peptide length.
+     */
+    private Integer minPeptideLength = 6;
+    /**
+     * Maximum number of proteins loaded into memory (1000-500000).
+     */
+    private Integer maxLoadedProteins = 100000;
+    /**
+     * Maximum number of spectra loaded into memory (1000-500000).
+     */
+    private Integer maxLoadedSpectra = 2000;
     /**
      * The maximum allowed length of the FASTA file name.
      */
@@ -70,7 +110,31 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
             if (!maxRank.equals(msAmandaParameters.getMaxRank())) {
                 return false;
             }
-            if (isLowMemoryMode() != msAmandaParameters.isLowMemoryMode()) {
+            if (performDeisotoping != msAmandaParameters.isPerformDeisotoping()) {
+                return false;
+            }
+            if (!maxModifications.equals(msAmandaParameters.getMaxModifications())) {
+                return false;
+            }
+            if (!maxVariableModifications.equals(msAmandaParameters.getMaxVariableModifications())) {
+                return false;
+            }
+            if (!maxModificationSites.equals(msAmandaParameters.getMaxModificationSites())) {
+                return false;
+            }
+            if (!maxNeutralLosses.equals(msAmandaParameters.getMaxNeutralLosses())) {
+                return false;
+            }
+            if (!maxNeutralLossesPerModification.equals(msAmandaParameters.getMaxNeutralLossesPerModification())) {
+                return false;
+            }
+            if (!minPeptideLength.equals(msAmandaParameters.getMinPeptideLength())) {
+                return false;
+            }
+            if (!maxLoadedProteins.equals(msAmandaParameters.getMaxLoadedProteins())) {
+                return false;
+            }
+            if (!maxLoadedSpectra.equals(msAmandaParameters.getMaxLoadedSpectra())) {
                 return false;
             }
             return true;
@@ -109,8 +173,32 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
         output.append("MAX_RANK=");
         output.append(maxRank);
         output.append(newLine);
-        output.append("LOW_MEMORY_MODE=");
-        output.append(lowMemoryMode);
+        output.append("PERFORM_DEISOTOPING=");
+        output.append(isPerformDeisotoping());
+        output.append(newLine);
+        output.append("MAX_MODIFICATIONS=");
+        output.append(getMaxModifications());
+        output.append(newLine);
+        output.append("MAX_VARIABLE_MODIFICATIONS=");
+        output.append(getMaxVariableModifications());
+        output.append(newLine);
+        output.append("MAX_MODIFICATIONS_SITES=");
+        output.append(getMaxModificationSites());
+        output.append(newLine);
+        output.append("MAX_NEUTRAL_LOSSES=");
+        output.append(getMaxNeutralLosses());
+        output.append(newLine);
+        output.append("MAX_NEUTRAL_LOSSES_PER_MODIFICATION=");
+        output.append(getMaxNeutralLossesPerModification());
+        output.append(newLine);
+        output.append("MIN_PEPTIDE_LENGTH=");
+        output.append(getMinPeptideLength());
+        output.append(newLine);
+        output.append("MAX_LOADED_PROTEINS=");
+        output.append(getMaxLoadedProteins());
+        output.append(newLine);
+        output.append("MAX_LOADED_SPECTRA=");
+        output.append(getMaxLoadedSpectra());
         output.append(newLine);
 
         return output.toString();
@@ -119,7 +207,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * Returns whether a decoy database shall be created and searched against.
      *
-     * @return whether a decoy database shall be created and searched against
+     * @return true if a decoy database shall be created and searched against
      */
     public boolean generateDecoy() {
         return generateDecoy;
@@ -138,8 +226,8 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      * Returns whether monoisotopic mass values shall be used (in contrast to
      * average mass values).
      *
-     * @return monoisotopic mass values shall be used (in contrast to average
-     * mass values)
+     * @return true if mass values shall be used (in contrast to average mass
+     * values)
      */
     public boolean isMonoIsotopic() {
         return monoisotopic;
@@ -158,7 +246,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * Return the instrument ID.
      *
-     * @return the instrumentID
+     * @return the instrument ID
      */
     public String getInstrumentID() {
         return instrumentID;
@@ -167,7 +255,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the instrument ID.
      *
-     * @param instrumentID the instrumentID to set
+     * @param instrumentID the instrument ID to set
      */
     public void setInstrumentID(String instrumentID) {
         this.instrumentID = instrumentID;
@@ -176,7 +264,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * Returns the maximum rank.
      *
-     * @return the maxRank
+     * @return the max rank
      */
     public Integer getMaxRank() {
         return maxRank;
@@ -193,8 +281,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns whether the low memory mode is used.
-     * 
-     * @return the lowMemoryMode
+     *
+     * @deprecated use getMaxLoadedProteins and getMaxLoadedSpectra instead
+     * @return true if in low memory mode
      */
     public boolean isLowMemoryMode() {
         if (lowMemoryMode == null) {
@@ -205,10 +294,211 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Set whether the low memory mode is used.
-     * 
-     * @param lowMemoryMode the lowMemoryMode to set
+     *
+     * @deprecated use setMaxLoadedProteins and setMaxLoadedSpectra instead
+     * @param lowMemoryMode the low memory mode to set
      */
     public void setLowMemoryMode(boolean lowMemoryMode) {
         this.lowMemoryMode = lowMemoryMode;
+    }
+
+    /**
+     * Returns whether deisotoping is to be performed.
+     *
+     * @return true if deisotoping is to be performed
+     */
+    public boolean isPerformDeisotoping() {
+        if (performDeisotoping == null) {
+            performDeisotoping = true;
+        }
+        return performDeisotoping;
+    }
+
+    /**
+     * Sets if deisotoping is to be performed.
+     *
+     * @param performDeisotoping the performDeisotoping to set
+     */
+    public void setPerformDeisotoping(boolean performDeisotoping) {
+        this.performDeisotoping = performDeisotoping;
+    }
+
+    /**
+     * Returns the maximum number of modifications per peptide.
+     *
+     * @return the maximum number of modifications
+     */
+    public Integer getMaxModifications() {
+        if (maxModifications == null) {
+            maxModifications = 3;
+        }
+        return maxModifications;
+    }
+
+    /**
+     * Set the maximum number of modifications per peptide.
+     *
+     * @param maxModifications the maximum number of modifications
+     */
+    public void setMaxModifications(Integer maxModifications) {
+        this.maxModifications = maxModifications;
+    }
+
+    /**
+     * Returns the maximum number of variable modifications per peptide.
+     *
+     * @return the maximum number of variable modifications
+     */
+    public Integer getMaxVariableModifications() {
+        if (maxVariableModifications == null) {
+            maxVariableModifications = 4;
+        }
+        return maxVariableModifications;
+    }
+
+    /**
+     * Set the maximum number of variable modifications per peptide.
+     *
+     * @param maxVariableModifications the maximum number of variable
+     * modifications
+     */
+    public void setMaxVariableModifications(Integer maxVariableModifications) {
+        this.maxVariableModifications = maxVariableModifications;
+    }
+
+    /**
+     * Returns the maximum number of modifications sites per modification per
+     * peptide.
+     *
+     * @return the maximum number of modifications sites per modification per
+     * peptide
+     */
+    public Integer getMaxModificationSites() {
+        if (maxModificationSites == null) {
+            maxModificationSites = 6;
+        }
+        return maxModificationSites;
+    }
+
+    /**
+     * Set the maximum number of modifications sites per modification per
+     * peptide.
+     *
+     * @param maxModificationSites the maximum number of modifications sites per
+     * modification per peptide
+     */
+    public void setMaxModificationSites(Integer maxModificationSites) {
+        this.maxModificationSites = maxModificationSites;
+    }
+
+    /**
+     * Returns the maximum number of water and ammonia losses per peptide.
+     *
+     * @return the maximum number of water and ammonia losses per peptide
+     */
+    public Integer getMaxNeutralLosses() {
+        if (maxNeutralLosses == null) {
+            maxNeutralLosses = 1;
+        }
+        return maxNeutralLosses;
+    }
+
+    /**
+     * Set the maximum number of water and ammonia losses per peptide.
+     *
+     * @param maxNeutralLosses the maximum number of water and ammonia losses
+     * per peptide
+     */
+    public void setMaxNeutralLosses(Integer maxNeutralLosses) {
+        this.maxNeutralLosses = maxNeutralLosses;
+    }
+
+    /**
+     * Returns the maximum number identical modification specific losses per
+     * peptide.
+     *
+     * @return the the maximum number identical modification specific losses per
+     * peptide
+     */
+    public Integer getMaxNeutralLossesPerModification() {
+        if (maxNeutralLossesPerModification == null) {
+            maxNeutralLossesPerModification = 2;
+        }
+        return maxNeutralLossesPerModification;
+    }
+
+    /**
+     * Set the maximum number identical modification specific losses per
+     * peptide.
+     *
+     * @param maxNeutralLossesPerModification the maximum number identical
+     * modification specific losses per peptide
+     */
+    public void setMaxNeutralLossesPerModification(Integer maxNeutralLossesPerModification) {
+        this.maxNeutralLossesPerModification = maxNeutralLossesPerModification;
+    }
+
+    /**
+     * Returns the minimum peptide length.
+     *
+     * @return the the minimum peptide length
+     */
+    public Integer getMinPeptideLength() {
+        if (minPeptideLength == null) {
+            minPeptideLength = 6;
+        }
+        return minPeptideLength;
+    }
+
+    /**
+     * Set the minimum peptide length.
+     *
+     * @param minPeptideLength the minimum peptide length
+     */
+    public void setMinPeptideLength(Integer minPeptideLength) {
+        this.minPeptideLength = minPeptideLength;
+    }
+
+    /**
+     * Returns the maximum number of proteins loaded into memory.
+     *
+     * @return the maximum number of proteins loaded into memory
+     */
+    public Integer getMaxLoadedProteins() {
+        if (maxLoadedProteins == null) {
+            maxLoadedProteins = 100000;
+        }
+        return maxLoadedProteins;
+    }
+
+    /**
+     * Set the maximum number of proteins loaded into memory.
+     *
+     * @param maxLoadedProteins the maximum number of proteins loaded into
+     * memory
+     */
+    public void setMaxLoadedProteins(Integer maxLoadedProteins) {
+        this.maxLoadedProteins = maxLoadedProteins;
+    }
+
+    /**
+     * Returns the maximum number of spectra loaded into memory.
+     *
+     * @return the maximum number of spectra loaded into memory
+     */
+    public Integer getMaxLoadedSpectra() {
+        if (maxLoadedSpectra == null) {
+            maxLoadedSpectra = 2000;
+        }
+        return maxLoadedSpectra;
+    }
+
+    /**
+     * Set the maximum number of spectra loaded into memory.
+     *
+     * @param maxLoadedSpectra the maximum number of spectra loaded into memory
+     */
+    public void setMaxLoadedSpectra(Integer maxLoadedSpectra) {
+        this.maxLoadedSpectra = maxLoadedSpectra;
     }
 }

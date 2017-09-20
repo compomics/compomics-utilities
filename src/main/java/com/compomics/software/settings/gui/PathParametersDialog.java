@@ -2,7 +2,7 @@ package com.compomics.software.settings.gui;
 
 import com.compomics.util.Util;
 import com.compomics.software.settings.PathKey;
-import com.compomics.software.settings.UtilitiesPathPreferences;
+import com.compomics.software.settings.UtilitiesPathParameters;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
  *
  * @author Marc Vaudel
  */
-public class PathSettingsDialog extends javax.swing.JDialog {
+public class PathParametersDialog extends javax.swing.JDialog {
 
     /**
      * Boolean indicating whether the process was canceled by the user.
@@ -62,7 +62,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
      * @param toolName the tool name
      * @param keyToPathMap the initial path settings
      */
-    public PathSettingsDialog(java.awt.Frame parent, String toolName, HashMap<PathKey, String> keyToPathMap) {
+    public PathParametersDialog(java.awt.Frame parent, String toolName, HashMap<PathKey, String> keyToPathMap) {
         super(parent, true);
 
         this.toolName = toolName;
@@ -518,7 +518,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 case 3:
                     String folderPath = keyToPathMap.get(pathKey);
                     if (folderPath != null) {
-                        return UtilitiesPathPreferences.testPath(folderPath);
+                        return UtilitiesPathParameters.testPath(folderPath);
                     }
                     return true;
                 default:

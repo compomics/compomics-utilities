@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ProcessingPreferencesDialog extends javax.swing.JDialog {
+public class ProcessingParametersDialog extends javax.swing.JDialog {
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -31,7 +31,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingPreferencesDialog(java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
+    public ProcessingParametersDialog(java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
         super(parentFrame, true);
         initComponents();
         this.editable = editable;
@@ -49,7 +49,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
+    public ProcessingParametersDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
         super(owner, true);
         initComponents();
         this.editable = editable;

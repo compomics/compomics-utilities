@@ -1,7 +1,6 @@
 package com.compomics.util.parameters.tools;
 
 import com.compomics.util.io.file.LastSelectedFolder;
-import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.JsonMarshaller;
 import java.awt.Color;
 import java.io.*;
@@ -927,7 +926,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param outputOption the SearchGUI output option
      */
-    public void setOutputOption(SearchGuiOutputParameters outputOption) {
+    public void setSearchGuiOutputParameters(SearchGuiOutputParameters outputOption) {
         this.outputOption = outputOption;
     }
 
@@ -936,7 +935,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the selected SearchGUI output option
      */
-    public SearchGuiOutputParameters getOutputOption() {
+    public SearchGuiOutputParameters getSearchGuiOutputParameters() {
         return outputOption;
     }
 

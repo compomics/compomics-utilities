@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author Marc Vaudel
  */
-public class UtilitiesPathPreferences {
+public class UtilitiesPathParameters {
 
     /**
      * Default name for the path configuration file.
@@ -162,7 +162,7 @@ public class UtilitiesPathPreferences {
             throw new IllegalArgumentException("Path " + id + " not recognized");
         } else {
             String path = getPath(line);
-            if (!path.equals(UtilitiesPathPreferences.defaultPath)) {
+            if (!path.equals(UtilitiesPathParameters.defaultPath)) {
                 File file = new File(path);
                 if (!file.exists()) {
                     throw new FileNotFoundException("File " + path + " not found.");
@@ -323,41 +323,41 @@ public class UtilitiesPathPreferences {
      */
     public static void writePathToFile(BufferedWriter bw, UtilitiesPathKey pathKey) throws IOException {
 
-        bw.write(pathKey.id + UtilitiesPathPreferences.separator);
+        bw.write(pathKey.id + UtilitiesPathParameters.separator);
         String toWrite = "";
         switch (pathKey) {
             case geneMappingKey:
                 toWrite = GeneFactory.getGeneMappingFolder().getAbsolutePath();
                 if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
+                    toWrite = UtilitiesPathParameters.defaultPath;
                 }
                 bw.write(toWrite);
                 break;
             case prideAnnotationKey:
                 toWrite = PrideObjectsFactory.getPrideFolder();
                 if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
+                    toWrite = UtilitiesPathParameters.defaultPath;
                 }
                 bw.write(toWrite);
                 break;
             case ptmFactoryKey:
                 toWrite = ModificationFactory.getSerializationFolder();
                 if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
+                    toWrite = UtilitiesPathParameters.defaultPath;
                 }
                 bw.write(toWrite);
                 break;
             case enzymeFactoryKey:
                 toWrite = EnzymeFactory.getSerializationFile();
                 if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
+                    toWrite = UtilitiesPathParameters.defaultPath;
                 }
                 bw.write(toWrite);
                 break;
             case utilitiesPreferencesKey:
                 toWrite = UtilitiesUserParameters.getUserParametersFolder();
                 if (toWrite == null) {
-                    toWrite = UtilitiesPathPreferences.defaultPath;
+                    toWrite = UtilitiesPathParameters.defaultPath;
                 }
                 bw.write(toWrite);
                 break;
@@ -428,8 +428,8 @@ public class UtilitiesPathPreferences {
      */
     public static ArrayList<PathKey> getErrorKeys() throws IOException {
         ArrayList<PathKey> result = new ArrayList<>();
-        for (UtilitiesPathPreferences.UtilitiesPathKey utilitiesPathKey : UtilitiesPathPreferences.UtilitiesPathKey.values()) {
-            String folder = UtilitiesPathPreferences.getPathPreference(utilitiesPathKey);
+        for (UtilitiesPathParameters.UtilitiesPathKey utilitiesPathKey : UtilitiesPathParameters.UtilitiesPathKey.values()) {
+            String folder = UtilitiesPathParameters.getPathPreference(utilitiesPathKey);
             if (folder != null && !testPath(folder)) {
                 result.add(utilitiesPathKey);
             }

@@ -131,7 +131,7 @@ public class UtilitiesPathParameters {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public static void loadPathPreferencesFromFile(File inputFile) throws FileNotFoundException, IOException {
+    public static void loadPathParametersFromFile(File inputFile) throws FileNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
         try {
             String line;
@@ -152,7 +152,7 @@ public class UtilitiesPathParameters {
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public static void loadPathPreferenceFromLine(String line) throws FileNotFoundException {
+    public static void loadPathParameterFromLine(String line) throws FileNotFoundException {
         String id = getPathID(line);
         if (id.equals("")) {
             throw new IllegalArgumentException("Impossible to parse path in " + line + ".");
@@ -170,7 +170,7 @@ public class UtilitiesPathParameters {
                 if (utilitiesPathKey.isDirectory && !file.isDirectory()) {
                     throw new FileNotFoundException("Found a file when expecting a directory for " + utilitiesPathKey.id + ".");
                 }
-                setPathPreference(utilitiesPathKey, path);
+                setPathParameter(utilitiesPathKey, path);
             }
         }
     }
@@ -181,7 +181,7 @@ public class UtilitiesPathParameters {
      * @param utilitiesPathKey the key of the path
      * @param path the path to be set
      */
-    public static void setPathPreference(UtilitiesPathKey utilitiesPathKey, String path) {
+    public static void setPathParameter(UtilitiesPathKey utilitiesPathKey, String path) {
         switch (utilitiesPathKey) {
             case geneMappingKey:
                 GeneFactory.setGeneMappingFolder(path);
@@ -213,7 +213,7 @@ public class UtilitiesPathParameters {
      *
      * @return the path to be set
      */
-    public static String getPathPreference(UtilitiesPathKey utilitiesPathKey) {
+    public static String getPathParameter(UtilitiesPathKey utilitiesPathKey) {
         switch (utilitiesPathKey) {
             case geneMappingKey:
                 return GeneFactory.getGeneMappingFolder().getAbsolutePath();
@@ -280,7 +280,7 @@ public class UtilitiesPathParameters {
             if (!newFile.exists()) {
                 throw new FileNotFoundException(newFile.getAbsolutePath() + " could not be created.");
             }
-            setPathPreference(utilitiesPathKey, newFile.getAbsolutePath());
+            setPathParameter(utilitiesPathKey, newFile.getAbsolutePath());
         }
     }
 
@@ -429,7 +429,7 @@ public class UtilitiesPathParameters {
     public static ArrayList<PathKey> getErrorKeys() throws IOException {
         ArrayList<PathKey> result = new ArrayList<>();
         for (UtilitiesPathParameters.UtilitiesPathKey utilitiesPathKey : UtilitiesPathParameters.UtilitiesPathKey.values()) {
-            String folder = UtilitiesPathParameters.getPathPreference(utilitiesPathKey);
+            String folder = UtilitiesPathParameters.getPathParameter(utilitiesPathKey);
             if (folder != null && !testPath(folder)) {
                 result.add(utilitiesPathKey);
             }

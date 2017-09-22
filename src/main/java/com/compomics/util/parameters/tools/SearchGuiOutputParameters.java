@@ -75,7 +75,7 @@ public enum SearchGuiOutputParameters {
      * 
      * @return an array of the names of the different options
      */
-    public static String[] getOutputOptionsNames() {
+    public static String[] getOutputParametersNames() {
         SearchGuiOutputParameters[] options = values();
         String[] result = new String[options.length];
         int i = 0;
@@ -93,7 +93,7 @@ public enum SearchGuiOutputParameters {
      *
      * @return the output option of interest
      */
-    public static SearchGuiOutputParameters getOutputOption(int id) {
+    public static SearchGuiOutputParameters getOutputParameters(int id) {
         for (SearchGuiOutputParameters outputOption : values()) {
             if (outputOption.id == id) {
                 return outputOption;
@@ -119,7 +119,7 @@ public enum SearchGuiOutputParameters {
             if (commandLine.length() > 0) {
                 commandLine.append(", ");
             }
-            commandLine.append(option).append(": ").append(getOutputOption(option).description);
+            commandLine.append(option).append(": ").append(getOutputParameters(option).description);
         }
         return commandLine.toString();
     }

@@ -1,6 +1,6 @@
 package com.compomics.software.autoupdater;
 
-import com.compomics.software.settings.UtilitiesPathPreferences;
+import com.compomics.software.settings.UtilitiesPathParameters;
 import com.compomics.util.Util;
 import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -246,10 +246,10 @@ public class DownloadLatestZipFromRepo {
 
             // copy path preferences to the new version
             String oldFolder = oldMavenJarFile.getAbsoluteFilePath();
-            File pathFile = new File(oldFolder, UtilitiesPathPreferences.configurationFileName);
+            File pathFile = new File(oldFolder, UtilitiesPathParameters.configurationFileName);
             if (pathFile.exists()) {
                 String downloadFolderPath = new File(downloadedJarFile.getAbsoluteFilePath()).getParent();
-                File newPathFile = new File(downloadFolderPath, UtilitiesPathPreferences.configurationFileName);
+                File newPathFile = new File(downloadFolderPath, UtilitiesPathParameters.configurationFileName);
                 Util.copyFile(pathFile, newPathFile);
             }
 

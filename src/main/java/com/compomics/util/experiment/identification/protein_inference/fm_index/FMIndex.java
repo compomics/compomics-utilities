@@ -4882,28 +4882,37 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     
     @Override
     public String getSequence(String proteinAccession) {
+        
         int[] accessionIndexPos = accessionsIndexPos.get(proteinAccession);
+        
         if (accessionIndexPos != null){
+            
             int index = accessionIndexPos[0];
             int indexPart = accessionIndexPos[1];
-            int[] suffixArrayPrimary = suffixArraysPrimary.get(indexPart);
             int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
             WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
             StringBuilder stringBuilder = new StringBuilder();
             
             while (true) {
+                
                 int[] aminoInfo = occurrenceTablePrimary.getCharacterInfo(index);
                 index = lessTablePrimary[aminoInfo[0]] + aminoInfo[1];
                 if (aminoInfo[0] == '/') break;
                 stringBuilder.append((char)aminoInfo[0]);
+                
             }
+            
             return stringBuilder.reverse().toString();
-        }        
+            
+        }
+        
         throw new UnsupportedOperationException("Protein accession '" + proteinAccession + "' not found in index.");
     }
 
     @Override
     public HashSet<String> getDecoyAccessions() {
+        
         return decoyAccessions;
+        
     }
 }

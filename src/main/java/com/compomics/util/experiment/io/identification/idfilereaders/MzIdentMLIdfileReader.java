@@ -1358,7 +1358,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.msgf, cvTerm, RawValueConversionType.noConversion);
         }
-        
+
         // PEAKS
         cvTerm = "MS:1002448";
         if (scoreMap.containsKey(cvTerm)) {
@@ -1368,7 +1368,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.peaks, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
         }
-        
+
         // X!Tandem
         cvTerm = "MS:1001330";
         if (scoreMap.containsKey(cvTerm)) {
@@ -1430,7 +1430,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.peptideShaker, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
         }
-        
+
         // Byonic
         cvTerm = "MS:1002262";
         if (scoreMap.containsKey(cvTerm)) {
@@ -1452,7 +1452,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.byonic, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
         }
-        
+
         // MS Fit
         cvTerm = "MS:1001501";
         if (scoreMap.containsKey(cvTerm)) {
@@ -1576,9 +1576,17 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.morpheus, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
         }
+
+        // MetaMorpheus
+        cvTerm = "MS:1002827";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.metaMorpheus, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
+        }
+
+        // Morpheus and MetaMorpheus (PSM-level q-value)
         cvTerm = "MS:1002354";
         if (scoreMap.containsKey(cvTerm)) {
-            return getEValueObject(scoreMap, Advocate.morpheus, cvTerm, RawValueConversionType.noConversion);
+            return getEValueObject(scoreMap, Advocate.morpheus, cvTerm, RawValueConversionType.noConversion); // @TODO: change advocate to metaMorpheus?
         }
 
         // Protein Pilot
@@ -1590,7 +1598,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.proteinPilot, cvTerm, RawValueConversionType.noConversion);
         }
-        
+
         // Scaffold
         cvTerm = "MS:1001568";
         if (scoreMap.containsKey(cvTerm)) {

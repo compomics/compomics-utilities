@@ -9,7 +9,7 @@ import com.compomics.util.parameters.identification.tool_specific.XtandemParamet
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.modification.ModificationsDialog;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -40,7 +40,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
     /**
      * The modification profile used for the search.
      */
-    private PtmSettings modificationProfile;
+    private ModificationParameters modificationProfile;
     /**
      * The fragment ion mass accuracy.
      */
@@ -79,9 +79,9 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public XTandemParametersDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
+    public XTandemParametersDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationParameters modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(parent, true);
-        this.modificationProfile = new PtmSettings(modificationProfile);
+        this.modificationProfile = new ModificationParameters(modificationProfile);
         this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
         initComponents();
@@ -103,9 +103,9 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public XTandemParametersDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
+    public XTandemParametersDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationParameters modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(owner, true);
-        this.modificationProfile = new PtmSettings(modificationProfile);
+        this.modificationProfile = new ModificationParameters(modificationProfile);
         this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
         initComponents();
@@ -410,7 +410,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      *
      * @return the modification profile corresponding to the input by the user
      */
-    public PtmSettings getModificationProfile() {
+    public ModificationParameters getModificationProfile() {
         return modificationProfile;
     }
 

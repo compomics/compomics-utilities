@@ -10,12 +10,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * This class stores the information about the modification preferences (colors,
- * names) used for the selected project.
+ * This class stores the information about the modification parameters (usage, colors,
+ * names).
  *
  * @author Marc Vaudel
  */
-public class PtmSettings implements Serializable {
+public class ModificationParameters implements Serializable {
 
     /**
      * Serial version number for serialization compatibility.
@@ -42,28 +42,28 @@ public class PtmSettings implements Serializable {
      */
     private HashMap<String, Color> colors = new HashMap<>();
     /**
-     * Back-up mapping of the PTMs for portability.
+     * Back-up mapping of the modifications for portability.
      */
     private HashMap<String, Modification> backUp = new HashMap<>();
 
     /**
      * Constructor.
      */
-    public PtmSettings() {
+    public ModificationParameters() {
     }
 
     /**
      * Constructor creating a new Modification profile based on the given one.
      * 
-     * @param ptmSettings the modification profile
+     * @param modificationParameters the modification profile
      */
-    public PtmSettings(PtmSettings ptmSettings) {
-        fixedModifications = ptmSettings.getFixedModifications();
-        variableModifications = ptmSettings.getVariableModifications();
-        refinementFixedModifications = ptmSettings.getRefinementFixedModifications();
-        refinementVariableModifications = ptmSettings.getRefinementVariableModifications();
-        colors = ptmSettings.getColors();
-        backUp = ptmSettings.getBackedUpPtmsMap();
+    public ModificationParameters(ModificationParameters modificationParameters) {
+        fixedModifications = modificationParameters.getFixedModifications();
+        variableModifications = modificationParameters.getVariableModifications();
+        refinementFixedModifications = modificationParameters.getRefinementFixedModifications();
+        refinementVariableModifications = modificationParameters.getRefinementVariableModifications();
+        colors = modificationParameters.getColors();
+        backUp = modificationParameters.getBackedUpModifications();
     }
 
     /**
@@ -135,14 +135,14 @@ public class PtmSettings implements Serializable {
         ArrayList<String> result = new ArrayList<>();
         result.addAll(fixedModifications);
         result.addAll(variableModifications);
-        for (String ptmName : refinementFixedModifications) {
-            if (!result.contains(ptmName)) {
-                result.add(ptmName);
+        for (String modName : refinementFixedModifications) {
+            if (!result.contains(modName)) {
+                result.add(modName);
             }
         }
-        for (String ptmName : refinementVariableModifications) {
-            if (!result.contains(ptmName)) {
-                result.add(ptmName);
+        for (String modName : refinementVariableModifications) {
+            if (!result.contains(modName)) {
+                result.add(modName);
             }
         }
         return result;
@@ -158,14 +158,14 @@ public class PtmSettings implements Serializable {
     public ArrayList<String> getAllNotFixedModifications() {
         ArrayList<String> result = new ArrayList<>();
         result.addAll(variableModifications);
-        for (String ptmName : refinementVariableModifications) {
-            if (!result.contains(ptmName)) {
-                result.add(ptmName);
+        for (String modName : refinementVariableModifications) {
+            if (!result.contains(modName)) {
+                result.add(modName);
             }
         }
-        for (String ptmName : refinementFixedModifications) {
-            if (!fixedModifications.contains(ptmName) && !result.contains(ptmName)) {
-                result.add(ptmName);
+        for (String modName : refinementFixedModifications) {
+            if (!fixedModifications.contains(modName) && !result.contains(modName)) {
+                result.add(modName);
             }
         }
         return result;
@@ -253,8 +253,8 @@ public class PtmSettings implements Serializable {
      */
     public Color getColor(String modification) {
         if (!colors.containsKey(modification)) {
-            ModificationFactory ptmFactory = ModificationFactory.getInstance();
-            setColor(modification, ptmFactory.getColor(modification));
+            ModificationFactory modificationFactory = ModificationFactory.getInstance();
+            setColor(modification, modificationFactory.getColor(modification));
         }
         return colors.get(modification);
     }
@@ -269,30 +269,21 @@ public class PtmSettings implements Serializable {
     }
 
     /**
-     * Returns the names of the backed-up PTMs.
+     * Returns the back-ed up modification with the given name.
      *
-     * @return the names of the backed-up PTMs
+     * @param modName the name of the modification of interest
+     * @return the corresponding modification. Null if not found.
      */
-    public Set<String> getBackedUpPtms() {
-        return backUp.keySet();
-    }
-
-    /**
-     * Returns the back-ed up PTM with the given name.
-     *
-     * @param modName the name of the PTM of interest
-     * @return the corresponding PTM. Null if not found.
-     */
-    public Modification getPtm(String modName) {
+    public Modification getModification(String modName) {
         return backUp.get(modName);
     }
 
     /**
-     * Returns the PTMs backed-up as a map. PTM name &gt; PTM.
+     * Returns the modifications backed-up as a map. modification name &gt; modification.
      *
-     * @return the PTMs backed-up as a map
+     * @return the modifications backed-up as a map
      */
-    public HashMap<String, Modification> getBackedUpPtmsMap() {
+    public HashMap<String, Modification> getBackedUpModifications() {
         return backUp;
     }
 
@@ -358,22 +349,22 @@ public class PtmSettings implements Serializable {
 
     /**
      * Returns a list containing all not fixed modifications with the same mass.
-     * Warning: all modifications of the profile must be loaded in the PTM
+     * Warning: all modifications of the profile must be loaded in the modification
      * factory.
      *
-     * @param ptmMass the mass
+     * @param modificationMass the mass
      * @return a list of all not fixed modifications with the same mass
      */
-    public ArrayList<String> getSimilarNotFixedModifications(Double ptmMass) {
-        ModificationFactory ptmFactory = ModificationFactory.getInstance();
-        ArrayList<String> ptms = new ArrayList<>();
-        for (String ptmName : getAllNotFixedModifications()) {
-            Modification ptm = ptmFactory.getModification(ptmName);
-            if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) { // @TODO: should compare against the accuracy
-                ptms.add(ptmName);
+    public ArrayList<String> getSameMassNotFixedModifications(double modificationMass) {
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        ArrayList<String> modifications = new ArrayList<>();
+        for (String modName : getAllNotFixedModifications()) {
+            Modification modification = modificationFactory.getModification(modName);
+            if (!modifications.contains(modName) && modification.getMass() == modificationMass) {
+                modifications.add(modName);
             }
         }
-        return ptms;
+        return modifications;
     }
 
     /**
@@ -382,7 +373,7 @@ public class PtmSettings implements Serializable {
      * @param otherProfile the profile to compare against
      * @return true of the two profiles are identical
      */
-    public boolean equals(PtmSettings otherProfile) {
+    public boolean equals(ModificationParameters otherProfile) {
 
         if (otherProfile == null) {
             return false;
@@ -430,7 +421,7 @@ public class PtmSettings implements Serializable {
                 return false;
             }
 
-            // @TODO: a test for identical ptms (and not just name as above) should be added
+            // @TODO: a test for identical modifications (and not just name as above) should be added
 //            if (!this.backUp.get(tempKey).equals(otherProfile.backUp.get(tempKey))) {
 //                return false;
 //            }

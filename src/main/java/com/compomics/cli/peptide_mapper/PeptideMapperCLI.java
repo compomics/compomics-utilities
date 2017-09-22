@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
@@ -82,7 +82,7 @@ public class PeptideMapperCLI {
         } else {
             peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
             searchParameters = new SearchParameters();
-            searchParameters.setPtmSettings(new PtmSettings());
+            searchParameters.setModificationParameters(new ModificationParameters());
             searchParameters.setFragmentIonAccuracy(0.02);
             searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
             sequenceMatchingPreferences = new SequenceMatchingParameters();
@@ -206,8 +206,8 @@ public class PeptideMapperCLI {
             // starting the mapping
             try {
                 // setting up modifications lists, only relevant for protein tree
-                ArrayList<String> variableModifications = searchParameters.getPtmSettings().getVariableModifications();
-                ArrayList<String> fixedModifications = searchParameters.getPtmSettings().getFixedModifications();
+                ArrayList<String> variableModifications = searchParameters.getModificationParameters().getVariableModifications();
+                ArrayList<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications();
 
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {

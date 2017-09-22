@@ -98,7 +98,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * The expected modifications. Modified peptides will be grouped and
      * displayed according to this classification.
      */
-    private PtmSettings ptmSettings = new PtmSettings();
+    private ModificationParameters modificationParameters = new ModificationParameters();
     /**
      * The digestion preferences.
      */
@@ -182,7 +182,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.precursorTolerance = searchParameters.getPrecursorAccuracy();
         this.precursorToleranceDalton = searchParameters.getPrecursorAccuracyDalton();
         this.fragmentIonMZTolerance = searchParameters.getFragmentIonAccuracy();
-        this.ptmSettings = new PtmSettings(searchParameters.getPtmSettings());
+        this.modificationParameters = new ModificationParameters(searchParameters.getModificationParameters());
         this.digestionPreferences = searchParameters.getDigestionPreferences();
         this.fastaFile = searchParameters.getFastaFile();
         this.fastaParameters = searchParameters.getFastaParameters();
@@ -307,21 +307,21 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Returns the PTM settings.
+     * Returns the modification settings.
      *
-     * @return the PTM settings
+     * @return the modification settings
      */
-    public PtmSettings getPtmSettings() {
-        return ptmSettings;
+    public ModificationParameters getModificationParameters() {
+        return modificationParameters;
     }
 
     /**
-     * Sets the PTM settings.
+     * Sets the modification settings.
      *
-     * @param ptmSettings the PTM settings
+     * @param modificationParameters the modification settings
      */
-    public void setPtmSettings(PtmSettings ptmSettings) {
-        this.ptmSettings = ptmSettings;
+    public void setModificationParameters(ModificationParameters modificationParameters) {
+        this.modificationParameters = modificationParameters;
     }
 
     /**
@@ -411,7 +411,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Returns the parameters to use to parse the fasta file.
-     * 
+     *
      * @return the parameters to use to parse the fasta file
      */
     public FastaParameters getFastaParameters() {
@@ -420,7 +420,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Sets the parameters to use to parse the fasta file.
-     * 
+     *
      * @param fastaParameters the parameters to use to parse the fasta file
      */
     public void setFastaParameters(FastaParameters fastaParameters) {
@@ -804,36 +804,20 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             output.append(digestionPreferences.getShortDescription());
         }
 
-        if (ptmSettings != null) {
-            ArrayList<String> ptms = ptmSettings.getFixedModifications();
-            if (!ptms.isEmpty()) {
+        if (modificationParameters != null) {
+            ArrayList<String> modifications = modificationParameters.getFixedModifications();
+            if (!modifications.isEmpty()) {
                 output.append("Fixed: ");
-                boolean first = true;
-                for (String ptm : ptms) {
-                    if (first) {
-                        output.append(ptm);
-                        first = false;
-                    } else {
-                        output.append(", ").append(ptm);
-                    }
-                }
+                output.append(modifications.stream().sorted().collect(Collectors.joining(", ")));
                 output.append(".").append(newLine);
             }
         }
 
-        if (ptmSettings != null) {
-            ArrayList<String> ptms = ptmSettings.getVariableModifications();
-            if (!ptms.isEmpty()) {
+        if (modificationParameters != null) {
+            ArrayList<String> modifications = modificationParameters.getVariableModifications();
+            if (!modifications.isEmpty()) {
                 output.append("Variable: ");
-                boolean first = true;
-                for (String ptm : ptms) {
-                    if (first) {
-                        output.append(ptm);
-                        first = false;
-                    } else {
-                        output.append(", ").append(ptm);
-                    }
-                }
+                output.append(modifications.stream().sorted().collect(Collectors.joining(", ")));
                 output.append(".").append(newLine);
             }
         }
@@ -929,62 +913,30 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
 
         output.append("FIXED_MODIFICATIONS=");
-        if (ptmSettings != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getFixedModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append("//").append(ptm);
-                }
-            }
+        if (modificationParameters != null) {
+            ArrayList<String> modifications = modificationParameters.getFixedModifications();
+            output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
         output.append(newLine);
 
         output.append("VARIABLE_MODIFICATIONS=");
-        if (ptmSettings != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getVariableModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append("//").append(ptm);
-                }
-            }
+        if (modificationParameters != null) {
+            ArrayList<String> modifications = modificationParameters.getVariableModifications();
+            output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
         output.append(newLine);
 
         output.append("REFINEMENT_FIXED_MODIFICATIONS=");
-        if (ptmSettings != null && ptmSettings.getRefinementFixedModifications() != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getRefinementFixedModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append("//").append(ptm);
-                }
-            }
+        if (modificationParameters != null && modificationParameters.getRefinementFixedModifications() != null) {
+            ArrayList<String> modifications = modificationParameters.getRefinementFixedModifications();
+            output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
         output.append(newLine);
 
         output.append("REFINEMENT_VARIABLE_MODIFICATIONS=");
-        if (ptmSettings != null && ptmSettings.getRefinementVariableModifications() != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getRefinementVariableModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append("//").append(ptm);
-                }
-            }
+        if (modificationParameters != null && modificationParameters.getRefinementVariableModifications() != null) {
+            ArrayList<String> modifications = modificationParameters.getRefinementVariableModifications();
+            output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
         output.append(newLine);
 
@@ -1095,7 +1047,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             return false;
         }
         if (getFastaParameters() != null && otherSearchParameters.getFastaParameters() != null
-               && !this.getFastaParameters().equals(otherSearchParameters.getFastaParameters())) {
+                && !this.getFastaParameters().equals(otherSearchParameters.getFastaParameters())) {
             return false;
         }
         if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() == null
@@ -1124,7 +1076,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (this.getMaxIsotopicCorrection() != otherSearchParameters.getMaxIsotopicCorrection()) {
             return false;
         }
-        if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {
+        if (!this.getModificationParameters().equals(otherSearchParameters.getModificationParameters())) {
             return false;
         }
 

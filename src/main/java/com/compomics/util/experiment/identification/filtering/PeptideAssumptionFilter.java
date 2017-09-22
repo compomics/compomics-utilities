@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.filtering;
 
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
@@ -247,7 +247,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateModifications(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences,
-            SequenceMatchingParameters ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
+            SequenceMatchingParameters ptmSequenceMatchingPreferences, ModificationParameters modificationProfile) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 

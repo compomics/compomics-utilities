@@ -75,7 +75,7 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * The memory to use.
      */
-    private int memoryPreference = 4 * 1024;
+    private int memoryParameter = 4 * 1024;
     /**
      * The Java Home, for example, C:\Program Files\Java\jdk1.8.0_25\bin. Null
      * if not set. Note that this setting will be ignored of a JavaHome.txt file
@@ -329,21 +329,21 @@ public class UtilitiesUserParameters implements Serializable {
     }
 
     /**
-     * Returns the preferred upper memory limit in MB.
+     * Returns the upper memory limit in MB.
      *
-     * @return the preferred upper memory limit
+     * @return the upper memory limit
      */
-    public Integer getMemoryPreference() {
-        return memoryPreference;
+    public Integer getMemoryParameter() {
+        return memoryParameter;
     }
 
     /**
-     * Sets the preferred upper memory limit.
+     * Sets the upper memory limit.
      *
-     * @param memoryPreference the preferred upper memory limit
+     * @param memoryParameter the preferred upper memory limit
      */
-    public void setMemoryPreference(int memoryPreference) {
-        this.memoryPreference = memoryPreference;
+    public void setMemoryParameter(int memoryParameter) {
+        this.memoryParameter = memoryParameter;
     }
 
     /**

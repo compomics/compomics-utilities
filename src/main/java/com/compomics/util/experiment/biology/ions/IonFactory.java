@@ -17,7 +17,7 @@ import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,7 +124,7 @@ public class IonFactory {
      *
      * @return the neutral losses expected in the dataset
      */
-    public static ArrayList<NeutralLoss> getNeutralLosses(PtmSettings ptmSettings) {
+    public static ArrayList<NeutralLoss> getNeutralLosses(ModificationParameters ptmSettings) {
         ArrayList<NeutralLoss> neutralLosses = new ArrayList<>();
         neutralLosses.addAll(IonFactory.getDefaultNeutralLosses());
         ModificationFactory ptmFactory = ModificationFactory.getInstance();
@@ -153,7 +153,7 @@ public class IonFactory {
      *
      * @return a hashset of the subtype indexes of the reporter ions to annotate
      */
-    public static HashSet<Integer> getReporterIons(PtmSettings ptmSettings) {
+    public static HashSet<Integer> getReporterIons(ModificationParameters ptmSettings) {
 
         HashSet<Integer> reporterIons = new HashSet<>();
         ModificationFactory ptmFactory = ModificationFactory.getInstance();

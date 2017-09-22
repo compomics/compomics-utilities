@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
@@ -211,13 +211,13 @@ public class AnnotationParameters implements Serializable {
         addIonType(Ion.IonType.RELATED_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
-        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        ModificationParameters ptmSettings = searchParameters.getModificationParameters();
         if (getReporterIons()) {
             HashSet<Integer> ptmReporterIons = IonFactory.getReporterIons(ptmSettings);
             selectedIonsMap.put(ReporterIon.IonType.REPORTER_ION, ptmReporterIons);
         }
         if (isAutomaticAnnotation() || areNeutralLossesSequenceAuto()) {
-            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
             for (NeutralLoss neutralLoss : neutralLosses) {
                 addNeutralLoss(neutralLoss);
             }

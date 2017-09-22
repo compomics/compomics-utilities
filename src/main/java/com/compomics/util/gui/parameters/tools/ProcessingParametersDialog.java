@@ -8,7 +8,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 
 /**
- * Dialog to edit the processing preferences.
+ * Dialog to edit the processing parameters.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -28,7 +28,7 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      * Creates a new ProcessingPreferencesDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
-     * @param processingPreferences the processing preferences to display
+     * @param processingPreferences the processing parameters to display
      * @param editable boolean indicating whether the settings can be edited
      */
     public ProcessingParametersDialog(java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
@@ -46,7 +46,7 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      *
      * @param owner the dialog owner
      * @param parentFrame a parent frame
-     * @param processingPreferences the processing preferences to display
+     * @param processingPreferences the processing parameters to display
      * @param editable boolean indicating whether the settings can be edited
      */
     public ProcessingParametersDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
@@ -71,7 +71,7 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
     /**
      * Fills the GUI with the given settings.
      *
-     * @param processingPreferences the processing preferences to display
+     * @param processingPreferences the processing parameters to display
      */
     private void populateGUI(ProcessingParameters processingPreferences) {
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
@@ -97,15 +97,15 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the processing preferences as set by the user.
+     * Returns the processing parameters as set by the user.
      *
-     * @return the processing preferences as set by the user
+     * @return the processing parameters as set by the user
      */
-    public ProcessingParameters getProcessingPreferences() {
-        ProcessingParameters processingPreferences = new ProcessingParameters();
-        processingPreferences.setProcessingType((ProcessingParameters.ProcessingType) processingTypeCmb.getSelectedItem());
-        processingPreferences.setnThreads((Integer) nThreadsSpinner.getValue());
-        return processingPreferences;
+    public ProcessingParameters getProcessingParameters() {
+        ProcessingParameters processingParameters = new ProcessingParameters();
+        processingParameters.setProcessingType((ProcessingParameters.ProcessingType) processingTypeCmb.getSelectedItem());
+        processingParameters.setnThreads((Integer) nThreadsSpinner.getValue());
+        return processingParameters;
     }
 
     /**

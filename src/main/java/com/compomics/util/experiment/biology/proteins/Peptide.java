@@ -10,7 +10,7 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
@@ -1328,7 +1328,7 @@ public class Peptide extends ExperimentObject {
      * @param excludeAllFixedPtms if true, all fixed Modifications are excluded
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
         HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>();
         HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
@@ -1379,7 +1379,7 @@ public class Peptide extends ExperimentObject {
      * @param useShortName if true the short names are used in the tags
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
@@ -1411,7 +1411,7 @@ public class Peptide extends ExperimentObject {
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(PtmSettings modificationProfile, Peptide peptide,
+    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, Peptide peptide,
             HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites,
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {

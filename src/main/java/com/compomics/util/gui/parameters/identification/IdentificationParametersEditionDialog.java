@@ -876,8 +876,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
-        ArrayList<Integer> reporterIons = new ArrayList<>(IonFactory.getReporterIons(searchParameters.getPtmSettings()));
+        ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
+        ArrayList<Integer> reporterIons = new ArrayList<>(IonFactory.getReporterIons(searchParameters.getModificationParameters()));
         AnnotationParametersDialog annotationSettingsDialog = new AnnotationParametersDialog(this, parentFrame, annotationSettings,
                 searchParameters.getFragmentIonAccuracy(), neutralLosses, reporterIons, editable);
         if (!annotationSettingsDialog.isCanceled()) {

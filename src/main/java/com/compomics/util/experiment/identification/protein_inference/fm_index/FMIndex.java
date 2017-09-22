@@ -12,7 +12,7 @@ import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
@@ -523,7 +523,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         if (searchParameters != null){
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getPtmSettings(), peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getModificationParameters(), peptideVariantsPreferences);
         }
         else {
             init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
@@ -544,7 +544,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
     }
 
@@ -564,7 +564,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();

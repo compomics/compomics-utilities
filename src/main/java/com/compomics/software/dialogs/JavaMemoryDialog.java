@@ -46,7 +46,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
         initComponents();
 
         if (javaHomeOrMemoryDialogParent.getUtilitiesUserParameters() != null) {
-            memoryTxt.setText(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryPreference() + "");
+            memoryTxt.setText(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryParameter() + "");
         } else {
             memoryTxt.setText("(error)");
         }
@@ -243,13 +243,13 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
 
             int newValue = new Integer(memoryTxt.getText().trim());
 
-            if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryPreference()) {
+            if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryParameter()) {
 
                 int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
                         "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
 
                 if (outcome == JOptionPane.OK_OPTION) {
-                    javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().setMemoryPreference(newValue);
+                    javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().setMemoryParameter(newValue);
 
                     try {
                         UtilitiesUserParameters.saveUserParameters(javaHomeOrMemoryDialogParent.getUtilitiesUserParameters());

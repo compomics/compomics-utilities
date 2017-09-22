@@ -2,7 +2,7 @@ package com.compomics.util.parameters.identification.tool_specific;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1010,7 +1010,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      * 
      * @param modificationProfile the modification profile of this search
      */
-    public void setPtmIndexes(PtmSettings modificationProfile) {
+    public void setPtmIndexes(ModificationParameters modificationProfile) {
         ptmIndexes.clear();
         int rank = 1;
         for (String ptm : modificationProfile.getAllModifications()) {

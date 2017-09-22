@@ -8,7 +8,7 @@ import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters.MatchingType;
 import java.awt.Color;
@@ -1411,7 +1411,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param excludeAllFixedPtms if true, all fixed Modifications are excluded
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
 
         HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<>(1);
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>(1);
@@ -1469,7 +1469,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(PtmSettings modificationProfile, AminoAcidPattern aminoAcidPattern,
+    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, AminoAcidPattern aminoAcidPattern,
             HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites,
             HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding,
             boolean useShortName) {
@@ -1548,7 +1548,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param useShortName if true the short names are used in the tags
      * @return the single residue as a tagged string
      */
-    private static String getTaggedResidue(char residue, String modificationName, PtmSettings modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
+    private static String getTaggedResidue(char residue, String modificationName, ModificationParameters modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
 
         String taggedResidue = "";
         ModificationFactory modificationFactory = ModificationFactory.getInstance();

@@ -22,7 +22,7 @@ import com.compomics.util.parameters.identification.tool_specific.PNovoParameter
 import com.compomics.util.parameters.identification.tool_specific.PepnovoParameters;
 import com.compomics.util.parameters.identification.tool_specific.TideParameters;
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.modification.PtmScore;
@@ -1869,10 +1869,10 @@ public class IdentificationParametersInputBean {
             searchParameters.setMaxChargeSearched(option);
         }
 
-        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        ModificationParameters ptmSettings = searchParameters.getModificationParameters();
         if (ptmSettings == null) {
-            ptmSettings = new PtmSettings();
-            searchParameters.setPtmSettings(ptmSettings);
+            ptmSettings = new ModificationParameters();
+            searchParameters.setModificationParameters(ptmSettings);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FIXED_MODS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FIXED_MODS.id);

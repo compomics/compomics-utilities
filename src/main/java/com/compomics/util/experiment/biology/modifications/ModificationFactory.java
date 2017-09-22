@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.atoms.AtomImpl;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
@@ -355,12 +355,12 @@ public class ModificationFactory implements Serializable {
      * checked.
      */
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
-        PtmSettings modificationProfile = searchParameters.getPtmSettings();
+        ModificationParameters modificationProfile = searchParameters.getModificationParameters();
         ArrayList<String> toCheck = new ArrayList<>();
-        for (String newModificationName : modificationProfile.getBackedUpPtms()) {
+        for (String newModificationName : modificationProfile.getBackedUpModifications().keySet()) {
             if (containsModification(newModificationName)) {
                 Modification oldModification = getModification(newModificationName);
-                Modification newModification = modificationProfile.getPtm(newModificationName);
+                Modification newModification = modificationProfile.getModification(newModificationName);
                 if (!oldModification.isSameAs(newModification)) {
                     toCheck.add(newModificationName);
                     if (overwrite) {
@@ -371,7 +371,7 @@ public class ModificationFactory implements Serializable {
                     }
                 }
             } else {
-                Modification modification = modificationProfile.getPtm(newModificationName);
+                Modification modification = modificationProfile.getModification(newModificationName);
                 addUserModification(modification);
                 for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
                     NeutralLoss.addNeutralLoss(neutralLoss);
@@ -448,7 +448,7 @@ public class ModificationFactory implements Serializable {
      * @param isFixed if true, the Modification will be added as a fixed modification
      * @return a pride parameters report as a string (for use in PRIDE Reshake)
      */
-    public String convertPridePtm(String pridePtmName, PtmSettings modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
+    public String convertPridePtm(String pridePtmName, ModificationParameters modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
 
         String prideParametersReport = "";
 

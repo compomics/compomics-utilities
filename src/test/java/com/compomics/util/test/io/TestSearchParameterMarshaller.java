@@ -1,7 +1,7 @@
 package com.compomics.util.test.io;
 
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
@@ -68,7 +68,7 @@ public class TestSearchParameterMarshaller {
         parameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
         parameters.setMaxChargeSearched(5);
         parameters.setMinChargeSearched(1);
-        parameters.setPtmSettings(createMockUpPTMSettings());
+        parameters.setModificationParameters(createMockUpPTMSettings());
         parameters.setFastaFile(new File("T:/HIS/IS/A/FAKE/FASTA.FASTA"));
         return parameters;
     }
@@ -76,8 +76,8 @@ public class TestSearchParameterMarshaller {
     /**
      * @return mock up PtmSettings
      */
-    private PtmSettings createMockUpPTMSettings() {
-        PtmSettings settings = new PtmSettings();
+    private ModificationParameters createMockUpPTMSettings() {
+        ModificationParameters settings = new ModificationParameters();
         ModificationFactory instance = ModificationFactory.getInstance();
         settings.addFixedModification(instance.getModification("Carboxymethylation of C"));
         settings.addVariableModification(instance.getModification("Oxidation of M"));

@@ -1,7 +1,7 @@
 package com.compomics.util.pride;
 
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.parameters.identification.search.PtmSettings;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -378,7 +378,7 @@ public class PtmToPrideMap implements Serializable {
         PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
         PtmToPrideMap ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
         boolean changes = false;
-        PtmSettings modificationProfile = searchParameters.getPtmSettings();
+        ModificationParameters modificationProfile = searchParameters.getModificationParameters();
         for (String psPtm : modificationProfile.getAllModifications()) {
             if (ptmToPrideMap.getCVTerm(psPtm) == null) {
                 CvTerm defaultCVTerm = PtmToPrideMap.getDefaultCVTerm(psPtm);

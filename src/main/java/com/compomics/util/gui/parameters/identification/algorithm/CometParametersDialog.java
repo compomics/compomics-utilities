@@ -457,7 +457,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         removePrecursorPeakLabel.setText("Remove Precursor Peak");
 
-        removePrecursorPeakCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No", "Yes", "Yes + Charge Reduced " }));
+        removePrecursorPeakCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No", "Yes", "Yes + Charge Reduced ", "Yes + Phosphate Neutral " }));
 
         removePrecursorPeakToleranceLbl.setText("Remove Precursor Peak Tolerance (Da)");
 
@@ -558,7 +558,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         isotopeCorrectionLabel.setText("Isotope Correction");
 
-        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "-1, 0, +1, +2, and +3", "-8, -4, 0, +4 and +8" }));
+        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "0 and +1", "0, +1 and +2", "0, +1, +2 and +3", "-8, -4, 0, +4 and +8" }));
+        isotopeCorrectionCmb.setSelectedIndex(3);
 
         precursorMassLabel.setText("Precursor Mass (min - max)");
 

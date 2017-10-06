@@ -822,7 +822,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id);
-            List<String> supportedInput = Arrays.asList("0", "1", "2");
+            List<String> supportedInput = Arrays.asList("0", "1", "2", "3");
             if (!CommandParameter.isInList(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id, arg, supportedInput)) {
                 return false;
             }
@@ -854,7 +854,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
-            List<String> supportedInput = Arrays.asList("0", "1", "2");
+            List<String> supportedInput = Arrays.asList("0", "1", "2", "3", "4");
             if (!CommandParameter.isInList(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id, arg, supportedInput)) {
                 return false;
             }

@@ -40,7 +40,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Remove precursor peak. An input value of 0 will not perform any precursor
      * removal. An input value of 1 will remove all peaks around the precursor
      * m/z. An input value of 2 will remove all charge reduced precursor peaks
-     * as expected to be present for ETD/ECD spectra.
+     * as expected to be present for ETD/ECD spectra. An input value of 3 will
+     * remove the HPO3 (-80) and H3PO4 (-98) precursor phosphate neutral loss
+     * peaks.
      */
     private Integer removePrecursor = 0;
     /**
@@ -65,11 +67,13 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     private Integer enzymeType = 2;
     /**
-     * Isotope correction setting. 0: performs no isotope error searches, 1:
-     * searches -1, 0, +1, +2, and +3 isotope offsets 2: searches -8, -4, 0, +4,
-     * +8 isotope offsets (for +4/+8 stable isotope labeling).
+     * Isotope correction setting. 0: analyzes no isotope offsets, just the
+     * given precursor mass, 1: searches 0, +1 isotope offsets, 2: searches 0,
+     * +1, +2 isotope offsets, 3: searches 0, +1, +2, +3 isotope offsets, 4:
+     * searches -8, -4, 0, +4, +8 isotope offsets (for +4/+8 stable isotope
+     * labeling).
      */
-    private Integer isotopeCorrection = 1;
+    private Integer isotopeCorrection = 3;
     /**
      * The minimum precursor mass.
      */

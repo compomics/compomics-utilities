@@ -574,7 +574,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     // modified residue
                     String modIndexString = charAtI + "";
                     int modIndex = new Integer(modIndexString);
-                    String utilitiesPtm = direcTagParameters.getUtilitiesPtmName(modIndex);
+                    String utilitiesPtm = direcTagParameters.getUtilitiesModificationName(modIndex);
                     modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, true, i + 1));
                     residues.append(dynamicModsResidues.get(modIndexString.charAt(0)));
                 } catch (Exception e1) {

@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Utilities user preferences will be serialized in the user folder and provide
- * useful information to all compomics software, well as soon as they use it of
- * course.
+ * Utilities user parameters can be used to store user parameters.
  *
  * @author Marc Vaudel
  */

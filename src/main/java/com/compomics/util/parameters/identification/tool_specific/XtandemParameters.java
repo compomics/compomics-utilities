@@ -589,9 +589,6 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return the outputResults
      */
     public String getOutputResults() {
-        if (outputResults == null) {
-            outputResults = "all";
-        }
         return outputResults;
     }
 
@@ -610,9 +607,6 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return the proteinPtmComplexity
      */
     public Double getProteinPtmComplexity() {
-        if (proteinPtmComplexity == null) {
-            proteinPtmComplexity = 6.0;
-        }
         return proteinPtmComplexity;
     }
 
@@ -636,7 +630,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
             double diff = Math.abs(maxEValue - xtandemParameters.getMaxEValue());
-            if (diff > 0.0000000000001) {
+            if (maxEValue != xtandemParameters.getMaxEValue()) {
                 return false;
             }
             diff = Math.abs(dynamicRange - xtandemParameters.getDynamicRange());

@@ -22,12 +22,12 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * The maximum number of variable modifications allowed on a single peptide.
      * The default is no limit (set to null).
      */
-    private Integer maxVariablePtmsPerPeptide = null;
+    private Integer maxVariableModificationsPerPeptide = null;
     /**
      * The maximum number of variable modifications of each type allowed on a
      * single peptide.
      */
-    private Integer maxVariablePtmsPerTypePerPeptide = 2; // @TODO: make this modification specific?
+    private Integer maxVariableModificationsPerTypePerPeptide = 2; // @TODO: make this modification specific?
     /**
      * The minimum peptide length.
      */
@@ -235,25 +235,25 @@ public class TideParameters implements IdentificationAlgorithmParameter {
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (maxVariablePtmsPerPeptide != null && tideParameters.getMaxVariablePtmsPerPeptide() == null) {
+            if (maxVariableModificationsPerPeptide != null && tideParameters.getMaxVariableModificationsPerPeptide() == null) {
                 return false;
             }
-            if (maxVariablePtmsPerPeptide == null && tideParameters.getMaxVariablePtmsPerPeptide() != null) {
+            if (maxVariableModificationsPerPeptide == null && tideParameters.getMaxVariableModificationsPerPeptide() != null) {
                 return false;
             }
-            if (maxVariablePtmsPerPeptide != null && tideParameters.getMaxVariablePtmsPerPeptide() != null) {
-                if (maxVariablePtmsPerPeptide.intValue() != tideParameters.getMaxVariablePtmsPerPeptide().intValue()) {
+            if (maxVariableModificationsPerPeptide != null && tideParameters.getMaxVariableModificationsPerPeptide() != null) {
+                if (maxVariableModificationsPerPeptide.intValue() != tideParameters.getMaxVariableModificationsPerPeptide().intValue()) {
                     return false;
                 }
             }
-            if (maxVariablePtmsPerTypePerPeptide != null && tideParameters.getMaxVariablePtmsPerTypePerPeptide() == null) {
+            if (maxVariableModificationsPerTypePerPeptide != null && tideParameters.getMaxVariableModificationsPerTypePerPeptide() == null) {
                 return false;
             }
-            if (maxVariablePtmsPerTypePerPeptide == null && tideParameters.getMaxVariablePtmsPerTypePerPeptide() != null) {
+            if (maxVariableModificationsPerTypePerPeptide == null && tideParameters.getMaxVariableModificationsPerTypePerPeptide() != null) {
                 return false;
             }
-            if (maxVariablePtmsPerTypePerPeptide != null && tideParameters.getMaxVariablePtmsPerTypePerPeptide() != null) {
-                if (!maxVariablePtmsPerTypePerPeptide.equals(tideParameters.getMaxVariablePtmsPerTypePerPeptide())) {
+            if (maxVariableModificationsPerTypePerPeptide != null && tideParameters.getMaxVariableModificationsPerTypePerPeptide() != null) {
+                if (!maxVariableModificationsPerTypePerPeptide.equals(tideParameters.getMaxVariableModificationsPerTypePerPeptide())) {
                     return false;
                 }
             }
@@ -397,11 +397,11 @@ public class TideParameters implements IdentificationAlgorithmParameter {
         output.append("MAX_PRECURSOR_MASS=");
         output.append(maxPrecursorMass);
         output.append(newLine);
-        output.append("MAX_VARIABLE_PTMS_PER_TYPE_PER_PEPTIDE=");
-        output.append(maxVariablePtmsPerTypePerPeptide);
+        output.append("MAX_VARIABLE_MODIFICATIONS_PER_TYPE_PER_PEPTIDE=");
+        output.append(maxVariableModificationsPerTypePerPeptide);
         output.append(newLine);
-        output.append("MAX_VARIABLE_PTMS_PER_PEPTID=");
-        output.append(maxVariablePtmsPerPeptide);
+        output.append("MAX_VARIABLE_MODIFICATIONS_PER_PEPTID=");
+        output.append(maxVariableModificationsPerPeptide);
         output.append(newLine);
         output.append("DECOY_FORMAT=");
         output.append(decoyFormat);
@@ -501,30 +501,30 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * Returns the maximum number of variable modifications allowed on a single
      * peptide. Null if no upper limit is set.
      *
-     * @return the maxVariablePtmsPerPeptide
+     * @return the maxVariableModificationsPerPeptide
      */
-    public Integer getMaxVariablePtmsPerPeptide() {
-        return maxVariablePtmsPerPeptide;
+    public Integer getMaxVariableModificationsPerPeptide() {
+        return maxVariableModificationsPerPeptide;
     }
 
     /**
      * Set the maximum number of variable modifications of allowed on a single
      * peptide. Set to null if no upper limit is to be used.
      *
-     * @param maxVariablePtmsPerPeptide the maxVariablePtmsPerPeptide to set
+     * @param maxVariableModificationsPerPeptide the maxVariableModificationsPerPeptide to set
      */
-    public void setMaxVariablePtmsPerPeptide(Integer maxVariablePtmsPerPeptide) {
-        this.maxVariablePtmsPerPeptide = maxVariablePtmsPerPeptide;
+    public void setMaxVariableModificationsPerPeptide(Integer maxVariableModificationsPerPeptide) {
+        this.maxVariableModificationsPerPeptide = maxVariableModificationsPerPeptide;
     }
 
     /**
      * Returns the maximum number of variable modifications of each modification
      * type allowed on a single peptide. Null if no upper limit is set.
      *
-     * @return the maxVariablePtmsPerPeptide
+     * @return the maxVariableModificationsPerTypePerPeptide
      */
-    public Integer getMaxVariablePtmsPerTypePerPeptide() {
-        return maxVariablePtmsPerTypePerPeptide;
+    public Integer getMaxVariableModificationsPerTypePerPeptide() {
+        return maxVariableModificationsPerTypePerPeptide;
     }
 
     /**
@@ -532,11 +532,11 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * type allowed on a single peptide. Set to null if no upper limit is to be
      * used.
      *
-     * @param maxVariablePtmsPerTypePerPeptide the
-     * maxVariablePtmsPerTypePerPeptide to set
+     * @param maxVariableModificationsPerTypePerPeptide the
+     * maxVariableModificationsPerTypePerPeptide to set
      */
-    public void setMaxVariablePtmsPerTypePerPeptide(Integer maxVariablePtmsPerTypePerPeptide) {
-        this.maxVariablePtmsPerTypePerPeptide = maxVariablePtmsPerTypePerPeptide;
+    public void setMaxVariableModificationsPerTypePerPeptide(Integer maxVariableModificationsPerTypePerPeptide) {
+        this.maxVariableModificationsPerTypePerPeptide = maxVariableModificationsPerTypePerPeptide;
     }
 
     /**

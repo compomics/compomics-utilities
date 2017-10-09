@@ -14,7 +14,7 @@ import no.uib.jsparklines.renderers.util.Util;
  *
  * @author Harald Barsnes
  */
-public class JavaSettingsDialog extends javax.swing.JDialog {
+public class JavaParametersDialog extends javax.swing.JDialog {
 
     /**
      * Reference to the JavaHomeOrMemoryDialogParent.
@@ -43,7 +43,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param modal if the dialog is to be modal or not
      */
-    public JavaSettingsDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
+    public JavaParametersDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
         super(parent, modal);
         this.frameParent = parent;
         this.javaHomeOrMemoryDialogParent = javaHomeOrMemoryDialogParent;

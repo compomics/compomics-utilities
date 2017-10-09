@@ -176,9 +176,9 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      */
     private double complementScoreWeight = 1.0;
     /**
-     * The variable PTMs in the order used.
+     * The variable modifications in the order used.
      */
-    private ArrayList<String> variablePtms = new ArrayList<>();
+    private ArrayList<String> variableModifications = new ArrayList<>(0);
 
     /**
      * Constructor.
@@ -554,30 +554,30 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
     }
 
     /**
-     * Sets the variable PTMs searched. The order is the one used by DirecTag
+     * Sets the variable modifications searched. The order is the one used by DirecTag
      * and the name is the utilities one.
      *
-     * @param variablePtms list of the names of the searched variable PTMs
+     * @param variableModifications list of the names of the searched variable modifications
      */
-    public void setPtms(ArrayList<String> variablePtms) {
-        this.variablePtms = variablePtms;
+    public void setModifications(ArrayList<String> variableModifications) {
+        this.variableModifications = variableModifications;
     }
 
     /**
-     * Returns the name of the PTM indexed by the given index.
+     * Returns the name of the modification indexed by the given index.
      *
-     * @param index the index of the PTM of interest
+     * @param index the index of the modification of interest
      *
-     * @return the name of the PTM of interest
+     * @return the name of the modification of interest
      */
-    public String getUtilitiesPtmName(int index) {
-        if (variablePtms == null || variablePtms.isEmpty()) {
-            throw new IllegalArgumentException("Variable PTM index map not set for this DirecTag sequencing.");
+    public String getUtilitiesModificationName(int index) {
+        if (variableModifications == null || variableModifications.isEmpty()) {
+            throw new IllegalArgumentException("Variable modification index map not set for this DirecTag sequencing.");
         }
-        if (index < 0 || index >= variablePtms.size()) {
-            throw new IllegalArgumentException("Variable PTM index " + index + " not found in mapping.");
+        if (index < 0 || index >= variableModifications.size()) {
+            throw new IllegalArgumentException("Variable modification index " + index + " not found in mapping.");
         }
-        return variablePtms.get(index);
+        return variableModifications.get(index);
     }
 
     @Override

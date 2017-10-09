@@ -183,7 +183,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
         } else {
             parametersReport += "Trypsin (assumed), 2 allowed missed cleavages (assumed), specific (assumed)";
         }
-        searchParameters.setDigestionPreferences(digestionPreferences);
+        searchParameters.setDigestionParameters(digestionPreferences);
 
         // set the min/max precursor charge
         parametersReport += "<br><br><b>Min Precusor Charge:</b> ";

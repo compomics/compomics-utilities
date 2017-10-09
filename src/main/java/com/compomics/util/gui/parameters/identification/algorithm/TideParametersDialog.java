@@ -164,11 +164,11 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                 removeMethionineCmb.setSelectedIndex(1);
             }
         }
-        if (tideParameters.getMaxVariablePtmsPerPeptide() != null) {
-            maxPtmsTxt.setText(tideParameters.getMaxVariablePtmsPerPeptide() + "");
+        if (tideParameters.getMaxVariableModificationsPerPeptide() != null) {
+            maxPtmsTxt.setText(tideParameters.getMaxVariableModificationsPerPeptide() + "");
         }
-        if (tideParameters.getMaxVariablePtmsPerTypePerPeptide() != null) {
-            maxVariablePtmsPerTypeTxt.setText(tideParameters.getMaxVariablePtmsPerTypePerPeptide() + "");
+        if (tideParameters.getMaxVariableModificationsPerTypePerPeptide() != null) {
+            maxVariablePtmsPerTypeTxt.setText(tideParameters.getMaxVariableModificationsPerTypePerPeptide() + "");
         }
         if (tideParameters.getDigestionType() != null) {
             enzymeTypeCmb.setSelectedItem(tideParameters.getDigestionType());
@@ -310,12 +310,12 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxVariablePtmsPerPeptide(new Integer(input));
+            result.setMaxVariableModificationsPerPeptide(new Integer(input));
         }
 
         input = maxVariablePtmsPerTypeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxVariablePtmsPerTypePerPeptide(new Integer(input));
+            result.setMaxVariableModificationsPerTypePerPeptide(new Integer(input));
         }
 
         result.setDigestionType((String) enzymeTypeCmb.getSelectedItem());

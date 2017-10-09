@@ -167,7 +167,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
-            this.searchParameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
+            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
             this.selectedFastaFile = searchParameters.getFastaFile();
@@ -221,7 +221,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
-            this.searchParameters.setDigestionPreferences(DigestionParameters.getDefaultPreferences());
+            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
         }
@@ -2181,7 +2181,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             
         }
 
-        DigestionParameters digestionPreferences = searchParameters.getDigestionPreferences();
+        DigestionParameters digestionPreferences = searchParameters.getDigestionParameters();
         
         if (digestionPreferences.getCleavagePreference() != null) {
             
@@ -2481,7 +2481,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         // save the digestion settings
-        tempSearchParameters.setDigestionPreferences(digestionPreferences);
+        tempSearchParameters.setDigestionParameters(digestionPreferences);
 
 // Precursor m/z tolerance
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));

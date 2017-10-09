@@ -63,5 +63,33 @@ public enum ModificationType {
         this.index = index;
         this.description = description;
     }
+    
+    /**
+     * Returns a boolean indicating whether the modification type targets the N-terminus of a protein or of a peptide.
+     * 
+     * @return a boolean indicating whether the modification type targets the N-terminus of a protein or of a peptide
+     */
+    public boolean isNTerm() {
+        
+        return this == modn_peptide
+                || this == modn_protein
+                || this == modnaa_peptide
+                || this == modnaa_protein;
+        
+    }
+    
+    /**
+     * Returns a boolean indicating whether the modification type targets the C-terminus of a protein or of a peptide.
+     * 
+     * @return a boolean indicating whether the modification type targets the C-terminus of a protein or of a peptide
+     */
+    public boolean isCTerm() {
+        
+        return this == modc_peptide
+                || this == modc_protein
+                || this == modcaa_peptide
+                || this == modcaa_protein;
+        
+    }
 
 }

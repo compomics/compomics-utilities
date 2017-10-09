@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  *
  * @author Marc Vaudel
  */
-public class PrivacySettingsDialog extends javax.swing.JDialog {
+public class PrivacyParametersDialog extends javax.swing.JDialog {
 
     /**
      * The normal dialog icon.
@@ -28,7 +28,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param normalIcon the normal icon
      */
-    public PrivacySettingsDialog(java.awt.Frame parent, Image normalIcon) {
+    public PrivacyParametersDialog(java.awt.Frame parent, Image normalIcon) {
         super(parent, true);
         initComponents();
         loadPreferencesOnGUI();

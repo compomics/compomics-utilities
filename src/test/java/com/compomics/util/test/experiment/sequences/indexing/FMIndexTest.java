@@ -54,20 +54,84 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
+            /*terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
             peptideToProteinMappingWithVariants();
-            peptideToProteinMappingWithVariantsSpecific();
+            peptideToProteinMappingWithVariantsSpecific();*/
             tagToProteinMapping();
-            tagToProteinMappingWithPTMsAndVariants();
+            /*tagToProteinMappingWithPTMsAndVariants();
             tagToProteinMappingWithVariantsGeneric();
-            tagToProteinMappingWithVariantsSpecific();
+            tagToProteinMappingWithVariantsSpecific();*/
         }
         catch(Exception e){
             e.printStackTrace();
         }
     }
     
+    
+    public void terminiPTMTagMapping() throws IOException {
+        
+        SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
+
+        ModificationFactory ptmFactory = ModificationFactory.getInstance();
+        ptmFactory.clearFactory();
+        ptmFactory = ModificationFactory.getInstance();
+
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
+        
+        File fastaFile = new File("src/test/resources/experiment/terminiSequence.fasta");
+        FastaParameters fastaParameters = new FastaParameters();
+        fastaParameters.setDefaultAttributes(fastaFile);
+        fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
+        
+        PeptideProteinMapping peptideProteinMapping;
+        AminoAcidSequence aminoAcidPattern;
+        double nTermGap;
+        double cTermGap;
+        Tag tag;
+        ModificationParameters ptmSettings;
+        FMIndex fmIndex;
+        
+        ArrayList<PeptideProteinMapping> peptideProteinMappings;
+        //ArrayList<ModificationMatch> modificationMatches;
+        //ModificationMatch modificationMatch;
+        
+        SearchParameters searchParameters = new SearchParameters();
+        
+        
+        
+        
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+        searchParameters.setFragmentIonAccuracy(0.02);
+        
+        
+        aminoAcidPattern = new AminoAcidSequence("AIIG");
+        nTermGap = 2626.29;
+        cTermGap = 470.224;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Carbamidomethylation of C"));
+        ptmSettings.addVariableModification(ptmFactory.getModification("Oxidation of M"));
+        ptmSettings.addVariableModification(ptmFactory.getModification("Acetylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+                
+        try {
+            peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+            Assert.assertTrue(peptideProteinMappings.isEmpty());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Assert.assertTrue(false);
+        }
+    }
     
 
     /**
@@ -1088,6 +1152,9 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches.size() == 1);
         modificationMatch = modificationMatches.get(0);
         Assert.assertTrue(modificationMatch.getModificationSite() == 1);
+        
+        
+        
 
         // TESTMRITESTCKTESTK with one fixed modification at peptide n-terminus
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -1101,6 +1168,9 @@ public class FMIndexTest extends TestCase {
 
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
 
         // TESTMRITESTCKTESTK with one variable modification at peptide n-terminus
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -1730,6 +1800,44 @@ public class FMIndexTest extends TestCase {
         // tags mapping to wildcards X in proteome modifications at the termini
         ////////////////////////////////////////////////////////////////////////
         
+        
+        // FIXTHISSHITY with one fixed modifications at protein n-terminus should not map because X has value zero here
+        aminoAcidPattern = new AminoAcidSequence("ISSH");
+        nTermGap = ptmFactory.getModification("Acetylation of protein N-term").getMass() + AminoAcid.F.getMonoisotopicMass() + AminoAcid.I.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.H.getMonoisotopicMass();
+        cTermGap = AminoAcid.I.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.Y.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 0);
+        
+        
+        
+        // FITTHISSHITTY => FIXTHISSHITTY with one fixed modifications at protein n-terminus
+        aminoAcidPattern = new AminoAcidSequence("ISSH");
+        nTermGap = ptmFactory.getModification("Acetylation of protein N-term").getMass() + AminoAcid.F.getMonoisotopicMass() + AminoAcid.I.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.H.getMonoisotopicMass();
+        cTermGap = AminoAcid.I.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.Y.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Acetylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 1);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("FITTHISSHITTY"));
+        modificationMatches = peptideProteinMapping.getModificationMatches();
+        Assert.assertTrue(modificationMatches != null);
+        Assert.assertTrue(modificationMatches.size() == 1);
+        modificationMatch = modificationMatches.get(0);
+        Assert.assertTrue(modificationMatch.getModificationSite() == 1);
+        
+        
+        
+        
+        
         // LATAWOIDN(P)KRRRP => LATAWOIDNXKRRRP
         aminoAcidPattern = new AminoAcidSequence("AWOIDN");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -1746,6 +1854,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("LATAWOIDNPKRRRP") == 0);
         Assert.assertTrue(peptideProteinMapping.getIndex() == 1);
+        
         
         // LATAWOIDN(P)KRRRP => LATAWOIDNXKRRRP
         aminoAcidPattern = new AminoAcidSequence("AWOIDN");

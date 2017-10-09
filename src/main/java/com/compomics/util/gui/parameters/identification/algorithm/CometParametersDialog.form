@@ -249,10 +249,11 @@
                 <Component class="javax.swing.JComboBox" name="removePrecursorPeakCombo">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
+                      <StringArray count="4">
                         <StringItem index="0" value="No"/>
                         <StringItem index="1" value="Yes"/>
                         <StringItem index="2" value="Yes + Charge Reduced "/>
+                        <StringItem index="3" value="Yes + Phosphate Neutral "/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -455,12 +456,15 @@
                 <Component class="javax.swing.JComboBox" name="isotopeCorrectionCmb">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
+                      <StringArray count="5">
                         <StringItem index="0" value="No Correction"/>
-                        <StringItem index="1" value="-1, 0, +1, +2, and +3"/>
-                        <StringItem index="2" value="-8, -4, 0, +4 and +8"/>
+                        <StringItem index="1" value="0 and +1"/>
+                        <StringItem index="2" value="0, +1 and +2"/>
+                        <StringItem index="3" value="0, +1, +2 and +3"/>
+                        <StringItem index="4" value="-8, -4, 0, +4 and +8"/>
                       </StringArray>
                     </Property>
+                    <Property name="selectedIndex" type="int" value="3"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="precursorMassLabel">

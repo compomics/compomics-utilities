@@ -102,7 +102,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The digestion preferences.
      */
-    private DigestionParameters digestionPreferences;
+    private DigestionParameters digestionParameters;
     /**
      * The sequence database file used for identification.
      */
@@ -183,7 +183,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.precursorToleranceDalton = searchParameters.getPrecursorAccuracyDalton();
         this.fragmentIonMZTolerance = searchParameters.getFragmentIonAccuracy();
         this.modificationParameters = new ModificationParameters(searchParameters.getModificationParameters());
-        this.digestionPreferences = searchParameters.getDigestionPreferences();
+        this.digestionParameters = searchParameters.getDigestionParameters();
         this.fastaFile = searchParameters.getFastaFile();
         this.fastaParameters = searchParameters.getFastaParameters();
         this.forwardIons = new ArrayList<>(searchParameters.getForwardIons());
@@ -377,18 +377,18 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @return the digestion preferences
      */
-    public DigestionParameters getDigestionPreferences() {
+    public DigestionParameters getDigestionParameters() {
 
-        return digestionPreferences;
+        return digestionParameters;
     }
 
     /**
      * Sets the digestion preferences.
      *
-     * @param digestionPreferences the digestion preferences
+     * @param digestionParameters the digestion preferences
      */
-    public void setDigestionPreferences(DigestionParameters digestionPreferences) {
-        this.digestionPreferences = digestionPreferences;
+    public void setDigestionParameters(DigestionParameters digestionParameters) {
+        this.digestionParameters = digestionParameters;
     }
 
     /**
@@ -800,8 +800,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
 
-        if (digestionPreferences != null && !DigestionParameters.getDefaultPreferences().equals(digestionPreferences)) {
-            output.append(digestionPreferences.getShortDescription());
+        if (digestionParameters != null && !DigestionParameters.getDefaultPreferences().equals(digestionParameters)) {
+            output.append(digestionParameters.getShortDescription());
         }
 
         if (modificationParameters != null) {
@@ -897,19 +897,19 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         output.append(newLine);
 
-        if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme) {
-            ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+        if (digestionParameters.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme) {
+            ArrayList<Enzyme> enzymes = digestionParameters.getEnzymes();
             for (int i = 0; i < enzymes.size(); i++) {
                 Enzyme tempEnzyme = enzymes.get(i);
                 String enzymeName = tempEnzyme.getName();
                 output.append("ENZYME").append(i).append("=");
-                output.append(enzymeName).append(", ").append(digestionPreferences.getSpecificity(enzymeName));
-                int nmc = digestionPreferences.getnMissedCleavages(enzymeName);
+                output.append(enzymeName).append(", ").append(digestionParameters.getSpecificity(enzymeName));
+                int nmc = digestionParameters.getnMissedCleavages(enzymeName);
                 output.append(", ").append(nmc).append(" missed cleavages");
                 output.append(newLine);
             }
         } else {
-            output.append("ENZYME").append("=").append(digestionPreferences.getCleavagePreference().name);
+            output.append("ENZYME").append("=").append(digestionParameters.getCleavagePreference().name);
         }
 
         output.append("FIXED_MODIFICATIONS=");
@@ -1050,12 +1050,12 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 && !this.getFastaParameters().equals(otherSearchParameters.getFastaParameters())) {
             return false;
         }
-        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() == null
-                || this.getDigestionPreferences() == null && otherSearchParameters.getDigestionPreferences() != null) {
+        if (this.getDigestionParameters() != null && otherSearchParameters.getDigestionParameters() == null
+                || this.getDigestionParameters() == null && otherSearchParameters.getDigestionParameters() != null) {
             return false;
         }
-        if (this.getDigestionPreferences() != null && otherSearchParameters.getDigestionPreferences() != null
-                && !this.getDigestionPreferences().isSameAs(otherSearchParameters.getDigestionPreferences())) {
+        if (this.getDigestionParameters() != null && otherSearchParameters.getDigestionParameters() != null
+                && !this.getDigestionParameters().isSameAs(otherSearchParameters.getDigestionParameters())) {
             return false;
         }
         if (!Util.sameLists(forwardIons, otherSearchParameters.getForwardIons())) {

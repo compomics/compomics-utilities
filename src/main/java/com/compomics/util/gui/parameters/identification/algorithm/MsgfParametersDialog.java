@@ -126,8 +126,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
         }
-        if (msgfParameters.getNumberOfPtmsPerPeptide() != null) {
-            maxPtmsTxt.setText(msgfParameters.getNumberOfPtmsPerPeptide() + "");
+        if (msgfParameters.getNumberOfModificationsPerPeptide() != null) {
+            maxPtmsTxt.setText(msgfParameters.getNumberOfModificationsPerPeptide() + "");
         }
     }
 
@@ -173,7 +173,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfPtmsPerPeptide(new Integer(input));
+            result.setNumberOfModificationsPerPeptide(new Integer(input));
         }
 
         return result;

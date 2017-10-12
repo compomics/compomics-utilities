@@ -1763,10 +1763,10 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             searchParameters.setFragmentIonAccuracy(option);
         }
-        DigestionParameters digestionPreferences = searchParameters.getDigestionPreferences();
+        DigestionParameters digestionPreferences = searchParameters.getDigestionParameters();
         if (digestionPreferences == null) {
             digestionPreferences = DigestionParameters.getDefaultPreferences();
-            searchParameters.setDigestionPreferences(digestionPreferences);
+            searchParameters.setDigestionParameters(digestionPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
@@ -2304,7 +2304,7 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
             Integer option = new Integer(arg);
-            msgfParameters.setNumberOfPtmsPerPeptide(option);
+            msgfParameters.setNumberOfModificationsPerPeptide(option);
         }
 
         ///////////////////////////////////
@@ -2642,12 +2642,12 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
             Integer option = new Integer(arg);
-            tideParameters.setMaxVariablePtmsPerPeptide(option);
+            tideParameters.setMaxVariableModificationsPerPeptide(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id);
             Integer option = new Integer(arg);
-            tideParameters.setMaxVariablePtmsPerTypePerPeptide(option);
+            tideParameters.setMaxVariableModificationsPerTypePerPeptide(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id);

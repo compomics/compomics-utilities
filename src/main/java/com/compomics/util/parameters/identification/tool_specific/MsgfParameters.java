@@ -50,26 +50,14 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     private boolean additionalOutput = false;
     /**
-     * The lower isotope error range.
-     * 
-     * @deprecated now a generic search setting
-     */
-    private Integer lowerIsotopeErrorRange = -1;
-    /**
-     * The upper isotope error range.
-     * 
-     * @deprecated now a generic search setting
-     */
-    private Integer upperIsotopeErrorRange = 2;
-    /**
      * The number of tolerable termini. E.g. For trypsin, 0: non-tryptic, 1:
      * semi-tryptic, 2: fully-tryptic peptides only.
      */
     private Integer numberTolerableTermini = 2;
     /**
-     * The maximum number of PTMs per peptide.
+     * The maximum number of modifications per peptide.
      */
-    private Integer numberOfPtmsPerPeptide = 2;
+    private Integer numberOfModificationsPerPeptide = 2;
 
     /**
      * Constructor.
@@ -114,7 +102,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
             if (!numberTolerableTermini.equals(msgfParameters.getNumberTolerableTermini())) {
                 return false;
             }
-            if (!numberOfPtmsPerPeptide.equals(msgfParameters.getNumberOfPtmsPerPeptide())) {
+            if (!numberOfModificationsPerPeptide.equals(msgfParameters.getNumberOfModificationsPerPeptide())) {
                 return false;
             }
             return true;
@@ -168,8 +156,8 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         output.append("NUMBER_OF_TOLERABLE_TERMINI=");
         output.append(numberTolerableTermini);
         output.append(newLine);
-        output.append("MAX_NUMBER_PTMS=");
-        output.append(numberOfPtmsPerPeptide);
+        output.append("MAX_NUMBER_MODIFICATIONS=");
+        output.append(numberOfModificationsPerPeptide);
         output.append(newLine);
 
         return output.toString();
@@ -338,20 +326,20 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the maximum number of PTMs per peptide.
+     * Returns the maximum number of modifications per peptide.
      *
-     * @return the numberOfPtmsPerPeptide
+     * @return the maximum number of modifications per peptide
      */
-    public Integer getNumberOfPtmsPerPeptide() {
-        return numberOfPtmsPerPeptide;
+    public Integer getNumberOfModificationsPerPeptide() {
+        return numberOfModificationsPerPeptide;
     }
 
     /**
-     * Set the maximum number of PTMs per peptide.
+     * Set the maximum number of modifications per peptide.
      *
-     * @param numberOfPtmsPerPeptide the numberOfPtmsPerPeptide to set
+     * @param numberOfModificationsPerPeptide the maximum number of modifications per peptide
      */
-    public void setNumberOfPtmsPerPeptide(Integer numberOfPtmsPerPeptide) {
-        this.numberOfPtmsPerPeptide = numberOfPtmsPerPeptide;
+    public void setNumberOfModificationsPerPeptide(Integer numberOfModificationsPerPeptide) {
+        this.numberOfModificationsPerPeptide = numberOfModificationsPerPeptide;
     }
 }

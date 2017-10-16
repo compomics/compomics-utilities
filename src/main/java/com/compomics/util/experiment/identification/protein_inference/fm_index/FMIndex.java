@@ -2060,14 +2060,13 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
                             final double massDiff = Math.abs(combinationMass - newMass);
-                            //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
-
+                            
                             // make a lookup when mass difference is below 800Da if it is still possible to reach by a AA combination
                             if (massNotValid(massDiff)) {
                                 continue;
                             }
                             boolean withinMass = withinMassTolerance(massDiff, newNumX);
-                            int offset = ((massDiff <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
+                            int offset = ((newNumX == 0 && massDiff <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
 
                             if (offset > 0) {
                                 newNumX = 0;
@@ -2236,24 +2235,31 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                         for (int b = 0; b < setCharacter[numMasses][0]; ++b) {
                             int[] borders = setCharacter[b];
                             final int aminoAcid = borders[0];
-                            if (aminoAcid == '/') {
-                                continue;
-                            }
-                            final double newMass = oldMass + aaMasses[borders[3]];
-                            final int lessValue = less[aminoAcid];
+                            
+                            if (aminoAcid == '/') continue;
+                            
+                            final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                            final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
+                            
+                            final double newMass = oldMass + (aminoAcid != 'X' ? aaMasses[borders[3]] : 0);
+                            int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
 
                             if (newMass - massTolerance <= combinationMass) {
                                 boolean add = true;
                                 double massDiff = combinationMass - newMass;
-                                int intMass = (int) (massDiff * lookupMultiplier);
-                                if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                    add = false;
-                                }
+                                if (massNotValid(massDiff)) add = false;
+                                
+                                boolean withinMass = withinMassTolerance(massDiff, newNumX);
+                                int offset = ((newNumX == 0 && Math.abs(massDiff) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
+                                if (offset > 0) newNumX = 0;
+                                
                                 if (add) {
-                                    row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
+                                    row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, newNumX, borders[3], numVariants, '-', null));
+                                    if (withinMass) {
+                                        row[j + offset].getLast().XMassDiff = massDiff;
+                                    }
                                 }
                             }
                             // variants
@@ -2263,20 +2269,26 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                                 matrix[k + 1][j].add(new MatrixContent(leftIndex, rightIndex, '*', content, oldMass, length, numX, -1, numVariants + 1, Character.toChars(aminoAcid + 32)[0], null));
 
                                 // substitution
-                                for (int index : aaMassIndexes) {
-                                    double aminoMass = oldMass + aaMasses[index];
-                                    int offsetSub = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
-                                    int amino = index & 127;
+                                if (aminoAcid != 'X'){
+                                    for (int index : aaMassIndexes) {
+                                        double aminoMass = oldMass + aaMasses[index];
+                                        int amino = index & 127;
 
-                                    if (amino != aminoAcid && aminoMass < combinationMass + massTolerance) {
-                                        boolean add = true;
-                                        double massDiff = combinationMass - aminoMass;
-                                        int intMass = (int) (massDiff * lookupMultiplier);
-                                        if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                            add = false;
-                                        }
-                                        if (add) {
-                                            matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
+                                        if (amino != aminoAcid && aminoMass < combinationMass + massTolerance) {
+                                            boolean add = true;
+                                            double massDiff = combinationMass - aminoMass;
+                                            
+                                            if (massNotValid(massDiff)) add = false;
+                                            boolean withinMass = withinMassTolerance(massDiff, newNumX);
+                                            int offsetSub = ((newNumX == 0 && Math.abs(massDiff) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
+                                            if (offsetSub > 0) newNumX = 0;
+                                            
+                                            if (add) {
+                                                matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, newNumX, index, numVariants + 1, (char) aminoAcid, null));
+                                                if (withinMass) {
+                                                    matrix[k + 1][j + offsetSub].getLast().XMassDiff = massDiff;
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -2287,18 +2299,22 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                         if (numVariants < maxNumberVariants) {
                             for (int index : aaMassIndexes) {
                                 double aminoMass = oldMass + aaMasses[index];
-                                int offsetDel = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
                                 int amino = index & 127;
 
                                 if (aminoMass < combinationMass + massTolerance) {
                                     boolean add = true;
                                     double massDiff = combinationMass - aminoMass;
-                                    int intMass = (int) (massDiff * lookupMultiplier);
-                                    if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                        add = false;
-                                    }
+                                    if (massNotValid(massDiff)) add = false;
+                                    boolean withinMass = withinMassTolerance(massDiff, numX);
+                                    int newNumX = numX;
+                                    int offsetIns = ((newNumX == 0 && Math.abs(massDiff) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
+                                    if (offsetIns > 0) newNumX = 0;
+                                    
                                     if (add) {
-                                        matrix[k + 1][j + offsetDel].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
+                                        matrix[k + 1][j + offsetIns].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, newNumX, index, numVariants + 1, '*', null));
+                                        if (withinMass) {
+                                            matrix[k + 1][j + offsetIns].getLast().XMassDiff = massDiff;
+                                        }
                                     }
                                 }
                             }
@@ -2307,10 +2323,10 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                     } else { // sequence mapping 
                         final String combinationSequence = combination.sequence;
                         final int xNumLimit = combination.xNumLimit;
-
+                        
                         for (int c = 0; c < combinationSequence.length(); ++c) {
                             final int aminoAcid = combinationSequence.charAt(c);
-                            final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                            int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
                             if (newNumX > xNumLimit) {
                                 continue;
                             }
@@ -2319,43 +2335,63 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                             final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
                             final int leftIndex = lessValue + range[0];
                             final int rightIndex = lessValue + range[1] - 1;
-
+                            if (j < combinations.length - 1 && combinations[j].isMass != combinations[j + 1].isMass) newNumX = 0;
+                            
                             // match
                             if (leftIndex <= rightIndex) {
                                 row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
                             }
 
-                            // variants
+                            // variants deletion and substitution
                             if (numVariants < maxNumberVariants && c == 0) {
-                                // insertion
-                                if (numVariants < maxNumberVariants) {
-                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
-                                }
+                                // deletion
+                                matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, numX, length + 1, numVariants + 1, '*'));
 
-                                // deletion and substitution
-                                int[][] setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                                for (int b = 0; b < setCharacterSeq[numMasses][0]; ++b) {
-                                    int[] borders = setCharacterSeq[b];
-                                    final int errorAminoAcid = borders[0];
-                                    final int errorNewNumX = newNumX + ((errorAminoAcid != 'X') ? 0 : 1);
-                                    if (errorNewNumX > xNumLimit) {
-                                        continue;
-                                    }
+                                // substitution
+                                if (aminoAcid != 'X'){
+                                    int[][] setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                    for (int b = 0; b < setCharacterSeq[numMasses][0]; ++b) {
+                                        int[] borders = setCharacterSeq[b];
+                                        final int errorAminoAcid = borders[0];
+                                        if (aminoAcid == errorAminoAcid) continue;
 
-                                    final int errorLessValue = less[errorAminoAcid];
-                                    final int errorLeftIndex = errorLessValue + borders[1];
-                                    final int errorRightIndex = errorLessValue + borders[2] - 1;
+                                        if (errorAminoAcid == 'X') continue;
 
-                                    // deletion
-                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
+                                        final int errorLessValue = less[errorAminoAcid];
+                                        final int errorLeftIndex = errorLessValue + borders[1];
+                                        final int errorRightIndex = errorLessValue + borders[2] - 1;
 
-                                    // substitution
-                                    if (aminoAcid != errorAminoAcid) {
-                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
+                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, newNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
                             }
 
+                        }
+                        
+
+                        // variants
+                        if (numVariants < maxNumberVariants) {
+                            int aminoAcid = combinationSequence.charAt(0);
+                            
+                            // insertion
+                            if (aminoAcid != 'X'){
+                                int[][] setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (int b = 0; b < setCharacterSeq[numMasses][0]; ++b) {
+                                    int[] borders = setCharacterSeq[b];
+                                    final int errorAminoAcid = borders[0];
+                                    if (errorAminoAcid == 'X') continue;
+
+                                    final int errorLessValue = less[errorAminoAcid];
+                                    final int errorLeftIndex = errorLessValue + borders[1];
+                                    final int errorRightIndex = errorLessValue + borders[2] - 1;
+                                    int newNumX = numX;
+                                    if (j < combinations.length - 1 && combinations[j].isMass != combinations[j + 1].isMass) newNumX = 0;
+
+                                    // insertion
+                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, newNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
+
+                                }
+                            }
                         }
                     }
                 }
@@ -4251,7 +4287,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                 XmassDiffs.put(key, currentContent.allXMassDiffs.get(key));
             }
 
-            for (ModificationMatch modificationMatch : currentContent.modifications) {
+            for (ModificationMatch modificationMatch : currentContent.allModifications) {
                 modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
             }
 
@@ -4622,7 +4658,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                 int leftIndex = content.left;
                 int rightIndex = content.right;
 
-                for (ModificationMatch modificationMatch : currentContent.modifications) {
+                for (ModificationMatch modificationMatch : currentContent.allModifications) {
                     modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
                 }
 

@@ -55,7 +55,7 @@ public class MatrixContent {
     /**
      * List of all modifications.
      */
-    public ArrayList<ModificationMatch> modifications;
+    public ArrayList<ModificationMatch> allModifications;
     /**
      * List of all modifications.
      */
@@ -109,21 +109,22 @@ public class MatrixContent {
         this.character = 0;
         this.previousContent = null;
         this.mass = 0;
-        this.peptideSequence = null;
         this.length = 0;
         this.numX = 0;
         this.modification = null;
-        this.modifications = null;
         this.modificationPos = -1;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = '\0';
-        this.allVariants = null;
         this.ambiguousChar = -1;
         this.peptideSequenceSearch = null;
         this.tagComponent = -1;
-        this.allXcomponents = null;
         this.XMassDiff = -1;
+        
+        this.peptideSequence = null;
+        this.allVariants = null;
+        this.allXcomponents = null;
+        this.allModifications = null;
         this.allXMassDiffs = null;
     }
 
@@ -146,7 +147,7 @@ public class MatrixContent {
         this.length = 0;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = -1;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -181,7 +182,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = -1;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -217,7 +218,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = -1;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -253,7 +254,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = -1;
         this.numVariants = numVariants;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -288,7 +289,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = -1;
         this.numVariants = 0;
         this.numSpecificVariants = numSpecificVariants;
@@ -325,7 +326,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = modifictationPos;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -369,7 +370,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = modification;
-        this.modifications = modifications;
+        this.allModifications = modifications;
         this.modificationPos = modifictationPos;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -412,7 +413,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = modification;
-        this.modifications = modifications;
+        this.allModifications = modifications;
         this.modificationPos = modifictationPos;
         this.numVariants = 0;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -452,7 +453,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = modifictationPos;
         this.numVariants = numVariants;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -491,7 +492,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = null;
-        this.modifications = null;
+        this.allModifications = null;
         this.modificationPos = modifictationPos;
         this.numVariants = 0;
         this.numSpecificVariants = numSpecificVariants;
@@ -533,7 +534,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = modification;
-        this.modifications = modifications;
+        this.allModifications = modifications;
         this.modificationPos = modifictationPos;
         this.numVariants = numVariants;
         this.numSpecificVariants = new int[]{0, 0, 0};
@@ -575,7 +576,7 @@ public class MatrixContent {
         this.length = length;
         this.numX = numX;
         this.modification = modification;
-        this.modifications = modifications;
+        this.allModifications = modifications;
         this.modificationPos = modifictationPos;
         this.numVariants = 0;
         this.numSpecificVariants = numSpecificVariants;
@@ -603,7 +604,7 @@ public class MatrixContent {
         this.length = foreign.length;
         this.numX = foreign.numX;
         this.modification = foreign.modification;
-        this.modifications = foreign.modifications;
+        this.allModifications = foreign.allModifications;
         this.modificationPos = foreign.modificationPos;
         this.numVariants = foreign.numVariants;
         this.numSpecificVariants = new int[]{foreign.numSpecificVariants[0], foreign.numSpecificVariants[1], foreign.numSpecificVariants[2]};

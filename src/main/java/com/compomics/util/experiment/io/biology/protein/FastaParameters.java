@@ -227,6 +227,21 @@ public class FastaParameters {
      * Infers the parameters used to parse the file.
      * 
      * @param fastaFile a fasta file
+     * 
+     * @return returns fasta parameters inferred from the file
+     * 
+     * @throws IOException exception thrown if an error occurred while iterating the file
+     */
+    public static FastaParameters inferParameters(File fastaFile) throws IOException {
+        
+        return inferParameters(fastaFile, null);
+        
+    }
+
+    /**
+     * Infers the parameters used to parse the file.
+     * 
+     * @param fastaFile a fasta file
      * @param waitingHandler a handler to allow canceling the import
      * 
      * @return returns fasta parameters inferred from the file

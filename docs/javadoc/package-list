@@ -1,4 +1,5 @@
 com.compomics.cli.enzymes
+com.compomics.cli.fasta
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
 com.compomics.cli.peptide_mapper

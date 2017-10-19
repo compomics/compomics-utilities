@@ -206,18 +206,11 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      * @param xtandemParameters the parameters to display
      */
     private void populateGUI(XtandemParameters xtandemParameters) {
-        if (xtandemParameters.getDynamicRange() != null) {
-            dynamicRangeTxt.setText(xtandemParameters.getDynamicRange() + "");
-        }
-        if (xtandemParameters.getnPeaks() != null) {
-            nPeaksTxt.setText(xtandemParameters.getnPeaks() + "");
-        }
-        if (xtandemParameters.getMinFragmentMz() != null) {
-            minFragmentMzTxt.setText(xtandemParameters.getMinFragmentMz() + "");
-        }
-        if (xtandemParameters.getMinPeaksPerSpectrum() != null) {
-            minPeaksTxt.setText(xtandemParameters.getMinPeaksPerSpectrum() + "");
-        }
+
+        dynamicRangeTxt.setText(xtandemParameters.getDynamicRange() + "");
+        minFragmentMzTxt.setText(xtandemParameters.getMinFragmentMz() + "");
+        minPeaksTxt.setText(xtandemParameters.getMinPeaksPerSpectrum() + "");
+
         if (xtandemParameters.isUseNoiseSuppression()) {
             noiseSuppressionCmb.setSelectedIndex(0);
             minPrecMassTxt.setEnabled(true);
@@ -225,9 +218,9 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
             noiseSuppressionCmb.setSelectedIndex(1);
             minPrecMassTxt.setEnabled(false);
         }
-        if (xtandemParameters.getMinPrecursorMass() != null) {
-            minPrecMassTxt.setText(xtandemParameters.getMinPrecursorMass() + "");
-        }
+
+        minPrecMassTxt.setText(xtandemParameters.getMinPrecursorMass() + "");
+
         if (xtandemParameters.isProteinQuickAcetyl()) {
             quickAcetylCmb.setSelectedIndex(0);
         } else {
@@ -262,9 +255,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
             snapsCmb.setEnabled(false);
             spectrumSynthesisCmb.setEnabled(false);
         }
-        if (xtandemParameters.getMaximumExpectationValueRefinement() != null) {
-            maxEValueRefineTxt.setText(xtandemParameters.getMaximumExpectationValueRefinement() + "");
-        }
+        maxEValueRefineTxt.setText(xtandemParameters.getMaximumExpectationValueRefinement() + "");
         if (xtandemParameters.isRefineUnanticipatedCleavages()) {
             unanticipatedCleavageCmb.setSelectedIndex(0);
         } else {
@@ -295,9 +286,9 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         } else {
             spectrumSynthesisCmb.setSelectedIndex(1);
         }
-        if (xtandemParameters.getMaxEValue() != null) {
-            eValueTxt.setText(xtandemParameters.getMaxEValue() + "");
-        }
+
+        eValueTxt.setText(xtandemParameters.getMaxEValue() + "");
+
         if (xtandemParameters.isOutputProteins()) {
             outputProteinsCmb.setSelectedIndex(0);
             outputSequencesCmb.setEnabled(true);
@@ -401,7 +392,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         if (!input.equals("")) {
             result.setProteinPtmComplexity(new Double(input));
         }
-        
+
         return result;
     }
 
@@ -2284,8 +2275,9 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
     }//GEN-LAST:event_modificationsTableMouseExited
 
     /**
-     * Opens a color chooser where the color for the modification can be changed, or
-     * allows the users to change of a Modification is in the most used modifications list.
+     * Opens a color chooser where the color for the modification can be
+     * changed, or allows the users to change of a Modification is in the most
+     * used modifications list.
      *
      * @param evt
      */

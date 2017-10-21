@@ -84,7 +84,7 @@ public class FastaSummary {
 
         try {
 
-            getSavedSummary(fastaFile);
+           fastaSummary = getSavedSummary(fastaFile);
 
         } catch (Exception e) {
 

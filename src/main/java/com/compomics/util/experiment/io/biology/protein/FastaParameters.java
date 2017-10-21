@@ -17,7 +17,7 @@ public class FastaParameters {
     /**
      * The decoy flags used to infer the fasta parameters.
      */
-    public static final String[] decoyFlags = {"decoy", "random", "reverse", "rev"};
+    public static final String[] decoyFlags = {"decoy", "random", "reversed", "rev"};
     /**
      * The decoy separators used to infer the fasta parameters.
      */

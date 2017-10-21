@@ -28,7 +28,7 @@ public class IdentificationParametersFactory {
     /**
      * The identification parameters.
      */
-    public static final String PARAMETERS_FOLDER = "identification_parameters";
+    public static final String PARAMETERS_FOLDER = "identification_parameters_4";
     /**
      * The extension for a parameters file.
      */

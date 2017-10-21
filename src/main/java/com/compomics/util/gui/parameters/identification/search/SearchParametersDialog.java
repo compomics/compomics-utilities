@@ -175,7 +175,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         loadUserPreferences();
-        
+
         defaultModifications = utilitiesUserParameters.getDefaultModifications();
 
         initComponents();
@@ -224,10 +224,12 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
         } else {
             this.searchParameters = searchParameters;
+            this.selectedFastaFile = searchParameters.getFastaFile();
+            this.fastaParameters = searchParameters.getFastaParameters();
         }
 
         loadUserPreferences();
-        
+
         defaultModifications = utilitiesUserParameters.getDefaultModifications();
 
         initComponents();
@@ -250,15 +252,15 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * Loads the user preferences.
      */
     private void loadUserPreferences() {
-        
+
         try {
-            
+
             utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
-            
+
         } catch (Exception e) {
-            
+
             e.printStackTrace();
-            
+
         }
     }
 
@@ -292,11 +294,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         removeFixedModification.setEnabled(editable);
         addVariableModification.setEnabled(editable);
         removeVariableModification.setEnabled(editable);
-        
+
         if (!editable) {
-            
+
             editDatabaseDetailsButton.setText("View");
-            
+
         }
 
         modificationTypesSplitPane.setDividerLocation(0.5);
@@ -1141,22 +1143,22 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(this, parentFrame, selectedFastaFile, fastaParameters, lastSelectedFolder, editable, normalIcon, waitingIcon);
 
         loadUserPreferences();
-        
+
         boolean success = sequenceDbDetailsDialog.selectDB(true);
-        
+
         if (success) {
-            
+
             sequenceDbDetailsDialog.setVisible(true);
-            
+
             if (!sequenceDbDetailsDialog.isCanceled()) {
-            
+
                 selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
                 fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
-            
-            databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
-            
+
+                databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
+
             }
-        
+
         }
 
         validateParametersInput(false);
@@ -1168,42 +1170,42 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addFixedModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFixedModificationActionPerformed
-        
+
         int nSelected = fixedModsTable.getRowCount();
         int nNew = modificationsTable.getSelectedRows().length;
         String[] fixedModifications = new String[nSelected + nNew];
         int cpt = 0;
 
         for (int i = 0; i < nSelected; i++) {
-            
+
             fixedModifications[cpt] = (String) fixedModsTable.getValueAt(i, 1);
             cpt++;
-            
+
         }
 
         for (int selectedRow : modificationsTable.getSelectedRows()) {
-            
+
             String name = (String) modificationsTable.getValueAt(selectedRow, 1);
             boolean found = false;
-            
+
             for (int i = 0; i < fixedModsTable.getModel().getRowCount(); i++) {
-                
+
                 if (((String) fixedModsTable.getValueAt(i, 1)).equals(name)) {
-                    
+
                     found = true;
                     break;
-                    
+
                 }
             }
-            
+
             if (!found) {
                 fixedModifications[cpt] = name;
                 cpt++;
-                
+
                 if (!defaultModifications.contains(name)) {
-                    
+
                     defaultModifications.add(name);
-                
+
                 }
             }
         }
@@ -1212,17 +1214,17 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            
+
             ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
-        
+
         }
-        
+
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
 
         fixedModificationsLabel.setText("Fixed Modifications (" + fixedModifications.length + ")");
         updateModificationList();
-        
+
     }//GEN-LAST:event_addFixedModificationActionPerformed
 
     /**
@@ -1231,31 +1233,31 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void removeFixedModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFixedModificationActionPerformed
-        
+
         int nSelected = fixedModsTable.getRowCount();
         int nToRemove = fixedModsTable.getSelectedRows().length;
         String[] fixedModifications = new String[nSelected - nToRemove];
         int cpt = 0;
 
         for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
-            
+
             boolean found = false;
-            
+
             for (int selectedRow : fixedModsTable.getSelectedRows()) {
-                
+
                 if (((String) fixedModsTable.getValueAt(i, 1)).equals((String) fixedModsTable.getValueAt(selectedRow, 1))) {
-                    
+
                     found = true;
                     break;
-                    
+
                 }
             }
-            
+
             if (!found) {
-                
+
                 fixedModifications[cpt] = (String) fixedModsTable.getValueAt(i, 1);
                 cpt++;
-                
+
             }
         }
 
@@ -1263,17 +1265,17 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            
+
             ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
-        
+
         }
-        
+
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
 
         fixedModificationsLabel.setText("Fixed Modifications (" + fixedModifications.length + ")");
         updateModificationList();
-        
+
     }//GEN-LAST:event_removeFixedModificationActionPerformed
 
     /**
@@ -1282,43 +1284,43 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addVariableModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVariableModificationActionPerformed
-        
+
         int nSelected = variableModsTable.getRowCount();
         int nNew = modificationsTable.getSelectedRows().length;
         String[] variableModifications = new String[nSelected + nNew];
         int cpt = 0;
 
         for (int i = 0; i < nSelected; i++) {
-            
+
             variableModifications[cpt] = (String) variableModsTable.getValueAt(i, 1);
             cpt++;
-            
+
         }
 
         for (int selectedRow : modificationsTable.getSelectedRows()) {
-            
+
             String name = (String) modificationsTable.getValueAt(selectedRow, 1);
             boolean found = false;
-            
+
             for (int i = 0; i < variableModsTable.getRowCount(); i++) {
-                
+
                 if (((String) variableModsTable.getValueAt(i, 1)).equals(name)) {
-                    
+
                     found = true;
                     break;
-                    
+
                 }
             }
-            
+
             if (!found) {
-                
+
                 variableModifications[cpt] = name;
                 cpt++;
-                
+
                 if (!defaultModifications.contains(name)) {
-                    
+
                     defaultModifications.add(name);
-                    
+
                 }
             }
         }
@@ -1327,21 +1329,21 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            
+
             ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
-        
+
         }
-        
+
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
 
         variableModificationsLabel.setText("Variable Modifications (" + variableModifications.length + ")");
 
         if (variableModifications.length > SearchParameters.preferredMaxVariableModifications) {
-            
+
             JOptionPane.showMessageDialog(this,
                     "It is not recommended to use more than " + SearchParameters.preferredMaxVariableModifications + " variable modifications in the same search.", "Warning", JOptionPane.WARNING_MESSAGE);
-        
+
         }
 
         updateModificationList();
@@ -1353,30 +1355,30 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void removeVariableModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeVariableModificationActionPerformed
-        
+
         int nSelected = variableModsTable.getRowCount();
         int nToRemove = variableModsTable.getSelectedRows().length;
         String[] variableModifications = new String[nSelected - nToRemove];
         int cpt = 0;
 
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
-            
+
             boolean found = false;
-            
+
             for (int selectedRow : variableModsTable.getSelectedRows()) {
-                
+
                 if (((String) variableModsTable.getValueAt(i, 1)).equals((String) variableModsTable.getValueAt(selectedRow, 1))) {
-                    
+
                     found = true;
                     break;
-                    
+
                 }
             }
             if (!found) {
-                
+
                 variableModifications[cpt] = (String) variableModsTable.getValueAt(i, 1);
                 cpt++;
-                
+
             }
         }
 
@@ -1384,17 +1386,17 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            
+
             ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
-        
+
         }
-        
+
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
 
         variableModificationsLabel.setText("Variable Modifications (" + variableModifications.length + ")");
         updateModificationList();
-        
+
     }//GEN-LAST:event_removeVariableModificationActionPerformed
 
     /**
@@ -1422,10 +1424,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        
+
         canceled = true;
         dispose();
-        
+
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
@@ -1434,22 +1436,22 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+
         utilitiesUserParameters.setDefaultModifications(defaultModifications);
-        
+
         try {
-            
+
             UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
-            
+
         } catch (Exception e) {
-            
+
             // Ignore
             e.printStackTrace();
-            
+
         }
-         
+
         dispose();
-        
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -1483,25 +1485,25 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         int column = fixedModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             String modificationName = (String) fixedModsTable.getValueAt(row, fixedModsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
             fixedModsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == fixedModsTable.getColumn(" ").getModelIndex()) {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-                
+
             } else {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                
+
             }
-            
+
         } else {
-            
+
             fixedModsTable.setToolTipText(null);
-            
+
         }
     }//GEN-LAST:event_fixedModsTableMouseMoved
 
@@ -1511,23 +1513,23 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void fixedModsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModsTableMouseReleased
-       
+
         int row = fixedModsTable.rowAtPoint(evt.getPoint());
         int column = fixedModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             if (column == fixedModsTable.getColumn(" ").getModelIndex()) {
-                
+
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) fixedModsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    
+
                     searchParameters.getModificationParameters().setColor((String) fixedModsTable.getValueAt(row, 1), newColor);
                     fixedModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
                     fixedModsTable.repaint();
-                    
+
                 }
             }
         }
@@ -1554,52 +1556,53 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         int column = modificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             String modificationName = (String) modificationsTable.getValueAt(row, modificationsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
             modificationsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-                
+
             } else {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                
+
             }
-            
+
         } else {
-            
+
             modificationsTable.setToolTipText(null);
-            
+
         }
     }//GEN-LAST:event_modificationsTableMouseMoved
 
     /**
-     * Opens a color chooser where the color for the Modification can be changed, or
-     * allows the users to change of a Modification is in the most used Modifications list.
+     * Opens a color chooser where the color for the Modification can be
+     * changed, or allows the users to change of a Modification is in the most
+     * used Modifications list.
      *
      * @param evt
      */
     private void modificationsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsTableMouseReleased
-        
+
         int row = modificationsTable.rowAtPoint(evt.getPoint());
         int column = modificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
-                
+
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) modificationsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    
+
                     modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
                     modificationsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
-                    
+
                 }
             } else if (modificationsListCombo.getSelectedIndex() == 1
                     && column == modificationsTable.getColumn("  ").getModelIndex()
@@ -1610,24 +1613,24 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 // change if the modification is considered as default
                 if (modificationsListCombo.getSelectedIndex() == 0) {
-                    
+
                     // remove from default modification set
                     defaultModifications.remove(modificationName);
-                    
+
                 } else if (selected) {
-                    
+
                     // add to default modification set
                     if (!defaultModifications.contains(modificationName)) {
-                        
+
                         defaultModifications.add(modificationName);
-                        
+
                     }
-                    
+
                 } else {
-                    
+
                     // remove from default modification set
                     defaultModifications.remove(modificationName);
-                    
+
                 }
 
                 Point viewPosition = modificationsJScrollPane.getViewport().getViewPosition();
@@ -1635,18 +1638,18 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 updateModificationList();
 
                 if (row < modificationsTable.getRowCount()) {
-                    
+
                     modificationsTable.setRowSelectionInterval(row, row);
-                    
+
                 } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
-                    
+
                     modificationsTable.setRowSelectionInterval(row - 1, row - 1);
-                    
+
                 }
 
                 modificationsJScrollPane.getViewport().setViewPosition(viewPosition);
                 modificationsJScrollPane.repaint();
-                
+
             }
 
             enableAddRemoveButtons();
@@ -1672,25 +1675,25 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         int column = variableModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             String modificationName = (String) variableModsTable.getValueAt(row, variableModsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
             variableModsTable.setToolTipText(modification.getHtmlTooltip());
 
             if (column == variableModsTable.getColumn(" ").getModelIndex()) {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-                
+
             } else {
-                
+
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                
+
             }
-            
+
         } else {
-            
+
             variableModsTable.setToolTipText(null);
-            
+
         }
     }//GEN-LAST:event_variableModsTableMouseMoved
 
@@ -1700,29 +1703,29 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void variableModsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_variableModsTableMouseReleased
-        
+
         int row = variableModsTable.rowAtPoint(evt.getPoint());
         int column = variableModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            
+
             if (column == variableModsTable.getColumn(" ").getModelIndex()) {
-                
+
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) variableModsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    
+
                     searchParameters.getModificationParameters().setColor((String) variableModsTable.getValueAt(row, 1), newColor);
                     variableModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
                     variableModsTable.repaint();
-                    
+
                 }
             }
         }
 
         enableAddRemoveButtons();
-        
+
     }//GEN-LAST:event_variableModsTableMouseReleased
 
     /**
@@ -2042,64 +2045,64 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     private void setScreenProps() {
 
         if (selectedFastaFile != null) {
-            
+
             String fastaPath = selectedFastaFile.getAbsolutePath();
             databaseSettingsTxt.setText(fastaPath);
-            
+
         }
 
         ArrayList<String> missingPtms = new ArrayList<>();
         ModificationParameters modificationProfile = searchParameters.getModificationParameters();
-        
+
         if (modificationProfile != null) {
-            
+
             ArrayList<String> fixedMods = modificationProfile.getFixedModifications();
 
             for (String modificationName : fixedMods) {
-                
+
                 if (!modificationFactory.containsModification(modificationName)) {
-                    
+
                     missingPtms.add(modificationName);
-                    
+
                 }
             }
 
             for (String missing : missingPtms) {
-                
+
                 fixedMods.remove(missing);
-                
+
             }
 
             if (!missingPtms.isEmpty()) {
-                
+
                 if (missingPtms.size() == 1) {
-                    
+
                     JOptionPane.showMessageDialog(this, "The following modification is currently not recognized by SearchGUI: "
                             + missingPtms.get(0) + ".\nPlease import it in the Modification Editor.", "Modification Not Found", JOptionPane.WARNING_MESSAGE);
-                
+
                 } else {
-                    
+
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
                     for (String modification : missingPtms) {
-                        
+
                         if (first) {
-                            
+
                             first = false;
-                            
+
                         } else {
-                            
+
                             output += ", ";
-                            
+
                         }
-                        
+
                         output += modification;
                     }
 
                     output += ".\nPlease import them in the Modification Editor.";
                     JOptionPane.showMessageDialog(this, output, "Modification Not Found", JOptionPane.WARNING_MESSAGE);
-                    
+
                 }
             }
 
@@ -2107,11 +2110,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             fixedModel.getDataVector().removeAllElements();
 
             for (String fixedMod : fixedMods) {
-                
+
                 ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
-            
+
             }
-            
+
             ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
             fixedModsTable.repaint();
             fixedModificationsLabel.setText("Fixed Modifications (" + fixedMods.size() + ")");
@@ -2119,44 +2122,44 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             ArrayList<String> variableMods = modificationProfile.getVariableModifications();
 
             for (String modificationName : variableMods) {
-                
+
                 if (!modificationFactory.containsModification(modificationName)) {
-                    
+
                     missingPtms.add(modificationName);
-                    
+
                 }
             }
 
             for (String missing : missingPtms) {
-                
+
                 variableMods.remove(missing);
-                
+
             }
 
             if (!missingPtms.isEmpty()) {
-                
+
                 if (missingPtms.size() == 1) {
-                    
+
                     JOptionPane.showMessageDialog(this, "The following modification is currently not recognized by SearchGUI: "
                             + missingPtms.get(0) + ".\nPlease import it in the Modification Editor.", "Modification Not Found", JOptionPane.WARNING_MESSAGE);
-                
+
                 } else {
-                    
+
                     String output = "The following modifications are currently not recognized by SearchGUI:\n";
                     boolean first = true;
 
                     for (String modification : missingPtms) {
-                        
+
                         if (first) {
-                            
+
                             first = false;
-                            
+
                         } else {
-                            
+
                             output += ", ";
-                            
+
                         }
-                        
+
                         output += modification;
                     }
 
@@ -2164,34 +2167,34 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, output, "Modification Not Found", JOptionPane.WARNING_MESSAGE);
                 }
             }
-            
+
             DefaultTableModel variableModel = (DefaultTableModel) variableModsTable.getModel();
             variableModel.getDataVector().removeAllElements();
             for (String variableMod : variableMods) {
-                
+
                 ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variableMod), variableMod, modificationFactory.getModification(variableMod).getMass()});
-            
+
             }
-            
+
             ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
             variableModsTable.repaint();
             variableModificationsLabel.setText("Variable Modifications (" + variableMods.size() + ")");
 
             updateModificationList();
-            
+
         }
 
         DigestionParameters digestionPreferences = searchParameters.getDigestionParameters();
-        
+
         if (digestionPreferences.getCleavagePreference() != null) {
-            
+
             digestionCmb.setSelectedItem(digestionPreferences.getCleavagePreference());
-            
+
         }
 
         // set enzyme
         if (digestionPreferences.getCleavagePreference() == CleavagePreference.enzyme) {
-            
+
             if (digestionPreferences.hasEnzymes()) {
 
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0);  // @TODO: allow the selection of multiple enzymes?
@@ -2200,24 +2203,24 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 // set missed cleavages
                 Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
-                
+
                 if (nMissedCleavages != null) {
-                    
+
                     maxMissedCleavagesTxt.setText(nMissedCleavages + "");
-                    
+
                 } else {
-                    
+
                     maxMissedCleavagesTxt.setText("Not set");
-                    
+
                 }
 
                 // set specificity
                 specificityComboBox.setSelectedItem(digestionPreferences.getSpecificity(enzymeName));
-                
+
             } else {
-                
+
                 enzymesCmb.setSelectedIndex(0);
-                
+
             }
         }
 
@@ -2225,79 +2228,79 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         digestionCmbActionPerformed(null);
 
         if (searchParameters.getForwardIons() != null && !searchParameters.getForwardIons().isEmpty()) {
-            
+
             Integer ionSearched = searchParameters.getForwardIons().get(0);
             fragmentIon1Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
-            
+
         }
 
         if (searchParameters.getRewindIons() != null && !searchParameters.getRewindIons().isEmpty()) {
-            
+
             Integer ionSearched = searchParameters.getRewindIons().get(0);
             fragmentIon2Cmb.setSelectedItem(PeptideFragmentIon.getSubTypeAsString(ionSearched));
-            
+
         }
 
         if (searchParameters.getPrecursorAccuracy() > 0.0) {
-            
+
             precursorIonAccuracyTxt.setText(searchParameters.getPrecursorAccuracy() + "");
-            
+
         }
 
         if (searchParameters.getPrecursorAccuracyType() != null) {
-            
+
             if (searchParameters.getPrecursorAccuracyType() == SearchParameters.MassAccuracyType.PPM) {
-                
+
                 precursorIonUnit.setSelectedItem("ppm");
-                
+
             } else if (searchParameters.getPrecursorAccuracyType() == SearchParameters.MassAccuracyType.DA) {
-                
+
                 precursorIonUnit.setSelectedItem("Da");
-                
+
             }
         }
 
         if (searchParameters.getFragmentIonAccuracy() > 0.0) {
-            
+
             fragmentIonAccuracyTxt.setText(searchParameters.getFragmentIonAccuracy() + "");
-            
+
         }
 
         if (searchParameters.getFragmentAccuracyType() != null) {
-            
+
             if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM) {
-                
+
                 fragmentIonUnit.setSelectedItem("ppm");
-                
+
             } else if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.DA) {
-                
+
                 fragmentIonUnit.setSelectedItem("Da");
-                
+
             }
         }
 
         if (searchParameters.getMinChargeSearched() > 0) {
-            
+
             minPrecursorChargeTxt.setText(searchParameters.getMinChargeSearched() + "");
-            
+
         }
 
         if (searchParameters.getMaxChargeSearched() > 0) {
-            
+
             maxPrecursorChargeTxt.setText(searchParameters.getMaxChargeSearched() + "");
-            
+
         }
 
-        if (searchParameters.getMinIsotopicCorrection() > 0) {
-            
+        if (searchParameters.getMinIsotopicCorrection() >= 0) {
+
             isotopeMinTxt.setText(searchParameters.getMinIsotopicCorrection() + "");
-            
+
         }
 
         if (searchParameters.getMaxIsotopicCorrection() > 0) {
-            
+
             isotopeMaxTxt.setText(searchParameters.getMaxIsotopicCorrection() + "");
-            
+
         }
     }
 
@@ -2319,32 +2322,32 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         maxMissedCleavagesLabel.setToolTipText(null);
 
         if (databaseSettingsTxt.getText() == null || databaseSettingsTxt.getText().trim().equals("")) {
-            
+
             if (showMessage && valid) {
-                
+
                 JOptionPane.showMessageDialog(this, "You need to specify a search database.", "Search Database Not Found", JOptionPane.WARNING_MESSAGE);
             }
-            
+
             databaseSettingsLbl.setForeground(Color.RED);
             databaseSettingsLbl.setToolTipText("Please select a valid '.fasta' or '.fas' database file");
             valid = false;
-            
+
         } else {
-            
+
             File test = new File(databaseSettingsTxt.getText().trim());
-            
+
             if (!test.exists()) {
-                
+
                 if (showMessage && valid) {
-                    
+
                     JOptionPane.showMessageDialog(this, "The database file could not be found.", "Search Database Not Found", JOptionPane.WARNING_MESSAGE);
-                
+
                 }
-                
+
                 databaseSettingsLbl.setForeground(Color.RED);
                 databaseSettingsLbl.setToolTipText("Database file could not be found!");
                 valid = false;
-                
+
             }
         }
 
@@ -2354,41 +2357,41 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         boolean lowerChargeValid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        
+
         if (!lowerChargeValid) {
-            
+
             GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        
+
         }
 
         boolean lowerBoundValid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
-        
+
         if (!lowerBoundValid) {
-            
+
             GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
-        
+
         }
 
         // make sure that the lower charge is smaller than the upper charge
         try {
-            
+
             int chargeLowerBound = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
             int chargeUpperBound = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
 
             if (chargeUpperBound < chargeLowerBound) {
-                
+
                 if (showMessage && valid) {
-                    
+
                     JOptionPane.showMessageDialog(this, "The minimum precursor charge must be lower than or equal to the maximum precursor charge.",
                             "Precursor Charge Error", JOptionPane.WARNING_MESSAGE);
-                    
+
                 }
-                
+
                 valid = false;
                 precursorChargeLbl.setForeground(Color.RED);
                 precursorChargeLbl.setToolTipText("Minimum precursor charge > Maximum precursor charge!");
-                
+
             }
 
         } catch (NumberFormatException e) {
@@ -2397,23 +2400,23 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         // make sure that the lower isotope is smaller than the upper isotope
         try {
-            
+
             int isotopeLowerBound = Integer.parseInt(isotopeMinTxt.getText().trim());
             int isotopeUpperBound = Integer.parseInt(isotopeMaxTxt.getText().trim());
 
             if (isotopeUpperBound < isotopeLowerBound) {
-                
+
                 if (showMessage && valid) {
-                    
+
                     JOptionPane.showMessageDialog(this, "The minimum precursor isotope must be lower than or equal to the maximum precursor isotope.",
                             "Precursor Isotope Error", JOptionPane.WARNING_MESSAGE);
-                    
+
                 }
-                
+
                 valid = false;
                 isotopesLbl.setForeground(Color.RED);
                 isotopesLbl.setToolTipText("Minimum precursor isotope > Maximum precursor isotope!");
-                
+
             }
 
         } catch (NumberFormatException e) {
@@ -2422,24 +2425,24 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         // valdiate that an enzyme is selected
         if (((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == CleavagePreference.enzyme && enzymesCmb.getSelectedIndex() == 0) {
-            
+
             if (showMessage && valid) {
-                
+
                 JOptionPane.showMessageDialog(this, "Please select an enzyme.", "Enzyme Error", JOptionPane.WARNING_MESSAGE);
-            
+
             }
-            
+
             valid = false;
             enzymeLabel.setForeground(Color.RED);
             enzymeLabel.setToolTipText("No enzyme selected!");
-            
+
         }
 
         // validate missed cleavages
         if (((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == CleavagePreference.enzyme) {
-            
+
             valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
-        
+
         }
 
         okButton.setEnabled(valid);
@@ -2461,6 +2464,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             File fastaFile = new File(databaseSettingsTxt.getText().trim());
             tempSearchParameters.setFastaFile(fastaFile);
         }
+        tempSearchParameters.setFastaParameters(fastaParameters);
 
         DigestionParameters digestionPreferences = new DigestionParameters();
 
@@ -2490,7 +2494,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         } else {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
-        
+
         // Fragment m/z tolerance
         tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
         if (fragmentIonUnit.getSelectedIndex() == 0) {
@@ -2532,7 +2536,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         tempSearchParameters.setModificationParameters(modificationProfile);
-        
+
         ArrayList<Integer> selectedForwardIons = new ArrayList<>(1);
         Integer ionType = PeptideFragmentIon.getIonType(fragmentIon1Cmb.getSelectedItem().toString().trim());
         selectedForwardIons.add(ionType);
@@ -2647,24 +2651,24 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * Updates the modification list (right).
      */
     private void updateModificationList() {
-        
+
         ArrayList<String> allModificationsList = new ArrayList<>();
-        
+
         if (modificationsListCombo.getSelectedIndex() == 0) {
-            
+
             for (String name : defaultModifications) {
-                
+
                 if (defaultModifications.contains(name)) {
-                    
+
                     allModificationsList.add(name);
-                    
+
                 }
             }
-            
+
         } else {
-            
+
             allModificationsList = modificationFactory.getModifications();
-            
+
         }
 
         int nFixed = fixedModsTable.getRowCount();
@@ -2672,36 +2676,36 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         ArrayList<String> allModifications = new ArrayList<>();
 
         for (String name : allModificationsList) {
-            
+
             boolean found = false;
-            
+
             for (int j = 0; j < nFixed; j++) {
-                
+
                 if (((String) fixedModsTable.getValueAt(j, 1)).equals(name)) {
-                    
+
                     found = true;
                     break;
-                    
+
                 }
             }
-            
+
             if (!found) {
-                
+
                 for (int j = 0; j < nVariable; j++) {
-                    
+
                     if (((String) variableModsTable.getValueAt(j, 1)).equals(name)) {
-                        
+
                         found = true;
                         break;
-                        
+
                     }
                 }
             }
-            
+
             if (!found) {
-                
+
                 allModifications.add(name);
-                
+
             }
         }
 

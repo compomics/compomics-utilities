@@ -21,7 +21,7 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * Location of the user preferences file.
      */
-    private static String USER_PARAMETERS_FILE = System.getProperty("user.home") + "/.compomics/userpreferences.cup";
+    private static String USER_PARAMETERS_FILE = System.getProperty("user.home") + "/.compomics/userparameters.cup";
     /**
      * The width to use for the annotated peaks.
      */
@@ -201,7 +201,7 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * The list of the default modifications.
      */
-    private HashSet<String> defaultModifications = new HashSet<>();
+    private HashSet<String> defaultModifications = defaultModifications();
 
     /**
      * Constructor.
@@ -1084,5 +1084,39 @@ public class UtilitiesUserParameters implements Serializable {
     public File getDbSummaryFolder() {
         
         return new File(getUserParametersFolder(), "fastaSummary");
+    }
+    
+    /**
+     * Sets the default list of modifications.
+     */
+    private static HashSet<String> defaultModifications() {
+        
+        HashSet<String> defaultList = new HashSet<>(12);
+        
+        defaultList.add("Acetylation of K");
+        defaultList.add("Acetylation of protein N-term");
+        defaultList.add("Carbamidomethylation of C");
+        defaultList.add("Deamidation of N");
+        defaultList.add("Deamidation of Q");
+        defaultList.add("Oxidation of M");
+        defaultList.add("Phosphorylation of S");
+        defaultList.add("Phosphorylation of T");
+        defaultList.add("Phosphorylation of Y");
+        defaultList.add("Pyrolidone from E");
+        defaultList.add("Pyrolidone from Q");
+        defaultList.add("Pyrolidone from carbamidomethylated C");
+        defaultList.add("TMT 10-plex of K");
+        defaultList.add("TMT 10-plex of peptide N-term");
+        defaultList.add("TMT 6-plex of K");
+        defaultList.add("TMT 6-plex of peptide N-term");
+        defaultList.add("iTRAQ 4-plex of K");
+        defaultList.add("iTRAQ 4-plex of Y");
+        defaultList.add("iTRAQ 4-plex of peptide N-term");
+        defaultList.add("iTRAQ 8-plex of K");
+        defaultList.add("iTRAQ 8-plex of Y");
+        defaultList.add("iTRAQ 8-plex of peptide N-term");
+        
+        return defaultList;
+        
     }
 }

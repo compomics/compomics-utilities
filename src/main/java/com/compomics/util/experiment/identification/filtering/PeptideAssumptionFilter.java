@@ -155,7 +155,7 @@ public class PeptideAssumptionFilter implements Serializable {
         }
 
         double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
-        if (sequenceMatchingPreferences.hasLimitX() && xShare > sequenceMatchingPreferences.getLimitX()) {
+        if (xShare > sequenceMatchingPreferences.getLimitX()) {
             return false;
         }
 

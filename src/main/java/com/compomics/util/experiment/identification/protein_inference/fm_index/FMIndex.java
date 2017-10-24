@@ -1483,6 +1483,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @return the mapping
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(String peptide, SequenceMatchingParameters seqMatchPref, int indexPart) {
+        
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
@@ -1490,7 +1491,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
-        int maxX = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
+        int maxX = (int) (seqMatchPref.getLimitX() * lenPeptide);
 
         ArrayList<MatrixContent>[] backwardList = (ArrayList<MatrixContent>[]) new ArrayList[lenPeptide + 1];
 
@@ -1577,7 +1578,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
-        int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
+        int xNumLimit = (int) (seqMatchPref.getLimitX() * lenPeptide);
 
         ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
 
@@ -1594,6 +1595,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         }
 
         if (countX <= xNumLimit) {
+            
             backwardMatrix[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
 
             for (int k = 0; k <= maxNumberVariants; ++k) {
@@ -1753,7 +1755,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         String pep_rev = new StringBuilder(peptide).reverse().toString();
         int lenPeptide = peptide.length();
         ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
-        int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
+        int xNumLimit = (int) (seqMatchPref.getLimitX() * lenPeptide);
 
         int numErrors = maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions;
         LinkedList<MatrixContent>[][] backwardMatrix = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors + 1][lenPeptide + 1];
@@ -4023,7 +4025,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         int[] lessTableReversed = lessTablesReversed.get(indexPart);
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
-        double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
+        double xLimit = sequenceMatchingPreferences.getLimitX();
 
         // copying tags into own data structure
         int maxSequencePosition = -1;
@@ -4409,7 +4411,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
 
-        double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
+        double xLimit = sequenceMatchingPreferences.getLimitX();
 
         // copying tags into own data structure
         int maxSequencePosition = -1;
@@ -4910,9 +4912,25 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     }
 
     @Override
+    public String getSubsequence(String accession, int start, int end) {
+        
+        String proteinSequence = getSequence(accession);
+        
+        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length() - 1));
+    
+    }
+
+    @Override
     public HashSet<String> getDecoyAccessions() {
         
         return decoyAccessions;
+        
+    }
+    
+    @Override
+    public String getHeader(String proteinAccession) {
+    
+        return "Not implemented yet";
         
     }
 }

@@ -4,6 +4,7 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -24,7 +25,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The matching protein(s) accessions sorted in natural order.
      */
-    private ArrayList<String> accessions = new ArrayList<>(1);
+    private String[] accessions;
     /**
      * The accession of the leading protein.
      */
@@ -55,7 +56,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(String proteinAccession) {
         
-        accessions.add(proteinAccession);
+        accessions = new String[1];
+        accessions[0] = proteinAccession;
+        
         leadingAccession = proteinAccession;
         
     }
@@ -69,26 +72,26 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(Peptide peptide, String peptideMatchKey) {
         
-        accessions = new ArrayList<>(peptide.getProteinMapping().navigableKeySet());
-        leadingAccession = accessions.get(0);
+        accessions = peptide.getProteinMapping().navigableKeySet()
+                .toArray(new String[peptide.getProteinMapping().size()]);
+        leadingAccession = accessions[0];
         peptideMatchesKeys.add(peptideMatchKey);
         
     }
 
     /**
-     * Sets the accessions of the proteins in this group.
+     * Sets the accessions of the proteins in this group. Note, accessions must be sorted.
      *
      * @param newAccessions the accessions of the proteins in this group
      */
-    public void setAccessions(ArrayList<String> newAccessions) {
+    public void setAccessions(String[] newAccessions) {
         
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
         
         this.accessions = newAccessions;
-        Collections.sort(accessions);
-        leadingAccession = accessions.get(0);
+        leadingAccession = accessions[0];
         matchKey = null;
         
     }
@@ -98,7 +101,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return the accessions of the proteins in this match
      */
-    public ArrayList<String> getAccessions() {
+    public String[] getAccessions() {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -218,7 +221,7 @@ public class ProteinMatch extends IdentificationMatch {
             zooActivateWrite();
             ObjectsDB.decreaseRWCounter();
 
-            matchKey = accessions.stream()
+            matchKey = Arrays.stream(accessions)
                     .collect(Collectors.joining(PROTEIN_KEY_SPLITTER));
 
         }
@@ -250,7 +253,7 @@ public class ProteinMatch extends IdentificationMatch {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
-        return accessions.size();
+        return accessions.length;
     }
 
     /**
@@ -267,7 +270,8 @@ public class ProteinMatch extends IdentificationMatch {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
-        return accessions.contains(aProtein);
+        return Arrays.stream(accessions)
+                .anyMatch(accession -> accession.equals(aProtein));
     }
 
     @Override

@@ -39,7 +39,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
     /**
      * The protein accessions of this match.
      */
-    private ArrayList<String> proteinAccessions = new ArrayList<>();
+    private String[] proteinAccessions = new String[0];
     /**
      * The protein accession column in the table. Only used if more than one
      * accession.
@@ -115,7 +115,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             goTable.getColumn("Accession").setMaxWidth(Integer.MAX_VALUE);
         }
 
-        if (proteinAccessions.size() > 1) {
+        if (proteinAccessions.length > 1) {
             width = getPreferredAccessionColumnWidth(goTable, goTable.getColumn("Protein").getModelIndex(), 20);
             if (width != null) {
                 goTable.getColumn("Protein").setMinWidth(width);
@@ -455,7 +455,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            if (proteinAccessions.size() > 1) {
+            if (proteinAccessions.length > 1) {
                 return 4;
             } else {
                 return 3;
@@ -465,7 +465,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         @Override
         public String getColumnName(int column) {
 
-            if (proteinAccessions.size() > 1) {
+            if (proteinAccessions.length > 1) {
                 switch (column) {
                     case 0:
                         return " ";
@@ -495,7 +495,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         @Override
         public Object getValueAt(int row, int column) {
 
-            if (proteinAccessions.size() > 1) {
+            if (proteinAccessions.length > 1) {
                 switch (column) {
                     case 0:
                         return (row + 1);

@@ -14,7 +14,7 @@ public interface UrParameter {
     static final long serialVersionUID = 6808590175195298797L;
 
     /**
-     * This method returns the key of the paramter. The key must be unique to the type of parameter.
+     * This method returns the key of the parameter. The key must be unique to the type of parameter.
      * 
      * @return the parameter key
      */

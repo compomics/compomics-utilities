@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.identification.protein_sequences;
 
 import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -69,6 +71,49 @@ public class PeptideUtils {
                         (a ,b) -> {throw new IllegalArgumentException("Duplicate key.");},
                         TreeMap::new));
         
+    }
+
+    /**
+     * Returns the peptide modifications as a string.
+     *
+     * @param peptide the peptide
+     * @param variable if true, only variable Modifications are shown, false return
+     * only the fixed Modifications
+     *
+     * @return the peptide modifications as a string
+     */
+    public static String getPeptideModificationsAsString(Peptide peptide, boolean variable) {
+
+        TreeMap<String, HashSet<Integer>> modMap = peptide.getModificationMatches().stream()
+                .filter(modificationMatch -> modificationMatch.getVariable() == variable)
+                .collect(Collectors.groupingBy(ModificationMatch::getModification, 
+                        Collectors.mapping(ModificationMatch::getModificationSite, HashSet::new)));
+        
+        return modMap.entrySet().stream()
+                .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(";"));
+    }
+    
+    /**
+     * Returns the modification and sites as string in the form modName(site1,site2).
+     * 
+     * @param modificationName the name of the modification
+     * @param sites the modification sites
+     * 
+     * @return the modification and sites as string
+     */
+    private static String getModificationString(String modificationName, HashSet<Integer> sites) {
+        
+        String sitesString = sites.stream()
+                .sorted()
+                .map(site -> site.toString())
+                .collect(Collectors.joining(","));
+        
+        StringBuilder sb = new StringBuilder(modificationName.length() + sitesString.length() + 2);
+        
+        sb.append(modificationName).append("(").append(sitesString).append(")");
+        
+        return sb.toString();
     }
 
 }

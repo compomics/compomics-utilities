@@ -18,10 +18,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * This class contains identification results.
+ * This class interacts with the back-end database to manage identification
+ * objects. Interacting with the back-end database might cause
+ * InterruptedException. These exceptions are passed as runtime exceptions for
+ * methods returning identification objects.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
@@ -62,7 +67,7 @@ public class Identification extends ExperimentObject {
     private ArrayList<String> orderedSpectrumFileNames = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param objectsDB the database for storing all objects on disk when memory
      * is too low
@@ -81,7 +86,7 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Set the ordered list of spectrum file names. Note that the list provided
+     * Sets the ordered list of spectrum file names. Note that the list provided
      * has to be the same size as the number of spectrum files used.
      *
      * @param orderedSpectrumFileNames the ordered list of spectrum file names
@@ -91,7 +96,8 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Fills the spectra per file map
+     * Fills the spectra per file map.
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
@@ -125,9 +131,10 @@ public class Identification extends ExperimentObject {
      * map as a list. To get the complete file path use
      * projectDetails.getSpectrumFile(...).
      *
+     * @return the mgf files used in the spectrum identification map
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return the mgf files used in the spectrum identification map
      */
     public ArrayList<String> getSpectrumFiles() throws InterruptedException {
 
@@ -143,9 +150,10 @@ public class Identification extends ExperimentObject {
     /**
      * Returns the ordered list of spectrum file names.
      *
+     * @return the ordered list of spectrum file names
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return the ordered list of spectrum file names
      */
     public ArrayList<String> getOrderedSpectrumFileNames() throws InterruptedException {
 
@@ -172,6 +180,7 @@ public class Identification extends ExperimentObject {
      * Returns the number of objects of a given class
      *
      * @param className the class name of a given class
+     *
      * @return the number of objects
      */
     public int getNumber(Class className) {
@@ -184,10 +193,10 @@ public class Identification extends ExperimentObject {
      * @param className the class name of a given class
      * @param filters filters for the class
      *
+     * @return the iterator
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return the iterator
      */
     public Iterator<?> getIterator(Class className, String filters) throws InterruptedException {
         return objectsDB.getObjectsIterator(className, filters);
@@ -213,10 +222,10 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
+     * @return returns the list of hashed keys
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return returns the list of hashed keys
      */
     public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         return objectsDB.loadObjects(className, waitingHandler, displayProgress);
@@ -231,10 +240,10 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
+     * @return returns the list of hashed keys
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return returns the list of hashed keys
      */
     public ArrayList<Long> loadObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         return objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
@@ -245,13 +254,19 @@ public class Identification extends ExperimentObject {
      *
      * @param longKey the hash key
      *
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the objects
      */
-    public Object retrieveObject(long longKey) throws InterruptedException {
-        return objectsDB.retrieveObject(longKey);
+    public Object retrieveObject(long longKey) {
+
+        try {
+
+            return objectsDB.retrieveObject(longKey);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -259,12 +274,19 @@ public class Identification extends ExperimentObject {
      *
      * @param key the key
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the objects
      */
-    public Object retrieveObject(String key) throws InterruptedException {
-        return objectsDB.retrieveObject(key);
+    public Object retrieveObject(String key) {
+
+        try {
+
+            return objectsDB.retrieveObject(key);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -276,12 +298,19 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return list of objects
      */
-    public ArrayList<Object> retrieveObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+    public ArrayList<Object> retrieveObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) {
+
+        try {
+
+            return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -294,11 +323,18 @@ public class Identification extends ExperimentObject {
      * method should be displayed on the waiting handler
      *
      * @return list of objects
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+
+        try {
+
         return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -306,6 +342,7 @@ public class Identification extends ExperimentObject {
      *
      * @param key the key of the object
      * @param object the object
+     * 
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
@@ -340,6 +377,7 @@ public class Identification extends ExperimentObject {
         Object object = objectsDB.retrieveObject(key);
 
         if (object instanceof ProteinMatch) {
+
             if (proteinIdentification.contains(key)) {
 
                 ProteinMatch proteinMatch = (ProteinMatch) object;
@@ -413,8 +451,11 @@ public class Identification extends ExperimentObject {
     public boolean matchExists(String matchKey) {
 
         if (matchKey == null || matchKey.length() == 0) {
+            
             return false;
+            
         }
+        
         return objectsDB.inDB(matchKey);
     }
 
@@ -459,6 +500,7 @@ public class Identification extends ExperimentObject {
      *
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * 
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
@@ -528,6 +570,7 @@ public class Identification extends ExperimentObject {
 
     /**
      * Closes the database connection.
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
@@ -552,8 +595,9 @@ public class Identification extends ExperimentObject {
      * @return the keys of the protein matches
      */
     public HashSet<String> getProteinMatches(Peptide peptide) {
-        
+
         return peptide.getProteinMapping().navigableKeySet().stream()
+                .filter(accession -> proteinMap.containsKey(accession))
                 .flatMap(accession -> proteinMap.get(accession).stream())
                 .collect(Collectors.toCollection(HashSet::new));
     }

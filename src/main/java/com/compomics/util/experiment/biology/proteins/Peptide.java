@@ -1450,58 +1450,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the peptide modifications as a string.
-     *
-     * @param peptide the peptide
-     * @param variablePtms if true, only variable Modifications are shown, false return
-     * only the fixed Modifications
-     *
-     * @return the peptide modifications as a string
-     */
-    public static String getPeptideModificationsAsString(Peptide peptide, boolean variablePtms) {
-
-        StringBuilder result = new StringBuilder();
-
-        HashMap<String, ArrayList<Integer>> modMap = new HashMap<>();
-        if (peptide.isModified()) {
-            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if ((variablePtms && modificationMatch.getVariable()) || (!variablePtms && !modificationMatch.getVariable())) {
-                    if (!modMap.containsKey(modificationMatch.getModification())) {
-                        modMap.put(modificationMatch.getModification(), new ArrayList<>());
-                    }
-                    modMap.get(modificationMatch.getModification()).add(modificationMatch.getModificationSite());
-                }
-            }
-        }
-
-        boolean first = true, first2;
-        ArrayList<String> mods = new ArrayList<>(modMap.keySet());
-
-        Collections.sort(mods);
-        for (String mod : mods) {
-            if (first) {
-                first = false;
-            } else {
-                result.append(", ");
-            }
-            first2 = true;
-            result.append(mod);
-            result.append(" (");
-            for (int aa : modMap.get(mod)) {
-                if (first2) {
-                    first2 = false;
-                } else {
-                    result.append(", ");
-                }
-                result.append(aa);
-            }
-            result.append(")");
-        }
-
-        return result.toString();
-    }
-
-    /**
      * Estimates the theoretic mass of the peptide. The previous version is
      * silently overwritten.
      */

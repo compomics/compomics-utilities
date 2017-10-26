@@ -3581,10 +3581,6 @@
 <dd>
 <div class="block">The description of the option.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#description">description</a></span> - Variable in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">The description of the peptide mapper.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#description">description</a></span> - Variable in enum com.compomics.util.experiment.identification.psm_scoring.<a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a></dt>
 <dd>
 <div class="block">Short description of the score.</div>
@@ -4692,11 +4688,10 @@
 <dd>
 <div class="block">Generic interface for a filter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/gui/spectrum/SpectrumPanel.html#filterAnnotations-java.util.Vector-java.util.HashMap-java.util.ArrayList-boolean-boolean-boolean-">filterAnnotations(Vector&lt;SpectrumAnnotation&gt;, HashMap&lt;Ion.IonType, ArrayList&lt;Integer&gt;&gt;, ArrayList&lt;NeutralLoss&gt;, boolean, boolean, boolean)</a></span> - Static method in class com.compomics.util.gui.spectrum.<a href="com/compomics/util/gui/spectrum/SpectrumPanel.html" title="class in com.compomics.util.gui.spectrum">SpectrumPanel</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/spectrum/SpectrumPanel.html#filterAnnotations-java.util.Vector-java.util.HashMap-java.util.ArrayList-boolean-boolean-boolean-">filterAnnotations(Vector&lt;SpectrumAnnotation&gt;, HashMap&lt;Ion.IonType, HashSet&lt;Integer&gt;&gt;, ArrayList&lt;NeutralLoss&gt;, boolean, boolean, boolean)</a></span> - Static method in class com.compomics.util.gui.spectrum.<a href="com/compomics/util/gui/spectrum/SpectrumPanel.html" title="class in com.compomics.util.gui.spectrum">SpectrumPanel</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">don't use method based on the peak labels but on the data
- type</span></div>
+<div class="block"><span class="deprecationComment">used only in demo classes</span></div>
 </div>
 </dd>
 <dt><a href="com/compomics/util/experiment/filtering/FilterItem.html" title="interface in com.compomics.util.experiment.filtering"><span class="typeNameLink">FilterItem</span></a> - Interface in <a href="com/compomics/util/experiment/filtering/package-summary.html">com.compomics.util.experiment.filtering</a></dt>
@@ -5218,6 +5213,14 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/SwingWorker.html#get--">get()</a></span> - Method in class com.compomics.util.sun.<a href="com/compomics/util/sun/SwingWorker.html" title="class in com.compomics.util.sun">SwingWorker</a></dt>
 <dd>
 <div class="block">Return the value created by the <code>construct</code> method.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html#getAaAfter-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">getAaAfter(Peptide, int, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.protein_sequences.<a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the amino acids before the given peptide as a string in a map based on the peptide protein mapping.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html#getAaBefore-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">getAaBefore(Peptide, int, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.protein_sequences.<a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the amino acids before the given peptide as a string in a map based on the peptide protein mapping.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html#getAaIndex--">getAaIndex()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic">AAIdentityFeature</a></dt>
 <dd>
@@ -6218,10 +6221,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/PtmScore.html#getCommandLineOptions--">getCommandLineOptions()</a></span> - Static method in enum com.compomics.util.experiment.identification.modification.<a href="com/compomics/util/experiment/identification/modification/PtmScore.html" title="enum in com.compomics.util.experiment.identification.modification">PtmScore</a></dt>
 <dd>
 <div class="block">Returns the different implemented scores as list of command line option.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#getCommandLineOptions--">getCommandLineOptions()</a></span> - Static method in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">Returns the different matching types as command line options description.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/MzIdentMLVersion.html#getCommandLineOptions--">getCommandLineOptions()</a></span> - Static method in enum com.compomics.util.experiment.io.identification.<a href="com/compomics/util/experiment/io/identification/MzIdentMLVersion.html" title="enum in com.compomics.util.experiment.io.identification">MzIdentMLVersion</a></dt>
 <dd>
@@ -7772,6 +7771,12 @@
 <dt><span class="memberNameLink"><a href="com/compomics/cli/identification_parameters/AbstractIdentificationParametersCli.html#getHeader--">getHeader()</a></span> - Static method in class com.compomics.cli.identification_parameters.<a href="com/compomics/cli/identification_parameters/AbstractIdentificationParametersCli.html" title="class in com.compomics.cli.identification_parameters">AbstractIdentificationParametersCli</a></dt>
 <dd>
 <div class="block">IdentificationParametersCLI header message when printing the usage.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getHeader-java.lang.String-">getHeader(String)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getHeader-java.lang.String-">getHeader(String)</a></span> - Method in interface com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></dt>
+<dd>
+<div class="block">returns the header for the given protein as a string.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/nucleotide/NucleotideSequence.html#getHeader--">getHeader()</a></span> - Method in class com.compomics.util.nucleotide.<a href="com/compomics/util/nucleotide/NucleotideSequence.html" title="class in com.compomics.util.nucleotide">NucleotideSequence</a></dt>
 <dd>
@@ -10925,14 +10930,6 @@
 <dd>
 <div class="block">Returns a list of the keys of all encountered peptides.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#getPeptideMapperType-int-">getPeptideMapperType(int)</a></span> - Static method in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">Returns the peptide mapper type corresponding to the given index.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html#getPeptideMapperType--">getPeptideMapperType()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a></dt>
-<dd>
-<div class="block">Returns the type of peptide mapper to use.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator(ArrayList&lt;String&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
@@ -11307,39 +11304,43 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/ElementaryIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/ElementaryIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">ElementaryIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/Glycan.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/Glycan.html" title="class in com.compomics.util.experiment.biology.ions.impl">Glycan</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/ImmoniumIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/ImmoniumIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">ImmoniumIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">PeptideFragmentIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/PrecursorIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/PrecursorIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">PrecursorIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/RelatedIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/RelatedIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">RelatedIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/ReporterIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/ReporterIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">ReporterIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html#getPossibleSubtypes--">getPossibleSubtypes()</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">TagFragmentIon</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns the possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/Ion.html#getPossibleSubtypes-com.compomics.util.experiment.biology.ions.Ion.IonType-">getPossibleSubtypes(Ion.IonType)</a></span> - Static method in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/Ion.html" title="class in com.compomics.util.experiment.biology.ions">Ion</a></dt>
 <dd>
-<div class="block">Returns an arraylist of possible subtypes.</div>
+<div class="block">Returns an array of possible subtypes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/Ion.html#getPossibleSubtypesAsSet-com.compomics.util.experiment.biology.ions.Ion.IonType-">getPossibleSubtypesAsSet(Ion.IonType)</a></span> - Static method in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/Ion.html" title="class in com.compomics.util.experiment.biology.ions">Ion</a></dt>
+<dd>
+<div class="block">Returns a hashset of possible subtypes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html#getPossibleTags-boolean-int-int-int-">getPossibleTags(boolean, int, int, int)</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_assumptions.<a href="com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a></dt>
 <dd>
@@ -13217,6 +13218,12 @@
 <dd>
 <div class="block">Returns a sub pattern of the pattern.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getSubsequence-java.lang.String-int-int-">getSubsequence(String, int, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getSubsequence-java.lang.String-int-int-">getSubsequence(String, int, int)</a></span> - Method in interface com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></dt>
+<dd>
+<div class="block">Returns the subsequence of the sequence of a given protein.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html#getSubSpectrum-double-double-">getSubSpectrum(double, double)</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a></dt>
 <dd>
 <div class="block">Returns the part of the spectrum contained between mzMin (inclusive) and
@@ -14288,10 +14295,6 @@
 <dd>
 <div class="block">Returns a hash code value for the object.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html#hasLimitX--">hasLimitX()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a></dt>
-<dd>
-<div class="block">Indicates whether the share of X's should be limited.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/Ion.html#hasNeutralLosses--">hasNeutralLosses()</a></span> - Method in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/Ion.html" title="class in com.compomics.util.experiment.biology.ions">Ion</a></dt>
 <dd>
 <div class="block">Indicates whether the ion has a neutral loss.</div>
@@ -15117,10 +15120,6 @@
 <dd>
 <div class="block">The index of the option.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#index">index</a></span> - Variable in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">The unique index of the peptide mapper.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#index">index</a></span> - Variable in enum com.compomics.util.experiment.identification.psm_scoring.<a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a></dt>
 <dd>
 <div class="block">The index of the score of interest.</div>
@@ -15556,7 +15555,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/parameters/identification/search/SequenceDbDetailsDialog.html#isCanceled--">isCanceled()</a></span> - Method in class com.compomics.util.gui.parameters.identification.search.<a href="com/compomics/util/gui/parameters/identification/search/SequenceDbDetailsDialog.html" title="class in com.compomics.util.gui.parameters.identification.search">SequenceDbDetailsDialog</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the database selection was canceled by the user.</div>
+<div class="block">Returns a boolean indicating whether the database selection was canceled
+ by the user.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/parameters/tools/ProcessingParametersDialog.html#isCanceled--">isCanceled()</a></span> - Method in class com.compomics.util.gui.parameters.tools.<a href="com/compomics/util/gui/parameters/tools/ProcessingParametersDialog.html" title="class in com.compomics.util.gui.parameters.tools">ProcessingParametersDialog</a></dt>
 <dd>
@@ -15711,6 +15711,10 @@
 <dd>
 <div class="block">Indicates whether the database size should be checked.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html#isDecoy-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isDecoy(Peptide, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.protein_sequences.<a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns a boolean indicating whether the peptide matches a decoy sequence.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/ProteinUtils.html#isDecoy-java.lang.String-com.compomics.util.experiment.io.biology.protein.FastaParameters-">isDecoy(String, FastaParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.protein_sequences.<a href="com/compomics/util/experiment/identification/protein_sequences/ProteinUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences">ProteinUtils</a></dt>
 <dd>
 <div class="block">Returns a boolean indicating whether the given accession corresponds to a decoy sequence according to the given fasta parameters.</div>
@@ -15846,6 +15850,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/NeutralLoss.html#isFixed--">isFixed()</a></span> - Method in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/NeutralLoss.html" title="class in com.compomics.util.experiment.biology.ions">NeutralLoss</a></dt>
 <dd>
 <div class="block">Returns a boolean indicating whether the neutral loss is fixed or not.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html#isForward-int-">isForward(int)</a></span> - Static method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/PeptideFragmentIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">PeptideFragmentIon</a></dt>
+<dd>
+<div class="block">Indicates whether the given subtype refers to a forward or a rewind ion.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html#isFragmentAll--">isFragmentAll()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">AndromedaParameters</a></dt>
 <dd>
@@ -18535,10 +18543,6 @@
 <dd>
 <div class="block">The name of the option.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#name">name</a></span> - Variable in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">The name of the peptide mapper.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#name">name</a></span> - Variable in enum com.compomics.util.experiment.identification.psm_scoring.<a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a></dt>
 <dd>
 <div class="block">The name of the score.</div>
@@ -19441,10 +19445,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/peptide_mapper/PeptideMapperCLI.html#PeptideMapperCLI--">PeptideMapperCLI()</a></span> - Constructor for class com.compomics.cli.peptide_mapper.<a href="com/compomics/cli/peptide_mapper/PeptideMapperCLI.html" title="class in com.compomics.cli.peptide_mapper">PeptideMapperCLI</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference"><span class="typeNameLink">PeptideMapperType</span></a> - Enum in <a href="com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a></dt>
-<dd>
-<div class="block">Enum of the different peptide mappers implemented.</div>
-</dd>
 <dt><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">PeptideMatch</span></a> - Class in <a href="com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a></dt>
 <dd>
 <div class="block">This class models a peptide match.</div>
@@ -19539,6 +19539,12 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences"><span class="typeNameLink">PeptideUtils</span></a> - Class in <a href="com/compomics/util/experiment/identification/protein_sequences/package-summary.html">com.compomics.util.experiment.identification.protein_sequences</a></dt>
+<dd>
+<div class="block">This class groups functions that can be used to work with peptides.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html#PeptideUtils--">PeptideUtils()</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_sequences.<a href="com/compomics/util/experiment/identification/protein_sequences/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences">PeptideUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">PeptideVariantMatches</span></a> - Class in <a href="com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a></dt>
 <dd>
 <div class="block">This class represents a set of variants found on a peptide.</div>
@@ -22890,7 +22896,7 @@
 <dd>
 <div class="block">Set the legend location of Dataset D in a four way Venn diagram.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html#setLimitX-java.lang.Double-">setLimitX(Double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html#setLimitX-double-">setLimitX(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a></dt>
 <dd>
 <div class="block">Sets the maximal share of X's a match can contain, range [0.0-1.0].</div>
 </dd>
@@ -23824,10 +23830,6 @@
 <dd>
 <div class="block">Sets the list of peptide quality filters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html#setPeptideMapperType-com.compomics.util.experiment.identification.protein_inference.PeptideMapperType-">setPeptideMapperType(PeptideMapperType)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a></dt>
-<dd>
-<div class="block">Sets the type of peptide mapper to use.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-java.util.HashSet-">setPeptideMatchesKeys(HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
 <dd>
 <div class="block">Sets the peptide keys for this protein match.</div>
@@ -24047,7 +24049,7 @@
 <dd>
 <div class="block">Sets the protein inference preferences.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setProteinMapping-java.util.HashMap-">setProteinMapping(HashMap&lt;String, int[]&gt;)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setProteinMapping-java.util.TreeMap-">setProteinMapping(TreeMap&lt;String, int[]&gt;)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Sets the proteins mapping as a map of 0 based indexes for every protein accession.</div>
 </dd>
@@ -26170,8 +26172,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/PtmScore.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.identification.modification.<a href="com/compomics/util/experiment/identification/modification/PtmScore.html" title="enum in com.compomics.util.experiment.identification.modification">PtmScore</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html#toString--">toString()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_assumptions.<a href="com/compomics/util/experiment/identification/spectrum_assumptions/TagAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions">TagAssumption</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#toString--">toString()</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
@@ -26874,10 +26874,6 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
-<dd>
-<div class="block">Returns the enum constant of this type with the specified name.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.experiment.identification.psm_scoring.<a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring">PsmScore</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -27139,11 +27135,6 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/PeptideFragmentationModel.html#values--">values()</a></span> - Static method in enum com.compomics.util.experiment.identification.peptide_fragmentation.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/PeptideFragmentationModel.html" title="enum in com.compomics.util.experiment.identification.peptide_fragmentation">PeptideFragmentationModel</a></dt>
-<dd>
-<div class="block">Returns an array containing the constants of this enum type, in
-the order they are declared.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html#values--">values()</a></span> - Static method in enum com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 import junit.framework.TestCase;
 
 /**
@@ -55,7 +56,7 @@ public class IdentificationDBTest extends TestCase {
                 String proteinKey = "test_protein";
                 Assert.assertTrue(objectsDB.createLongKey(peptideKey) != objectsDB.createLongKey(proteinKey));
 
-                HashMap<String, int[]> testProteins = new HashMap<>();
+                TreeMap<String, int[]> testProteins = new TreeMap<>();
                 testProteins.put("test protein1", new int[]{0, 12});
                 testProteins.put("test protein2", new int[]{1259});
 
@@ -100,10 +101,10 @@ public class IdentificationDBTest extends TestCase {
                 String[] accessionsExpectation = testProteins.keySet().stream()
                         .sorted()
                         .toArray(String[]::new);
-                String[] accessionsResult = bestPeptide.getProteinMapping().keySet().stream()
-                        .sorted()
+                String[] accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
                         .toArray(String[]::new);
                 Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);
+                
                 for (int i = 0; i < accessionsResult.length; i++) {
                     Assert.assertTrue(accessionsResult[i].equals(accessionsExpectation[i]));
                     int[] positionsResult = bestPeptide.getProteinMapping().get(accessionsResult[i]);
@@ -125,7 +126,7 @@ public class IdentificationDBTest extends TestCase {
                 bestAssumptions = mascotAssumptions.get(bestScore);
                 bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
                 bestPeptide = bestAssumption.getPeptide();
-                accessionsResult = bestPeptide.getProteinMapping().keySet().stream()
+                accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
                         .sorted()
                         .toArray(String[]::new);
                 Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);

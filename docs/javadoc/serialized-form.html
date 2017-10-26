@@ -2856,7 +2856,7 @@
 </li>
 <li class="blockList">
 <h4>proteinMapping</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; proteinMapping</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html?is-external=true" title="class or interface in java.util">TreeMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; proteinMapping</pre>
 <div class="block">The mapping of this peptide on proteins as a map, accession to position.
  Position on protein sequences is 0 based.</div>
 </li>
@@ -9231,14 +9231,6 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
 </li>
 <li class="blockList">
-<h4>indexTypeCmb</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; indexTypeCmb</pre>
-</li>
-<li class="blockList">
-<h4>indexTypeLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> indexTypeLbl</pre>
-</li>
-<li class="blockList">
 <h4>matchingCmb</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; matchingCmb</pre>
 </li>
@@ -12235,7 +12227,8 @@
 <li class="blockList">
 <h4>canceled</h4>
 <pre>boolean canceled</pre>
-<div class="block">Boolean indicating whether the database selection was canceled by the user.</div>
+<div class="block">Boolean indicating whether the database selection was canceled by the
+ user.</div>
 </li>
 <li class="blockList">
 <h4>accessionsSpinner</h4>
@@ -14942,15 +14935,10 @@
 <pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.MatchingType.html" title="enum in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters.MatchingType</a> sequenceMatchingType</pre>
 <div class="block">The amino acid matching type.</div>
 </li>
-<li class="blockList">
-<h4>limitX</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> limitX</pre>
-<div class="block">Limit the share of X's a match can contain, range [0.0-1.0].</div>
-</li>
 <li class="blockListLast">
-<h4>peptideMapperType</h4>
-<pre><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapperType.html" title="enum in com.compomics.util.experiment.identification.protein_inference">PeptideMapperType</a> peptideMapperType</pre>
-<div class="block">The peptide mapper to use, FMI by default.</div>
+<h4>limitX</h4>
+<pre>double limitX</pre>
+<div class="block">Limit the share of X's a match can contain, range [0.0-1.0].</div>
 </li>
 </ul>
 </li>

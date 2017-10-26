@@ -111,11 +111,11 @@ public class Glycan extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
+    public static int[] getPossibleSubtypes() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

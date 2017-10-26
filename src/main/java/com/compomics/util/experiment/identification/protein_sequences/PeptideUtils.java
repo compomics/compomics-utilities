@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ public class PeptideUtils {
      */
     public static boolean isDecoy(Peptide peptide, SequenceProvider sequenceProvider) {
         
-        return peptide.getProteinMapping().keySet().stream()
+        return peptide.getProteinMapping().navigableKeySet().stream()
                 .anyMatch(accession -> sequenceProvider.getDecoyAccessions().contains(accession));
         
     }
@@ -37,14 +38,15 @@ public class PeptideUtils {
      * 
      * @return the amino acids before the given peptide as a string in a map based on the peptide protein mapping
      */
-    public static Map<String, String[]> getAaBefore(Peptide peptide, int nAa, SequenceProvider sequenceProvider) {
+    public static TreeMap<String, String[]> getAaBefore(Peptide peptide, int nAa, SequenceProvider sequenceProvider) {
         
         return peptide.getProteinMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, 
                         entry -> Arrays.stream(entry.getValue())
                         .mapToObj(index -> sequenceProvider.getSubsequence(entry.getKey(), index - nAa - 1, index - 1))
                         .toArray(String[]::new), 
-                        (a ,b) -> {throw new IllegalArgumentException("Duplicate key.");}));
+                        (a ,b) -> {throw new IllegalArgumentException("Duplicate key.");},
+                        TreeMap::new));
         
     }
     
@@ -57,14 +59,15 @@ public class PeptideUtils {
      * 
      * @return the amino acids before the given peptide as a string in a map based on the peptide protein mapping
      */
-    public static Map<String, String[]> getAaAfter(Peptide peptide, int nAa, SequenceProvider sequenceProvider) {
+    public static TreeMap<String, String[]> getAaAfter(Peptide peptide, int nAa, SequenceProvider sequenceProvider) {
                 
         return peptide.getProteinMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, 
                         entry -> Arrays.stream(entry.getValue())
                         .mapToObj(index -> sequenceProvider.getSubsequence(entry.getKey(), index + peptide.getSequence().length(), index + peptide.getSequence().length() + nAa))
                         .toArray(String[]::new), 
-                        (a ,b) -> {throw new IllegalArgumentException("Duplicate key.");}));
+                        (a ,b) -> {throw new IllegalArgumentException("Duplicate key.");},
+                        TreeMap::new));
         
     }
 

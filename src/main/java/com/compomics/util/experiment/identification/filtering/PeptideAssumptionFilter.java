@@ -17,6 +17,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -204,14 +205,14 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
 
-        HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
+        TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
             
             boolean target = false;
             boolean decoy = false;
             
-            for (String accession : proteinMapping.keySet()) {
+            for (String accession : proteinMapping.navigableKeySet()) {
                 
                 if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
                     

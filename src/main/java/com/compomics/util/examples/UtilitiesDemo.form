@@ -629,16 +629,16 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel7" alignment="0" pref="1055" max="32767" attributes="2"/>
-                          <Component id="jPanel6" alignment="1" pref="1055" max="32767" attributes="2"/>
+                          <Component id="jPanel7" alignment="0" pref="1071" max="32767" attributes="2"/>
+                          <Component id="jPanel6" alignment="1" pref="1071" max="32767" attributes="2"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jPanel6" pref="274" max="32767" attributes="0"/>
+                              <Component id="jPanel6" pref="284" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="jPanel7" pref="274" max="32767" attributes="0"/>
+                              <Component id="jPanel7" pref="285" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -907,9 +907,9 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                                  <Component id="jPanel2" pref="219" max="32767" attributes="0"/>
+                                  <Component id="jPanel2" pref="231" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jPanel4" pref="219" max="32767" attributes="0"/>
+                                  <Component id="jPanel4" pref="231" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
@@ -1540,8 +1540,8 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="sequenceCoverageJPanel" pref="644" max="32767" attributes="3"/>
-                                      <Component id="jPanel3" alignment="0" pref="644" max="32767" attributes="3"/>
+                                      <Component id="sequenceCoverageJPanel" pref="648" max="32767" attributes="3"/>
+                                      <Component id="jPanel3" alignment="0" pref="648" max="32767" attributes="3"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
@@ -1560,13 +1560,13 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel3" min="0" pref="195" max="32767" attributes="2"/>
+                              <Component id="jPanel3" min="0" pref="206" max="32767" attributes="2"/>
                               <Component id="jPanel11" alignment="0" max="32767" attributes="3"/>
                           </Group>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="sequenceCoverageJPanel" pref="351" max="32767" attributes="2"/>
-                              <Component id="peptidesJPanel" alignment="0" pref="351" max="32767" attributes="2"/>
+                              <Component id="sequenceCoverageJPanel" pref="361" max="32767" attributes="2"/>
+                              <Component id="peptidesJPanel" alignment="0" pref="361" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -2080,7 +2080,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="peptidesScrollPane" max="32767" attributes="0"/>
+                              <Component id="peptidesScrollPane" pref="492" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>

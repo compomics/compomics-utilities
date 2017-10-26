@@ -316,15 +316,19 @@ public class ImmoniumIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<>(21);
+    public static int[] getPossibleSubtypes() {
+        int[] possibleTypes = new int[21];
+        
         for (int i = 0 ; i <= 20 ; i++) {
-            possibleTypes.add(i);
+            
+            possibleTypes[i] = i;
+        
         }
+        
         return possibleTypes;
     }
 

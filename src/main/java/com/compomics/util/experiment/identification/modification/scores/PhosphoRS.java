@@ -18,11 +18,13 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.math.BasicMathFunctions;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.math.util.FastMath;
@@ -143,48 +145,64 @@ public class PhosphoRS {
         HashSet<Integer> possibleSitesSet = new HashSet<>(2);
 
         int peptideLength = peptide.getSequence().length();
-        HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
+        TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         for (Modification modification : modifications) {
+            
             modificationSwitch:
+            
             switch (modification.getModificationType()) {
+                
                 case modaa:
-                     for (String accession : proteinMapping.keySet()) {
+                    
+                     for (String accession : proteinMapping.navigableKeySet()) {
+                         
                          String proteinSequence = sequenceProvider.getSequence(accession);
+                         
                          for (int index : proteinMapping.get(accession)) {
+                             
                              possibleSitesSet.addAll(peptide.getPotentialModificationSites(modification, proteinSequence, index, modificationSequenceMatchingPreferences));
+                             
                              if (modification.getPattern().length() == 1) {
+                                 
                                  break modificationSwitch;
+                                 
                              }
                          }
                      }
+                     
                      break;
+                     
                 case modn_peptide:
                 case modn_protein:
                 case modnaa_peptide:
                 case modnaa_protein:
-                     for (String accession : proteinMapping.keySet()) {
-                         for (int index : proteinMapping.get(accession)) {
-                             if (!peptide.getPotentialModificationSites(modification, accession, index, modificationSequenceMatchingPreferences).isEmpty()) {
+                    
+                    if(proteinMapping.entrySet().stream()
+                            .flatMap(entry -> Arrays.stream(entry.getValue())
+                                    .mapToObj(index -> new AbstractMap.SimpleEntry<>(entry.getKey(), index)))
+                            .anyMatch(entry -> !peptide.getPotentialModificationSites(modification, entry.getKey(), entry.getValue(), modificationSequenceMatchingPreferences).isEmpty())) {
+                        
                                  possibleSitesSet.add(0);
                                  break modificationSwitch;
-                             }
-                         }
-                     }
+                                 
+                    }
+                     
                      break;
                 case modc_peptide:
                 case modc_protein:
                 case modcaa_peptide:
                 case modcaa_protein:
-                     for (String accession : proteinMapping.keySet()) {
-                         for (int index : proteinMapping.get(accession)) {
-                             String proteinSequence = sequenceProvider.getSequence(accession);
-                             if (!peptide.getPotentialModificationSites(modification, proteinSequence, index, modificationSequenceMatchingPreferences).isEmpty()) {
+                    
+                    if(proteinMapping.entrySet().stream()
+                            .flatMap(entry -> Arrays.stream(entry.getValue())
+                                    .mapToObj(index -> new AbstractMap.SimpleEntry<>(entry.getKey(), index)))
+                            .anyMatch(entry -> !peptide.getPotentialModificationSites(modification, entry.getKey(), entry.getValue(), modificationSequenceMatchingPreferences).isEmpty())) {
+                        
                                  possibleSitesSet.add(peptideLength + 1);
                                  break modificationSwitch;
-                             }
-                         }
-                     }
+                                 
+                    }
                      break;
             }
         }

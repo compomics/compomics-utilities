@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
+import com.compomics.util.experiment.identification.utils.PeptideUtils;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -1361,7 +1362,7 @@ public class Peptide extends ExperimentObject {
                 }
             }
         }
-        return getTaggedModifiedSequence(modificationProfile, this, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
+        return PeptideUtils.getTaggedModifiedSequence(modificationProfile, this, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
 
@@ -1384,69 +1385,6 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
-    }
-
-    /**
-     * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the Modification found in the peptide are in the
-     * ModificationFactory.
-     *
-     * @param modificationProfile the modification profile of the search
-     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
-     * @param peptide the peptide to annotate
-     * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number &gt; list of modifications (1 is
-     * the first AA) (can be null)
-     * @param representativeAmbiguousModificationSites the representative site
-     * of the ambiguously localized variable modifications in a map: aa number
-     * &gt; list of modifications (1 is the first AA) (can be null)
-     * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number &gt;
-     * list of modifications (1 is the first AA) (can be null)
-     * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number &gt; list of modifications (1 is the first AA) (can be null)
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * Modification tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     * @return the tagged modified sequence as a string
-     */
-    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
-            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites,
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
-
-        if (confidentModificationSites == null) {
-            confidentModificationSites = new HashMap<>(0);
-        }
-        if (representativeAmbiguousModificationSites == null) {
-            representativeAmbiguousModificationSites = new HashMap<>(0);
-        }
-        if (secondaryAmbiguousModificationSites == null) {
-            secondaryAmbiguousModificationSites = new HashMap<>(0);
-        }
-        if (fixedModificationSites == null) {
-            fixedModificationSites = new HashMap<>(0);
-        }
-
-        String modifiedSequence = "";
-
-        if (useHtmlColorCoding && includeHtmlStartEndTags) {
-            modifiedSequence += "<html>";
-        }
-
-        modifiedSequence += peptide.getNTerminal() + "-";
-
-        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites,
-                representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
-
-        modifiedSequence += "-" + peptide.getCTerminal();
-
-        if (useHtmlColorCoding && includeHtmlStartEndTags) {
-            modifiedSequence += "</html>";
-        }
-
-        return modifiedSequence;
     }
 
     /**
@@ -1478,67 +1416,24 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the sequence of this peptide as AminoAcidPattern.
-     *
-     * @return the sequence of this peptide as AminoAcidPattern
-     */
-    public AminoAcidPattern getSequenceAsPattern() {
-        return getSequenceAsPattern(sequence);
-    }
-
-    /**
-     * Returns the given sequence as AminoAcidPattern.
-     *
-     * @param sequence the sequence of interest
-     * @return the sequence as AminoAcidPattern
-     */
-    public static AminoAcidPattern getSequenceAsPattern(String sequence) {
-        return AminoAcidPattern.getAminoAcidPatternFromString(sequence);
-    }
-
-    /**
-     * Returns the sequence of this peptide as AminoAcidSequence.
-     *
-     * @return the sequence of this peptide as AminoAcidSequence
-     */
-    public AminoAcidSequence getSequenceAsAminoAcidSequence() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        return getSequenceAsAminoAcidSequence(sequence);
-    }
-
-    /**
-     * Returns the given sequence as AminoAcidSequence.
-     *
-     * @param sequence the sequence of interest
-     *
-     * @return the sequence as AminoAcidSequence
-     */
-    public static AminoAcidSequence getSequenceAsAminoAcidSequence(String sequence) {
-        return new AminoAcidSequence(sequence);
-    }
-
-    /**
      * Returns a version of the peptide which does not contain the given list of modifications.
      *
-     * @param peptide the original peptide
      * @param forbiddenModifications list of forbidden modifications
      *
      * @return a not modified version of the peptide
      */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<Modification> forbiddenModifications) {
+    public Peptide getNoModPeptide(HashSet<String> forbiddenModifications) {
 
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>(0));
-        noModPeptide.setProteinMapping(peptide.getProteinMapping());
+        Peptide noModPeptide = new Peptide(getSequence(), new ArrayList<>(0));
+        noModPeptide.setProteinMapping(getProteinMapping());
 
-        ArrayList<ModificationMatch> allModificationMatches = peptide.getModificationMatches();
+        ArrayList<ModificationMatch> allModificationMatches = getModificationMatches();
         
         if (allModificationMatches != null) {
             
-            HashSet<String> forbiddenModificationsNames = forbiddenModifications.stream().map(modification -> modification.getName()).collect(Collectors.toCollection(HashSet::new));
-            
-            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream().filter(modificationMatch -> !forbiddenModificationsNames.contains(modificationMatch.getModification())).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream()
+                    .filter(modificationMatch -> !forbiddenModifications.contains(modificationMatch.getModification()))
+                    .collect(Collectors.toCollection(ArrayList::new));
 
             noModPeptide.setModificationMatches(filteredModificationMatches);
             

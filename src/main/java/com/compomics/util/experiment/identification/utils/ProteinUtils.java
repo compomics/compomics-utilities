@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.protein_sequences;
+package com.compomics.util.experiment.identification.utils;
 
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;

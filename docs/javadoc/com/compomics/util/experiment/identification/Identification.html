@@ -130,7 +130,10 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">Identification</span>
 extends <a href="../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></pre>
-<div class="block">This class contains identification results.</div>
+<div class="block">This class interacts with the back-end database to manage identification
+ objects. Interacting with the back-end database might cause
+ InterruptedException. These exceptions are passed as runtime exceptions for
+ methods returning identification objects.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Marc Vaudel, Dominik Kopczynski</dd>
@@ -195,7 +198,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#Identification-com.compomics.util.db.object.ObjectsDB-">Identification</a></span>(<a href="../../../../../com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a>&nbsp;objectsDB)</code>
-<div class="block">Constructor</div>
+<div class="block">Constructor.</div>
 </td>
 </tr>
 </table>
@@ -251,7 +254,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#fillSpectraPerFile--">fillSpectraPerFile</a></span>()</code>
-<div class="block">Fills the spectra per file map</div>
+<div class="block">Fills the spectra per file map.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -460,7 +463,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#setOrderedListOfSpectrumFileNames-java.util.ArrayList-">setOrderedListOfSpectrumFileNames</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;orderedSpectrumFileNames)</code>
-<div class="block">Set the ordered list of spectrum file names.</div>
+<div class="block">Sets the ordered list of spectrum file names.</div>
 </td>
 </tr>
 </table>
@@ -561,7 +564,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>Identification</h4>
 <pre>public&nbsp;Identification(<a href="../../../../../com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a>&nbsp;objectsDB)</pre>
-<div class="block">Constructor</div>
+<div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>objectsDB</code> - the database for storing all objects on disk when memory
@@ -598,7 +601,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>setOrderedListOfSpectrumFileNames</h4>
 <pre>public&nbsp;void&nbsp;setOrderedListOfSpectrumFileNames(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;orderedSpectrumFileNames)</pre>
-<div class="block">Set the ordered list of spectrum file names. Note that the list provided
+<div class="block">Sets the ordered list of spectrum file names. Note that the list provided
  has to be the same size as the number of spectrum files used.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -614,7 +617,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>fillSpectraPerFile</h4>
 <pre>public&nbsp;void&nbsp;fillSpectraPerFile()
                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Fills the spectra per file map</div>
+<div class="block">Fills the spectra per file map.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
@@ -786,17 +789,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>retrieveObject</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(long&nbsp;longKey)
-                      throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(long&nbsp;longKey)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>longKey</code> - the hash key</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -806,17 +805,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>retrieveObject</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)
-                      throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;retrieveObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -828,8 +823,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keyList,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -840,9 +834,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -854,8 +845,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">Returns an array of all objects of a given class</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -866,9 +856,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>

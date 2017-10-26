@@ -1,9 +1,13 @@
-package com.compomics.util.experiment.identification.protein_sequences;
+package com.compomics.util.experiment.identification.utils;
 
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
@@ -86,8 +90,9 @@ public class PeptideUtils {
 
         TreeMap<String, HashSet<Integer>> modMap = peptide.getModificationMatches().stream()
                 .filter(modificationMatch -> modificationMatch.getVariable() == variable)
-                .collect(Collectors.groupingBy(ModificationMatch::getModification, 
-                        Collectors.mapping(ModificationMatch::getModificationSite, HashSet::new)));
+                .collect(Collectors.groupingBy(ModificationMatch::getModification,
+                        TreeMap::new,
+                        Collectors.mapping(ModificationMatch::getModificationSite, Collectors.toCollection(HashSet::new))));
         
         return modMap.entrySet().stream()
                 .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
@@ -114,6 +119,58 @@ public class PeptideUtils {
         sb.append(modificationName).append("(").append(sitesString).append(")");
         
         return sb.toString();
+    }
+
+    /**
+     * Returns the modified sequence as an tagged string with potential
+     * modification sites color coded or with Modification tags, e.g, &lt;mox&gt;. /!\
+     * This method will work only if the Modification found in the peptide are in the
+     * ModificationFactory.
+     *
+     * @param modificationProfile the modification profile of the search
+     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
+     * @param peptide the peptide to annotate
+     * @param confidentModificationSites the confidently localized variable
+     * modification sites in a map: aa number &gt; list of modifications (1 is
+     * the first AA) (can be null)
+     * @param representativeAmbiguousModificationSites the representative site
+     * of the ambiguously localized variable modifications in a map: aa number
+     * &gt; list of modifications (1 is the first AA) (can be null)
+     * @param secondaryAmbiguousModificationSites the secondary sites of the
+     * ambiguously localized variable modifications in a map: aa number &gt;
+     * list of modifications (1 is the first AA) (can be null)
+     * @param fixedModificationSites the fixed modification sites in a map: aa
+     * number &gt; list of modifications (1 is the first AA) (can be null)
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * Modification tags, e.g, &lt;mox&gt;, are used
+     * @param useShortName if true the short names are used in the tags
+     *
+     * @return the tagged modified sequence as a string
+     */
+    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, Peptide peptide, HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+        if (confidentModificationSites == null) {
+            confidentModificationSites = new HashMap<>(0);
+        }
+        if (representativeAmbiguousModificationSites == null) {
+            representativeAmbiguousModificationSites = new HashMap<>(0);
+        }
+        if (secondaryAmbiguousModificationSites == null) {
+            secondaryAmbiguousModificationSites = new HashMap<>(0);
+        }
+        if (fixedModificationSites == null) {
+            fixedModificationSites = new HashMap<>(0);
+        }
+        String modifiedSequence = "";
+        if (useHtmlColorCoding && includeHtmlStartEndTags) {
+            modifiedSequence += "<html>";
+        }
+        modifiedSequence += peptide.getNTerminal() + "-";
+        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.getSequence(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
+        modifiedSequence += "-" + peptide.getCTerminal();
+        if (useHtmlColorCoding && includeHtmlStartEndTags) {
+            modifiedSequence += "</html>";
+        }
+        return modifiedSequence;
     }
 
 }

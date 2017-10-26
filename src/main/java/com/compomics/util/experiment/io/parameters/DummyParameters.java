@@ -11,7 +11,7 @@ public class DummyParameters implements MarshallableParameter {
     /**
      * Name of the type of marshalled parameter.
      */
-    private String marshallableParameterType = null;
+    private final String marshallableParameterType = null;
     
 
     @Override

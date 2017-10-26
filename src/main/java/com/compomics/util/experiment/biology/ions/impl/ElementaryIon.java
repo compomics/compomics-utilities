@@ -27,11 +27,11 @@ public class ElementaryIon extends Ion {
     /**
      * The name of the ion.
      */
-    private String name;
+    private final String name;
     /**
      * The subtype identifier.
      */
-    private int subType;
+    private final int subType;
     /**
      * Cache for the multiples of the proton mass.
      */

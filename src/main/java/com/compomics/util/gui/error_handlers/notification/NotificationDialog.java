@@ -10,11 +10,11 @@ public class NotificationDialog extends javax.swing.JDialog {
     /**
      * The notification dialog parent.
      */
-    private NotificationDialogParent notificationDialogParent;
+    private final NotificationDialogParent notificationDialogParent;
     /**
      * The notification type.
      */
-    private String notificationType;
+    private final String notificationType;
 
     /**
      * Creates a new NotificationDialog.

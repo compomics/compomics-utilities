@@ -10,7 +10,7 @@ public class NeutralLossCombination {
     /**
      * The neutral losses.
      */
-    private NeutralLoss[] neutralLossCombination;
+    private final NeutralLoss[] neutralLossCombination;
     /**
      * The mass of the combination.
      */

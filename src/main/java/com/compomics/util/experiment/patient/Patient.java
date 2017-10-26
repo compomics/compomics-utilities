@@ -13,12 +13,12 @@ public class Patient {
     /**
      * The patient id,
      */
-    private String id;
+    private final String id;
     /**
      * The patient information as a map. See the PatientInformation class for
      * how to annotate the key.
      */
-    private HashMap<String, Comparable> patientInformationMap = new HashMap<>();
+    private final HashMap<String, Comparable> patientInformationMap = new HashMap<>();
 
     /**
      * Constructor,

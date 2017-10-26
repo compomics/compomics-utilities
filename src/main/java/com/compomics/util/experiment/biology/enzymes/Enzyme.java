@@ -29,31 +29,31 @@ public class Enzyme extends ExperimentObject {
     /*
      * The enzyme name.
      */
-    private String name;
+    private final String name;
     /*
      * The amino acids before cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> aminoAcidBefore = new ArrayList<>(0);
+    private final ArrayList<Character> aminoAcidBefore = new ArrayList<>(0);
     /*
      * The amino acids after cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> aminoAcidAfter = new ArrayList<>(0);
+    private final ArrayList<Character> aminoAcidAfter = new ArrayList<>(0);
     /*
      * The restriction amino acids before cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> restrictionBefore = new ArrayList<>(0);
+    private final ArrayList<Character> restrictionBefore = new ArrayList<>(0);
     /*
      * The restriction amino acids after cleavage.
      * 
      * @deprecated use the set instead
      */
-    private ArrayList<Character> restrictionAfter = new ArrayList<>(0);
+    private final ArrayList<Character> restrictionAfter = new ArrayList<>(0);
     /*
      * The amino acids before cleavage.
      */

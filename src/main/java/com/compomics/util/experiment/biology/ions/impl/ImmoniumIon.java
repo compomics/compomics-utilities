@@ -113,7 +113,7 @@ public class ImmoniumIon extends Ion {
     /**
      * The PSI CV term.
      */
-    private static CvTerm psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
+    private static final CvTerm psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
 
     /**
      * Constructor for an immonium ion.

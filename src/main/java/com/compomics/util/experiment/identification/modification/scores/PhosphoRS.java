@@ -56,11 +56,11 @@ public class PhosphoRS {
     /**
      * The number of binomial distributions kept in cache.
      */
-    private static int distributionCacheSize = 1000;
+    private static final int distributionCacheSize = 1000;
     /**
      * The binomial distributions cache.
      */
-    private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
+    private static final HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
 
     /**
      * Returns the PhosphoRS sequence probabilities for the modification possible

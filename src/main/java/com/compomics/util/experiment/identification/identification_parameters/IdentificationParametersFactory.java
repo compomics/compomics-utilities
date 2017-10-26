@@ -36,7 +36,7 @@ public class IdentificationParametersFactory {
     /**
      * A map of the parsed parameters indexed by their name.
      */
-    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
+    private final HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
 
     /**
      * Constructor for the factory.

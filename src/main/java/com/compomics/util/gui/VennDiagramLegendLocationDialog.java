@@ -12,7 +12,7 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
     /**
      * The VennDiagramDialog parent.
      */
-    private VennDiagramDialog vennDiagramDialog;
+    private final VennDiagramDialog vennDiagramDialog;
     /**
      * Legend shift size.
      */

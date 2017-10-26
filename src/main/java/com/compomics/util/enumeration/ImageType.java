@@ -14,7 +14,7 @@ public enum ImageType {
     /**
      * The image file extension.
      */
-    private String extension;
+    private final String extension;
 
     /**
      * Constructor setting the image type extension.

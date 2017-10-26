@@ -20,11 +20,11 @@ public enum PtmScore {
     /**
      * Score id number.
      */
-    private int id;
+    private final int id;
     /**
      * Score name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Constructor.

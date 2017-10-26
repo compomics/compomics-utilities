@@ -63,7 +63,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The table model.
      */
-    private TableModel tableModel;
+    private final TableModel tableModel;
     /**
      * The chart panel.
      */
@@ -88,7 +88,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The dialog parent.
      */
-    private Frame dialogParent;
+    private final Frame dialogParent;
     /**
      * If true, the plot is currently being updated.
      */
@@ -125,27 +125,27 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The cell renderers for the table.
      */
-    private HashMap<Integer, TableCellRenderer> cellRenderers;
+    private final HashMap<Integer, TableCellRenderer> cellRenderers;
     /**
      * The maximum column widths for the table.
      */
-    private HashMap<Integer, Integer> maxColumnWidths;
+    private final HashMap<Integer, Integer> maxColumnWidths;
     /**
      * The minimum column widths for the table.
      */
-    private HashMap<Integer, Integer> minColumnWidths;
+    private final HashMap<Integer, Integer> minColumnWidths;
     /**
      * The table column header tool tips.
      */
-    private ArrayList<String> tableToolTips;
+    private final ArrayList<String> tableToolTips;
     /**
      * The color gradient to use.
      */
-    private GradientColorCoding.ColorGradient colorGradient = GradientColorCoding.ColorGradient.BlueWhiteGreen;
+    private final GradientColorCoding.ColorGradient colorGradient = GradientColorCoding.ColorGradient.BlueWhiteGreen;
     /**
      * The color used for the bars in the histograms.
      */
-    private Color histogramColor = new Color(110, 196, 97);
+    private final Color histogramColor = new Color(110, 196, 97);
     /**
      * The last selected folder.
      */
@@ -153,11 +153,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     /**
      * The normal icon for the parent dialog.
      */
-    private Image normalIcon;
+    private final Image normalIcon;
     /**
      * The icon to use when busy.
      */
-    private Image waitingIcon;
+    private final Image waitingIcon;
     /**
      * The table columns.
      */

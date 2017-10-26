@@ -24,7 +24,7 @@ public class ExcelWriter extends ExportWriter {
     /**
      * The workbook for excel exports.
      */
-    private HSSFWorkbook workbook;
+    private final HSSFWorkbook workbook;
     /**
      * The workbook style to use for an excel export.
      */

@@ -18,11 +18,11 @@ public class TestBigFunctions extends TestCase {
     /**
      * The math context.
      */
-    private MathContext mathContext;
+    private final MathContext mathContext;
     /**
      * The tolerance to use when testing the results.
      */
-    private BigDecimal tolerance;
+    private final BigDecimal tolerance;
 
     /**
      * Constructor.

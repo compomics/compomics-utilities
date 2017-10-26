@@ -12,15 +12,15 @@ public class DasFeature {
     /**
      * The feature.
      */
-    private String iFeature;
+    private final String iFeature;
     /**
      * The feature ID.
      */
-    private String featureId;
+    private final String featureId;
     /**
      * The feature label.
      */
-    private String featureLabel;
+    private final String featureLabel;
     /**
      * The type ID.
      */

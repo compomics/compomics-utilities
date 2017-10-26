@@ -23,15 +23,15 @@ public class IsotopicElement {
     /**
      * The element
      */
-    private MolecularElement iElement;
+    private final MolecularElement iElement;
     /**
      * The dalton difference with the natural form of this element
      */
-    private int iDaltonDifference;
+    private final int iDaltonDifference;
     /**
      * The occurrence of the element
      */
-    private double iOccurrence;
+    private final double iOccurrence;
 
     /**
      * Constructor

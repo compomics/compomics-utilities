@@ -25,19 +25,19 @@ public class GoMapping {
     /**
      * Protein accession to go terms map.
      */
-    private HashMap<String, HashSet<String>> proteinToGoMap;
+    private final HashMap<String, HashSet<String>> proteinToGoMap;
     /**
      * Go terms to Protein accession map.
      */
-    private HashMap<String, HashSet<String>> goToProteinMap;
+    private final HashMap<String, HashSet<String>> goToProteinMap;
     /**
      * Go term accession to name map.
      */
-    private HashMap<String, String> goAccessionsToNamesMap;
+    private final HashMap<String, String> goAccessionsToNamesMap;
     /**
      * Go term name to accession map.
      */
-    private HashMap<String, String> goNamesToAccessionsMap;
+    private final HashMap<String, String> goNamesToAccessionsMap;
     /**
      * A sorted list of GO terms names.
      */

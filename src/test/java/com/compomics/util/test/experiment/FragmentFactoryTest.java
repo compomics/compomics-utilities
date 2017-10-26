@@ -27,11 +27,11 @@ public class FragmentFactoryTest extends TestCase {
     /**
      * The fragment factory.
      */
-    private IonFactory fragmentFactory = IonFactory.getInstance();
+    private final IonFactory fragmentFactory = IonFactory.getInstance();
     /**
      * The mass tolerance.
      */
-    private double tolerance = 0.01;
+    private final double tolerance = 0.01;
 
     /**
      * Tests the in silico fragmentation of a peptide.

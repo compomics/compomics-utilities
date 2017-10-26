@@ -33,7 +33,7 @@ public class PtmtableContent {
      * according to the peptide fragment ion static fields &gt; aa number &gt;
      * list of intensities.
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>> map;
+    private final HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>> map;
     /**
      * The total intensity.
      */

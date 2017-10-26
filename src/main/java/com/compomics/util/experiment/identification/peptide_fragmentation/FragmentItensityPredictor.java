@@ -14,7 +14,7 @@ public class FragmentItensityPredictor {
     /**
      * The model to use for the fragmentation of peptides.
      */
-    private PeptideFragmentationModel peptideFragmentationModel;
+    private final PeptideFragmentationModel peptideFragmentationModel;
 
     /**
      * Constructor.

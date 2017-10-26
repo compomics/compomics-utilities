@@ -13,7 +13,7 @@ public class CommandLineExceptionHandler extends ExceptionHandler {
     /**
      * List of caught exceptions.
      */
-    private ArrayList<String> exceptionCaught = new ArrayList<>();
+    private final ArrayList<String> exceptionCaught = new ArrayList<>();
 
     /**
      * Constructor.

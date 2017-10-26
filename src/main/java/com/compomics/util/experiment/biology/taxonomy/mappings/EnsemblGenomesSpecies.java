@@ -22,15 +22,15 @@ public class EnsemblGenomesSpecies {
     /**
      * NCBI ID to name.
      */
-    private HashMap<Integer, String> idToNameMap;
+    private final HashMap<Integer, String> idToNameMap;
     /**
      * NCBI ID to Ensembl division.
      */
-    private HashMap<Integer, String> idToDivisionMap;
+    private final HashMap<Integer, String> idToDivisionMap;
     /**
      * NCBI ID to Ensembl assembly.
      */
-    private HashMap<Integer, String> idToAssemblyMap;
+    private final HashMap<Integer, String> idToAssemblyMap;
 
     /**
      * Enum of the different Ensembl genome divisions.

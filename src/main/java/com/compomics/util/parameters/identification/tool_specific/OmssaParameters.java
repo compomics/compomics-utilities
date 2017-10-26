@@ -64,7 +64,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * The available types of output.
      */
-    private static String[] omssaOutputTypes = {"OMX", "CSV", "pepXML"};
+    private static final String[] omssaOutputTypes = {"OMX", "CSV", "pepXML"};
     /**
      * Map sequence in libraries in memory
      */
@@ -188,7 +188,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * Map of the OMSSA indexes used for user modifications in this search.
      */
-    private HashMap<Integer, String> ptmIndexes = new HashMap<>();
+    private final HashMap<Integer, String> ptmIndexes = new HashMap<>();
 
     /**
      * Constructor.

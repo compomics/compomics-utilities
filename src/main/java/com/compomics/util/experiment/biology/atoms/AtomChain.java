@@ -25,7 +25,7 @@ public class AtomChain implements Serializable {
      * 
      * @deprecated use the double value instead
      */
-    private Double mass = null;
+    private final Double mass = null;
     /**
      * The mass of the atom chain.
      */
@@ -35,7 +35,7 @@ public class AtomChain implements Serializable {
      * 
      * @deprecated deprecated since utilities version 4.8.2. Use stringValue1 instead.
      */
-    private String stringValue = null;
+    private final String stringValue = null;
     /**
      * Cache for the string value.
      */

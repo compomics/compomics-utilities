@@ -130,12 +130,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * The maximum padding allowed in the spectrum panels. Increase if font size
      * on the y-axis becomes too small.
      */
-    private int spectrumPanelMaxPadding = 50;
+    private final int spectrumPanelMaxPadding = 50;
     /**
      * The maximum padding allowed in the chromatogram panels. Increase if font
      * size on the y-axis becomes too small.
      */
-    private int chromatogramPanelMaxPadding = 65;
+    private final int chromatogramPanelMaxPadding = 65;
     /**
      * Used to read the enzyme details from file.
      */
@@ -151,11 +151,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Sequence annotation column header tooltips.
      */
-    private ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<>();
+    private final ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<>();
     /**
      * The color used for the sparkline bar chart plots.
      */
-    private Color sparklineColor = new Color(110, 196, 97);
+    private final Color sparklineColor = new Color(110, 196, 97);
 
     /**
      * Creates a new UtilitiesDemo frame and makes it visible.

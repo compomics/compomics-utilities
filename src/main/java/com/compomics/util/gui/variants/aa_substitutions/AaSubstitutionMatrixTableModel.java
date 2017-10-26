@@ -15,7 +15,7 @@ public class AaSubstitutionMatrixTableModel extends DefaultTableModel {
     /**
      * The possible amino acids represented by their single character code.
      */
-    private char[] aminoAcids = AminoAcid.getUniqueAminoAcids();
+    private final char[] aminoAcids = AminoAcid.getUniqueAminoAcids();
     /**
      * The substitution matrix to display.
      */

@@ -44,7 +44,7 @@ public class IonFactory {
     /**
      * Cache for the possible combinations of neutral losses.
      */
-    private HashMap<String, NeutralLossCombination[]> neutralLossesCombinationsCache = new HashMap<>();
+    private final HashMap<String, NeutralLossCombination[]> neutralLossesCombinationsCache = new HashMap<>();
     /**
      * Cache for the mass of NH3.
      */

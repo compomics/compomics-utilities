@@ -18,12 +18,12 @@ public enum CompomicsTools {
     /**
      * A name for each tool or library.
      */
-    private String iName;
+    private final String iName;
 
     /**
      * The package name of each tool.
      */
-    private String iPackageName;
+    private final String iPackageName;
 
     /**
      * Private constructor to initialize variables for each type.

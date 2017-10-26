@@ -12,7 +12,7 @@ public class ElementaryElement extends DbObject {
     /**
      * The name of the element.
      */
-    private String name;
+    private final String name;
     /*
      * The theoretic mass.
      */

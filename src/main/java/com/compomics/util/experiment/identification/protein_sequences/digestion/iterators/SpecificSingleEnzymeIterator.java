@@ -21,31 +21,31 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
     /**
      * Utilities classes for the digestion.
      */
-    private ProteinIteratorUtils proteinIteratorUtils;
+    private final ProteinIteratorUtils proteinIteratorUtils;
     /**
      * The protein sequence.
      */
-    private String proteinSequence;
+    private final String proteinSequence;
     /**
      * The protein sequence as char array.
      */
-    private char[] proteinSequenceAsCharArray;
+    private final char[] proteinSequenceAsCharArray;
     /**
      * The minimal mass to consider.
      */
-    private double massMin;
+    private final double massMin;
     /**
      * The maximal mass to consider.
      */
-    private double massMax;
+    private final double massMax;
     /**
      * The enzyme to use to digest the sequence.
      */
-    private Enzyme enzyme;
+    private final Enzyme enzyme;
     /**
      * The maximum number of missed cleavages
      */
-    private int nMissedCleavages;
+    private final int nMissedCleavages;
     /**
      * Map of the previous peptide starts to number of missed cleavages.
      */
@@ -57,7 +57,7 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
     /**
      * The peptides found.
      */
-    private ArrayList<PeptideWithPosition> result;
+    private final ArrayList<PeptideWithPosition> result;
     /**
      * Index of the result iterator.
      */

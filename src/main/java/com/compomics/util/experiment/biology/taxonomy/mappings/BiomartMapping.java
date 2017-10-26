@@ -20,7 +20,7 @@ public class BiomartMapping {
     /**
      * Ensembl assembly to BioMart dataset.
      */
-    private HashMap<String, String> assemblyToDataset;
+    private final HashMap<String, String> assemblyToDataset;
 
     /**
      * Constructor.

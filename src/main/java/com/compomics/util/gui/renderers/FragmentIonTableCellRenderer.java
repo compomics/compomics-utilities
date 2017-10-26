@@ -23,19 +23,19 @@ public class FragmentIonTableCellRenderer implements TableCellRenderer {
     /**
      * The background color to use.
      */
-    private Color backgroundColor;
+    private final Color backgroundColor;
     /**
      * The foreground color to use.
      */
-    private Color foregroundColor;
+    private final Color foregroundColor;
     /**
      * The row indices to hightlight.
      */
-    private ArrayList<Integer> indices;
+    private final ArrayList<Integer> indices;
     /**
      * The number formatting to use for double values.
      */
-    private DecimalFormat numberFormat;
+    private final DecimalFormat numberFormat;
 
     /**
      * Creates a new FragmentIonTableCellRenderer.

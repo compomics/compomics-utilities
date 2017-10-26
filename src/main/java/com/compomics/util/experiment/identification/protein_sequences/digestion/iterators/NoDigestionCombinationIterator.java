@@ -17,11 +17,11 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
     /**
      * Utilities classes for the digestion.
      */
-    private ProteinIteratorUtils proteinIteratorUtils;
+    private final ProteinIteratorUtils proteinIteratorUtils;
     /**
      * The protein sequence.
      */
-    private String proteinSequence;
+    private final String proteinSequence;
     /**
      * The protein sequence as char array.
      */
@@ -29,19 +29,19 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
     /**
      * The minimal mass to consider.
      */
-    private Double massMin;
+    private final Double massMin;
     /**
      * The maximal mass to consider.
      */
-    private Double massMax;
+    private final Double massMax;
     /**
      * The peptide beginning index of the iterator.
      */
-    private int index1 = 0;
+    private final int index1 = 0;
     /**
      * The peptide end index of the iterator.
      */
-    private int index2 = 1;
+    private final int index2 = 1;
     /**
      * The ambiguous sequence iterator.
      */

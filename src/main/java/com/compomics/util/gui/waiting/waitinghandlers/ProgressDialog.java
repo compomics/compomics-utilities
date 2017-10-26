@@ -27,7 +27,7 @@ public class ProgressDialog extends JDialog {
     // Class specific log4j logger for ProgressDialog instances.
     Logger logger = Logger.getLogger(ProgressDialog.class);
 
-    private JProgressBar iProgress = new JProgressBar(JProgressBar.HORIZONTAL);
+    private final JProgressBar iProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 
     /**
      * Creates an indeterminate ProgressDialog by default, with the specified title and message.

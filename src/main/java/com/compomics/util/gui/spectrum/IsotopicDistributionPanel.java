@@ -35,11 +35,11 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
     /**
      * The color used for the peaks. Default to red.
      */
-    private Color aSpectrumPeakColor = Color.RED;
+    private final Color aSpectrumPeakColor = Color.RED;
     /**
      * The color used for the area under the curve. Defaults to pink.
      */
-    private Color aSpectrumProfileModeLineColor = Color.PINK;
+    private final Color aSpectrumProfileModeLineColor = Color.PINK;
     /**
      * The peptide sequences to display the isotopic distribution for.
      */

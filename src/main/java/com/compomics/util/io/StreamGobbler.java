@@ -19,11 +19,11 @@ public class StreamGobbler implements Runnable {
     /**
      * The input stream.
      */
-    private InputStream is;
+    private final InputStream is;
     /**
      * The string builder.
      */
-    private StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
     /**
      * Constructor.

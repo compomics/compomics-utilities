@@ -31,7 +31,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
     /**
      * The Gene maps.
      */
-    private GeneMaps geneMaps;
+    private final GeneMaps geneMaps;
     /**
      * The protein 
      */
@@ -44,21 +44,21 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * The protein accession column in the table. Only used if more than one
      * accession.
      */
-    private ArrayList<String> proteinAccessionColumn = new ArrayList<>();
+    private final ArrayList<String> proteinAccessionColumn = new ArrayList<>();
     /**
      * The GO term descriptions attached to this protein match.
      */
-    private ArrayList<String> goTermDescriptions;
+    private final ArrayList<String> goTermDescriptions;
     /**
      * The color to use for the HTML tags for the selected rows, in HTML color
      * code.
      */
-    private String selectedRowHtmlTagFontColor = "#FFFFFF"; // @TODO: move somewhere more generic...
+    private final String selectedRowHtmlTagFontColor = "#FFFFFF"; // @TODO: move somewhere more generic...
     /**
      * The color to use for the HTML tags for the rows that are not selected, in
      * HTML color code.
      */
-    private String notSelectedRowHtmlTagFontColor = "#0101DF"; // @TODO: move somewhere more generic...
+    private final String notSelectedRowHtmlTagFontColor = "#0101DF"; // @TODO: move somewhere more generic...
 
     /**
      * Creates a new GeneDetailsDialog.

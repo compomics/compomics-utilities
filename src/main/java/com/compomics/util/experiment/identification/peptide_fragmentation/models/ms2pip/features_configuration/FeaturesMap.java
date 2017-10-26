@@ -29,7 +29,7 @@ public class FeaturesMap {
     /**
      * Sorted list of keys of the features map.
      */
-    private String[] sortedFeaturesList;
+    private final String[] sortedFeaturesList;
     /**
      * The number of features in the map.
      */

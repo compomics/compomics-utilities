@@ -10,27 +10,27 @@ public class AlignmentBlock {
     /**
      * The PDB start.
      */
-    private int iPdbStart;
+    private final int iPdbStart;
     /**
      * The PDB end.
      */
-    private int iPdbEnd;
+    private final int iPdbEnd;
     /**
      * The SP start.
      */
-    private int iSpStart;
+    private final int iSpStart;
     /**
      * The SP end.
      */
-    private int iSpEnd;
+    private final int iSpEnd;
     /**
      * The PDB accession.
      */
-    private String iPdbAccession;
+    private final String iPdbAccession;
     /**
      * The SP accession.
      */
-    private String iSpAccession;
+    private final String iSpAccession;
 
     /**
      * Constructor.

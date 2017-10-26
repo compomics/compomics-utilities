@@ -752,7 +752,7 @@ public class ReportEditor extends javax.swing.JDialog {
         /**
          * The list of implemented sections.
          */
-        private ArrayList<String> sectionList;
+        private final ArrayList<String> sectionList;
 
         /**
          * Constructor.

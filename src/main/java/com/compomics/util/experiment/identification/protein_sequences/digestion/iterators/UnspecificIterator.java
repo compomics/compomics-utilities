@@ -17,23 +17,23 @@ public class UnspecificIterator implements SequenceIterator {
     /**
      * Utilities classes for the digestion.
      */
-    private ProteinIteratorUtils proteinIteratorUtils;
+    private final ProteinIteratorUtils proteinIteratorUtils;
     /**
      * The protein sequence.
      */
-    private String proteinSequence;
+    private final String proteinSequence;
     /**
      * The protein sequence as char array.
      */
-    private char[] proteinSequenceAsCharArray;
+    private final char[] proteinSequenceAsCharArray;
     /**
      * The minimal mass to consider.
      */
-    private Double massMin;
+    private final Double massMin;
     /**
      * The maximal mass to consider.
      */
-    private Double massMax;
+    private final Double massMax;
     /**
      * The peptide beginning index of the iterator.
      */

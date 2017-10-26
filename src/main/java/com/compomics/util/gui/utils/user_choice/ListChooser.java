@@ -27,7 +27,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
     /**
      * Table column header tooltips.
      */
-    private ArrayList<String> tableToolTips = new ArrayList<>();
+    private final ArrayList<String> tableToolTips = new ArrayList<>();
 
     /**
      * Constructor. Null values will be replaced by default.

@@ -30,11 +30,11 @@ public class PrecursorAnnotator {
     /**
      * The mass of the precursor to annotate.
      */
-    private double precursorMass;
+    private final double precursorMass;
     /**
      * The masses of the neutral losses to consider.
      */
-    private double[] neutralLossesMasses;
+    private final double[] neutralLossesMasses;
     /**
      * Array of the neutral losses to consider.
      */

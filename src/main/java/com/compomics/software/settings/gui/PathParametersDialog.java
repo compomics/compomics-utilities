@@ -45,11 +45,11 @@ public class PathParametersDialog extends javax.swing.JDialog {
     /**
      * The tool name.
      */
-    private String toolName;
+    private final String toolName;
     /**
      * Tooltips for the paths.
      */
-    private ArrayList<String> pathsToolTips;
+    private final ArrayList<String> pathsToolTips;
     /**
      * The path table column header tooltips.
      */

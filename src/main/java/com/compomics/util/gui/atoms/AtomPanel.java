@@ -23,11 +23,11 @@ public class AtomPanel extends javax.swing.JPanel {
     /**
      * The parent dialog.
      */
-    private AtomChainDialog atomChainDialog;
+    private final AtomChainDialog atomChainDialog;
     /**
      * The panel index.
      */
-    private int panelIndex;
+    private final int panelIndex;
 
     /**
      * Creates a new AtomPanel.

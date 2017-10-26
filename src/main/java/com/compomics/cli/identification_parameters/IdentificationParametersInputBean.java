@@ -1662,15 +1662,15 @@ public class IdentificationParametersInputBean {
     /**
      * The compomics PTM factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The enzyme factory.
      */
-    private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
+    private final EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
     /**
      * The command line.
      */
-    private CommandLine commandLine;
+    private final CommandLine commandLine;
 
     /**
      * Takes all the arguments from a command line.

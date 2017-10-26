@@ -29,7 +29,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     /**
      * A boolean indicating whether the pattern can be edited.
      */
-    private boolean editable;
+    private final boolean editable;
     /**
      * A boolean indicating whether the used clicked the cancel button.
      */

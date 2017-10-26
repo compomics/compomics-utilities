@@ -17,7 +17,7 @@ public class MsConvertParameters {
     /**
      * Map of filters to use. Index of the filter - value of the argument
      */
-    private HashMap<Integer, String> filters = new HashMap<>(2);
+    private final HashMap<Integer, String> filters = new HashMap<>(2);
 
     /**
      * Constructor.

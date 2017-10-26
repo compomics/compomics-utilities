@@ -34,11 +34,11 @@ public class ProteinIteratorUtils {
     /**
      * The fixed protein N-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedProteinNtermModificationsAtAa = new HashMap<>(0);
+    private final HashMap<Character, String> fixedProteinNtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed protein C-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedProteinCtermModificationsAtAa = new HashMap<>(0);
+    private final HashMap<Character, String> fixedProteinCtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed peptide N-term modification.
      */
@@ -50,15 +50,15 @@ public class ProteinIteratorUtils {
     /**
      * The fixed peptide N-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedPeptideNtermModificationsAtAa = new HashMap<>(0);
+    private final HashMap<Character, String> fixedPeptideNtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed peptide C-term modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedPeptideCtermModificationsAtAa = new HashMap<>(0);
+    private final HashMap<Character, String> fixedPeptideCtermModificationsAtAa = new HashMap<>(0);
     /**
      * The fixed modifications at specific amino acids.
      */
-    private HashMap<Character, String> fixedModificationsAtAa = new HashMap<>(0);
+    private final HashMap<Character, String> fixedModificationsAtAa = new HashMap<>(0);
     /**
      * Map of modifications at specific amino acids (termini or not) targeting a
      * pattern of amino acids.

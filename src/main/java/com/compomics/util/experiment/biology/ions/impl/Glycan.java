@@ -41,7 +41,7 @@ public class Glycan extends Ion {
     /**
      * Masses of this glycan.
      */
-    private HashMap<Integer, Double> theoreticMasses = new HashMap<>();
+    private final HashMap<Integer, Double> theoreticMasses = new HashMap<>();
 
     /**
      * Constructor for a glycan.
@@ -57,11 +57,11 @@ public class Glycan extends Ion {
     /**
      * The glycan short name which can be displayed on a spectrum.
      */
-    private String name;
+    private final String name;
     /**
      * The glycan full name.
      */
-    private String longName;
+    private final String longName;
 
     /**
      * Add a mass for this glycan.

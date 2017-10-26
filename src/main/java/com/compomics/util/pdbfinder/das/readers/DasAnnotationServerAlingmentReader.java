@@ -12,7 +12,7 @@ public class DasAnnotationServerAlingmentReader {
     /**
      * The XML string to parse.
      */
-    private String iXml;
+    private final String iXml;
     /**
      * The last feature end position.
      */

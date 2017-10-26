@@ -42,23 +42,23 @@ public class ModificationFactory implements Serializable {
      * The name of the Modification factory back-up file. The version number follows the
      * one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "modificationFactory-4.12.1.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-4.12.1.json";
     /**
      * A map linking indexes with modifications.
      */
-    private HashMap<String, Modification> modificationMap = new HashMap<>();
+    private final HashMap<String, Modification> modificationMap = new HashMap<>();
     /**
      * List of the indexes of default modifications.
      */
-    private ArrayList<String> defaultMods = new ArrayList<>();
+    private final ArrayList<String> defaultMods = new ArrayList<>();
     /**
      * List of the indexes of user modifications.
      */
-    private ArrayList<String> userMods = new ArrayList<>();
+    private final ArrayList<String> userMods = new ArrayList<>();
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> userColors = new HashMap<>();
+    private final HashMap<String, Color> userColors = new HashMap<>();
     /**
      * Suffix for the modification clone targeting a single amino acid instead
      * of a pattern.

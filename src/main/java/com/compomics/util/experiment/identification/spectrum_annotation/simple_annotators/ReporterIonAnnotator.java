@@ -17,12 +17,12 @@ public class ReporterIonAnnotator {
     /**
      * Array of the m/z of the reporter ions to annotate.
      */
-    private double[] reporterIonsMz;
+    private final double[] reporterIonsMz;
     
     /**
      * Array of the reporter ions to annotate.
      */
-    private ReporterIon[] reporterIons;
+    private final ReporterIon[] reporterIons;
     
     /**
      * Constructor.

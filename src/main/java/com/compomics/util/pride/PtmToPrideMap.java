@@ -26,7 +26,7 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Map of the CV terms indexed by modification user name.
      */
-    private HashMap<String, CvTerm> modToCvMap = new HashMap<>();
+    private final HashMap<String, CvTerm> modToCvMap = new HashMap<>();
 
     /**
      * Constructor.

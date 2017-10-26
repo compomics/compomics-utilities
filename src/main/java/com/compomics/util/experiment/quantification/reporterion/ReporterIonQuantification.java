@@ -19,7 +19,7 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * The sample assignment to the various reporter ions indexed by their name.
      */
-    private HashMap<String, Sample> sampleAssignement = new HashMap<>();
+    private final HashMap<String, Sample> sampleAssignement = new HashMap<>();
     /**
      * The sample index map. The key is the sample reference and the element the
      * index as a zero based integer.

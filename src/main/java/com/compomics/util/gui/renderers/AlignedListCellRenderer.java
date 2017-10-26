@@ -17,7 +17,7 @@ public class AlignedListCellRenderer extends DefaultListCellRenderer {
      * (the default for image-only labels), RIGHT, LEADING (the default for
      * text-only labels) or TRAILING.
      */
-    private int align;
+    private final int align;
 
     /**
      * Creates a new AlignedListCellRenderer

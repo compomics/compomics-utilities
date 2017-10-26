@@ -81,13 +81,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      *
      * @deprecated now general search setting
      */
-    private Integer lowerIsotopeCorrection = -1; // note: the new default is 0
+    private final Integer lowerIsotopeCorrection = -1; // note: the new default is 0
     /**
      * The upper isotope correction range.
      *
      * @deprecated now general search setting
      */
-    private Integer upperIsotopeCorrection = 2; // note: new default is 1
+    private final Integer upperIsotopeCorrection = 2; // note: new default is 1
     /**
      * The fragmentation rules. CID (b, y), ETD (c, z*) or manual (user-defined
      * (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z)

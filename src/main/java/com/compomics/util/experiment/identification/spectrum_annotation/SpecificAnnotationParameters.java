@@ -18,11 +18,11 @@ public class SpecificAnnotationParameters {
     /**
      * The key of the currently annotated spectrum.
      */
-    private String spectrumKey;
+    private final String spectrumKey;
     /**
      * The currently annotated spectrumIdentificationAssumption.
      */
-    private SpectrumIdentificationAssumption spectrumIdentificationAssumption;
+    private final SpectrumIdentificationAssumption spectrumIdentificationAssumption;
     /**
      * The types of ions to annotate.
      */

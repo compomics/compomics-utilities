@@ -21,15 +21,15 @@ public class EnsemblSpecies {
     /**
      * NCBI ID to scientific name.
      */
-    private HashMap<Integer, String> idToNameMap;
+    private final HashMap<Integer, String> idToNameMap;
     /**
      * NCBI ID to common name.
      */
-    private HashMap<Integer, String> idToCommonNameMap;
+    private final HashMap<Integer, String> idToCommonNameMap;
     /**
      * NCBI ID to Ensembl assembly.
      */
-    private HashMap<Integer, String> idToAssemblyMap;
+    private final HashMap<Integer, String> idToAssemblyMap;
 
     /**
      * Constructor.

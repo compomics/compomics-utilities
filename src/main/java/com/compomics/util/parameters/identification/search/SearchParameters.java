@@ -1085,11 +1085,15 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
 
         for (int se : getAlgorithms()) {
+            
             IdentificationAlgorithmParameter otherParameter = otherSearchParameters.getIdentificationAlgorithmParameter(se);
+            
             if (otherParameter == null) {
                 return false;
             }
+            
             IdentificationAlgorithmParameter thisParameter = getIdentificationAlgorithmParameter(se);
+            
             if (!otherParameter.equals(thisParameter)) {
                 return false;
             }

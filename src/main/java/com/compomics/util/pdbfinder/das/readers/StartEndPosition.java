@@ -10,11 +10,11 @@ public class StartEndPosition {
     /**
      * The start.
      */
-    private int iStart;
+    private final int iStart;
     /**
      * The end.
      */
-    private int iEnd;
+    private final int iEnd;
 
     /**
      * Constructor.

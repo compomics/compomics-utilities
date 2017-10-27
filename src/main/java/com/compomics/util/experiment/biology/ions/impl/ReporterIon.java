@@ -34,7 +34,7 @@ public class ReporterIon extends Ion {
     /**
      * The possible subtypes as list of indexes.
      */
-    private static ArrayList<Integer> possibleSubtypes = null;
+    private static int[] possibleSubtypes = null;
     /**
      * Standard reporter ion iTRAQ 4Plex 114.
      */
@@ -540,18 +540,25 @@ public class ReporterIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
+    public static int[] getPossibleSubtypes() {
+        
         if (possibleSubtypes == null) {
-            ArrayList<Integer> tempList = new ArrayList<>(implementedIons.size());
+            
+            int[] temp = new int[implementedIons.size()];
+            
             for (int i = 0; i < implementedIons.size(); i++) {
-                tempList.add(i);
+                
+                temp[i] = i;
+                
             }
-            possibleSubtypes = tempList;
+            possibleSubtypes = temp;
+            
         }
+        
         return possibleSubtypes;
     }
 

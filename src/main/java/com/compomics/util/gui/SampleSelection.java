@@ -14,7 +14,7 @@ public class SampleSelection extends javax.swing.JDialog {
     /**
      * The samples found.
      */
-    private String[] samples;
+    private final String[] samples;
     /**
      * The choice of the user.
      */

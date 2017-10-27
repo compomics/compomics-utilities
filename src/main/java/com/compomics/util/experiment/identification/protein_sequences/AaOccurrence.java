@@ -15,12 +15,12 @@ public class AaOccurrence {
      * Occurrences of the amino acids without combinations indexed as in the
      * AminoAcid class.
      */
-    private int[] uniqueAaOccurrence;
+    private final int[] uniqueAaOccurrence;
     /**
      * Shares of the amino acids without combinations indexed as in the
      * AminoAcid class. -Log10 transformed.
      */
-    private double[] uniqueAaShareLog;
+    private final double[] uniqueAaShareLog;
 
     /**
      * Constructor.

@@ -28,15 +28,15 @@ public class UniprotTaxonomy {
     /**
      * UniProt species name to NCBI ID.
      */
-    private HashMap<String, Integer> nameToIdMap;
+    private final HashMap<String, Integer> nameToIdMap;
     /**
      * NCBI ID to Latin name.
      */
-    private HashMap<Integer, String> idToNameMap;
+    private final HashMap<Integer, String> idToNameMap;
     /**
      * NCBI ID to common name.
      */
-    private HashMap<Integer, String> idToCommonNameMap;
+    private final HashMap<Integer, String> idToCommonNameMap;
     /**
      * The local file to store the mappings.
      */

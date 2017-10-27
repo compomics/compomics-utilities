@@ -40,21 +40,21 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The post translational modifications factory.
      */
-    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * The color used for the sparkline bar chart plots.
      */
-    private Color sparklineColor = new Color(110, 196, 97);
+    private final Color sparklineColor = new Color(110, 196, 97);
     /**
      * The color to use for the HTML tags for the selected rows, in HTML color
      * code.
      */
-    private String selectedRowHtmlTagFontColor = "#FFFFFF";
+    private final String selectedRowHtmlTagFontColor = "#FFFFFF";
     /**
      * The color to use for the HTML tags for the rows that are not selected, in
      * HTML color code.
      */
-    private String notSelectedRowHtmlTagFontColor = "#0101DF";
+    private final String notSelectedRowHtmlTagFontColor = "#0101DF";
     /**
      * The default mods table column header tooltips.
      */
@@ -66,7 +66,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The lines of the Modifications concerned by the search.
      */
-    private ArrayList<Integer> searchPossibilities = new ArrayList<>();
+    private final ArrayList<Integer> searchPossibilities = new ArrayList<>();
     /**
      * The search current selection.
      */

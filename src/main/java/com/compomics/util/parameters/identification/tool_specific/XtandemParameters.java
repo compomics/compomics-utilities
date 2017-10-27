@@ -17,7 +17,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     /**
      * Maximal e-value cut-off.
      */
-    private Double maxEValue = 0.01;
+    private double maxEValue = 0.01;
     /**
      * The output results filter: all, valid or stochastic.
      */
@@ -27,69 +27,69 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * the dynamic range value peaks smaller than one are ignored. e.g. for 100
      * peaks with an intensity &lt;1% of the highest peak are ignored.
      */
-    private Double dynamicRange = 100.0;
+    private double dynamicRange = 100.0;
     /**
      * The number of most intense peaks to consider.
      */
-    private Integer nPeaks = 50;
+    private int nPeaks = 50;
     /**
      * The minimum precursor mass.
      */
-    private Double minPrecursorMass = 500.0;
+    private double minPrecursorMass = 500.0;
     /**
      * The minimum fragment mass.
      */
-    private Double minFragmentMz = 200.0;
+    private double minFragmentMz = 200.0;
     /**
      * The minimum number of peaks per spectrum.
      */
-    private Integer minPeaksPerSpectrum = 5;
+    private int minPeaksPerSpectrum = 5;
     /**
      * Indicates whether the protein quick acetylation option should be
      * triggered.
      */
-    private Boolean proteinQuickAcetyl = true;
+    private boolean proteinQuickAcetyl = true;
     /**
      * Indicates whether the quick pyrolidone option should be triggered.
      */
-    private Boolean quickPyrolidone = true;
+    private boolean quickPyrolidone = true;
     /**
      * Triggers the refinement process.
      */
-    private Boolean refine = true;
+    private boolean refine = true;
     /**
      * Sets whether semi enzymatic peptides should be search for during the
      * refinement process.
      */
-    private Boolean refineSemi = false;
+    private boolean refineSemi = false;
     /**
      * Sets whether point mutations should be search for during the refinement
      * process.
      */
-    private Boolean refinePointMutations = false;
+    private boolean refinePointMutations = false;
     /**
      * Sets whether the spectrum synthesis option should be used during the
      * refinement process.
      */
-    private Boolean refineSpectrumSynthesis = true;
+    private boolean refineSpectrumSynthesis = true;
     /**
      * Sets whether unexpected cleavages should be search for during the
      * refinement process.
      */
-    private Boolean refineUnanticipatedCleavages = true;
+    private boolean refineUnanticipatedCleavages = true;
     /**
      * Indicates whether snAPs should be used during the refinement process.
      */
-    private Boolean refineSnaps = true;
+    private boolean refineSnaps = true;
     /**
      * The maximum expectation value for a hit to be considered during the
      * refinement process.
      */
-    private Double maximumExpectationValueRefinement = 0.01;
+    private double maximumExpectationValueRefinement = 0.01;
     /**
      * Sets the modifications to be used during the refinement process.
      */
-    private Boolean potentialModificationsForFullRefinment = false;
+    private boolean potentialModificationsForFullRefinment = false;
     /**
      * The skyline path.
      */
@@ -97,7 +97,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     /**
      * If true protein details will be exported to the to the result file.
      */
-    private Boolean outputProteins = true;
+    private boolean outputProteins = true;
     /**
      * If true protein sequences will be added to the protein details to the
      * result file.
@@ -106,20 +106,20 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     /**
      * If true spectra will be exported to the result file.
      */
-    private Boolean outputSpectra = true;
+    private boolean outputSpectra = true;
     /**
      * If true histograms will be exported to the result file.
      */
-    private Boolean outputHistograms = false;
+    private boolean outputHistograms = false;
     /**
      * Indicates whether the phospho stp bias option should be triggered.
      */
-    private Boolean stpBias = false;
+    private boolean stpBias = false;
     /**
      * Triggers the noise suppression function. Note: ignored in X!Tandem
      * VENGEANCE (2015.12.15) and newer.
      */
-    private Boolean useNoiseSuppression = false;
+    private boolean useNoiseSuppression = false;
     /**
      * The value of the command "protein, ptm complexity" (C, a floating point
      * number 0.0–12.0) sets the maximum number of variable modification
@@ -127,13 +127,13 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * alternatives is 2.0C. If this number is not specified, the default value
      * C = 6.0 will be used.
      */
-    private Double proteinPtmComplexity = 6.0;
+    private double proteinPtmComplexity = 6.0;
     /**
      * Sets whether the parent ion mass tolerance is expanded by opening up
      * multiple tolerance windows centered on the first and second 13C isotope
      * peaks for a peptide.
      */
-    private Boolean parentMonoisotopicMassIsotopeError = true;
+    private boolean parentMonoisotopicMassIsotopeError = true;
 
     /**
      * Constructor.
@@ -147,7 +147,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the dynamic range for spectrum filtering
      */
-    public Double getDynamicRange() {
+    public double getDynamicRange() {
         return dynamicRange;
     }
 
@@ -156,7 +156,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param dynamicRange the dynamic range for spectrum filtering
      */
-    public void setDynamicRange(Double dynamicRange) {
+    public void setDynamicRange(double dynamicRange) {
         this.dynamicRange = dynamicRange;
     }
 
@@ -165,7 +165,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the number of most intense peaks to consider
      */
-    public Integer getnPeaks() {
+    public int getnPeaks() {
         return nPeaks;
     }
 
@@ -174,7 +174,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param nPeaks the number of most intense peaks to consider
      */
-    public void setnPeaks(Integer nPeaks) {
+    public void setnPeaks(int nPeaks) {
         this.nPeaks = nPeaks;
     }
 
@@ -183,7 +183,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the minimal precursor mass
      */
-    public Double getMinPrecursorMass() {
+    public double getMinPrecursorMass() {
         return minPrecursorMass;
     }
 
@@ -192,7 +192,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param minPrecursorMass the minimal precursor mass
      */
-    public void setMinPrecursorMass(Double minPrecursorMass) {
+    public void setMinPrecursorMass(double minPrecursorMass) {
         this.minPrecursorMass = minPrecursorMass;
     }
 
@@ -201,7 +201,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the minimal fragment m/z
      */
-    public Double getMinFragmentMz() {
+    public double getMinFragmentMz() {
         return minFragmentMz;
     }
 
@@ -210,7 +210,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param minFragmentMz the minimal fragment m/z
      */
-    public void setMinFragmentMz(Double minFragmentMz) {
+    public void setMinFragmentMz(double minFragmentMz) {
         this.minFragmentMz = minFragmentMz;
     }
 
@@ -219,7 +219,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the minimal number of peaks per spectrum
      */
-    public Integer getMinPeaksPerSpectrum() {
+    public int getMinPeaksPerSpectrum() {
         return minPeaksPerSpectrum;
     }
 
@@ -228,7 +228,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param minPeaksPerSpectrum the minimal number of peaks per spectrum
      */
-    public void setMinPeaksPerSpectrum(Integer minPeaksPerSpectrum) {
+    public void setMinPeaksPerSpectrum(int minPeaksPerSpectrum) {
         this.minPeaksPerSpectrum = minPeaksPerSpectrum;
     }
 
@@ -238,7 +238,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the protein quick acetylation option should be triggered
      */
-    public Boolean isProteinQuickAcetyl() {
+    public boolean isProteinQuickAcetyl() {
         return proteinQuickAcetyl;
     }
 
@@ -248,7 +248,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param proteinQuickAcetyl true if the protein quick acetylation option
      * should be triggered
      */
-    public void setProteinQuickAcetyl(Boolean proteinQuickAcetyl) {
+    public void setProteinQuickAcetyl(boolean proteinQuickAcetyl) {
         this.proteinQuickAcetyl = proteinQuickAcetyl;
     }
 
@@ -257,7 +257,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the quick pyrolidone option should be triggered
      */
-    public Boolean isQuickPyrolidone() {
+    public boolean isQuickPyrolidone() {
         return quickPyrolidone;
     }
 
@@ -266,7 +266,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param quickPyrolidone the quick pyrolidone option should be triggered
      */
-    public void setQuickPyrolidone(Boolean quickPyrolidone) {
+    public void setQuickPyrolidone(boolean quickPyrolidone) {
         this.quickPyrolidone = quickPyrolidone;
     }
 
@@ -275,7 +275,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the second pass search should be triggered
      */
-    public Boolean isRefine() {
+    public boolean isRefine() {
         return refine;
     }
 
@@ -284,7 +284,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param refine true if the second pass search should be triggered
      */
-    public void setRefine(Boolean refine) {
+    public void setRefine(boolean refine) {
         this.refine = refine;
     }
 
@@ -293,7 +293,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the stP bias should be triggered
      */
-    public Boolean isStpBias() {
+    public boolean isStpBias() {
         return stpBias;
     }
 
@@ -302,7 +302,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param stpBias true if the stP bias should be triggered
      */
-    public void setStpBias(Boolean stpBias) {
+    public void setStpBias(boolean stpBias) {
         this.stpBias = stpBias;
     }
 
@@ -311,7 +311,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the maximal e-value searched for
      */
-    public Double getMaxEValue() {
+    public double getMaxEValue() {
         return maxEValue;
     }
 
@@ -320,7 +320,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param maxEValue the maximal e-value searched for
      */
-    public void setMaxEValue(Double maxEValue) {
+    public void setMaxEValue(double maxEValue) {
         this.maxEValue = maxEValue;
     }
 
@@ -331,7 +331,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the semi enzymatic option of the second pass search
      * should be triggered
      */
-    public Boolean isRefineSemi() {
+    public boolean isRefineSemi() {
         return refineSemi;
     }
 
@@ -342,7 +342,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param refineSemi true if the semi enzymatic option of the second pass
      * search should be triggered
      */
-    public void setRefineSemi(Boolean refineSemi) {
+    public void setRefineSemi(boolean refineSemi) {
         this.refineSemi = refineSemi;
     }
 
@@ -353,7 +353,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if point mutations should be looked for during the
      * refinement process
      */
-    public Boolean isRefinePointMutations() {
+    public boolean isRefinePointMutations() {
         return refinePointMutations;
     }
 
@@ -364,7 +364,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param refinePointMutations true if point mutations should be looked for
      * during the refinement process
      */
-    public void setRefinePointMutations(Boolean refinePointMutations) {
+    public void setRefinePointMutations(boolean refinePointMutations) {
         this.refinePointMutations = refinePointMutations;
     }
 
@@ -375,7 +375,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the spectrum synthesis option should be used during the
      * refinement process
      */
-    public Boolean isRefineSpectrumSynthesis() {
+    public boolean isRefineSpectrumSynthesis() {
         return refineSpectrumSynthesis;
     }
 
@@ -386,7 +386,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param refineSpectrumSynthesis true if the spectrum synthesis option
      * should be used during the refinement process
      */
-    public void setRefineSpectrumSynthesis(Boolean refineSpectrumSynthesis) {
+    public void setRefineSpectrumSynthesis(boolean refineSpectrumSynthesis) {
         this.refineSpectrumSynthesis = refineSpectrumSynthesis;
     }
 
@@ -397,7 +397,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the unanticipated cleavages option should be used during
      * the refinement process
      */
-    public Boolean isRefineUnanticipatedCleavages() {
+    public boolean isRefineUnanticipatedCleavages() {
         return refineUnanticipatedCleavages;
     }
 
@@ -408,7 +408,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param refineUnanticipatedCleavages true if the unanticipated cleavages
      * option should be used during the refinement process
      */
-    public void setRefineUnanticipatedCleavages(Boolean refineUnanticipatedCleavages) {
+    public void setRefineUnanticipatedCleavages(boolean refineUnanticipatedCleavages) {
         this.refineUnanticipatedCleavages = refineUnanticipatedCleavages;
     }
 
@@ -417,7 +417,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return the maximum expectation value to use for refinement
      */
-    public Double getMaximumExpectationValueRefinement() {
+    public double getMaximumExpectationValueRefinement() {
         return maximumExpectationValueRefinement;
     }
 
@@ -427,7 +427,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param maximumExpectationValue the maximum expectation value to use for
      * refinement
      */
-    public void setMaximumExpectationValueRefinement(Double maximumExpectationValue) {
+    public void setMaximumExpectationValueRefinement(double maximumExpectationValue) {
         this.maximumExpectationValueRefinement = maximumExpectationValue;
     }
 
@@ -438,7 +438,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the refinement modifications should be used for the full
      * refinement
      */
-    public Boolean isPotentialModificationsForFullRefinment() {
+    public boolean isPotentialModificationsForFullRefinment() {
         return potentialModificationsForFullRefinment;
     }
 
@@ -449,7 +449,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param potentialModificationsForFullRefinment true if the refinement
      * modifications should be used for the full refinement
      */
-    public void setPotentialModificationsForFullRefinment(Boolean potentialModificationsForFullRefinment) {
+    public void setPotentialModificationsForFullRefinment(boolean potentialModificationsForFullRefinment) {
         this.potentialModificationsForFullRefinment = potentialModificationsForFullRefinment;
     }
 
@@ -476,7 +476,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the protein bloc should be included in the export
      */
-    public Boolean isOutputProteins() {
+    public boolean isOutputProteins() {
         return outputProteins;
     }
 
@@ -485,7 +485,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @param outputProteins the protein bloc should be included in the export
      */
-    public void setOutputProteins(Boolean outputProteins) {
+    public void setOutputProteins(boolean outputProteins) {
         this.outputProteins = outputProteins;
     }
 
@@ -496,7 +496,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the protein sequences should be included in the protein
      * block of the export
      */
-    public Boolean isOutputSequences() {
+    public boolean isOutputSequences() {
         return outputSequences;
     }
 
@@ -516,7 +516,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if the spectra should be exported in the result file
      */
-    public Boolean isOutputSpectra() {
+    public boolean isOutputSpectra() {
         return outputSpectra;
     }
 
@@ -526,7 +526,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param outputSpectra true if the spectra should be exported in the result
      * file
      */
-    public void setOutputSpectra(Boolean outputSpectra) {
+    public void setOutputSpectra(boolean outputSpectra) {
         this.outputSpectra = outputSpectra;
     }
 
@@ -535,7 +535,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if histograms should be written in the result file
      */
-    public Boolean isOutputHistograms() {
+    public boolean isOutputHistograms() {
         return outputHistograms;
     }
 
@@ -545,7 +545,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param outputHistograms true if histograms should be written in the
      * result file
      */
-    public void setOutputHistograms(Boolean outputHistograms) {
+    public void setOutputHistograms(boolean outputHistograms) {
         this.outputHistograms = outputHistograms;
     }
 
@@ -555,7 +555,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if noise suppression should be used when importing spectra
      */
-    public Boolean isUseNoiseSuppression() {
+    public boolean isUseNoiseSuppression() {
         return useNoiseSuppression;
     }
 
@@ -566,7 +566,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param useNoiseSuppression true if noise suppression should be used when
      * importing spectra
      */
-    public void setUseNoiseSuppression(Boolean useNoiseSuppression) {
+    public void setUseNoiseSuppression(boolean useNoiseSuppression) {
         this.useNoiseSuppression = useNoiseSuppression;
     }
 
@@ -575,7 +575,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if snAPs should be used during the refinement process
      */
-    public Boolean isRefineSnaps() {
+    public boolean isRefineSnaps() {
         return refineSnaps;
     }
 
@@ -585,7 +585,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @param refineSnaps true if snAPs should be used during the refinement
      * process
      */
-    public void setRefineSnaps(Boolean refineSnaps) {
+    public void setRefineSnaps(boolean refineSnaps) {
         this.refineSnaps = refineSnaps;
     }
 
@@ -612,7 +612,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * 
      * @return the proteinPtmComplexity
      */
-    public Double getProteinPtmComplexity() {
+    public double getProteinPtmComplexity() {
         return proteinPtmComplexity;
     }
 
@@ -621,7 +621,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * 
      * @param proteinPtmComplexity the proteinPtmComplexity to set
      */
-    public void setProteinPtmComplexity(Double proteinPtmComplexity) {
+    public void setProteinPtmComplexity(double proteinPtmComplexity) {
         this.proteinPtmComplexity = proteinPtmComplexity;
     }
 
@@ -635,87 +635,82 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
-            double diff = Math.abs(maxEValue - xtandemParameters.getMaxEValue());
             if (maxEValue != xtandemParameters.getMaxEValue()) {
                 return false;
             }
-            diff = Math.abs(dynamicRange - xtandemParameters.getDynamicRange());
-            if (diff > 0.0000000000001) {
+            if (dynamicRange != xtandemParameters.getDynamicRange()) {
                 return false;
             }
-            if (getnPeaks().intValue() != xtandemParameters.getnPeaks()) {
+            if (getnPeaks() != xtandemParameters.getnPeaks()) {
                 return false;
             }
-            diff = Math.abs(minPrecursorMass - xtandemParameters.getMinPrecursorMass());
-            if (diff > 0.0000000000001) {
+            if (minPrecursorMass != xtandemParameters.getMinPrecursorMass()) {
                 return false;
             }
-            diff = Math.abs(minFragmentMz - xtandemParameters.getMinFragmentMz());
-            if (diff > 0.0000000000001) {
+            if (minFragmentMz != xtandemParameters.getMinFragmentMz()) {
                 return false;
             }
-            if (getMinPeaksPerSpectrum().intValue() != xtandemParameters.getMinPeaksPerSpectrum()) {
+            if (getMinPeaksPerSpectrum() != xtandemParameters.getMinPeaksPerSpectrum()) {
                 return false;
             }
-            if (isProteinQuickAcetyl().booleanValue() != xtandemParameters.isProteinQuickAcetyl()) {
+            if (isProteinQuickAcetyl() != xtandemParameters.isProteinQuickAcetyl()) {
                 return false;
             }
-            if (isQuickPyrolidone().booleanValue() != xtandemParameters.isQuickPyrolidone()) {
+            if (isQuickPyrolidone() != xtandemParameters.isQuickPyrolidone()) {
                 return false;
             }
-            if (isRefine().booleanValue() != xtandemParameters.isRefine()) {
+            if (isRefine() != xtandemParameters.isRefine()) {
                 return false;
             }
-            if (isRefineSemi().booleanValue() != xtandemParameters.isRefineSemi()) {
+            if (isRefineSemi() != xtandemParameters.isRefineSemi()) {
                 return false;
             }
-            if (isRefinePointMutations().booleanValue() != xtandemParameters.isRefinePointMutations()) {
+            if (isRefinePointMutations() != xtandemParameters.isRefinePointMutations()) {
                 return false;
             }
-            if (isRefineSpectrumSynthesis().booleanValue() != xtandemParameters.isRefineSpectrumSynthesis()) {
+            if (isRefineSpectrumSynthesis() != xtandemParameters.isRefineSpectrumSynthesis()) {
                 return false;
             }
-            if (isRefineUnanticipatedCleavages().booleanValue() != xtandemParameters.isRefineUnanticipatedCleavages()) {
+            if (isRefineUnanticipatedCleavages() != xtandemParameters.isRefineUnanticipatedCleavages()) {
                 return false;
             }
-            if (isRefineSnaps().booleanValue() != xtandemParameters.isRefineSnaps()) {
+            if (isRefineSnaps() != xtandemParameters.isRefineSnaps()) {
                 return false;
             }
-            diff = Math.abs(maximumExpectationValueRefinement - xtandemParameters.getMaximumExpectationValueRefinement());
-            if (diff > 0.0000000000001) {
+            if (maximumExpectationValueRefinement != xtandemParameters.getMaximumExpectationValueRefinement()) {
                 return false;
             }
-            if (isPotentialModificationsForFullRefinment().booleanValue() != xtandemParameters.isPotentialModificationsForFullRefinment()) {
+            if (isPotentialModificationsForFullRefinment() != xtandemParameters.isPotentialModificationsForFullRefinment()) {
                 return false;
             }
             if (!getSkylinePath().equals(xtandemParameters.getSkylinePath())) {
                 return false;
             }
-            if (isOutputProteins().booleanValue() != xtandemParameters.isOutputProteins()) {
+            if (isOutputProteins() != xtandemParameters.isOutputProteins()) {
                 return false;
             }
-            if (isOutputSpectra().booleanValue() != xtandemParameters.isOutputSpectra()) {
+            if (isOutputSpectra() != xtandemParameters.isOutputSpectra()) {
                 return false;
             }
-            if (isOutputSequences().booleanValue() != xtandemParameters.isOutputSequences()) {
+            if (isOutputSequences() != xtandemParameters.isOutputSequences()) {
                 return false;
             }
-            if (isOutputHistograms().booleanValue() != xtandemParameters.isOutputHistograms()) {
+            if (isOutputHistograms() != xtandemParameters.isOutputHistograms()) {
                 return false;
             }
-            if (isStpBias().booleanValue() != xtandemParameters.isStpBias()) {
+            if (isStpBias() != xtandemParameters.isStpBias()) {
                 return false;
             }
-            if (isUseNoiseSuppression().booleanValue() != xtandemParameters.isUseNoiseSuppression()) {
+            if (isUseNoiseSuppression() != xtandemParameters.isUseNoiseSuppression()) {
                 return false;
             }
             if (!getOutputResults().equalsIgnoreCase(xtandemParameters.getOutputResults())) {
                 return false;
             }
-            if (getProteinPtmComplexity().doubleValue() != xtandemParameters.getProteinPtmComplexity()) {
+            if (getProteinPtmComplexity() != xtandemParameters.getProteinPtmComplexity()) {
                 return false;
             }
-            if (getParentMonoisotopicMassIsotopeError().booleanValue() != xtandemParameters.getParentMonoisotopicMassIsotopeError()) {
+            if (getParentMonoisotopicMassIsotopeError() != xtandemParameters.getParentMonoisotopicMassIsotopeError()) {
                 return false;
             }
             return true;
@@ -919,10 +914,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * 
      * @return the parentMonoisotopicMassIsotopeError
      */
-    public Boolean getParentMonoisotopicMassIsotopeError() {
-        if (parentMonoisotopicMassIsotopeError == null) {
-            parentMonoisotopicMassIsotopeError = true;
-        }
+    public boolean getParentMonoisotopicMassIsotopeError() {
         return parentMonoisotopicMassIsotopeError;
     }
 
@@ -933,7 +925,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * 
      * @param parentMonoisotopicMassIsotopeError the parentMonoisotopicMassIsotopeError to set
      */
-    public void setParentMonoisotopicMassIsotopeError(Boolean parentMonoisotopicMassIsotopeError) {
+    public void setParentMonoisotopicMassIsotopeError(boolean parentMonoisotopicMassIsotopeError) {
         this.parentMonoisotopicMassIsotopeError = parentMonoisotopicMassIsotopeError;
     }
 }

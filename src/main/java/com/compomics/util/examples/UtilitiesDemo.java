@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -129,12 +130,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * The maximum padding allowed in the spectrum panels. Increase if font size
      * on the y-axis becomes too small.
      */
-    private int spectrumPanelMaxPadding = 50;
+    private final int spectrumPanelMaxPadding = 50;
     /**
      * The maximum padding allowed in the chromatogram panels. Increase if font
      * size on the y-axis becomes too small.
      */
-    private int chromatogramPanelMaxPadding = 65;
+    private final int chromatogramPanelMaxPadding = 65;
     /**
      * Used to read the enzyme details from file.
      */
@@ -150,11 +151,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Sequence annotation column header tooltips.
      */
-    private ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<>();
+    private final ArrayList<String> sequenceAnnotationColumnHeaderTooltips = new ArrayList<>();
     /**
      * The color used for the sparkline bar chart plots.
      */
-    private Color sparklineColor = new Color(110, 196, 97);
+    private final Color sparklineColor = new Color(110, 196, 97);
 
     /**
      * Creates a new UtilitiesDemo frame and makes it visible.
@@ -2357,13 +2358,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             Vector<SpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
 
             // update the ion coverage annotations
-            currentSpectrumPanel.setAnnotations(SpectrumPanel.filterAnnotations(
-                    currentAnnotations,
-                    getCurrentFragmentIonTypes(),
-                    getNeutralLosses(),
-                    chargeOneJCheckBox.isSelected(),
-                    chargeTwoJCheckBox.isSelected(),
-                    chargeOverTwoJCheckBox.isSelected()));
+            currentSpectrumPanel.setAnnotations(
+                    SpectrumPanel.filterAnnotations(
+                            currentAnnotations,
+                            getCurrentFragmentIonTypes(),
+                            getNeutralLosses(),
+                            chargeOneJCheckBox.isSelected(),
+                            chargeTwoJCheckBox.isSelected(),
+                            chargeOverTwoJCheckBox.isSelected()));
             currentSpectrumPanel.validate();
             currentSpectrumPanel.repaint();
         }
@@ -3415,39 +3417,56 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      *
      * @return a map of the currently selected fragment ion types
      */
-    private HashMap<IonType, ArrayList<Integer>> getCurrentFragmentIonTypes() {
+    private HashMap<IonType, HashSet<Integer>> getCurrentFragmentIonTypes() {
 
-        HashMap<IonType, ArrayList<Integer>> fragmentIontypes = new HashMap<>();
-        fragmentIontypes.put(IonType.PEPTIDE_FRAGMENT_ION, new ArrayList<>());
+        HashMap<IonType, HashSet<Integer>> fragmentIontypes = new HashMap<>(1);
+
+        HashSet<Integer> selectedFragmentIons = new HashSet<>(2);
 
         if (aIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.A_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.A_ION);
+
         }
 
         if (bIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.B_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.B_ION);
+
         }
 
         if (cIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.C_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.C_ION);
+
         }
 
         if (xIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.X_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.X_ION);
+
         }
 
         if (yIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.Y_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.Y_ION);
+
         }
 
         if (zIonsJCheckBox.isSelected()) {
-            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.Z_ION);
+
+            selectedFragmentIons.add(PeptideFragmentIon.Z_ION);
+
         }
 
+        fragmentIontypes.put(IonType.PEPTIDE_FRAGMENT_ION, selectedFragmentIons);
+
         if (otherIonsJCheckBox.isSelected()) {
-            fragmentIontypes.put(IonType.IMMONIUM_ION, Ion.getPossibleSubtypes(IonType.IMMONIUM_ION));
-            fragmentIontypes.put(IonType.PRECURSOR_ION, Ion.getPossibleSubtypes(IonType.PRECURSOR_ION));
-            fragmentIontypes.put(IonType.REPORTER_ION, Ion.getPossibleSubtypes(IonType.REPORTER_ION));
+
+            fragmentIontypes.put(IonType.IMMONIUM_ION, Ion.getPossibleSubtypesAsSet(IonType.IMMONIUM_ION));
+            fragmentIontypes.put(IonType.PRECURSOR_ION, Ion.getPossibleSubtypesAsSet(IonType.PRECURSOR_ION));
+            fragmentIontypes.put(IonType.REPORTER_ION, Ion.getPossibleSubtypesAsSet(IonType.REPORTER_ION));
+
         }
 
         return fragmentIontypes;
@@ -3509,8 +3528,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         return p.getProperty("compomics-utilities.version");
     }
-    */
-    
+     */
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;

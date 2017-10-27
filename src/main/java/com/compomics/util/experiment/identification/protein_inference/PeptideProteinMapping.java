@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -285,14 +286,14 @@ public class PeptideProteinMapping {
             Peptide peptide = peptidesMap.get(peptideKey);
 
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
-            HashMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
+            TreeMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
                     .collect(Collectors.toMap(Entry::getKey,
                             entry -> entry.getValue().stream()
                                     .mapToInt(Integer::intValue)
                                     .sorted()
                                     .toArray(),
                             null,
-                            HashMap::new));
+                            TreeMap::new));
 
             peptide.setProteinMapping(proteinMappingArray);
 

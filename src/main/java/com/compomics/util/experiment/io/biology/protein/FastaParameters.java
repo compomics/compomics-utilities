@@ -17,7 +17,7 @@ public class FastaParameters {
     /**
      * The decoy flags used to infer the fasta parameters.
      */
-    public static final String[] decoyFlags = {"decoy", "random", "reverse", "rev"};
+    public static final String[] decoyFlags = {"decoy", "random", "reversed", "rev"};
     /**
      * The decoy separators used to infer the fasta parameters.
      */
@@ -220,6 +220,21 @@ public class FastaParameters {
         setName(Util.removeExtension(fastaFile.getName()));
         setDescription(fastaFile.getAbsolutePath());
         setVersion((new Date(fastaFile.lastModified())).toString());
+        
+    }
+
+    /**
+     * Infers the parameters used to parse the file.
+     * 
+     * @param fastaFile a fasta file
+     * 
+     * @return returns fasta parameters inferred from the file
+     * 
+     * @throws IOException exception thrown if an error occurred while iterating the file
+     */
+    public static FastaParameters inferParameters(File fastaFile) throws IOException {
+        
+        return inferParameters(fastaFile, null);
         
     }
 

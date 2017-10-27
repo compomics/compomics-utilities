@@ -30,7 +30,7 @@ public class PropertiesManager {
     /**
      * This folder is located in the user home directory and captures the user properties of ms_lims.
      */
-    private File iHomeFolder;
+    private final File iHomeFolder;
 
     /**
      * This private constructor manages a single instance to access the properties.

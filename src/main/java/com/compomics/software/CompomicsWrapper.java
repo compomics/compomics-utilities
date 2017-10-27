@@ -44,7 +44,7 @@ public class CompomicsWrapper {
      * If set to true debug output will be written to the screen and to
      * startup.log.
      */
-    private boolean useStartUpLog = true;
+    private final boolean useStartUpLog = true;
     /**
      * True if this the first time the wrapper tries to launch the application.
      * If the first launch fails, e.g., due to memory settings, it is set to

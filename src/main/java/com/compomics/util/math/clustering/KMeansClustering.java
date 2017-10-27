@@ -487,12 +487,12 @@ public class KMeansClustering {
         /**
          * The sample data.
          */
-        private double samples[][];
+        private final double samples[][];
 
         /**
          * The sample identifiers.
          */
-        private String sampleIds[];
+        private final String sampleIds[];
 
         /**
          * The sample data.

@@ -73,6 +73,6 @@ public class PsmIterator extends MatchesIterator {
      */
     public SpectrumMatch next() throws InterruptedException {
         
-        return (SpectrumMatch)nextObject();
+        return (SpectrumMatch) nextObject();
     }
 }

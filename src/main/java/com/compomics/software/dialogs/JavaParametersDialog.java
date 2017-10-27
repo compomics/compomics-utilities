@@ -19,19 +19,19 @@ public class JavaParametersDialog extends javax.swing.JDialog {
     /**
      * Reference to the JavaHomeOrMemoryDialogParent.
      */
-    private JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent;
+    private final JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent;
     /**
      * The frame parent.
      */
-    private JFrame frameParent;
+    private final JFrame frameParent;
     /**
      * The name of the tool, e.g., PeptideShaker.
      */
-    private String toolName;
+    private final String toolName;
     /**
      * A reference to the Welcome Dialog.
      */
-    private JDialog welcomeDialog;
+    private final JDialog welcomeDialog;
 
     /**
      * Creates a new JavaSettingsDialog.

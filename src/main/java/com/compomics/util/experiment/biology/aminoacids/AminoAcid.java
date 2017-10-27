@@ -92,7 +92,7 @@ public abstract class AminoAcid implements Serializable {
     /**
      * The mass tolerance used for the indistinguishable amino acids in cache.
      */
-    private Double indistinguishableAACacheMass = null;
+    private final Double indistinguishableAACacheMass = null;
     /**
      * The sub amino acids.
      */

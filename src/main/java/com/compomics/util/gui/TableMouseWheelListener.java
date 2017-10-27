@@ -19,7 +19,7 @@ public class TableMouseWheelListener implements MouseWheelListener {
      * The table to be monitored. Must have a SelfUpdatingTableModel as the
      * table model.
      */
-    private JTable table;
+    private final JTable table;
     /**
      * The last time the a scrolling event was triggered.
      */
@@ -29,7 +29,7 @@ public class TableMouseWheelListener implements MouseWheelListener {
      * checking if the user is done scrolling and if so update the table
      * content.
      */
-    private int scrollingTableUpdateDelay = 1500;
+    private final int scrollingTableUpdateDelay = 1500;
 
     /**
      * Constructor.

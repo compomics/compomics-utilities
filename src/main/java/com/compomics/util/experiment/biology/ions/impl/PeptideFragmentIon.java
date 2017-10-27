@@ -4,6 +4,8 @@ import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
+import java.util.List;
 
 /**
  * This class models a peptide fragment ion.
@@ -303,36 +305,56 @@ public class PeptideFragmentIon extends Ion {
      * menu
      */
     public static Integer getIonType(String ionSymbol) {
-        if (ionSymbol.equals("a")) {
-            return PeptideFragmentIon.A_ION;
-        } else if (ionSymbol.equals("b")) {
-            return PeptideFragmentIon.B_ION;
-        } else if (ionSymbol.equals("c")) {
-            return PeptideFragmentIon.C_ION;
-        } else if (ionSymbol.equals("x")) {
-            return PeptideFragmentIon.X_ION;
-        } else if (ionSymbol.equals("y")) {
-            return PeptideFragmentIon.Y_ION;
-        } else if (ionSymbol.equals("z")) {
-            return PeptideFragmentIon.Z_ION;
+
+        switch (ionSymbol) {
+            case "a":
+                return PeptideFragmentIon.A_ION;
+            case "b":
+                return PeptideFragmentIon.B_ION;
+            case "c":
+                return PeptideFragmentIon.C_ION;
+            case "x":
+                return PeptideFragmentIon.X_ION;
+            case "y":
+                return PeptideFragmentIon.Y_ION;
+            case "z":
+                return PeptideFragmentIon.Z_ION;
         }
         throw new UnsupportedOperationException("Ion of type " + ionSymbol + " not supported.");
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<>();
-        possibleTypes.add(A_ION);
-        possibleTypes.add(B_ION);
-        possibleTypes.add(C_ION);
-        possibleTypes.add(X_ION);
-        possibleTypes.add(Y_ION);
-        possibleTypes.add(Z_ION);
-        return possibleTypes;
+    public static int[] getPossibleSubtypes() {
+
+        return new int[]{A_ION, B_ION, C_ION,
+            X_ION, Y_ION, Z_ION};
+    }
+    
+    /**
+     * Indicates whether the given subtype refers to a forward or a rewind ion.
+     * 
+     * @param subType the subtype as integer.
+     * 
+     * @return true for forward ions
+     */
+    public static boolean isForward(int subType) {
+        
+        switch(subType) {
+                case A_ION:
+                case B_ION:
+                case C_ION:
+                    return true;
+                case X_ION:
+                case Y_ION:
+                case Z_ION:
+                    return false;
+        }
+        
+                throw new UnsupportedOperationException("Subtype: " + subType + " not found.");
     }
 
     @Override

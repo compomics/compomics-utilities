@@ -17,7 +17,7 @@ public class TableScrollBarListener implements AdjustmentListener {
      * The table to be monitored. Must have a SelfUpdatingTableModel as the
      * table model.
      */
-    private JTable table;
+    private final JTable table;
 
     /**
      * Constructor.

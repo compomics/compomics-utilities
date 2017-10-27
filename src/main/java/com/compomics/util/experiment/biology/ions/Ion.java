@@ -13,7 +13,10 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * This class models an ion.
@@ -147,13 +150,13 @@ public abstract class Ion extends ExperimentObject {
     public abstract String getSubTypeAsString();
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns an array of possible subtypes.
      *
-     * @param ionType an arraylist of possible subtypes
+     * @param ionType an array of possible subtypes
      * 
-     * @return an arraylist of possible subtypes
+     * @return an array of possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes(IonType ionType) {
+    public static int[] getPossibleSubtypes(IonType ionType) {
         switch (ionType) {
             case ELEMENTARY_ION:
                 return ElementaryIon.getPossibleSubtypes();
@@ -174,6 +177,23 @@ public abstract class Ion extends ExperimentObject {
             default:
                 throw new UnsupportedOperationException("Not supported yet.");
         }
+    }
+
+    /**
+     * Returns a hashset of possible subtypes.
+     *
+     * @param ionType a hashset of possible subtypes
+     * 
+     * @return a hashset of possible subtypes
+     */
+    public static HashSet<Integer> getPossibleSubtypesAsSet(IonType ionType) {
+        
+        int[] possibleSubtypes = getPossibleSubtypes(ionType);
+        
+        return Arrays.stream(possibleSubtypes)
+                .mapToObj(Integer::new)
+                .collect(Collectors.toCollection(HashSet::new));
+        
     }
 
     /**

@@ -38,11 +38,11 @@ public class SpectrumFactory {
     /**
      * Map of already loaded spectra.
      */
-    private HashMap<String, HashMap<String, Spectrum>> currentSpectrumMap = new HashMap<>();
+    private final HashMap<String, HashMap<String, Spectrum>> currentSpectrumMap = new HashMap<>();
     /**
      * Map of already loaded precursors.
      */
-    private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<>();
+    private final HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<>();
     /**
      * Maximal number of spectra in cache. By default 1000000, which corresponds
      * to approx. 110MB.
@@ -51,29 +51,29 @@ public class SpectrumFactory {
     /**
      * List of the loaded spectra.
      */
-    private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<>();
     /**
      * Map to the different files.
      */
-    private HashMap<String, File> filesMap = new HashMap<>();
+    private final HashMap<String, File> filesMap = new HashMap<>();
     /**
      * Map of the random access files of the loaded mgf files (filename &gt;
      * random access file).
      */
-    private HashMap<String, BufferedRandomAccessFile> mgfRandomAccessFilesMap = new HashMap<>();
+    private final HashMap<String, BufferedRandomAccessFile> mgfRandomAccessFilesMap = new HashMap<>();
     /**
      * Map of the mgf indexes (fileName &gt; mgf index).
      */
-    private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<>();
+    private final HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<>();
     /**
      * Map of the mzML unmarshallers (fileName &gt; unmarshaller).
      */
-    private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<>();
+    private final HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<>();
     /**
      * Map of the spectrum file mapped according to the name used by the search
      * engine.
      */
-    private HashMap<String, File> idToSpectrumName = new HashMap<>();
+    private final HashMap<String, File> idToSpectrumName = new HashMap<>();
     /**
      * The time out in milliseconds when querying the file.
      */

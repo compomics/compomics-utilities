@@ -738,7 +738,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
         /**
          * Name to neutral loss map.
          */
-        private HashMap<String, NeutralLoss> namesMap = new HashMap<>();
+        private final HashMap<String, NeutralLoss> namesMap = new HashMap<>();
 
         /**
          * List of the names of the neutral losses to display.

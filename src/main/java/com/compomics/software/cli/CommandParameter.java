@@ -4,9 +4,12 @@ import com.compomics.util.Util;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Convenience methods for the validation of command line parameters.
@@ -76,22 +79,52 @@ public class CommandParameter {
      * @param argType the name of the argument
      * @param arg the content of the argument
      * @param supportedInput the list of supported input
+     * 
      * @return true of the input is in the list
      */
     public static boolean isInList(String argType, String arg, List<String> supportedInput) {
+        
+        return isInList(argType, arg, supportedInput.stream());
+        
+    }
+
+    /**
+     * Returns true of the input is in the provided list.
+     *
+     * @param argType the name of the argument
+     * @param arg the content of the argument
+     * @param supportedInput the list of supported input
+     * 
+     * @return true of the input is in the list
+     */
+    public static boolean isInList(String argType, String arg, String[] supportedInput) {
+        
+        return isInList(argType, arg, Arrays.stream(supportedInput));
+        
+    }
+
+    /**
+     * Returns true of the input is in the provided stream.
+     *
+     * @param argType the name of the argument
+     * @param arg the content of the argument
+     * @param supportedInput the list of supported input
+     * 
+     * @return true of the input is in the list
+     */
+    public static boolean isInList(String argType, String arg, Stream<String> supportedInput) {
+        
         boolean valid = true;
-        if (!supportedInput.contains(arg)) {
+        
+        if (!supportedInput.anyMatch(value -> value.equals(arg))) {
+            
             valid = false;
-            String errorMessage = System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + arg + ". Supported input: [";
-            for (int i = 0; i < supportedInput.size(); i++) {
-                if (i > 0) {
-                    errorMessage += ", ";
-                }
-                errorMessage += supportedInput.get(i);
-            }
-            errorMessage += "]." + System.getProperty("line.separator");
+            String errorMessage = System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + arg + ". Supported input: ["
+                    + supportedInput.collect(Collectors.joining(",")) + "]." + System.getProperty("line.separator");
             System.out.println(errorMessage);
+        
         }
+        
         return valid;
     }
 

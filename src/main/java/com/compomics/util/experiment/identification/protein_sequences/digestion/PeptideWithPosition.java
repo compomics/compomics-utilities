@@ -12,11 +12,11 @@ public class PeptideWithPosition {
     /**
      * The peptide.
      */
-    private Peptide peptide;
+    private final Peptide peptide;
     /**
      * The position of the peptide on the protein.
      */
-    private int position;
+    private final int position;
 
     /**
      * Constructor.

@@ -17,7 +17,7 @@ public class VennDiagramDialog extends javax.swing.JDialog {
     /**
      * The dialog parent.
      */
-    private Frame dialogParent;
+    private final Frame dialogParent;
     /**
      * The last selected folder.
      */
@@ -25,11 +25,11 @@ public class VennDiagramDialog extends javax.swing.JDialog {
     /**
      * The normal icon for the parent dialog.
      */
-    private Image normalIcon;
+    private final Image normalIcon;
     /**
      * The icon to use when busy.
      */
-    private Image waitingIcon;
+    private final Image waitingIcon;
     /**
      * The Venn diagram panel.
      */

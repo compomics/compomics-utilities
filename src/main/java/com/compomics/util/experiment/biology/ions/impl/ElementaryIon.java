@@ -27,11 +27,11 @@ public class ElementaryIon extends Ion {
     /**
      * The name of the ion.
      */
-    private String name;
+    private final String name;
     /**
      * The subtype identifier.
      */
-    private int subType;
+    private final int subType;
     /**
      * Cache for the multiples of the proton mass.
      */
@@ -103,14 +103,14 @@ public class ElementaryIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<>();
-        possibleTypes.add(PROTON);
-        return possibleTypes;
+    public static int[] getPossibleSubtypes() {
+        
+        return new int[]{PROTON};
+        
     }
 
     @Override

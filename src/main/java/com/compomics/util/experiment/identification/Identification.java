@@ -553,7 +553,7 @@ public class Identification extends ExperimentObject {
      */
     public HashSet<String> getProteinMatches(Peptide peptide) {
         
-        return peptide.getProteinMapping().keySet().stream()
+        return peptide.getProteinMapping().navigableKeySet().stream()
                 .flatMap(accession -> proteinMap.get(accession).stream())
                 .collect(Collectors.toCollection(HashSet::new));
     }

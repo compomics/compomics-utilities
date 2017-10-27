@@ -17,7 +17,7 @@ public class XYPlotFiltersDialog extends javax.swing.JDialog {
     /**
      * The XYPlottingDialog parent.
      */
-    private XYPlottingDialog xyPlottingDialog;
+    private final XYPlottingDialog xyPlottingDialog;
 
     /**
      * Creates a new XYPlotFiltersDialog.

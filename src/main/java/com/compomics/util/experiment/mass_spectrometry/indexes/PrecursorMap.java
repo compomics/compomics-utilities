@@ -23,7 +23,7 @@ public class PrecursorMap {
     /**
      * Map of the precursors by bin and m/z.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>> precursorsMap = new HashMap<>();
+    private final HashMap<Integer, HashMap<Double, ArrayList<PrecursorWithTitle>>> precursorsMap = new HashMap<>();
     /**
      * An m/z anchor to determine the bins in ppm
      */

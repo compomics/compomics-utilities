@@ -21,7 +21,7 @@ public class FrameExceptionHandler extends ExceptionHandler {
      * The tool issues page, e.g.,
      * https://github.com/compomics/peptide-shaker/issues.
      */
-    private String toolIssuesPage;
+    private final String toolIssuesPage;
 
     /**
      * Constructor.

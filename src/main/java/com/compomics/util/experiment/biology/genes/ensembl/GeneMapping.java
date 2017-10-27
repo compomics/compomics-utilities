@@ -22,11 +22,11 @@ public class GeneMapping {
     /**
      * Gene name to chromosome map.
      */
-    private HashMap<String, String> geneNameToChromosome;
+    private final HashMap<String, String> geneNameToChromosome;
     /**
      * Gene name to Ensembl accession map.
      */
-    private HashMap<String, String> geneNameToAccession;
+    private final HashMap<String, String> geneNameToAccession;
 
     /**
      * Constructor.

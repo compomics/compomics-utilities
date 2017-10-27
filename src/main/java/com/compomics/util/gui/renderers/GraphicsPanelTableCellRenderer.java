@@ -22,16 +22,16 @@ public class GraphicsPanelTableCellRenderer extends JLabel implements TableCellR
     /**
      * The minimum x-axis value.
      */
-    private double minXAxisValue;
+    private final double minXAxisValue;
     /**
      * The maxium x-axis value.
      */
-    private double maxXAxisValue;
+    private final double maxXAxisValue;
 
     /**
      * A reference to a standard table cell renderer.
      */
-    private TableCellRenderer delegate = new DefaultTableCellRenderer();
+    private final TableCellRenderer delegate = new DefaultTableCellRenderer();
 
     /**
      * Create a new GraphicsPanelTableCellRenderer with a given x-axis range

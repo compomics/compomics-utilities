@@ -7,7 +7,6 @@ import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -37,23 +36,22 @@ public class PeptideMapperCLI {
     public static void main(String[] args) {
         if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))) {
 
-            System.err.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-            System.err.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
-            System.err.println();
-            System.err.println("Options are:");
-            System.err.println("\t-p\tpeptide mapping");
-            System.err.println("\t-t\tsequence tag mapping");
-            System.err.println("\t-h\tprint this info");
-            System.err.println();
-            System.err.println("Default parameters:");
-            System.err.println("\tindexing method:\t\tfm-index");
-            System.err.println("\tframentation tolerance [Da]:\t0.02");
+            System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
+            System.out.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
+            System.out.println();
+            System.out.println("Options are:");
+            System.out.println("\t-p\tpeptide mapping");
+            System.out.println("\t-t\tsequence tag mapping");
+            System.out.println("\t-h\tprint this info");
+            System.out.println();
+            System.out.println("Default parameters:");
+            System.out.println("\tindexing method:\t\tfm-index");
+            System.out.println("\tframentation tolerance [Da]:\t0.02");
 
             System.exit(-1);
         }
 
-        PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
-        System.err.println("Start reading FASTA file");
+        System.out.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);
 
@@ -71,10 +69,6 @@ public class PeptideMapperCLI {
                 System.exit(-1);
             }
 
-            if (peptideMapperType != identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType()) {
-                peptideMapperType = identificationParameters.getSequenceMatchingPreferences().getPeptideMapperType();
-                System.err.println("New mapping index: " + peptideMapperType.name);
-            }
             peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
             sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
             searchParameters = identificationParameters.getSearchParameters();
@@ -90,28 +84,19 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setLimitX(0.25);
         }
 
-        System.err.println("Start indexing fasta file");
+        System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
         PeptideMapper peptideMapper = null;
-        if (peptideMapperType == PeptideMapperType.fm_index) {
-            try {
-                peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
-            } catch (IOException e) {
-                System.err.println("Error: cound not index the fasta file");
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        } else {
-            System.err.println("No other peptide mapping supported than FM index, please change settings in setting file.");
+        try {
+            peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+        } catch (IOException e) {
+            System.err.println("Error: cound not index the fasta file");
+            e.printStackTrace();
             System.exit(-1);
         }
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
-        System.err.println();
-        if (peptideMapperType == PeptideMapperType.fm_index) {
-            System.err.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
-        } else {
-            System.err.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds");
-        }
+        System.out.println();
+        System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
 
         if (args[0].equals("-p")) {
             ArrayList<String> peptides = new ArrayList<>();
@@ -146,8 +131,8 @@ public class PeptideMapperCLI {
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                 }
                 long diffTimeMapping = System.nanoTime() - startTimeMapping;
-                System.err.println();
-                System.err.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
+                System.out.println();
+                System.out.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
             } catch (Exception e) {
                 System.err.println("Error: mapping went wrong");
                 e.printStackTrace();
@@ -219,8 +204,8 @@ public class PeptideMapperCLI {
                     }
                 }
                 long diffTimeMapping = System.nanoTime() - startTimeMapping;
-                System.err.println();
-                System.err.println("Mapping " + tags.size() + " tags took " + (diffTimeMapping / 1e9) + " seconds");
+                System.out.println();
+                System.out.println("Mapping " + tags.size() + " tags took " + (diffTimeMapping / 1e9) + " seconds");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Error: an unexpected error happened.");

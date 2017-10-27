@@ -113,7 +113,7 @@ public class ImmoniumIon extends Ion {
     /**
      * The PSI CV term.
      */
-    private static CvTerm psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
+    private static final CvTerm psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
 
     /**
      * Constructor for an immonium ion.
@@ -316,15 +316,19 @@ public class ImmoniumIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<>(21);
+    public static int[] getPossibleSubtypes() {
+        int[] possibleTypes = new int[21];
+        
         for (int i = 0 ; i <= 20 ; i++) {
-            possibleTypes.add(i);
+            
+            possibleTypes[i] = i;
+        
         }
+        
         return possibleTypes;
     }
 

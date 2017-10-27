@@ -44,7 +44,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * The number of rows loaded at a time.
      */
-    private static int batchSize = 100;
+    private static final int batchSize = 100;
     /**
      * If false, the table will not update automatically.
      */

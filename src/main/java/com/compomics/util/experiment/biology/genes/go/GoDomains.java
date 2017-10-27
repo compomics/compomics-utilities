@@ -24,7 +24,7 @@ public class GoDomains {
     /**
      * Go term accession to domain map.
      */
-    private HashMap<String, String> goAccessionToDomainMap;
+    private final HashMap<String, String> goAccessionToDomainMap;
 
     /**
      * Constructor.

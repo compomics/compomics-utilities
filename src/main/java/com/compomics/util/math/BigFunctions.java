@@ -24,7 +24,7 @@ public class BigFunctions {
     /**
      * Cache for factorials.
      */
-    private static HashMap<BigInteger, BigInteger> factorialsCache = new HashMap<BigInteger, BigInteger>(1000);
+    private static final HashMap<BigInteger, BigInteger> factorialsCache = new HashMap<BigInteger, BigInteger>(1000);
 
     /**
      * Returns n! as BigInteger.

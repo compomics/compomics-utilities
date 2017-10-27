@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import java.io.Serializable;
 
 /**
@@ -101,11 +100,7 @@ public class SequenceMatchingParameters implements Serializable {
     /**
      * Limit the share of X's a match can contain, range [0.0-1.0].
      */
-    private Double limitX = null;
-    /**
-     * The peptide mapper to use, FMI by default.
-     */
-    private PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
+    private double limitX = 0.25;
 
     /**
      * Constructor for empty preferences.
@@ -166,17 +161,8 @@ public class SequenceMatchingParameters implements Serializable {
      *
      * @return the maximal share of X's a match can contain
      */
-    public Double getLimitX() {
+    public double getLimitX() {
         return limitX;
-    }
-
-    /**
-     * Indicates whether the share of X's should be limited.
-     *
-     * @return whether the share of X's should be limited
-     */
-    public boolean hasLimitX() {
-        return limitX != null && limitX >= 0;
     }
 
     /**
@@ -184,29 +170,8 @@ public class SequenceMatchingParameters implements Serializable {
      *
      * @param limitX the maximal share of X's a match can contain
      */
-    public void setLimitX(Double limitX) {
+    public void setLimitX(double limitX) {
         this.limitX = limitX;
-    }
-
-    /**
-     * Returns the type of peptide mapper to use.
-     *
-     * @return the type of peptide mapper to use
-     */
-    public PeptideMapperType getPeptideMapperType() {
-        if (peptideMapperType == null) { // Backward compatibility.
-            peptideMapperType = PeptideMapperType.tree;
-        }
-        return peptideMapperType;
-    }
-
-    /**
-     * Sets the type of peptide mapper to use.
-     *
-     * @param peptideMapperEnum the type of peptide mapper to use
-     */
-    public void setPeptideMapperType(PeptideMapperType peptideMapperEnum) {
-        this.peptideMapperType = peptideMapperEnum;
     }
 
     /**
@@ -220,24 +185,19 @@ public class SequenceMatchingParameters implements Serializable {
      * one
      */
     public boolean isSameAs(SequenceMatchingParameters sequenceMatchingPreferences) {
-        if (peptideMapperType != sequenceMatchingPreferences.getPeptideMapperType()) {
-            return false;
-        }
+
         if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
+
             return false;
+
         }
-        if (hasLimitX() && sequenceMatchingPreferences.hasLimitX()) {
-            double diff = Math.abs(limitX - sequenceMatchingPreferences.getLimitX());
-            if (diff > 0.0000000000001) {
-                return false;
-            }
-        }
-        if (hasLimitX() && !sequenceMatchingPreferences.hasLimitX()) {
+
+        if (limitX != sequenceMatchingPreferences.getLimitX()) {
+
             return false;
+
         }
-        if (!hasLimitX() && sequenceMatchingPreferences.hasLimitX()) {
-            return false;
-        }
+
         return true;
     }
 
@@ -252,7 +212,6 @@ public class SequenceMatchingParameters implements Serializable {
 
         StringBuilder output = new StringBuilder();
 
-        output.append("Index: ").append(peptideMapperType).append(".").append(newLine);
         output.append("Method: ").append(sequenceMatchingType).append(".").append(newLine);
         output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
 

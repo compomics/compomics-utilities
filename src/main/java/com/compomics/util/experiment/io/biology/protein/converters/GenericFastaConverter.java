@@ -1,0 +1,64 @@
+package com.compomics.util.experiment.io.biology.protein.converters;
+
+import com.compomics.util.experiment.biology.proteins.Protein;
+import com.compomics.util.experiment.io.biology.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
+import com.compomics.util.waiting.WaitingHandler;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+/**
+ * This converter writes a fasta file with standardized headers.
+ *
+ * @author Marc Vaudel
+ */
+public class GenericFastaConverter {
+
+    
+
+    /**
+     * Appends decoy sequences to the provided fasta file.
+     *
+     * @param fastaIn the fasta file to read
+     * @param fastaOut the fasta file to write
+     * @param waitingHandler a handler to allow canceling the import and
+     * displaying progress
+     *
+     * @throws IOException exception thrown whenever an error happened while
+     * reading or writing a fasta file
+     */
+    public static void convertFile(File fastaIn, File fastaOut, WaitingHandler waitingHandler) throws IOException {
+
+        FastaIterator fastaIterator = new FastaIterator(fastaIn);
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fastaOut))) {
+
+            Protein protein;
+            while ((protein = fastaIterator.getNextProtein()) != null) {
+
+                Header header = fastaIterator.getLastHeader();
+                String genericHeader = header.asGenericHeader();
+                
+                bw.write(genericHeader);
+                bw.newLine();
+                bw.write(protein.getSequence());
+                bw.newLine();
+                bw.newLine();
+
+                if (waitingHandler != null) {
+
+                    if (waitingHandler.isRunCanceled()) {
+
+                        return;
+
+                    }
+
+                    waitingHandler.increaseSecondaryProgressCounter();
+
+                }
+            }
+        }
+    }
+}

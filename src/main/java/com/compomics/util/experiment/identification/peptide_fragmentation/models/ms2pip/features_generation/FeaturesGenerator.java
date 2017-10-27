@@ -40,7 +40,7 @@ public class FeaturesGenerator {
     /**
      * The PTM factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The map of the different features to include.
      */
@@ -590,57 +590,57 @@ public class FeaturesGenerator {
         /**
          * The minimal value of amino acid properties along a peptide sequence.
          */
-        private double[] minPeptideAminoAcidProperties;
+        private final double[] minPeptideAminoAcidProperties;
         /**
          * The maximal value of amino acid properties along a peptide sequence.
          */
-        private double[] maxPeptideAminoAcidProperties;
+        private final double[] maxPeptideAminoAcidProperties;
         /**
          * The sum of amino acid properties along a peptide sequence.
          */
-        private double[] sumPeptideAminoAcidProperties;
+        private final double[] sumPeptideAminoAcidProperties;
         /**
          * The minimal value of amino acid properties on forward ions derived
          * from a sequence.
          */
-        private double[][] minForwardIonAminoAcidProperties;
+        private final double[][] minForwardIonAminoAcidProperties;
         /**
          * The maximal value of amino acid properties on forward ions derived
          * from a sequence.
          */
-        private double[][] maxForwardIonAminoAcidProperties;
+        private final double[][] maxForwardIonAminoAcidProperties;
         /**
          * The sum of amino acid properties on forward ions derived from a
          * sequence.
          */
-        private double[][] sumForwardIonAminoAcidProperties;
+        private final double[][] sumForwardIonAminoAcidProperties;
         /**
          * The minimal value of amino acid properties on complementary ions
          * derived from a sequence.
          */
-        private double[][] minComplementaryIonAminoAcidProperties;
+        private final double[][] minComplementaryIonAminoAcidProperties;
         /**
          * The maximal value of amino acid properties on complementary ions
          * derived from a sequence.
          */
-        private double[][] maxComplementaryIonAminoAcidProperties;
+        private final double[][] maxComplementaryIonAminoAcidProperties;
         /**
          * The sum of amino acid properties on complementary ions derived from a
          * sequence.
          */
-        private double[][] sumComplementaryIonAminoAcidProperties;
+        private final double[][] sumComplementaryIonAminoAcidProperties;
         /**
          * The mass of forward ions derived from a sequence.
          */
-        private double[] forwardIonMass;
+        private final double[] forwardIonMass;
         /**
          * The properties of all amino acids in a sequence.
          */
-        private double[][] aminoAcidProperties;
+        private final double[][] aminoAcidProperties;
         /**
          * The mass added by modifications on the amino acids.
          */
-        private double[] modificationsMasses;
+        private final double[] modificationsMasses;
 
         /**
          * Constructor.

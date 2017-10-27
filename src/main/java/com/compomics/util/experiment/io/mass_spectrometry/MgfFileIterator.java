@@ -17,7 +17,7 @@ public class MgfFileIterator {
     /**
      * The reader going through the file.
      */
-    private BufferedReader br;
+    private final BufferedReader br;
     /**
      * The next spectrum in the file.
      */
@@ -25,7 +25,7 @@ public class MgfFileIterator {
     /**
      * The name of the mgf file.
      */
-    private String mgfFileName;
+    private final String mgfFileName;
     /**
      * The rank of the spectrum.
      */

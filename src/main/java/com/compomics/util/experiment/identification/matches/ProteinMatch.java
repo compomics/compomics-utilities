@@ -69,8 +69,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(Peptide peptide, String peptideMatchKey) {
         
-        accessions = new ArrayList<>(peptide.getProteinMapping().keySet());
-        Collections.sort(accessions);
+        accessions = new ArrayList<>(peptide.getProteinMapping().navigableKeySet());
         leadingAccession = accessions.get(0);
         peptideMatchesKeys.add(peptideMatchKey);
         
@@ -235,8 +234,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static String getProteinMatchKey(Peptide peptide) {
         
-        return peptide.getProteinMapping().keySet().stream()
-                .sorted()
+        return peptide.getProteinMapping().navigableKeySet().stream()
                 .collect(Collectors.joining(PROTEIN_KEY_SPLITTER));
         
     }

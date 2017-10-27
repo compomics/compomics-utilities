@@ -459,6 +459,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         saveButton.setEnabled(valid);
 
         if (searchParameters != null) {
+            
             IdentificationParameters currentParameters = getIdentificationParameters();
 
             if (!identificationParametersFactory.getParametersList().contains(currentParameters.getName())

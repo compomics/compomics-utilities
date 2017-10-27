@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -108,7 +106,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private FastaIterator proteinIterator;
     /**
-     * Boolean indicating whether the database selection was canceled by the user.
+     * Boolean indicating whether the database selection was canceled by the
+     * user.
      */
     private boolean canceled = false;
 
@@ -141,11 +140,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         if (this.selectedFastaFile != null) {
 
-            loadFastaFile(selectedFastaFile, fastaParameters == null);
+            loadFastaFile(selectedFastaFile, fastaParameters == null, true);
 
         }
 
-        setUpGUI();
         setLocationRelativeTo(owner);
 
     }
@@ -180,11 +178,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         if (this.selectedFastaFile != null) {
 
-            loadFastaFile(selectedFastaFile, fastaParameters == null);
+            loadFastaFile(selectedFastaFile, fastaParameters == null, true);
 
         }
 
-        setUpGUI();
         setLocationRelativeTo(parent);
     }
 
@@ -238,13 +235,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     TreeMap<Integer, TreeSet<ProteinDatabase>> occurrenceToDBMap = databaseType.entrySet().stream()
                             .collect(Collectors.groupingBy(Entry::getValue)).entrySet().stream()
                             .collect(Collectors.toMap(
-                                    Entry::getKey, 
+                                    Entry::getKey,
                                     entry -> entry.getValue().stream()
-                                        .map(entry2 -> entry2.getKey())
-                                        .collect(Collectors.toCollection(TreeSet::new)),
-                                    (a,b) -> {a.addAll(b); return a;},
+                                            .map(entry2 -> entry2.getKey())
+                                            .collect(Collectors.toCollection(TreeSet::new)),
+                                    (a, b) -> {
+                                        a.addAll(b);
+                                        return a;
+                                    },
                                     TreeMap::new));
-                            
 
                     String dbOccurrenceText = occurrenceToDBMap.descendingMap().values().stream()
                             .flatMap(dbs -> dbs.stream())
@@ -407,13 +406,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 }
             }
 
-            loadFastaFile(file, true);
-
-            if (!progressDialog.isRunCanceled()) {
-
-                setUpGUI();
-
-            }
+            loadFastaFile(file, fastaParameters == null, true);
 
             return true;
 
@@ -430,8 +423,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Loads the given fasta file.
      *
      * @param fastaFile a fasta file
+     * @param inferParameters if true fasta parsing parameters are inferred
+     * automatically
+     * @param setUpGUI if true the gui will be updated
      */
-    private void loadFastaFile(File fastaFile, boolean inferParameters) {
+    private void loadFastaFile(File fastaFile, boolean inferParameters, boolean setUpGUI) {
 
         this.selectedFastaFile = fastaFile;
 
@@ -440,33 +436,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 waitingImage,
                 true);
 
-        progressDialog.setPrimaryProgressCounterIndeterminate(true);
-
-        if (inferParameters) {
-
-            progressDialog.setTitle("Inferring Database Format. Please Wait...");
-
-            inferParameters();
-
-        }
-
-        if (!progressDialog.isRunCanceled()) {
-
-            progressDialog.setTitle("Getting Summary Data. Please Wait...");
-
-            getSummaryData();
-
-        }
-
-        progressDialog.setRunFinished();
-
-    }
-
-    /**
-     * Infers parsing parameters from the selected fasta file.
-     */
-    private void inferParameters() {
-
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -482,7 +451,44 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                 try {
 
-                    fastaParameters = FastaParameters.inferParameters(selectedFastaFile, progressDialog);
+                    if (inferParameters) {
+
+                        progressDialog.setPrimaryProgressCounterIndeterminate(true);
+
+                        progressDialog.setTitle("Inferring Database Format. Please Wait...");
+
+                        fastaParameters = FastaParameters.inferParameters(selectedFastaFile, progressDialog);
+
+                    }
+
+                    if (!progressDialog.isRunCanceled()) {
+
+                        progressDialog.setWaitingText("Importing database. Please wait...");
+
+                        fastaSummary = FastaSummary.getSummary(selectedFastaFile, fastaParameters, progressDialog);
+
+                        if (!fastaParameters.isTargetDecoy()) {
+
+                            int outcome = JOptionPane.showConfirmDialog(SequenceDbDetailsDialog.this,
+                                    "The database does not seem to contain decoy sequences.\nAdd decoys?", "Add decoys?",
+                                    JOptionPane.YES_NO_OPTION);
+
+                            if (outcome == JOptionPane.YES_OPTION) {
+
+                                generateTargetDecoyDatabase();
+
+                            }
+                        }
+
+                        if (setUpGUI && !progressDialog.isRunCanceled()) {
+
+                            setUpGUI();
+
+                        }
+
+                        progressDialog.setRunFinished();
+                        
+                    }
 
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
@@ -502,55 +508,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     return;
                 }
 
-                if (!progressDialog.isRunCanceled()) {
-
-                    setUpGUI();
-
-                }
                 progressDialog.setRunFinished();
-            }
-        }.start();
-    }
 
-    /**
-     * Gets summary information on the selected fasta file.
-     */
-    private void getSummaryData() {
-
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    progressDialog.setVisible(true);
-                } catch (IndexOutOfBoundsException e) {
-                    // ignore
-                }
-            }
-        }, "ProgressDialog").start();
-
-        new Thread("importThread") {
-            public void run() {
-
-                try {
-
-                    fastaSummary = FastaSummary.getSummary(selectedFastaFile, fastaParameters, progressDialog);
-
-                } catch (IOException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            "File " + selectedFastaFile.getAbsolutePath() + " not found.",
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                } catch (Exception e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "There was an error importing the FASTA file:<br>"
-                            + e.getMessage() + "<br>"
-                            + "See <a href=\"http://compomics.github.io/projects/searchgui/wiki/databasehelp.html\">DatabaseHelp</a> for help."),
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                }
             }
         }.start();
     }
@@ -582,6 +541,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
             progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
             progressDialog.setPrimaryProgressCounterIndeterminate(false);
+            progressDialog.setPrimaryProgressCounter(0);
             progressDialog.setMaxPrimaryProgressCounter(fastaSummary.nSequences);
 
             DecoyConverter.appendDecoySequences(selectedFastaFile, newFile, progressDialog);
@@ -1021,6 +981,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
         UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
+        
+        
+        
         dispose();
 
     }//GEN-LAST:event_okButtonActionPerformed
@@ -1031,11 +994,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        
+
         canceled = true;
-        
+
         dispose();
-        
+
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
@@ -1075,6 +1038,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             public void run() {
 
                 generateTargetDecoyDatabase();
+
+                if (!progressDialog.isRunCanceled()) {
+
+                    setUpGUI();
+
+                }
+
                 progressDialog.setRunFinished();
 
             }
@@ -1200,7 +1170,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Returns the selected fasta file.
-     * 
+     *
      * @return the selected fasta file
      */
     public File getSelectedFastaFile() {
@@ -1209,7 +1179,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Returns the fasta parameters.
-     * 
+     *
      * @return the fasta parameters
      */
     public FastaParameters getFastaParameters() {
@@ -1217,9 +1187,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns a boolean indicating whether the database selection was canceled by the user.
-     * 
-     * @return a boolean indicating whether the database selection was canceled by the user
+     * Returns a boolean indicating whether the database selection was canceled
+     * by the user.
+     *
+     * @return a boolean indicating whether the database selection was canceled
+     * by the user
      */
     public boolean isCanceled() {
         return canceled;

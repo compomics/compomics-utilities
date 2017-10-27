@@ -41,7 +41,7 @@ public class Glycan extends Ion {
     /**
      * Masses of this glycan.
      */
-    private HashMap<Integer, Double> theoreticMasses = new HashMap<>();
+    private final HashMap<Integer, Double> theoreticMasses = new HashMap<>();
 
     /**
      * Constructor for a glycan.
@@ -57,11 +57,11 @@ public class Glycan extends Ion {
     /**
      * The glycan short name which can be displayed on a spectrum.
      */
-    private String name;
+    private final String name;
     /**
      * The glycan full name.
      */
-    private String longName;
+    private final String longName;
 
     /**
      * Add a mass for this glycan.
@@ -111,11 +111,11 @@ public class Glycan extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
+    public static int[] getPossibleSubtypes() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

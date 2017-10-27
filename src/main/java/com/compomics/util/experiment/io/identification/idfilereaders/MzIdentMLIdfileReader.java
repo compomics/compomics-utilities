@@ -1266,7 +1266,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @return the e-value object for the given CV term, null if not found
      */
     private EValueObject getEValueObject(HashMap<String, Double> scoreMap, Advocate advocate, String cvTerm, RawValueConversionType rawValueConversionType) {
-
+        
         EValueObject eValueObject = null;
         Double eValue = scoreMap.get(cvTerm), rawScore = null;
 

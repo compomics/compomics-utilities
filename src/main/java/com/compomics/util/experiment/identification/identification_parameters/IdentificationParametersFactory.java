@@ -28,7 +28,7 @@ public class IdentificationParametersFactory {
     /**
      * The identification parameters.
      */
-    public static final String PARAMETERS_FOLDER = "identification_parameters";
+    public static final String PARAMETERS_FOLDER = "identification_parameters_4";
     /**
      * The extension for a parameters file.
      */
@@ -36,7 +36,7 @@ public class IdentificationParametersFactory {
     /**
      * A map of the parsed parameters indexed by their name.
      */
-    private HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
+    private final HashMap<String, IdentificationParameters> identificationParametersMap = new HashMap<>();
 
     /**
      * Constructor for the factory.

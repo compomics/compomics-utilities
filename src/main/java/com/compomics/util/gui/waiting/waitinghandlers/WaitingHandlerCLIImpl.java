@@ -54,7 +54,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     /**
      * The line break type.
      */
-    private String lineBreak = System.getProperty("line.separator");
+    private final String lineBreak = System.getProperty("line.separator");
 
     @Override
     public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {

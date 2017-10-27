@@ -12,8 +12,10 @@ import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * This class contains the spectrum annotation preferences.
@@ -376,13 +378,24 @@ public class AnnotationParameters implements Serializable {
      * @param ionType a new ion type to annotate
      */
     public void addIonType(Ion.IonType ionType) {
-        ArrayList<Integer> possibleSubtypes = Ion.getPossibleSubtypes(ionType);
+
+        int[] possibleSubtypes = Ion.getPossibleSubtypes(ionType);
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
+
         if (selectedSubtypes == null) {
-            selectedSubtypes = new HashSet<Integer>(possibleSubtypes);
+
+            selectedSubtypes = Arrays.stream(possibleSubtypes)
+                    .mapToObj(Integer::new)
+                    .collect(Collectors.toCollection(HashSet::new));
             selectedIonsMap.put(ionType, selectedSubtypes);
+
         } else {
-            selectedSubtypes.addAll(possibleSubtypes);
+
+            for (int i = 0; i < possibleSubtypes.length; i++) {
+
+                selectedSubtypes.add(possibleSubtypes[i]);
+
+            }
         }
     }
 

@@ -19,7 +19,7 @@ public class ModificationsCLI {
     /**
      * The parsed command line input.
      */
-    private ModificationsCLIInputBean modificationsCLIInputBean;
+    private final ModificationsCLIInputBean modificationsCLIInputBean;
 
     /**
      * Constructor.

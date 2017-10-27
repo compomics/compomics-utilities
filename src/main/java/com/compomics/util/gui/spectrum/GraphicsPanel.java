@@ -898,17 +898,23 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aAnnotations Vector with SpectrumAnnotation instances.
      */
     public void setAnnotations(List<SpectrumAnnotation> aAnnotations) {
-        this.iAnnotations = new Vector(50, 25);
+        
+        iAnnotations = new Vector(50, 25);
+        
         if (aAnnotations != null) {
+            
             // Attempt to remove duplicates.
-            HashSet removeDupes = new HashSet(aAnnotations.size());
+            HashSet<String> removeDupes = new HashSet<>(aAnnotations.size());
+            
             for (SpectrumAnnotation annotation : aAnnotations) {
+            
                 String key = annotation.getLabel() + annotation.getMZ();
-                if (removeDupes.contains(key)) {
-                    // Duplicate, ignore!
-                } else {
+                
+                if (!removeDupes.contains(key)) {
+                    
+                    iAnnotations.add(annotation);
                     removeDupes.add(key);
-                    this.iAnnotations.add(annotation);
+                    
                 }
             }
         }

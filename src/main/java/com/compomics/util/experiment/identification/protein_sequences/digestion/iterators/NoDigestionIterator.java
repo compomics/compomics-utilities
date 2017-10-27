@@ -15,7 +15,7 @@ public class NoDigestionIterator implements SequenceIterator {
     /**
      * Utilities classes for the digestion.
      */
-    private ProteinIteratorUtils proteinIteratorUtils;
+    private final ProteinIteratorUtils proteinIteratorUtils;
     /**
      * The peptide with position inferred from the sequence.
      */

@@ -18,15 +18,15 @@ public class ReporterMethod implements Serializable {
     /**
      * Map of the reagents. Reagent name &gt; reagent
      */
-    private HashMap<String, Reagent> reagents;
+    private final HashMap<String, Reagent> reagents;
     /**
      * The name of the method.
      */
-    private String name;
+    private final String name;
     /**
      * The names of the reporter ions in this method
      */
-    private HashMap<String, ReporterIon> reporterIonsMap;
+    private final HashMap<String, ReporterIon> reporterIonsMap;
 
     /**
      * Constructor for a reporter method.

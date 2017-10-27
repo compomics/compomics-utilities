@@ -24,7 +24,7 @@ public class SequenceModificationPanel extends JPanel {
      * A map of the rectangles used to draw each profile peak. This map is later
      * used for the tooltip for each peak.
      */
-    private HashMap<String, Rectangle> fragmentIonRectangles;
+    private final HashMap<String, Rectangle> fragmentIonRectangles;
     /**
      * Elementary data for composing the Panel.
      */
@@ -32,11 +32,11 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * The list of modification profiles.
      */
-    private ArrayList<ModificationProfile> profiles;
+    private final ArrayList<ModificationProfile> profiles;
     /**
      * The font to use.
      */
-    private Font iBaseFont = new Font("Monospaced", Font.PLAIN, 14);
+    private final Font iBaseFont = new Font("Monospaced", Font.PLAIN, 14);
     /**
      * The maximum bar height.
      */
@@ -67,11 +67,11 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * The name of the score above of the sequence.
      */
-    private String score1Name;
+    private final String score1Name;
     /**
      * The name of the score under of the sequence.
      */
-    private String score2Name;
+    private final String score2Name;
 
     /**
      * Creates a new SequenceFragmentationPanel.

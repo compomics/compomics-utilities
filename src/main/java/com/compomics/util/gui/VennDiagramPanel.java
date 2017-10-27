@@ -57,11 +57,11 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * The current Venn diagram results/data.
      */
-    private HashMap<String, ArrayList<String>> vennDiagramResults;
+    private final HashMap<String, ArrayList<String>> vennDiagramResults;
     /**
      * The current Venn diagram group names.
      */
-    private HashMap<String, String> groupNames;
+    private final HashMap<String, String> groupNames;
     /**
      * The chart panel.
      */
@@ -109,19 +109,19 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * The color for dataset A.
      */
-    private Color datasetAColor;
+    private final Color datasetAColor;
     /**
      * The color for dataset B.
      */
-    private Color datasetBColor;
+    private final Color datasetBColor;
     /**
      * The color for dataset C.
      */
-    private Color datasetCColor;
+    private final Color datasetCColor;
     /**
      * The color for dataset D.
      */
-    private Color datasetDColor;
+    private final Color datasetDColor;
 
     /**
      * Creates a new VennDiagramPanel.

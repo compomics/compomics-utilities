@@ -26,11 +26,11 @@ public class SnrScore {
     /**
      * Log10 value of the lowest limit of a double.
      */
-    private static double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
+    private static final double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
     /**
      * The occurrence of amino acids in the database.
      */
-    private AaOccurrence aaOccurrence;
+    private final AaOccurrence aaOccurrence;
     
     /**
      * Constructor.

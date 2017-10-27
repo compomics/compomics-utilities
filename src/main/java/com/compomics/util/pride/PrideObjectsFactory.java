@@ -47,23 +47,23 @@ public class PrideObjectsFactory {
     /**
      * List of all contacts.
      */
-    private static HashMap<String, ContactGroup> contactGroups = new HashMap<String, ContactGroup>();
+    private static final HashMap<String, ContactGroup> contactGroups = new HashMap<String, ContactGroup>();
     /**
      * List of all instruments.
      */
-    private static HashMap<String, Instrument> instruments = new HashMap<String, Instrument>();
+    private static final HashMap<String, Instrument> instruments = new HashMap<String, Instrument>();
     /**
      * List of all protocols.
      */
-    private static HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
+    private static final HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
     /**
      * List of all references.
      */
-    private static HashMap<String, ReferenceGroup> references = new HashMap<String, ReferenceGroup>();
+    private static final HashMap<String, ReferenceGroup> references = new HashMap<String, ReferenceGroup>();
     /**
      * List of all samples.
      */
-    private static HashMap<String, Sample> samples = new HashMap<String, Sample>();
+    private static final HashMap<String, Sample> samples = new HashMap<String, Sample>();
     /**
      * Utilities to PSI PTM mapping for the default PTMs.
      */

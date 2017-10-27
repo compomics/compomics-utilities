@@ -24,7 +24,6 @@ import com.compomics.util.parameters.identification.tool_specific.TideParameters
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
@@ -1669,15 +1668,15 @@ public class IdentificationParametersInputBean {
     /**
      * The compomics PTM factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
     /**
      * The enzyme factory.
      */
-    private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
+    private final EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
     /**
      * The command line.
      */
-    private CommandLine commandLine;
+    private final CommandLine commandLine;
 
     /**
      * Takes all the arguments from a command line.
@@ -3239,12 +3238,6 @@ public class IdentificationParametersInputBean {
         if (sequenceMatchingPreferences == null) {
             sequenceMatchingPreferences = new SequenceMatchingParameters();
             identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_INDEX_TYPE.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_INDEX_TYPE.id);
-            Integer intValue = new Integer(arg);
-            PeptideMapperType value = PeptideMapperType.getPeptideMapperType(intValue);
-            sequenceMatchingPreferences.setPeptideMapperType(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id);

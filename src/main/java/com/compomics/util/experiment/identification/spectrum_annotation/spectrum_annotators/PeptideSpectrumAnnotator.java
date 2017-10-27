@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.math.MathException;
@@ -357,7 +358,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         if (peptide.isModified()) {
 
-            HashMap<String, int[]> proteinMapping = peptide.getProteinMapping();
+            TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
             for (ModificationMatch modMatch : peptide.getModificationMatches()) {
 
@@ -368,7 +369,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     aaMin = sequence.length();
                     aaMax = 0;
 
-                    for (String proteinAccession : proteinMapping.keySet()) {
+                    for (String proteinAccession : proteinMapping.navigableKeySet()) {
                         
                         String proteinSequence = sequenceProvider.getSequence(proteinAccession);
                         

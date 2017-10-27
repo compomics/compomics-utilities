@@ -1,7 +1,6 @@
 package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.modification.PtmScore;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -307,7 +306,6 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Sequence matching
     //////////////////////////////////
-    SEQUENCE_INDEX_TYPE("sequence_index_type", "The protein database index type. (" + PeptideMapperType.getCommandLineOptions() + ", default is " + PeptideMapperType.fm_index.index + ")", false, true),
     SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
             + ", default is " + SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids + ")", false, true),
     SEQUENCE_MATCHING_X("sequence_matching_x", "The maximum share of X's in a sequence, 0.25 means 25% of X's, default is 0.25.", false, true),

@@ -144,6 +144,7 @@ public class DecoyConverter {
         
         int nTarget = targetSummary.nTarget;
         
-        return new FastaSummary(newFastaFile, speciesOccurrence, dbOccurrence, nSequences, nTarget);
+        return new FastaSummary(newFastaFile, speciesOccurrence, dbOccurrence, nSequences, nTarget, newFastaFile.lastModified());
+        
     }
 }

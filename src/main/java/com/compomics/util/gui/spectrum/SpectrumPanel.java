@@ -684,8 +684,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * Filters the annotations and returns the annotations matching the
      * currently selected types.
      *
-     * @deprecated don't use method based on the peak labels but on the data
-     * type
+     * @deprecated used only in demo classes
+     * 
      * @param annotations the annotations to be filtered, the annotations are
      * assumed to have the following form: ion type + [ion number] + [charge] +
      * [neutral loss]
@@ -703,7 +703,7 @@ public class SpectrumPanel extends GraphicsPanel {
      */
     public static Vector<SpectrumAnnotation> filterAnnotations(
             Vector<SpectrumAnnotation> annotations,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+            HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             ArrayList<NeutralLoss> neutralLosses,
             boolean singleChargeSelected,
             boolean doubleChargeSelected,

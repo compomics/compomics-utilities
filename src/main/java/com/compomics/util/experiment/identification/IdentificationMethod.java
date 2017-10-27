@@ -25,7 +25,7 @@ public class IdentificationMethod extends ExperimentObject {
     /**
      * index of the method
      */
-    private int index;
+    private final int index;
 
     /**
      * Constructor for the identification method

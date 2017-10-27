@@ -26,7 +26,7 @@ public class HeaderIterator {
     /**
      * The header corresponding to the last protein returned.
      */
-    private Header lastHeader = null;
+    private final Header lastHeader = null;
     /**
      * Boolean indicating whether the end of the file has been reached.
      */

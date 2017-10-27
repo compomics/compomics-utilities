@@ -218,15 +218,20 @@ public class RelatedIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes.
+     * Returns the possible subtypes.
      *
-     * @return an arraylist of possible subtypes
+     * @return the possible subtypes
      */
-    public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<>();
+    public static int[] getPossibleSubtypes() {
+        
+        int[] possibleTypes = new int[subTypeCounter];
+        
         for (int i = 0; i < subTypeCounter; i++) {
-            possibleTypes.add(i);
+            
+            possibleTypes[i] = i;
+            
         }
+        
         return possibleTypes;
     }
 

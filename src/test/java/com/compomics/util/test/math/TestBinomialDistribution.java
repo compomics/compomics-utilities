@@ -37,7 +37,7 @@ public class TestBinomialDistribution extends TestCase {
     /**
      * Results obtained using excel
      */
-    private double[] results = {3.98430652880611000000E-27,
+    private final double[] results = {3.98430652880611000000E-27,
         1.38312355214268000000E-25,
         3.19435677518669000000E-24,
         5.52167385425120000000E-23,

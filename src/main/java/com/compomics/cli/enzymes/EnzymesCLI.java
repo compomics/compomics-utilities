@@ -19,7 +19,7 @@ public class EnzymesCLI {
     /**
      * The parsed command line input.
      */
-    private EnzymesCLIInputBean enzymesCLIInputBean;
+    private final EnzymesCLIInputBean enzymesCLIInputBean;
     
     /**
      * Constructor.

@@ -7,7 +7,10 @@ import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import no.uib.jsparklines.renderers.util.Util;
 
 /**
  * This class parses a fasta file and gathers summary statistics.
@@ -36,6 +39,10 @@ public class FastaSummary {
      * The number of target sequences.
      */
     public final int nTarget;
+    /**
+     * The last time the file was modified.
+     */
+    public final long lastModified;
 
     /**
      * Constructor.
@@ -45,14 +52,16 @@ public class FastaSummary {
      * @param databaseType the occurrence of every database type
      * @param nSequences the number of sequences
      * @param nTarget the number of target sequences
+     * @param lastModified the last time the file was modified
      */
-    public FastaSummary(File fastaFile, HashMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget) {
+    public FastaSummary(File fastaFile, HashMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
 
         this.fastaFile = fastaFile;
         this.speciesOccurrence = speciesOccurrence;
         this.databaseType = databaseType;
         this.nSequences = nSequences;
         this.nTarget = nTarget;
+        this.lastModified = lastModified;
 
     }
 
@@ -75,7 +84,7 @@ public class FastaSummary {
 
         try {
 
-            getSavedSummary(fastaFile);
+           fastaSummary = getSavedSummary(fastaFile);
 
         } catch (Exception e) {
 
@@ -194,6 +203,8 @@ public class FastaSummary {
      */
     private static FastaSummary parseSummary(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
 
+        long lastModified = fastaFile.lastModified();
+        
         HashMap<String, Integer> speciesOccurrence = new HashMap<>(1);
         HashMap<ProteinDatabase, Integer> databaseType = new HashMap<>(1);
         int nSequences = 0;
@@ -257,8 +268,34 @@ public class FastaSummary {
             }
         }
 
-        return new FastaSummary(fastaFile, speciesOccurrence, databaseType, nSequences, nTarget);
+        return new FastaSummary(fastaFile, speciesOccurrence, databaseType, nSequences, nTarget, lastModified);
 
+    }
+    
+    /**
+     * Returns a string with the different database types found.
+     * 
+     * @return a string with the different database types found
+     */
+    public String getTypeAsString() {
+        
+        if (databaseType.isEmpty()) {
+            
+            return "Unknown";
+            
+        } else if (databaseType.size() == 1) {
+            
+            return databaseType.keySet().stream().findAny().get().getFullName();
+            
+        }
+        
+        int sum = databaseType.values().stream().mapToInt(Integer::intValue).sum();
+        
+        return databaseType.entrySet().stream()
+                .map(entry -> new SimpleEntry<>(entry.getKey(), ((double) entry.getValue()) / sum))
+                .map(entry -> entry.getKey().getFullName() + " (" + Util.roundDouble(entry.getValue(), 1) + "%)")
+                .collect(Collectors.joining(", "));
+        
     }
 
 }

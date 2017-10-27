@@ -940,7 +940,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
         /**
          * List of filters to display.
          */
-        private ArrayList<Filter> filters;
+        private final ArrayList<Filter> filters;
 
         /**
          * Creates a new table model.

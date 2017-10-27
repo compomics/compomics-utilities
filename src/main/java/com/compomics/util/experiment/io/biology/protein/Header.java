@@ -1723,4 +1723,19 @@ public class Header implements Cloneable, Serializable {
                 return null;
         }
     }
+    
+    /**
+     * Returns the header in generic format.
+     * 
+     * @return the header in generic format
+     */
+    public String asGenericHeader() {
+        
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(">generic|").append(getAccession()).append("|").append(getDescription());
+        
+        return sb.toString();
+        
+    }
 }

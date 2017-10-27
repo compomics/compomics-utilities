@@ -128,6 +128,12 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * C = 6.0 will be used.
      */
     private Double proteinPtmComplexity = 6.0;
+    /**
+     * Sets whether the parent ion mass tolerance is expanded by opening up
+     * multiple tolerance windows centered on the first and second 13C isotope
+     * peaks for a peptide.
+     */
+    private Boolean parentMonoisotopicMassIsotopeError = true;
 
     /**
      * Constructor.
@@ -709,6 +715,9 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
             if (getProteinPtmComplexity().doubleValue() != xtandemParameters.getProteinPtmComplexity()) {
                 return false;
             }
+            if (getParentMonoisotopicMassIsotopeError().booleanValue() != xtandemParameters.getParentMonoisotopicMassIsotopeError()) {
+                return false;
+            }
             return true;
         }
         return false;
@@ -750,6 +759,14 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
         output.append("NOISE_SUPPRESSION=");
         if (useNoiseSuppression) {
+            output.append("YES");
+        } else {
+            output.append("NO");
+        }
+        output.append(newLine);
+        
+        output.append("PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR=");
+        if (parentMonoisotopicMassIsotopeError) {
             output.append("YES");
         } else {
             output.append("NO");
@@ -893,5 +910,30 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
 
         return output.toString();
+    }
+
+    /**
+     * Returns true if the parent ion mass tolerance is expanded by opening up
+     * multiple tolerance windows centered on the first and second 13C isotope
+     * peaks for a peptide.
+     * 
+     * @return the parentMonoisotopicMassIsotopeError
+     */
+    public Boolean getParentMonoisotopicMassIsotopeError() {
+        if (parentMonoisotopicMassIsotopeError == null) {
+            parentMonoisotopicMassIsotopeError = true;
+        }
+        return parentMonoisotopicMassIsotopeError;
+    }
+
+    /**
+     * Sets whether the parent ion mass tolerance is expanded by opening up
+     * multiple tolerance windows centered on the first and second 13C isotope
+     * peaks for a peptide.
+     * 
+     * @param parentMonoisotopicMassIsotopeError the parentMonoisotopicMassIsotopeError to set
+     */
+    public void setParentMonoisotopicMassIsotopeError(Boolean parentMonoisotopicMassIsotopeError) {
+        this.parentMonoisotopicMassIsotopeError = parentMonoisotopicMassIsotopeError;
     }
 }

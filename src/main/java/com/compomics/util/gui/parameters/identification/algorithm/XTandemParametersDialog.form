@@ -119,9 +119,14 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="parentMonoisotopicMassIsotopeErrorLabel" min="-2" pref="265" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="parentMonoisotopicMassIsotopeErrorCmb" max="32767" attributes="0"/>
+                              </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="minPrecMassLbl" alignment="0" min="-2" pref="265" max="-2" attributes="1"/>
@@ -133,7 +138,7 @@
                                       <Component id="noiseSuppressionCmb" pref="294" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="dynamicRangeLbl" min="-2" pref="265" max="-2" attributes="1"/>
                                       <Component id="nPeaksLbl" min="-2" pref="265" max="-2" attributes="1"/>
@@ -144,12 +149,12 @@
                                       <Component id="dynamicRangeTxt" max="32767" attributes="2"/>
                                   </Group>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="minPeaksLbl" min="-2" pref="265" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="minPeaksTxt" max="32767" attributes="2"/>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="minFragMzLbl" min="-2" pref="265" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="minFragmentMzTxt" max="32767" attributes="2"/>
@@ -192,7 +197,12 @@
                               <Component id="minPrecMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minPrecMassLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="parentMonoisotopicMassIsotopeErrorCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="parentMonoisotopicMassIsotopeErrorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="230" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -312,10 +322,31 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noiseSuppressionLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noiseSuppressionLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noiseSuppressionLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noiseSuppressionLabelMouseReleased"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="parentMonoisotopicMassIsotopeErrorLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Parent Isotope Expansion (?)"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="parentMonoisotopicMassIsotopeErrorLabelMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="parentMonoisotopicMassIsotopeErrorLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="parentMonoisotopicMassIsotopeErrorLabelMouseReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="parentMonoisotopicMassIsotopeErrorCmb">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="2">
+                        <StringItem index="0" value="Yes"/>
+                        <StringItem index="1" value="No"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

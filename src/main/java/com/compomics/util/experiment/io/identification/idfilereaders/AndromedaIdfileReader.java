@@ -126,7 +126,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                         if (previousModificationMatches != null) {
 
                             newModificationMatches = Arrays.stream(previousModificationMatches)
-                                    .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                    .map(modificationMatch -> modificationMatch.clone())
                                     .toArray(ModificationMatch[]::new);
 
                         }

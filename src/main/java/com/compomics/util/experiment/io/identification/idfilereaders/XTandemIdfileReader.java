@@ -175,15 +175,15 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 if (foundModifications != null) {
 
                                     newModificationMatches = Arrays.stream(foundModifications)
-                                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                            .map(modificationMatch -> modificationMatch.clone())
                                             .toArray(ModificationMatch[]::new);
 
                                 }
-                                
+
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
                                 spectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
-                            
+
                             }
                         }
                     }
@@ -424,13 +424,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             }
 
                             if (adding) {
-                                
+
                                 peptide = new Peptide(pepSeq, new ModificationMatch[0]);
                                 PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFileName.getName());
                                 allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
                                 addAA = true;
-                                
+
                             }
                             break;
 

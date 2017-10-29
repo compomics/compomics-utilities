@@ -293,7 +293,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                     if (previousModificationMatches != null) {
                         
                         newModificationMatches = Arrays.stream(previousModificationMatches)
-                                .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                    .map(modificationMatch -> modificationMatch.clone())
                                 .toArray(ModificationMatch[]::new);
                     
                     }

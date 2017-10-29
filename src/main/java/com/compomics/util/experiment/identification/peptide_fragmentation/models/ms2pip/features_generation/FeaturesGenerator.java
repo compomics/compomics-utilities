@@ -68,7 +68,8 @@ public class FeaturesGenerator {
     public int[] getForwardIonsFeatures(Peptide peptide, int charge, int ionIndex) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+
         return getIonsFeatures(peptideSequence, modificationMatches, charge, ionIndex);
     }
 
@@ -87,19 +88,32 @@ public class FeaturesGenerator {
         char[] peptideSequence = peptide.getSequence().toCharArray();
         int sequenceLength = peptideSequence.length;
         char[] reversedSequence = new char[sequenceLength];
+
         for (int i = 0; i < sequenceLength; i++) {
+
             reversedSequence[i] = peptideSequence[sequenceLength - i - 1];
+
         }
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-        ArrayList<ModificationMatch> reversedModificationMatches;
+
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] reversedModificationMatches;
+
         if (modificationMatches != null) {
-            reversedModificationMatches = new ArrayList<>(modificationMatches.size());
-            for (ModificationMatch modificationMatch : modificationMatches) {
+
+            reversedModificationMatches = new ModificationMatch[modificationMatches.length];
+
+            for (int i = 0; i < modificationMatches.length; i++) {
+
+                ModificationMatch modificationMatch = modificationMatches[i];
                 ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
-                reversedModificationMatches.add(reversedModificationMatch);
+                reversedModificationMatches[i] = reversedModificationMatch;
+
             }
+
         } else {
+
             reversedModificationMatches = null;
+
         }
 
         return getIonsFeatures(reversedSequence, reversedModificationMatches, charge, ionIndex);
@@ -116,7 +130,7 @@ public class FeaturesGenerator {
      *
      * @return the ms2pip features for the b ions
      */
-    private int[] getIonsFeatures(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches, int charge, int ionIndex) {
+    private int[] getIonsFeatures(char[] peptideSequence, ModificationMatch[] modificationMatches, int charge, int ionIndex) {
 
         // Get the properties needed for peptides, ions, and amino acids
         AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
@@ -652,7 +666,7 @@ public class FeaturesGenerator {
          * @param complementaryIonAminoAcidProperties
          * @param individualAminoAcidProperties
          */
-        private PeptideAttributes(char[] peptideSequence, ArrayList<ModificationMatch> modificationMatches,
+        private PeptideAttributes(char[] peptideSequence, ModificationMatch[] modificationMatches,
                 AminoAcid.Property[] peptideAminoAcidProperties, AminoAcid.Property[] forwardIonAminoAcidProperties,
                 AminoAcid.Property[] complementaryIonAminoAcidProperties, AminoAcid.Property[] individualAminoAcidProperties) {
 

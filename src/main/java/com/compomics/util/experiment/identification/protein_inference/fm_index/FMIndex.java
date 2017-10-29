@@ -4030,16 +4030,27 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         // copying tags into own data structure
         int maxSequencePosition = -1;
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
+        
         for (int i = 0; i < tag.getContent().size(); ++i) {
+        
             if (tag.getContent().get(i) instanceof MassGap) {
+            
                 tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), (int) Math.round(tag.getContent().get(i).getMass() / 120. * xLimit)); // 120 is the average mass of all amino acids
+            
             } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
+            
                 tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int) (tag.getContent().get(i).asSequence().length() * xLimit));
+                
                 if (maxSequencePosition == -1 || tagElements[i].sequence.length() < tagElements[i].sequence.length()) {
+                
                     maxSequencePosition = i;
+                
                 }
+            
             } else {
+            
                 throw new UnsupportedOperationException("Unsupported tag in tag mapping for FM-Index.");
+            
             }
         }
 
@@ -4208,92 +4219,129 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         }
         // Traceback from NTerm
         for (MatrixContent content : matrix[combinations.length]) {
+            
             MatrixContent currentContent = content;
             String currentPeptide = "";
             String currentPeptideSearch = "";
-            ArrayList<ModificationMatch> modifications = new ArrayList<>();
+            ArrayList<ModificationMatch> modifications = new ArrayList<>(0);
             ArrayList<int[]> Xcomponents = new ArrayList<>();
             HashMap<Integer, Double> XmassDiffs = new HashMap<>();
 
             
             while (currentContent.previousContent != null) {
+                
                 if (currentContent.character != '\0') {
+                
                     currentPeptide += (char) currentContent.character;
                     currentPeptideSearch += (char) (currentContent.ambiguousChar == -1 ? currentContent.character : currentContent.ambiguousChar);
+                    
                     if (currentContent.character == 'X') {
+                    
                         Xcomponents.add(new int[]{1, currentContent.tagComponent, content.length - currentContent.length + 1});
+                    
                     }
                 }
+
                 if (currentContent.XMassDiff > -1) {
+
                     XmassDiffs.put(currentContent.tagComponent + 1024, currentContent.XMassDiff);
+
                 }
 
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
+
                     if (currentContent.modificationPos >= 0) {
+
                         if (modificationFlags[currentContent.modificationPos]) {
+
                             modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
+
                         }
+
                     } else {
+
                         modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), content.length - currentContent.modification.getModificationSite() + 1));
+
                     }
                 }
 
                 currentContent = currentContent.previousContent;
+
             }
-            //System.out.println();
 
             int leftIndex = content.left;
             int rightIndex = content.right;
 
             for (int[] Xcomponent : currentContent.allXcomponents) {
+
                 Xcomponents.add(new int[]{Xcomponent[0], Xcomponent[1], Xcomponent[2] + content.length - currentContent.length});
+
             }
 
             for (Integer key : currentContent.allXMassDiffs.keySet()) {
+
                 XmassDiffs.put(key, currentContent.allXMassDiffs.get(key));
+
             }
 
             for (ModificationMatch modificationMatch : currentContent.modifications) {
+
                 modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+
             }
 
             String peptide = currentPeptide + currentContent.peptideSequence;
             String peptideSearch = currentPeptideSearch + currentContent.peptideSequenceSearch;
 
             if (turned) {
+
                 leftIndex = 0;
                 rightIndex = indexStringLengths.get(indexPart) - 1;
 
                 for (int p = 0; p < peptideSearch.length(); ++p) {
+
                     int aminoAcid = peptideSearch.charAt(p);
                     final int lessValue = lessReversed[aminoAcid];
                     final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
                     leftIndex = lessValue + range[0];
                     rightIndex = lessValue + range[1] - 1;
+
                 }
 
                 for (ModificationMatch modificationMatch : modifications) {
+
                     modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
+
                 }
 
                 for (int[] Xcomponent : Xcomponents) {
+
                     Xcomponent[2] = peptide.length() - Xcomponent[2] + 1;
+
                 }
 
                 peptide = (new StringBuilder(peptide).reverse()).toString();
+
             }
 
             if (Xcomponents.isEmpty()) {
+
                 for (int j = leftIndex; j <= rightIndex; ++j) {
+
                     int pos = getTextPosition(j, indexPart);
                     int index = binarySearch(boundaries.get(indexPart), pos);
                     String accession = accessions.get(indexPart)[index];
-                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries.get(indexPart)[index] + 1, modifications);
+                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide, pos - boundaries.get(indexPart)[index] + 1, modifications.toArray(new ModificationMatch[modifications.size()]));
+
                     if (checkPTMPattern(peptideProteinMapping)) {
+
                         allMatches.add(peptideProteinMapping);
+
                     }
                 }
+
             } else {
+
                 // substituting all Xs if present into their corresponding amino acids
                 ArrayList< ArrayList<Integer>> Xsets = new ArrayList<>();
                 ArrayList< int[]> Xorigins = new ArrayList<>();
@@ -4301,14 +4349,20 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                 int nTag = -1, nComponent = -1;
 
                 for (int i = 0; i < Xcomponents.size(); ++i) {
+
                     if (nTag != Xcomponents.get(i)[0] || nComponent != Xcomponents.get(i)[1]) {
+
                         Xorigins.add(new int[]{Xcomponents.get(i)[0], Xcomponents.get(i)[1]});
                         Xsets.add(new ArrayList<>());
                         nTag = Xcomponents.get(i)[0];
                         nComponent = Xcomponents.get(i)[1];
+
                     }
+
                     Xsets.get(Xsets.size() - 1).add(Xcomponents.get(i)[2]);
+
                 }
+
                 LinkedList<String> substitutedPeptides = new LinkedList<>();
                 LinkedList<String> substitutedPeptidesTmp = new LinkedList<>();
                 substitutedPeptides.add(peptide);
@@ -4317,6 +4371,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                 substitutedModifications.add(modifications);
 
                 for (int k = 0; k < Xsets.size(); ++k) {
+
                     ArrayList<Integer> Xpositions = Xsets.get(k);
                     int len = Xpositions.size();
                     HashMap<String, int[][]> uniqueSubstitutions = new HashMap<>();
@@ -4324,62 +4379,94 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                     // find amino acids that correspond to the number of Xs and mass gap caused by all Xs
                     int[] Xranges = computeMappingRanges(XmassDiffs.get(Xorigins.get(k)[0] * 1024 + Xorigins.get(k)[1]));
                     ArrayList< int[]> possibleAAs = new ArrayList<>();
+
                     for (int i = Xranges[0]; i <= Xranges[1]; ++i) {
+
                         if (massIndexMaps.get(i).indexes.length == len) {
+
                             possibleAAs.add(massIndexMaps.get(i).indexes);
+
                         }
                     }
 
                     int[][] permutations = allPermutations[len];
+
                     for (int j = 0; j < possibleAAs.size(); ++j) {
+
                         for (int i = 0; i < permutations.length; ++i) {
+
                             String key = "";
+
                             for (int index : permutations[i]) {
+
                                 key += "-" + possibleAAs.get(j)[index];
+
                             }
+
                             int[][] zipped = {permutations[i], possibleAAs.get(j)};
                             uniqueSubstitutions.put(key, zipped);
+
                         }
                     }
 
                     while (!substitutedPeptides.isEmpty()) {
+
                         String pep = substitutedPeptides.removeLast();
                         ArrayList<ModificationMatch> currentModifications = substitutedModifications.removeLast();
                         char[] pepChars = pep.toCharArray();
+
                         for (int[][] uniquePermutations : uniqueSubstitutions.values()) {
 
                             ArrayList<ModificationMatch> newModifications = new ArrayList<>();
+
                             for (ModificationMatch m : currentModifications) {
+
                                 newModifications.add(new ModificationMatch(m.getModification(), m.getVariable(), m.getModificationSite()));
+
                             }
 
                             for (int i = 0; i < uniquePermutations[0].length; ++i) {
+
                                 int pos = uniquePermutations[1][uniquePermutations[0][i]];
                                 pepChars[Xpositions.get(i) - 1] = (char) (pos & 127);
+
                                 if (modificationFlags[pos]) {
+
                                     newModifications.add(new ModificationMatch(modifictationLabels[pos], pos >= 128, Xpositions.get(i)));
+
                                 }
                             }
+
                             substitutedPeptidesTmp.add(String.valueOf(pepChars));
                             substitutedModificationsTmp.add(newModifications);
+
                         }
                     }
+
                     while (!substitutedPeptidesTmp.isEmpty()) {
+
                         substitutedPeptides.add(substitutedPeptidesTmp.removeLast());
                         substitutedModifications.add(substitutedModificationsTmp.removeLast());
+
                     }
                 }
 
                 for (int i = 0; i < substitutedPeptides.size(); ++i) {
+
                     for (int j = leftIndex; j <= rightIndex; ++j) {
+
                         int pos = getTextPosition(j, indexPart);
                         int index = binarySearch(boundaries.get(indexPart), pos);
                         String accession = accessions.get(indexPart)[index];
 
                         // pos - boundaries.get(indexPart)[index] +1 because of start counting from one
-                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index] + 1, substitutedModifications.get(i));
+                        ArrayList<ModificationMatch> currenModifications = substitutedModifications.get(i);
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index] + 1, currenModifications.toArray(new ModificationMatch[currenModifications.size()]));
+
                         if (checkPTMPattern(peptideProteinMapping)) {
+
                             allMatches.add(peptideProteinMapping);
+
                         }
                     }
                 }
@@ -4415,17 +4502,29 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
 
         // copying tags into own data structure
         int maxSequencePosition = -1;
+        
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
+        
         for (int i = 0; i < tag.getContent().size(); ++i) {
+        
             if (tag.getContent().get(i) instanceof MassGap) {
+            
                 tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), 0);
+            
             } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
+            
                 tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int) (xLimit * tag.getContent().get(i).asSequence().length()));
+                
                 if (maxSequencePosition == -1 || tagElements[i].sequence.length() < tagElements[i].sequence.length()) {
+                
                     maxSequencePosition = i;
+                
                 }
+            
             } else {
+            
                 throw new UnsupportedOperationException("Unsupported tag in tag mapping for FM-Index.");
+            
             }
         }
 
@@ -4446,10 +4545,14 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
 
         // turning complete tag content if tag set starts with a smaller mass than it ends
         if (turned) {
+
             refTagContent = new TagElement[tagElements.length];
+
             for (int i = tagElements.length - 1, j = 0; i >= 0; --i, ++j) {
+
                 String sequenceReversed = (new StringBuilder(tagElements[i].sequence).reverse()).toString();
                 refTagContent[j] = new TagElement(tagElements[i].isMass, sequenceReversed, tagElements[i].mass, tagElements[i].xNumLimit);
+
             }
 
             lessReversed = lessTablePrimary;
@@ -4459,28 +4562,40 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
             //hasCTermDirection = hasNTermDirectionPTM;
             //hasNTermDirection = hasCTermDirectionPTM;
             //towardsC = false;
+
         } else {
+
             refTagContent = tagElements;
             lessPrimary = lessTablePrimary;
             lessReversed = lessTableReversed;
             occurrencePrimary = occurrenceTablePrimary;
             occurrenceReversed = occurrenceTableReversed;
+
         }
 
         ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
+
         if (cached != null && cached.isEmpty()) {
+
             return allMatches;
+
         }
 
         TagElement[] tagComponents = new TagElement[maxSequencePosition];
+
         for (int i = maxSequencePosition - 1, j = 0; i >= 0; --i, ++j) {
+
             String sequenceReversed = (new StringBuilder(refTagContent[i].sequence).reverse()).toString();
             tagComponents[j] = new TagElement(refTagContent[i].isMass, sequenceReversed, refTagContent[i].mass, refTagContent[i].xNumLimit);
+
         }
 
         TagElement[] tagComponentsReverse = new TagElement[tagElements.length - maxSequencePosition];
+
         for (int i = maxSequencePosition, j = 0; i < refTagContent.length; ++i, ++j) {
+
             tagComponentsReverse[j] = refTagContent[i];
+
         }
 
         TagElement[] combinations = createPeptideCombinations(tagComponents, sequenceMatchingPreferences);
@@ -4494,35 +4609,54 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
 
         // initializing both matrices
         for (int k = 0; k < numErrors; ++k) {
+
             for (int j = 0; j <= combinationsReversed.length; ++j) {
+
                 matrixReversed[k][j] = new LinkedList<>();
+
             }
+
             for (int j = 0; j <= combinations.length; ++j) {
+
                 matrix[k][j] = new LinkedList<>();
+
             }
         }
 
         // filling the matrices
         if (cached != null) {
+
             for (MatrixContent matrixContent : cached) {
+
                 int error = genericVariantMatching ? matrixContent.numVariants : matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
                 matrix[error][0].add(matrixContent);
+
             }
+
         } else {
+
             matrixReversed[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
+
         }
 
         if (cached == null) {
+
             // Map Reverse
             if (genericVariantMatching) {
+
                 mappingSequenceAndMassesWithVariantsGeneric(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
+
             } else {
+
                 mappingSequenceAndMassesWithVariantsSpecific(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
+
             }
 
             // Traceback Reverse
             for (int k = 0; k < numErrors; ++k) {
+
                 for (MatrixContent content : matrixReversed[k][combinationsReversed.length]) {
+
                     MatrixContent currentContent = content;
                     String currentPeptide = "";
                     int leftIndexFront = 0;
@@ -4531,101 +4665,149 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                     String allVariants = "";
 
                     while (currentContent.previousContent != null) {
+
                         int aminoAcidPep = currentContent.character;
                         int aminoAcidProt = currentContent.character;
                         int edit = currentContent.variant;
                         boolean update = true;
 
                         if (edit != '-') {
+
                             if (edit == '*') {
+
                                 update = false; // insertion
+
                             } else if ('A' <= edit && edit <= 'Z') {
+
                                 aminoAcidProt = edit; // substitution
+
                             } else if ('a' <= edit && edit <= 'z') {
+
                                 aminoAcidProt = edit - 32; // deletion
+
                             }
                         }
 
                         if (aminoAcidPep > 0) {
+
                             currentPeptide += (char) aminoAcidPep;
                             allVariants += (char) edit;
+
                             if (update) {
+
                                 final int lessValue = lessPrimary[aminoAcidProt];
                                 final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcidProt);
                                 leftIndexFront = lessValue + range[0];
                                 rightIndexFront = lessValue + range[1] - 1;
+
                             }
                         }
 
                         if (currentContent.modification != null || currentContent.modificationPos >= 0) {
+
                             if (currentContent.modificationPos >= 0) {
+
                                 if (modificationFlags[currentContent.modificationPos]) {
+
                                     modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length));
+
                                 }
+
                             } else {
+
                                 modifications.add(currentContent.modification);
+
                             }
                         }
+
                         currentContent = currentContent.previousContent;
+
                     }
 
                     String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
                     allVariants = (new StringBuilder(allVariants).reverse()).toString();
+
                     if (genericVariantMatching) {
+
                         cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1, k, '\0', allVariants));
+
                     } else {
+
                         cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1, new int[]{content.numSpecificVariants[0], content.numSpecificVariants[1], content.numSpecificVariants[2]}, '\0', allVariants));
+
                     }
                 }
             }
 
             for (MatrixContent matrixContent : cachePrimary) {
+
                 int error = genericVariantMatching ? matrixContent.numVariants : matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
                 matrix[error][0].add(matrixContent);
+
             }
+
             cacheIt(refTagContent, cachePrimary, indexPart);
 
         }
 
         if (genericVariantMatching) {
+
             mappingSequenceAndMassesWithVariantsGeneric(combinations, matrix, lessPrimary, occurrencePrimary);
+
         } else {
+
             mappingSequenceAndMassesWithVariantsSpecific(combinations, matrix, lessPrimary, occurrencePrimary);
+
         }
 
         // Traceback from NTerm
         for (int k = 0; k < numErrors; ++k) {
+
             for (MatrixContent content : matrix[k][combinations.length]) {
+
                 MatrixContent currentContent = content;
                 String currentPeptide = "";
                 ArrayList<ModificationMatch> modifications = new ArrayList<>();
                 String allVariants = "";
 
                 while (currentContent.previousContent != null) {
+
                     int aminoAcid = currentContent.character;
+
                     if (aminoAcid > 0) {
+
                         currentPeptide += (char) aminoAcid;
                         allVariants += (char) currentContent.variant;
+
                     }
 
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
+
                         if (currentContent.modificationPos >= 0) {
+
                             if (modificationFlags[currentContent.modificationPos]) {
+
                                 modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, content.length - currentContent.length + 1));
+
                             }
                         } else {
+
                             modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), currentContent.modification.getModificationSite() + content.length - currentContent.length + 1));
+
                         }
                     }
 
                     currentContent = currentContent.previousContent;
+
                 }
 
                 int leftIndex = content.left;
                 int rightIndex = content.right;
 
                 for (ModificationMatch modificationMatch : currentContent.modifications) {
+
                     modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+
                 }
 
                 String peptide = currentPeptide + currentContent.peptideSequence;
@@ -4635,62 +4817,88 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                 int lengthDifference = 0;
 
                 if (turned) {
+
                     leftIndex = 0;
                     rightIndex = indexStringLengths.get(indexPart) - 1;
 
                     for (int p = 0; p < peptide.length(); ++p) {
+
                         boolean update = true;
                         int aminoAcid = peptide.charAt(p);
                         int edit = allVariants.charAt(p);
+
                         if (edit != '-') {
+
                             if (edit == '*') {
+
                                 update = false; // insertion
+
                             } else if ('A' <= edit && edit <= 'Z') {
+
                                 aminoAcid = edit; // substitution
+
                             } else if ('a' <= edit && edit <= 'z') {
+
                                 aminoAcid = edit - 32; // deletion
+
                             }
                         }
 
                         if (update) {
+
                             final int lessValue = lessReversed[aminoAcid];
                             final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
                             leftIndex = lessValue + range[0];
                             rightIndex = lessValue + range[1] - 1;
+
                         }
                     }
 
                     for (ModificationMatch modificationMatch : modifications) {
+
                         modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
+
                     }
 
                     allVariants = (new StringBuilder(allVariants).reverse()).toString();
                     peptide = (new StringBuilder(peptide).reverse()).toString();
+
                 }
 
                 // adding variants and adjusting modification sites
                 for (int i = 0, length = 0; i < allVariants.length(); ++i) {
+
                     int edit = allVariants.charAt(i);
                     ++length;
+
                     if (edit != '-') {
+
                         if (edit == '*') { // insertion
+
                             Variant variant = new Insertion(peptide.charAt(length - 1));
                             variants.put(length, variant);
                             lengthDifference--;
+
                         } else if ('A' <= edit && edit <= 'Z') { // substitution
+
                             Variant variant = new Substitution((char) edit, peptide.charAt(length - 1));
                             variants.put(length, variant);
+
                         } else if ('a' <= edit && edit <= 'z') { // deletion
+
                             Variant variant = new Deletion((char) (edit - 32));
                             variants.put(length, variant);
                             lengthDifference++;
                             --length;
+
                         }
                     }
                 }
 
                 String cleanPeptide = peptide.replace("*", "");
+
                 for (int j = leftIndex; j <= rightIndex; ++j) {
+
                     int pos = getTextPosition(j, indexPart);
                     int index = binarySearch(boundaries.get(indexPart), pos);
                     String accession = accessions.get(indexPart)[index];
@@ -4699,9 +4907,12 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                     boolean newPeptide = true;
 
                     for (PeptideProteinMapping ppm : allMatches) {
+
                         if (ppm.getProteinAccession().equals(accession) && ppm.getPeptideSequence().equals(cleanPeptide) && Math.abs(ppm.getIndex() - startPosition) <= numErrors) {
+
                             newPeptide = false;
                             break;
+
                         }
                     }
 
@@ -4710,12 +4921,14 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
                         PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
 
                         // startPosition +1 because of start counting from one
-                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, modifications, peptideVariantMatches);
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, modifications.toArray(new ModificationMatch[modifications.size()]), peptideVariantMatches);
+
                         if (checkPTMPattern(peptideProteinMapping)) {
+
                             allMatches.add(peptideProteinMapping);
+
                         }
                     }
-
                 }
             }
         }
@@ -4734,6 +4947,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         }
          */
         return allMatches;
+
     }
 
     /**

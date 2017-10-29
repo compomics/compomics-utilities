@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
@@ -185,7 +186,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             Peptide tempPeptide = tempPeptideAssumption.getPeptide();
                             if (peptide.getSequence().equals(tempPeptide.getSequence())) {
                                 boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
-                                if (sameModifications && peptide.isModified()) {
+                                if (sameModifications && peptide.getModificationMatches() != null) {
                                     for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
                                         boolean ptmFound = false;
                                         for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
@@ -211,19 +212,21 @@ public class PepxmlIdfileReader implements IdfileReader {
 
                         Advocate advocate = Advocate.getAdvocate(searchEngine);
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                            ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+
+                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
                                     newModificationMatches = null;
-                            if (previousModificationMatches != null) {
-                                newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                            }
+
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
+
                                 if (previousModificationMatches != null) {
-                                    for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(),
-                                                modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                                    }
+
+                                    newModificationMatches = Arrays.stream(previousModificationMatches)
+                                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                            .toArray(ModificationMatch[]::new);
+
                                 }
+
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
                                         peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(),
                                         peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
@@ -431,7 +434,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             value = parser.getAttributeValue(i);
                         }
                     }
-                    
+
                     if (name != null && value != null) {
                         if (name.equals("expect") || name.equals("Morpheus Score")) {
                             try {
@@ -448,7 +451,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             type = parser.next();
         }
 
-        Peptide peptide = new Peptide(sequence, modificationMatches, true);
+        Peptide peptide = new Peptide(sequence, modificationMatches.toArray(new ModificationMatch[modificationMatches.size()]), true);
         Advocate advocate = Advocate.getAdvocate(searchEngine);
         return new PeptideAssumption(peptide, rank, advocate.getIndex(), charge, score, idFile.getName());
     }

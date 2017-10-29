@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Annotati
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -240,20 +241,18 @@ public class ModificationtableContent {
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
             AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
 
-        //@TODO: use Peptide.getNoModPeptide instead
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>());
-
-        if (peptide.isModified()) {
-           
-            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+                ModificationMatch[] newMatches = null;
+        
+        if (modificationMatches != null) {
             
-                if (!modificationMatch.getModification().equals(modification.getName())) {
-                
-                    noModPeptide.addModificationMatch(modificationMatch);
-                
-                }
-            }
+            newMatches = Arrays.stream(modificationMatches)
+                    .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))
+                    .toArray(ModificationMatch[]::new);
+            
         }
+        
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), newMatches);
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons

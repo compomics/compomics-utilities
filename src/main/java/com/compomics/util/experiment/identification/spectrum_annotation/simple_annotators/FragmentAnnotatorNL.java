@@ -27,7 +27,7 @@ public class FragmentAnnotatorNL {
     /**
      * The modifications factory.
      */
-    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * Array of the forward ion m/z with charge 1.
      */
@@ -93,7 +93,8 @@ public class FragmentAnnotatorNL {
 
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        
         if (modificationMatches != null) {
 
             // Keep track of the modified amino acids and possible losses
@@ -101,7 +102,7 @@ public class FragmentAnnotatorNL {
             for (ModificationMatch modificationMatch : modificationMatches) {
 
                 String modificationName = modificationMatch.getModification();
-                Modification modification = ptmFactory.getModification(modificationName);
+                Modification modification = modificationFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
 
                 int site = modificationMatch.getModificationSite();
@@ -234,15 +235,17 @@ public class FragmentAnnotatorNL {
 
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        
         if (modificationMatches != null) {
 
             // Keep track of the modified amino acids and possible losses
             HashMap<String, int[]> modificationLossesSites = new HashMap<String, int[]>(1);
+            
             for (ModificationMatch modificationMatch : modificationMatches) {
 
                 String modificationName = modificationMatch.getModification();
-                Modification modification = ptmFactory.getModification(modificationName);
+                Modification modification = modificationFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
 
                 int site = modificationMatch.getModificationSite();

@@ -94,7 +94,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
+        Assert.assertTrue(peptide.getModificationMatches().length == 3);
         
         
         // Unspecific digestion
@@ -217,7 +217,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
-        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
+        Assert.assertTrue(peptide.getModificationMatches().length == 3);
         
         
         // No missed cleavages

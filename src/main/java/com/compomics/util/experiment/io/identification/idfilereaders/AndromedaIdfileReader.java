@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -50,7 +51,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * Constructor for an Andromeda result file reader.
      *
      * @param resultsFile the Andromeda results file
-     * 
+     *
      * @throws IOException if a IOException occurs
      */
     public AndromedaIdfileReader(File resultsFile) throws IOException {
@@ -113,25 +114,33 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 }
                 rank++;
                 PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank);
+
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+
                     Peptide peptide = peptideAssumption.getPeptide();
-                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;
-                    if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                    }
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
+
                         if (previousModificationMatches != null) {
-                            for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                            }
+
+                            newModificationMatches = Arrays.stream(previousModificationMatches)
+                                    .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                    .toArray(ModificationMatch[]::new);
+
                         }
+
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
+
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), newAssumption);
+
                     }
                 } else {
+
                     spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), peptideAssumption);
+
                 }
             }
         }
@@ -155,14 +164,18 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         ArrayList<ModificationMatch> modMatches = new ArrayList<>();
 
         for (int aa = 0; aa < temp1.length; aa++) {
+
             String mod = temp1[aa];
+
             if (!mod.equals("A")) {
+
                 modMatches.add(new ModificationMatch(mod, true, aa));
+
             }
         }
 
         String sequence = temp[0];
-        Peptide peptide = new Peptide(sequence, modMatches, true);
+        Peptide peptide = new Peptide(sequence, modMatches.toArray(new ModificationMatch[modMatches.size()]), true);
 
         int charge = Integer.parseInt(temp[6]);
         Double score = new Double(temp[1]);
@@ -170,6 +183,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);
         peptideAssumption.setRawScore(score);
         return peptideAssumption;
+
     }
 
     @Override

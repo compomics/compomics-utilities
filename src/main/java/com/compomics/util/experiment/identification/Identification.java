@@ -18,8 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -194,12 +192,18 @@ public class Identification extends ExperimentObject {
      * @param filters filters for the class
      *
      * @return the iterator
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public Iterator<?> getIterator(Class className, String filters) throws InterruptedException {
-        return objectsDB.getObjectsIterator(className, filters);
+    public Iterator<?> getIterator(Class className, String filters) {
+        
+        try {
+        
+            return objectsDB.getObjectsIterator(className, filters);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -287,6 +291,45 @@ public class Identification extends ExperimentObject {
             throw new RuntimeException(ex);
 
         }
+    }
+    
+    /**
+     * Returns the spectrum match with the given key.
+     * 
+     * @param key the key of the match
+     * 
+     * @return the spectrum match with the given key
+     */
+    public SpectrumMatch getSpectrumMatch(String key) {
+        
+        return (SpectrumMatch) retrieveObject(key);
+        
+    }
+    
+    /**
+     * Returns the peptide match with the given key.
+     * 
+     * @param key the key of the match
+     * 
+     * @return the peptide match with the given key
+     */
+    public PeptideMatch getPeptideMatch(String key) {
+        
+        return (PeptideMatch) retrieveObject(key);
+        
+    }
+    
+    /**
+     * Returns the protein match with the given key.
+     * 
+     * @param key the key of the match
+     * 
+     * @return the protein match with the given key
+     */
+    public ProteinMatch getProteinMatch(String key) {
+        
+        return (ProteinMatch) retrieveObject(key);
+        
     }
 
     /**
@@ -632,11 +675,9 @@ public class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PsmIterator getPsmIterator(WaitingHandler waitingHandler) throws InterruptedException {
+    public PsmIterator getPsmIterator(WaitingHandler waitingHandler) {
         return new PsmIterator(this, waitingHandler, false);
     }
 

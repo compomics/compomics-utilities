@@ -211,8 +211,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <h4>ProteinMatchesIterator</h4>
 <pre>public&nbsp;ProteinMatchesIterator(<a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                               <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                              boolean&nbsp;displayProgress)
-                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                              boolean&nbsp;displayProgress)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -221,9 +220,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -236,8 +232,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <pre>public&nbsp;ProteinMatchesIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;keys,
                               <a href="../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
                               <a href="../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                              boolean&nbsp;displayProgress)
-                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                              boolean&nbsp;displayProgress)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -247,9 +242,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -267,16 +259,12 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockListLast">
 <li class="blockList">
 <h4>next</h4>
-<pre>public&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;next()
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a>&nbsp;next()</pre>
 <div class="block">Returns the next match and updates the buffer. Null if the iterator is
  done iterating.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the next match</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>

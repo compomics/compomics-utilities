@@ -319,31 +319,40 @@ public class PeptideDraft {
                 ArrayList<ModificationMatch> modificationMatches = null;
 
                 if (nTermModification != null) {
+                    
                     modificationMatches = new ArrayList<>(fixedAaModifications.size());
                     modificationMatches.add(new ModificationMatch(nTermModification, false, 1));
+                
                 }
 
                 if (cTermModification != null) {
 
                     if (modificationMatches == null) {
+                
                         modificationMatches = new ArrayList<>(fixedAaModifications.size());
+                    
                     }
 
                     modificationMatches.add(new ModificationMatch(cTermModification, false, length()));
+
                 }
 
                 for (Integer site : fixedAaModifications.keySet()) {
 
                     if (modificationMatches == null) {
+
                         modificationMatches = new ArrayList<>(fixedAaModifications.size());
+
                     }
 
                     String modificationName = fixedAaModifications.get(site);
                     modificationMatches.add(new ModificationMatch(modificationName, false, site));
+
                 }
 
-                Peptide peptide = new Peptide(new String(getSequence()), modificationMatches, false, tempMass);
-                return peptide;
+                return modificationMatches == null ? new Peptide(new String(getSequence()), null, false, tempMass) :
+                        new Peptide(new String(getSequence()), modificationMatches.toArray(new ModificationMatch[modificationMatches.size()]), false, tempMass);
+
             }
         }
 

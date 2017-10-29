@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -370,26 +371,31 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //                    }
 //                }
                 // Create the peptide assumption
-                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
+                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), charge, novorScore, novorCsvFile.getName());
                 peptideAssumption.setAminoAcidScores(aminoAcidScores);
                 //peptideAssumption.setRawScore(novorScore);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
-                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;
-                    if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                    }
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
+
                         if (previousModificationMatches != null) {
-                            for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                            }
+
+                            newModificationMatches = Arrays.stream(previousModificationMatches)
+                                    .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                                    .toArray(ModificationMatch[]::new);
+
                         }
+
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), newAssumption);
+
                     }
+
                 } else {
                     currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), peptideAssumption);
                 }

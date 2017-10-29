@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.math.MathException;
 
 /**
  * Annotates a spectrum with peptide fragments. Warning: operations are not
@@ -355,12 +354,14 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 }
             }
         }
+        
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-        if (peptide.isModified()) {
+        if (modificationMatches != null) {
 
             TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
-            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+            for (ModificationMatch modMatch : modificationMatches) {
 
                 Modification ptm = modificationFactory.getModification(modMatch.getModification());
 

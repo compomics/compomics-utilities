@@ -3297,7 +3297,7 @@ public class IdentificationParametersInputBean {
                 default:
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id + ": " + arg + ". 0 or 1 expected.");
             }
-            peptideAssumptionFilter.setRemoveUnknownPTMs(value);
+            peptideAssumptionFilter.setRemoveUnknownModifications(value);
         }
 
         //////////////////////////////////

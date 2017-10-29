@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -174,18 +175,24 @@ public class OnyaseIdfileReader implements IdfileReader {
         String separatorString = separator + "";
         String line;
         while ((line = br.readLine()) != null) {
+            
             if (!line.startsWith("#")) {
+            
                 String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0];
                 spectrumTitle = URLDecoder.decode(spectrumTitle, encoding);
                 String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
+                
                 if (spectrumMatch == null) {
+                
                     spectrumMatch = new SpectrumMatch(spectrumKey);
                     spectrumMatchesMap.put(spectrumKey, spectrumMatch);
+                
                 }
+                
                 String sequence = lineSplit[3];
-                ArrayList<ModificationMatch> modificationMatches = getModificationMatches(lineSplit[4]);
+                ModificationMatch[] modificationMatches = getModificationMatches(lineSplit[4]);
                 Peptide peptide = new Peptide(sequence, modificationMatches);
                 Integer charge = new Integer(lineSplit[5]);
                 Double score = new Double(lineSplit[6]);
@@ -193,6 +200,7 @@ public class OnyaseIdfileReader implements IdfileReader {
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), charge, eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addPeptideAssumption(Advocate.onyaseEngine.getIndex(), peptideAssumption);
+            
             }
         }
 
@@ -227,20 +235,21 @@ public class OnyaseIdfileReader implements IdfileReader {
      * @throws UnsupportedEncodingException exception thrown whenever an error
      * occurred while decoding the string
      */
-    private ArrayList<ModificationMatch> getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
+    private ModificationMatch[] getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
+        
         if (modificationsString.length() == 0) {
-            return new ArrayList<>(0);
+        
+            return null;
+        
         }
+        
         String decodedString = URLDecoder.decode(modificationsString, "utf-8");
         String[] modifications = decodedString.split(Peptide.MODIFICATION_SEPARATOR);
-        ArrayList<ModificationMatch> modificationMatches = new ArrayList<>(modifications.length);
-        for (String modification : modifications) {
-            String[] modificationSplit = modification.split(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR);
-            String modificationName = modificationSplit[0];
-            Integer site = new Integer(modificationSplit[1]);
-            ModificationMatch modificationMatch = new ModificationMatch(modificationName, true, site);
-            modificationMatches.add(modificationMatch);
-        }
+        ModificationMatch[] modificationMatches = Arrays.stream(modifications)
+                .map(modification -> modification.split(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR))
+                .map(modificationSplit -> new ModificationMatch(modificationSplit[0], true, Integer.parseInt(modificationSplit[1])))
+                .toArray(ModificationMatch[]::new);
+        
         return modificationMatches;
     }
 

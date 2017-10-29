@@ -125,10 +125,6 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="#com.compomics.util.experiment.massspectrometry">com.compomics.util.experiment.massspectrometry</a></td>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.gui.spectrum">com.compomics.util.gui.spectrum</a></td>
 <td class="colLast">
 <div class="block">Spectrum and Chromatogram visualization GUI classes.</div>
@@ -504,26 +500,6 @@
 </tbody>
 </table>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.massspectrometry">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a> in <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/package-summary.html">com.compomics.util.experiment.massspectrometry</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Method parameters in <a href="../../../../../../../com/compomics/util/experiment/massspectrometry/package-summary.html">com.compomics.util.experiment.massspectrometry</a> with type arguments of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>,<a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Spectrum.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/massspectrometry/Spectrum.html#getDesignaledPeakList-java.util.ArrayList-">getDesignaledPeakList</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;matches)</code>
-<div class="block">Returns the peak list of this spectrum without matched peaks.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
 <li class="blockList"><a name="com.compomics.util.gui.spectrum">
 <!--   -->
 </a>
@@ -562,7 +538,7 @@
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
@@ -594,7 +570,7 @@
                             boolean&nbsp;showRewindTags,
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -614,7 +590,7 @@
                             float&nbsp;forwardIonAlphaLevel,
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
@@ -646,7 +622,7 @@
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -682,7 +658,7 @@
                             float&nbsp;forwardIonAlphaLevel,
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>

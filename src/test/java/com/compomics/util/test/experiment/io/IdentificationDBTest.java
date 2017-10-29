@@ -6,8 +6,8 @@ import com.compomics.util.experiment.ProjectParameters;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.Identification;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeMap;
 import junit.framework.TestCase;
 
@@ -60,7 +58,7 @@ public class IdentificationDBTest extends TestCase {
                 testProteins.put("test protein1", new int[]{0, 12});
                 testProteins.put("test protein2", new int[]{1259});
 
-                Peptide peptide = new Peptide(peptideKey, new ArrayList<>());
+                Peptide peptide = new Peptide(peptideKey, new ModificationMatch[0]);
                 SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
                 testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 2, 0.1, "no file"));
                 identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);

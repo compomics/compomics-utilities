@@ -105,43 +105,59 @@ public class PhosphoRS {
         }
 
         int nModification = 0;
-        if (peptide.isModified()) {
-            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                if (modMatch.getVariable()) {
-                    for (Modification modification : modifications) {
-                        if (modification.getName().equals(modMatch.getModification())) {
-                            nModification++;
-                        }
-                    }
-                }
-            }
+        
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        
+        if (modificationMatches != null) {
+            
+            nModification = (int) Arrays.stream(modificationMatches)
+                    .filter(ModificationMatch::getVariable)
+                    .filter(modificationMatch -> modifications.stream()
+                            .anyMatch(modification -> modification.getName().equals(modificationMatch.getModification())))
+                    .count();
+            
         }
+        
         if (nModification == 0) {
+        
             throw new IllegalArgumentException("Given modifications not found in the peptide for PhosphoRS calculation.");
+        
         }
 
         double modificationMass = modifications.get(0).getMass();
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationSettings.getNeutralLossesMap(),
                 scoringLossesMap = new NeutralLossesMap();
+
         if (accountNeutralLosses) {
+
             // here annotation are sequence and modification independant
             for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
+
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
+
                 if (Math.abs(neutralLoss.getMass() - modificationMass) > specificAnnotationSettings.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
+
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
+
                 }
             }
         }
+
         SpecificAnnotationParameters scoringAnnotationSetttings = specificAnnotationSettings.clone();
         scoringAnnotationSetttings.setNeutralLossesMap(scoringLossesMap);
         HashMap<Ion.IonType, HashSet<Integer>> ions = specificAnnotationSettings.getIonTypes(),
                 newIons = new HashMap<>(1);
+
         for (Ion.IonType ionType : ions.keySet()) {
+
             if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+
                 newIons.put(ionType, ions.get(ionType));
+
             }
         }
+
         scoringAnnotationSetttings.setSelectedIonsMap(newIons);
         HashSet<Integer> possibleSitesSet = new HashSet<>(2);
 

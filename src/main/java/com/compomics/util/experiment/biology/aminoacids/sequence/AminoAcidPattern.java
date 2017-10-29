@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 /**
  * An amino acid pattern is a sequence of amino acids. For example for trypsin:
  * Target R or K not followed by P. IMPORTANT: the index for the target residue
- * is by default 0
+ * is by default 0.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynsk
  */
-public class AminoAcidPattern extends ExperimentObject implements TagComponent {
+public class AminoAcidPattern extends ExperimentObject {
 
     /**
      * Serial number for backward compatibility.
@@ -1196,7 +1196,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     @Override
     public String toString() {
-        return asSequence();
+        return asStringBuilder().toString();
     }
 
     /**
@@ -1231,11 +1231,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
         return result;
-    }
-
-    @Override
-    public String asSequence() {
-        return asStringBuilder().toString();
     }
 
     /**
@@ -1649,38 +1644,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         return results;
     }
 
-    @Override
-    public double getMass() {
-        double mass = 0;
-
-        for (int i = 0; i < length(); i++) {
-            if (residueTargeted != null) {
-                ArrayList<Character> aminoAcids = residueTargeted.get(i);
-                if (aminoAcids.size() == 1) {
-                    Character aa = getTargetedAA(i).get(0);
-                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                    mass += aminoAcid.getMonoisotopicMass();
-                } else {
-                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". "
-                            + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid.");
-                }
-            } else {
-                throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". null as targeted amino acid map.");
-            }
-            if (targetModifications != null) {
-                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i + 1);
-                if (modificationAtIndex != null) {
-                    for (ModificationMatch modificationMatch : modificationAtIndex) {
-                        Modification modification = ModificationFactory.getInstance().getModification(modificationMatch.getModification());
-                        mass += modification.getMass();
-                    }
-                }
-            }
-        }
-
-        return mass;
-    }
-
     /**
      * Returns a sub pattern of the pattern.
      *
@@ -1782,25 +1745,5 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
          */
         return newPattern;
-    }
-
-    @Override
-    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        if (!(anotherCompontent instanceof AminoAcidPattern)) {
-            return false;
-        } else {
-            AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
-            return isSameAs(aminoAcidPattern, sequenceMatchingPreferences);
-        }
-    }
-
-    @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        if (!(anotherCompontent instanceof AminoAcidPattern)) {
-            return false;
-        } else {
-            AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
-            return isSameSequenceAndModificationStatusAs(aminoAcidPattern, sequenceMatchingPreferences);
-        }
     }
 }

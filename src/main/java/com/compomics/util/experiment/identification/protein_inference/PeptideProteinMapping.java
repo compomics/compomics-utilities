@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -37,7 +35,7 @@ public class PeptideProteinMapping {
     /**
      * Eventual modifications.
      */
-    private final ArrayList<ModificationMatch> modificationMatches;
+    private final ModificationMatch[] modificationMatches;
     /**
      * Eventual variants.
      */
@@ -52,7 +50,7 @@ public class PeptideProteinMapping {
      * @param modificationMatches eventual modification matches
      * @param peptideVariantMatches eventual sequence variants
      */
-    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ArrayList<ModificationMatch> modificationMatches, PeptideVariantMatches peptideVariantMatches) {
+    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ModificationMatch[] modificationMatches, PeptideVariantMatches peptideVariantMatches) {
 
         this.proteinAccession = proteinAccession;
         this.peptideSequence = peptideSequence;
@@ -81,7 +79,7 @@ public class PeptideProteinMapping {
      * @param index the index on the protein
      * @param modificationMatches modification matches
      */
-    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ArrayList<ModificationMatch> modificationMatches) {
+    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ModificationMatch[] modificationMatches) {
         this(proteinAccession, peptideSequence, index, modificationMatches, null);
     }
 
@@ -117,7 +115,7 @@ public class PeptideProteinMapping {
      *
      * @return eventual modifications found
      */
-    public ArrayList<ModificationMatch> getModificationMatches() {
+    public ModificationMatch[] getModificationMatches() {
         return modificationMatches;
     }
 

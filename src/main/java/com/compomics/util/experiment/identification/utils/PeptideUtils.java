@@ -88,7 +88,7 @@ public class PeptideUtils {
      */
     public static String getPeptideModificationsAsString(Peptide peptide, boolean variable) {
 
-        TreeMap<String, HashSet<Integer>> modMap = peptide.getModificationMatches().stream()
+        TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(peptide.getModificationMatches())
                 .filter(modificationMatch -> modificationMatch.getVariable() == variable)
                 .collect(Collectors.groupingBy(ModificationMatch::getModification,
                         TreeMap::new,

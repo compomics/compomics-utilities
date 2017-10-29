@@ -2862,7 +2862,7 @@
 </li>
 <li class="blockList">
 <h4>modificationMatches</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; modificationMatches</pre>
+<pre><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[] modificationMatches</pre>
 <div class="block">The modifications carried by the peptide.</div>
 </li>
 <li class="blockListLast">
@@ -3168,9 +3168,9 @@
  false: Da).</div>
 </li>
 <li class="blockList">
-<h4>unknownPtm</h4>
-<pre>boolean unknownPtm</pre>
-<div class="block">Boolean indicating whether peptides presenting unknown PTMs should be
+<h4>unknownModification</h4>
+<pre>boolean unknownModification</pre>
+<div class="block">Boolean indicating whether peptides presenting unknown modifications should be
  ignored.</div>
 </li>
 <li class="blockList">
@@ -4719,137 +4719,6 @@
 <h4>intensityThresholdType</h4>
 <pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters.IntensityThresholdType</a> intensityThresholdType</pre>
 <div class="block">The type of intensity threshold.</div>
-</li>
-<li class="blockListLast">
-<h4>binnedCumulativeFunction</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry">SimpleNoiseDistribution</a> binnedCumulativeFunction</pre>
-<div class="block">The binned cumulative function of the distribution of the log of the
- peaks intensities.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.massspectrometry</h2>
-<ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.massspectrometry.Spectrum">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/massspectrometry/Spectrum.html" title="class in com.compomics.util.experiment.massspectrometry">com.compomics.util.experiment.massspectrometry.Spectrum</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>7152424141470431489L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>spectrumTitle</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumTitle</pre>
-<div class="block">Spectrum title.</div>
-</li>
-<li class="blockList">
-<h4>fileName</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> fileName</pre>
-<div class="block">Spectrum file name.</div>
-</li>
-<li class="blockList">
-<h4>level</h4>
-<pre>int level</pre>
-<div class="block">The MS level.</div>
-</li>
-<li class="blockList">
-<h4>peakList</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; peakList</pre>
-<div class="block">mz indexed Peak list.</div>
-</li>
-<li class="blockList">
-<h4>intensityPeakMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; intensityPeakMap</pre>
-<div class="block">Intensity indexed Peak map.</div>
-</li>
-<li class="blockList">
-<h4>scanNumber</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> scanNumber</pre>
-<div class="block">Scan number or range.</div>
-</li>
-<li class="blockList">
-<h4>scanStartTime</h4>
-<pre>double scanStartTime</pre>
-<div class="block">The time point when the spectrum was recorded (scan start time in mzML
- files).</div>
-</li>
-<li class="blockList">
-<h4>jFreePeakList</h4>
-<pre>double[][] jFreePeakList</pre>
-<div class="block">The peak list as an array directly plottable by JFreeChart.</div>
-</li>
-<li class="blockList">
-<h4>mzValuesAsArray</h4>
-<pre>double[] mzValuesAsArray</pre>
-<div class="block">The mz values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>mzValuesOrderedAsArray</h4>
-<pre>double[] mzValuesOrderedAsArray</pre>
-<div class="block">The mz values sorted in acceding order as array. Null until set by the
- getter.</div>
-</li>
-<li class="blockList">
-<h4>peakListAsString</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> peakListAsString</pre>
-<div class="block">The peak list as an array list formatted as text, e.g. [[303.17334
- 3181.14],[318.14542 37971.93], ... ].</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesAsArray</h4>
-<pre>double[] intensityValuesAsArray</pre>
-<div class="block">The intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesNormaizedAsArray</h4>
-<pre>double[] intensityValuesNormaizedAsArray</pre>
-<div class="block">The intensity values as array normalized against the most intense peak.
- Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>mzAndIntensityAsArray</h4>
-<pre>double[][] mzAndIntensityAsArray</pre>
-<div class="block">The mz and intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>totalIntensity</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> totalIntensity</pre>
-<div class="block">The total intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxIntensity</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> maxIntensity</pre>
-<div class="block">The maximal intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxMz</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> maxMz</pre>
-<div class="block">The maximal m/z.</div>
-</li>
-<li class="blockList">
-<h4>minMz</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> minMz</pre>
-<div class="block">The minimal m/z.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimit</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> intensityLimit</pre>
-<div class="block">Cache for the intensity limit.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimitLevel</h4>
-<pre>double intensityLimitLevel</pre>
-<div class="block">Intensity level corresponding to the value in cache.</div>
 </li>
 <li class="blockListLast">
 <h4>binnedCumulativeFunction</h4>

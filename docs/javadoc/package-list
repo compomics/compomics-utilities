@@ -79,7 +79,6 @@ com.compomics.util.experiment.mass_spectrometry.proteowizard
 com.compomics.util.experiment.mass_spectrometry.proteowizard.gui
 com.compomics.util.experiment.mass_spectrometry.spectra
 com.compomics.util.experiment.mass_spectrometry.utils
-com.compomics.util.experiment.massspectrometry
 com.compomics.util.experiment.normalization
 com.compomics.util.experiment.patient
 com.compomics.util.experiment.personalization

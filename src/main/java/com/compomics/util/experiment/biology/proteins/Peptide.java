@@ -57,7 +57,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The modifications carried by the peptide.
      */
-    private ArrayList<ModificationMatch> modificationMatches = null;
+    private ModificationMatch[] modificationMatches = null;
     /**
      * The variants observed when mapping this peptide to the database. Peptide
      * variant matches are indexed by protein and by peptide start.
@@ -86,13 +86,15 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatches the Modification of this peptide
      * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modificationMatches, boolean sanityCheck) {
+    public Peptide(String aSequence, ModificationMatch[] modificationMatches, boolean sanityCheck) {
 
         this.sequence = aSequence;
         this.modificationMatches = modificationMatches;
 
         if (sanityCheck) {
+            
             sanityCheck();
+        
         }
     }
 
@@ -104,7 +106,7 @@ public class Peptide extends ExperimentObject {
      * @param sanityCheck boolean indicating whether the input should be checked
      * @param mass the mass of the peptide
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modificationMatches, boolean sanityCheck, double mass) {
+    public Peptide(String aSequence, ModificationMatch[] modificationMatches, boolean sanityCheck, double mass) {
 
         this.sequence = aSequence;
         this.modificationMatches = modificationMatches;
@@ -122,7 +124,7 @@ public class Peptide extends ExperimentObject {
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param modifications the Modification of this peptide
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) {
+    public Peptide(String aSequence, ModificationMatch[] modifications) {
         this(aSequence, modifications, false);
     }
 
@@ -134,7 +136,7 @@ public class Peptide extends ExperimentObject {
      * @param variantMatches the variants compared to the database
      * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ArrayList<ModificationMatch> modificationMatches, HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, boolean sanityCheck) {
+    public Peptide(String aSequence, ModificationMatch[] modificationMatches, HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, boolean sanityCheck) {
 
         this.sequence = aSequence;
         this.modificationMatches = modificationMatches;
@@ -159,7 +161,8 @@ public class Peptide extends ExperimentObject {
 
         if (modificationMatches != null) {
 
-            HashSet<String> conflictingPtms = modificationMatches.stream().map(modificationMatch -> modificationMatch.getModification())
+            HashSet<String> conflictingPtms = Arrays.stream(modificationMatches)
+                    .map(modificationMatch -> modificationMatch.getModification())
                     .filter((modificationName) -> (modificationName.contains(MODIFICATION_SEPARATOR) || modificationName.contains(MODIFICATION_LOCALIZATION_SEPARATOR)))
                     .collect(Collectors.toCollection(HashSet::new));
 
@@ -276,7 +279,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return the modifications matches as found by the search engine
      */
-    public ArrayList<ModificationMatch> getModificationMatches() {
+    public ModificationMatch[] getModificationMatches() {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -290,7 +293,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param modificationMatches the new modification matches
      */
-    public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
+    public void setModificationMatches(ModificationMatch[] modificationMatches) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
@@ -313,7 +316,7 @@ public class Peptide extends ExperimentObject {
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        modificationMatches.clear();
+        modificationMatches = new ModificationMatch[0];
 
         setMass(-1);
         setKey(null);
@@ -332,13 +335,20 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
 
         if (modificationMatches == null) {
-            modificationMatches = new ArrayList<>(1);
+            
+            modificationMatches = new ModificationMatch[1];
+            
+        } else {
+            
+            modificationMatches = Arrays.copyOf(modificationMatches, modificationMatches.length + 1);
+            
         }
-        modificationMatches.add(modificationMatch);
+        modificationMatches[modificationMatches.length] = modificationMatch;
 
         setMass(-1);
         setKey(null);
         setMatchingKey(null);
+        
     }
 
     /**
@@ -351,7 +361,9 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
 
         if (variantMatches != null) {
+            
             variantMatches.clear();
+            
         }
     }
 
@@ -554,7 +566,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return the key of the peptide
      */
-    public static String getKey(String sequence, ArrayList<ModificationMatch> modificationMatches) {
+    public static String getKey(String sequence, ModificationMatch[] modificationMatches) {
 
         if (modificationMatches == null) {
 
@@ -563,7 +575,7 @@ public class Peptide extends ExperimentObject {
         }
 
         int size = sequence.length();
-        ArrayList<String> tempModifications = new ArrayList<>(modificationMatches.size());
+        ArrayList<String> tempModifications = new ArrayList<>(modificationMatches.length);
 
         for (ModificationMatch mod : modificationMatches) {
 
@@ -603,20 +615,7 @@ public class Peptide extends ExperimentObject {
                 .append(tempModifications.stream().sorted().collect(Collectors.joining(MODIFICATION_SEPARATOR)));
 
         return result.toString();
-    }
-
-    /**
-     * Indicates whether a peptide carries modifications.
-     *
-     * @return a boolean indicating whether a peptide carries modifications
-     */
-    public boolean isModified() {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        return modificationMatches != null && !modificationMatches.isEmpty();
+        
     }
 
     /**
@@ -631,7 +630,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return modificationMatches == null ? 0 : (int) modificationMatches.stream()
+        return modificationMatches == null ? 0 : (int) Arrays.stream(modificationMatches)
                 .filter(modificationMatch -> modificationMatch.getVariable())
                 .map(modificationMatch -> ModificationFactory.getInstance().getModification(modificationMatch.getModification()))
                 .filter(modification -> modification.getMass() == modificationMass).count();
@@ -648,7 +647,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return modificationMatches != null ? modificationMatches.size() : 0;
+        return modificationMatches == null ? 0 : modificationMatches.length;
     }
 
     /**
@@ -1114,10 +1113,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
-        if (!isModified() && !anotherPeptide.isModified()) {
-            return true;
-        }
 
         if (getNModifications() != anotherPeptide.getNModifications()) {
             return false;
@@ -1125,12 +1120,12 @@ public class Peptide extends ExperimentObject {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         
-        ArrayList<ModificationMatch> modificationMatches1 = getModificationMatches();
-        Map<Double, Long> masses1 = modificationMatches1.stream().collect(Collectors.groupingBy(
+        ModificationMatch[] modificationMatches1 = getModificationMatches();
+        Map<Double, Long> masses1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
         
-        ArrayList<ModificationMatch> modificationMatches2 = anotherPeptide.getModificationMatches();
-        Map<Double, Long> masses2 = modificationMatches2.stream().collect(Collectors.groupingBy(
+        ModificationMatch[] modificationMatches2 = anotherPeptide.getModificationMatches();
+        Map<Double, Long> masses2 = Arrays.stream(modificationMatches2).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
 
         if (masses1.size() != masses2.size()) {
@@ -1157,9 +1152,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        if (!isModified() && !anotherPeptide.isModified()) {
-            return true;
-        }
 
         if (getNModifications() != anotherPeptide.getNModifications()) {
             return false;
@@ -1227,9 +1219,6 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        if (!isModified() && !anotherPeptide.isModified()) {
-            return true;
-        }
 
         if (getNModifications() != anotherPeptide.getNModifications()) {
             return false;
@@ -1300,11 +1289,19 @@ public class Peptide extends ExperimentObject {
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         if (modificationMatches != null) {
-            for (int i = 0; i < modificationMatches.size(); i++) {
-                if (modificationMatches.get(i).getModificationSite() == sequence.length()) {
-                    Modification modification = modificationFactory.getModification(modificationMatches.get(i).getModification());
+            
+            for (int i = 0; i < modificationMatches.length; i++) {
+                
+                ModificationMatch modificationMatch = modificationMatches[i];
+                
+                if (modificationMatch.getModificationSite() == sequence.length()) {
+                    
+                    Modification modification = modificationFactory.getModification(modificationMatch.getModification());
+                    
                     if (modification.getModificationType() != ModificationType.modaa) {
+                        
                         cTerm = modification.getShortName();
+                        
                     }
                 }
             }
@@ -1330,6 +1327,7 @@ public class Peptide extends ExperimentObject {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
+        
         HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>();
         HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
@@ -1338,27 +1336,48 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         if (modificationMatches != null) {
+            
             for (ModificationMatch modMatch : modificationMatches) {
+                
                 String modName = modMatch.getModification();
                 int modSite = modMatch.getModificationSite();
+                
                 if (modMatch.getVariable()) {
+                    
                     if (modMatch.getConfident()) {
+                        
                         if (!confidentModificationSites.containsKey(modSite)) {
+                            
                             confidentModificationSites.put(modSite, new ArrayList<>(1));
+                            
                         }
+                        
                         confidentModificationSites.get(modSite).add(modName);
+                        
                     } else {
+                        
                         if (!representativeModificationSites.containsKey(modSite)) {
+                            
                             representativeModificationSites.put(modSite, new ArrayList<>(1));
+                            
                         }
+                        
                         representativeModificationSites.get(modSite).add(modName);
+                        
                     }
+                    
                 } else if (!excludeAllFixedPtms) {
+                    
                     if (!fixedModificationSites.containsKey(modSite)) {
+                        
                         fixedModificationSites.put(modSite, new ArrayList<>(1));
+                        
                     }
+                    
                     fixedModificationSites.get(modSite).add(modName);
+                    
                 }
             }
         }
@@ -1381,9 +1400,11 @@ public class Peptide extends ExperimentObject {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
     }
 
@@ -1392,6 +1413,7 @@ public class Peptide extends ExperimentObject {
      * silently overwritten.
      */
     public synchronized void estimateTheoreticMass() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
@@ -1407,8 +1429,10 @@ public class Peptide extends ExperimentObject {
             }
 
             if (modificationMatches != null) {
+                
                 ModificationFactory modificationFactory = ModificationFactory.getInstance();
-                tempMass += modificationMatches.stream().mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass()).sum();
+                tempMass += Arrays.stream(modificationMatches).mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass()).sum();
+            
             }
 
             setMass(tempMass);
@@ -1424,20 +1448,19 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide getNoModPeptide(HashSet<String> forbiddenModifications) {
 
-        Peptide noModPeptide = new Peptide(getSequence(), new ArrayList<>(0));
-        noModPeptide.setProteinMapping(getProteinMapping());
 
-        ArrayList<ModificationMatch> allModificationMatches = getModificationMatches();
+        ModificationMatch[] modificationMatches = getModificationMatches();
         
-        if (allModificationMatches != null) {
+        if (modificationMatches != null) {
             
-            ArrayList<ModificationMatch> filteredModificationMatches = allModificationMatches.stream()
+            modificationMatches = Arrays.stream(modificationMatches)
                     .filter(modificationMatch -> !forbiddenModifications.contains(modificationMatch.getModification()))
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            noModPeptide.setModificationMatches(filteredModificationMatches);
+                    .toArray(ModificationMatch[]::new);
             
         }
+        
+        Peptide noModPeptide = new Peptide(getSequence(), modificationMatches);
+        noModPeptide.setProteinMapping(getProteinMapping());
 
         return noModPeptide;
     }

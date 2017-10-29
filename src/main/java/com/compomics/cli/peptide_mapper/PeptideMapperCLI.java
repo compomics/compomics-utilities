@@ -214,24 +214,42 @@ public class PeptideMapperCLI {
             }
 
             try {
+                
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
+                
                 for (int i = 0; i < allPeptideProteinMappings.size(); ++i) {
+                
                     PeptideProteinMapping peptideProteinMapping = allPeptideProteinMappings.get(i);
                     String peptide = peptideProteinMapping.getPeptideSequence();
                     String accession = peptideProteinMapping.getProteinAccession();
                     int startIndex = peptideProteinMapping.getIndex();
+                    
                     for (TagComponent tagComponent : tags.get(tagIndexes.get(i)).getContent()) {
+                        
                         if (tagComponent instanceof MassGap) {
+                        
                             writer.print(tagComponent.getMass());
-                        }
-                        if (tagComponent instanceof AminoAcidSequence) {
+                        
+                        } else if (tagComponent instanceof AminoAcidSequence) {
+                        
                             writer.print(tagComponent.asSequence());
+                        
+                        } else {
+                        
+                            throw new UnsupportedOperationException("Tag component of class " + tagComponent.getClass().getName() + " not supported.");
+                        
                         }
+                        
                         writer.print(",");
+                        
                     }
+                    
                     writer.println(peptide + "," + accession + "," + startIndex);
+                
                 }
+                
                 writer.close();
+            
             } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
                 e.printStackTrace();

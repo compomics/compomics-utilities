@@ -66,18 +66,18 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * Returns the possible neutral losses expected by default for a given tag.
-     * /!\ this method will work only if the PTM found in the tag are in the
-     * PTMFactory.
+     * /!\ this method will work only if the modificatoin found in the tag are in the
+     * factory.
      *
      * @param tag the tag of interest
-     * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
+     * @param modificationSequenceMatchingSettings the sequence matching settings for modification
      * to peptide mapping
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingParameters ptmSequenceMatchingSettings) {
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingParameters modificationSequenceMatchingSettings) {
 
-        ModificationFactory pTMFactory = ModificationFactory.getInstance();
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
         int tagLength = tag.getLengthInAminoAcid();
@@ -85,21 +85,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         int aaMax = 0;
 
         int offset = 0;
+        
         for (TagComponent component : tag.getContent()) {
-            if (component instanceof AminoAcidPattern) {
-                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
-                for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.D.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.E.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.S.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.T.getSingleLetterCodeAsChar())) {
-                        int index = i + offset;
-                        aaMin = Math.min(index, aaMin);
-                        aaMax = Math.max(index, aaMax);
-                    }
-                }
-                offset += aminoAcidPattern.length();
-            } else if (component instanceof AminoAcidSequence) {
+            
+            if (component instanceof AminoAcidSequence) {
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
                 for (int i = 0; i < aminoAcidSequence.length(); i++) {
                     if (aminoAcidSequence.charAt(i) == 'D'
@@ -112,84 +101,109 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                     }
                 }
                 offset += aminoAcidSequence.length();
+            
             } else if (component instanceof MassGap) {
+            
                 offset++;
+            
             } else {
+            
                 throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
+            
             }
         }
+        
         if (aaMin < tagLength) {
+        
             neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, tagLength - aaMax);
+        
         }
 
         aaMin = tagLength;
         aaMax = 0;
 
         offset = 0;
+        
         for (TagComponent component : tag.getContent()) {
-            if (component instanceof AminoAcidPattern) {
-                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
-                for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.K.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.N.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.Q.getSingleLetterCodeAsChar())
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.R.getSingleLetterCodeAsChar())) {
-                        int index = i + offset;
-                        aaMin = Math.min(index, aaMin);
-                        aaMax = Math.max(index, aaMax);
-                    }
-                }
-                offset += aminoAcidPattern.length();
-            } else if (component instanceof AminoAcidSequence) {
+            
+            if (component instanceof AminoAcidSequence) {
+            
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
+                
                 for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                
                     if (aminoAcidSequence.charAt(i) == 'K'
                             || aminoAcidSequence.charAt(i) == 'N'
                             || aminoAcidSequence.charAt(i) == 'Q'
                             || aminoAcidSequence.charAt(i) == 'R') {
+                    
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);
+                
                     }
                 }
+                
                 offset += aminoAcidSequence.length();
+            
             } else if (component instanceof MassGap) {
+            
                 offset++;
+            
             } else {
+            
                 throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
+            
             }
         }
+        
         if (aaMin < tagLength) {
+        
             neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, tagLength - aaMax);
+        
         }
 
         int modMin = tagLength;
         int modMax = 0;
 
         offset = 0;
+        
         for (TagComponent component : tag.getContent()) {
-            if (component instanceof AminoAcidPattern) {
-                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
-                for (int i = 1; i <= aminoAcidPattern.length(); i++) {
-                    for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
-                        Modification ptm = pTMFactory.getModification(modificationMatch.getModification());
-                        if (ptm == null) {
-                            throw new IllegalArgumentException("PTM " + modificationMatch.getModification() + " not loaded in PTM factory.");
-                        }
-                        for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings); // @TODO: could end in a null pointer?
+        
+            if (component instanceof AminoAcidSequence) {
+                
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
+            
+                for (int i = 1; i <= aminoAcidSequence.length(); i++) {
+                    
+                    for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i)) {
+                    
+                        Modification modification = modificationFactory.getModification(modificationMatch.getModification());
+                        
+                        for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+                        
+                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(modification, modificationSequenceMatchingSettings); // @TODO: could end in a null pointer?
+                            
                             if (!indexes.isEmpty()) {
+                            
                                 Collections.sort(indexes);
                                 modMin = indexes.get(0);
                                 modMax = indexes.get(indexes.size() - 1);
+                            
                             }
+                            
                             neutralLossesMap.addNeutralLoss(neutralLoss, modMin, tag.getLengthInAminoAcid() - modMax + 1);
+                        
                         }
                     }
                 }
-                offset += aminoAcidPattern.length();
+                
+                offset += aminoAcidSequence.length();
+            
             } else {
+            
                 offset++;
+            
             }
         }
 

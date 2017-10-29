@@ -25,7 +25,7 @@ public class PrecursorAnnotator {
     /**
      * The modifications factory.
      */
-    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
     /**
      * The mass of the precursor to annotate.
@@ -49,20 +49,25 @@ public class PrecursorAnnotator {
 
         precursorMass = peptide.getMass();
 
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        
         if (modificationMatches != null) {
+        
             HashSet<String> modificationLosses = new HashSet<String>(0);
             for (ModificationMatch modificationMatch : modificationMatches) {
 
                 String modificationName = modificationMatch.getModification();
-                Modification modification = ptmFactory.getModification(modificationName);
+                Modification modification = modificationFactory.getModification(modificationName);
 
                 for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+                
                     modificationLosses.add(neutralLoss.name);
+                
                 }
             }
 
             if (!modificationLosses.isEmpty()) {
+                
                 int nNeutralLosses = modificationLosses.size() + 2;
                 neutralLosses = new NeutralLoss[nNeutralLosses];
                 neutralLossesMasses = new double[nNeutralLosses];

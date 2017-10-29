@@ -1,6 +1,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -8,8 +9,8 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -39,7 +40,7 @@ public class FragmentFactoryTest extends TestCase {
     public void testPeptideFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        Peptide peptide = new Peptide(sequence, new ArrayList<>());
+        Peptide peptide = new Peptide(sequence, new ModificationMatch[0]);
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
@@ -375,7 +376,7 @@ public class FragmentFactoryTest extends TestCase {
     public void testTagFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        Tag tag = new Tag(0, AminoAcidPattern.getAminoAcidPatternFromString(sequence), 0);
+        Tag tag = new Tag(0, new AminoAcidSequence(sequence), 0);
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);

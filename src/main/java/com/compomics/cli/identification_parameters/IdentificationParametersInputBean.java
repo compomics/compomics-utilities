@@ -466,6 +466,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id, arg)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id, arg)) {
@@ -2136,6 +2142,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id);
             Double option = new Double(arg);
             xtandemParameters.setMinPrecursorMass(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id);
+            Integer option = new Integer(arg);
+            xtandemParameters.setParentMonoisotopicMassIsotopeError(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id);

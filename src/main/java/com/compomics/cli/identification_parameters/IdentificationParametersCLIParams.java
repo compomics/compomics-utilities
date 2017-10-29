@@ -100,6 +100,7 @@ public enum IdentificationParametersCLIParams {
     XTANDEM_MIN_PEAKS("xtandem_min_peaks", "X!Tandem 'spectrum, minimum peaks' option, default is '15'.", false, true),
     XTANDEM_NOISE_SUPPRESSION("xtandem_noise_suppr", "X!Tandem 'spectrum, use noise suppression' option. 1: true, 0: false, default is '0'.", false, true),
     XTANDEM_MIN_PREC_MASS("xtandem_min_prec_mass", "X!Tandem 'spectrum, minimum parent m+h' option, default is '500'.", false, true),
+    XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR("xtandem_parent_isotope_correction", "X!Tandem 'spectrum, parent monoisotopic mass isotope error. 1: true, 0: false, default is '1'.", false, true),
     XTANDEM_QUICK_ACETYL("xtandem_quick_acetyl", "X!Tandem 'protein, quick acetyl' option. 1: true, 0: false, default is '1'.", false, true),
     XTANDEM_QUICK_PYRO("xtandem_quick_pyro", "X!Tandem 'protein, quick pyrolidone' option. 1: true, 0: false, default is '1'.", false, true),
     XTANDEM_STP_BIAS("xtandem_stp_bias", "X!Tandem 'protein, stP bias' option. 1: true, 0: false, default is '0'.", false, true),
@@ -443,6 +444,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.id) + " " + IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id) + " " + IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id) + " " + IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.id) + " " + IdentificationParametersCLIParams.XTANDEM_PARENT_MONOISOTOPIC_MASS_ISOTOPE_ERROR.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id) + " " + IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id) + " " + IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id) + " " + IdentificationParametersCLIParams.XTANDEM_STP_BIAS.description + "\n";

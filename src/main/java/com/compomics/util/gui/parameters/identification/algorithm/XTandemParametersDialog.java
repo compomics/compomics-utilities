@@ -136,6 +136,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         snapsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         spectrumSynthesisCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputResultsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        parentMonoisotopicMassIsotopeErrorCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         modificationTableToolTips = new ArrayList<>();
         modificationTableToolTips.add(null);
@@ -361,6 +362,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         if (!input.equals("")) {
             result.setMinPrecursorMass(new Double(input));
         }
+        result.setParentMonoisotopicMassIsotopeError(parentMonoisotopicMassIsotopeErrorCmb.getSelectedIndex() == 0);
         result.setProteinQuickAcetyl(quickAcetylCmb.getSelectedIndex() == 0);
         result.setQuickPyrolidone(quickPyroCmb.getSelectedIndex() == 0);
         result.setStpBias(stpBiasCmb.getSelectedIndex() == 0);
@@ -440,6 +442,8 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         minPrecMassTxt = new javax.swing.JTextField();
         noiseSuppressionCmb = new javax.swing.JComboBox();
         noiseSuppressionLabel = new javax.swing.JLabel();
+        parentMonoisotopicMassIsotopeErrorLabel = new javax.swing.JLabel();
+        parentMonoisotopicMassIsotopeErrorCmb = new javax.swing.JComboBox();
         advancedSearchSettingsPanel = new javax.swing.JPanel();
         quickPyroCmb = new javax.swing.JComboBox();
         quickAcetylCmb = new javax.swing.JComboBox();
@@ -630,25 +634,45 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         noiseSuppressionLabel.setText("Noise Suppression    (?)");
         noiseSuppressionLabel.setToolTipText("Open X!Tandem parameter details");
         noiseSuppressionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                noiseSuppressionLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 noiseSuppressionLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 noiseSuppressionLabelMouseExited(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                noiseSuppressionLabelMouseReleased(evt);
+            }
         });
+
+        parentMonoisotopicMassIsotopeErrorLabel.setText("Parent Isotope Expansion (?)");
+        parentMonoisotopicMassIsotopeErrorLabel.setToolTipText("Open X!Tandem parameter details");
+        parentMonoisotopicMassIsotopeErrorLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                parentMonoisotopicMassIsotopeErrorLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                parentMonoisotopicMassIsotopeErrorLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                parentMonoisotopicMassIsotopeErrorLabelMouseReleased(evt);
+            }
+        });
+
+        parentMonoisotopicMassIsotopeErrorCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         javax.swing.GroupLayout spectrumImportSettingsPanelLayout = new javax.swing.GroupLayout(spectrumImportSettingsPanel);
         spectrumImportSettingsPanel.setLayout(spectrumImportSettingsPanelLayout);
         spectrumImportSettingsPanelLayout.setHorizontalGroup(
             spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, spectrumImportSettingsPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(parentMonoisotopicMassIsotopeErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(parentMonoisotopicMassIsotopeErrorCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(noiseSuppressionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -656,7 +680,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(minPrecMassTxt)
                             .addComponent(noiseSuppressionCmb, 0, 294, Short.MAX_VALUE)))
-                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dynamicRangeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -664,11 +688,11 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nPeaksTxt)
                             .addComponent(dynamicRangeTxt)))
-                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(minPeaksTxt))
-                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(minFragmentMzTxt)))
@@ -701,7 +725,11 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(minPrecMassLbl))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(parentMonoisotopicMassIsotopeErrorCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(parentMonoisotopicMassIsotopeErrorLabel))
+                .addContainerGap(230, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Spectrum Import", spectrumImportSettingsPanel);
@@ -2530,6 +2558,35 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
     }//GEN-LAST:event_modificationComplexityTxtKeyReleased
 
     /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void parentMonoisotopicMassIsotopeErrorLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentMonoisotopicMassIsotopeErrorLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_parentMonoisotopicMassIsotopeErrorLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void parentMonoisotopicMassIsotopeErrorLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentMonoisotopicMassIsotopeErrorLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_parentMonoisotopicMassIsotopeErrorLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void parentMonoisotopicMassIsotopeErrorLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentMonoisotopicMassIsotopeErrorLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/tandem/api/spmmie.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_parentMonoisotopicMassIsotopeErrorLabelMouseReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -2681,6 +2738,8 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
     private javax.swing.JPanel outputSettingsPanel;
     private javax.swing.JComboBox outputSpectraCmb;
     private javax.swing.JLabel outputSpectraLabel;
+    private javax.swing.JComboBox parentMonoisotopicMassIsotopeErrorCmb;
+    private javax.swing.JLabel parentMonoisotopicMassIsotopeErrorLabel;
     private javax.swing.JLabel pointMutationLabel;
     private javax.swing.JComboBox pointMutationsCmb;
     private javax.swing.JComboBox potentialModificationsCmb;

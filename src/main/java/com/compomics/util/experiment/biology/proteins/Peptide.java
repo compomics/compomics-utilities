@@ -477,7 +477,10 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.decreaseRWCounter();
 
         return digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme
-                ? digestionPreferences.getEnzymes().stream().mapToInt(enzyme -> getNMissedCleavages(enzyme)).min().orElse(0) : 0;
+                ? digestionPreferences.getEnzymes().stream()
+                        .mapToInt(enzyme -> getNMissedCleavages(enzyme))
+                        .min().orElse(0) 
+                : 0;
     }
 
     /**
@@ -1372,7 +1375,7 @@ public class Peptide extends ExperimentObject {
                 }
             }
         }
-        return PeptideUtils.getTaggedModifiedSequence(modificationProfile, this, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
+        return PeptideUtils.getTaggedModifiedSequence(this, modificationProfile, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
 

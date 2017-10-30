@@ -36,7 +36,7 @@ public class SpectrumMatchesIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public SpectrumMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public SpectrumMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -51,7 +51,7 @@ public class SpectrumMatchesIterator extends MatchesIterator {
      * method should be displayed on the waiting handler
      * @param filters filters for the class
      */
-    public SpectrumMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
+    public SpectrumMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, filters);
     }
     

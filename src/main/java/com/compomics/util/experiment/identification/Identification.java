@@ -15,11 +15,9 @@ import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +44,10 @@ public class Identification extends ExperimentObject {
      */
     protected HashSet<Long> peptideIdentification = new HashSet<>();
     /**
+     * Map mapping spectra per file.
+     */
+    private HashMap<String, HashSet<Long>> spectrumIdentification = null;
+    /**
      * A map linking protein accessions to all their protein matches keys.
      */
     protected HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
@@ -57,10 +59,6 @@ public class Identification extends ExperimentObject {
      * The database which will contain the objects.
      */
     private final ObjectsDB objectsDB;
-    /**
-     * Map mapping spectra per file.
-     */
-    private HashMap<String, ArrayList<Long>> spectraPerFile = null;
 
     /**
      * Constructor.
@@ -83,31 +81,20 @@ public class Identification extends ExperimentObject {
 
     /**
      * Fills the spectra per file map.
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void fillSpectraPerFile() throws InterruptedException {
+    private void fillSpectrumIdentification() {
 
-        spectraPerFile = new HashMap<>(getNumber(SpectrumMatch.class));
-        SpectrumMatchesIterator psmIterator = getPsmIterator(null);
-        SpectrumMatch spectrumMatch;
+        try {
 
-        while ((spectrumMatch = psmIterator.next()) != null) {
+            spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
+                    .collect(Collectors.groupingBy(
+                            key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
+                            HashMap::new,
+                            Collectors.toCollection(HashSet::new)));
 
-            String key = spectrumMatch.getSpectrumKey();
-            String fileName = Spectrum.getSpectrumFile(key);
+        } catch (Exception e) {
 
-            ArrayList<Long> spectrumMatchKeys = spectraPerFile.get(fileName);
-
-            if (spectrumMatchKeys == null) {
-
-                spectrumMatchKeys = new ArrayList<>();
-                spectraPerFile.put(fileName, spectrumMatchKeys);
-
-            }
-
-            spectrumMatchKeys.add(ExperimentObject.asLong(key));
+            throw new RuntimeException(e);
 
         }
     }
@@ -116,19 +103,16 @@ public class Identification extends ExperimentObject {
      * Returns a map of the spectrum matches keys indexed by spectrum file name.
      *
      * @return a map of the spectrum matches keys indexed by spectrum file name
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public HashMap<String, ArrayList<Long>> getSpectrumFiles() throws InterruptedException {
+    public HashMap<String, HashSet<Long>> getSpectrumIdentification() {
 
-        if (spectraPerFile == null) {
+        if (spectrumIdentification == null) {
 
-            fillSpectraPerFile();
+            fillSpectrumIdentification();
 
         }
 
-        return spectraPerFile;
+        return spectrumIdentification;
     }
 
     /**
@@ -387,7 +371,7 @@ public class Identification extends ExperimentObject {
         }
 
         objectsDB.removeObject(key);
-        
+
     }
 
     /**
@@ -577,7 +561,7 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      * @return a peptide matches iterator
      */
-    public SpectrumMatchesIterator getPsmIterator(ArrayList<Long> spectrumMatches, WaitingHandler waitingHandler) throws InterruptedException {
+    public SpectrumMatchesIterator getPsmIterator(long[] spectrumMatches, WaitingHandler waitingHandler) throws InterruptedException {
         return new SpectrumMatchesIterator(spectrumMatches, this, waitingHandler, false);
     }
 
@@ -598,11 +582,9 @@ public class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      * @param filters filters for the class
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public SpectrumMatchesIterator getPsmIterator(WaitingHandler waitingHandler, String filters) throws InterruptedException {
+    public SpectrumMatchesIterator getPsmIterator(WaitingHandler waitingHandler, String filters) {
         return new SpectrumMatchesIterator(null, this, waitingHandler, false, filters);
     }
 
@@ -612,11 +594,9 @@ public class Identification extends ExperimentObject {
      * @param peptideKeys the keys of the peptides to iterate
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<Long> peptideKeys, WaitingHandler waitingHandler) throws InterruptedException {
+    public PeptideMatchesIterator getPeptideMatchesIterator(long[] peptideKeys, WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(peptideKeys, this, waitingHandler, false);
     }
 
@@ -625,11 +605,9 @@ public class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) throws InterruptedException {
+    public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(this, waitingHandler, false);
     }
 
@@ -639,11 +617,9 @@ public class Identification extends ExperimentObject {
      * @param proteinKeys the keys of the peptides to iterate
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<Long> proteinKeys, WaitingHandler waitingHandler) throws InterruptedException {
+    public ProteinMatchesIterator getProteinMatchesIterator(long[] proteinKeys, WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(proteinKeys, this, waitingHandler, false);
     }
 
@@ -652,11 +628,9 @@ public class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) throws InterruptedException {
+    public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, waitingHandler, false);
     }
 

@@ -31,7 +31,7 @@ public abstract class MatchesIterator {
      * list of potential keys for the iterator, if empty all instances of the
      * class are being iterated
      */
-    private ArrayList<Long> keys = null;
+    private long[] keys = null;
     /**
      * current absolute index
      */
@@ -84,11 +84,11 @@ public abstract class MatchesIterator {
      * method should be displayed on the waiting handler
      * @param filters filters for the class
      */
-    public MatchesIterator(ArrayList<Long> keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
+    public MatchesIterator(long[] keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
         
         if (keys != null) {
             
-            num = keys.size();
+            num = keys.length;
             this.keys = keys;
             
         } else {
@@ -138,7 +138,7 @@ public abstract class MatchesIterator {
                 
             } else {
                 
-                obj = identification.retrieveObject(keys.get(currentIndex));
+                obj = identification.retrieveObject(keys[currentIndex]);
                 
             }
         }

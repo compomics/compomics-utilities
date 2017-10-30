@@ -37,7 +37,7 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public PeptideMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public PeptideMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, PeptideMatch.class, identification, waitingHandler, displayProgress, null);
     }
     

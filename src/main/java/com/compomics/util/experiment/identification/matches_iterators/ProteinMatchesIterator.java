@@ -37,7 +37,7 @@ public class ProteinMatchesIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public ProteinMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public ProteinMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, ProteinMatch.class, identification, waitingHandler, displayProgress, null);
     }
     

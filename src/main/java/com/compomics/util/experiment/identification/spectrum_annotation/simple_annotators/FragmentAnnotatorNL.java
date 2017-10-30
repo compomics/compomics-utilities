@@ -94,80 +94,93 @@ public class FragmentAnnotatorNL {
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-        
-        if (modificationMatches != null) {
 
-            // Keep track of the modified amino acids and possible losses
-            HashMap<String, int[]> modificationLossesSites = new HashMap<String, int[]>(1);
-            for (ModificationMatch modificationMatch : modificationMatches) {
+        // Keep track of the modified amino acids and possible losses
+        HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
+        for (ModificationMatch modificationMatch : modificationMatches) {
 
-                String modificationName = modificationMatch.getModification();
-                Modification modification = modificationFactory.getModification(modificationName);
-                double modificationMass = modification.getMass();
+            String modificationName = modificationMatch.getModification();
+            Modification modification = modificationFactory.getModification(modificationName);
+            double modificationMass = modification.getMass();
 
-                int site = modificationMatch.getModificationSite();
-                int siteIndex = site - 1;
+            int site = modificationMatch.getModificationSite();
+            int siteIndex = site - 1;
 
-                modificationsMasses[siteIndex] += modificationMass;
+            modificationsMasses[siteIndex] += modificationMass;
 
-                for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+            for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
 
-                    int[] sites = modificationLossesSites.get(neutralLoss.name);
-                    if (sites == null) {
-                        sites = new int[]{siteIndex, siteIndex};
-                        modificationLossesSites.put(neutralLoss.name, sites);
-                    } else {
-                        if (siteIndex < sites[0]) {
-                            sites[0] = siteIndex;
-                        } else if (siteIndex > sites[1]) {
-                            sites[1] = siteIndex;
-                        }
+                int[] sites = modificationLossesSites.get(neutralLoss.name);
+                if (sites == null) {
+                    sites = new int[]{siteIndex, siteIndex};
+                    modificationLossesSites.put(neutralLoss.name, sites);
+                } else {
+                    if (siteIndex < sites[0]) {
+                        sites[0] = siteIndex;
+                    } else if (siteIndex > sites[1]) {
+                        sites[1] = siteIndex;
                     }
                 }
             }
-            if (!modificationLossesSites.isEmpty()) {
-                int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
-                System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
-                NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
-                System.arraycopy(losses, 0, newLosses, 0, losses.length);
-                int index = lossesIndexes.length;
-                for (String lossName : modificationLossesSites.keySet()) {
-                    int[] sites = modificationLossesSites.get(lossName);
-                    newIndexes[index][1] = sites[0];
-                    newIndexes[index][1] = sites[1];
-                    newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
-                    index++;
-                }
-                lossesIndexes = newIndexes;
-                losses = newLosses;
+        }
+        
+        if (!modificationLossesSites.isEmpty()) {
+            
+            int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
+            System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
+            NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
+            System.arraycopy(losses, 0, newLosses, 0, losses.length);
+            int index = lossesIndexes.length;
+            
+            for (String lossName : modificationLossesSites.keySet()) {
+                
+                int[] sites = modificationLossesSites.get(lossName);
+                newIndexes[index][1] = sites[0];
+                newIndexes[index][1] = sites[1];
+                newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
+                index++;
+                
             }
+            
+            lossesIndexes = newIndexes;
+            losses = newLosses;
+            
         }
 
         double forwardMass;
         double complementaryMass;
+        
         if (ionSeries == IonSeries.by) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass();
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2];
             forwardIonType = PeptideFragmentIon.B_ION;
             complementaryIonType = PeptideFragmentIon.Y_ION;
+            
         } else if (ionSeries == IonSeries.cz) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() + StandardMasses.nh3.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] - StandardMasses.nh3.mass;
             forwardIonType = PeptideFragmentIon.C_ION;
             complementaryIonType = PeptideFragmentIon.Z_ION;
+            
         } else if (ionSeries == IonSeries.ax) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() - StandardMasses.co.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] + StandardMasses.co.mass;
             forwardIonType = PeptideFragmentIon.A_ION;
             complementaryIonType = PeptideFragmentIon.X_ION;
+            
         } else {
+            
             throw new UnsupportedOperationException("Ion series " + ionSeries + " not supported.");
+            
         }
 
-        forwardNeutralLossesMasses = new ArrayList<double[]>(peptideLength);
-        forwardNeutralLosses = new ArrayList<ArrayList<NeutralLoss>>(peptideLength);
-        complementaryNeutralLossesMasses = new ArrayList<double[]>(peptideLength);
-        complementaryNeutralLosses = new ArrayList<ArrayList<NeutralLoss>>(peptideLength);
+        forwardNeutralLossesMasses = new ArrayList<>(peptideLength);
+        forwardNeutralLosses = new ArrayList<>(peptideLength);
+        complementaryNeutralLossesMasses = new ArrayList<>(peptideLength);
+        complementaryNeutralLosses = new ArrayList<>(peptideLength);
 
         for (int i = 0; i < peptideLength; i++) {
 
@@ -180,8 +193,8 @@ public class FragmentAnnotatorNL {
             forwardIonMz1[i] = forwardMass;
             complementaryIonMz1[i] = complementaryMass - forwardMass;
 
-            ArrayList<NeutralLoss> forwardIonlosses = new ArrayList<NeutralLoss>(lossesIndexes.length);
-            ArrayList<NeutralLoss> complementaryIonlosses = new ArrayList<NeutralLoss>(lossesIndexes.length);
+            ArrayList<NeutralLoss> forwardIonlosses = new ArrayList<>(lossesIndexes.length);
+            ArrayList<NeutralLoss> complementaryIonlosses = new ArrayList<>(lossesIndexes.length);
             double[] forwardMasses = new double[lossesIndexes.length];
             double[] complementaryMasses = new double[lossesIndexes.length];
             int indexForward = 0;
@@ -236,12 +249,10 @@ public class FragmentAnnotatorNL {
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-        
-        if (modificationMatches != null) {
 
             // Keep track of the modified amino acids and possible losses
-            HashMap<String, int[]> modificationLossesSites = new HashMap<String, int[]>(1);
-            
+            HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
+
             for (ModificationMatch modificationMatch : modificationMatches) {
 
                 String modificationName = modificationMatch.getModification();
@@ -284,42 +295,58 @@ public class FragmentAnnotatorNL {
                 lossesIndexes = newIndexes;
                 losses = newLosses;
             }
-        }
 
         double forwardMass;
         double complementaryMass;
+        
         if (ionSeries == IonSeries.by) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass();
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2];
             forwardIonType = PeptideFragmentIon.B_ION;
             complementaryIonType = PeptideFragmentIon.Y_ION;
+            
         } else if (ionSeries == IonSeries.cz) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() + StandardMasses.nh3.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] - StandardMasses.nh3.mass;
             forwardIonType = PeptideFragmentIon.C_ION;
             complementaryIonType = PeptideFragmentIon.Z_ION;
+            
         } else if (ionSeries == IonSeries.ax) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() - StandardMasses.co.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] + StandardMasses.co.mass;
             forwardIonType = PeptideFragmentIon.A_ION;
             complementaryIonType = PeptideFragmentIon.X_ION;
+            
         } else {
+            
             throw new UnsupportedOperationException("Ion series " + ionSeries + " not supported.");
+            
         }
 
         if (forward) {
-            forwardNeutralLossesMasses = new ArrayList<double[]>(peptideLength);
-            forwardNeutralLosses = new ArrayList<ArrayList<NeutralLoss>>(peptideLength);
+            
+            forwardNeutralLossesMasses = new ArrayList<>(peptideLength);
+            forwardNeutralLosses = new ArrayList<>(peptideLength);
+            
         } else {
+            
             forwardNeutralLossesMasses = null;
             forwardNeutralLosses = null;
+            
         }
         if (complementary) {
-            complementaryNeutralLossesMasses = new ArrayList<double[]>(peptideLength);
-            complementaryNeutralLosses = new ArrayList<ArrayList<NeutralLoss>>(peptideLength);
+            
+            complementaryNeutralLossesMasses = new ArrayList<>(peptideLength);
+            complementaryNeutralLosses = new ArrayList<>(peptideLength);
+            
         } else {
+            
             complementaryNeutralLossesMasses = null;
             complementaryNeutralLosses = null;
+            
         }
 
         for (int i = 0; i < peptideLength; i++) {
@@ -334,7 +361,7 @@ public class FragmentAnnotatorNL {
 
                 forwardIonMz1[i] = forwardMass;
 
-                ArrayList<NeutralLoss> forwardIonlosses = new ArrayList<NeutralLoss>(lossesIndexes.length);
+                ArrayList<NeutralLoss> forwardIonlosses = new ArrayList<>(lossesIndexes.length);
                 double[] forwardMasses = new double[lossesIndexes.length];
                 int indexForward = 0;
                 for (int j = 0; j < lossesIndexes.length; j++) {
@@ -352,7 +379,7 @@ public class FragmentAnnotatorNL {
             if (complementary) {
                 complementaryIonMz1[i] = complementaryMass - forwardMass;
 
-                ArrayList<NeutralLoss> complementaryIonlosses = new ArrayList<NeutralLoss>(lossesIndexes.length);
+                ArrayList<NeutralLoss> complementaryIonlosses = new ArrayList<>(lossesIndexes.length);
                 double[] complementaryMasses = new double[lossesIndexes.length];
                 int indexComplementary = 0;
                 for (int j = 0; j < lossesIndexes.length; j++) {
@@ -445,7 +472,7 @@ public class FragmentAnnotatorNL {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge) {
 
-        ArrayList<IonMatch> results = new ArrayList<IonMatch>(0);
+        ArrayList<IonMatch> results = new ArrayList<>(0);
 
         for (int i = 0; i < peptideLength; i++) {
 

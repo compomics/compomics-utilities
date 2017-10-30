@@ -113,7 +113,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
         if (!atomChainAdded.getAtomChain().isEmpty()) {
 
-            HashMap<String, HashSet<Integer>> atomsAdded = new HashMap<String, HashSet<Integer>>(4);
+            HashMap<String, HashSet<Integer>> atomsAdded = new HashMap<>(4);
 
             for (AtomImpl tempAtomImpl : atomChainAdded.getAtomChain()) {
 
@@ -124,7 +124,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 if (isotopeList == null) {
                     elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
                             atomChainAdded.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
-                    isotopeList = new HashSet<Integer>(2);
+                    isotopeList = new HashSet<>(2);
                     isotopeList.add(tempAtomImpl.getIsotope());
                     atomsAdded.put(atomSymbol, isotopeList);
                 } else if (!isotopeList.contains(tempAtomImpl.getIsotope())) {
@@ -136,7 +136,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
         }
 
         if (!atomChainRemoved.getAtomChain().isEmpty()) {
-            HashMap<String, HashSet<Integer>> atomsRemoved = new HashMap<String, HashSet<Integer>>(4);
+            HashMap<String, HashSet<Integer>> atomsRemoved = new HashMap<>(4);
 
             for (AtomImpl tempAtomImpl : atomChainRemoved.getAtomChain()) {
 
@@ -147,7 +147,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 if (isotopeList == null) {
                     elementsPanel.add(new AtomPanel(this, atom, tempAtomImpl.getIsotope(),
                             -atomChainRemoved.getOccurrence(atom, tempAtomImpl.getIsotope()), atomPanelIndex++, addOnly));
-                    isotopeList = new HashSet<Integer>(2);
+                    isotopeList = new HashSet<>(2);
                     isotopeList.add(tempAtomImpl.getIsotope());
                     atomsRemoved.put(atomSymbol, isotopeList);
                 } else if (!isotopeList.contains(tempAtomImpl.getIsotope())) {

@@ -648,7 +648,7 @@
 <dd>
 <div class="block">Adds an object to the cache.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addObject-java.lang.String-java.lang.Object-">addObject(String, Object)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addObject-long-java.lang.Object-">addObject(long, Object)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Adds an object into the database.</div>
 </dd>
@@ -656,7 +656,7 @@
 <dd>
 <div class="block">Adds an object to the cache.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">addObjects(HashMap&lt;String, Object&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">addObjects(HashMap&lt;Long, Object&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Adds a list of objects into the database.</div>
 </dd>
@@ -668,7 +668,7 @@
 <dd>
 <div class="block">Add a hit.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#addPeptideMatchKey-java.lang.String-">addPeptideMatchKey(String)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#addPeptideMatchKey-long-">addPeptideMatchKey(long)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
 <dd>
 <div class="block">Add a subordinated peptide key.</div>
 </dd>
@@ -778,7 +778,7 @@
 <dd>
 <div class="block">Add spectra to the factory.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#addSpectrumMatchKey-java.lang.String-">addSpectrumMatchKey(String)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#addSpectrumMatchKey-long-">addSpectrumMatchKey(long)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
 <dd>
 <div class="block">Add a spectrum match key.</div>
 </dd>
@@ -1321,6 +1321,11 @@
 <dd>
 <div class="block">Returns the header in generic format.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#asLong-java.lang.String-">asLong(String)</a></span> - Static method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
+<dd>
+<div class="block">Creating a unique 64 bit hash key from the original key of arbitrary
+ length.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html#asMgf--">asMgf()</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a></dt>
 <dd>
 <div class="block">Returns the peak list as an mgf bloc.</div>
@@ -1467,10 +1472,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html#B_ION">B_ION</a></span> - Static variable in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">TagFragmentIon</a></dt>
 <dd>
 <div class="block">Identifier for a b ion.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#backwardCompatibilityFix--">backwardCompatibilityFix()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html" title="class in com.compomics.util.experiment.biology.enzymes">Enzyme</a></dt>
-<dd>
-<div class="block">Converts a list based object (utilities older than 0.8.4) to a set based.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html#backwardCompatibilityFix--">backwardCompatibilityFix()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a></dt>
 <dd>
@@ -2970,7 +2971,7 @@
 <dd>
 <div class="block">Indicates whether the pattern contains a subsequence of amino acids.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#contains-java.lang.String-">contains(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#contains-long-">contains(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Checks if database contains a certain object.</div>
 </dd>
@@ -3068,11 +3069,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#createLessTable--">createLessTable()</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Create the less table.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#createLongKey-java.lang.String-">createLongKey(String)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
-<dd>
-<div class="block">Creating a unique 64 bit hash key from the original key of arbitrary
- length.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/enzymes/EnzymesCLIParams.html#createOptionsCLI-org.apache.commons.cli.Options-">createOptionsCLI(Options)</a></span> - Static method in enum com.compomics.cli.enzymes.<a href="com/compomics/cli/enzymes/EnzymesCLIParams.html" title="enum in com.compomics.cli.enzymes">EnzymesCLIParams</a></dt>
 <dd>
@@ -5496,8 +5492,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#getAminoAcid-char-">getAminoAcid(char)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Returns the amino acid corresponding to the single letter code given, null if not
- implemented.</div>
+<div class="block">Returns the amino acid corresponding to the single letter code given,
+ null if not implemented.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html#getAminoAcid--">getAminoAcid()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic">AAIdentityFeature</a></dt>
 <dd>
@@ -8528,6 +8524,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getKey--">getKey()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/ProjectParameters.html#getKey--">getKey()</a></span> - Static method in class com.compomics.util.experiment.<a href="com/compomics/util/experiment/ProjectParameters.html" title="class in com.compomics.util.experiment">ProjectParameters</a></dt>
+<dd>
+<div class="block">Returns the key to use when sorting the project parameters to the database.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/software/settings/UtilitiesPathParameters.UtilitiesPathKey.html#getKeyFromId-java.lang.String-">getKeyFromId(String)</a></span> - Static method in enum com.compomics.software.settings.<a href="com/compomics/software/settings/UtilitiesPathParameters.UtilitiesPathKey.html" title="enum in com.compomics.software.settings">UtilitiesPathParameters.UtilitiesPathKey</a></dt>
 <dd>
 <div class="block">Returns the key from its id.</div>
@@ -9675,7 +9675,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/ModificationtableContent.html#getModificationPlotData-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.biology.modifications.Modification-int-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-">getModificationPlotData(Peptide, Modification, int, Spectrum, AnnotationParameters, SpecificAnnotationParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.<a href="com/compomics/util/experiment/identification/modification/ModificationtableContent.html" title="class in com.compomics.util.experiment.identification.modification">ModificationtableContent</a></dt>
 <dd>
-<div class="block">Returns the modification plot series in the JFreechart format for one PSM.</div>
+<div class="block">Returns the modification plot series in the JFreechart format for one
+ PSM.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/parameters/identification/algorithm/XTandemParametersDialog.html#getModificationProfile--">getModificationProfile()</a></span> - Method in class com.compomics.util.gui.parameters.identification.algorithm.<a href="com/compomics/util/gui/parameters/identification/algorithm/XTandemParametersDialog.html" title="class in com.compomics.util.gui.parameters.identification.algorithm">XTandemParametersDialog</a></dt>
 <dd>
@@ -10155,7 +10156,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getNoModPeptide-java.util.HashSet-">getNoModPeptide(HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
-<div class="block">Returns a version of the peptide which does not contain the given list of modifications.</div>
+<div class="block">Returns a version of the peptide which does not contain the given list of
+ modifications.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/matrix/DoubleMatrix.html#getNonDiagonalScore--">getNonDiagonalScore()</a></span> - Method in class com.compomics.util.math.matrix.<a href="com/compomics/util/math/matrix/DoubleMatrix.html" title="class in com.compomics.util.math.matrix">DoubleMatrix</a></dt>
 <dd>
@@ -10475,10 +10477,6 @@
 <dd>
 <div class="block">Returns an array of the m/z values sorted in ascending order.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getOrderedSpectrumFileNames--">getOrderedSpectrumFileNames()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Returns the ordered list of spectrum file names.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/pdbfinder/das/readers/DasFeature.html#getOrientation--">getOrientation()</a></span> - Method in class com.compomics.util.pdbfinder.das.readers.<a href="com/compomics/util/pdbfinder/das/readers/DasFeature.html" title="class in com.compomics.util.pdbfinder.das.readers">DasFeature</a></dt>
 <dd>
 <div class="block">Returns the orientation.</div>
@@ -10784,11 +10782,11 @@
 <dd>
 <div class="block">Returns a list of the keys of all encountered peptides.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPeptideMatch-java.lang.String-">getPeptideMatch(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPeptideMatch-long-">getPeptideMatch(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns the peptide match with the given key.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator(ArrayList&lt;String&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator(ArrayList&lt;Long&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 </dd>
@@ -11563,7 +11561,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getProteinMapping--">getProteinMapping()</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
-<div class="block">Returns the proteins mapping as a map of 0 based indexes for every protein accession.</div>
+<div class="block">Returns the proteins mapping as a map of 0 based indexes for every
+ protein accession.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(String, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
@@ -11613,7 +11612,7 @@
 <dd>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getProteinMatch-java.lang.String-">getProteinMatch(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getProteinMatch-long-">getProteinMatch(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns the protein match with the given key.</div>
 </dd>
@@ -11621,7 +11620,7 @@
 <dd>
 <div class="block">Returns the keys of the protein matches where a peptide can be found.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator(ArrayList&lt;String&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator(ArrayList&lt;Long&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 </dd>
@@ -11720,7 +11719,7 @@
 <dd>
 <div class="block">Returns the list of PSM quality filters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPsmIterator(ArrayList&lt;String&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPsmIterator(ArrayList&lt;Long&gt;, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a psm iterator for a given key list.</div>
 </dd>
@@ -12823,12 +12822,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumFiles--">getSpectrumFiles()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
-<div class="block">Returns the names of the mgf files used in the spectrum identification
- map as a list.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentification--">getSpectrumIdentification()</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Returns the keys of the spectrum identifications</div>
+<div class="block">Returns a map of the spectrum matches keys indexed by spectrum file name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html#getSpectrumIdentificationAssumption--">getSpectrumIdentificationAssumption()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a></dt>
 <dd>
@@ -12851,6 +12845,10 @@
 <dd>
 <div class="block">Returns the spectrum index of the given spectrum in the given file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getSpectrumKey--">getSpectrumKey()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
+<dd>
+<div class="block">Returns the key of the spectrum corresponding to this match.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html#getSpectrumKey--">getSpectrumKey()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a></dt>
 <dd>
 <div class="block">Returns the key of the spectrum to annotate.</div>
@@ -12863,7 +12861,7 @@
 <dd>
 <div class="block">Returns the key of the spectrum.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumMatch-java.lang.String-">getSpectrumMatch(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumMatch-long-">getSpectrumMatch(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns the spectrum match with the given key.</div>
 </dd>
@@ -13161,12 +13159,14 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-">getTaggedModifiedSequence(ModificationParameters, boolean, boolean, boolean, boolean)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with Modification tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with Modification tags, e.g,
+ &lt;mox&gt;.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-">getTaggedModifiedSequence(ModificationParameters, boolean, boolean, boolean)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with Modification tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with Modification tags, e.g,
+ &lt;mox&gt;.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-boolean-">getTaggedModifiedSequence(ModificationParameters, boolean, boolean, boolean, boolean, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
@@ -13534,7 +13534,9 @@
 <div class="block">Returns the refinement parameter of the same type than the one provided.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams()</a></span> - Method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns the user parameters map.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/TideParameters.html#getUseFlankingPeaks--">getUseFlankingPeaks()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/TideParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">TideParameters</a></dt>
 <dd>
 <div class="block">Returns true if flanking peaks are to be used.</div>
@@ -14744,9 +14746,9 @@
 <dd>
 <div class="block">Check if key in cache</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#inCache-java.lang.String-">inCache(String)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#inCache-long-">inCache(long)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
-<div class="block">Indicates whether an object is loaded.</div>
+<div class="block">Indicates whether an object is loaded in cache.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/XYPlottingDialog.SelectedValuesTableFilter.html#include-javax.swing.RowFilter.Entry-">include(RowFilter.Entry&lt;? extends DefaultTableModel, ? extends Integer&gt;)</a></span> - Method in class com.compomics.util.gui.<a href="com/compomics/util/gui/XYPlottingDialog.SelectedValuesTableFilter.html" title="class in com.compomics.util.gui">XYPlottingDialog.SelectedValuesTableFilter</a></dt>
 <dd>&nbsp;</dd>
@@ -14840,9 +14842,9 @@
 <dd>
 <div class="block">Indicates whether the score increases with the quality of the match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#inDB-java.lang.String-">inDB(String)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#inDB-long-">inDB(long)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
-<div class="block">Indicates whether an object is loaded.</div>
+<div class="block">Indicates whether an object is in the cache or the database.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html#indentCounter">indentCounter</a></span> - Variable in class com.compomics.util.io.export.xml.<a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html" title="class in com.compomics.util.io.export.xml">SimpleXmlWriter</a></dt>
 <dd>
@@ -15001,11 +15003,11 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#insertObject-java.lang.String-java.lang.Object-">insertObject(String, Object)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#insertObject-long-java.lang.Object-">insertObject(long, Object)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
 <div class="block">Stores an object in the desired table.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#insertObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">insertObjects(HashMap&lt;String, Object&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#insertObjects-java.util.HashMap-com.compomics.util.waiting.WaitingHandler-boolean-">insertObjects(HashMap&lt;Long, Object&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
 <div class="block">Inserts a set of objects in the given table.</div>
 </dd>
@@ -15191,7 +15193,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#isAa-char-">isAa(char)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the given character is a supported amino acid.</div>
+<div class="block">Returns a boolean indicating whether the given character is a supported
+ amino acid.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/spectrum/ReferenceArea.html#isAboveXAxis--">isAboveXAxis()</a></span> - Method in class com.compomics.util.gui.spectrum.<a href="com/compomics/util/gui/spectrum/ReferenceArea.html" title="class in com.compomics.util.gui.spectrum">ReferenceArea</a></dt>
 <dd>
@@ -16228,12 +16231,6 @@
 <dd>
 <div class="block">Indicates whether the table is in self update mode.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isSemiSpecific--">isSemiSpecific()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html" title="class in com.compomics.util.experiment.biology.enzymes">Enzyme</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
-</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/software/cli/CommandParameter.html#isSequenceMatchingType-java.lang.String-java.lang.String-">isSequenceMatchingType(String, String)</a></span> - Static method in class com.compomics.software.cli.<a href="com/compomics/software/cli/CommandParameter.html" title="class in com.compomics.software.cli">CommandParameter</a></dt>
 <dd>
 <div class="block">Returns true of the input is in the provided list.</div>
@@ -16330,17 +16327,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#isUniqueAa-char-">isUniqueAa(char)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the given character is a supported amino acid excluding combinations.</div>
+<div class="block">Returns a boolean indicating whether the given character is a supported
+ amino acid excluding combinations.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#isUniqueProteinGroup-com.compomics.util.experiment.biology.proteins.Peptide-">isUniqueProteinGroup(Peptide)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Indicates whether a peptide is found in a single protein match.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isUnspecific--">isUnspecific()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html" title="class in com.compomics.util.experiment.biology.enzymes">Enzyme</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
-</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html#isUseChargeStateFromMS--">isUseChargeStateFromMS()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">DirecTagParameters</a></dt>
 <dd>
@@ -16387,12 +16379,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html#isValidStartup-org.apache.commons.cli.CommandLine-">isValidStartup(CommandLine)</a></span> - Static method in class com.compomics.cli.modifications.<a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html" title="class in com.compomics.cli.modifications">ModificationsCLIInputBean</a></dt>
 <dd>
 <div class="block">Verifies the command line start parameters.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html#isWholeProtein--">isWholeProtein()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/Enzyme.html" title="class in com.compomics.util.experiment.biology.enzymes">Enzyme</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">use the digestion preferences instead</span></div>
-</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/ModificationImplementation.html#iTemplate">iTemplate</a></span> - Variable in class com.compomics.util.protein.<a href="com/compomics/util/protein/ModificationImplementation.html" title="class in com.compomics.util.protein">ModificationImplementation</a></dt>
 <dd>
@@ -16962,9 +16948,9 @@
 <dd>
 <div class="block">Reads go mappings from a BioMart file.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#loadObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects(Collection&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
-<div class="block">Loads some objects from a table in the cache.</div>
+<div class="block">Loads objects from a table in the cache.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects(Class, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
@@ -16974,7 +16960,7 @@
 <dd>
 <div class="block">Loads all objects of the class in cache.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects(ArrayList&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Loads all objects of given keys in cache.</div>
 </dd>
@@ -17423,13 +17409,9 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.Class-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">MatchesIterator(ArrayList&lt;String&gt;, Class, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">MatchesIterator</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#MatchesIterator-java.util.ArrayList-java.lang.Class-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">MatchesIterator(ArrayList&lt;Long&gt;, Class, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">MatchesIterator</a></dt>
 <dd>
 <div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#matchExists-java.lang.String-">matchExists(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Indicates whether a match indexed by the given key exists.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#matchInSpectrum-com.compomics.util.experiment.biology.ions.Ion-java.lang.Integer-">matchInSpectrum(Ion, Integer)</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpectrumAnnotator</a></dt>
 <dd>
@@ -18431,7 +18413,7 @@
 <dd>
 <div class="block">Returns the next match and updates the buffer.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#next--">next()</a></span> - Method in class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html#next--">next()</a></span> - Method in class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></dt>
 <dd>
 <div class="block">Returns the next match and updates the buffer.</div>
 </dd>
@@ -19084,11 +19066,19 @@
 <dd>
 <div class="block">Constructor for the peptide.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-boolean-">Peptide(String, ModificationMatch[], boolean)</a></span> - Constructor for class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-java.util.HashMap-boolean-double-">Peptide(String, ModificationMatch[], HashMap&lt;String, HashMap&lt;Integer, PeptideVariantMatches&gt;&gt;, boolean, double)</a></span> - Constructor for class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-boolean-double-">Peptide(String, ModificationMatch[], boolean, double)</a></span> - Constructor for class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-boolean-">Peptide(String, ModificationMatch[], boolean)</a></span> - Constructor for class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-">Peptide(String)</a></span> - Constructor for class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -19217,11 +19207,7 @@
 <dd>
 <div class="block">This class models a peptide match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch--">PeptideMatch()</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
-<dd>
-<div class="block">Constructor for the peptide match.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">PeptideMatch(Peptide, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-long-long-">PeptideMatch(Peptide, long, long)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
 <dd>
 <div class="block">Constructor for the peptide match.</div>
 </dd>
@@ -19233,7 +19219,7 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator(ArrayList&lt;String&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html#PeptideMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PeptideMatchesIterator(ArrayList&lt;Long&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -19909,10 +19895,6 @@
 <div class="block">This constructor allows for the construction of a Protein instance through the
  passing of a Header String and a Sequence String.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#PROTEIN_KEY_SPLITTER">PROTEIN_KEY_SPLITTER</a></span> - Static variable in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
-<dd>
-<div class="block">The splitter in the key between protein accessions.</div>
-</dd>
 <dt><a href="com/compomics/util/experiment/io/biology/protein/ProteinDatabase.html" title="enum in com.compomics.util.experiment.io.biology.protein"><span class="typeNameLink">ProteinDatabase</span></a> - Enum in <a href="com/compomics/util/experiment/io/biology/protein/package-summary.html">com.compomics.util.experiment.io.biology.protein</a></dt>
 <dd>
 <div class="block">Enum of the supported protein databases.</div>
@@ -19975,7 +19957,7 @@
 <dd>
 <div class="block">Constructor for the protein match.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#ProteinMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">ProteinMatch(Peptide, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#ProteinMatch-com.compomics.util.experiment.biology.proteins.Peptide-long-">ProteinMatch(Peptide, long)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
 <dd>
 <div class="block">Constructor for the protein match.</div>
 </dd>
@@ -19987,7 +19969,7 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator(ArrayList&lt;String&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html#ProteinMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">ProteinMatchesIterator(ArrayList&lt;Long&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -20063,22 +20045,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/file/filefilters/ProtXmlFileFilter.html#ProtXmlFileFilter--">ProtXmlFileFilter()</a></span> - Constructor for class com.compomics.util.io.file.filefilters.<a href="com/compomics/util/io/file/filefilters/ProtXmlFileFilter.html" title="class in com.compomics.util.io.file.filefilters">ProtXmlFileFilter</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators"><span class="typeNameLink">PsmIterator</span></a> - Class in <a href="com/compomics/util/experiment/identification/matches_iterators/package-summary.html">com.compomics.util.experiment.identification.matches_iterators</a></dt>
-<dd>
-<div class="block">An iterator for spectrum matches.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator(Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">PsmIterator(ArrayList&lt;String&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html#PsmIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">PsmIterator(ArrayList&lt;String&gt;, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/PsmIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PsmIterator</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
 <dt><a href="com/compomics/util/experiment/identification/psm_scoring/PsmScore.html" title="enum in com.compomics.util.experiment.identification.psm_scoring"><span class="typeNameLink">PsmScore</span></a> - Enum in <a href="com/compomics/util/experiment/identification/psm_scoring/package-summary.html">com.compomics.util.experiment.identification.psm_scoring</a></dt>
 <dd>
 <div class="block">Enum listing the PSM scores implemented in compomics utilities.</div>
@@ -20619,19 +20585,19 @@
 <dd>
 <div class="block">Removes an object from the cache</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#removeObject-java.lang.String-">removeObject(String)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#removeObject-long-">removeObject(long)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
-<div class="block">Removing an object from.</div>
+<div class="block">Removing an object from the cache and database.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#removeObject-java.lang.String-">removeObject(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#removeObject-long-">removeObject(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Removes an object from the database.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#removeObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects(Collection&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
-<div class="block">Removing an object from.</div>
+<div class="block">Removing an object from the cache and database.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects(ArrayList&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Remove a list of objects from the database.</div>
 </dd>
@@ -20670,9 +20636,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#removeUnknownModifications--">removeUnknownModifications()</a></span> - Method in class com.compomics.util.experiment.identification.filtering.<a href="com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html" title="class in com.compomics.util.experiment.identification.filtering">PeptideAssumptionFilter</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether unknown modifications shall be removed.</div>
+<div class="block">Returns a boolean indicating whether unknown modifications shall be
+ removed.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam(String)</a></span> - Method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-long-">removeUrParam(long)</a></span> - Method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
 <dd>
 <div class="block">Removes a user parameter from the user parameters map.</div>
 </dd>
@@ -20816,10 +20783,6 @@
 <div class="block">Repositions this stream to the position at the time the
  <code>mark</code> method was last called on this input stream.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#resetKeysCaches--">resetKeysCaches()</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
-<dd>
-<div class="block">Resets the internal cache of the keys.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#resetPeptideNormalisationFactors--">resetPeptideNormalisationFactors()</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
 <div class="block">Resets the peptide normalization factors.</div>
@@ -20895,19 +20858,11 @@
 <dd>
 <div class="block">Retrieves some objects from the database or cache.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#retrieveObject-java.lang.String-">retrieveObject(String)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
-<dd>
-<div class="block">retrieves some objects from the database or cache.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#retrieveObject-long-">retrieveObject(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#retrieveObject-java.lang.String-">retrieveObject(String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Returns an array of all objects of a given list of keys</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#retrieveObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects(Collection&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
 <div class="block">retrieves some objects from the database or cache.</div>
 </dd>
@@ -20915,7 +20870,7 @@
 <dd>
 <div class="block">Retrieves all objects from a given class.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects(ArrayList&lt;String&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects(Collection&lt;Long&gt;, WaitingHandler, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </dd>
@@ -22548,11 +22503,11 @@
 <div class="block">Set the option for keeping the terminal amino acids when generating the
  decoys</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setKey-java.lang.String-">setKey(String)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setKey-long-">setKey(long)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Sets the object key.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#setKey-java.lang.String-">setKey(String)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#setKey-long-">setKey(long)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
 <dd>
 <div class="block">Sets a new key for the match.</div>
 </dd>
@@ -22706,7 +22661,7 @@
 <dd>
 <div class="block">Sets a new m/z tolerance for peak matching.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setMatchingKey-java.lang.String-">setMatchingKey(String)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setMatchingKey-long-">setMatchingKey(long)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Sets the key accounting for sequence matching preferences.</div>
 </dd>
@@ -23428,10 +23383,6 @@
 <dd>
 <div class="block">Sets the ontology.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#setOrderedListOfSpectrumFileNames-java.util.ArrayList-">setOrderedListOfSpectrumFileNames(ArrayList&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Sets the ordered list of spectrum file names.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/tools/UtilitiesUserParameters.html#setOutputData-boolean-">setOutputData(boolean)</a></span> - Method in class com.compomics.util.parameters.tools.<a href="com/compomics/util/parameters/tools/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters.tools">UtilitiesUserParameters</a></dt>
 <dd>
 <div class="block">Sets whether data should be copied along with the identification files in
@@ -23556,7 +23507,7 @@
 <dd>
 <div class="block">Sets the list of peptide quality filters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-java.util.HashSet-">setPeptideMatchesKeys(HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-long:A-">setPeptideMatchesKeys(long[])</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
 <dd>
 <div class="block">Sets the peptide keys for this protein match.</div>
 </dd>
@@ -23777,7 +23728,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setProteinMapping-java.util.TreeMap-">setProteinMapping(TreeMap&lt;String, int[]&gt;)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
-<div class="block">Sets the proteins mapping as a map of 0 based indexes for every protein accession.</div>
+<div class="block">Sets the proteins mapping as a map of 0 based indexes for every protein
+ accession.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html#setProteinPtmComplexity-double-">setProteinPtmComplexity(double)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">XtandemParameters</a></dt>
 <dd>
@@ -24397,7 +24349,7 @@
 <dd>
 <div class="block">Sets the match key.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#setSpectrumMatchesKeys-java.util.HashSet-">setSpectrumMatchesKeys(HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#setSpectrumMatchesKeys-long:A-">setSpectrumMatchesKeys(long[])</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
 <dd>
 <div class="block">Sets the spectrum matches keys.</div>
 </dd>
@@ -24584,8 +24536,10 @@
 <dd>
 <div class="block">Updates the table content.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams(HashMap&lt;String, UrParameter&gt;)</a></span> - Method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams(HashMap&lt;Long, UrParameter&gt;)</a></span> - Method in class com.compomics.util.experiment.personalization.<a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></dt>
+<dd>
+<div class="block">Sets the user parameters map.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html#setUseChargeStateFromMS-boolean-">setUseChargeStateFromMS(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">DirecTagParameters</a></dt>
 <dd>
 <div class="block">Sets whether the charge state from the spectrum should be used.</div>
@@ -25063,6 +25017,22 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#SpectrumMatch-java.lang.String-">SpectrumMatch(String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
 <div class="block">Constructor for the spectrum match.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators"><span class="typeNameLink">SpectrumMatchesIterator</span></a> - Class in <a href="com/compomics/util/experiment/identification/matches_iterators/package-summary.html">com.compomics.util.experiment.identification.matches_iterators</a></dt>
+<dd>
+<div class="block">An iterator for spectrum matches.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html#SpectrumMatchesIterator-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">SpectrumMatchesIterator(Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html#SpectrumMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-">SpectrumMatchesIterator(ArrayList&lt;Long&gt;, Identification, WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html#SpectrumMatchesIterator-java.util.ArrayList-com.compomics.util.experiment.identification.Identification-com.compomics.util.waiting.WaitingHandler-boolean-java.lang.String-">SpectrumMatchesIterator(ArrayList&lt;Long&gt;, Identification, WaitingHandler, boolean, String)</a></span> - Constructor for class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></dt>
+<dd>
+<div class="block">Constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Advocate.html#spectrumMill">spectrumMill</a></span> - Static variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Advocate.html" title="class in com.compomics.util.experiment.identification">Advocate</a></dt>
 <dd>

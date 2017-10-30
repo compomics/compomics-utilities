@@ -233,10 +233,10 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>(1);
 
                 if (!modifications.isEmpty()) {
-                    
+
                     String[] modificationsString = modifications.split(";");
-                    for (int i = 0 ; i < modificationsString.length ; i++) {
-                        
+                    for (int i = 0; i < modificationsString.length; i++) {
+
                         String modificationString = modificationsString[i];
 
                         try {
@@ -265,11 +265,11 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             String modFixedStatus = details[2];
 
                             if (modFixedStatus.equalsIgnoreCase("variable")) {
-                                
+
                                 utilitiesModifications.add(new ModificationMatch(modMass + "@" + peptideSequence.charAt(modSite - 1), true, modSite));
-                            
+
                             }
-                            
+
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Error parsing modification: " + modificationString + ".");
                         }
@@ -284,43 +284,38 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 peptideAssumption.setRawScore(msAmandaRawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                    
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
-                            newModificationMatches = null;
-                    
+
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
-                    if (previousModificationMatches != null) {
-                        
-                        newModificationMatches = Arrays.stream(previousModificationMatches)
-                                    .map(modificationMatch -> modificationMatch.clone())
+                        ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                .map(modificationMatch -> modificationMatch.clone())
                                 .toArray(ModificationMatch[]::new);
-                    
-                    }
-                        
+
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                    
+
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(msAmandaRawScore);
                         currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
-                        
+
                     }
-                    
+
                 } else {
-                    
+
                     currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
-                
+
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {
-                    
+
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
-                    
+
                     if (waitingHandler.isRunCanceled()) {
-                    
+
                         bufferedRandomAccessFile.close();
                         break;
-                    
+
                     }
                 }
             }

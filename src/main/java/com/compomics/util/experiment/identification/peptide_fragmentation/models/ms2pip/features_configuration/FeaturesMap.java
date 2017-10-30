@@ -25,7 +25,7 @@ public class FeaturesMap {
     /**
      * Map of the different features indexed by category.
      */
-    private final HashMap<String, Ms2pipFeature[]> featuresMap = new HashMap<String, Ms2pipFeature[]>(4);
+    private final HashMap<String, Ms2pipFeature[]> featuresMap = new HashMap<>(4);
     /**
      * Sorted list of keys of the features map.
      */

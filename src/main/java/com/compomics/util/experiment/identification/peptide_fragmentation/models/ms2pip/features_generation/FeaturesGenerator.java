@@ -98,21 +98,13 @@ public class FeaturesGenerator {
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
         ModificationMatch[] reversedModificationMatches;
 
-        if (modificationMatches != null) {
+        reversedModificationMatches = new ModificationMatch[modificationMatches.length];
 
-            reversedModificationMatches = new ModificationMatch[modificationMatches.length];
+        for (int i = 0; i < modificationMatches.length; i++) {
 
-            for (int i = 0; i < modificationMatches.length; i++) {
-
-                ModificationMatch modificationMatch = modificationMatches[i];
-                ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
-                reversedModificationMatches[i] = reversedModificationMatch;
-
-            }
-
-        } else {
-
-            reversedModificationMatches = null;
+            ModificationMatch modificationMatch = modificationMatches[i];
+            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
+            reversedModificationMatches[i] = reversedModificationMatch;
 
         }
 
@@ -173,7 +165,7 @@ public class FeaturesGenerator {
      * @return the amino acid properties needed
      */
     private AminoAcid.Property[] getAaProperties(Class... categories) {
-        HashSet<Integer> indexes = new HashSet<Integer>(4);
+        HashSet<Integer> indexes = new HashSet<>(4);
         for (Class category : categories) {
             Ms2pipFeature[] features = featuresMap.getFeatures(category.getSimpleName());
             for (Ms2pipFeature ms2pipFeature : features) {
@@ -782,21 +774,19 @@ public class FeaturesGenerator {
             }
 
             // Iterate modifications
-            if (modificationMatches != null) {
-                for (ModificationMatch modificationMatch : modificationMatches) {
+            for (ModificationMatch modificationMatch : modificationMatches) {
 
-                    String modificationName = modificationMatch.getModification();
-                    Modification modification = ptmFactory.getModification(modificationName);
-                    double modificationMass = modification.getMass();
-                    int modificationSite = modificationMatch.getModificationSite();
+                String modificationName = modificationMatch.getModification();
+                Modification modification = ptmFactory.getModification(modificationName);
+                double modificationMass = modification.getMass();
+                int modificationSite = modificationMatch.getModificationSite();
 
-                    peptideMass += modificationMass;
+                peptideMass += modificationMass;
 
-                    modificationsMasses[modificationSite - 1] += modificationMass;
+                modificationsMasses[modificationSite - 1] += modificationMass;
 
-                    for (int i = modificationSite - 1; i < peptideSequence.length; i++) {
-                        forwardIonMass[i] += modificationMass;
-                    }
+                for (int i = modificationSite - 1; i < peptideSequence.length; i++) {
+                    forwardIonMass[i] += modificationMass;
                 }
             }
         }

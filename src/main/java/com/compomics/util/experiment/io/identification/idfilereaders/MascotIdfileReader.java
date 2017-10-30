@@ -161,10 +161,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             for (SpectrumMatch currentMatch : allMatches.values()) {
 
                 currentMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
+                    
                     Peptide peptide = currentAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
-                            newModificationMatches = null;
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
 
                     if (AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -175,16 +175,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                                 continue;
                             }
 
-                    if (previousModificationMatches != null) {
-
-                        newModificationMatches = Arrays.stream(previousModificationMatches)
+                            ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
                                     .map(modificationMatch -> modificationMatch.clone())
-                                .toArray(ModificationMatch[]::new);
-
-                    }
+                                    .toArray(ModificationMatch[]::new);
 
                             Peptide newPeptide = new Peptide(newSequence, newModificationMatches);
-                    
+
                             PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
                             currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
 
@@ -203,20 +199,20 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put("Mascot", versions);
         return result;
-        
+
     }
 
     @Override
     public boolean hasDeNovoTags() {
-        
+
         return false;
-        
+
     }
 
     private void parseMasses(BufferedReader in, String boundary) {
@@ -224,9 +220,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         String line;
 
         int theCase = 0; // 1 = fix
-        
+
         try {
-        
+
             while ((line = in.readLine()) != null) {
                 if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                     break;
@@ -279,12 +275,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     continue;
                 }
                 if ("title".equals(parts[0])) {
+                    
                     int specNum = Integer.parseInt(state.substring(5, state.length()));
                     String specTitle = URLDecoder.decode(parts[1], "utf8");
+                    SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
-                    if (allMatches.containsKey(specNum)) {
-                        String spectrumKey = Spectrum.getSpectrumKey(allMatches.get(specNum).getKey(), specTitle);
-                        allMatches.get(specNum).setSpectrumKey(spectrumKey);
+                    if (spectrumMatch != null) {
+                        
+                        String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), specTitle);
+                        spectrumMatch.setSpectrumKey(spectrumKey);
+                        
                     }
                 }
             }

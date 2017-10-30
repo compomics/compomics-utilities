@@ -40,7 +40,7 @@ public class Precursor extends ExperimentObject {
     /**
      * The charge of the precursor.
      */
-    private ArrayList<Integer> possibleCharges = new ArrayList<Integer>(1);
+    private ArrayList<Integer> possibleCharges = new ArrayList<>(1);
 
     /**
      * Constructor for the precursor.

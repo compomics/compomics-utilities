@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -105,23 +106,19 @@ public class PhosphoRS {
         }
 
         int nModification = 0;
-        
+
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-        
-        if (modificationMatches != null) {
-            
-            nModification = (int) Arrays.stream(modificationMatches)
-                    .filter(ModificationMatch::getVariable)
-                    .filter(modificationMatch -> modifications.stream()
-                            .anyMatch(modification -> modification.getName().equals(modificationMatch.getModification())))
-                    .count();
-            
-        }
-        
+
+        nModification = (int) Arrays.stream(modificationMatches)
+                .filter(ModificationMatch::getVariable)
+                .filter(modificationMatch -> modifications.stream()
+                .anyMatch(modification -> modification.getName().equals(modificationMatch.getModification())))
+                .count();
+
         if (nModification == 0) {
-        
+
             throw new IllegalArgumentException("Given modifications not found in the peptide for PhosphoRS calculation.");
-        
+
         }
 
         double modificationMass = modifications.get(0).getMass();
@@ -748,20 +745,15 @@ public class PhosphoRS {
                 peptide.addModificationMatch(new ModificationMatch(representativeModification, true, position));
             }
 
-            HashSet<Double> mzs = new HashSet<>(2);
-
-            for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values()) {
-                for (Ion ion : ions) {
-                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                        for (int charge : scoringAnnotationSetttings.getSelectedCharges()) {
-                            double mz = ion.getTheoreticMz(charge);
-                            mzs.add(mz);
-                        }
-                    }
-                }
-            }
+            HashSet<Double> mzs = spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values().stream()
+                    .flatMap(ArrayList::stream)
+                    .filter(ion -> ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                    .flatMap(ion -> scoringAnnotationSetttings.getSelectedCharges().stream()
+                    .map(charge -> ion.getTheoreticMz(charge)))
+                    .collect(Collectors.toCollection(HashSet::new));
 
             String profileKey = getModificationProfileKey(modificationProfile);
+
             for (double mz : mzs) {
                 if (commonIons.isEmpty()) {
                     ArrayList<String> profiles = new ArrayList<>(2);

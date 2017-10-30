@@ -365,7 +365,7 @@ public class AnnotationParameters implements Serializable {
     public void addIonType(Ion.IonType ionType, int subType) {
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
         if (selectedSubtypes == null) {
-            selectedSubtypes = new HashSet<Integer>(1);
+            selectedSubtypes = new HashSet<>(1);
             selectedIonsMap.put(ionType, selectedSubtypes);
         }
         selectedSubtypes.add(subType);

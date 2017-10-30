@@ -238,7 +238,7 @@ public class AtomChain implements Serializable {
                 String atomSymbol = atomImpl.getAtomSymbol();
                 HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomSymbol);
                 if (atomIsotopes == null) {
-                    atomIsotopes = new HashMap<Integer, String>(1);
+                    atomIsotopes = new HashMap<>(1);
                     isotopeMap.put(atomSymbol, atomIsotopes);
                 }
                 Integer isotope = atomImpl.getIsotope();

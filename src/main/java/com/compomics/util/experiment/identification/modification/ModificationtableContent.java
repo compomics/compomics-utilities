@@ -166,17 +166,17 @@ public class ModificationtableContent {
      * @param anotherContent another table content
      */
     public void addAll(ModificationtableContent anotherContent) {
-        
+
         for (int nMod : anotherContent.getMap().keySet()) {
-        
+
             for (Integer peptideFragmentIonType : anotherContent.getMap().get(nMod).keySet()) {
-            
+
                 for (int nAA : anotherContent.getMap().get(nMod).get(peptideFragmentIonType).keySet()) {
-                
+
                     for (double intensity : anotherContent.getIntensities(nMod, peptideFragmentIonType, nAA)) {
-                    
+
                         addIntensity(nMod, peptideFragmentIonType, nAA, intensity);
-                    
+
                     }
                 }
             }
@@ -187,30 +187,30 @@ public class ModificationtableContent {
      * Normalize intensities.
      */
     public void normalize() {
-        
+
         if (totalIntensity > 0) {
-        
+
             double normalization = totalIntensity;
             totalIntensity = 0;
             maxIntensity = 0;
             ArrayList<Double> tempIntensities;
-            
+
             for (int nMod : map.keySet()) {
-            
+
                 for (Integer peptideFragmentIonType : map.get(nMod).keySet()) {
-                
+
                     for (int nAA : map.get(nMod).get(peptideFragmentIonType).keySet()) {
-                    
+
                         tempIntensities = new ArrayList<>();
-                        
+
                         for (double intensity : getIntensities(nMod, peptideFragmentIonType, nAA)) {
-                        
+
                             tempIntensities.add(intensity / normalization);
-                        
+
                         }
-                        
+
                         map.get(nMod).get(peptideFragmentIonType).put(nAA, tempIntensities);
-                    
+
                     }
                 }
             }
@@ -227,7 +227,8 @@ public class ModificationtableContent {
     }
 
     /**
-     * Returns the modification plot series in the JFreechart format for one PSM.
+     * Returns the modification plot series in the JFreechart format for one
+     * PSM.
      *
      * @param peptide the peptide of interest
      * @param modification the modification to score
@@ -236,22 +237,18 @@ public class ModificationtableContent {
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
      *
-     * @return the modification plot series in the JFreechart format for one PSM.
+     * @return the modification plot series in the JFreechart format for one
+     * PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
             AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
 
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-                ModificationMatch[] newMatches = null;
-        
-        if (modificationMatches != null) {
-            
-            newMatches = Arrays.stream(modificationMatches)
-                    .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))
-                    .toArray(ModificationMatch[]::new);
-            
-        }
-        
+
+        ModificationMatch[] newMatches = Arrays.stream(modificationMatches)
+                .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))
+                .toArray(ModificationMatch[]::new);
+
         Peptide noModPeptide = new Peptide(peptide.getSequence(), newMatches);
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
@@ -318,7 +315,7 @@ public class ModificationtableContent {
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge(), specificAnnotationPreferences);
-        
+
         for (int i = 0; i <= nMod; i++) {
 
             spectrumAnnotator.setMassShift(i * modification.getMass());
@@ -329,8 +326,8 @@ public class ModificationtableContent {
                     .forEach(ionMatch -> {
                         PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
                         tableContent.addIntensity(index, peptideFragmentIon.getSubType(), peptideFragmentIon.getAaNumber(peptide.getSequence().length()), ionMatch.peak.intensity);
-                            });
-            
+                    });
+
         }
 
         return tableContent;

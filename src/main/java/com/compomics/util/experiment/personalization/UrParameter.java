@@ -18,5 +18,5 @@ public interface UrParameter {
      * 
      * @return the parameter key
      */
-    public String getParameterKey();
+    public long getParameterKey();
 }

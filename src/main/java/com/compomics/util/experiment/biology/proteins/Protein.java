@@ -284,7 +284,10 @@ public class Protein extends ExperimentObject {
      */
     public int getNEnzymaticTermini(int peptideStart, int peptideEnd, ArrayList<Enzyme> enzymes) {
 
-        return enzymes.stream().mapToInt(enzyme -> getNEnzymaticTermini(peptideStart, peptideEnd, enzyme)).max().orElse(0);
+        return enzymes.stream()
+                .mapToInt(enzyme -> getNEnzymaticTermini(peptideStart, peptideEnd, enzyme))
+                .max()
+                .orElse(0);
     }
 
     /**
@@ -299,6 +302,9 @@ public class Protein extends ExperimentObject {
      */
     public int getNEnzymaticTermini(ArrayList<int[]> peptideStartEnd, ArrayList<Enzyme> enzymes) {
 
-        return peptideStartEnd.stream().mapToInt(startEnd -> getNEnzymaticTermini(startEnd[0], startEnd[1], enzymes)).max().orElse(0);
+        return peptideStartEnd.stream()
+                .mapToInt(startEnd -> getNEnzymaticTermini(startEnd[0], startEnd[1], enzymes))
+                .max()
+                .orElse(0);
     }
 }

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
  * This is an abstract class for an identification match.
@@ -39,5 +38,5 @@ public abstract class IdentificationMatch extends ExperimentObject {
      *
      * @return the key of a match
      */
-    public abstract String getKey();
+    public abstract long getKey();
 }

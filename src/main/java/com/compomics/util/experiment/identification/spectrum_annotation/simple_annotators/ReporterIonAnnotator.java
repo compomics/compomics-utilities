@@ -48,7 +48,7 @@ public class ReporterIonAnnotator {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex) {
 
-        ArrayList<IonMatch> results = new ArrayList<IonMatch>(reporterIons.length);
+        ArrayList<IonMatch> results = new ArrayList<>(reporterIons.length);
 
         for (int i = 0; i < reporterIons.length; i++) {
 

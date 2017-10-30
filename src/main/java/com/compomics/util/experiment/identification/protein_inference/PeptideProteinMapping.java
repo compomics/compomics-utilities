@@ -165,9 +165,9 @@ public class PeptideProteinMapping {
             String accession = ppm.getProteinAccession();
             String sec = ppm.getPeptideSequence();
             int index = ppm.getIndex();
-            if (!resultMapTmp.containsKey(sec)) resultMapTmp.put(sec, new HashMap<String, ArrayList<Integer>>());
+            if (!resultMapTmp.containsKey(sec)) resultMapTmp.put(sec, new HashMap<>());
             HashMap<String, ArrayList<Integer>> accessions = resultMapTmp.get(sec);
-            if (!accessions.containsKey(accession)) accessions.put(accession, new ArrayList<Integer>());
+            if (!accessions.containsKey(accession)) accessions.put(accession, new ArrayList<>());
             ArrayList<Integer> indexes = accessions.get(accession);
             indexes.add(index);
         }
@@ -220,15 +220,16 @@ public class PeptideProteinMapping {
      */
     public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        HashMap<String, Peptide> peptidesMap = new HashMap<>(peptideProteinMappings.size());
-        HashMap<String, HashMap<String, HashSet<Integer>>> proteinsMap = new HashMap<>(peptideProteinMappings.size());
-        HashMap<String, HashMap<String, HashMap<Integer, PeptideVariantMatches>>> variantsMap = new HashMap<>(peptideProteinMappings.size());
+        HashMap<Long, Peptide> peptidesMap = new HashMap<>(peptideProteinMappings.size());
+        HashMap<Long, HashMap<String, HashSet<Integer>>> proteinsMap = new HashMap<>(peptideProteinMappings.size());
+        HashMap<Long, HashMap<String, HashMap<Integer, PeptideVariantMatches>>> variantsMap = new HashMap<>(peptideProteinMappings.size());
 
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
 
             Peptide tempPeptide = new Peptide(peptideProteinMapping.getPeptideSequence(),
                     peptideProteinMapping.getModificationMatches());
-            String peptideKey = tempPeptide.getMatchingKey(sequenceMatchingPreferences);
+            
+            long peptideKey = tempPeptide.getMatchingKey(sequenceMatchingPreferences);
             Peptide peptide = peptidesMap.get(peptideKey);
 
             String proteinAccession = peptideProteinMapping.getProteinAccession();
@@ -279,7 +280,7 @@ public class PeptideProteinMapping {
             }
         }
 
-        for (String peptideKey : peptidesMap.keySet()) {
+        for (long peptideKey : peptidesMap.keySet()) {
 
             Peptide peptide = peptidesMap.get(peptideKey);
 

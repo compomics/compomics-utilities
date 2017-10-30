@@ -13,7 +13,9 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * Annotator for the precursor peaks.
@@ -51,20 +53,11 @@ public class PrecursorAnnotator {
 
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
         
-        if (modificationMatches != null) {
-        
-            HashSet<String> modificationLosses = new HashSet<String>(0);
-            for (ModificationMatch modificationMatch : modificationMatches) {
-
-                String modificationName = modificationMatch.getModification();
-                Modification modification = modificationFactory.getModification(modificationName);
-
-                for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
-                
-                    modificationLosses.add(neutralLoss.name);
-                
-                }
-            }
+            HashSet<String> modificationLosses = Arrays.stream(modificationMatches)
+                    .map(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()))
+                    .flatMap(modification -> modification.getNeutralLosses().stream())
+                    .map(neutralLoss -> neutralLoss.name)
+                    .collect(Collectors.toCollection(HashSet::new));
 
             if (!modificationLosses.isEmpty()) {
                 
@@ -81,14 +74,13 @@ public class PrecursorAnnotator {
                     neutralLosses[cpt] = neutralLoss;
                     neutralLossesMasses[cpt++] = neutralLoss.getMass();
                 }
+                
             } else {
+                
                 neutralLosses = new NeutralLoss[]{NeutralLoss.H2O, NeutralLoss.NH3};
                 neutralLossesMasses = new double[]{NeutralLoss.H2O.getMass(), NeutralLoss.NH3.getMass()};
+                
             }
-        } else {
-            neutralLosses = new NeutralLoss[]{NeutralLoss.H2O, NeutralLoss.NH3};
-            neutralLossesMasses = new double[]{NeutralLoss.H2O.getMass(), NeutralLoss.NH3.getMass()};
-        }
 
     }
 
@@ -103,7 +95,7 @@ public class PrecursorAnnotator {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge, int isotopeMax) {
 
-        ArrayList<IonMatch> results = new ArrayList<IonMatch>(0);
+        ArrayList<IonMatch> results = new ArrayList<>(0);
 
         double protonatedMass = precursorMass + ElementaryIon.getProtonMassMultiple(peptideCharge);
 

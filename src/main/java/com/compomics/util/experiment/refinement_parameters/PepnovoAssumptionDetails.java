@@ -2,6 +2,7 @@ package com.compomics.util.experiment.refinement_parameters;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
@@ -11,6 +12,11 @@ import com.compomics.util.experiment.personalization.UrParameter;
  * @author Marc Vaudel
  */
 public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
+
+    /**
+     * The key to use when storing the object in the database.
+     */
+    private static final long key = ExperimentObject.asLong("com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails");
 
     /**
      * The PepNovo rank score.
@@ -68,7 +74,7 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
     }
 
     @Override
-    public String getParameterKey() {
-        return "deNovo|1"; // Should not be changed for backward compatibility
+    public long getParameterKey() {
+        return key;
     }
 }

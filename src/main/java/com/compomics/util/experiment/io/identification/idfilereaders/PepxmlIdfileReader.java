@@ -133,7 +133,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             int type;
             boolean hasMatch = false;
 
-            HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
+            HashMap<Long, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
             spectrumMatches = new LinkedList<>();
             SpectrumMatch currentMatch = null;
             Integer currentCharge = null;
@@ -186,7 +186,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             Peptide tempPeptide = tempPeptideAssumption.getPeptide();
                             if (peptide.getSequence().equals(tempPeptide.getSequence())) {
                                 boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
-                                if (sameModifications && peptide.getModificationMatches() != null) {
+                                if (sameModifications) {
                                     for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
                                         boolean ptmFound = false;
                                         for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
@@ -213,18 +213,13 @@ public class PepxmlIdfileReader implements IdfileReader {
                         Advocate advocate = Advocate.getAdvocate(searchEngine);
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 
-                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
-                                    newModificationMatches = null;
+                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
 
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
-                                if (previousModificationMatches != null) {
-
-                                    newModificationMatches = Arrays.stream(previousModificationMatches)
-                                            .map(modificationMatch -> modificationMatch.clone())
-                                            .toArray(ModificationMatch[]::new);
-
-                                }
+                                ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                        .map(modificationMatch -> modificationMatch.clone())
+                                        .toArray(ModificationMatch[]::new);
 
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
@@ -237,17 +232,26 @@ public class PepxmlIdfileReader implements IdfileReader {
                         }
                     }
                 }
+                
                 if (type == XmlPullParser.END_TAG && tagName.equals("spectrum_query")) {
+                    
                     if (hasMatch) {
-                        String key = currentMatch.getKey();
+                        
+                        long key = currentMatch.getKey();
+                        
                         if (!spectrumMatchesMap.containsKey(key)) {
+                            
                             spectrumMatchesMap.put(key, currentMatch);
                             spectrumMatches.add(currentMatch);
+                            
                         }
+                        
                         hasMatch = false;
                         currentMatch = null;
                         currentCharge = null;
+                        
                     }
+                    
                     if (waitingHandler != null && spectrumFactory.fileLoaded(inputFileName)) {
                         waitingHandler.increaseSecondaryProgressCounter();
                     }
@@ -502,7 +506,6 @@ public class PepxmlIdfileReader implements IdfileReader {
                 spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, index);
             }
         }
-        Advocate advocate = Advocate.getAdvocate(searchEngine);
         String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
         spectrumMatch.setSpectrumNumber(index);

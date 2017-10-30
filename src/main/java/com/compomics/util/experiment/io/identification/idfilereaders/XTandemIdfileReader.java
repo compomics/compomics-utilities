@@ -148,6 +148,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (expandAaCombinations) {
+            
             for (SpectrumMatch spectrumMatch : allMatches.values()) {
 
                 spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
@@ -155,16 +156,19 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                     // updating modifications
                     for (ModificationMatch mods : peptide.getModificationMatches()) {
+                        
                         String modName = mods.getModification();
                         String modNameCheck = changeModificationName(modName);
+                        
                         if (modifications.containsKey(modNameCheck)) {
+                            
                             mods.setVariable(modifications.get(modNameCheck));
+                            
                         }
                     }
 
                     String peptideSequence = peptide.getSequence();
-                    ModificationMatch[] foundModifications = peptide.getModificationMatches(),
-                            newModificationMatches = null;
+                    ModificationMatch[] foundModifications = peptide.getModificationMatches();
 
                     if (AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -172,13 +176,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (!expandedSequence.toString().equals(peptideSequence)) {
 
-                                if (foundModifications != null) {
-
-                                    newModificationMatches = Arrays.stream(foundModifications)
-                                            .map(modificationMatch -> modificationMatch.clone())
-                                            .toArray(ModificationMatch[]::new);
-
-                                }
+                                ModificationMatch[] newModificationMatches = Arrays.stream(foundModifications)
+                                        .map(modificationMatch -> modificationMatch.clone())
+                                        .toArray(ModificationMatch[]::new);
 
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
@@ -199,8 +199,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put("X!Tandem", versions);
         return result;
@@ -276,8 +276,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         if (title.indexOf("RTINSECONDS") >= 0) {
                             title = title.split("RTINSECONDS")[0].trim();
                         }
-                        String spectrumKey = Spectrum.getSpectrumKey(allMatches.get(id).getKey(), title);
-                        allMatches.get(id).setSpectrumKey(spectrumKey);
+                        SpectrumMatch spectrumMatch = allMatches.get(id);
+                        String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), title);
+                        spectrumMatch.setSpectrumKey(spectrumKey);
                         content = new StringBuilder();
                         write = false;
                     } else if ("group".equalsIgnoreCase(parser.getLocalName())) {
@@ -425,7 +426,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (adding) {
 
-                                peptide = new Peptide(pepSeq, new ModificationMatch[0]);
+                                peptide = new Peptide(pepSeq);
                                 PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFileName.getName());
                                 allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
@@ -435,7 +436,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             break;
 
                         case "aa":
+                            
                             if (addAA) {
+                                
                                 String modName = parser.getAttributeValue("", "modified") + "@" + parser.getAttributeValue("", "type");
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
                                 peptide.addModificationMatch(new ModificationMatch(modName, true, modPosition));

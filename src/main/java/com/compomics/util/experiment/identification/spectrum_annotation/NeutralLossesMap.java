@@ -35,12 +35,12 @@ public class NeutralLossesMap implements Serializable {
      * Map indicating for each neutral loss when they should start being
      * accounted for the forward ions (b ions for instance).
      */
-    private HashMap<String, Integer> forwardBoundaries = new HashMap<String, Integer>(2);
+    private HashMap<String, Integer> forwardBoundaries = new HashMap<>(2);
     /**
      * Map indicating for each neutral loss when they should start being
      * accounted for the reverse ions (y ions for instance).
      */
-    private HashMap<String, Integer> rewindBoundaries = new HashMap<String, Integer>(2);
+    private HashMap<String, Integer> rewindBoundaries = new HashMap<>(2);
     /**
      * Cache for the accounted neutral losses.
      */

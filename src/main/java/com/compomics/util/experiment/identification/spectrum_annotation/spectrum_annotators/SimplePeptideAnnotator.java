@@ -247,7 +247,7 @@ public class SimplePeptideAnnotator {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge, int precursorIsotopeMax) {
         
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>(0);
+        ArrayList<IonMatch> result = new ArrayList<>(0);
         if (axFragmentAnnotator != null) {
             result.addAll(axFragmentAnnotator.getIonMatches(spectrumIndex, peptideCharge));
         }

@@ -292,7 +292,7 @@ public class PeptideDraft {
      * @return the peptide built from the peptide draft
      */
     public Peptide getPeptide(double massMin, double massMax) {
-        return getPeptide(massMin, massMax, new BoxedObject<Boolean>(Boolean.FALSE));
+        return getPeptide(massMin, massMax, new BoxedObject<>(Boolean.FALSE));
     }
 
     /**

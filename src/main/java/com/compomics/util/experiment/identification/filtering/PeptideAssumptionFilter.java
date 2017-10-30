@@ -48,8 +48,8 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     private boolean isPpm;
     /**
-     * Boolean indicating whether peptides presenting unknown modifications should be
-     * ignored.
+     * Boolean indicating whether peptides presenting unknown modifications
+     * should be ignored.
      */
     private boolean unknownModification;
     /**
@@ -97,7 +97,8 @@ public class PeptideAssumptionFilter implements Serializable {
      * disabled)
      * @param isPpm boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
-     * @param unknownModification shall peptides presenting unknown modifications be removed
+     * @param unknownModification shall peptides presenting unknown
+     * modifications be removed
      * @param minMissedCleavages the minimum number of missed cleavages allowed
      * (null for disabled)
      * @param maxMissedCleavages the maximum number of missed cleavages allowed
@@ -108,7 +109,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * disabled)
      */
     public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownModification, Integer minMissedCleavages, Integer maxMissedCleavages, Integer minIsotopes, Integer maxIsotopes) {
-        
+
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.maxMassDeviation = maxMzDeviation;
@@ -118,7 +119,7 @@ public class PeptideAssumptionFilter implements Serializable {
         this.maxMissedCleavages = maxMissedCleavages;
         this.minIsotopes = minIsotopes;
         this.maxIsotopes = maxIsotopes;
-    
+
     }
 
     /**
@@ -199,9 +200,9 @@ public class PeptideAssumptionFilter implements Serializable {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, FMIndex fmIndex) {
-        
+
         return validateProteins(peptide, sequenceMatchingPreferences, fmIndex, fmIndex);
-        
+
     }
 
     /**
@@ -221,27 +222,27 @@ public class PeptideAssumptionFilter implements Serializable {
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
-            
+
             boolean target = false;
             boolean decoy = false;
-            
+
             for (String accession : proteinMapping.navigableKeySet()) {
-                
+
                 if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
-                    
+
                     decoy = true;
-                    
+
                 } else {
-                    
+
                     target = true;
-                    
+
                 }
             }
-            
+
             if (target && decoy) {
-                
+
                 return false;
-                
+
             }
         }
 
@@ -254,8 +255,8 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param peptide the peptide of interest
      * @param sequenceMatchingPreferences the sequence matching preferences for
      * peptide to protein mapping
-     * @param modificationSequenceMatchingPreferences the sequence matching preferences
-     * for modification to peptide mapping
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for modification to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
@@ -267,18 +268,15 @@ public class PeptideAssumptionFilter implements Serializable {
 
         // check if a modification could not be parsed
         if (unknownModification) {
-            
+
             ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-            
-            if (modificationMatches != null) {
-                
-                if (Arrays.stream(modificationMatches)
-                        .map(ModificationMatch::getModification)
-                        .anyMatch(modName -> !modificationFactory.containsModification(modName))) {
-                    
-                    return false;
-                    
-                }
+
+            if (Arrays.stream(modificationMatches)
+                    .map(ModificationMatch::getModification)
+                    .anyMatch(modName -> !modificationFactory.containsModification(modName))) {
+
+                return false;
+
             }
         }
 
@@ -298,7 +296,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * filter
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) {
-        
+
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {
@@ -312,14 +310,16 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether unknown modifications shall be removed.
+     * Returns a boolean indicating whether unknown modifications shall be
+     * removed.
      *
-     * @return a boolean indicating whether unknown modifications shall be removed
+     * @return a boolean indicating whether unknown modifications shall be
+     * removed
      */
     public boolean removeUnknownModifications() {
-        
+
         return unknownModification;
-    
+
     }
 
     /**
@@ -328,9 +328,9 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param unknownModification whether unknown modifications shall be removed
      */
     public void setRemoveUnknownModifications(boolean unknownModification) {
-        
+
         this.unknownModification = unknownModification;
-    
+
     }
 
     /**

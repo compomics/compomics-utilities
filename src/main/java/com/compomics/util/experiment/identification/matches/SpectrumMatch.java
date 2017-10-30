@@ -4,6 +4,7 @@ import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * The number of the spectrum.
      */
     private int spectrumNumber;
+    /**
+     * The key of the match.
+     */
+    private long key;
     /**
      * Map of the identification algorithm peptide assumptions: advocate number &gt;
      * score &gt; assumptions.
@@ -88,10 +93,13 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param spectrumKey the key of the spectrum
      */
     public SpectrumMatch(String spectrumKey) {
+        
         this.spectrumKey = spectrumKey;
+        this.key = ExperimentObject.asLong(spectrumKey);
+        
         peptideAssumptionsMap = new HashMap<>(1);
     }
-
+    
     /**
      * Returns the spectrum number.
      * 
@@ -166,14 +174,28 @@ public class SpectrumMatch extends IdentificationMatch {
         this.bestTagAssumption = bestTagAssumption;
     }
 
-    @Override
-    public String getKey() {
+    /**
+     * Returns the key of the spectrum corresponding to this match.
+     * 
+     * @return the key of the spectrum
+     */
+    public String getSpectrumKey() {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
         return spectrumKey;
+    }
+
+    @Override
+    public long getKey() {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return key;
     }
 
     /**
@@ -363,6 +385,8 @@ public class SpectrumMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
         
         this.spectrumKey = spectrumKey;
+        this.key = ExperimentObject.asLong(spectrumKey);
+        
     }
 
     /**

@@ -72,7 +72,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 || specificAnnotationSettings == null && super.specificAnnotationSettings != null
                 || specificAnnotationSettings != null && super.specificAnnotationSettings != null && specificAnnotationSettings != super.specificAnnotationSettings
                 || this.peptide == null
-                || !this.peptide.getKey().equals(peptide.getKey())
+                || this.peptide.getKey() != peptide.getKey()
                 || !this.peptide.sameModificationsAs(peptide)
                 || this.precursorCharge != precursorCharge) {
 
@@ -312,7 +312,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * peptide.
      *
      * @param peptide the peptide of interest
-     * @param sequenceProvider a sequence provide able to retrieve the protein sequence for the given peptide
+     * @param sequenceProvider a sequence provide able to retrieve the protein
+     * sequence for the given peptide
      * @param sequenceMatchingSettings the sequence matching settings for
      * peptide to protein mapping
      * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
@@ -324,7 +325,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             SequenceMatchingParameters ptmSequenceMatchingSettings) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        
+
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
         String sequence = peptide.getSequence();
@@ -354,40 +355,37 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 }
             }
         }
-        
+
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-        if (modificationMatches != null) {
+        TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
-            TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
+        for (ModificationMatch modMatch : modificationMatches) {
 
-            for (ModificationMatch modMatch : modificationMatches) {
+            Modification ptm = modificationFactory.getModification(modMatch.getModification());
 
-                Modification ptm = modificationFactory.getModification(modMatch.getModification());
+            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
 
-                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                aaMin = sequence.length();
+                aaMax = 0;
 
-                    aaMin = sequence.length();
-                    aaMax = 0;
+                for (String proteinAccession : proteinMapping.navigableKeySet()) {
 
-                    for (String proteinAccession : proteinMapping.navigableKeySet()) {
-                        
-                        String proteinSequence = sequenceProvider.getSequence(proteinAccession);
-                        
-                        for (int peptideStart : proteinMapping.get(proteinAccession)) {
+                    String proteinSequence = sequenceProvider.getSequence(proteinAccession);
 
-                            ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, proteinSequence, peptideStart, ptmSequenceMatchingSettings);
+                    for (int peptideStart : proteinMapping.get(proteinAccession)) {
 
-                            if (!indexes.isEmpty()) {
+                        ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, proteinSequence, peptideStart, ptmSequenceMatchingSettings);
 
-                                aaMin = Math.min(aaMin, indexes.get(0));
-                                aaMax = Math.max(aaMax, indexes.get(indexes.size() - 1));
+                        if (!indexes.isEmpty()) {
 
-                            }
+                            aaMin = Math.min(aaMin, indexes.get(0));
+                            aaMax = Math.max(aaMax, indexes.get(indexes.size() - 1));
 
-                            neutralLossesMap.addNeutralLoss(neutralLoss, aaMin, sequence.length() - aaMax + 1);
-                            
                         }
+
+                        neutralLossesMap.addNeutralLoss(neutralLoss, aaMin, sequence.length() - aaMax + 1);
+
                     }
                 }
             }

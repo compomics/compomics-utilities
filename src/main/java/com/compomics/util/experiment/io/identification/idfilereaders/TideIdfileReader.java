@@ -283,19 +283,14 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 peptideAssumption.setRawScore(rawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches(),
-                            newModificationMatches = null;
-                    
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                    
 
-                        if (previousModificationMatches != null) {
+                        ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                .map(modificationMatch -> modificationMatch.clone())
+                                .toArray(ModificationMatch[]::new);
 
-                            newModificationMatches = Arrays.stream(previousModificationMatches)
-                                    .map(modificationMatch -> modificationMatch.clone())
-                                    .toArray(ModificationMatch[]::new);
-
-                        }
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(rawScore);

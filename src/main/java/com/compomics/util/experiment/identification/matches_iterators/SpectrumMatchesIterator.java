@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Harald Barsnes
  * @author Dominik Kopczynski
  */
-public class PsmIterator extends MatchesIterator {
+public class SpectrumMatchesIterator extends MatchesIterator {
     /**
      * Constructor.
      *
@@ -22,7 +22,7 @@ public class PsmIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public PsmIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public SpectrumMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         this(null, identification, waitingHandler, displayProgress);
     }
     
@@ -36,7 +36,7 @@ public class PsmIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
+    public SpectrumMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -51,7 +51,7 @@ public class PsmIterator extends MatchesIterator {
      * method should be displayed on the waiting handler
      * @param filters filters for the class
      */
-    public PsmIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
+    public SpectrumMatchesIterator(ArrayList<Long> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
         super(keys, SpectrumMatch.class, identification, waitingHandler, displayProgress, filters);
     }
     
@@ -66,5 +66,6 @@ public class PsmIterator extends MatchesIterator {
     public SpectrumMatch next() {
         
         return (SpectrumMatch) nextObject();
+        
     }
 }

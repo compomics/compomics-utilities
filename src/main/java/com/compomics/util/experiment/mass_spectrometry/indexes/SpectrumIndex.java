@@ -3,6 +3,7 @@ package com.compomics.util.experiment.mass_spectrometry.indexes;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,10 @@ import org.apache.commons.math.util.FastMath;
  */
 public class SpectrumIndex extends DbObject implements UrParameter {
 
+    /**
+     * The key to use when storing the object in the database.
+     */
+    private static final long key = ExperimentObject.asLong("com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex");
     /**
      * The precursor mass tolerance.
      */
@@ -65,22 +70,30 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     }
     
     public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return peaksMap;
     }
     
     public boolean getPpm(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return ppm;
     }
     
     public double getPrecursorToleance(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return precursorTolerance;
     }
     
     public double getScalingFactor(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return scalingFactor;
     }
 
@@ -94,30 +107,50 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @param ppm boolean indicating whether the tolerance is in ppm
      */
     public SpectrumIndex(HashMap<Double, Peak> peaks, double intenstiyLimit, double tolerance, boolean ppm) {
+        
         this.intensityLimit = intenstiyLimit;
-        this.peaksMap = new HashMap<Integer, HashMap<Double, Peak>>();
+        this.peaksMap = new HashMap<>();
         this.precursorTolerance = tolerance;
         this.ppm = ppm;
+        
         if (ppm) {
+            
             scalingFactor = FastMath.log((1000000 - tolerance) / (1000000 + tolerance));
+            
         }
+        
         totalIntensity = 0.0;
+        
         for (Peak peak : peaks.values()) {
+            
             if (peak.intensity >= intenstiyLimit) {
+                
                 totalIntensity += peak.intensity;
                 Integer bin = getBin(peak.mz);
+                
                 if (binMax == null || bin > binMax) {
+                    
                     binMax = bin;
+                    
                 }
+                
                 if (binMin == null || bin < binMin) {
+                    
                     binMin = bin;
+                    
                 }
+                
                 HashMap<Double, Peak> peaksInBin = peaksMap.get(bin);
+                
                 if (peaksInBin == null) {
+                    
                     peaksInBin = new HashMap<>(4);
                     peaksMap.put(bin, peaksInBin);
+                    
                 }
+                
                 peaksInBin.put(peak.mz, peak);
+                
             }
         }
     }
@@ -130,11 +163,17 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bin
      */
     public int getBin(double mz) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         if (ppm) {
+            
             return getBinPpm(mz);
+            
         } else {
+            
             return getBinAbsolute(mz);
+            
         }
     }
 
@@ -147,8 +186,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bin
      */
     private int getBinAbsolute(double mz) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         int bin = (int) (mz / precursorTolerance);
+        
         return bin;
     }
 
@@ -161,8 +203,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bin
      */
     private int getBinPpm(double mz) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
+        
         return bin;
     }
 
@@ -175,57 +220,71 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the peaks matching the given m/z
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         int bin0;
         if (ppm) {
+            
             bin0 = getBinPpm(mz);
+            
         } else {
+            
             bin0 = getBinAbsolute(mz);
+            
         }
+        
         ArrayList<Peak> result = new ArrayList<>(0);
         HashMap<Double, Peak> binContent = peaksMap.get(bin0 - 1);
+        
         if (binContent != null) {
+            
             for (Double peakMz : binContent.keySet()) {
-                double error;
-                if (ppm) {
-                    error = 1000000 * (peakMz - mz) / mz;
-                } else {
-                    error = peakMz - mz;
-                }
+                
+                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
+                
                 if (Math.abs(error) <= precursorTolerance) {
+                    
                     result.add(binContent.get(peakMz));
+                    
                 }
             }
         }
+        
         binContent = peaksMap.get(bin0);
+        
         if (binContent != null) {
+            
             for (Double peakMz : binContent.keySet()) {
-                double error;
-                if (ppm) {
-                    error = 1000000 * (peakMz - mz) / mz;
-                } else {
-                    error = peakMz - mz;
-                }
+                
+                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
+                
                 if (Math.abs(error) <= precursorTolerance) {
+                    
                     result.add(binContent.get(peakMz));
+                    
                 }
             }
         }
+        
         binContent = peaksMap.get(bin0 + 1);
+        
         if (binContent != null) {
+            
             for (Double peakMz : binContent.keySet()) {
-                double error;
-                if (ppm) {
-                    error = 1000000 * (peakMz - mz) / mz;
-                } else {
-                    error = peakMz - mz;
-                }
+                
+                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
+                
                 if (Math.abs(error) <= precursorTolerance) {
+                    
                     result.add(binContent.get(peakMz));
+                    
                 }
             }
         }
+        
         return result;
+        
     }
 
     /**
@@ -234,8 +293,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return new ArrayList<>(peaksMap.keySet());
+        
     }
 
     /**
@@ -244,8 +306,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bins in the map
      */
     public Set<Integer> getRawBins() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return peaksMap.keySet();
+        
     }
 
     /**
@@ -256,8 +321,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the peaks at the given bin
      */
     public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return peaksMap.get(bin);
+        
     }
 
     /**
@@ -268,12 +336,12 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the mass associated with the given bin
      */
     public Double getMass(int bin) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        if (ppm) {
-            return FastMath.exp((scalingFactor * bin) + mzAnchorLog);
-        } else {
-            return precursorTolerance * (0.5 + bin);
-        }
+        
+        return ppm ?  FastMath.exp((scalingFactor * bin) + mzAnchorLog)
+                : precursorTolerance * (0.5 + bin);
+        
     }
 
     /**
@@ -282,8 +350,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return binMax the highest bin
      */
     public Integer getBinMax() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return binMax;
+        
     }
 
     /**
@@ -292,8 +363,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return binMin the lowest bin
      */
     public Integer getBinMin() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return binMin;
+        
     }
 
     /**
@@ -302,47 +376,71 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the total intensity of the peaks above the intensity threshold
      */
     public Double getTotalIntensity() {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return totalIntensity;
+        
     }
 
     @Override
-    public String getParameterKey() {
-        return "SpectrumIndex";
+    public long getParameterKey() {
+        return key;
     }
     
     public void setBinMax(Integer binMax){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.binMax = binMax;
+        
     }
     
     public void setBinMin(Integer binMin){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.binMin = binMin;
+        
     }
     
     public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.peaksMap = peaksMap;
+        
     }
     
     public void setPpm(boolean ppm){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.ppm = ppm;
+        
     }
     
     public void setPrecursorTolerance(double precursorTolerance){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.precursorTolerance = precursorTolerance;
+        
     }
     
     public void setScalingFactor(double scalingFactor){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.scalingFactor = scalingFactor;
+        
     }
     
     public void setTotalIntensity(Double totalIntensity){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.totalIntensity = totalIntensity;
+        
     }
 }

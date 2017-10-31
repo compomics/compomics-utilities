@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 
@@ -24,10 +23,6 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 8514376202742537298L;
-    /**
-     * The key to use when storing the object in the database.
-     */
-    private static final long key = ExperimentObject.asLong("com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption");
     /**
      * List of mass gaps.
      */
@@ -184,6 +179,6 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
 
     @Override
     public long getParameterKey() {
-        return key;
+        return getId();
     }
 }

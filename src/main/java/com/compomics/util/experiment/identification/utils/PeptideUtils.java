@@ -265,4 +265,24 @@ public class PeptideUtils {
                                     proteinSequence,
                                     enzyme) == 2));
     }
+
+    /**
+     * Returns a boolean indicating whether the peptide is enzymatic in at least one protein using one of the given enzymes.
+     * 
+     * @param peptide the peptide
+     * @param sequenceProvider the sequence provider
+     * @param enzymes the enzymes used for digestion
+     * 
+     * @return a boolean indicating whether the peptide is enzymatic using one of the given enzymes
+     */
+    public static boolean isEnzymatic(Peptide peptide, SequenceProvider sequenceProvider, ArrayList<Enzyme> enzymes) {
+        
+        return peptide.getProteinMapping().entrySet().stream()
+                .anyMatch(entry -> isEnzymatic(
+                        peptide, 
+                        entry.getKey(), 
+                        sequenceProvider.getSequence(entry.getKey()), 
+                        enzymes));
+        
+    }
 }

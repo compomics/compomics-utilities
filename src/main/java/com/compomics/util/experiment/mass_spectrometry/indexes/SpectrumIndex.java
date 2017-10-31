@@ -16,11 +16,7 @@ import org.apache.commons.math.util.FastMath;
  * @author Marc Vaudel
  */
 public class SpectrumIndex extends DbObject implements UrParameter {
-
-    /**
-     * The key to use when storing the object in the database.
-     */
-    private static final long key = ExperimentObject.asLong("com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex");
+    
     /**
      * The precursor mass tolerance.
      */
@@ -385,7 +381,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
 
     @Override
     public long getParameterKey() {
-        return key;
+        return getId();
     }
     
     public void setBinMax(Integer binMax){

@@ -2,7 +2,6 @@ package com.compomics.util.experiment.refinement_parameters;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
@@ -12,11 +11,6 @@ import com.compomics.util.experiment.personalization.UrParameter;
  * @author Marc Vaudel
  */
 public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
-
-    /**
-     * The key to use when storing the object in the database.
-     */
-    private static final long key = ExperimentObject.asLong("com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails");
 
     /**
      * The PepNovo rank score.
@@ -39,7 +33,11 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @return the PepNovo rank score
      */
     public double getRankScore() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
         return rankScore;
     }
 
@@ -49,7 +47,11 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.rankScore = rankScore;
     }
 
@@ -59,7 +61,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @return the PepNovo mH
      */
     public double getMH() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return mH;
     }
 
@@ -69,12 +73,16 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @param mH the PepNovo mH
      */
     public void setMH(double mH) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.mH = mH;
     }
 
     @Override
     public long getParameterKey() {
-        return key;
+        return getId();
     }
 }

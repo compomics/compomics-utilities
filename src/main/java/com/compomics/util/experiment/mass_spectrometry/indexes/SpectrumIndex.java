@@ -3,7 +3,6 @@ package com.compomics.util.experiment.mass_spectrometry.indexes;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +16,10 @@ import org.apache.commons.math.util.FastMath;
  */
 public class SpectrumIndex extends DbObject implements UrParameter {
     
+    /**
+     * Serial number used for serialization and object key.
+     */
+    private static final long serialVersionUID = -4447843223014568761L;
     /**
      * The precursor mass tolerance.
      */
@@ -381,7 +384,9 @@ public class SpectrumIndex extends DbObject implements UrParameter {
 
     @Override
     public long getParameterKey() {
-        return getId();
+        
+        return serialVersionUID;
+        
     }
     
     public void setBinMax(Integer binMax){

@@ -8,12 +8,15 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.SpectrumMatchesIterator;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -437,11 +440,12 @@ public class Identification extends ExperimentObject {
      *
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceProvider a provider of protein sequences
      *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences) throws InterruptedException {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) throws InterruptedException {
 
         long spectrumMatchKey = spectrumMatch.getKey();
 
@@ -467,7 +471,8 @@ public class Identification extends ExperimentObject {
         if (proteinMatch == null) {
 
             proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
-            proteinIdentification.add(proteinMatchKey);
+            proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
+                    .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
 
             for (String proteinAccession : proteinMatch.getAccessions()) {
 
@@ -484,6 +489,7 @@ public class Identification extends ExperimentObject {
 
             }
 
+            proteinIdentification.add(proteinMatchKey);
             objectsDB.insertObject(proteinMatchKey, proteinMatch);
 
         } else {
@@ -539,40 +545,25 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether a peptide is found in a single protein match.
-     *
-     * @param peptide the peptide of interest
-     *
-     * @return true if peptide is found in a single protein match
-     */
-    public boolean isUniqueProteinGroup(Peptide peptide) {
-
-        return getProteinMatches(peptide).size() == 1;
-
-    }
-
-    /**
-     * Returns a psm iterator for a given key list.
+     * Returns a spectrum matches iterator for a given key list.
      *
      * @param spectrumMatches the keys of the spectra to iterate
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return a peptide matches iterator
+     * @return a spectrum matches iterator
      */
-    public SpectrumMatchesIterator getPsmIterator(long[] spectrumMatches, WaitingHandler waitingHandler) throws InterruptedException {
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(long[] spectrumMatches, WaitingHandler waitingHandler) {
         return new SpectrumMatchesIterator(spectrumMatches, this, waitingHandler, false);
     }
 
     /**
-     * Returns a psm iterator for all SpectrumMatches.
+     * Returns a spectrum matches iterator for all SpectrumMatches.
      *
      * @param waitingHandler the waiting handler
      *
-     * @return a peptide matches iterator
+     * @return a spectrum matches iterator
      */
-    public SpectrumMatchesIterator getPsmIterator(WaitingHandler waitingHandler) {
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler) {
         return new SpectrumMatchesIterator(this, waitingHandler, false);
     }
 

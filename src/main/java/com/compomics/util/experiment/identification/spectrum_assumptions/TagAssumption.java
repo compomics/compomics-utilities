@@ -179,6 +179,8 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
 
     @Override
     public long getParameterKey() {
-        return getId();
+        
+        return serialVersionUID;
+        
     }
 }

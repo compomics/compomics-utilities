@@ -1414,20 +1414,17 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        double tempMass = StandardMasses.h2o.mass;
-        char[] sequenceAsCharArray = sequence.toCharArray();
-
-        for (char aa : sequenceAsCharArray) {
-            
-            AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-            tempMass += currentAA.getMonoisotopicMass();
-            
-        }
+        double tempMass = StandardMasses.h2o.mass
+                + sequence.chars()
+                        .mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass())
+                        .sum();
 
         if (modificationMatches != null) {
 
             ModificationFactory modificationFactory = ModificationFactory.getInstance();
-            tempMass += Arrays.stream(modificationMatches).mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass()).sum();
+            tempMass += Arrays.stream(modificationMatches)
+                    .mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass())
+                    .sum();
 
         }
 

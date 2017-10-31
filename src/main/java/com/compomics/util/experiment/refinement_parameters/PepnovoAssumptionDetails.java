@@ -13,6 +13,10 @@ import com.compomics.util.experiment.personalization.UrParameter;
 public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
 
     /**
+     * Serial number used for serialization and object key.
+     */
+    private static final long serialVersionUID = -4163506699889716493L;
+    /**
      * The PepNovo rank score.
      */
     private double rankScore;
@@ -83,6 +87,8 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
 
     @Override
     public long getParameterKey() {
-        return getId();
+        
+        return serialVersionUID;
+        
     }
 }

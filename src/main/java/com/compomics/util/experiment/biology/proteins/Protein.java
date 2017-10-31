@@ -1,11 +1,6 @@
 package com.compomics.util.experiment.biology.proteins;
 
-import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
-import com.compomics.util.experiment.biology.enzymes.Enzyme;
-import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class models a protein.
@@ -116,22 +111,5 @@ public class Protein extends ExperimentObject {
         
         return sequence.length();
         
-    }
-
-    /**
-     * Returns the protein's molecular weight. (Note that when using a
-     * SequenceFactory it is recommended to use the SequenceFactory's
-     * computeMolecularWeight method instead, as that method stored the computed
-     * molecular weights instead of recalculating them every time.)
-     *
-     * @return the protein's molecular weight in Da
-     */
-    public double computeMolecularWeight() {
-
-        double mass = StandardMasses.h2o.mass;
-
-        mass += sequence.chars().mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass()).sum();
-
-        return mass;
     }
 }

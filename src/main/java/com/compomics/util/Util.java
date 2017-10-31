@@ -931,13 +931,11 @@ public class Util {
      * @return the occurrence of a character in a string
      */
     public static int getOccurrence(String input, char character) {
-        int result = 0;
-        for (char aa : input.toCharArray()) {
-            if (aa == character) {
-                result++;
-            }
-        }
-        return result;
+        
+        return (int) input.chars()
+                .filter(aa -> aa == character)
+                .count();
+        
     }
 
     /**

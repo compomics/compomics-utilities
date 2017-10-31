@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -233,8 +233,9 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">buildPeptidesAndProteins</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
-                        <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">buildPeptidesAndProteins</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
+                        <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                        <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</code>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match.</div>
 </td>
@@ -296,7 +297,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;peptideKeys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(long[]&nbsp;peptideKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 </td>
@@ -334,7 +335,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;proteinKeys,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(long[]&nbsp;proteinKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 </td>
@@ -347,40 +348,40 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;spectrumMatches,
-              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Returns a psm iterator for a given key list.</div>
-</td>
-</tr>
-<tr id="i21" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
-</td>
-</tr>
-<tr id="i22" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentification--">getSpectrumIdentification</a></span>()</code>
 <div class="block">Returns a map of the spectrum matches keys indexed by spectrum file name.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentificationSize--">getSpectrumIdentificationSize</a></span>()</code>
 <div class="block">Returns the number of spectrum identifications.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatch-long-">getSpectrumMatch</a></span>(long&nbsp;key)</code>
 <div class="block">Returns the spectrum match with the given key.</div>
+</td>
+</tr>
+<tr id="i24" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(long[]&nbsp;spectrumMatches,
+                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<div class="block">Returns a spectrum matches iterator for a given key list.</div>
+</td>
+</tr>
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<div class="block">Returns a spectrum matches iterator for all SpectrumMatches.</div>
 </td>
 </tr>
 <tr id="i26" class="altColor">
@@ -390,12 +391,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i27" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#isUniqueProteinGroup-com.compomics.util.experiment.biology.proteins.Peptide-">isUniqueProteinGroup</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>
-<div class="block">Indicates whether a peptide is found in a single protein match.</div>
-</td>
-</tr>
-<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keyList,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -403,7 +398,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Loads all objects of given keys in cache.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#loadObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">loadObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
            <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -411,13 +406,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Loads all objects of the class in cache.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#removeObject-long-">removeObject</a></span>(long&nbsp;key)</code>
 <div class="block">Removes an object from the database.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#removeObjects-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-boolean-">removeObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keys,
              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -425,13 +420,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Remove a list of objects from the database.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObject-long-">retrieveObject</a></span>(long&nbsp;longKey)</code>
 <div class="block">Returns an array of all objects of a given list of keys</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.lang.Class-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -439,7 +434,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <div class="block">Returns an array of all objects of a given class</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#retrieveObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">retrieveObjects</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keyList,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -581,15 +576,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getSpectrumIdentification</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&gt;&nbsp;getSpectrumIdentification()
-                                                        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&gt;&nbsp;getSpectrumIdentification()</pre>
 <div class="block">Returns a map of the spectrum matches keys indexed by spectrum file name.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a map of the spectrum matches keys indexed by spectrum file name</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -957,14 +948,15 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
+<a name="buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildPeptidesAndProteins</h4>
 <pre>public&nbsp;void&nbsp;buildPeptidesAndProteins(<a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
-                                     <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences)
+                                     <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                                     <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)
                               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match. Note that only the best peptide assumption is used, the method has
@@ -976,6 +968,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>spectrumMatch</code> - the spectrum match to add</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
+<dd><code>sequenceProvider</code> - a provider of protein sequences</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
  while interacting with the database</dd>
@@ -1044,57 +1037,37 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="isUniqueProteinGroup-com.compomics.util.experiment.biology.proteins.Peptide-">
+<a name="getSpectrumMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>isUniqueProteinGroup</h4>
-<pre>public&nbsp;boolean&nbsp;isUniqueProteinGroup(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</pre>
-<div class="block">Indicates whether a peptide is found in a single protein match.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>peptide</code> - the peptide of interest</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if peptide is found in a single protein match</dd>
-</dl>
-</li>
-</ul>
-<a name="getPsmIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPsmIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getPsmIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;spectrumMatches,
-                                              <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
-<div class="block">Returns a psm iterator for a given key list.</div>
+<h4>getSpectrumMatchesIterator</h4>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getSpectrumMatchesIterator(long[]&nbsp;spectrumMatches,
+                                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
+<div class="block">Returns a spectrum matches iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>spectrumMatches</code> - the keys of the spectra to iterate</dd>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
+<dd>a spectrum matches iterator</dd>
 </dl>
 </li>
 </ul>
-<a name="getPsmIterator-com.compomics.util.waiting.WaitingHandler-">
+<a name="getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getPsmIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
-<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
+<h4>getSpectrumMatchesIterator</h4>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getSpectrumMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
+<div class="block">Returns a spectrum matches iterator for all SpectrumMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a peptide matches iterator</dd>
+<dd>a spectrum matches iterator</dd>
 </dl>
 </li>
 </ul>
@@ -1105,8 +1078,7 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <li class="blockList">
 <h4>getPsmIterator</h4>
 <pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)
-                                       throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1114,21 +1086,17 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>filters</code> - filters for the class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
-<a name="getPeptideMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">
+<a name="getPeptideMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;peptideKeys,
-                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(long[]&nbsp;peptideKeys,
+                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1136,9 +1104,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1148,29 +1113,24 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a>&nbsp;getPeptideMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a peptide matches iterator for all PeptideMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
-<a name="getProteinMatchesIterator-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">
+<a name="getProteinMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getProteinMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;proteinKeys,
-                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(long[]&nbsp;proteinKeys,
+                                                        <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1178,9 +1138,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1190,17 +1147,13 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getProteinMatchesIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)
-                                                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a>&nbsp;getProteinMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Returns a protein matches iterator for all PeptideMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a peptide matches iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>

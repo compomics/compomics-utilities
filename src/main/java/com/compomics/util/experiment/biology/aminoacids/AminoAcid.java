@@ -352,7 +352,7 @@ public abstract class AminoAcid implements Serializable {
         if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
 
             char[] aas = sequence.toCharArray();
-            
+
             for (int i = 0; i < aas.length; i++) {
                 
                 if (aas[i] == 'L') {

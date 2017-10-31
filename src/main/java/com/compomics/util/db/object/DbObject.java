@@ -12,7 +12,6 @@ import org.zoodb.api.impl.ZooPC;
  */
 public class DbObject extends ZooPC implements Serializable {
     
-    private static final long serialVersionUID = -7906158551970915613l;
     /**
      * unique identifier
      */

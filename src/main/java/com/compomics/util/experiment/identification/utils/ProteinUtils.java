@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.identification.utils;
 
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,6 +46,7 @@ public class ProteinUtils {
         }
         
         return subString.equals(fastaFlag);
+        
     }
 
     /**
@@ -80,7 +83,8 @@ public class ProteinUtils {
             
             char charati = sequence.charAt(i), charatiPlusOne = sequence.charAt(i + 1);
             
-            if (enzymes.stream().anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
+            if (enzymes.stream()
+                    .anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
                 
                 if (i - lastCleavage <= pepMaxLength) {
                     
@@ -140,7 +144,8 @@ public class ProteinUtils {
             
             char charati = sequence.charAt(i), charatiPlusOne = sequence.charAt(i + 1);
             
-            if (enzymes.stream().anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
+            if (enzymes.stream()
+                    .anyMatch(enzyme -> enzyme.isCleavageSite(charati, charatiPlusOne))) {
                 
                 nCleavageSites++;
             
@@ -148,6 +153,24 @@ public class ProteinUtils {
         }
         
         return nCleavageSites;
+    }
+
+    /**
+     * Returns the protein's molecular weight.
+     *
+     * @param sequence  the protein sequence
+     *
+     * @return the protein's molecular weight in Da
+     */
+    public static double computeMolecularWeight(String sequence) {
+        
+        double mass = StandardMasses.h2o.mass;
+
+        mass += sequence.chars()
+                .mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass())
+                .sum();
+
+        return mass;
     }
     
 }

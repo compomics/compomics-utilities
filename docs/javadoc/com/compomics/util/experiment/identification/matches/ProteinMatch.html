@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -267,18 +267,30 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#isDecoy--">isDecoy</a></span>()</code>
+<div class="block">Returns a boolean indicating whether the given match is decoy.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setAccessions-java.lang.String:A-">setAccessions</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;newAccessions)</code>
 <div class="block">Sets the accessions of the proteins in this group.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setDecoy-boolean-">setDecoy</a></span>(boolean&nbsp;decoy)</code>
+<div class="block">Sets whether the given match is decoy</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setLeadingAccession-java.lang.String-">setLeadingAccession</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;leadingAccession)</code>
 <div class="block">Sets the leading accession for this match.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ProteinMatch.html#setPeptideMatchesKeys-long:A-">setPeptideMatchesKeys</a></span>(long[]&nbsp;peptideMatchKeys)</code>
 <div class="block">Sets the peptide keys for this protein match.</div>
@@ -430,6 +442,34 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>leadingAccession</code> - the leading accession for this match</dd>
+</dl>
+</li>
+</ul>
+<a name="isDecoy--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isDecoy</h4>
+<pre>public&nbsp;boolean&nbsp;isDecoy()</pre>
+<div class="block">Returns a boolean indicating whether the given match is decoy.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a boolean indicating whether the given match is decoy</dd>
+</dl>
+</li>
+</ul>
+<a name="setDecoy-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setDecoy</h4>
+<pre>public&nbsp;void&nbsp;setDecoy(boolean&nbsp;decoy)</pre>
+<div class="block">Sets whether the given match is decoy</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>decoy</code> - a boolean indicating whether the given match is decoy</dd>
 </dl>
 </li>
 </ul>

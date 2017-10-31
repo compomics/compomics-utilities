@@ -3,6 +3,8 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
 
@@ -36,6 +38,10 @@ public class ProteinMatch extends IdentificationMatch {
      * The key of the match.
      */
     private long matchKey;
+    /**
+     * Boolean indicating whether the protein match is decoy.
+     */
+    private boolean decoy;
 
     /**
      * Constructor for the protein match.
@@ -123,6 +129,7 @@ public class ProteinMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
 
         return leadingAccession;
+        
     }
 
     /**
@@ -137,6 +144,36 @@ public class ProteinMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
 
         this.leadingAccession = leadingAccession;
+    }
+
+    /**
+     * Returns a boolean indicating whether the given match is decoy.
+     * 
+     * @return a boolean indicating whether the given match is decoy
+     */
+    public boolean isDecoy() {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
+        return decoy;
+        
+    }
+
+    /**
+     * Sets whether the given match is decoy
+     * 
+     * @param decoy a boolean indicating whether the given match is decoy
+     */
+    public void setDecoy(boolean decoy) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+
+        this.decoy = decoy;
+        
     }
 
     /**

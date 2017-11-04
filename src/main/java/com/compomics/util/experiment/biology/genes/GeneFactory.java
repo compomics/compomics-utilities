@@ -9,6 +9,8 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpe
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import com.compomics.util.experiment.io.biology.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -109,19 +111,15 @@ public class GeneFactory {
      * Returns the gene maps for the given proteins. For every protein, the species must be given as well as the gene name, in the format used in a Uniprot fasta file.
      *
      * @param genePreferences the gene preferences
-     * @param proteinSpeciesMap the protein to species map
-     * @param proteinGeneMap the protein to gene map
      * @param waitingHandler waiting handler displaying progress for the
      * download and allowing canceling of the progress.
      *
      * @return the gene maps for the FASTA file loaded in the factory
-     *
-     * @throws java.io.IOException thrown whenever an error occurs while reading
-     * or writing data.
-     * @throws java.lang.InterruptedException exception thrown whenever a threading issue occurs.
      */
-    public GeneMaps getGeneMaps(GeneParameters genePreferences, HashMap<String, String> proteinSpeciesMap, HashMap<String, String> proteinGeneMap, WaitingHandler waitingHandler) throws IOException, InterruptedException {
+    public GeneMaps getGeneMaps(GeneParameters genePreferences, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider, WaitingHandler waitingHandler) {
 
+        sequenceProvider.
+        
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
         HashMap<String, GeneMapping> geneMappings = new HashMap<>(proteinSpeciesMap.size());
         HashMap<String, GoMapping> goMappings = new HashMap<>(proteinSpeciesMap.size());

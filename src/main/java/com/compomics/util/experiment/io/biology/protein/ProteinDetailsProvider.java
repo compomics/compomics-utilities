@@ -17,13 +17,13 @@ public interface ProteinDetailsProvider {
     public String getDescription(String accession);
     
     /**
-     * Returns the name of the protein database.
+     * Returns the the protein database for the given protein.
      * 
      * @param accession the accession of the protein
      * 
      * @return the name of the protein database
      */
-    public String getProteinDatabaseName(String accession);
+    public ProteinDatabase getProteinDatabase(String accession);
     
     /**
      * Returns the gene name for the given protein.
@@ -33,5 +33,14 @@ public interface ProteinDetailsProvider {
      * @return the gene name for the given protein
      */
     public String getGeneName(String accession);
+    
+    /**
+     * Returns the taxonomy for the given protein.
+     * 
+     * @param accession the accession of the protein
+     * 
+     * @return the taxonomy for the given protein
+     */
+    public String getTaxonomy(String accession);
 
 }

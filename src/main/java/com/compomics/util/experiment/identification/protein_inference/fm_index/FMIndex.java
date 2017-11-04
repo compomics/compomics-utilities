@@ -20,6 +20,9 @@ import com.compomics.util.experiment.identification.protein_inference.PeptideMap
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
+import com.compomics.util.experiment.io.biology.protein.Header;
+import com.compomics.util.experiment.io.biology.protein.ProteinDatabase;
+import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
@@ -47,7 +50,7 @@ import java.util.concurrent.Semaphore;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements PeptideMapper, SequenceProvider {
+public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Semaphore for caching.
@@ -538,14 +541,14 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param fastaParameters the parameters for the fasta file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param ptmSettings contains modification parameters for identification
+     * @param modificationSettings contains modification parameters for identification
      * @param peptideVariantsPreferences contains all parameters for variants
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
     }
 
     /**
@@ -557,14 +560,14 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
      * @param fastaParameters the parameters for the fasta file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param ptmSettings contains modification parameters for identification
+     * @param modificatoinSettings contains modification parameters for identification
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param massTolerance the mass tolerance
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters ptmSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificatoinSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -602,14 +605,14 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
         }
 
         // load all ptm preferences
-        if (ptmSettings != null) {
+        if (modificatoinSettings != null) {
             // create masses table and modifications
             int[] modificationCounts = new int[128];
             for (int i = 0; i < modificationCounts.length; ++i) {
                 modificationCounts[i] = 0;
             }
-            ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
-            ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
+            ArrayList<String> variableModifications = modificatoinSettings.getVariableModifications();
+            ArrayList<String> fixedModifications = modificatoinSettings.getFixedModifications();
             ModificationFactory ptmFactory = ModificationFactory.getInstance();
 
             int hasVariableModification = 0;
@@ -5135,16 +5138,57 @@ public class FMIndex implements PeptideMapper, SequenceProvider {
     }
 
     @Override
+    public Object getAccessions() {
+        
+        throw new UnsupportedOperationException("Not supported yet."); //@Dominik
+        
+    }
+
+    @Override
     public HashSet<String> getDecoyAccessions() {
         
         return decoyAccessions;
         
     }
     
-    @Override
+    /**
+     * Returns the fasta header of the protein as found in the fasta file.
+     * 
+     * @param proteinAccession the accession of the protein
+     * 
+     * @return the fasta header of the protein as found in the fasta file
+     */
     public String getHeader(String proteinAccession) {
-    
-        return "Not implemented yet";
+        
+        throw new UnsupportedOperationException("Not supported yet."); //@Dominik
+        
+    }
+
+    @Override
+    public String getDescription(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getDescription();
+        
+    }
+
+    @Override
+    public ProteinDatabase getProteinDatabase(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getDatabaseType();
+        
+    }
+
+    @Override
+    public String getGeneName(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getGeneName();
+        
+    }
+
+    @Override
+    public String getTaxonomy(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getTaxonomy();
         
     }
 }

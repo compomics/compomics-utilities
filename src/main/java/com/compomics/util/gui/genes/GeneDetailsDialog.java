@@ -33,7 +33,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      */
     private final GeneMaps geneMaps;
     /**
-     * The protein 
+     * The protein details provider.
      */
     private ProteinDetailsProvider proteinDetailsProvider;
     /**

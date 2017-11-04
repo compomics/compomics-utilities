@@ -6,9 +6,9 @@ import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
+import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
-import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.waiting.WaitingHandler;
@@ -24,9 +24,9 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
 
 /**
  * Class used to map proteins to gene information.
@@ -34,7 +34,7 @@ import java.util.Map.Entry;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class GeneFactory {
+public class ProteinGeneDetailsProvider {
     
     /**
      * The separator used to separate line contents.
@@ -77,7 +77,7 @@ public class GeneFactory {
     /**
      * Constructor.
      */
-    public GeneFactory() {
+    public ProteinGeneDetailsProvider() {
     }
 
     /**
@@ -111,23 +111,24 @@ public class GeneFactory {
      * Returns the gene maps for the given proteins. For every protein, the species must be given as well as the gene name, in the format used in a Uniprot fasta file.
      *
      * @param genePreferences the gene preferences
+     * @param fastaSummary summary information on the fasta file containing the proteins
+     * @param sequenceProvider the protein sequence provider
+     * @param proteinDetailsProvider the protein details provider
      * @param waitingHandler waiting handler displaying progress for the
      * download and allowing canceling of the progress.
      *
      * @return the gene maps for the FASTA file loaded in the factory
      */
-    public GeneMaps getGeneMaps(GeneParameters genePreferences, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider, WaitingHandler waitingHandler) {
+    public GeneMaps getGeneMaps(GeneParameters genePreferences, FastaSummary fastaSummary, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider, WaitingHandler waitingHandler) {
 
-        sequenceProvider.
+        Collection<String> accessions = sequenceProvider.getAccessions();
         
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-        HashMap<String, GeneMapping> geneMappings = new HashMap<>(proteinSpeciesMap.size());
-        HashMap<String, GoMapping> goMappings = new HashMap<>(proteinSpeciesMap.size());
-
-        HashSet<String> species = new HashSet<>(proteinSpeciesMap.values());
+        HashMap<String, GeneMapping> geneMappings = new HashMap<>(accessions.size());
+        HashMap<String, GoMapping> goMappings = new HashMap<>(accessions.size());
         
         // download/update species mapping, put them in maps per species
-        for (String uniprotTaxonomy : species) {
+        for (String uniprotTaxonomy : fastaSummary.speciesOccurrence.keySet()) {
 
             if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
 
@@ -205,16 +206,15 @@ public class GeneFactory {
         }
         
         HashMap<String, String> ensemblVersionsUsed = new HashMap<>(ensemblVersionsMap);
-        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<>(proteinGeneMap.size());
-        HashMap<String, String> geneNameToChromosomeMap = new HashMap<>(proteinGeneMap.size());
-        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<>(proteinGeneMap.size());
-        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<>(proteinGeneMap.size());
-        HashMap<String, String> goNamesMap = new HashMap<>(proteinGeneMap.size());
+        HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<>(accessions.size());
+        HashMap<String, String> geneNameToChromosomeMap = new HashMap<>(accessions.size());
+        HashMap<String, HashSet<String>> proteinToGoMap = new HashMap<>(accessions.size());
+        HashMap<String, HashSet<String>> goToProteinMap = new HashMap<>(accessions.size());
+        HashMap<String, String> goNamesMap = new HashMap<>(accessions.size());
 
-        for (Entry<String, String> entry : proteinSpeciesMap.entrySet()) {
+        for (String accession : accessions) {
 
-            String accession = entry.getKey();
-            String uniprotTaxonomy = entry.getValue();
+            String uniprotTaxonomy = proteinDetailsProvider.getTaxonomy(accession);
 
             if (uniprotTaxonomy != null && !uniprotTaxonomy.equals("")) {
 
@@ -225,7 +225,7 @@ public class GeneFactory {
 
                         String speciesName = speciesFactory.getName(taxon);
 
-                        String geneName = proteinGeneMap.get(accession);
+                        String geneName = proteinDetailsProvider.getGeneName(accession);
                         
                         if (geneName != null) {
                             

@@ -1,6 +1,6 @@
 package com.compomics.util.gui.genes;
 
-import com.compomics.util.experiment.biology.genes.GeneFactory;
+import com.compomics.util.experiment.biology.genes.ProteinGeneDetailsProvider;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies;
@@ -39,7 +39,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
     /**
      * The gene factory.
      */
-    private GeneFactory geneFactory = new GeneFactory();
+    private ProteinGeneDetailsProvider geneFactory = new ProteinGeneDetailsProvider();
     /**
      * The species factory
      */
@@ -574,8 +574,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
             String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
             if (ensemblDatasetName == null
-                    || !GeneFactory.getGeneMappingFile(ensemblDatasetName).exists()
-                    || !GeneFactory.getGoMappingFile(ensemblDatasetName).exists()) {
+                    || !ProteinGeneDetailsProvider.getGeneMappingFile(ensemblDatasetName).exists()
+                    || !ProteinGeneDetailsProvider.getGoMappingFile(ensemblDatasetName).exists()) {
                 updateMappingsButton.setText("Download");
                 updateMappingsButton.setToolTipText("Download Gene and GO Mappings");
                 updateMappingsButton.setEnabled(true);

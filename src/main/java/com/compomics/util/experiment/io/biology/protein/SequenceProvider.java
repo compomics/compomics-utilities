@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 /**

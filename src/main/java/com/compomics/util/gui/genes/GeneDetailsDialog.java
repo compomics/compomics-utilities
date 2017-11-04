@@ -69,8 +69,11 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @param proteinDetailsProvider a provider for protein details
      */
     public GeneDetailsDialog(java.awt.Frame parent, ProteinMatch proteinMatch, GeneMaps geneMaps, ProteinDetailsProvider proteinDetailsProvider) {
+        
         super(parent, true);
+        
         initComponents();
+        
         this.geneMaps = geneMaps;
         proteinAccessions = proteinMatch.getAccessions();
         goTable.setModel(new GOTableModel());

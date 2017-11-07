@@ -7,11 +7,11 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class contains convenience methods to map ptms on potential sites.
+ * This class contains convenience methods to map modifications on potential sites.
  *
  * @author Marc Vaudel
  */
-public class PtmSiteMapping {
+public class ModificationSiteMapping {
 
     /**
      * Aligns two series of integer, minimizing the distance between them and
@@ -23,6 +23,7 @@ public class PtmSiteMapping {
      *
      * @param serie1 first list of integer
      * @param serie2 second list of integer
+     * 
      * @return a map of the doublets created.
      */
     public static HashMap<Integer, Integer> align(Collection<Integer> serie1, Collection<Integer> serie2) {

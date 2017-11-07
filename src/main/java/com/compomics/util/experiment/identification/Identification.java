@@ -314,12 +314,18 @@ public class Identification extends ExperimentObject {
      *
      * @param key the key of the object
      * @param object the object
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void addObject(long key, Object object) throws InterruptedException {
+    public void addObject(long key, Object object) {
+
+        try {
+            
         objectsDB.insertObject(key, object);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**

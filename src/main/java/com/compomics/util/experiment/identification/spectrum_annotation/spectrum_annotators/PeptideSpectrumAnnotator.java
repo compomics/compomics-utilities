@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 /**
  * Annotates a spectrum with peptide fragments. Warning: operations are not
- * synchronized use one iterator per thread.
+ * synchronized use one annotator per thread.
  *
  * @author Marc Vaudel
  */

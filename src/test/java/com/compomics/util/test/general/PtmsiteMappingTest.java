@@ -1,6 +1,6 @@
 package com.compomics.util.test.general;
 
-import com.compomics.util.experiment.identification.modification.PtmSiteMapping;
+import com.compomics.util.experiment.identification.modification.ModificationSiteMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class PtmsiteMappingTest extends TestCase {
         Integer[] array2 = {100, 2, 12, 14, 18, 30, 115, 1000};
         ArrayList<Integer> serie1 = new ArrayList<>(Arrays.asList(array1));
         ArrayList<Integer> serie2 = new ArrayList<>(Arrays.asList(array2));
-        HashMap<Integer, Integer> result = PtmSiteMapping.align(serie1, serie2);
+        HashMap<Integer, Integer> result = ModificationSiteMapping.align(serie1, serie2);
         Assert.assertTrue(result.size() == serie1.size());
         Assert.assertTrue(result.containsKey(0));
         Assert.assertTrue(result.get(0) == null);
@@ -65,12 +65,12 @@ public class PtmsiteMappingTest extends TestCase {
         Integer[] array4 = {0, 1, 2, 3, 4, 7, 8, 9, 10};
         ArrayList<Integer> serie3 = new ArrayList<>(Arrays.asList(array3));
         ArrayList<Integer> serie4 = new ArrayList<>(Arrays.asList(array4));
-        result = PtmSiteMapping.align(serie3, serie4);
+        result = ModificationSiteMapping.align(serie3, serie4);
         Assert.assertTrue(result.size() == serie3.size());
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
 
-        result = PtmSiteMapping.align(serie4, serie3);
+        result = ModificationSiteMapping.align(serie4, serie3);
         Assert.assertTrue(result.size() == serie4.size());
         Assert.assertTrue(result.containsKey(0));
         Assert.assertTrue(result.get(0) == null);
@@ -122,7 +122,7 @@ public class PtmsiteMappingTest extends TestCase {
         Integer[] array2 = {100, 2, 12, 14, 18, 30, 115, 1000};
         ArrayList<Integer> serie1 = new ArrayList<>(Arrays.asList(array1));
         ArrayList<Integer> serie2 = new ArrayList<>(Arrays.asList(array2));
-        HashMap<Integer, Integer> result = PtmSiteMapping.alignAll(serie1, serie2);
+        HashMap<Integer, Integer> result = ModificationSiteMapping.alignAll(serie1, serie2);
         Assert.assertTrue(result.size() == serie1.size());
         Assert.assertTrue(result.containsKey(0));
         Assert.assertTrue(result.get(0) == 115);
@@ -143,12 +143,12 @@ public class PtmsiteMappingTest extends TestCase {
         Integer[] array4 = {0, 1, 2, 3, 4, 7, 8, 9, 10};
         ArrayList<Integer> serie3 = new ArrayList<>(Arrays.asList(array3));
         ArrayList<Integer> serie4 = new ArrayList<>(Arrays.asList(array4));
-        result = PtmSiteMapping.align(serie3, serie4);
+        result = ModificationSiteMapping.align(serie3, serie4);
         Assert.assertTrue(result.size() == serie3.size());
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
 
-        result = PtmSiteMapping.align(serie4, serie3);
+        result = ModificationSiteMapping.align(serie4, serie3);
         Assert.assertTrue(result.size() == serie4.size());
         Assert.assertTrue(result.containsKey(0));
         Assert.assertTrue(result.get(0) == null);
@@ -255,7 +255,7 @@ public class PtmsiteMappingTest extends TestCase {
         input.put(99, new ArrayList<>());
         input.get(99).add(3);
 
-        HashMap<Integer, Integer> result = PtmSiteMapping.alignAll(input);
+        HashMap<Integer, Integer> result = ModificationSiteMapping.alignAll(input);
         Assert.assertTrue(result.size() == 9);
         Assert.assertTrue(result.containsKey(1));
         Assert.assertTrue(result.get(1) == null);
@@ -287,7 +287,7 @@ public class PtmsiteMappingTest extends TestCase {
         input.get(5).add(8);
         input.get(5).add(9);
         input.get(5).add(10);
-        result = PtmSiteMapping.alignAll(input);
+        result = ModificationSiteMapping.alignAll(input);
         Assert.assertTrue(result.size() == 1);
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
@@ -311,7 +311,7 @@ public class PtmsiteMappingTest extends TestCase {
         input.get(9).add(5);
         input.put(10, new ArrayList<>());
         input.get(10).add(5);
-        result = PtmSiteMapping.alignAll(input);
+        result = ModificationSiteMapping.alignAll(input);
         Assert.assertTrue(result.size() == 9);
         Assert.assertTrue(result.containsKey(0));
         Assert.assertTrue(result.get(0) == null);

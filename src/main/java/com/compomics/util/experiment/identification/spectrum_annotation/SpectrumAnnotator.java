@@ -268,6 +268,7 @@ public abstract class SpectrumAnnotator {
      * @param tiesResolution the method used to resolve ties
      */
     protected void setMassTolerance(double mzTolerance, boolean isPpm, TiesResolution tiesResolution) {
+        
         if (mzTolerance != this.mzTolerance || tiesResolution != this.tiesResolution) {
 
             // Clear previous index

@@ -190,34 +190,15 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before.
+     * Validates a peptide depending on its protein inference status.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param fmIndex the FM-Index.
-     *
-     * @return a boolean indicating whether the peptide passed the test
-     */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, FMIndex fmIndex) {
-
-        return validateProteins(peptide, sequenceMatchingPreferences, fmIndex, fmIndex);
-
-    }
-
-    /**
-     * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before.
-     *
-     * @param peptide the peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideMapper the peptide mapper to use for peptide to protein
-     * mapping
      * @param sequenceProvider a sequence provider
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) {
 
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 

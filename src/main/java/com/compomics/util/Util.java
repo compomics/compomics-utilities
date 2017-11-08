@@ -1188,4 +1188,22 @@ public class Util {
         System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
         return arrayUnique;
     }
+    
+    /**
+     * Returns a string in the form value(attribute).
+     * 
+     * @param value the value
+     * @param attribute the attribute
+     * 
+     * @return a string in the form value(attribute)
+     */
+    public static String toString(String value, String attribute) {
+        
+        StringBuilder sb = new StringBuilder(value.length() + attribute.length() + 2);
+        
+        sb.append(value).append("(").append(attribute).append(")");
+        
+        return sb.toString();
+        
+    }
 }

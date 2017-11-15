@@ -313,6 +313,7 @@ public class EnzymeFactory {
 
         enzyme = new Enzyme("Glu-C");
         enzyme.addAminoAcidBefore('E');
+        enzyme.setCvTerm(new CvTerm("PSI-MS", "MS:1001917", "glutamyl endopeptidase", null));
         enzymes.add(enzyme);
 
         enzyme = new Enzyme("Lys-C");
@@ -381,7 +382,7 @@ public class EnzymeFactory {
         enzyme.addAminoAcidAfter('R');
         enzyme.addAminoAcidAfter('K');
         enzymes.add(enzyme);
-
+        
         return enzymes;
     }
 }

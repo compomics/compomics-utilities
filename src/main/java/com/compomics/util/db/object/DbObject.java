@@ -29,8 +29,11 @@ public class DbObject extends ZooPC implements Serializable {
      * @return the id of the object
      */
     public long getId(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return id;
+    
     }
     
     /**
@@ -39,8 +42,11 @@ public class DbObject extends ZooPC implements Serializable {
      * @param id the id of the object
      */
     public void setId(long id){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.id = id;
+    
     }
     
     
@@ -49,8 +55,11 @@ public class DbObject extends ZooPC implements Serializable {
      * @return first level flag
      */
     public boolean getFirstLevel(){
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return firstLevel;
+    
     }
     
     
@@ -59,7 +68,10 @@ public class DbObject extends ZooPC implements Serializable {
      * @param firstLevel first level flag 
      */
     public void setFirstLevel(boolean firstLevel){
+        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
         this.firstLevel = firstLevel;
+    
     }
 }

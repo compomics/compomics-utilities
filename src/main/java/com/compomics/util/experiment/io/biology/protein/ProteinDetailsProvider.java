@@ -17,6 +17,15 @@ public interface ProteinDetailsProvider {
     public String getDescription(String accession);
     
     /**
+     * Returns the simple description of the protein with the given accession.
+     * 
+     * @param accession the accession of the protein
+     * 
+     * @return the description of the protein with the given accession
+     */
+    public String getSimpleDescription(String accession);
+    
+    /**
      * Returns the the protein database for the given protein.
      * 
      * @param accession the accession of the protein

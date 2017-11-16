@@ -5178,6 +5178,13 @@ public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsP
     }
 
     @Override
+    public String getSimpleDescription(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getSimpleProteinDescription();
+        
+    }
+
+    @Override
     public ProteinDatabase getProteinDatabase(String accession) {
         
         return Header.parseFromFASTA(getHeader(accession)).getDatabaseType();

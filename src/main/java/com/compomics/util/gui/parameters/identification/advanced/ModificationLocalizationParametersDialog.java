@@ -1,6 +1,6 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
-import com.compomics.util.experiment.identification.modification.PtmScore;
+import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
@@ -145,7 +145,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
      */
     public boolean validateInput() {
         try {
-            if (scoreCmb.getSelectedItem() != PtmScore.None && thresholdAutoCmb.getSelectedIndex() == 1) {
+            if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None && thresholdAutoCmb.getSelectedIndex() == 1) {
                 Double temp = new Double(thresholdTxt.getText().trim());
                 if (temp < 0 || temp > 100) {
                     JOptionPane.showMessageDialog(this, "Please verify the input for the score threshold.",
@@ -161,7 +161,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
             return false;
         }
 
-        if (scoreCmb.getSelectedItem() == PtmScore.None) {
+        if (scoreCmb.getSelectedItem() == ModificationLocalizationScore.None) {
             int outcome = JOptionPane.showConfirmDialog(this,
                     "Disabling the probabilistic score will impair PTM localization and thus distinction\n"
                     + "between peptides. See help for more details. Continue with this setting?",
@@ -170,7 +170,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
                 return false;
             }
         }
-        if (scoreCmb.getSelectedItem() != PtmScore.None && neutralLossesCmb.getSelectedIndex() == 0) {
+        if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None && neutralLossesCmb.getSelectedIndex() == 0) {
             int outcome = JOptionPane.showConfirmDialog(this,
                     "In our experience probabilistic scores perform poorly when accounting for\n"
                     + "neutral losses. See help for more details. Continue with this setting?",
@@ -191,8 +191,8 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
 
         ModificationLocalizationParameters ptmScoringPreferences = new ModificationLocalizationParameters();
 
-        ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
-        ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());
+        ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != ModificationLocalizationScore.None);
+        ptmScoringPreferences.setSelectedProbabilisticScore((ModificationLocalizationScore) scoreCmb.getSelectedItem());
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
 
         if (thresholdAutoCmb.getSelectedIndex() == 0) {
@@ -261,7 +261,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         ptmScoringPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Modificatoin Scoring"));
         ptmScoringPanel.setOpaque(false);
 
-        scoreCmb.setModel(new DefaultComboBoxModel(PtmScore.getScoresAsList()));
+        scoreCmb.setModel(new DefaultComboBoxModel(com.compomics.util.experiment.identification.modification.ModificationLocalizationScore.values()));
         scoreCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 scoreCmbActionPerformed(evt);
@@ -459,7 +459,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
      * @param evt
      */
     private void scoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreCmbActionPerformed
-        if (scoreCmb.getSelectedItem() != PtmScore.None) {
+        if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None) {
             neutralLossesCmb.setEnabled(true);
             thresholdAutoCmb.setEnabled(true);
             if (thresholdAutoCmb.getSelectedIndex() == 1) {

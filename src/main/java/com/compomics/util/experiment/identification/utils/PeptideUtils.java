@@ -42,6 +42,25 @@ public class PeptideUtils {
      * based on the peptide protein mapping.
      *
      * @param peptide the peptide
+     * @param accession the accession of the protein
+     * @param index the position of the peptide on the protein sequence
+     * @param nAa the number of amino acids to include
+     * @param sequenceProvider the sequence provider
+     *
+     * @return the amino acids before the given peptide as a string in a map
+     * based on the peptide protein mapping
+     */
+    public static String getAaBefore(Peptide peptide, String accession, int index, int nAa, SequenceProvider sequenceProvider) {
+        
+        return sequenceProvider.getSubsequence(accession, index - nAa - 1, index - 1);
+        
+    }
+
+    /**
+     * Returns the amino acids before the given peptide as a string in a map
+     * based on the peptide protein mapping.
+     *
+     * @param peptide the peptide
      * @param nAa the number of amino acids to include
      * @param sequenceProvider the sequence provider
      *
@@ -53,13 +72,31 @@ public class PeptideUtils {
         return peptide.getProteinMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         entry -> Arrays.stream(entry.getValue())
-                                .mapToObj(index -> sequenceProvider.getSubsequence(entry.getKey(), index - nAa - 1, index - 1))
+                                .mapToObj(index -> getAaAfter(peptide, entry.getKey(), index, nAa, sequenceProvider))
                                 .toArray(String[]::new),
                         (a, b) -> {
                             throw new IllegalArgumentException("Duplicate key.");
                         },
                         TreeMap::new));
 
+    }
+
+    /**
+     * Returns the amino acids before the given peptide as a string.
+     *
+     * @param peptide the peptide
+     * @param accession the accession of the protein
+     * @param index the position of the peptide on the protein sequence
+     * @param nAa the number of amino acids to include
+     * @param sequenceProvider the sequence provider
+     *
+     * @return the amino acids before the given peptide as a string in a map
+     * based on the peptide protein mapping
+     */
+    public static String getAaAfter(Peptide peptide, String accession, int index, int nAa, SequenceProvider sequenceProvider) {
+        
+        return sequenceProvider.getSubsequence(accession, index + peptide.getSequence().length(), index + peptide.getSequence().length() + nAa);
+        
     }
 
     /**
@@ -78,7 +115,7 @@ public class PeptideUtils {
         return peptide.getProteinMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         entry -> Arrays.stream(entry.getValue())
-                                .mapToObj(index -> sequenceProvider.getSubsequence(entry.getKey(), index + peptide.getSequence().length(), index + peptide.getSequence().length() + nAa))
+                                .mapToObj(index -> getAaAfter(peptide, entry.getKey(), index, nAa, sequenceProvider))
                                 .toArray(String[]::new),
                         (a, b) -> {
                             throw new IllegalArgumentException("Duplicate key.");

@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -128,11 +129,11 @@ public class DecoyConverter {
      */
     public static FastaSummary getDecoySummary(File newFastaFile, FastaSummary targetSummary) {
         
-        HashMap<String, Integer> speciesOccurrence = targetSummary.speciesOccurrence.entrySet().stream()
+        TreeMap<String, Integer> speciesOccurrence = targetSummary.speciesOccurrence.entrySet().stream()
                 .collect(Collectors.toMap(Entry::getKey, 
                         entry -> 2 * entry.getValue(), 
                         (oldValue, newValue) -> oldValue + newValue,
-                        HashMap::new));
+                        TreeMap::new));
         
         HashMap<ProteinDatabase, Integer> dbOccurrence = targetSummary.databaseType.entrySet().stream()
                 .collect(Collectors.toMap(Entry::getKey, 

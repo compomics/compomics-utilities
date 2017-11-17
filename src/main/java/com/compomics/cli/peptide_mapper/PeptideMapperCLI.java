@@ -70,7 +70,7 @@ public class PeptideMapperCLI {
             }
 
             peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
-            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
             searchParameters = identificationParameters.getSearchParameters();
 
         } else {

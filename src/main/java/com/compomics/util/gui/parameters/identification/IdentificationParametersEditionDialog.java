@@ -234,20 +234,20 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param identificationParameters
      */
     private void extractParameters(IdentificationParameters identificationParameters) {
-        annotationSettings = identificationParameters.getAnnotationPreferences();
+        annotationSettings = identificationParameters.getAnnotationParameters();
         searchParameters = identificationParameters.getSearchParameters();
-        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
-        peptideVariantsPreferences = identificationParameters.getPeptideVariantsPreferences();
-        genePreferences = identificationParameters.getGenePreferences();
-        psmScoringPreferences = identificationParameters.getPsmScoringPreferences();
+        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
+        peptideVariantsPreferences = identificationParameters.getPeptideVariantsParameters();
+        genePreferences = identificationParameters.getGeneParameters();
+        psmScoringPreferences = identificationParameters.getPsmScoringParameters();
         peptideAssumptionFilter = identificationParameters.getPeptideAssumptionFilter();
-        ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
-        proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+        ptmScoringPreferences = identificationParameters.getModificationLocalizationParameters();
+        proteinInferencePreferences = identificationParameters.getProteinInferenceParameters();
         if (proteinInferencePreferences.getProteinSequenceDatabase() == null && searchParameters.getFastaFile() != null) {
             proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
         }
-        idValidationPreferences = identificationParameters.getIdValidationPreferences();
-        fractionSettings = identificationParameters.getFractionSettings();
+        idValidationPreferences = identificationParameters.getIdValidationParameters();
+        fractionSettings = identificationParameters.getFractionParameters();
     }
 
     /**
@@ -403,17 +403,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         IdentificationParameters identificationParameters = new IdentificationParameters();
         identificationParameters.setName(nameTxt.getText());
         identificationParameters.setDescription(searchParameters.getShortDescription(), true);
-        identificationParameters.setAnnotationSettings(annotationSettings);
+        identificationParameters.setAnnotationParameters(annotationSettings);
         identificationParameters.setSearchParameters(searchParameters);
-        identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
-        identificationParameters.setGenePreferences(genePreferences);
-        identificationParameters.setIdFilter(peptideAssumptionFilter);
-        identificationParameters.setPsmScoringPreferences(psmScoringPreferences);
-        identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
-        identificationParameters.setPeptideVariantsPreferences(peptideVariantsPreferences);
-        identificationParameters.setProteinInferencePreferences(proteinInferencePreferences);
-        identificationParameters.setIdValidationPreferences(idValidationPreferences);
-        identificationParameters.setFractionSettings(fractionSettings);
+        identificationParameters.setSequenceMatchingParameters(sequenceMatchingPreferences);
+        identificationParameters.setGeneParameters(genePreferences);
+        identificationParameters.setPeptideAssumptionFilter(peptideAssumptionFilter);
+        identificationParameters.setPsmScoringParameters(psmScoringPreferences);
+        identificationParameters.setModificationLocalizationParameters(ptmScoringPreferences);
+        identificationParameters.setPeptideVariantsParameters(peptideVariantsPreferences);
+        identificationParameters.setProteinInferenceParameters(proteinInferencePreferences);
+        identificationParameters.setIdValidationParameters(idValidationPreferences);
+        identificationParameters.setFractionParameters(fractionSettings);
         return identificationParameters;
     }
 

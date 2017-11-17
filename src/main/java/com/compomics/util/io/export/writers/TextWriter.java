@@ -6,8 +6,11 @@ import com.compomics.util.io.export.WorkbookStyle;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * ExportWriter for the export to text files.
@@ -20,6 +23,10 @@ public class TextWriter extends ExportWriter {
      * Writer.
      */
     private final BufferedWriter writer;
+    /**
+     * Encoding for the file, cf the second rule.
+     */
+    public static final String encoding = "UTF-8";
     /**
      * The separator.
      */
@@ -40,14 +47,29 @@ public class TextWriter extends ExportWriter {
      * @param separator separator between two values
      * @param nSeparationLines the number of lines to include between two
      * sections
+     * @param gzip if true export as gzipped file
      *
      * @throws IOException if an IOException occurs
      */
-    public TextWriter(File destinationFile, String separator, int nSeparationLines) throws IOException {
+    public TextWriter(File destinationFile, String separator, int nSeparationLines, boolean gzip) throws IOException {
+        
         this.separator = separator;
-        writer = new BufferedWriter(new FileWriter(destinationFile));
-        exportFormat = ExportFormat.text;
+        this.exportFormat = ExportFormat.text;
         this.nSeparationLines = nSeparationLines;
+
+        if (gzip) {
+
+            // Setup the writer
+            FileOutputStream fileStream = new FileOutputStream(destinationFile);
+            GZIPOutputStream gzipStream = new GZIPOutputStream(fileStream);
+            OutputStreamWriter encoder = new OutputStreamWriter(gzipStream, encoding);
+            this.writer = new BufferedWriter(encoder);
+
+        } else {
+
+            this.writer = new BufferedWriter(new FileWriter(destinationFile));
+
+        }
     }
 
     @Override

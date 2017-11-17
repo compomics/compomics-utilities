@@ -39,10 +39,15 @@ public abstract class ExportWriter {
      * @throws IOException if an IOException occurs
      */
     public void write(String text) throws IOException {
+        
         if (text == null) {
+            
             text = "";
+            
         }
+        
         write(text, null);
+        
     }
 
     /**
@@ -180,19 +185,25 @@ public abstract class ExportWriter {
      * @param separator the separator for a text export
      * @param nSeparationLines the number of separation lines between two
      * sections for a text export
+     * @param gzip if true export test as gzipped file
      *
      * @return an export writer for the desired format
      *
      * @throws IOException if an IOException occurs
      */
-    public static ExportWriter getExportWriter(ExportFormat exportFormat, File destinationFile, String separator, int nSeparationLines) throws IOException {
+    public static ExportWriter getExportWriter(ExportFormat exportFormat, File destinationFile, String separator, int nSeparationLines, boolean gzip) throws IOException {
+        
         switch (exportFormat) {
+            
             case excel:
                 return new ExcelWriter(destinationFile);
+            
             case text:
-                return new TextWriter(destinationFile, separator, nSeparationLines);
+                return new TextWriter(destinationFile, separator, nSeparationLines, gzip);
+            
             default:
                 throw new IllegalArgumentException("No exporter implemented for format " + exportFormat.name + ".");
+        
         }
     }
 }

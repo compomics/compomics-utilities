@@ -129,7 +129,7 @@ public class PsmScoresEstimator {
                         identificationParameters.getSearchParameters().getMinIsotopicCorrection(), 
                         identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
             case hyperScore:
-                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), 
+                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationParameters(), 
                         specificAnnotationPreferences, peptideSpectrumAnnotator);
             default:
                 throw new UnsupportedOperationException("Score not implemented.");

@@ -51,32 +51,80 @@ public enum FilterItemComparator {
      * @return a boolean indicating whether a given value passes a threshold
      * using this comparator
      */
+    public boolean passes(String threshold, double value) {
+        switch (this) {
+            case equal:
+                return Double.parseDouble(threshold) == value;
+            
+            case higher:
+                return value > Double.parseDouble(threshold);
+                
+            case lower:
+                return value < Double.parseDouble(threshold);
+                
+            case higherOrEqual:
+                return value >= Double.parseDouble(threshold);
+                
+            case lowerOrEqual:
+                return value <= Double.parseDouble(threshold);
+            
+            case contains:
+                return Double.toString(value).contains(threshold);
+            
+            case excludes:
+                return !Double.toString(value).contains(threshold);
+            
+            case matches:
+                return Double.toString(value).matches(threshold);
+            
+            default:
+                throw new IllegalArgumentException("Filter comparator not implemented for item " + this.name + ".");
+        }
+    }
+
+    /**
+     * Indicates whether a given value passes a threshold using this comparator.
+     *
+     * @param threshold the threshold as string
+     * @param value the value as string
+     *
+     * @return a boolean indicating whether a given value passes a threshold
+     * using this comparator
+     */
     public boolean passes(String threshold, String value) {
         switch (this) {
             case equal:
                 return threshold.equals(value);
+            
             case higher:
-                Double thresholdDouble = new Double(threshold);
-                Double valueDouble = new Double(value);
+                double thresholdDouble = Double.parseDouble(threshold);
+                double valueDouble = Double.parseDouble(value);
                 return valueDouble > thresholdDouble;
+                
             case lower:
-                thresholdDouble = new Double(threshold);
-                valueDouble = new Double(value);
+                thresholdDouble = Double.parseDouble(threshold);
+                valueDouble = Double.parseDouble(value);
                 return valueDouble < thresholdDouble;
+                
             case higherOrEqual:
-                thresholdDouble = new Double(threshold);
-                valueDouble = new Double(value);
+                thresholdDouble = Double.parseDouble(threshold);
+                valueDouble = Double.parseDouble(value);
                 return valueDouble >= thresholdDouble;
+                
             case lowerOrEqual:
-                thresholdDouble = new Double(threshold);
-                valueDouble = new Double(value);
+                thresholdDouble = Double.parseDouble(threshold);
+                valueDouble = Double.parseDouble(value);
                 return valueDouble <= thresholdDouble;
+            
             case contains:
                 return value.contains(threshold);
+            
             case excludes:
                 return !value.contains(threshold);
+            
             case matches:
                 return value.matches(threshold);
+            
             default:
                 throw new IllegalArgumentException("Filter comparator not implemented for item " + this.name + ".");
         }

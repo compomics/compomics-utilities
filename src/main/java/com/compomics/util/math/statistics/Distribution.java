@@ -17,7 +17,7 @@ public interface Distribution extends Serializable {
      * 
      * @return the value of the density function at the give position
      */
-    public Double getProbabilityAt(double x);
+    public double getProbabilityAt(double x);
 
     /**
      * Returns the cumulative density function value at a given position.
@@ -26,7 +26,7 @@ public interface Distribution extends Serializable {
      * 
      * @return the value of the density function at the give position
      */
-    public Double getCumulativeProbabilityAt(double x);
+    public double getCumulativeProbabilityAt(double x);
 
     /**
      * Returns the cumulative density function value at a given position when
@@ -36,7 +36,7 @@ public interface Distribution extends Serializable {
      * 
      * @return the value of the density function at the give position
      */
-    public Double getDescendingCumulativeProbabilityAt(double x);
+    public double getDescendingCumulativeProbabilityAt(double x);
 
     /**
      * Returns the cumulative density function value at a given position, starting from the low values if before the median, from the high otherwise.
@@ -45,7 +45,7 @@ public interface Distribution extends Serializable {
      * 
      * @return the value of the density function at the give position
      */
-    public Double getSmallestCumulativeProbabilityAt(double x);
+    public double getSmallestCumulativeProbabilityAt(double x);
 
     /**
      * The value after which the density function will be smaller than p.
@@ -54,7 +54,7 @@ public interface Distribution extends Serializable {
      * 
      * @return the value after which the density function will be smaller than p
      */
-    public Double getMaxValueForProbability(double p);
+    public double getMaxValueForProbability(double p);
 
     /**
      * The value before which the density function will be smaller than p.
@@ -64,7 +64,7 @@ public interface Distribution extends Serializable {
      * @return the value before which the density function will be smaller than
      * p
      */
-    public Double getMinValueForProbability(double p);
+    public double getMinValueForProbability(double p);
 
     /**
      * The value after which the cumulative density function will be smaller
@@ -75,7 +75,7 @@ public interface Distribution extends Serializable {
      * @return the value after which the cumulative density function will be
      * smaller than p
      */
-    public Double getValueAtCumulativeProbability(double p);
+    public double getValueAtCumulativeProbability(double p);
 
     /**
      * The value after which the cumulative density function will be smaller
@@ -86,5 +86,5 @@ public interface Distribution extends Serializable {
      * @return the value after which the cumulative density function will be
      * smaller than p
      */
-    public Double getValueAtDescendingCumulativeProbability(double p);
+    public double getValueAtDescendingCumulativeProbability(double p);
 }

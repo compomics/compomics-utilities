@@ -16,12 +16,10 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -312,8 +310,6 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * peptide.
      *
      * @param peptide the peptide of interest
-     * @param sequenceProvider a sequence provide able to retrieve the protein
-     * sequence for the given peptide
      * @param sequenceMatchingSettings the sequence matching settings for
      * peptide to protein mapping
      * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
@@ -321,7 +317,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceProvider sequenceProvider, SequenceMatchingParameters sequenceMatchingSettings,
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingParameters sequenceMatchingSettings,
             SequenceMatchingParameters ptmSequenceMatchingSettings) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
@@ -358,36 +354,16 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-        TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
-
         for (ModificationMatch modMatch : modificationMatches) {
 
             Modification ptm = modificationFactory.getModification(modMatch.getModification());
+            aaMin = modMatch.getModificationSite();
+            aaMax = sequence.length() - modMatch.getModificationSite() + 1;
 
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-
-                aaMin = sequence.length();
-                aaMax = 0;
-
-                for (String proteinAccession : proteinMapping.navigableKeySet()) {
-
-                    String proteinSequence = sequenceProvider.getSequence(proteinAccession);
-
-                    for (int peptideStart : proteinMapping.get(proteinAccession)) {
-
-                        ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, proteinSequence, peptideStart, ptmSequenceMatchingSettings);
-
-                        if (!indexes.isEmpty()) {
-
-                            aaMin = Math.min(aaMin, indexes.get(0));
-                            aaMax = Math.max(aaMax, indexes.get(indexes.size() - 1));
-
-                        }
-
-                        neutralLossesMap.addNeutralLoss(neutralLoss, aaMin, sequence.length() - aaMax + 1);
-
-                    }
-                }
+                
+                neutralLossesMap.addNeutralLoss(neutralLoss, aaMin, aaMax);
+                
             }
         }
 

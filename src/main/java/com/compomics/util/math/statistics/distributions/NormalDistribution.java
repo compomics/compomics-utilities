@@ -43,7 +43,9 @@ public class NormalDistribution implements Distribution {
         this.std = std;
 
         if (std > 0) {
+            
             this.normalDistributionImpl = new NormalDistributionImpl(mean, std);
+        
         }
     }
 
@@ -57,7 +59,9 @@ public class NormalDistribution implements Distribution {
      * deviation
      */
     public static NormalDistribution getNormalDistribution(ArrayList<Double> input) {
+        
         return new NormalDistribution(BasicMathFunctions.mean(input), BasicMathFunctions.std(input));
+    
     }
 
     /**
@@ -70,71 +74,106 @@ public class NormalDistribution implements Distribution {
      * to median distance
      */
     public static NormalDistribution getRobustNormalDistribution(ArrayList<Double> input) {
+        
         double std = (BasicMathFunctions.percentile(input, 0.841) - BasicMathFunctions.percentile(input, 0.159)) / 2;
         return new NormalDistribution(BasicMathFunctions.median(input), std);
+    
     }
 
     @Override
-    public Double getProbabilityAt(double x) {
+    public double getProbabilityAt(double x) {
 
-        if (std == 0) {
+        if (std > 0) {
+
+            double xNorm = (x - mean) / std;
+            return Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5)); //@TODO: verify that xNorm is not too big/small
+
+        } else if (std == 0) {
+
             if (x == mean) {
+
                 return 1.0;
+
             } else {
+
                 return 0.0;
+
             }
         }
 
-        double xNorm = (x - mean) / std;
-        double result = Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5)); //@TODO: verify that xNorm is not too big/small
+        throw new IllegalArgumentException("std < 0");
 
-        return result;
     }
 
     @Override
-    public Double getMaxValueForProbability(double p) {
+    public double getMaxValueForProbability(double p) {
 
-        if (std == 0) {
+        if (std > 0) {
+
+            if (p >= 1) {
+                throw new IllegalArgumentException("Probability >= 1");
+            }
+
+            if (p <= 0) {
+                throw new IllegalArgumentException("Probability <= 0");
+            }
+
+            double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
+
+            return mean + std * x;
+
+        } else if (std == 0) {
+
             return mean;
+
         }
 
-        if (p >= 1) {
-            throw new IllegalArgumentException("Probability >= 1");
-        }
+        throw new IllegalArgumentException("std < 0");
 
-        if (p <= 0) {
-            throw new IllegalArgumentException("Probability <= 0");
-        }
-
-        double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
-
-        return mean + std * x;
     }
 
     @Override
-    public Double getMinValueForProbability(double p) {
+    public double getMinValueForProbability(double p) {
 
-        if (std == 0) {
+        if (std > 0) {
+
+            if (p >= 1) {
+                throw new IllegalArgumentException("Probability >= 1");
+            }
+
+            if (p <= 0) {
+                throw new IllegalArgumentException("Probability <= 0");
+            }
+
+            double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
+
+            return mean - std * x;
+
+        } else if (std == 0) {
+
             return mean;
+
         }
 
-        if (p >= 1) {
-            throw new IllegalArgumentException("Probability >= 1");
-        }
-
-        if (p <= 0) {
-            throw new IllegalArgumentException("Probability <= 0");
-        }
-
-        double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
-
-        return mean - std * x;
+        throw new IllegalArgumentException("std < 0");
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) {
+    public double getCumulativeProbabilityAt(double x) {
 
-        if (std == 0) {
+        if (std > 0) {
+
+            try {
+
+                return normalDistributionImpl.cumulativeProbability(x);
+
+            } catch (MathException e) {
+
+                throw new IllegalArgumentException(e);
+
+            }
+
+        } else if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (x < mean) {
                 return 0.0;
@@ -145,79 +184,105 @@ public class NormalDistribution implements Distribution {
             }
         }
 
-        try {
-
-            return normalDistributionImpl.cumulativeProbability(x);
-
-        } catch (MathException e) {
-            throw new IllegalArgumentException(e);
-        }
+        throw new IllegalArgumentException("std < 0");
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) {
-        
-        if (std == 0) {
-            // Note: this is my personal interpretation of the cumulative distribution in this case
+    public double getValueAtCumulativeProbability(double p) {
+
+        if (std > 0) {
+
+            try {
+
+                return normalDistributionImpl.inverseCumulativeProbability(p);
+
+            } catch (MathException e) {
+
+                throw new IllegalArgumentException(e);
+
+            }
+
+        } else if (std == 0) {
+
             if (p < 0.5) {
+
                 return Double.NEGATIVE_INFINITY;
+
             } else if (p == 0.5) {
+
                 return mean;
+
             } else {
+
                 return Double.POSITIVE_INFINITY;
+
             }
         }
 
-        try {
-            
-        return normalDistributionImpl.inverseCumulativeProbability(p);
-
-        } catch (MathException e) {
-            throw new IllegalArgumentException(e);
-        }
+        throw new IllegalArgumentException("std < 0");
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) {
-        
-        if (std == 0) {
-            // Note: this is my personal interpretation of the cumulative distribution in this case
+    public double getDescendingCumulativeProbabilityAt(double x) {
+
+        if (std > 0) {
+
+            return 1.0 - getCumulativeProbabilityAt(x);
+
+        } else if (std == 0) {
+
             if (x > mean) {
+
                 return 0.0;
+
             } else if (x == mean) {
+
                 return 0.5;
+
             } else {
+
                 return 1.0;
+
             }
         }
-            
-        return 1.0 - getCumulativeProbabilityAt(x);
+
+        throw new IllegalArgumentException("std < 0");
     }
 
     @Override
-    public Double getSmallestCumulativeProbabilityAt(double x) {
-        
-        if (x > mean) {
-            return getDescendingCumulativeProbabilityAt(x);
-        } else {
-            return getCumulativeProbabilityAt(x);
-        }
+    public double getSmallestCumulativeProbabilityAt(double x) {
+
+        return x > mean
+                ? getDescendingCumulativeProbabilityAt(x)
+                : getCumulativeProbabilityAt(x);
+
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) {
-        
-        if (std == 0) {
-            // Note: this is my personal interpretation of the cumulative distribution in this case
+    public double getValueAtDescendingCumulativeProbability(double p) {
+
+        if (std > 0) {
+
+            return getValueAtCumulativeProbability(1 - p);
+
+        } else if (std == 0) {
+
             if (p < 0.5) {
+
                 return Double.POSITIVE_INFINITY;
+
             } else if (p == 0.5) {
+
                 return mean;
+
             } else {
+
                 return Double.NEGATIVE_INFINITY;
+
             }
         }
-        
-        return getValueAtCumulativeProbability(1 - p);
+
+        throw new IllegalArgumentException("std < 0");
+
     }
 }

@@ -3,7 +3,6 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.HashMap;
 import java.util.HashSet;
-import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.BinomialDistributionImpl;
 import org.apache.commons.math.special.Beta;
 
@@ -52,17 +51,22 @@ public class BinomialDistribution implements Distribution {
     }
 
     @Override
-    public Double getProbabilityAt(double x) {
+    public double getProbabilityAt(double x) {
 
         if (x < 0 || x > n) {
+            
             return 0.0;
+        
         }
 
         int k = (int) x;
         Double result = pCache.get(k);
+        
         if (result == null) {
+        
             result = binomialDistributionImpl.probability(k);
             addPToCache(k, result);
+        
         }
 
         return result;
@@ -76,36 +80,53 @@ public class BinomialDistribution implements Distribution {
      * @param p the probability
      */
     private synchronized void addPToCache(int k, Double p) {
+        
         if (pCache.size() >= cacheSize) {
+        
             HashSet<Integer> keys = new HashSet<>(pCache.keySet());
+            
             for (Integer key : keys) {
+            
                 pCache.remove(key);
+                
                 if (pCache.size() < cacheSize) {
+                
                     break;
+                
                 }
             }
         }
+        
         pCache.put(k, p);
+    
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) {
+    public double getCumulativeProbabilityAt(double x) {
 
         return 1.0 - getDescendingCumulativeProbabilityAt(x);
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) {
+    public double getDescendingCumulativeProbabilityAt(double x) {
 
         int k = (int) x;
+        
         if (k > n) {
+        
             return 0.0;
+        
         } else if (k < 0) {
+        
             return 1.0;
+        
         }
+        
         Double result = pCache.get(k);
+        
         if (result == null) {
             // adapted from http://commons.apache.org/proper/commons-math/apidocs/src-html/org/apache/commons/math3/distribution/BinomialDistribution.html#line.130
+        
             try {
                 
                 result = Beta.regularizedBeta(p, x + 1.0, n - x);
@@ -115,7 +136,9 @@ public class BinomialDistribution implements Distribution {
                 throw new IllegalArgumentException(e);
                 
             }
+            
             addDescendingCumulativePToCache(k, result);
+        
         }
 
         return result;
@@ -128,16 +151,25 @@ public class BinomialDistribution implements Distribution {
      * @param p the probability
      */
     private synchronized void addDescendingCumulativePToCache(int k, Double p) {
+        
         if (descendingCumulativePCache.size() >= cacheSize) {
+        
             HashSet<Integer> keys = new HashSet<>(descendingCumulativePCache.keySet());
+            
             for (Integer key : keys) {
+            
                 descendingCumulativePCache.remove(key);
+                
                 if (descendingCumulativePCache.size() < cacheSize) {
+                
                     break;
+                
                 }
             }
         }
+        
         descendingCumulativePCache.put(k, p);
+    
     }
 
     /**
@@ -146,31 +178,43 @@ public class BinomialDistribution implements Distribution {
      * @return a boolean indicating whether all caches are empty
      */
     public boolean isCacheEmpty() {
+        
         return pCache.isEmpty() && descendingCumulativePCache.isEmpty();
+    
     }
 
     @Override
-    public Double getSmallestCumulativeProbabilityAt(double x) {
+    public double getSmallestCumulativeProbabilityAt(double x) {
+        
         throw new UnsupportedOperationException("Not supported yet.");
+    
     }
 
     @Override
-    public Double getMaxValueForProbability(double p) {
+    public double getMaxValueForProbability(double p) {
+    
         throw new UnsupportedOperationException("Not supported.");
+    
     }
 
     @Override
-    public Double getMinValueForProbability(double p) {
+    public double getMinValueForProbability(double p) {
+    
         throw new UnsupportedOperationException("Not supported.");
+    
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) {
+    public double getValueAtCumulativeProbability(double p) {
+    
         throw new UnsupportedOperationException("Not supported.");
+    
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) {
+    public double getValueAtDescendingCumulativeProbability(double p) {
+    
         throw new UnsupportedOperationException("Not supported.");
+    
     }
 }

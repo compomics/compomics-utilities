@@ -5157,13 +5157,7 @@ public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsP
         
     }
     
-    /**
-     * Returns the fasta header of the protein as found in the fasta file.
-     * 
-     * @param proteinAccession the accession of the protein
-     * 
-     * @return the fasta header of the protein as found in the fasta file
-     */
+    @Override
     public String getHeader(String proteinAccession) {
         
         throw new UnsupportedOperationException("Not supported yet."); //@Dominik

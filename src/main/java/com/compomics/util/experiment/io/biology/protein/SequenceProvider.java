@@ -43,5 +43,14 @@ public interface SequenceProvider {
      * @return the subsequence as string
      */
     public String getSubsequence(String accession, int start, int end);
+    
+    /**
+     * Returns the fasta header of the protein as found in the fasta file.
+     * 
+     * @param proteinAccession the accession of the protein
+     * 
+     * @return the fasta header of the protein as found in the fasta file
+     */
+    public String getHeader(String proteinAccession);
 
 }

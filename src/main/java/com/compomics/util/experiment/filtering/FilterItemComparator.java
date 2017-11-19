@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.filtering;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Comparators for filter items.
@@ -140,7 +140,7 @@ public enum FilterItemComparator {
      * @return a boolean indicating whether a given value passes a threshold
      * using this comparator
      */
-    public boolean passes(String threshold, List<String> values) {
+    public boolean passes(String threshold, Collection<String> values) {
         switch (this) {
             case equal:
                 for (String value : values) {

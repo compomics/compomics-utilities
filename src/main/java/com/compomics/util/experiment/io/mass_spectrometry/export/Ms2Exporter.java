@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.export;
 
-import com.compomics.util.experiment.io.mass_spectrometry.MgfFileIterator;
+import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;

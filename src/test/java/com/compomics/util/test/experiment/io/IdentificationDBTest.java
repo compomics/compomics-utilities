@@ -90,8 +90,8 @@ public class IdentificationDBTest extends TestCase {
                 testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
                 Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
 
-                HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
-                HashMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+                HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
+                TreeMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
                 Assert.assertTrue(mascotAssumptions.size() == 1);
                 ArrayList<Double> mascotScores = new ArrayList<>(mascotAssumptions.keySet());
                 Assert.assertTrue(mascotScores.size() == 1);

@@ -8,6 +8,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
 /**
@@ -38,7 +39,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * Map of the identification algorithm peptide assumptions: advocate number &gt;
      * score &gt; assumptions.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap = new HashMap<>(0);
+    private HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap = new HashMap<>(0);
     /**
      * The best peptide assumption.
      */
@@ -47,7 +48,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * Map of the identification algorithm tag assumptions: advocate number &gt;
      * score &gt; assumptions.
      */
-    private HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap = new HashMap<>(0);
+    private HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap = new HashMap<>(0);
     /**
      * The best tag assumption.
      */
@@ -64,7 +65,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param peptideAssumptionsMap the peptide assumption map
      */
-    public void setPeptideAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
+    public void setPeptideAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
         
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
@@ -78,7 +79,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param tagAssumptionsMap the tag assumption map
      */
-    public void setTagAssumptionMap(HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
+    public void setTagAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
         
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
@@ -206,7 +207,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return all assumptions
      */
-    public HashMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
+    public TreeMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -223,7 +224,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return all assumptions
      */
-    public HashMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
+    public TreeMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -270,7 +271,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return the assumptions map
      */
-    public HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
+    public HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -285,7 +286,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return the assumptions map
      */
-    public HashMap<Integer, HashMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
+    public HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
         
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -306,11 +307,11 @@ public class SpectrumMatch extends IdentificationMatch {
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
         
-        HashMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
+        TreeMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
         
         if (advocateMap == null) {
             
-            advocateMap = new HashMap<>(1);
+            advocateMap = new TreeMap<>();
             peptideAssumptionsMap.put(advocateId, advocateMap);
             
         }
@@ -340,11 +341,11 @@ public class SpectrumMatch extends IdentificationMatch {
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
         
-        HashMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
+        TreeMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
         
         if (advocateMap == null) {
             
-            advocateMap = new HashMap<>(1);
+            advocateMap = new TreeMap<>();
             tagAssumptionsMap.put(advocateId, advocateMap);
             
         }
@@ -401,7 +402,7 @@ public class SpectrumMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
         
         int se = peptideAssumption.getAdvocate();
-        HashMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
+        TreeMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
         ArrayList<PeptideAssumption> assumptionsList = algorithmMap.get(peptideAssumption.getScore());
         assumptionsList.remove(peptideAssumption);
         
@@ -429,7 +430,7 @@ public class SpectrumMatch extends IdentificationMatch {
         ObjectsDB.decreaseRWCounter();
         
         int se = tagAssumption.getAdvocate();
-        HashMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
+        TreeMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
         ArrayList<TagAssumption> assumptionsList = algorithmMap.get(tagAssumption.getScore());
         assumptionsList.remove(tagAssumption);
         
@@ -493,7 +494,7 @@ public class SpectrumMatch extends IdentificationMatch {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        HashMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
+        TreeMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
 
         return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }
@@ -513,7 +514,7 @@ public class SpectrumMatch extends IdentificationMatch {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        HashMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
+        TreeMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
 
         return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }

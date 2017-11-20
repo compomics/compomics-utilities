@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TreeMap;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -401,12 +402,18 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     allMatches.put(spectrumNumber, currentMatch);
                     rank = 1;
                 } else {
+                    
                     currentMatch = allMatches.get(spectrumNumber);
-                    HashMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
+                    TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
+                    
                     if (assump.containsKey(expectancy)) {
+                    
                         rank = assump.get(expectancy).get(0).getRank();
+                    
                     } else {
+                    
                         rank = (int) allMatches.get(spectrumNumber).getAllPeptideAssumptions().count() + 1;
+                    
                     }
                 }
 

@@ -197,29 +197,51 @@ public class PeptideUtils {
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationProfile, HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+        
         if (confidentModificationSites == null) {
+
             confidentModificationSites = new HashMap<>(0);
+
         }
+
         if (representativeAmbiguousModificationSites == null) {
+
             representativeAmbiguousModificationSites = new HashMap<>(0);
+
         }
+
         if (secondaryAmbiguousModificationSites == null) {
+
             secondaryAmbiguousModificationSites = new HashMap<>(0);
+
         }
+
         if (fixedModificationSites == null) {
+
             fixedModificationSites = new HashMap<>(0);
+
         }
+
         String modifiedSequence = "";
+
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
+
             modifiedSequence += "<html>";
+
         }
+
         modifiedSequence += peptide.getNTerminal() + "-";
         modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.getSequence(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
         modifiedSequence += "-" + peptide.getCTerminal();
+
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
+
             modifiedSequence += "</html>";
+
         }
+
         return modifiedSequence;
+
     }
 
     /**
@@ -321,4 +343,5 @@ public class PeptideUtils {
                         enzymes));
         
     }
+    
 }

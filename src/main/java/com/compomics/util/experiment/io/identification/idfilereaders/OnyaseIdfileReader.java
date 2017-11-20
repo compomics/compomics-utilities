@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 import javax.xml.bind.JAXBException;
 
@@ -205,21 +206,32 @@ public class OnyaseIdfileReader implements IdfileReader {
         }
 
         LinkedList<SpectrumMatch> result = new LinkedList<>();
+        
         for (SpectrumMatch spectrumMatch : spectrumMatchesMap.values()) {
-            HashMap<Double, ArrayList<PeptideAssumption>> assumptionsMap = spectrumMatch.getAllPeptideAssumptions(Advocate.onyaseEngine.getIndex());
+            
+            TreeMap<Double, ArrayList<PeptideAssumption>> assumptionsMap = spectrumMatch.getAllPeptideAssumptions(Advocate.onyaseEngine.getIndex());
             ArrayList<Double> eValues = new ArrayList<>(assumptionsMap.keySet());
             Collections.sort(eValues);
             int rank = 1;
             int cpt = 1;
+            
             for (Double eValue : eValues) {
+            
                 ArrayList<PeptideAssumption> spectrumIdentificationAssumptions = assumptionsMap.get(eValue);
+                
                 for (SpectrumIdentificationAssumption spectrumIdentificationAssumption : spectrumIdentificationAssumptions) {
+                
                     spectrumIdentificationAssumption.setRank(rank);
                     cpt++;
+                
                 }
+                
                 rank = cpt;
+            
             }
+            
             result.add(spectrumMatch);
+        
         }
 
         return result;

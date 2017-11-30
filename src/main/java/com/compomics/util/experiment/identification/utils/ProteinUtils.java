@@ -25,6 +25,12 @@ public class ProteinUtils {
      */
     public static boolean isDecoy(String accession, FastaParameters fastaParameters) {
         
+        if (!fastaParameters.isTargetDecoy()) {
+            
+            return false;
+            
+        }
+        
         String fastaFlag = fastaParameters.getDecoyFlag();
         
         if (fastaFlag == null || fastaFlag.length() > accession.length()) {
@@ -33,17 +39,9 @@ public class ProteinUtils {
             
         }
         
-        String subString;
-        
-        if (fastaParameters.isDecoySuffix()) {
-            
-            subString = accession.substring(accession.length() - fastaFlag.length());
-            
-        } else {
-            
-            subString = accession.substring(0, fastaFlag.length());
-            
-        }
+        String subString = fastaParameters.isDecoySuffix() ? 
+                accession.substring(accession.length() - fastaFlag.length())
+                : accession.substring(0, fastaFlag.length());
         
         return subString.equals(fastaFlag);
         

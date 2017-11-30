@@ -3,7 +3,6 @@ package com.compomics.util.db.object;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,12 +109,11 @@ public class ObjectsDB {
 
     /**
      * Committing all changes into the database.
-     *
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred while establishing the connection
      */
-    public void commit() throws InterruptedException {
+    public void commit() {
+        
         COMMITBLOCKER.set(true);
+       
         while (ACCESSCOUNTER.get() != 0) {
             // YOU SHALL NOT PASS
             // while processes are potentially accessing the database
@@ -126,6 +124,7 @@ public class ObjectsDB {
         currentAdded = 0;
 
         COMMITBLOCKER.set(false);
+    
     }
 
     /**
@@ -156,30 +155,37 @@ public class ObjectsDB {
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
      * @param overwrite overwriting old database
-     *
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName, boolean overwrite) throws InterruptedException {
+    public ObjectsDB(String folder, String dbName, boolean overwrite) {
+        
         if (debugInteractions) {
+            
             System.out.println(System.currentTimeMillis() + " Creating database");
+
         }
 
         dbFolder = new File("/" + folder);
 
         if (!dbFolder.exists()) {
+
             if (!dbFolder.mkdirs()) {
-                throw new InterruptedException("cannot create database folder");
+
+                throw new IllegalArgumentException("cannot create database folder");
+
             }
         }
 
         dbFile = new File(dbFolder, dbName);
+
         if (dbFile.exists() && overwrite) {
+
             ZooHelper.removeDb(dbFile.getAbsolutePath());
+
         }
 
         establishConnection();
         objectsCache = new ObjectsCache(this);
+
     }
 
     /**
@@ -483,11 +489,8 @@ public class ObjectsDB {
      *
      * @param longKey the keys of the object to load
      * @return the retrieved objects
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public Object retrieveObject(long longKey) throws InterruptedException {
+    public Object retrieveObject(long longKey) {
 
         Object obj = null;
 
@@ -802,26 +805,26 @@ public class ObjectsDB {
 
     /**
      * Closes the db connection.
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close() throws InterruptedException {
+    public void close() {
+        
         close(true);
+        
     }
 
     /**
      * Closes the db connection.
      *
      * @param clearing clearing all database structures
-     * 
-     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public void close(boolean clearing) throws InterruptedException {
+    public void close(boolean clearing) {
         
         synchronized (dbMutex) {
             
             if (debugInteractions) {
+                
                 System.out.println("closing database");
+                
             }
 
             objectsCache.saveCache(null, clearing);
@@ -848,11 +851,8 @@ public class ObjectsDB {
 
     /**
      * Establishes connection to the database.
-     *
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred while establishing the connection
      */
-    private void establishConnection() throws InterruptedException {
+    private void establishConnection() {
         
         establishConnection(true);
 
@@ -862,16 +862,15 @@ public class ObjectsDB {
      * Establishes connection to the database.
      *
      * @param loading load all objects from database
-     * 
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred while establishing the connection
      */
-    public void establishConnection(boolean loading) throws InterruptedException {
+    public void establishConnection(boolean loading) {
 
         synchronized (dbMutex) {
             
             if (debugInteractions) {
+
                 System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
+
             }
             
             idMap.clear();

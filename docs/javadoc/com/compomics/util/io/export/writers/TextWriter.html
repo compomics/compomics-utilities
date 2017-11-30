@@ -75,13 +75,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.com.compomics.util.io.export.ExportWriter">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -133,6 +133,19 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <!--   -->
 </a>
 <h3>Field Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/io/export/writers/TextWriter.html#encoding">encoding</a></span></code>
+<div class="block">Encoding for the file, cf the second rule.</div>
+</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="fields.inherited.from.class.com.compomics.util.io.export.ExportWriter">
 <!--   -->
@@ -154,9 +167,10 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/io/export/writers/TextWriter.html#TextWriter-java.io.File-java.lang.String-int-">TextWriter</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;destinationFile,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/io/export/writers/TextWriter.html#TextWriter-java.io.File-java.lang.String-int-boolean-">TextWriter</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;destinationFile,
           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;separator,
-          int&nbsp;nSeparationLines)</code>
+          int&nbsp;nSeparationLines,
+          boolean&nbsp;gzip)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
@@ -241,7 +255,7 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.io.export.<a href="../../../../../../com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></h3>
-<code><a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#addSeparator--">addSeparator</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#getExportFormat--">getExportFormat</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-">getExportWriter</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#startNewSection--">startNewSection</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#startNewSection-java.lang.String-">startNewSection</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#write-java.lang.String-">write</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#writeHeaderText-java.lang.String-">writeHeaderText</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#writeMainTitle-java.lang.String-">writeMainTitle</a></code></li>
+<code><a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#addSeparator--">addSeparator</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#getExportFormat--">getExportFormat</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-boolean-">getExportWriter</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#startNewSection--">startNewSection</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#startNewSection-java.lang.String-">startNewSection</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#write-java.lang.String-">write</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#writeHeaderText-java.lang.String-">writeHeaderText</a>, <a href="../../../../../../com/compomics/util/io/export/ExportWriter.html#writeMainTitle-java.lang.String-">writeMainTitle</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -258,13 +272,35 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="encoding">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>encoding</h4>
+<pre>public static final&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> encoding</pre>
+<div class="block">Encoding for the file, cf the second rule.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../constant-values.html#com.compomics.util.io.export.writers.TextWriter.encoding">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="TextWriter-java.io.File-java.lang.String-int-">
+<a name="TextWriter-java.io.File-java.lang.String-int-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -272,7 +308,8 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <h4>TextWriter</h4>
 <pre>public&nbsp;TextWriter(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;destinationFile,
                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;separator,
-                  int&nbsp;nSeparationLines)
+                  int&nbsp;nSeparationLines,
+                  boolean&nbsp;gzip)
            throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Constructor.</div>
 <dl>
@@ -281,6 +318,7 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <dd><code>separator</code> - separator between two values</dd>
 <dd><code>nSeparationLines</code> - the number of lines to include between two
  sections</dd>
+<dd><code>gzip</code> - if true export as gzipped file</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - if an IOException occurs</dd>
 </dl>
@@ -526,13 +564,13 @@ extends <a href="../../../../../../com/compomics/util/io/export/ExportWriter.htm
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.com.compomics.util.io.export.ExportWriter">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

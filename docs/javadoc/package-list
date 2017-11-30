@@ -70,8 +70,9 @@ com.compomics.util.experiment.io.biology.protein.converters
 com.compomics.util.experiment.io.biology.protein.iterators
 com.compomics.util.experiment.io.identification
 com.compomics.util.experiment.io.identification.idfilereaders
-com.compomics.util.experiment.io.mass_spectrometry
 com.compomics.util.experiment.io.mass_spectrometry.export
+com.compomics.util.experiment.io.mass_spectrometry.mgf
+com.compomics.util.experiment.io.mass_spectrometry.msp
 com.compomics.util.experiment.io.parameters
 com.compomics.util.experiment.mass_spectrometry
 com.compomics.util.experiment.mass_spectrometry.indexes

@@ -85,15 +85,24 @@ public class BlobObject extends DbObject {
      * @return the object represented by this blob
      * 
      * @throws IOException exception thrown whenever an error occurred while reading the object from its byte representation
-     * @throws ClassNotFoundException exception thrown whenever the class of the object could not be found
      */
-    public Object unBlob() throws IOException, ClassNotFoundException{
+    public Object unBlob() throws IOException {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         Object object;
         ByteArrayInputStream bais = new ByteArrayInputStream(blob);
+        
         try (BufferedInputStream bis = new BufferedInputStream(bais); ObjectInputStream in = new ObjectInputStream(bis)) {
+            
             object = in.readObject();
+        
+        } catch (ClassNotFoundException e) {
+            
+            throw new RuntimeException(e);
+            
         }
+        
         return object;
     }
 }

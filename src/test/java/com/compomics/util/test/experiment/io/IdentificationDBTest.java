@@ -75,7 +75,7 @@ public class IdentificationDBTest extends TestCase {
                 identification.addObject(testProteinMatch.getKey(), testProteinMatch);
 
                 ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
-                identification.addObject(ProjectParameters.getKey(), projectParameters);
+                identification.addObject(ProjectParameters.key, projectParameters);
 
                 identification.getObjectsDB().dumpToDB();
                 identification.close();
@@ -83,7 +83,7 @@ public class IdentificationDBTest extends TestCase {
                 objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
                 identification = new Identification(objectsDB);
 
-                ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.getKey());
+                ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.key);
                 Assert.assertTrue(retrieve != null);
                 Assert.assertTrue(retrieve.getProjectUniqueName().equals(projectParametersTitle));
 

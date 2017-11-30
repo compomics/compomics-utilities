@@ -211,15 +211,8 @@ public class Identification extends ExperimentObject {
      */
     public Object retrieveObject(long longKey) {
 
-        try {
+        return objectsDB.retrieveObject(longKey);
 
-            return objectsDB.retrieveObject(longKey);
-
-        } catch (InterruptedException ex) {
-
-            throw new RuntimeException(ex);
-
-        }
     }
 
     /**
@@ -318,8 +311,8 @@ public class Identification extends ExperimentObject {
     public void addObject(long key, Object object) {
 
         try {
-            
-        objectsDB.insertObject(key, object);
+
+            objectsDB.insertObject(key, object);
 
         } catch (InterruptedException ex) {
 
@@ -518,12 +511,11 @@ public class Identification extends ExperimentObject {
 
     /**
      * Closes the database connection.
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void close() throws InterruptedException {
+    public void close() {
+
         objectsDB.close();
+
     }
 
     /**

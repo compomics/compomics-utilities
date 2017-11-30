@@ -8,8 +8,6 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
 import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotTaxonomy;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

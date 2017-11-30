@@ -1546,58 +1546,6 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.ShotgunProtocol">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/ShotgunProtocol.html" title="class in com.compomics.util.experiment">com.compomics.util.experiment.ShotgunProtocol</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-6331062569130128058L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>enrichedPtms</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; enrichedPtms</pre>
-<div class="block">The PTMs enriched for.</div>
-</li>
-<li class="blockList">
-<h4>labellingPtms</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; labellingPtms</pre>
-<div class="block">The PTMs resulting of a labeling in a map: name of the PTM - boolean
- indicating whether the labeling is complete.</div>
-</li>
-<li class="blockList">
-<h4>ms1Resolution</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> ms1Resolution</pre>
-<div class="block">The MS1 resolution.</div>
-</li>
-<li class="blockList">
-<h4>ms1ResolutionPpm</h4>
-<pre>boolean ms1ResolutionPpm</pre>
-<div class="block">Boolean indicating whether the MS1 resolution is in ppm.</div>
-</li>
-<li class="blockList">
-<h4>fragmentationMethod</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/FragmentationMethod.html" title="enum in com.compomics.util.experiment.mass_spectrometry">FragmentationMethod</a> fragmentationMethod</pre>
-<div class="block">The fragmentation method used.</div>
-</li>
-<li class="blockList">
-<h4>ms2Resolution</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> ms2Resolution</pre>
-<div class="block">The MS2 resolution.</div>
-</li>
-<li class="blockListLast">
-<h4>ms2ResolutionPpm</h4>
-<pre>boolean ms2ResolutionPpm</pre>
-<div class="block">Boolean indicating whether the MS2 resolution is in ppm.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="blockList">
@@ -3524,20 +3472,6 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>bBoundaries</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; bBoundaries</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use String indexes instead</span></div>
-<div class="block">Map indicating for each neutral loss when they should start being
- accounted for the forward ions (b ions for instance).</div>
-</li>
-<li class="blockList">
-<h4>yBoundaries</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; yBoundaries</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use String indexes instead</span></div>
-<div class="block">Map indicating for each neutral loss when they should start being
- accounted for the reverse ions (y ions for instance).</div>
-</li>
-<li class="blockList">
 <h4>forwardBoundaries</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; forwardBoundaries</pre>
 <div class="block">Map indicating for each neutral loss when they should start being
@@ -4229,12 +4163,12 @@
 </ul>
 </li>
 <li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.mass_spectrometry</h2>
+<h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.mass_spectrometry.mgf</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.io.mass_spectrometry.MgfIndex">
+<li class="blockList"><a name="com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/io/mass_spectrometry/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">com.compomics.util.experiment.io.mass_spectrometry.MgfIndex</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -7023,7 +6957,7 @@
 <li class="blockList">
 <h4>proteinDetailsProvider</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a> proteinDetailsProvider</pre>
-<div class="block">The protein</div>
+<div class="block">The protein details provider.</div>
 </li>
 <li class="blockList">
 <h4>proteinAccessions</h4>
@@ -7127,7 +7061,7 @@
 </li>
 <li class="blockList">
 <h4>geneFactory</h4>
-<pre><a href="com/compomics/util/experiment/biology/genes/GeneFactory.html" title="class in com.compomics.util.experiment.biology.genes">GeneFactory</a> geneFactory</pre>
+<pre><a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html" title="class in com.compomics.util.experiment.biology.genes">ProteinGeneDetailsProvider</a> geneFactory</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">The gene factory.</div>
 </li>
@@ -14415,28 +14349,28 @@
 <div class="block">The parameters used for the spectrum matching.</div>
 </li>
 <li class="blockList">
-<h4>annotationSettings</h4>
-<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a> annotationSettings</pre>
-<div class="block">The peak annotation preferences.</div>
+<h4>annotationParameters</h4>
+<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a> annotationParameters</pre>
+<div class="block">The peak annotation parameters.</div>
 </li>
 <li class="blockList">
-<h4>sequenceMatchingPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingPreferences</pre>
-<div class="block">The peptide to protein matching preferences.</div>
+<h4>sequenceMatchingParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingParameters</pre>
+<div class="block">The peptide to protein matching parameters.</div>
 </li>
 <li class="blockList">
-<h4>peptideVariantsPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a> peptideVariantsPreferences</pre>
-<div class="block">The peptide variants preferences.</div>
+<h4>peptideVariantsParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a> peptideVariantsParameters</pre>
+<div class="block">The peptide variants parameters.</div>
 </li>
 <li class="blockList">
-<h4>genePreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a> genePreferences</pre>
-<div class="block">The gene preferences.</div>
+<h4>geneParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a> geneParameters</pre>
+<div class="block">The gene parameters.</div>
 </li>
 <li class="blockList">
-<h4>psmScoringPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a> psmScoringPreferences</pre>
+<h4>psmScoringParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a> psmScoringParameters</pre>
 <div class="block">The PSM scores to use.</div>
 </li>
 <li class="blockList">
@@ -14445,23 +14379,23 @@
 <div class="block">The PSM filter.</div>
 </li>
 <li class="blockList">
-<h4>ptmScoringPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a> ptmScoringPreferences</pre>
-<div class="block">The PTM localization scoring preferences.</div>
+<h4>modificationLocalizationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a> modificationLocalizationParameters</pre>
+<div class="block">The modification localization parameters.</div>
 </li>
 <li class="blockList">
-<h4>proteinInferencePreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a> proteinInferencePreferences</pre>
-<div class="block">The protein inference preferences.</div>
+<h4>proteinInferenceParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a> proteinInferenceParameters</pre>
+<div class="block">The protein inference parameters.</div>
 </li>
 <li class="blockList">
-<h4>idValidationPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a> idValidationPreferences</pre>
-<div class="block">The identification validation preferences.</div>
+<h4>idValidationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a> idValidationParameters</pre>
+<div class="block">The identification validation parameters.</div>
 </li>
 <li class="blockListLast">
-<h4>fractionSettings</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionSettings</pre>
+<h4>fractionParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionParameters</pre>
 <div class="block">The fraction settings.</div>
 </li>
 </ul>
@@ -14610,7 +14544,7 @@
 </li>
 <li class="blockList">
 <h4>selectedProbabilisticScore</h4>
-<pre><a href="com/compomics/util/experiment/identification/modification/PtmScore.html" title="enum in com.compomics.util.experiment.identification.modification">PtmScore</a> selectedProbabilisticScore</pre>
+<pre><a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html" title="enum in com.compomics.util.experiment.identification.modification">ModificationLocalizationScore</a> selectedProbabilisticScore</pre>
 <div class="block">The probabilistic score selected.</div>
 </li>
 <li class="blockList">

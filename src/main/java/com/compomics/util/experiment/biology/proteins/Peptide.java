@@ -242,7 +242,13 @@ public class Peptide extends ExperimentObject {
      * @param proteinMapping the proteins mapping
      */
     public void setProteinMapping(TreeMap<String, int[]> proteinMapping) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.proteinMapping = proteinMapping;
+        
     }
 
     /**

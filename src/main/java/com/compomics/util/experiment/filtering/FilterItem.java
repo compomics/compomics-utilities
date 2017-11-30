@@ -39,12 +39,12 @@ public interface FilterItem {
     public boolean isNumber();
 
     /**
-     * Indicates whether the item expects a list of PTMs to filter on.
+     * Indicates whether the item expects a list of modifications to filter on.
      *
-     * @return a boolean indicating whether the item expects a list of PTMs to
+     * @return a boolean indicating whether the item expects a list of modifications to
      * filter on
      */
-    public boolean isPtm();
+    public boolean needsModifications();
 
     /**
      * In case the filter has predefined values, return the possible values, null otherwise.

@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * All project specific parameters are supposed to be stored here
+ * This class contains project specific parameters.
+ * 
  * @author Dominik Kopczynski
  */
 public class ProjectParameters extends DbObject {
@@ -17,7 +18,7 @@ public class ProjectParameters extends DbObject {
     private HashMap<String, Integer> integerParameters = new HashMap<>();
     private HashMap<String, Double> numericParameters = new HashMap<>();
     
-    public static final String nameForDatabase = "Project_parameters_object";
+    public static final long key = ExperimentObject.asLong("Project_parameters_object");
     
     public ProjectParameters(){
         projectUniqueName = "undefined project";
@@ -77,16 +78,5 @@ public class ProjectParameters extends DbObject {
     public double getNumericParameter(String key){
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return numericParameters.get(key);
-    }
-    
-    /**
-     * Returns the key to use when sorting the project parameters to the database.
-     * 
-     * @return the key to use when sorting the project parameters to the database
-     */
-    public static long getKey() {
-        
-        return ExperimentObject.asLong(nameForDatabase);
-        
     }
 }

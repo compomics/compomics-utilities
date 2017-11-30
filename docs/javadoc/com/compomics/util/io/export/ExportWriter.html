@@ -215,10 +215,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/io/export/ExportWriter.html#getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-">getExportWriter</a></span>(<a href="../../../../../com/compomics/util/io/export/ExportFormat.html" title="enum in com.compomics.util.io.export">ExportFormat</a>&nbsp;exportFormat,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/io/export/ExportWriter.html#getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-boolean-">getExportWriter</a></span>(<a href="../../../../../com/compomics/util/io/export/ExportFormat.html" title="enum in com.compomics.util.io.export">ExportFormat</a>&nbsp;exportFormat,
                <a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;destinationFile,
                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;separator,
-               int&nbsp;nSeparationLines)</code>
+               int&nbsp;nSeparationLines,
+               boolean&nbsp;gzip)</code>
 <div class="block">Returns an export writer for the desired format.</div>
 </td>
 </tr>
@@ -623,7 +624,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  written, e.g. going from peptide to protein.</div>
 </li>
 </ul>
-<a name="getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-">
+<a name="getExportWriter-com.compomics.util.io.export.ExportFormat-java.io.File-java.lang.String-int-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -632,7 +633,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;<a href="../../../../../com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a>&nbsp;getExportWriter(<a href="../../../../../com/compomics/util/io/export/ExportFormat.html" title="enum in com.compomics.util.io.export">ExportFormat</a>&nbsp;exportFormat,
                                            <a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;destinationFile,
                                            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;separator,
-                                           int&nbsp;nSeparationLines)
+                                           int&nbsp;nSeparationLines,
+                                           boolean&nbsp;gzip)
                                     throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">Returns an export writer for the desired format.</div>
 <dl>
@@ -642,6 +644,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>separator</code> - the separator for a text export</dd>
 <dd><code>nSeparationLines</code> - the number of separation lines between two
  sections for a text export</dd>
+<dd><code>gzip</code> - if true export test as gzipped file</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an export writer for the desired format</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>

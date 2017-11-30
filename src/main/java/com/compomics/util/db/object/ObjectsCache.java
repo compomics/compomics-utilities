@@ -16,6 +16,7 @@ import javax.jdo.PersistenceManager;
  * @author Dominik Kopczynski
  */
 public class ObjectsCache {
+
     /**
      * Share of the memory to be used.
      */
@@ -45,12 +46,14 @@ public class ObjectsCache {
      */
     private final int keepObjectsThreshold = 10000;
     /**
-     * If number number of registered objects exceeds value, commit to db should be triggered.
+     * If number number of registered objects exceeds value, commit to db should
+     * be triggered.
      */
     private final int numToCommit = 10000;
 
     /**
      * Constructor.
+     *
      * @param objectsDB the object database
      */
     public ObjectsCache(ObjectsDB objectsDB) {
@@ -88,13 +91,10 @@ public class ObjectsCache {
         this.memoryShare = memoryShare;
         try {
             updateCache();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    
 
     /**
      * Returns the objects if present in the cache. Null if not. Warning: this
@@ -104,19 +104,23 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      *
      * @return the object of interest, null if not present in the cache
-     * 
-     * @throws InterruptedException if the thread is interrupted
      */
-    public Object getObject(Long objectKey) throws InterruptedException{
+    public Object getObject(Long objectKey) {
+
         updateCache();
         Object object = null;
-        synchronized(loadedObjectMutex){
-            if (loadedObjects.containsKey(objectKey)) object = loadedObjects.get(objectKey);
+
+        synchronized (loadedObjectMutex) {
+
+            if (loadedObjects.containsKey(objectKey)) {
+                object = loadedObjects.get(objectKey);
+            }
+
         }
 
         return object;
     }
-    
+
     /**
      * Removes an object from the cache
      *
@@ -127,9 +131,9 @@ public class ObjectsCache {
      */
     public String removeObject(long objectKey) throws InterruptedException {
         String className = null;
-        synchronized(loadedObjectMutex){
+        synchronized (loadedObjectMutex) {
             if (!readOnly) {
-                if (loadedObjects.containsKey(objectKey)){
+                if (loadedObjects.containsKey(objectKey)) {
                     className = loadedObjects.get(objectKey).getClass().getSimpleName();
                     loadedObjects.remove(objectKey);
                     objectQueue.removeFirstOccurrence(objectKey);
@@ -146,21 +150,25 @@ public class ObjectsCache {
      *
      * @param objectKey the key of the object
      * @param object the object to store in the cache
-     *
-     * @throws InterruptedException if a threading error occurs
-     * writing to the database
      */
-    public void addObject(Long objectKey, Object object) throws InterruptedException {
-        synchronized(loadedObjectMutex){
-            if (!readOnly) {            
+    public void addObject(Long objectKey, Object object) {
 
-                if (!loadedObjects.containsKey(objectKey)){
+        synchronized (loadedObjectMutex) {
+
+            if (!readOnly) {
+
+                if (!loadedObjects.containsKey(objectKey)) {
+
                     loadedObjects.put(objectKey, object);
                     objectQueue.add(objectKey);
-                    
-                    if (objectsDB.getCurrentAdded() > numToCommit) objectsDB.commit();
+
+                    if (objectsDB.getCurrentAdded() > numToCommit) {
+                        objectsDB.commit();
+                    }
                 }
+
                 updateCache();
+
             }
         }
     }
@@ -175,13 +183,15 @@ public class ObjectsCache {
      *
      */
     public void addObjects(HashMap<Long, Object> objects) throws InterruptedException {
-        synchronized(loadedObjectMutex){
-            if (!readOnly) {            
+        synchronized (loadedObjectMutex) {
+            if (!readOnly) {
 
                 loadedObjects.putAll(objects);
                 objectQueue.addAll(objects.keySet());
-                
-                if (objectsDB.getCurrentAdded() > numToCommit) objectsDB.commit();
+
+                if (objectsDB.getCurrentAdded() > numToCommit) {
+                    objectsDB.commit();
+                }
 
                 updateCache();
             }
@@ -198,7 +208,6 @@ public class ObjectsCache {
     private boolean memoryCheck() {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
     }
-    
 
     /**
      * Saves an entry in the database if modified and clears it from the cache.
@@ -232,69 +241,86 @@ public class ObjectsCache {
      * Can be null. Progress will be displayed as secondary.
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
-     *
-     * @throws InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) throws InterruptedException {
-        
-        synchronized(loadedObjectMutex){
-            
+    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
+
+        synchronized (loadedObjectMutex) {
+
             if (!readOnly) {
+
                 if (waitingHandler != null) {
+
                     waitingHandler.resetSecondaryProgressCounter();
                     waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
+
                 }
 
                 ListIterator<Long> listIterator = objectQueue.listIterator();
                 PersistenceManager pm = objectsDB.getDB();
 
-                for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i){
+                for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
+
                     if (waitingHandler != null) {
+
                         waitingHandler.increaseSecondaryProgressCounter();
+
                         if (waitingHandler.isRunCanceled()) {
+
                             break;
+
                         }
                     }
+
                     long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
 
                     Object obj = loadedObjects.get(key);
-                    if (!((DbObject)obj).jdoZooIsPersistent()){
+
+                    if (!((DbObject) obj).jdoZooIsPersistent()) {
+
                         pm.makePersistent(obj);
-                        objectsDB.getIdMap().put(key, ((DbObject)obj).jdoZooGetOid());
+                        objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
+
                     }
 
-                    if (clearEntries) loadedObjects.remove(key);
+                    if (clearEntries) {
+                        loadedObjects.remove(key);
+                    }
+
                 }
+
                 objectsDB.commit();
+
             }
         }
     }
-    
 
     /**
      * Updates the cache according to the memory settings.
      *
      * @throws InterruptedException if the thread is interrupted
      */
-    private void updateCache() throws InterruptedException {
-        while (loadedObjects.size() > keepObjectsThreshold && !memoryCheck()){
+    private void updateCache() {
+
+        while (loadedObjects.size() > keepObjectsThreshold && !memoryCheck()) {
+
             int toRemove = loadedObjects.size() >> 2;
             saveObjects(toRemove, null, true);
-            
+
             // turning on the garbage collector from time to time
             // helps to keep the memory clean. Performance becomes
             // better, the mass for cleaning is lower
             System.gc();
+
         }
     }
-    
+
     /**
      * Check if key in cache
-     * 
+     *
      * @param longKey key of the entry
      * @return if key in cache
      */
-    public boolean inCache(long longKey){
+    public boolean inCache(long longKey) {
         return loadedObjects.containsKey(longKey);
     }
 
@@ -304,11 +330,11 @@ public class ObjectsCache {
      * @param waitingHandler a waiting handler on which the progress will be
      * @param emptyCache boolean indicating whether the cache content shall be
      * cleared while saving displayed as secondary progress. can be null
-     *
-     * @throws java.lang.InterruptedException if the thread is interrupted
      */
-    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws InterruptedException {
+    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) {
+
         saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
+
     }
 
     /**
@@ -328,7 +354,7 @@ public class ObjectsCache {
      * @throws InterruptedException if the thread is interrupted
      */
     public void setReadOnly(boolean readOnly) throws InterruptedException {
-        synchronized(loadedObjectMutex){
+        synchronized (loadedObjectMutex) {
             this.readOnly = readOnly;
         }
     }

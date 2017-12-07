@@ -16,7 +16,6 @@ import com.compomics.util.parameters.identification.search.ModificationParameter
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
@@ -44,6 +43,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
+import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 
 /**
  * The FM index.
@@ -51,7 +51,7 @@ import java.util.concurrent.Semaphore;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsProvider {
+public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Semaphore for caching.
@@ -1451,33 +1451,24 @@ public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsP
         return (pos < indexStringLength) ? pos : pos - indexStringLength;
     }
 
-    /**
-     * Main method for mapping a peptide with all variants against all
-     * registered proteins in the experiment. This method is implementing the
-     * backward search.
-     *
-     * @param peptide the peptide
-     * @param seqMatchPref the sequence matching preferences
-     * @return the protein mapping
-     */
     @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters seqMatchPref) {
+    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters sequenceMatchingParameters) {
         ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
             if (genericVariantMatching) {
                 for (int i = 0; i < indexParts; ++i) {
-                    peptideProteinMapping.addAll(getProteinMappingWithVariantsGeneric(peptide, seqMatchPref, i));
+                    peptideProteinMapping.addAll(getProteinMappingWithVariantsGeneric(peptide, sequenceMatchingParameters, i));
                 }
                 return peptideProteinMapping;
             } else {
                 for (int i = 0; i < indexParts; ++i) {
-                    peptideProteinMapping.addAll(getProteinMappingWithVariantsSpecific(peptide, seqMatchPref, i));
+                    peptideProteinMapping.addAll(getProteinMappingWithVariantsSpecific(peptide, sequenceMatchingParameters, i));
                 }
                 return peptideProteinMapping;
             }
         } else {
             for (int i = 0; i < indexParts; ++i) {
-                peptideProteinMapping.addAll(getProteinMappingWithoutVariants(peptide, seqMatchPref, i));
+                peptideProteinMapping.addAll(getProteinMappingWithoutVariants(peptide, sequenceMatchingParameters, i));
             }
             return peptideProteinMapping;
         }
@@ -1734,17 +1725,13 @@ public class FMIndex implements PeptideMapper, SequenceProvider, ProteinDetailsP
 
                             PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             allMatches.add(peptideProteinMapping);
+                            
                         }
                     }
                 }
             }
         }
 
-        /*
-        for (PeptideProteinMapping ppm : allMatches){
-            System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex() + " " + ppm.getVariantMatches().size() + "e");
-        }
-         */
         return allMatches;
     }
 

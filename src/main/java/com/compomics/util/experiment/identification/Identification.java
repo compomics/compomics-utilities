@@ -573,7 +573,7 @@ public class Identification extends ExperimentObject {
      *
      * @return a peptide matches iterator
      */
-    public SpectrumMatchesIterator getPsmIterator(WaitingHandler waitingHandler, String filters) {
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler, String filters) {
         return new SpectrumMatchesIterator(null, this, waitingHandler, false, filters);
     }
 

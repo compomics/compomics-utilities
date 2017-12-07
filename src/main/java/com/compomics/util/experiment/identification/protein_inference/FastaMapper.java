@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  * @author Dominik Kopczynski
  */
-public interface PeptideMapper {
+public interface FastaMapper {
 
     /**
      * Returns the protein mapping in the FASTA file loaded in the sequence

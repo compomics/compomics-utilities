@@ -141,12 +141,11 @@ public class ObjectsDB {
      *
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
-     *
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName) throws InterruptedException {
+    public ObjectsDB(String folder, String dbName) {
+        
         this(folder, dbName, true);
+    
     }
 
     /**

@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -20,6 +19,7 @@ import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 
 /**
  * Command line peptide mapping.
@@ -86,7 +86,7 @@ public class PeptideMapperCLI {
 
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
-        PeptideMapper peptideMapper = null;
+        FastaMapper peptideMapper = null;
         try {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } catch (IOException e) {

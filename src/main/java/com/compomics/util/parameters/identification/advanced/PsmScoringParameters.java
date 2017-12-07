@@ -85,11 +85,16 @@ public class PsmScoringParameters implements Serializable {
      *
      * @return the index of the score
      */
-    public HashSet<Integer> getScoreForAlgorithm(Integer advocateId) {
+    public HashSet<Integer> getScoreForAlgorithm(int advocateId) {
+        
         if (spectrumMatchingScores == null) {
-            return null;
+        
+            return new HashSet<>(0);
+        
         }
+        
         return spectrumMatchingScores.get(advocateId);
+    
     }
 
     /**

@@ -6,6 +6,8 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * Contains methods for downloading gene and GO mappings.
@@ -140,15 +142,17 @@ public class GeneParameters implements Serializable {
             try {
 
                 FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile, searchParameters.getFastaParameters(), null);
-                HashMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
+                TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
                 Integer occurrenceMax = null;
 
                 // Select the background species based on occurrence in the factory
-                for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+                for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
 
+                    String uniprotTaxonomy = entry.getKey();
+                    
                     if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
                         
-                        Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
+                        Integer occurrence = entry.getValue();
 
                         if (occurrenceMax == null || occurrence > occurrenceMax) {
                             

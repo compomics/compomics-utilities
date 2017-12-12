@@ -8,7 +8,6 @@ import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -141,7 +140,6 @@ public class AnnotationParameters implements Serializable {
      * identification assumption.
      *
      * @param spectrumKey the key of the spectrum to annotate
-     * @param sequenceProvider a provider for the protein sequences
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
      * @param sequenceMatchingPreferences the sequence matching preferences for
@@ -152,34 +150,52 @@ public class AnnotationParameters implements Serializable {
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider,
+    public SpecificAnnotationParameters getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption,
             SequenceMatchingParameters sequenceMatchingPreferences, SequenceMatchingParameters ptmSequenceMatchingPreferences) {
 
         SpecificAnnotationParameters specificAnnotationPreferences = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
+        
         if (neutralLossesAuto) {
-            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
+            
+            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
+        
         } else {
+        
             NeutralLossesMap tempNeutralLossesMap = new NeutralLossesMap();
+            
             for (NeutralLoss neutralLoss : getNeutralLosses()) {
+            
                 tempNeutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
+            
             }
+            
             specificAnnotationPreferences.setNeutralLossesMap(tempNeutralLossesMap);
+        
         }
+        
         ArrayList<Integer> charges = new ArrayList<>(4);
         int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge();
+        
         if (precursorCharge == 1) {
+        
             charges.add(precursorCharge);
+        
         } else {
+        
             for (int charge = 1; charge < precursorCharge; charge++) {
+            
                 charges.add(charge);
+            
             }
         }
+        
         specificAnnotationPreferences.setSelectedCharges(charges);
         specificAnnotationPreferences.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
         specificAnnotationPreferences.setFragmentIonAccuracy(fragmentIonAccuracy);
         specificAnnotationPreferences.setFragmentIonPpm(fragmentIonPpm);
         return specificAnnotationPreferences;
+        
     }
 
     /**
@@ -365,7 +381,7 @@ public class AnnotationParameters implements Serializable {
     public void addIonType(Ion.IonType ionType, int subType) {
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
         if (selectedSubtypes == null) {
-            selectedSubtypes = new HashSet<Integer>(1);
+            selectedSubtypes = new HashSet<>(1);
             selectedIonsMap.put(ionType, selectedSubtypes);
         }
         selectedSubtypes.add(subType);

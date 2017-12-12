@@ -107,7 +107,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         if (doubleValue > 0) {
             precDevTxt.setText(idFilter.getMaxMzDeviation() + "");
         }
-        ptmsCheck.setSelected(idFilter.removeUnknownPTMs());
+        ptmsCheck.setSelected(idFilter.removeUnknownModifications());
 
         if (idFilter.isIsPpm()) {
             unitCmb.setSelectedIndex(0);

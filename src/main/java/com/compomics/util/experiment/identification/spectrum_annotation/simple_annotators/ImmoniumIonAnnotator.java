@@ -98,7 +98,7 @@ public class ImmoniumIonAnnotator {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex) {
 
-        ArrayList<IonMatch> results = new ArrayList<IonMatch>(0);
+        ArrayList<IonMatch> results = new ArrayList<>(0);
 
         // Immonium ions
         for (int i = 0; i < aas.length; i++) {

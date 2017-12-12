@@ -342,8 +342,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>getObject</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;getObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&nbsp;objectKey)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;getObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&nbsp;objectKey)</pre>
 <div class="block">Returns the objects if present in the cache. Null if not. Warning: this
  method returns the object as it is and does not wait for cache edition
  operations to finish.</div>
@@ -352,8 +351,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>objectKey</code> - the key of the object</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the object of interest, null if not present in the cache</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -383,8 +380,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>addObject</h4>
 <pre>public&nbsp;void&nbsp;addObject(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&nbsp;objectKey,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)
-               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)</pre>
 <div class="block">Adds an object to the cache. The object must not necessarily be in the
  database. If an object is already present with the same identifiers, it
  will be silently overwritten.</div>
@@ -392,9 +388,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>objectKey</code> - the key of the object</dd>
 <dd><code>object</code> - the object to store in the cache</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if a threading error occurs
- writing to the database</dd>
 </dl>
 </li>
 </ul>
@@ -462,8 +455,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>saveObjects</h4>
 <pre>public&nbsp;void&nbsp;saveObjects(int&nbsp;numLastEntries,
                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                        boolean&nbsp;clearEntries)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                        boolean&nbsp;clearEntries)</pre>
 <div class="block">Saves an entry in the database if modified.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -472,8 +464,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  Can be null. Progress will be displayed as secondary.</dd>
 <dd><code>clearEntries</code> - a boolean indicating whether the entry shall be
  cleared from the cache</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
 </dl>
 </li>
 </ul>
@@ -500,16 +490,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>saveCache</h4>
 <pre>public&nbsp;void&nbsp;saveCache(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                      boolean&nbsp;emptyCache)
-               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                      boolean&nbsp;emptyCache)</pre>
 <div class="block">Saves the cache content in the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>waitingHandler</code> - a waiting handler on which the progress will be</dd>
 <dd><code>emptyCache</code> - boolean indicating whether the cache content shall be
  cleared while saving displayed as secondary progress. can be null</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if the thread is interrupted</dd>
 </dl>
 </li>
 </ul>

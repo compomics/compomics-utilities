@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
@@ -20,6 +19,7 @@ import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 
 /**
  * Command line peptide mapping.
@@ -70,7 +70,7 @@ public class PeptideMapperCLI {
             }
 
             peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
-            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
             searchParameters = identificationParameters.getSearchParameters();
 
         } else {
@@ -86,7 +86,7 @@ public class PeptideMapperCLI {
 
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
-        PeptideMapper peptideMapper = null;
+        FastaMapper peptideMapper = null;
         try {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } catch (IOException e) {
@@ -214,24 +214,42 @@ public class PeptideMapperCLI {
             }
 
             try {
+                
                 PrintWriter writer = new PrintWriter(args[3], "UTF-8");
+                
                 for (int i = 0; i < allPeptideProteinMappings.size(); ++i) {
+                
                     PeptideProteinMapping peptideProteinMapping = allPeptideProteinMappings.get(i);
                     String peptide = peptideProteinMapping.getPeptideSequence();
                     String accession = peptideProteinMapping.getProteinAccession();
                     int startIndex = peptideProteinMapping.getIndex();
+                    
                     for (TagComponent tagComponent : tags.get(tagIndexes.get(i)).getContent()) {
+                        
                         if (tagComponent instanceof MassGap) {
+                        
                             writer.print(tagComponent.getMass());
-                        }
-                        if (tagComponent instanceof AminoAcidSequence) {
+                        
+                        } else if (tagComponent instanceof AminoAcidSequence) {
+                        
                             writer.print(tagComponent.asSequence());
+                        
+                        } else {
+                        
+                            throw new UnsupportedOperationException("Tag component of class " + tagComponent.getClass().getName() + " not supported.");
+                        
                         }
+                        
                         writer.print(",");
+                        
                     }
+                    
                     writer.println(peptide + "," + accession + "," + startIndex);
+                
                 }
+                
                 writer.close();
+            
             } catch (Exception e) {
                 System.err.println("Error: could not write into file '" + args[3] + "'");
                 e.printStackTrace();

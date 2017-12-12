@@ -22,10 +22,8 @@ public class ProteinMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ProteinMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public ProteinMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         this(null, identification, waitingHandler, displayProgress);
     }
     
@@ -38,10 +36,8 @@ public class ProteinMatchesIterator extends MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ProteinMatchesIterator(ArrayList<String> keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public ProteinMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         super(keys, ProteinMatch.class, identification, waitingHandler, displayProgress, null);
     }
     
@@ -50,11 +46,9 @@ public class ProteinMatchesIterator extends MatchesIterator {
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the next match
      */
-    public ProteinMatch next() throws InterruptedException {
+    public ProteinMatch next() {
         return (ProteinMatch) nextObject();
     }
 }

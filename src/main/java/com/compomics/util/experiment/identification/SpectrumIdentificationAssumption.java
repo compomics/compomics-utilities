@@ -49,10 +49,6 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     protected ArrayList<double[]> aminoAcidScores = null;
 
-    
-    
-    
-    
     /**
      * Get the identification rank.
      *

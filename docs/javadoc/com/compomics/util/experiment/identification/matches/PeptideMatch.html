@@ -175,13 +175,9 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch--">PeptideMatch</a></span>()</code>
-<div class="block">Constructor for the peptide match.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">PeptideMatch</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchKey)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-long-long-">PeptideMatch</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+            long&nbsp;matchKey,
+            long&nbsp;spectrumMatchKey)</code>
 <div class="block">Constructor for the peptide match.</div>
 </td>
 </tr>
@@ -202,7 +198,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#addSpectrumMatchKey-java.lang.String-">addSpectrumMatchKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumMatchKey)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#addSpectrumMatchKey-long-">addSpectrumMatchKey</a></span>(long&nbsp;spectrumMatchKey)</code>
 <div class="block">Add a spectrum match key.</div>
 </td>
 </tr>
@@ -213,7 +209,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getKey--">getKey</a></span>()</code>
 <div class="block">Returns the key of a match.</div>
 </td>
@@ -231,7 +227,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
+<td class="colFirst"><code>long[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getSpectrumMatchesKeys--">getSpectrumMatchesKeys</a></span>()</code>
 <div class="block">Returns the keys of all spectra matched.</div>
 </td>
@@ -250,7 +246,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setKey-java.lang.String-">setKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newKey)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setKey-long-">setKey</a></span>(long&nbsp;newKey)</code>
 <div class="block">Sets a new key for the match.</div>
 </td>
 </tr>
@@ -262,7 +258,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setSpectrumMatchesKeys-java.util.HashSet-">setSpectrumMatchesKeys</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumMatchesKeys)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setSpectrumMatchesKeys-long:A-">setSpectrumMatchesKeys</a></span>(long[]&nbsp;spectrumMatchesKeys)</code>
 <div class="block">Sets the spectrum matches keys.</div>
 </td>
 </tr>
@@ -272,7 +268,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
-<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-java.lang.String-">removeUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
+<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#asLong-java.lang.String-">asLong</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-long-">removeUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
@@ -309,29 +305,21 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PeptideMatch--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>PeptideMatch</h4>
-<pre>public&nbsp;PeptideMatch()</pre>
-<div class="block">Constructor for the peptide match.</div>
-</li>
-</ul>
-<a name="PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">
+<a name="PeptideMatch-com.compomics.util.experiment.biology.proteins.Peptide-long-long-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PeptideMatch</h4>
 <pre>public&nbsp;PeptideMatch(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-                    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;matchKey)</pre>
+                    long&nbsp;matchKey,
+                    long&nbsp;spectrumMatchKey)</pre>
 <div class="block">Constructor for the peptide match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the matching peptide</dd>
 <dd><code>matchKey</code> - the key of the match as referenced in the identification</dd>
+<dd><code>spectrumMatchKey</code> - the key of a spectrum match linked to this peptide</dd>
 </dl>
 </li>
 </ul>
@@ -378,7 +366,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>getKey</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getKey()</pre>
+<pre>public&nbsp;long&nbsp;getKey()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html#getKey--">IdentificationMatch</a></code></span></div>
 <div class="block">Returns the key of a match.</div>
 <dl>
@@ -389,13 +377,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="setKey-java.lang.String-">
+<a name="setKey-long-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setKey</h4>
-<pre>public&nbsp;void&nbsp;setKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newKey)</pre>
+<pre>public&nbsp;void&nbsp;setKey(long&nbsp;newKey)</pre>
 <div class="block">Sets a new key for the match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -437,7 +425,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <ul class="blockList">
 <li class="blockList">
 <h4>getSpectrumMatchesKeys</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;getSpectrumMatchesKeys()</pre>
+<pre>public&nbsp;long[]&nbsp;getSpectrumMatchesKeys()</pre>
 <div class="block">Returns the keys of all spectra matched.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -445,13 +433,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="setSpectrumMatchesKeys-java.util.HashSet-">
+<a name="setSpectrumMatchesKeys-long:A-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setSpectrumMatchesKeys</h4>
-<pre>public&nbsp;void&nbsp;setSpectrumMatchesKeys(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;spectrumMatchesKeys)</pre>
+<pre>public&nbsp;void&nbsp;setSpectrumMatchesKeys(long[]&nbsp;spectrumMatchesKeys)</pre>
 <div class="block">Sets the spectrum matches keys.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -459,13 +447,13 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </dl>
 </li>
 </ul>
-<a name="addSpectrumMatchKey-java.lang.String-">
+<a name="addSpectrumMatchKey-long-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addSpectrumMatchKey</h4>
-<pre>public&nbsp;void&nbsp;addSpectrumMatchKey(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;spectrumMatchKey)</pre>
+<pre>public&nbsp;void&nbsp;addSpectrumMatchKey(long&nbsp;spectrumMatchKey)</pre>
 <div class="block">Add a spectrum match key.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

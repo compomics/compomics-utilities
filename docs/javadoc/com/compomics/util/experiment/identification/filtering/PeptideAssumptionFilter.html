@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -150,7 +150,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
                        int&nbsp;maxPepLength,
                        double&nbsp;maxMzDeviation,
                        boolean&nbsp;isPpm,
-                       boolean&nbsp;unknownPTM,
+                       boolean&nbsp;unknownModification,
                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;minMissedCleavages,
                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;maxMissedCleavages,
                        <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;minIsotopes,
@@ -235,8 +235,9 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#removeUnknownPTMs--">removeUnknownPTMs</a></span>()</code>
-<div class="block">Returns a boolean indicating whether unknown PTMs shall be removed.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#removeUnknownModifications--">removeUnknownModifications</a></span>()</code>
+<div class="block">Returns a boolean indicating whether unknown modifications shall be
+ removed.</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
@@ -295,15 +296,15 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#setRemoveUnknownPTMs-boolean-">setRemoveUnknownPTMs</a></span>(boolean&nbsp;unknownPtm)</code>
-<div class="block">Set whether unknown PTMs shall be removed.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#setRemoveUnknownModifications-boolean-">setRemoveUnknownModifications</a></span>(boolean&nbsp;unknownModification)</code>
+<div class="block">Set whether unknown modifications shall be removed.</div>
 </td>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateModifications-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.search.ModificationParameters-">validateModifications</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                      <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences,
+                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences,
                      <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile)</code>
 <div class="block">Verifies that the definition of every modification name is available.</div>
 </td>
@@ -328,17 +329,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                 <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a>&nbsp;fmIndex)</code>
-<div class="block">Validates a peptide depending on its protein inference status.</div>
-</td>
-</tr>
-<tr id="i25" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideAssumptionFilter.html#validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">validateProteins</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
                 <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</code>
 <div class="block">Validates a peptide depending on its protein inference status.</div>
 </td>
@@ -385,7 +377,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
                                int&nbsp;maxPepLength,
                                double&nbsp;maxMzDeviation,
                                boolean&nbsp;isPpm,
-                               boolean&nbsp;unknownPTM,
+                               boolean&nbsp;unknownModification,
                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;minMissedCleavages,
                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;maxMissedCleavages,
                                <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&nbsp;minIsotopes,
@@ -401,7 +393,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
  disabled)</dd>
 <dd><code>isPpm</code> - boolean indicating the unit of the allowed m/z deviation
  (true: ppm, false: Da)</dd>
-<dd><code>unknownPTM</code> - shall peptides presenting unknownPTMs be ignored</dd>
+<dd><code>unknownModification</code> - shall peptides presenting unknown
+ modifications be removed</dd>
 <dd><code>minMissedCleavages</code> - the minimum number of missed cleavages allowed
  (null for disabled)</dd>
 <dd><code>maxMissedCleavages</code> - the maximum number of missed cleavages allowed
@@ -458,7 +451,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex-">
+<a name="validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -466,37 +459,12 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <h4>validateProteins</h4>
 <pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                                 <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a>&nbsp;fmIndex)</pre>
-<div class="block">Validates a peptide depending on its protein inference status. Maps the
- peptide to proteins in case it was not done before.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>peptide</code> - the peptide</dd>
-<dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
-<dd><code>fmIndex</code> - the FM-Index.</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether the peptide passed the test</dd>
-</dl>
-</li>
-</ul>
-<a name="validateProteins-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.protein_inference.PeptideMapper-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>validateProteins</h4>
-<pre>public&nbsp;boolean&nbsp;validateProteins(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                                <a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a>&nbsp;peptideMapper,
                                 <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider)</pre>
-<div class="block">Validates a peptide depending on its protein inference status. Maps the
- peptide to proteins in case it was not done before.</div>
+<div class="block">Validates a peptide depending on its protein inference status.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences</dd>
-<dd><code>peptideMapper</code> - the peptide mapper to use for peptide to protein
- mapping</dd>
 <dd><code>sequenceProvider</code> - a sequence provider</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the peptide passed the test</dd>
@@ -511,7 +479,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <h4>validateModifications</h4>
 <pre>public&nbsp;boolean&nbsp;validateModifications(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                                      <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences,
+                                     <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences,
                                      <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile)</pre>
 <div class="block">Verifies that the definition of every modification name is available.</div>
 <dl>
@@ -519,8 +487,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dd><code>peptide</code> - the peptide of interest</dd>
 <dd><code>sequenceMatchingPreferences</code> - the sequence matching preferences for
  peptide to protein mapping</dd>
-<dd><code>ptmSequenceMatchingPreferences</code> - the sequence matching preferences
- for PTM to peptide mapping</dd>
+<dd><code>modificationSequenceMatchingPreferences</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 <dd><code>modificationProfile</code> - the modification profile of the identification</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether the peptide passed the test</dd>
@@ -551,31 +519,33 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="removeUnknownPTMs--">
+<a name="removeUnknownModifications--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>removeUnknownPTMs</h4>
-<pre>public&nbsp;boolean&nbsp;removeUnknownPTMs()</pre>
-<div class="block">Returns a boolean indicating whether unknown PTMs shall be removed.</div>
+<h4>removeUnknownModifications</h4>
+<pre>public&nbsp;boolean&nbsp;removeUnknownModifications()</pre>
+<div class="block">Returns a boolean indicating whether unknown modifications shall be
+ removed.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether unknown PTMs shall be removed</dd>
+<dd>a boolean indicating whether unknown modifications shall be
+ removed</dd>
 </dl>
 </li>
 </ul>
-<a name="setRemoveUnknownPTMs-boolean-">
+<a name="setRemoveUnknownModifications-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setRemoveUnknownPTMs</h4>
-<pre>public&nbsp;void&nbsp;setRemoveUnknownPTMs(boolean&nbsp;unknownPtm)</pre>
-<div class="block">Set whether unknown PTMs shall be removed.</div>
+<h4>setRemoveUnknownModifications</h4>
+<pre>public&nbsp;void&nbsp;setRemoveUnknownModifications(boolean&nbsp;unknownModification)</pre>
+<div class="block">Set whether unknown modifications shall be removed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>unknownPtm</code> - whether unknown PTMs shall be removed</dd>
+<dd><code>unknownModification</code> - whether unknown modifications shall be removed</dd>
 </dl>
 </li>
 </ul>

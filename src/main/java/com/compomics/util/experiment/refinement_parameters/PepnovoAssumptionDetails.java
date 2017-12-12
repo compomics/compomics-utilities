@@ -13,6 +13,10 @@ import com.compomics.util.experiment.personalization.UrParameter;
 public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
 
     /**
+     * Serial number used for serialization and object key.
+     */
+    private static final long serialVersionUID = -4163506699889716493L;
+    /**
      * The PepNovo rank score.
      */
     private double rankScore;
@@ -33,7 +37,11 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @return the PepNovo rank score
      */
     public double getRankScore() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+        
         return rankScore;
     }
 
@@ -43,7 +51,11 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.rankScore = rankScore;
     }
 
@@ -53,7 +65,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @return the PepNovo mH
      */
     public double getMH() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return mH;
     }
 
@@ -63,12 +77,18 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @param mH the PepNovo mH
      */
     public void setMH(double mH) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+        
         this.mH = mH;
     }
 
     @Override
-    public String getParameterKey() {
-        return "deNovo|1"; // Should not be changed for backward compatibility
+    public long getParameterKey() {
+        
+        return serialVersionUID;
+        
     }
 }

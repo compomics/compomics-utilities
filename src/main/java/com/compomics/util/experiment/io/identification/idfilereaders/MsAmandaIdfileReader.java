@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -229,19 +230,21 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 }
 
                 // get the modifications
-                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
+                ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>(1);
 
                 if (!modifications.isEmpty()) {
-                    String[] ptms = modifications.split(";");
 
-                    for (String ptm : ptms) {
+                    String[] modificationsString = modifications.split(";");
+                    for (int i = 0; i < modificationsString.length; i++) {
+
+                        String modificationString = modificationsString[i];
 
                         try {
                             // we expect something like this:
                             // N-Term(acetylation of protein n-term|42.010565|variable) or
                             // C4(carbamidomethyl c|57.021464|fixed)
 
-                            String location = ptm.substring(0, ptm.indexOf("("));
+                            String location = modificationString.substring(0, modificationString.indexOf("("));
                             int modSite;
 
                             if (location.equalsIgnoreCase("N-Term")) {
@@ -250,59 +253,69 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                                 modSite = peptideSequence.length() + 1;
                             } else {
                                 // amino acid type and index expected, e.g., C4 or M3
-                                modSite = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
+                                modSite = Integer.parseInt(modificationString.substring(1, modificationString.indexOf("(")));
                             }
 
-                            String rest = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
+                            String rest = modificationString.substring(modificationString.indexOf("(") + 1, modificationString.length() - 1).toLowerCase();
 
                             String[] details = rest.split("\\|");
-                            String ptmName = details[0]; // not currently used
-                            String ptmMassAsString = details[1];
-                            double ptmMass = Util.readDoubleAsString(ptmMassAsString);
-                            String ptmFixedStatus = details[2];
+                            String modName = details[0]; // not currently used
+                            String modMassAsString = details[1];
+                            double modMass = Util.readDoubleAsString(modMassAsString);
+                            String modFixedStatus = details[2];
 
-                            if (ptmFixedStatus.equalsIgnoreCase("variable")) {
-                                utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + peptideSequence.charAt(modSite - 1), true, modSite));
+                            if (modFixedStatus.equalsIgnoreCase("variable")) {
+
+                                utilitiesModifications.add(new ModificationMatch(modMass + "@" + peptideSequence.charAt(modSite - 1), true, modSite));
+
                             }
+
                         } catch (Exception e) {
-                            throw new IllegalArgumentException("Error parsing ptm: " + ptm + "!");
+                            throw new IllegalArgumentException("Error parsing modification: " + modificationString + ".");
                         }
                     }
                 }
 
                 // create the peptide
-                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
+                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
 
                 // create the peptide assumption
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), charge, msAmandaTransformedScore, Util.getFileName(msAmandaCsvFile));
                 peptideAssumption.setRawScore(msAmandaRawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
-                            newModificationMatches = null;
-                    if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                    }
+
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                        ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                .map(modificationMatch -> modificationMatch.clone())
+                                .toArray(ModificationMatch[]::new);
+
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                        if (previousModificationMatches != null) {
-                            for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                            }
-                        }
+
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(msAmandaRawScore);
                         currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
+
                     }
+
                 } else {
+
                     currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
+
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {
+
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
+
                     if (waitingHandler.isRunCanceled()) {
+
                         bufferedRandomAccessFile.close();
                         break;
+
                     }
                 }
             }

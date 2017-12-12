@@ -183,10 +183,10 @@
                          boolean&nbsp;useHtmlColorCoding,
                          boolean&nbsp;includeHtmlStartEndTags,
                          boolean&nbsp;useShortName,
-                         boolean&nbsp;excludeAllFixedPtms,
+                         boolean&nbsp;excludeAllFixedModifications,
                          boolean&nbsp;includeTerminalGaps)</code>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with PTM tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with modification tags, e.g, &lt;mox&gt;.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -329,7 +329,7 @@
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a></code></td>
 <td class="colLast"><span class="typeNameLabel">TagSpectrumAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/TagSpectrumAnnotator.html#getDefaultLosses-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getDefaultLosses</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingSettings)</code>
+                <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingSettings)</code>
 <div class="block">Returns the possible neutral losses expected by default for a given tag.</div>
 </td>
 </tr>
@@ -450,7 +450,7 @@
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -486,7 +486,7 @@
                             float&nbsp;forwardIonAlphaLevel,
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>

@@ -1,6 +1,8 @@
 
-package com.compomics.util.experiment.io.mass_spectrometry;
+package com.compomics.util.experiment.io.mass_spectrometry.msp;
 
+import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex;
+import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
@@ -36,13 +38,13 @@ public class MspReader extends MgfReader{
     public static Spectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
         String line;
-        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<>();
         double precursorMz = 0;
         double precursorIntensity = 0;//not assigned in msp file format case
         double rt = -1.0;//not assigned in msp file format case
         double rt1 = -1.0;//not assigned in msp file format case
         double rt2 = -1.0;//not assigned in msp file format case
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
@@ -149,7 +151,7 @@ public class MspReader extends MgfReader{
     @Override
     public ArrayList<Spectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
-        ArrayList<Spectrum> spectra = new ArrayList<Spectrum>();
+        ArrayList<Spectrum> spectra = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         try {
             Spectrum spectrum;
@@ -176,11 +178,11 @@ public class MspReader extends MgfReader{
      */
    public static MgfIndex getIndexMap(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        HashMap<String, Long> indexes = new HashMap<String, Long>();
-        HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
-        HashMap<Integer, Double> precursorMzMap = new HashMap<Integer, Double>();
-        LinkedHashSet<String> spectrumTitles = new LinkedHashSet<String>();
-        HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
+        HashMap<String, Long> indexes = new HashMap<>();
+        HashMap<String, Integer> spectrumIndexes = new HashMap<>();
+        HashMap<Integer, Double> precursorMzMap = new HashMap<>();
+        LinkedHashSet<String> spectrumTitles = new LinkedHashSet<>();
+        HashMap<String, Integer> duplicateTitles = new HashMap<>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mspFile, "r", 1024 * 100);
         long currentIndex = 0;
         String title = null;
@@ -255,7 +257,7 @@ public class MspReader extends MgfReader{
                 spectrumIndexes.put(title, spectrumCounter - 1);
                 
                 
-                ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+                ArrayList<Integer> precursorCharges = new ArrayList<>();
                 int val=Integer.parseInt(line.substring(line.indexOf('/') + 1));                  
                 precursorCharges.add(val);
                 
@@ -331,7 +333,7 @@ public class MspReader extends MgfReader{
         }
 
         // convert the spectrum titles to an arraylist
-        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<String>(); // @TODO: is there a faster way of doing this?
+        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<>(); // @TODO: is there a faster way of doing this?
         for (String temp : spectrumTitles) {
             spectrumTitlesAsArrayList.add(temp);
         }
@@ -358,7 +360,7 @@ public class MspReader extends MgfReader{
      */
     public static void addMissingSpectrumTitles(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        ArrayList<String> spectrumTitles = new ArrayList<>();
 
         File tempSpectrumFile = new File(mspFile.getParentFile(), mspFile.getName() + "_temp");
 
@@ -590,7 +592,7 @@ public class MspReader extends MgfReader{
      */
     public static void renameDuplicateSpectrumTitles(File mspFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        ArrayList<String> spectrumTitles = new ArrayList<>();
         File tempSpectrumFile = new File(mspFile.getParentFile(), mspFile.getName() + "_temp");
 
         FileWriter fw = new FileWriter(tempSpectrumFile);
@@ -683,7 +685,7 @@ public class MspReader extends MgfReader{
             }
 
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
-            ArrayList<File> splittedFiles = new ArrayList<File>();
+            ArrayList<File> splittedFiles = new ArrayList<>();
 
             int fileCounter = 1, spectrumCounter = 0;
             String currentName = splittedName + "_" + fileCounter + ".msp";
@@ -733,7 +735,7 @@ public class MspReader extends MgfReader{
             readBufferedRandomAccessFile.close();
 
             // index the new files
-            ArrayList<MgfIndex> mspIndexes = new ArrayList<MgfIndex>();
+            ArrayList<MgfIndex> mspIndexes = new ArrayList<>();
             for (int i = 0; i < splittedFiles.size(); i++) {
                 File newFile = splittedFiles.get(i);
 
@@ -777,13 +779,13 @@ public class MspReader extends MgfReader{
          
         bufferedRandomAccessFile.seek(index);
         String line;
-        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<>();
         double precursorMz = 0;
         double precursorIntensity = 0;//not assigned in msp file format case
         double rt = -1.0;//not assigned in msp file format case
         double rt1 = -1.0;//not assigned in msp file format case
         double rt2 = -1.0;//not assigned in msp file format case
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
+        ArrayList<Integer> precursorCharges = new ArrayList<>();
         String scanNumber = "";//not assigned in msp file format case
         String spectrumTitle = "";//msp spetrum name should be assigned for spetrumTitle as there is no spectrum title in msp file format
 
@@ -896,7 +898,7 @@ public class MspReader extends MgfReader{
         String line;
        // String spectrumName=null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Integer> precursorCharges = new ArrayList<Integer>(1);
+        ArrayList<Integer> precursorCharges = new ArrayList<>(1);
 
         do {
             line = bufferedRandomAccessFile.readLine();

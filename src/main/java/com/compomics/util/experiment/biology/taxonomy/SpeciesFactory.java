@@ -8,10 +8,12 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
 import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotTaxonomy;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Class related to the handling of species.
@@ -116,49 +118,79 @@ public class SpeciesFactory {
      *
      * @return a listing of the species occurrence map provided
      */
-    public static String getSpeciesDescription(HashMap<String, Integer> speciesOccurrence) {
+    public static String getSpeciesDescription(TreeMap<String, Integer> speciesOccurrence) {
 
-        HashMap<Integer, ArrayList<String>> occurrenceToSpecies = new HashMap<>(speciesOccurrence.size());
+        TreeMap<Integer, TreeSet<String>> occurrenceToSpecies = new TreeMap<>();
         double total = 0.0;
-        for (String taxonomy : speciesOccurrence.keySet()) {
-            Integer occurrence = speciesOccurrence.get(taxonomy);
+        
+        for (Map.Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
+            
+            String taxonomy = entry.getKey();
+            Integer occurrence = entry.getValue();
             total += occurrence;
-            ArrayList<String> species = occurrenceToSpecies.get(occurrence);
+            TreeSet<String> species = occurrenceToSpecies.get(occurrence);
+            
             if (species == null) {
-                species = new ArrayList<>(1);
+                
+                species = new TreeSet<>();
                 occurrenceToSpecies.put(occurrence, species);
+                
             }
+            
             species.add(taxonomy);
+            
         }
 
         StringBuilder description = new StringBuilder();
-        ArrayList<Integer> occurrences = new ArrayList<>(occurrenceToSpecies.keySet());
-        Collections.sort(occurrences, Collections.reverseOrder());
-        for (Integer occurrence : occurrences) {
-            ArrayList<String> species = occurrenceToSpecies.get(occurrence);
-            Collections.sort(species);
+        
+        for (Entry<Integer, TreeSet<String>> entry : occurrenceToSpecies.descendingMap().entrySet()) {
+            
+            int occurrence = entry.getKey();
+            TreeSet<String> species = entry.getValue();
+            
             for (String taxonomy : species) {
+                
                 double percentage = 100.0 * occurrence / total;
+                
                 if (description.length() > 0) {
+                    
                     description.append(", ");
+                    
                 }
+                
                 description.append(taxonomy);
+                
                 if (speciesOccurrence.size() > 1) {
+                    
                     String occurrencePercentage;
+                    
                     if (percentage > 99.9) {
+                        
                         occurrencePercentage = ">99.9";
+                        
                     } else if (percentage < 0.1) {
+                        
                         occurrencePercentage = "<0.1";
+                        
                     } else {
+                        
                         double roundedDouble = Util.roundDouble(percentage, 1);
-                        occurrencePercentage = roundedDouble + "";
+                        occurrencePercentage = Double.toString(roundedDouble);
+                        
                     }
-                    description.append(" (").append(occurrence).append(", ").append(occurrencePercentage).append("%)");
+                    
+                    description.append(" (")
+                            .append(occurrence)
+                            .append(", ")
+                            .append(occurrencePercentage)
+                            .append("%)");
+                    
                 }
             }
         }
 
         return description.toString();
+        
     }
 
     /**

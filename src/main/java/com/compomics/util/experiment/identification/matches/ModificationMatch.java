@@ -214,6 +214,7 @@ public class ModificationMatch extends ExperimentObject {
         ModificationMatch newMatch = new ModificationMatch(modification, variable, modifiedSite);
         newMatch.setConfident(confident);
         newMatch.setInferred(inferred);
+        
         return newMatch;
     }
 }

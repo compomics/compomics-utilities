@@ -8,6 +8,8 @@ import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
@@ -117,26 +119,38 @@ public class GeneParametersDialog extends javax.swing.JDialog {
             try {
 
                 FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile, searchParameters.getFastaParameters(), null); // @TODO use a progress bar?
-                HashMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
+                TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
 
                 // Select the background species based on occurrence in the factory
-                for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+                for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
 
+                    String uniprotTaxonomy = entry.getKey();
+                    
                     if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
-                        Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
+                        
+                        Integer occurrence = entry.getValue();
 
                         if (occurrence != null) {
+                            
                             try {
+                                
                                 Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                                
                                 if (taxon != null) {
+                                    
                                     if (genePreferences.getSelectedBackgroundSpecies() != null
                                             && genePreferences.getSelectedBackgroundSpecies().intValue() == taxon) {
+                                        
                                         selectedIndex = availableSpecies.size();
+                                        
                                     }
+                                    
                                     String tempSpecies = speciesFactory.getName(taxon) + " (" + occurrence + ")";
                                     availableSpecies.add(tempSpecies);
                                     speciesMap.put(tempSpecies, taxon);
+                                    
                                 }
+                                
                             } catch (Exception e) {
                                 // taxon not available, ignore
                                 e.printStackTrace();

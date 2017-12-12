@@ -56,45 +56,45 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      */
     private SearchParameters searchParameters;
     /**
-     * The peak annotation preferences.
+     * The peak annotation parameters.
      */
-    private AnnotationParameters annotationSettings;
+    private AnnotationParameters annotationParameters;
     /**
-     * The peptide to protein matching preferences.
+     * The peptide to protein matching parameters.
      */
-    private SequenceMatchingParameters sequenceMatchingPreferences;
+    private SequenceMatchingParameters sequenceMatchingParameters;
     /**
-     * The peptide variants preferences.
+     * The peptide variants parameters.
      */
-    private PeptideVariantsParameters peptideVariantsPreferences;
+    private PeptideVariantsParameters peptideVariantsParameters;
     /**
-     * The gene preferences.
+     * The gene parameters.
      */
-    private GeneParameters genePreferences;
+    private GeneParameters geneParameters;
     /**
      * The PSM scores to use.
      */
-    private PsmScoringParameters psmScoringPreferences;
+    private PsmScoringParameters psmScoringParameters;
     /**
      * The PSM filter.
      */
     private PeptideAssumptionFilter peptideAssumptionFilter;
     /**
-     * The PTM localization scoring preferences.
+     * The modification localization parameters.
      */
-    private ModificationLocalizationParameters ptmScoringPreferences;
+    private ModificationLocalizationParameters modificationLocalizationParameters;
     /**
-     * The protein inference preferences.
+     * The protein inference parameters.
      */
-    private ProteinInferenceParameters proteinInferencePreferences;
+    private ProteinInferenceParameters proteinInferenceParameters;
     /**
-     * The identification validation preferences.
+     * The identification validation parameters.
      */
-    private IdMatchValidationParameters idValidationPreferences;
+    private IdMatchValidationParameters idValidationParameters;
     /**
      * The fraction settings.
      */
-    private FractionParameters fractionSettings;
+    private FractionParameters fractionParameters;
 
     /**
      * Creates empty identification parameters.
@@ -109,8 +109,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param searchParameters the search parameters
      */
     public IdentificationParameters(SearchParameters searchParameters) {
+
         this.searchParameters = searchParameters;
         setParametersFromSearch(searchParameters);
+
     }
 
     /**
@@ -119,34 +121,39 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param name the name of the parameters
      * @param description the description
      * @param searchParameters the search parameters
-     * @param annotationSettings the annotation preferences
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideVariantsPreferences the peptide variant preferences
-     * @param genePreferences the gene preferences
-     * @param psmScoringPreferences the PSM scoring preferences
+     * @param annotationParameters the annotation parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param peptideVariantsParameters the peptide variant parameters
+     * @param geneParameters the gene parameters
+     * @param psmScoringParameters the PSM scoring parameters
      * @param peptideAssumptionFilter the peptide assumption filters
-     * @param ptmScoringPreferences the PTM localization scoring preferences
-     * @param proteinInferencePreferences the protein inference preferences
-     * @param idValidationPreferences the matches validation preferences
-     * @param fractionSettings the fraction settings
+     * @param ModificationLocalizationParameters the PTM localization scoring
+     * parameters
+     * @param proteinInferenceParameters the protein inference parameters
+     * @param idValidationParameters the matches validation parameters
+     * @param fractionParameters the fraction parameters
      */
-    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationParameters annotationSettings,
-            SequenceMatchingParameters sequenceMatchingPreferences, PeptideVariantsParameters peptideVariantsPreferences, GeneParameters genePreferences, PsmScoringParameters psmScoringPreferences,
-            PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ptmScoringPreferences, ProteinInferenceParameters proteinInferencePreferences,
-            IdMatchValidationParameters idValidationPreferences, FractionParameters fractionSettings) {
+    public IdentificationParameters(String name, String description,
+            SearchParameters searchParameters, AnnotationParameters annotationParameters,
+            SequenceMatchingParameters sequenceMatchingParameters, PeptideVariantsParameters peptideVariantsParameters,
+            GeneParameters geneParameters, PsmScoringParameters psmScoringParameters,
+            PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ModificationLocalizationParameters,
+            ProteinInferenceParameters proteinInferenceParameters, IdMatchValidationParameters idValidationParameters,
+            FractionParameters fractionParameters) {
+
         this.name = name;
         this.description = description;
         this.searchParameters = searchParameters;
-        this.annotationSettings = annotationSettings;
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
-        this.peptideVariantsPreferences = peptideVariantsPreferences;
-        this.genePreferences = genePreferences;
-        this.psmScoringPreferences = psmScoringPreferences;
+        this.annotationParameters = annotationParameters;
+        this.sequenceMatchingParameters = sequenceMatchingParameters;
+        this.peptideVariantsParameters = peptideVariantsParameters;
+        this.geneParameters = geneParameters;
+        this.psmScoringParameters = psmScoringParameters;
         this.peptideAssumptionFilter = peptideAssumptionFilter;
-        this.ptmScoringPreferences = ptmScoringPreferences;
-        this.proteinInferencePreferences = proteinInferencePreferences;
-        this.idValidationPreferences = idValidationPreferences;
-        this.fractionSettings = fractionSettings;
+        this.modificationLocalizationParameters = ModificationLocalizationParameters;
+        this.proteinInferenceParameters = proteinInferenceParameters;
+        this.idValidationParameters = idValidationParameters;
+        this.fractionParameters = fractionParameters;
     }
 
     /**
@@ -155,7 +162,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the parameters used for the spectrum matching
      */
     public SearchParameters getSearchParameters() {
+
         return searchParameters;
+
     }
 
     /**
@@ -164,9 +173,13 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param searchParameters the parameters used for the spectrum matching
      */
     public void setSearchParameters(SearchParameters searchParameters) {
+
         this.searchParameters = searchParameters;
+
         if (defaultDescription || description == null || description.length() == 0) {
+
             setDescription(searchParameters.getShortDescription(), true);
+
         }
     }
 
@@ -180,8 +193,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the relative tolerance in ppm
      */
     public static double getPpmTolerance(double daltonTolerance, double refMass) {
-        double result = daltonTolerance / refMass * 1000000;
-        return result;
+
+        return daltonTolerance / refMass * 1000000.0;
+
     }
 
     /**
@@ -194,31 +208,32 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the relative tolerance in ppm
      */
     public static double getDaTolerance(double ppmTolerance, double refMass) {
-        double result = ppmTolerance / 1000000 * refMass;
-        return result;
+
+        return ppmTolerance / 1000000.0 * refMass;
+
     }
 
     /**
-     * Returns the annotation preferences used for identification.
+     * Returns the annotation parameters used for identification.
      *
-     * @return the annotation preferences used for identification
+     * @return the annotation parameters used for identification
      */
-    public AnnotationParameters getAnnotationPreferences() {
-        if (annotationSettings == null) { // Backward compatibility
-            annotationSettings = new AnnotationParameters();
-            annotationSettings.setPreferencesFromSearchParameters(searchParameters);
-        }
-        return annotationSettings;
+    public AnnotationParameters getAnnotationParameters() {
+
+        return annotationParameters;
+
     }
 
     /**
-     * Sets the annotation preferences used for identification.
+     * Sets the annotation parameters used for identification.
      *
-     * @param annotationSettings the annotation preferences used for
+     * @param annotationParameters the annotation parameters used for
      * identification
      */
-    public void setAnnotationSettings(AnnotationParameters annotationSettings) {
-        this.annotationSettings = annotationSettings;
+    public void setAnnotationParameters(AnnotationParameters annotationParameters) {
+
+        this.annotationParameters = annotationParameters;
+
     }
 
     /**
@@ -227,7 +242,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the filter used when importing PSMs
      */
     public PeptideAssumptionFilter getPeptideAssumptionFilter() {
+
         return peptideAssumptionFilter;
+
     }
 
     /**
@@ -235,160 +252,189 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      *
      * @param peptideAssumptionFilter the filter used when importing PSMs
      */
-    public void setIdFilter(PeptideAssumptionFilter peptideAssumptionFilter) {
+    public void setPeptideAssumptionFilter(PeptideAssumptionFilter peptideAssumptionFilter) {
+
         this.peptideAssumptionFilter = peptideAssumptionFilter;
+
     }
 
     /**
-     * Returns the scoring preferences used when scoring PSMs.
+     * Returns the scoring parameters used when scoring PSMs.
      *
-     * @return the scoring preferences used when scoring PSMs
+     * @return the scoring parameters used when scoring PSMs
      */
-    public PsmScoringParameters getPsmScoringPreferences() {
-        return psmScoringPreferences;
+    public PsmScoringParameters getPsmScoringParameters() {
+
+        return psmScoringParameters;
+
     }
 
     /**
      * Sets the scoring preferences used when scoring PSMs.
      *
-     * @param psmScoringPreferences the scoring preferences used when scoring
+     * @param psmScoringParameters the scoring preferences used when scoring
      * PSMs
      */
-    public void setPsmScoringPreferences(PsmScoringParameters psmScoringPreferences) {
-        this.psmScoringPreferences = psmScoringPreferences;
+    public void setPsmScoringParameters(PsmScoringParameters psmScoringParameters) {
+
+        this.psmScoringParameters = psmScoringParameters;
+
     }
 
     /**
-     * Returns the PTM localization scoring preferences.
+     * Returns the modification localization scoring parameters.
      *
-     * @return the PTM localization scoring preferences
+     * @return the modification localization scoring parameters
      */
-    public ModificationLocalizationParameters getPtmScoringPreferences() {
-        return ptmScoringPreferences;
+    public ModificationLocalizationParameters getModificationLocalizationParameters() {
+
+        return modificationLocalizationParameters;
+
     }
 
     /**
-     * Sets the PTM localization scoring preferences.
+     * Sets the modification localization parameters.
      *
-     * @param ptmScoringPreferences the PTM localization scoring preferences
+     * @param modificationLocalizationParameters the modification localization
+     * parameters
      */
-    public void setPtmScoringPreferences(ModificationLocalizationParameters ptmScoringPreferences) {
-        this.ptmScoringPreferences = ptmScoringPreferences;
+    public void setModificationLocalizationParameters(ModificationLocalizationParameters modificationLocalizationParameters) {
+
+        this.modificationLocalizationParameters = modificationLocalizationParameters;
+
     }
 
     /**
-     * Returns the sequence matching preferences.
+     * Returns the sequence matching parameters.
      *
-     * @return the sequence matching preferences
+     * @return the sequence matching parameters
      */
-    public SequenceMatchingParameters getSequenceMatchingPreferences() {
-        return sequenceMatchingPreferences;
+    public SequenceMatchingParameters getSequenceMatchingParameters() {
+
+        return sequenceMatchingParameters;
+
     }
 
     /**
      * Sets the sequence matching preferences.
      *
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      */
-    public void setSequenceMatchingPreferences(SequenceMatchingParameters sequenceMatchingPreferences) {
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
+    public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
+
+        this.sequenceMatchingParameters = sequenceMatchingParameters;
+
     }
 
     /**
-     * Returns the peptide variant preferences.
-     * 
-     * @return the peptide variant preferences
-     */
-    public PeptideVariantsParameters getPeptideVariantsPreferences() {
-        if (peptideVariantsPreferences == null) { // Backward compatibility
-            peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
-        }
-        return peptideVariantsPreferences;
-    }
-
-    /**
-     * Sets the peptide variant preferences.
-     * 
-     * @param peptideVariantsPreferences the peptide variant preferences
-     */
-    public void setPeptideVariantsPreferences(PeptideVariantsParameters peptideVariantsPreferences) {
-        this.peptideVariantsPreferences = peptideVariantsPreferences;
-    }
-
-    /**
-     * Returns the identification matches validation preferences.
+     * Returns the peptide variant parameters.
      *
-     * @return the identification matches validation preferences
+     * @return the peptide variant parameters
      */
-    public IdMatchValidationParameters getIdValidationPreferences() {
-        return idValidationPreferences;
+    public PeptideVariantsParameters getPeptideVariantsParameters() {
+
+        return peptideVariantsParameters;
+
     }
 
     /**
-     * Sets the identification matches validation preferences.
+     * Sets the peptide variant parameters.
      *
-     * @param idValidationPreferences the identification matches validation
-     * preferences
+     * @param peptideVariantsParameters the peptide variant parameters
      */
-    public void setIdValidationPreferences(IdMatchValidationParameters idValidationPreferences) {
-        this.idValidationPreferences = idValidationPreferences;
+    public void setPeptideVariantsParameters(PeptideVariantsParameters peptideVariantsParameters) {
+
+        this.peptideVariantsParameters = peptideVariantsParameters;
+
     }
 
     /**
-     * Returns the protein inference preferences.
+     * Returns the identification matches validation parameters.
      *
-     * @return the protein inference preferences
+     * @return the identification matches validation parameters
      */
-    public ProteinInferenceParameters getProteinInferencePreferences() {
-        return proteinInferencePreferences;
+    public IdMatchValidationParameters getIdValidationParameters() {
+
+        return idValidationParameters;
+
     }
 
     /**
-     * Sets the protein inference preferences.
+     * Sets the identification matches validation parameters.
      *
-     * @param proteinInferencePreferences the protein inference preferences
+     * @param idValidationParameters the identification matches validation
+     * parameters
      */
-    public void setProteinInferencePreferences(ProteinInferenceParameters proteinInferencePreferences) {
-        this.proteinInferencePreferences = proteinInferencePreferences;
+    public void setIdValidationParameters(IdMatchValidationParameters idValidationParameters) {
+
+        this.idValidationParameters = idValidationParameters;
+
     }
 
     /**
-     * Returns the gene preferences.
+     * Returns the protein inference parameters.
      *
-     * @return the gene preferences
+     * @return the protein inference parameters
      */
-    public GeneParameters getGenePreferences() {
-        return genePreferences;
+    public ProteinInferenceParameters getProteinInferenceParameters() {
+
+        return proteinInferenceParameters;
+
     }
 
     /**
-     * Sets the gene preferences.
+     * Sets the protein inference parameters.
      *
-     * @param genePreferences the gene preferences
+     * @param proteinInferenceParameters the protein inference parameters
      */
-    public void setGenePreferences(GeneParameters genePreferences) {
-        this.genePreferences = genePreferences;
+    public void setProteinInferenceParameters(ProteinInferenceParameters proteinInferenceParameters) {
+
+        this.proteinInferenceParameters = proteinInferenceParameters;
+
     }
 
     /**
-     * Returns the fraction settings.
+     * Returns the gene parameters.
      *
-     * @return the fraction settings
+     * @return the gene parameters
      */
-    public FractionParameters getFractionSettings() {
-        if (fractionSettings == null) { // Backward compatibility
-            return new FractionParameters();
-        }
-        return fractionSettings;
+    public GeneParameters getGeneParameters() {
+
+        return geneParameters;
+
     }
 
     /**
-     * Sets the fraction settings.
+     * Sets the gene parameters.
      *
-     * @param fractionSettings the fraction settings
+     * @param geneParameters the gene parameters
      */
-    public void setFractionSettings(FractionParameters fractionSettings) {
-        this.fractionSettings = fractionSettings;
+    public void setGeneParameters(GeneParameters geneParameters) {
+
+        this.geneParameters = geneParameters;
+
+    }
+
+    /**
+     * Returns the fraction parameters.
+     *
+     * @return the fraction parameters
+     */
+    public FractionParameters getFractionParameters() {
+
+        return fractionParameters;
+
+    }
+
+    /**
+     * Sets the fraction parameters.
+     *
+     * @param fractionParameters the fraction parameters
+     */
+    public void setFractionParameters(FractionParameters fractionParameters) {
+
+        this.fractionParameters = fractionParameters;
+
     }
 
     /**
@@ -399,52 +445,56 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      *
      * @return the parameters
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws IOException if an error occurs while reading the file
+     * @throws ClassNotFoundException if the file could not be casted
      */
     public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws IOException, ClassNotFoundException {
 
         Object savedObject;
 
-        try {
-            // try as json file
             IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
             Class expectedObjectType = DummyParameters.class;
             Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
             DummyParameters dummyParameters = (DummyParameters) object;
+
             if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
+                
                 expectedObjectType = SearchParameters.class;
                 savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+            
             } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+
                 expectedObjectType = IdentificationParameters.class;
                 savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+
             } else {
+
                 throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
+
             }
-        } catch (Exception e1) {
-            try {
-                // try serialized java object
-                savedObject = SerializationUtils.readObject(identificationParametersFile);
-            } catch (Exception e2) {
-                e1.printStackTrace();
-                e2.printStackTrace();
-                throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
-            }
-        }
 
         IdentificationParameters identificationParameters;
+
         if (savedObject instanceof SearchParameters) {
+
             SearchParameters searchParameters = (SearchParameters) savedObject;
             identificationParameters = new IdentificationParameters(searchParameters);
             identificationParameters.setName(Util.removeExtension(identificationParametersFile.getName()));
+
         } else if (savedObject instanceof IdentificationParameters) {
+
             identificationParameters = (IdentificationParameters) savedObject;
+
         } else {
+
             throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
+
         }
+
         identificationParameters.getSearchParameters().getDigestionParameters();
 
         return identificationParameters;
+
     }
 
     /**
@@ -453,25 +503,15 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param identificationParameters the identification parameters
      * @param identificationParametersFile the file
      *
-     * @throws IOException if an IOException occurs
+     * @throws IOException if an error occurred while writing the file
      */
     public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File identificationParametersFile) throws IOException {
-
-        // Temporary fix for the parameters not in utilities
-        IdMatchValidationParameters idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
-        if (idMatchValidationPreferences != null) {
-            ValidationQcParameters validationQCPreferences = idMatchValidationPreferences.getValidationQCPreferences();
-            if (validationQCPreferences != null) {
-                idMatchValidationPreferences = new IdMatchValidationParameters(idMatchValidationPreferences);
-                idMatchValidationPreferences.setValidationQCPreferences(new ValidationQcParameters());
-                identificationParameters = new IdentificationParameters(identificationParameters.getName(), identificationParameters.getDescription(), identificationParameters.getSearchParameters(), identificationParameters.getAnnotationPreferences(), identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getPeptideVariantsPreferences(), identificationParameters.getGenePreferences(), identificationParameters.getPsmScoringPreferences(), identificationParameters.getPeptideAssumptionFilter(), identificationParameters.ptmScoringPreferences, identificationParameters.getProteinInferencePreferences(), idMatchValidationPreferences, identificationParameters.getFractionSettings());
-            }
-        }
 
         // Save to json file
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
+        
     }
 
     /**
@@ -480,7 +520,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the name of the parameters
      */
     public String getName() {
+        
         return name;
+        
     }
 
     /**
@@ -489,7 +531,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param name the name of the parameters
      */
     public void setName(String name) {
+        
         this.name = name;
+        
     }
 
     /**
@@ -498,7 +542,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the description of the parameters
      */
     public String getDescription() {
+        
         return description;
+        
     }
 
     /**
@@ -507,11 +553,16 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return a boolean indicating whether the description is automatically
      * generated
      */
-    public Boolean getDefaultDescription() {
+    public boolean getDefaultDescription() {
+        
         if (defaultDescription == null) {
+            
             return false;
+            
         }
+        
         return defaultDescription;
+        
     }
 
     /**
@@ -522,8 +573,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * is automatically generated
      */
     public void setDescription(String description, boolean automaticallyGenerated) {
+        
         this.description = description;
         this.defaultDescription = automaticallyGenerated;
+        
     }
 
     /**
@@ -532,63 +585,107 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param searchParameters the parameters used for the search
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
+        
         setSearchParameters(searchParameters);
-        annotationSettings = new AnnotationParameters();
-        annotationSettings.addNeutralLoss(NeutralLoss.H2O);
-        annotationSettings.addNeutralLoss(NeutralLoss.NH3);
+        annotationParameters = new AnnotationParameters();
+        annotationParameters.addNeutralLoss(NeutralLoss.H2O);
+        annotationParameters.addNeutralLoss(NeutralLoss.NH3);
+        
         if (searchParameters != null) {
-            annotationSettings.setPreferencesFromSearchParameters(searchParameters);
+            
+            annotationParameters.setPreferencesFromSearchParameters(searchParameters);
+            
         }
-        annotationSettings.setIntensityLimit(0.75);
-        annotationSettings.setAutomaticAnnotation(true);
+        
+        annotationParameters.setIntensityLimit(0.75);
+        annotationParameters.setAutomaticAnnotation(true);
         peptideAssumptionFilter = new PeptideAssumptionFilter();
+        
         if (searchParameters != null) {
+            
             peptideAssumptionFilter.setFilterFromSearchParameters(searchParameters);
+            
         }
-        if (psmScoringPreferences == null) {
-            psmScoringPreferences = new PsmScoringParameters();
+        
+        if (psmScoringParameters == null) {
+            
+            psmScoringParameters = new PsmScoringParameters();
+            
         }
-        if (ptmScoringPreferences == null) {
-            ptmScoringPreferences = new ModificationLocalizationParameters();
+        
+        if (modificationLocalizationParameters == null) {
+            
+            modificationLocalizationParameters = new ModificationLocalizationParameters();
+            
         }
-        if (sequenceMatchingPreferences == null) {
-            sequenceMatchingPreferences = SequenceMatchingParameters.getDefaultSequenceMatching();
+        
+        if (sequenceMatchingParameters == null) {
+            
+            sequenceMatchingParameters = SequenceMatchingParameters.getDefaultSequenceMatching();
+            
         }
-        if (peptideVariantsPreferences == null) {
-            peptideVariantsPreferences = new PeptideVariantsParameters();
+        
+        if (peptideVariantsParameters == null) {
+            
+            peptideVariantsParameters = new PeptideVariantsParameters();
+            
         }
-        if (genePreferences == null) {
-            genePreferences = new GeneParameters();
-            genePreferences.setPreferencesFromSearchParameters(searchParameters);
+        
+        if (geneParameters == null) {
+            
+            geneParameters = new GeneParameters();
+            geneParameters.setPreferencesFromSearchParameters(searchParameters);
+            
         }
-        if (proteinInferencePreferences == null) {
-            proteinInferencePreferences = new ProteinInferenceParameters();
+        
+        if (proteinInferenceParameters == null) {
+            
+            proteinInferenceParameters = new ProteinInferenceParameters();
+            
             if (searchParameters != null && searchParameters.getFastaFile() != null) {
-                proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
+                
+                proteinInferenceParameters.setProteinSequenceDatabase(searchParameters.getFastaFile());
+                
             }
         }
-        if (idValidationPreferences == null) {
-            idValidationPreferences = new IdMatchValidationParameters();
+        
+        if (idValidationParameters == null) {
+            
+            idValidationParameters = new IdMatchValidationParameters();
+            
         }
-        if (fractionSettings == null) {
-            fractionSettings = new FractionParameters();
+        
+        if (fractionParameters == null) {
+            
+            fractionParameters = new FractionParameters();
+            
         }
+        
         if (searchParameters != null) {
+            
             setDescription(searchParameters.getShortDescription(), true);
+            
         }
     }
 
     @Override
     public void setType() {
+        
         marshallableParameterType = Type.identification_parameters.name();
+        
     }
 
     @Override
     public Type getType() {
+        
         if (marshallableParameterType == null) {
+            
             return null;
+            
         }
+        
         return Type.valueOf(marshallableParameterType);
+        
     }
 
     /**
@@ -603,62 +700,71 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
 
         if (otherIdentificationParameters == null) {
+            
             return false;
-        }
-
-        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
-            return false;
-        }
-
-        return equalsExceptValidationPreferences(otherIdentificationParameters);
-    }
-
-    /**
-     * Returns true if the identification parameter objects have identical
-     * settings except for the validation preferences.
-     *
-     * @param otherIdentificationParameters the parameters to compare to
-     *
-     * @return true if the identification parameter objects have identical
-     * settings except for the validation preferences
-     */
-    public boolean equalsExceptValidationPreferences(IdentificationParameters otherIdentificationParameters) {
-
-        if (otherIdentificationParameters == null) {
-            return false;
+            
         }
 
         if (!searchParameters.equals(otherIdentificationParameters.getSearchParameters())) {
+            
             return false;
+            
         }
-        if (!annotationSettings.isSameAs(otherIdentificationParameters.getAnnotationPreferences())) {
+        if (!annotationParameters.isSameAs(otherIdentificationParameters.getAnnotationParameters())) {
+            
             return false;
+            
         }
-        if (!sequenceMatchingPreferences.isSameAs(otherIdentificationParameters.getSequenceMatchingPreferences())) {
+        
+        if (!sequenceMatchingParameters.isSameAs(otherIdentificationParameters.getSequenceMatchingParameters())) {
+            
             return false;
+            
         }
-        if (!getPeptideVariantsPreferences().isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
+        
+        if (!getPeptideVariantsParameters().isSameAs(otherIdentificationParameters.getPeptideVariantsParameters())) {
+            
             return false;
+            
         }
-        if (!genePreferences.equals(otherIdentificationParameters.getGenePreferences())) {
+        
+        if (!geneParameters.equals(otherIdentificationParameters.getGeneParameters())) {
+            
             return false;
+            
         }
-        if (!psmScoringPreferences.equals(otherIdentificationParameters.getPsmScoringPreferences())) {
+        
+        if (!psmScoringParameters.equals(otherIdentificationParameters.getPsmScoringParameters())) {
+            
             return false;
+            
         }
+        
         if (!peptideAssumptionFilter.isSameAs(otherIdentificationParameters.getPeptideAssumptionFilter())) {
+            
             return false;
+            
         }
-        if (!ptmScoringPreferences.equals(otherIdentificationParameters.getPtmScoringPreferences())) {
+        
+        if (!modificationLocalizationParameters.equals(otherIdentificationParameters.getModificationLocalizationParameters())) {
+            
             return false;
+            
         }
-        if (!proteinInferencePreferences.equals(otherIdentificationParameters.getProteinInferencePreferences())) {
+        
+        if (!proteinInferenceParameters.equals(otherIdentificationParameters.getProteinInferenceParameters())) {
+            
             return false;
+            
         }
-        if (!fractionSettings.isSameAs(otherIdentificationParameters.getFractionSettings())) {
+        
+        if (!fractionParameters.isSameAs(otherIdentificationParameters.getFractionParameters())) {
+            
             return false;
+            
         }
 
         return true;
+        
     }
 }

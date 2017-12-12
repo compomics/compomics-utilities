@@ -1,7 +1,7 @@
 package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
-import com.compomics.util.experiment.identification.modification.PtmScore;
+import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import org.apache.commons.cli.Options;
@@ -322,7 +322,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // PTM localization parameters
     //////////////////////////////////
-    PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + PtmScore.getCommandLineOptions() + ", default is '1').", false, true),
+    PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + ModificationLocalizationScore.getCommandLineOptions() + ", default is '1').", false, true),
     PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
     PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 

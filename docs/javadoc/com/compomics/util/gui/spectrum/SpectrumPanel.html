@@ -469,7 +469,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
@@ -501,7 +501,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             boolean&nbsp;showRewindTags,
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -521,7 +521,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             float&nbsp;forwardIonAlphaLevel,
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
@@ -553,7 +553,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -589,7 +589,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             float&nbsp;forwardIonAlphaLevel,
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                            boolean&nbsp;excludeFixedPtms,
+                            boolean&nbsp;excludeFixedModifications,
                             boolean&nbsp;mirrored)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
@@ -1480,7 +1480,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default percent
  height of 0.9 for the forward ions and 1.0 for the reverse ions default
- alpha levels of 0.2. Fixed PTMs are not annotated.</div>
+ alpha levels of 0.2. Fixed modificatoins are not annotated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>currentPeptide</code> - the current peptide sequence</dd>
@@ -1517,7 +1517,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;rewindIonPercentHeight,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
- levels of 0.2. Fixed PTMs are not annotated.</div>
+ levels of 0.2. Fixed modifications are not annotated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>currentPeptide</code> - the current peptide sequence</dd>
@@ -1556,7 +1556,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          boolean&nbsp;showRewindTags,
                                          double&nbsp;forwardIonPercentHeight,
                                          double&nbsp;rewindIonPercentHeight,
-                                         boolean&nbsp;excludeFixedPtms,
+                                         boolean&nbsp;excludeFixedModifications,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -1579,7 +1579,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  annotation [0-1]</dd>
 <dd><code>rewindIonPercentHeight</code> - the percent height of the reverse ion
  annotation [0-1]</dd>
-<dd><code>excludeFixedPtms</code> - are fixed PTMs to be annotated?</dd>
+<dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
 </dl>
 </li>
@@ -1600,7 +1600,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default percent
  height of 0.9 for the forward ions and 1.0 for the reverse ions default
- alpha levels of 0.2. Fixed PTMs are not annotated.</div>
+ alpha levels of 0.2. Fixed modifications are not annotated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tag</code> - the current tag sequence</dd>
@@ -1637,7 +1637,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;rewindIonPercentHeight,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
- levels of 0.2. Fixed PTMs are not annotated.</div>
+ levels of 0.2. Fixed modifications are not annotated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tag</code> - the current tag sequence</dd>
@@ -1677,7 +1677,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;forwardIonPercentHeight,
                                          double&nbsp;rewindIonPercentHeight,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                                         boolean&nbsp;excludeFixedPtms,
+                                         boolean&nbsp;excludeFixedModifications,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
@@ -1702,7 +1702,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  annotation [0-1]</dd>
 <dd><code>alphaLevels</code> - the individual alpha levels, if set override
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
-<dd><code>excludeFixedPtms</code> - are fixed PTMs to be annotated?</dd>
+<dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
 </dl>
 </li>
@@ -1723,7 +1723,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;forwardIonPercentHeight,
                                          double&nbsp;rewindIonPercentHeight,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                                         boolean&nbsp;excludeFixedPtms,
+                                         boolean&nbsp;excludeFixedModifications,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 <dl>
@@ -1747,7 +1747,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  annotation [0-1]</dd>
 <dd><code>alphaLevels</code> - the individual alpha levels, if set override
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
-<dd><code>excludeFixedPtms</code> - are fixed PTMs to be annotated?</dd>
+<dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
 </dl>
 </li>
@@ -1770,7 +1770,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          float&nbsp;forwardIonAlphaLevel,
                                          float&nbsp;rewindIonAlphaLevel,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                                         boolean&nbsp;excludeFixedPtms,
+                                         boolean&nbsp;excludeFixedModifications,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 <dl>
@@ -1796,7 +1796,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 <dd><code>rewindIonAlphaLevel</code> - alpha level of the reverse ions</dd>
 <dd><code>alphaLevels</code> - the individual alpha levels, if set override
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
-<dd><code>excludeFixedPtms</code> - are fixed PTMs to be annotated?</dd>
+<dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
 </dl>
 </li>
@@ -1819,7 +1819,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          float&nbsp;forwardIonAlphaLevel,
                                          float&nbsp;rewindIonAlphaLevel,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
-                                         boolean&nbsp;excludeFixedPtms,
+                                         boolean&nbsp;excludeFixedModifications,
                                          boolean&nbsp;mirrored)</pre>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 <dl>
@@ -1845,7 +1845,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 <dd><code>rewindIonAlphaLevel</code> - alpha level of the reverse ions</dd>
 <dd><code>alphaLevels</code> - the individual alpha levels, if set override
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
-<dd><code>excludeFixedPtms</code> - are fixed PTMs to be annotated?</dd>
+<dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
 </dl>
 </li>

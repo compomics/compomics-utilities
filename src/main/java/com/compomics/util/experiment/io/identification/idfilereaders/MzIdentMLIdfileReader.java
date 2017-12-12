@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -320,7 +321,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
                         for (Modification modification : mzIdentMLPeptide.getModification()) {
 
-                            String accession = modification.getCvParam().get(0).getAccession(); // note: only the first ptm cv term is used
+                            String accession = modification.getCvParam().get(0).getAccession(); // note: only the first cv term is used
                             int location = modification.getLocation();
                             double monoMassDelta = modification.getMonoisotopicMassDelta();
 
@@ -386,9 +387,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             if (!fixed) {
 
                                 if (location == 0) {
-                                    location = 1; // n-term ptm
+                                    location = 1; // n-term
                                 } else if (location == peptideSequence.length() + 1) {
-                                    location -= 1; // c-term ptm
+                                    location -= 1; // c-term
                                 }
 
                                 utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), true, location));
@@ -396,7 +397,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         }
 
                         // create the peptide
-                        Peptide peptide = new Peptide(peptideSequence, utilitiesModifications, true);
+                        Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
 
                         // get the e-value and advocate
                         HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
@@ -413,18 +414,17 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         }
 
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
-                            ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
-                                    newModificationMatches = null;
-                            if (previousModificationMatches != null) {
-                                newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                            }
+
+                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                                ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                        .map(modificationMatch -> modificationMatch.clone())
+                                        .toArray(ModificationMatch[]::new);
+
                                 Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                                if (previousModificationMatches != null) {
-                                    for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                                    }
-                                }
+
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                                 if (rawScore != null) {
                                     newAssumption.setRawScore(rawScore);
@@ -577,7 +577,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectraData")) {
                     parseSpectraData(parser, spectrumFileNameMap);
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("ModificationParams")) {
-                    parseFixedPtms(parser);
+                    parseFixedModifications(parser);
                 } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectrumIdentificationResult")) {
                     parsePsm(parser, result);
                 }
@@ -851,7 +851,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @param parser the XML parser
      * @throws Exception thrown if an exception occurs
      */
-    private void parseFixedPtms(XmlPullParser parser) throws Exception {
+    private void parseFixedModifications(XmlPullParser parser) throws Exception {
 
         parser.next();
         parser.next();
@@ -864,7 +864,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 Double massDelta = null;
                 boolean fixed = false;
                 ArrayList<String> modRuleCvTerms = new ArrayList<>();
-                ArrayList<String> ptmCvTerms = new ArrayList<>();
+                ArrayList<String> modCvTerms = new ArrayList<>();
 
                 for (int i = 0; i < parser.getAttributeCount(); i++) {
                     String attributeName = parser.getAttributeName(i);
@@ -932,7 +932,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         }
 
                         if (accession != null && !accession.equalsIgnoreCase("MS:1002504")) { // ignore MS:1002504 - modification index
-                            ptmCvTerms.add(accession);
+                            modCvTerms.add(accession);
                         }
                     }
 
@@ -941,10 +941,14 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     parser.next();
                 }
 
-                if (fixed && !ptmCvTerms.isEmpty()) {
-                    for (String tempPtmCvTerm : ptmCvTerms) {
-                        fixedModificationsCustomParser.add(new SearchModificationCustom(tempPtmCvTerm, residues, massDelta, modRuleCvTerms));
+                if (fixed && !modCvTerms.isEmpty()) {
+
+                    for (String tempCvTerm : modCvTerms) {
+
+                        fixedModificationsCustomParser.add(new SearchModificationCustom(tempCvTerm, residues, massDelta, modRuleCvTerms));
+
                     }
+
                 }
 
                 parser.next();
@@ -1169,19 +1173,30 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
             // create a new peptide
             ArrayList<ModificationMatch> modMatches = new ArrayList<>();
+
             for (SearchModificationCustom tempMod : tempPeptide.getModifications()) {
+
                 if (isVariableModification(tempMod, tempPeptide.getPeptideSequence())) {
+
                     // correct for terminal modifications
                     int location = tempMod.getLocation();
+
                     if (location == 0) {
+
                         location = 1; // n-term ptm
+
                     } else if (location == tempPeptide.getPeptideSequence().length() + 1) {
+
                         location -= 1; // c-term ptm
+
                     }
+
                     modMatches.add(new ModificationMatch(tempMod.getMassDelta() + "@" + tempPeptide.getPeptideSequence().charAt(location - 1), true, location));
+
                 }
             }
-            Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches, true);
+
+            Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches.toArray(new ModificationMatch[modMatches.size()]), true);
 
             // create the peptide assumption
             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), chargeState, eValue, mzIdentMLFileName);
@@ -1191,23 +1206,27 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
 
             if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
-                ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
-                        newModificationMatches = null;
-                if (previousModificationMatches != null) {
-                    newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                }
+
+                ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                    ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                            .toArray(ModificationMatch[]::new);
+
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                    if (previousModificationMatches != null) {
-                        for (ModificationMatch modificationMatch : previousModificationMatches) {
-                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                        }
-                    }
+
                     PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+
                     if (rawScore != null) {
+
                         newAssumption.setRawScore(rawScore);
+
                     }
+
                     currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
+
                 }
             } else {
                 currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
@@ -1266,7 +1285,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @return the e-value object for the given CV term, null if not found
      */
     private EValueObject getEValueObject(HashMap<String, Double> scoreMap, Advocate advocate, String cvTerm, RawValueConversionType rawValueConversionType) {
-        
+
         EValueObject eValueObject = null;
         Double eValue = scoreMap.get(cvTerm), rawScore = null;
 

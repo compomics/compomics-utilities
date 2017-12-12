@@ -60,21 +60,36 @@ public class EnzymeFactory {
      * @return the factory instance
      */
     public static EnzymeFactory getInstance(File enzymeFile) {
+
         if (instance == null) {
+
             try {
+
                 if (enzymeFile == null && getSerializationFile() != null) {
+
                     enzymeFile = new File(getSerializationFile());
+
                 }
+
                 if (enzymeFile != null && enzymeFile.exists()) {
+
                     instance = loadFromFile(enzymeFile);
+
                 } else {
+
                     instance = getDefault();
+
                 }
+
             } catch (Exception e) {
+
                 instance = getDefault();
+
             }
         }
+
         return instance;
+
     }
 
     /**

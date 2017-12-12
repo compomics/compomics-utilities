@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.mass_spectrometry;
+package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;

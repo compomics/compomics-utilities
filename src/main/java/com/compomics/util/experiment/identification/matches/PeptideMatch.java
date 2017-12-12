@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import java.util.HashSet;
+import java.util.Arrays;
 
 /**
  * This class models a peptide match.
@@ -18,17 +18,17 @@ public class PeptideMatch extends IdentificationMatch {
      */
     static final long serialVersionUID = 7195830246336841081L;
     /**
-     * The theoretic peptide match.
+     * The peptide.
      */
     private Peptide peptide;
     /**
      * The key of the match.
      */
-    private String key;
+    private long key;
     /**
-     * All spectrum matches indexed by spectrum id.
+     * The keys of the spectrum matches linking to this peptide match.
      */
-    private HashSet<String> spectrumMatchesKeys = new HashSet<>(1);
+    private long[] spectrumMatchesKeys;
     /**
      * Is the peptide match a decoy hit?
      */
@@ -40,10 +40,13 @@ public class PeptideMatch extends IdentificationMatch {
      * @return a boolean indicating whether the peptide maps to a decoy sequence
      */
     public boolean getIsDecoy() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         return isDecoy;
+        
     }
 
     /**
@@ -53,23 +56,22 @@ public class PeptideMatch extends IdentificationMatch {
      * sequence
      */
     public void setIsDecoy(boolean isDecoy) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
+        
         this.isDecoy = isDecoy;
-    }
-
-    /**
-     * Constructor for the peptide match.
-     */
-    public PeptideMatch() {
+        
     }
 
     @Override
-    public String getKey() {
+    public long getKey() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         return key;
     }
 
@@ -78,10 +80,12 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @param newKey a new key for the match
      */
-    public void setKey(String newKey) {
+    public void setKey(long newKey) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
+        
         this.key = newKey;
     }
 
@@ -90,10 +94,16 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @param peptide the matching peptide
      * @param matchKey the key of the match as referenced in the identification
+     * @param spectrumMatchKey the key of a spectrum match linked to this peptide
      */
-    public PeptideMatch(Peptide peptide, String matchKey) {
+    public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {
+        
         this.peptide = peptide;
         this.key = matchKey;
+        
+        spectrumMatchesKeys = new long[1];
+        spectrumMatchesKeys[0] = spectrumMatchKey;
+        
     }
 
     /**
@@ -102,9 +112,11 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the peptide
      */
     public Peptide getPeptide() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         return peptide;
     }
 
@@ -114,9 +126,11 @@ public class PeptideMatch extends IdentificationMatch {
      * @param peptide a peptide
      */
     public void setPeptide(Peptide peptide) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
+        
         this.peptide = peptide;
     }
 
@@ -125,11 +139,14 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @return the keys of all spectrum matches
      */
-    public HashSet<String> getSpectrumMatchesKeys() {
+    public long[] getSpectrumMatchesKeys() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
+        
         return spectrumMatchesKeys;
+        
     }
 
     /**
@@ -137,11 +154,14 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @param spectrumMatchesKeys the keys
      */
-    public void setSpectrumMatchesKeys(HashSet<String> spectrumMatchesKeys) {
+    public void setSpectrumMatchesKeys(long[] spectrumMatchesKeys) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
+        
         this.spectrumMatchesKeys = spectrumMatchesKeys;
+        
     }
 
     /**
@@ -149,11 +169,16 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @param spectrumMatchKey the key of a spectrum match
      */
-    public void addSpectrumMatchKey(String spectrumMatchKey) {
+    public void addSpectrumMatchKey(long spectrumMatchKey) {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        spectrumMatchesKeys.add(spectrumMatchKey);
+        
+        spectrumMatchesKeys =  Arrays.copyOf(spectrumMatchesKeys, spectrumMatchesKeys.length + 1);
+        
+        spectrumMatchesKeys[spectrumMatchesKeys.length - 1] = spectrumMatchKey;
+        
     }
 
     /**
@@ -162,10 +187,12 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
+        
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        return spectrumMatchesKeys.size();
+        
+        return spectrumMatchesKeys.length;
     }
 
     @Override

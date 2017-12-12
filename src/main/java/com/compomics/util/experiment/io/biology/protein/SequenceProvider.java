@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -8,6 +9,13 @@ import java.util.HashSet;
  * @author Marc Vaudel
  */
 public interface SequenceProvider {
+    
+    /**
+     * Returns all accessions loaded in the provider.
+     * 
+     * @return all accessions loaded in the provider
+     */
+    public Collection<String> getAccessions();
     
     /**
      * Returns the decoy accessions.
@@ -26,15 +34,6 @@ public interface SequenceProvider {
     public String getSequence(String proteinAccession);
     
     /**
-     * returns the header for the given protein as a string.
-     * 
-     * @param proteinAccession the accession of the protein of interest
-     * 
-     * @return the header as a string
-     */
-    public String getHeader(String proteinAccession);
-    
-    /**
      * Returns the subsequence of the sequence of a given protein. Indexes are 0-based like for strings and no exception is thrown if indexes are out of bounds, the substring is trimmed.
      * 
      * @param accession the accession of the protein
@@ -44,5 +43,14 @@ public interface SequenceProvider {
      * @return the subsequence as string
      */
     public String getSubsequence(String accession, int start, int end);
+    
+    /**
+     * Returns the fasta header of the protein as found in the fasta file.
+     * 
+     * @param proteinAccession the accession of the protein
+     * 
+     * @return the fasta header of the protein as found in the fasta file
+     */
+    public String getHeader(String proteinAccession);
 
 }

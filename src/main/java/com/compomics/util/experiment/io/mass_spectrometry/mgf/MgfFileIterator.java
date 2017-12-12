@@ -1,9 +1,8 @@
-package com.compomics.util.experiment.io.mass_spectrometry;
+package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -40,25 +39,25 @@ public class MgfFileIterator {
      *
      * @param mgfFile the file to go through
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
+     * @throws IOException if an exception occurs while reading the file
      */
-    public MgfFileIterator(File mgfFile) throws FileNotFoundException, IOException {
+    public MgfFileIterator(File mgfFile) throws IOException {
+
         mgfFileName = mgfFile.getName();
         br = new BufferedReader(new FileReader(mgfFile));
 
-        if (mgfFile.getName().endsWith("mgf")) {
-            nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
-        } else {
-            //MspReader mspr=new MspReader();
-            nextSpectrum = MspReader.getSpectrum(br, mgfFileName);
-        }
+        nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
 
         rank = 1;
+
         if (nextSpectrum.getScanNumber() == null) {
-            nextSpectrum.setScanNumber(rank + "");
+
+            nextSpectrum.setScanNumber(Integer.toString(rank));
+
         } else {
-            while (nextSpectrum.getScanNumber().equals(++rank + ""));
+
+            while (nextSpectrum.getScanNumber().equals(Integer.toString(++rank)));
+
         }
     }
 
@@ -68,7 +67,9 @@ public class MgfFileIterator {
      * @return a boolean indicating whether the file contains another spectrum
      */
     public boolean hasNext() {
+        
         return nextSpectrum != null;
+        
     }
 
     /**
@@ -76,33 +77,42 @@ public class MgfFileIterator {
      *
      * @return the next spectrum in the file
      *
-     * @throws IOException if an IOException occurs
+     * @throws IOException if an exception occurs while reading the file
      */
     public synchronized Spectrum next() throws IOException {
 
         Spectrum currentSpectrum = nextSpectrum;
+        
         if (!streamClosed) {
 
-            if (mgfFileName.endsWith("mgf")) {
                 nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
-            } else {
-                nextSpectrum = MspReader.getSpectrum(br, mgfFileName);
-            }
+                
         } else {
+            
             nextSpectrum = null;
+        
         }
 
         if (nextSpectrum == null) {
+            
             if (!streamClosed) {
+            
                 br.close();
                 streamClosed = true;
+            
             }
+        
         } else if (nextSpectrum.getScanNumber() == null) {
-            nextSpectrum.setScanNumber(++rank + "");
+
+            nextSpectrum.setScanNumber(Integer.toString(rank));
+
         } else {
-            while (nextSpectrum.getScanNumber().equals(++rank + ""));
+
+            while (nextSpectrum.getScanNumber().equals(Integer.toString(++rank)));
+
         }
 
         return currentSpectrum;
+        
     }
 }

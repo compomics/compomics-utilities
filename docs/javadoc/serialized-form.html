@@ -830,10 +830,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a> extends org.zoodb.api.impl.ZooPC implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-7906158551970915613L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -1550,58 +1546,6 @@
 </li>
 </ul>
 </li>
-<li class="blockList"><a name="com.compomics.util.experiment.ShotgunProtocol">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/ShotgunProtocol.html" title="class in com.compomics.util.experiment">com.compomics.util.experiment.ShotgunProtocol</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-6331062569130128058L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>enrichedPtms</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; enrichedPtms</pre>
-<div class="block">The PTMs enriched for.</div>
-</li>
-<li class="blockList">
-<h4>labellingPtms</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; labellingPtms</pre>
-<div class="block">The PTMs resulting of a labeling in a map: name of the PTM - boolean
- indicating whether the labeling is complete.</div>
-</li>
-<li class="blockList">
-<h4>ms1Resolution</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> ms1Resolution</pre>
-<div class="block">The MS1 resolution.</div>
-</li>
-<li class="blockList">
-<h4>ms1ResolutionPpm</h4>
-<pre>boolean ms1ResolutionPpm</pre>
-<div class="block">Boolean indicating whether the MS1 resolution is in ppm.</div>
-</li>
-<li class="blockList">
-<h4>fragmentationMethod</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/FragmentationMethod.html" title="enum in com.compomics.util.experiment.mass_spectrometry">FragmentationMethod</a> fragmentationMethod</pre>
-<div class="block">The fragmentation method used.</div>
-</li>
-<li class="blockList">
-<h4>ms2Resolution</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> ms2Resolution</pre>
-<div class="block">The MS2 resolution.</div>
-</li>
-<li class="blockListLast">
-<h4>ms2ResolutionPpm</h4>
-<pre>boolean ms2ResolutionPpm</pre>
-<div class="block">Boolean indicating whether the MS2 resolution is in ppm.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="blockList">
@@ -2244,49 +2188,19 @@
 </li>
 <li class="blockList">
 <h4>aminoAcidBefore</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidBefore</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidBefore</pre>
 </li>
 <li class="blockList">
 <h4>aminoAcidAfter</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidAfter</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidAfter</pre>
 </li>
 <li class="blockList">
 <h4>restrictionBefore</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionBefore</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionBefore</pre>
 </li>
 <li class="blockList">
 <h4>restrictionAfter</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionAfter</pre>
-</li>
-<li class="blockList">
-<h4>aminoAcidBeforeSet</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidBeforeSet</pre>
-</li>
-<li class="blockList">
-<h4>aminoAcidAfterSet</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; aminoAcidAfterSet</pre>
-</li>
-<li class="blockList">
-<h4>restrictionBeforeSet</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionBeforeSet</pre>
-</li>
-<li class="blockList">
-<h4>restrictionAfterSet</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionAfterSet</pre>
-</li>
-<li class="blockList">
-<h4>isSemiSpecific</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> isSemiSpecific</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use the digestion preferences instead</span></div>
-<div class="block">If true, the enzyme is considered as semi-specific, meaning that only one
- end of the resulting peptide has to be enzymatic.</div>
-</li>
-<li class="blockList">
-<h4>isWholeProtein</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> isWholeProtein</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use the digestion preferences instead</span></div>
-<div class="block">If true, the enzyme does not cleave, i.e., the whole protein sequence is
- used.</div>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; restrictionAfter</pre>
 </li>
 <li class="blockListLast">
 <h4>cvTerm</h4>
@@ -2841,12 +2755,17 @@
 </li>
 <li class="blockList">
 <h4>key</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> key</pre>
+<pre>long key</pre>
 <div class="block">The peptide key.</div>
 </li>
 <li class="blockList">
+<h4>keySet</h4>
+<pre>boolean keySet</pre>
+<div class="block">Boolean indicating whether the matching key is set.</div>
+</li>
+<li class="blockList">
 <h4>matchingKey</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> matchingKey</pre>
+<pre>long matchingKey</pre>
 <div class="block">The peptide matching key.</div>
 </li>
 <li class="blockList">
@@ -2862,7 +2781,7 @@
 </li>
 <li class="blockList">
 <h4>modificationMatches</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; modificationMatches</pre>
+<pre><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[] modificationMatches</pre>
 <div class="block">The modifications carried by the peptide.</div>
 </li>
 <li class="blockListLast">
@@ -2972,6 +2891,11 @@
 <div class="block">List of the keys of all imported peptides.</div>
 </li>
 <li class="blockList">
+<h4>spectrumIdentification</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; spectrumIdentification</pre>
+<div class="block">Map mapping spectra per file.</div>
+</li>
+<li class="blockList">
 <h4>proteinMap</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; proteinMap</pre>
 <div class="block">A map linking protein accessions to all their protein matches keys.</div>
@@ -2981,20 +2905,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> dbDirectory</pre>
 <div class="block">The directory where the database stored.</div>
 </li>
-<li class="blockList">
+<li class="blockListLast">
 <h4>objectsDB</h4>
 <pre><a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a> objectsDB</pre>
 <div class="block">The database which will contain the objects.</div>
-</li>
-<li class="blockList">
-<h4>spectraPerFile</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; spectraPerFile</pre>
-<div class="block">Map mapping spectra per file.</div>
-</li>
-<li class="blockListLast">
-<h4>orderedSpectrumFileNames</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; orderedSpectrumFileNames</pre>
-<div class="block">Ordered list of spectrum file names</div>
 </li>
 </ul>
 </li>
@@ -3168,10 +3082,10 @@
  false: Da).</div>
 </li>
 <li class="blockList">
-<h4>unknownPtm</h4>
-<pre>boolean unknownPtm</pre>
-<div class="block">Boolean indicating whether peptides presenting unknown PTMs should be
- ignored.</div>
+<h4>unknownModification</h4>
+<pre>boolean unknownModification</pre>
+<div class="block">Boolean indicating whether peptides presenting unknown modifications
+ should be ignored.</div>
 </li>
 <li class="blockList">
 <h4>minMissedCleavages</h4>
@@ -3294,17 +3208,17 @@
 <li class="blockList">
 <h4>peptide</h4>
 <pre><a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a> peptide</pre>
-<div class="block">The theoretic peptide match.</div>
+<div class="block">The peptide.</div>
 </li>
 <li class="blockList">
 <h4>key</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> key</pre>
+<pre>long key</pre>
 <div class="block">The key of the match.</div>
 </li>
 <li class="blockList">
 <h4>spectrumMatchesKeys</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; spectrumMatchesKeys</pre>
-<div class="block">All spectrum matches indexed by spectrum id.</div>
+<pre>long[] spectrumMatchesKeys</pre>
+<div class="block">The keys of the spectrum matches linking to this peptide match.</div>
 </li>
 <li class="blockListLast">
 <h4>isDecoy</h4>
@@ -3351,7 +3265,7 @@
 <ul class="blockList">
 <li class="blockList">
 <h4>accessions</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; accessions</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[] accessions</pre>
 <div class="block">The matching protein(s) accessions sorted in natural order.</div>
 </li>
 <li class="blockList">
@@ -3361,13 +3275,18 @@
 </li>
 <li class="blockList">
 <h4>peptideMatchesKeys</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; peptideMatchesKeys</pre>
-<div class="block">The corresponding peptide match keys.</div>
+<pre>long[] peptideMatchesKeys</pre>
+<div class="block">The keys of the peptide matches associated to this protein match.</div>
+</li>
+<li class="blockList">
+<h4>matchKey</h4>
+<pre>long matchKey</pre>
+<div class="block">The key of the match.</div>
 </li>
 <li class="blockListLast">
-<h4>matchKey</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> matchKey</pre>
-<div class="block">The key of the match.</div>
+<h4>decoy</h4>
+<pre>boolean decoy</pre>
+<div class="block">Boolean indicating whether the protein match is decoy.</div>
 </li>
 </ul>
 </li>
@@ -3394,6 +3313,11 @@
 <h4>spectrumNumber</h4>
 <pre>int spectrumNumber</pre>
 <div class="block">The number of the spectrum.</div>
+</li>
+<li class="blockList">
+<h4>key</h4>
+<pre>long key</pre>
+<div class="block">The key of the match.</div>
 </li>
 <li class="blockList">
 <h4>peptideAssumptionsMap</h4>
@@ -3547,20 +3471,6 @@
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockList">
-<h4>bBoundaries</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; bBoundaries</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use String indexes instead</span></div>
-<div class="block">Map indicating for each neutral loss when they should start being
- accounted for the forward ions (b ions for instance).</div>
-</li>
-<li class="blockList">
-<h4>yBoundaries</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; yBoundaries</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use String indexes instead</span></div>
-<div class="block">Map indicating for each neutral loss when they should start being
- accounted for the reverse ions (y ions for instance).</div>
-</li>
 <li class="blockList">
 <h4>forwardBoundaries</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; forwardBoundaries</pre>
@@ -4253,12 +4163,12 @@
 </ul>
 </li>
 <li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.mass_spectrometry</h2>
+<h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.mass_spectrometry.mgf</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.io.mass_spectrometry.MgfIndex">
+<li class="blockList"><a name="com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/experiment/io/mass_spectrometry/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">com.compomics.util.experiment.io.mass_spectrometry.MgfIndex</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -4360,6 +4270,10 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.mass_spectrometry.indexes">com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>-4447843223014568761L</dd>
+</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -4733,137 +4647,6 @@
 </ul>
 </li>
 <li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.massspectrometry</h2>
-<ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.massspectrometry.Spectrum">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/massspectrometry/Spectrum.html" title="class in com.compomics.util.experiment.massspectrometry">com.compomics.util.experiment.massspectrometry.Spectrum</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>7152424141470431489L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>spectrumTitle</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumTitle</pre>
-<div class="block">Spectrum title.</div>
-</li>
-<li class="blockList">
-<h4>fileName</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> fileName</pre>
-<div class="block">Spectrum file name.</div>
-</li>
-<li class="blockList">
-<h4>level</h4>
-<pre>int level</pre>
-<div class="block">The MS level.</div>
-</li>
-<li class="blockList">
-<h4>peakList</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; peakList</pre>
-<div class="block">mz indexed Peak list.</div>
-</li>
-<li class="blockList">
-<h4>intensityPeakMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; intensityPeakMap</pre>
-<div class="block">Intensity indexed Peak map.</div>
-</li>
-<li class="blockList">
-<h4>scanNumber</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> scanNumber</pre>
-<div class="block">Scan number or range.</div>
-</li>
-<li class="blockList">
-<h4>scanStartTime</h4>
-<pre>double scanStartTime</pre>
-<div class="block">The time point when the spectrum was recorded (scan start time in mzML
- files).</div>
-</li>
-<li class="blockList">
-<h4>jFreePeakList</h4>
-<pre>double[][] jFreePeakList</pre>
-<div class="block">The peak list as an array directly plottable by JFreeChart.</div>
-</li>
-<li class="blockList">
-<h4>mzValuesAsArray</h4>
-<pre>double[] mzValuesAsArray</pre>
-<div class="block">The mz values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>mzValuesOrderedAsArray</h4>
-<pre>double[] mzValuesOrderedAsArray</pre>
-<div class="block">The mz values sorted in acceding order as array. Null until set by the
- getter.</div>
-</li>
-<li class="blockList">
-<h4>peakListAsString</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> peakListAsString</pre>
-<div class="block">The peak list as an array list formatted as text, e.g. [[303.17334
- 3181.14],[318.14542 37971.93], ... ].</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesAsArray</h4>
-<pre>double[] intensityValuesAsArray</pre>
-<div class="block">The intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesNormaizedAsArray</h4>
-<pre>double[] intensityValuesNormaizedAsArray</pre>
-<div class="block">The intensity values as array normalized against the most intense peak.
- Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>mzAndIntensityAsArray</h4>
-<pre>double[][] mzAndIntensityAsArray</pre>
-<div class="block">The mz and intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>totalIntensity</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> totalIntensity</pre>
-<div class="block">The total intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxIntensity</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> maxIntensity</pre>
-<div class="block">The maximal intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxMz</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> maxMz</pre>
-<div class="block">The maximal m/z.</div>
-</li>
-<li class="blockList">
-<h4>minMz</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> minMz</pre>
-<div class="block">The minimal m/z.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimit</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> intensityLimit</pre>
-<div class="block">Cache for the intensity limit.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimitLevel</h4>
-<pre>double intensityLimitLevel</pre>
-<div class="block">Intensity level corresponding to the value in cache.</div>
-</li>
-<li class="blockListLast">
-<h4>binnedCumulativeFunction</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry">SimpleNoiseDistribution</a> binnedCumulativeFunction</pre>
-<div class="block">The binned cumulative function of the distribution of the log of the
- peaks intensities.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.normalization</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.compomics.util.experiment.normalization.NormalizationFactors">
@@ -5094,6 +4877,10 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/refinement_parameters/PepnovoAssumptionDetails.html" title="class in com.compomics.util.experiment.refinement_parameters">com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>-4163506699889716493L</dd>
+</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -7170,11 +6957,11 @@
 <li class="blockList">
 <h4>proteinDetailsProvider</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a> proteinDetailsProvider</pre>
-<div class="block">The protein</div>
+<div class="block">The protein details provider.</div>
 </li>
 <li class="blockList">
 <h4>proteinAccessions</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; proteinAccessions</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[] proteinAccessions</pre>
 <div class="block">The protein accessions of this match.</div>
 </li>
 <li class="blockList">
@@ -7274,7 +7061,7 @@
 </li>
 <li class="blockList">
 <h4>geneFactory</h4>
-<pre><a href="com/compomics/util/experiment/biology/genes/GeneFactory.html" title="class in com.compomics.util.experiment.biology.genes">GeneFactory</a> geneFactory</pre>
+<pre><a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html" title="class in com.compomics.util.experiment.biology.genes">ProteinGeneDetailsProvider</a> geneFactory</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">The gene factory.</div>
 </li>
@@ -11642,6 +11429,14 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> outputSpectraLabel</pre>
 </li>
 <li class="blockList">
+<h4>parentMonoisotopicMassIsotopeErrorCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; parentMonoisotopicMassIsotopeErrorCmb</pre>
+</li>
+<li class="blockList">
+<h4>parentMonoisotopicMassIsotopeErrorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> parentMonoisotopicMassIsotopeErrorLabel</pre>
+</li>
+<li class="blockList">
 <h4>pointMutationLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> pointMutationLabel</pre>
 </li>
@@ -14554,28 +14349,28 @@
 <div class="block">The parameters used for the spectrum matching.</div>
 </li>
 <li class="blockList">
-<h4>annotationSettings</h4>
-<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a> annotationSettings</pre>
-<div class="block">The peak annotation preferences.</div>
+<h4>annotationParameters</h4>
+<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a> annotationParameters</pre>
+<div class="block">The peak annotation parameters.</div>
 </li>
 <li class="blockList">
-<h4>sequenceMatchingPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingPreferences</pre>
-<div class="block">The peptide to protein matching preferences.</div>
+<h4>sequenceMatchingParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingParameters</pre>
+<div class="block">The peptide to protein matching parameters.</div>
 </li>
 <li class="blockList">
-<h4>peptideVariantsPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a> peptideVariantsPreferences</pre>
-<div class="block">The peptide variants preferences.</div>
+<h4>peptideVariantsParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a> peptideVariantsParameters</pre>
+<div class="block">The peptide variants parameters.</div>
 </li>
 <li class="blockList">
-<h4>genePreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a> genePreferences</pre>
-<div class="block">The gene preferences.</div>
+<h4>geneParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a> geneParameters</pre>
+<div class="block">The gene parameters.</div>
 </li>
 <li class="blockList">
-<h4>psmScoringPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a> psmScoringPreferences</pre>
+<h4>psmScoringParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a> psmScoringParameters</pre>
 <div class="block">The PSM scores to use.</div>
 </li>
 <li class="blockList">
@@ -14584,23 +14379,23 @@
 <div class="block">The PSM filter.</div>
 </li>
 <li class="blockList">
-<h4>ptmScoringPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a> ptmScoringPreferences</pre>
-<div class="block">The PTM localization scoring preferences.</div>
+<h4>modificationLocalizationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a> modificationLocalizationParameters</pre>
+<div class="block">The modification localization parameters.</div>
 </li>
 <li class="blockList">
-<h4>proteinInferencePreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a> proteinInferencePreferences</pre>
-<div class="block">The protein inference preferences.</div>
+<h4>proteinInferenceParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a> proteinInferenceParameters</pre>
+<div class="block">The protein inference parameters.</div>
 </li>
 <li class="blockList">
-<h4>idValidationPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a> idValidationPreferences</pre>
-<div class="block">The identification validation preferences.</div>
+<h4>idValidationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a> idValidationParameters</pre>
+<div class="block">The identification validation parameters.</div>
 </li>
 <li class="blockListLast">
-<h4>fractionSettings</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionSettings</pre>
+<h4>fractionParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionParameters</pre>
 <div class="block">The fraction settings.</div>
 </li>
 </ul>
@@ -14749,7 +14544,7 @@
 </li>
 <li class="blockList">
 <h4>selectedProbabilisticScore</h4>
-<pre><a href="com/compomics/util/experiment/identification/modification/PtmScore.html" title="enum in com.compomics.util.experiment.identification.modification">PtmScore</a> selectedProbabilisticScore</pre>
+<pre><a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html" title="enum in com.compomics.util.experiment.identification.modification">ModificationLocalizationScore</a> selectedProbabilisticScore</pre>
 <div class="block">The probabilistic score selected.</div>
 </li>
 <li class="blockList">
@@ -16647,7 +16442,7 @@
 <div class="block">Triggers the noise suppression function. Note: ignored in X!Tandem
  VENGEANCE (2015.12.15) and newer.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>proteinPtmComplexity</h4>
 <pre>double proteinPtmComplexity</pre>
 <div class="block">The value of the command "protein, ptm complexity" (C, a floating point
@@ -16655,6 +16450,13 @@
  alternatives that will be tested for a particular peptide. The number of
  alternatives is 2.0C. If this number is not specified, the default value
  C = 6.0 will be used.</div>
+</li>
+<li class="blockListLast">
+<h4>parentMonoisotopicMassIsotopeError</h4>
+<pre>boolean parentMonoisotopicMassIsotopeError</pre>
+<div class="block">Sets whether the parent ion mass tolerance is expanded by opening up
+ multiple tolerance windows centered on the first and second 13C isotope
+ peaks for a peptide.</div>
 </li>
 </ul>
 </li>

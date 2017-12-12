@@ -40,7 +40,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         SequenceIterator sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        ArrayList<PeptideWithPosition> peptides = new ArrayList<PeptideWithPosition>();
+        ArrayList<PeptideWithPosition> peptides = new ArrayList<>();
         PeptideWithPosition peptideWithPosition;
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
@@ -48,11 +48,11 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         Peptide peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches() == null);
+        Assert.assertTrue(peptide.getModificationMatches().length == 0);
         
         // Combination
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequenceCombination, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -60,7 +60,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification lower mass limit
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 1734.8, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -68,7 +68,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification upper mass limit
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, 1734.7);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -83,18 +83,18 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches() == null);
+        Assert.assertTrue(peptide.getModificationMatches().length == 0);
         
         // Modifications
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
+        Assert.assertTrue(peptide.getModificationMatches().length == 3);
         
         
         // Unspecific digestion
@@ -102,7 +102,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -110,7 +110,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Combination
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequenceCombination, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -118,7 +118,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification lower mass limit
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 667.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -126,7 +126,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification upper mass limit
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, 668.0);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -142,7 +142,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Modifications
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -150,7 +150,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Modification lower mass limit
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 667.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -158,7 +158,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Modification upper mass limit
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, 668.0);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -178,7 +178,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -186,7 +186,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Combination
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequenceCombination, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -202,7 +202,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // Modifications
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
@@ -217,7 +217,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
-        Assert.assertTrue(peptide.getModificationMatches().size() == 3);
+        Assert.assertTrue(peptide.getModificationMatches().length == 3);
         
         
         // No missed cleavages
@@ -225,7 +225,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        peptides = new ArrayList<PeptideWithPosition>();
+        peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }

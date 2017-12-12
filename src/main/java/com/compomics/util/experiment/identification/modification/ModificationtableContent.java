@@ -12,13 +12,12 @@ import com.compomics.util.experiment.identification.spectrum_annotation.spectrum
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.math.MathException;
 
 /**
  * Convenience class for the content of a PTM table.
@@ -26,7 +25,7 @@ import org.apache.commons.math.MathException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PtmtableContent {
+public class ModificationtableContent {
 
     /**
      * The content of the table: modification status &gt; fragment ion type
@@ -46,7 +45,7 @@ public class PtmtableContent {
     /**
      * Constructor.
      */
-    public PtmtableContent() {
+    public ModificationtableContent() {
         map = new HashMap<>();
     }
 
@@ -164,14 +163,20 @@ public class PtmtableContent {
     /**
      * Add all.
      *
-     * @param anotherContent another PTM table content
+     * @param anotherContent another table content
      */
-    public void addAll(PtmtableContent anotherContent) {
-        for (int nPTM : anotherContent.getMap().keySet()) {
-            for (Integer peptideFragmentIonType : anotherContent.getMap().get(nPTM).keySet()) {
-                for (int nAA : anotherContent.getMap().get(nPTM).get(peptideFragmentIonType).keySet()) {
-                    for (double intensity : anotherContent.getIntensities(nPTM, peptideFragmentIonType, nAA)) {
-                        addIntensity(nPTM, peptideFragmentIonType, nAA, intensity);
+    public void addAll(ModificationtableContent anotherContent) {
+
+        for (int nMod : anotherContent.getMap().keySet()) {
+
+            for (Integer peptideFragmentIonType : anotherContent.getMap().get(nMod).keySet()) {
+
+                for (int nAA : anotherContent.getMap().get(nMod).get(peptideFragmentIonType).keySet()) {
+
+                    for (double intensity : anotherContent.getIntensities(nMod, peptideFragmentIonType, nAA)) {
+
+                        addIntensity(nMod, peptideFragmentIonType, nAA, intensity);
+
                     }
                 }
             }
@@ -182,19 +187,30 @@ public class PtmtableContent {
      * Normalize intensities.
      */
     public void normalize() {
+
         if (totalIntensity > 0) {
+
             double normalization = totalIntensity;
             totalIntensity = 0;
             maxIntensity = 0;
             ArrayList<Double> tempIntensities;
-            for (int nPTM : map.keySet()) {
-                for (Integer peptideFragmentIonType : map.get(nPTM).keySet()) {
-                    for (int nAA : map.get(nPTM).get(peptideFragmentIonType).keySet()) {
+
+            for (int nMod : map.keySet()) {
+
+                for (Integer peptideFragmentIonType : map.get(nMod).keySet()) {
+
+                    for (int nAA : map.get(nMod).get(peptideFragmentIonType).keySet()) {
+
                         tempIntensities = new ArrayList<>();
-                        for (double intensity : getIntensities(nPTM, peptideFragmentIonType, nAA)) {
+
+                        for (double intensity : getIntensities(nMod, peptideFragmentIonType, nAA)) {
+
                             tempIntensities.add(intensity / normalization);
+
                         }
-                        map.get(nPTM).get(peptideFragmentIonType).put(nAA, tempIntensities);
+
+                        map.get(nMod).get(peptideFragmentIonType).put(nAA, tempIntensities);
+
                     }
                 }
             }
@@ -211,43 +227,38 @@ public class PtmtableContent {
     }
 
     /**
-     * Returns the PTM plot series in the JFreechart format for one PSM.
+     * Returns the modification plot series in the JFreechart format for one
+     * PSM.
      *
      * @param peptide the peptide of interest
-     * @param ptm the PTM to score
-     * @param nPTM the amount of times the PTM is expected
+     * @param modification the modification to score
+     * @param nMod the number of times the modification is expected
      * @param spectrum the corresponding spectrum
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
      *
-     * @return the PTM plot series in the JFreechart format for one PSM.
-     * 
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     * @return the modification plot series in the JFreechart format for one
+     * PSM.
      */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, Modification ptm, int nPTM, Spectrum spectrum,
-            AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) throws InterruptedException, MathException {
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
+            AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
 
-        //@TODO: use Peptide.getNoModPeptide instead
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<>());
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-        if (peptide.isModified()) {
-            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if (!modificationMatch.getModification().equals(ptm.getName())) {
-                    noModPeptide.addModificationMatch(modificationMatch);
-                }
-            }
-        }
+        ModificationMatch[] newMatches = Arrays.stream(modificationMatches)
+                .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))
+                .toArray(ModificationMatch[]::new);
+
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), newMatches);
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons
                 = spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>(); //@TODO: refactor using another key for the map
 
-        for (int i = 0; i <= nPTM; i++) {
+        for (int i = 0; i <= nMod; i++) {
 
-            spectrumAnnotator.setMassShift(i * ptm.getMass());
+            spectrumAnnotator.setMassShift(i * modification.getMass());
 
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide)
                     .collect(Collectors.toCollection(ArrayList::new));
@@ -274,59 +285,51 @@ public class PtmtableContent {
     }
 
     /**
-     * Get the PTM table content.
+     * Get the table content.
      *
      * @param peptide the peptide of interest
-     * @param ptm the PTM to score
-     * @param nPTM the amount of times the PTM is expected
+     * @param modification the modification to score
+     * @param nMod the number of times the modification is expected
      * @param spectrum the corresponding spectrum
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
      *
-     * @return the PtmtableContent object
-     * 
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
-     * @throws org.apache.commons.math.MathException exception thrown if a math exception occurred when estimating the noise level 
+     * @return the table content
      */
-    public static PtmtableContent getPTMTableContent(Peptide peptide, Modification ptm, int nPTM, Spectrum spectrum,
-            AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException, MathException {
+    public static ModificationtableContent getModificationTableContent(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
+            AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
 
-        PtmtableContent ptmTableContent = new PtmtableContent();
+        ModificationtableContent tableContent = new ModificationtableContent();
 
-        ArrayList<Modification> ptms = new ArrayList<>(1);
-        ptms.add(ptm);
-        Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
+        HashSet<String> forbiddenMod = new HashSet<>(1);
+        forbiddenMod.add(modification.getName());
+        Peptide noModPeptide = peptide.getNoModPeptide(forbiddenMod);
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         for (String neutralLossName : specificAnnotationPreferences.getNeutralLossesMap().getAccountedNeutralLosses()) {
             NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-            if (Math.abs(neutralLoss.getMass() - ptm.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
+            if (Math.abs(neutralLoss.getMass() - modification.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                 lossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
         }
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge(), specificAnnotationPreferences);
-        
-        for (int i = 0; i <= nPTM; i++) {
 
-            spectrumAnnotator.setMassShift(i * ptm.getMass());
+        for (int i = 0; i <= nMod; i++) {
+
+            spectrumAnnotator.setMassShift(i * modification.getMass());
 
             final int index = i;
             Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
             matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                     .forEach(ionMatch -> {
                         PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                        ptmTableContent.addIntensity(index, peptideFragmentIon.getSubType(), peptideFragmentIon.getAaNumber(peptide.getSequence().length()), ionMatch.peak.intensity);
-                            });
-            
+                        tableContent.addIntensity(index, peptideFragmentIon.getSubType(), peptideFragmentIon.getAaNumber(peptide.getSequence().length()), ionMatch.peak.intensity);
+                    });
+
         }
 
-        return ptmTableContent;
+        return tableContent;
     }
 }

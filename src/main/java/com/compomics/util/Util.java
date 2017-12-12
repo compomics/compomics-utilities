@@ -931,13 +931,11 @@ public class Util {
      * @return the occurrence of a character in a string
      */
     public static int getOccurrence(String input, char character) {
-        int result = 0;
-        for (char aa : input.toCharArray()) {
-            if (aa == character) {
-                result++;
-            }
-        }
-        return result;
+        
+        return (int) input.chars()
+                .filter(aa -> aa == character)
+                .count();
+        
     }
 
     /**
@@ -1189,5 +1187,23 @@ public class Util {
         
         System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
         return arrayUnique;
+    }
+    
+    /**
+     * Returns a string in the form value(attribute).
+     * 
+     * @param value the value
+     * @param attribute the attribute
+     * 
+     * @return a string in the form value(attribute)
+     */
+    public static String toString(String value, String attribute) {
+        
+        StringBuilder sb = new StringBuilder(value.length() + attribute.length() + 2);
+        
+        sb.append(value).append("(").append(attribute).append(")");
+        
+        return sb.toString();
+        
     }
 }

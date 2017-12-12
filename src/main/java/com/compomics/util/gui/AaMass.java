@@ -101,11 +101,10 @@ public class AaMass extends javax.swing.JDialog {
 
         String input = sequenceTxt.getText().trim();
         char[] array = input.toCharArray();
-        double mass = 0;
-        for (char aa : array) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            mass += aminoAcid.getMonoisotopicMass();
-        }
+        double mass = input.chars()
+                .mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass())
+                .sum();
+        
         massTxt.setText(mass + "");
 
     }

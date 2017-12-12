@@ -114,32 +114,47 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * by accounting for other charges and isotopes
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
         int refCharge = identificationCharge;
+        
         for (int charge = minCharge; charge <= maxCharge; charge++) {
+        
             for (int isotope = 0; isotope <= maxIsotope; isotope++) {
+            
                 if (charge != refCharge || isotope > 0) {
+                
                     double newMass = refMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
                     double deltaMass = newMass - refMass + isotope * Atom.C.getDifferenceToMonoisotopic(1);
                     int index = 0;
+                    
                     if (forwardIon) {
+                    
                         index = tag.getContent().size() - 1;
+                    
                     }
+
                     TagComponent terminalComponent = tag.getContent().get(index);
+                    
                     if ((terminalComponent instanceof MassGap) && terminalComponent.getMass() > -deltaMass) {
+                    
                         Tag newTag = new Tag(tag);
                         MassGap terminalGap = (MassGap) newTag.getContent().get(index);
                         terminalGap.setMass(terminalComponent.getMass() + deltaMass);
                         TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, charge, score);
                         results.add(tagAssumption);
+                    
                     }
                 }
             }
         }
+        
         return results;
+        
     }
 
     /**
@@ -163,7 +178,9 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     }
 
     @Override
-    public String getParameterKey() {
-        return "deNovo|2"; // Should not be changed for backward compatibility
+    public long getParameterKey() {
+        
+        return serialVersionUID;
+        
     }
 }

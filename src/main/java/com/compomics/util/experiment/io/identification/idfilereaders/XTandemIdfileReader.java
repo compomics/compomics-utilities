@@ -9,7 +9,6 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -26,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -39,14 +39,14 @@ import javax.xml.stream.XMLStreamReader;
  * @author dominik.kopczynski
  */
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
-    
+
     private File inputFileName = null;
     private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
     private HashMap<String, Boolean> modifications = new HashMap<>();
     private int specNumber = 0;
     private String PSMFileName;
     private String softwareVersion;
-    
+
     /**
      * Default constructor for the purpose of instantiation.
      */
@@ -81,15 +81,21 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             while (parser.hasNext()) {
                 parser.next();
                 switch (parser.getEventType()) {
-                    case XMLStreamConstants.START_DOCUMENT: break;
-                    case XMLStreamConstants.END_DOCUMENT: parser.close(); break;
-                    case XMLStreamConstants.NAMESPACE: break;
-                    case XMLStreamConstants.CHARACTERS: break;
-                    case XMLStreamConstants.END_ELEMENT: break;
-                    
+                    case XMLStreamConstants.START_DOCUMENT:
+                        break;
+                    case XMLStreamConstants.END_DOCUMENT:
+                        parser.close();
+                        break;
+                    case XMLStreamConstants.NAMESPACE:
+                        break;
+                    case XMLStreamConstants.CHARACTERS:
+                        break;
+                    case XMLStreamConstants.END_ELEMENT:
+                        break;
+
                     case XMLStreamConstants.START_ELEMENT:
                         String element = parser.getLocalName();
-                        if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null){
+                        if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null) {
                             switch (parser.getAttributeValue("", "type").toLowerCase()) {
                                 case "model":
                                     int id = Integer.parseInt(parser.getAttributeValue("", "id"));
@@ -100,35 +106,32 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                                     readGroupOrProtein(parser, id, expect);
                                     break;
-                                    
+
                                 case "parameters":
                                     readParameters(parser);
                                     break;
-                                    
+
                                 default:
                                     break;
                             }
-                        }
-                        else if (element.equalsIgnoreCase("bioml")){
+                        } else if (element.equalsIgnoreCase("bioml")) {
                             PSMFileName = parser.getAttributeValue("", "label");
                             PSMFileName = PSMFileName.split("'")[1];
                             PSMFileName = (new File(PSMFileName.replaceAll("\\\\", "/"))).getName();
                         }
                         break;
-                        
-                        
-                    default: break;
+
+                    default:
+                        break;
                 }
             }
-        
-        
-        }
-        catch(Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     @Override
     public String getExtension() {
         return ".t.xml";
@@ -143,34 +146,44 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
-        if (expandAaCombinations){
-            for (SpectrumMatch spectrumMatch : allMatches.values()){
-                
+
+        if (expandAaCombinations) {
+            
+            for (SpectrumMatch spectrumMatch : allMatches.values()) {
+
                 spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
                     Peptide peptide = currentAssumption.getPeptide();
-                    
+
                     // updating modifications
-                    for (ModificationMatch mods : peptide.getModificationMatches()){
+                    for (ModificationMatch mods : peptide.getModificationMatches()) {
+                        
                         String modName = mods.getModification();
                         String modNameCheck = changeModificationName(modName);
-                        if (modifications.containsKey(modNameCheck)){
+                        
+                        if (modifications.containsKey(modNameCheck)) {
+                            
                             mods.setVariable(modifications.get(modNameCheck));
+                            
                         }
                     }
-                    
+
                     String peptideSequence = peptide.getSequence();
-                    ArrayList<ModificationMatch> foundModifications = peptide.getModificationMatches();
+                    ModificationMatch[] foundModifications = peptide.getModificationMatches();
 
                     if (AminoAcidSequence.hasCombination(peptideSequence)) {
+
                         for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                            if (!expandedSequence.equals(peptideSequence)){
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<>(foundModifications.size()));
-                                for (ModificationMatch modificationMatch : foundModifications) {
-                                    newPeptide.addModificationMatch((new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite())));
-                                }
+
+                            if (!expandedSequence.toString().equals(peptideSequence)) {
+
+                                ModificationMatch[] newModificationMatches = Arrays.stream(foundModifications)
+                                        .map(modificationMatch -> modificationMatch.clone())
+                                        .toArray(ModificationMatch[]::new);
+
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
                                 PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
                                 spectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
+
                             }
                         }
                     }
@@ -179,15 +192,15 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
         return new LinkedList<>(allMatches.values());
     }
-    
+
     @Override
     public void close() throws IOException {
     }
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> versions = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put("X!Tandem", versions);
         return result;
@@ -197,101 +210,118 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     public boolean hasDeNovoTags() {
         return false;
     }
-    
-    
+
     private void readGroupOrProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
-                case XMLStreamConstants.CHARACTERS: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    break;
                 case XMLStreamConstants.END_ELEMENT:
-                    if ("group".equalsIgnoreCase(parser.getLocalName())) return;
+                    if ("group".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
+                    }
                     break;
 
                 case XMLStreamConstants.START_ELEMENT:
-                    switch(parser.getLocalName().toLowerCase()){
+                    switch (parser.getLocalName().toLowerCase()) {
                         case "group":
                             if (parser.getAttributeValue("", "label") != null && "fragment ion mass spectrum".equalsIgnoreCase(parser.getAttributeValue("", "label"))) {
                                 readGroupFragment(parser, id);
                             }
-                         break;
-                        
+                            break;
+
                         case "protein":
                             readProtein(parser, id, expect);
                             break;
-                            
-                        default: break;
+
+                        default:
+                            break;
                     }
                     break;
 
-                default: break;
+                default:
+                    break;
             }
         }
     }
-    
-    
+
     private void readGroupFragment(XMLStreamReader parser, int id) throws XMLStreamException, UnsupportedEncodingException {
         boolean write = false;
         StringBuilder content = new StringBuilder();
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
                 case XMLStreamConstants.CHARACTERS:
-                    if (write) content.append(parser.getText());
+                    if (write) {
+                        content.append(parser.getText());
+                    }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
-                    if ("note".equalsIgnoreCase(parser.getLocalName()) && write){
+                    if ("note".equalsIgnoreCase(parser.getLocalName()) && write) {
                         String value = content.toString().trim();
                         String title = URLDecoder.decode(value, "utf-8");
-                        if (title.indexOf("RTINSECONDS") >= 0) title = title.split("RTINSECONDS")[0].trim();
-                        String spectrumKey = Spectrum.getSpectrumKey(allMatches.get(id).getKey(), title);
-                        allMatches.get(id).setSpectrumKey(spectrumKey);
+                        if (title.indexOf("RTINSECONDS") >= 0) {
+                            title = title.split("RTINSECONDS")[0].trim();
+                        }
+                        SpectrumMatch spectrumMatch = allMatches.get(id);
+                        String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), title);
+                        spectrumMatch.setSpectrumKey(spectrumKey);
                         content = new StringBuilder();
                         write = false;
+                    } else if ("group".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
                     }
-                    
-                    else if ("group".equalsIgnoreCase(parser.getLocalName()))  return;
                     break;
 
                 case XMLStreamConstants.START_ELEMENT:
-                    switch(parser.getLocalName().toLowerCase()){
+                    switch (parser.getLocalName().toLowerCase()) {
                         case "note":
                             write = true;
                             break;
-                    
+
                         case "trace":
-                            if (parser.getAttributeValue("", "type") != null && "tandem mass spectrum".equalsIgnoreCase(parser.getAttributeValue("", "type"))){
+                            if (parser.getAttributeValue("", "type") != null && "tandem mass spectrum".equalsIgnoreCase(parser.getAttributeValue("", "type"))) {
                                 readGroupFragmentTrace(parser, id);
                             }
                             break;
-                            
+
                         default:
                             break;
                     }
                     break;
 
-                default: break;
+                default:
+                    break;
             }
         }
     }
-    
-    
-    private void readGroupFragmentTrace(XMLStreamReader parser, int id) throws XMLStreamException{
+
+    private void readGroupFragmentTrace(XMLStreamReader parser, int id) throws XMLStreamException {
         boolean readCharge = false;
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
                 case XMLStreamConstants.CHARACTERS:
-                    if (readCharge){
+                    if (readCharge) {
                         int chrg = Integer.parseInt(parser.getText());
                         allMatches.get(id).getAllPeptideAssumptions().forEach(peptideAssumption -> {
                             peptideAssumption.setIdentificationCharge(chrg);
@@ -299,50 +329,61 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     }
                     readCharge = false;
                     break;
-                    
-                case XMLStreamConstants.END_ELEMENT:
-                    if ("trace".equalsIgnoreCase(parser.getLocalName())) return;
-                    break;
 
-                case XMLStreamConstants.START_ELEMENT:
-                    switch(parser.getLocalName().toLowerCase()){
-                        case "attribute":
-                            if ("charge".equalsIgnoreCase(parser.getAttributeValue("", "type"))) readCharge = true;
-                            break;
-                        default: break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if ("trace".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
                     }
                     break;
 
-                default: break;
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (parser.getLocalName().toLowerCase()) {
+                        case "attribute":
+                            if ("charge".equalsIgnoreCase(parser.getAttributeValue("", "type"))) {
+                                readCharge = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
     }
-    
-    
+
     private void readProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
-                case XMLStreamConstants.CHARACTERS: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    break;
                 case XMLStreamConstants.END_ELEMENT:
-                    if ("protein".equalsIgnoreCase(parser.getLocalName())) return;
+                    if ("protein".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
+                    }
                     break;
 
                 case XMLStreamConstants.START_ELEMENT:
-                    if ("peptide".equalsIgnoreCase(parser.getLocalName().toLowerCase())){
+                    if ("peptide".equalsIgnoreCase(parser.getLocalName().toLowerCase())) {
                         readPeptide(parser, id, expect);
                     }
                     break;
 
-                default: break;
+                default:
+                    break;
             }
         }
     }
-    
-    
+
     private void readPeptide(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
         Peptide peptide = null;
         int pepStart = -1;
@@ -351,57 +392,67 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
-                case XMLStreamConstants.CHARACTERS: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    break;
                 case XMLStreamConstants.END_ELEMENT:
-                    if ("domain".equalsIgnoreCase(parser.getLocalName())) addAA = false;
-                    else if ("peptide".equalsIgnoreCase(parser.getLocalName())) return;
+                    if ("domain".equalsIgnoreCase(parser.getLocalName())) {
+                        addAA = false;
+                    } else if ("peptide".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
+                    }
                     break;
 
                 case XMLStreamConstants.START_ELEMENT:
-                    switch (parser.getLocalName().toLowerCase()){
+                    switch (parser.getLocalName().toLowerCase()) {
                         case "domain":
                             pepSeq = parser.getAttributeValue("", "seq");
-                            
+
                             boolean adding = true;
                             if (allMatches.get(id).getAllPeptideAssumptions(Advocate.xtandem.getIndex()) != null) {
                                 ArrayList<PeptideAssumption> matchAssuptions = allMatches.get(id).getAllPeptideAssumptions(Advocate.xtandem.getIndex()).get(expect);
-                                for (int i = 0; i < matchAssuptions.size(); ++i){
-                                    if (matchAssuptions.get(i).getPeptide().getSequence().equals(pepSeq)){
+                                for (int i = 0; i < matchAssuptions.size(); ++i) {
+                                    if (matchAssuptions.get(i).getPeptide().getSequence().equals(pepSeq)) {
                                         adding = false;
                                         break;
                                     }
                                 }
                             }
-                            
-                            
-                            if (adding){
-                                peptide = new Peptide(pepSeq, new ArrayList<>());
+
+                            if (adding) {
+
+                                peptide = new Peptide(pepSeq);
                                 PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFileName.getName());
                                 allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
                                 addAA = true;
+
                             }
                             break;
-                        
+
                         case "aa":
-                            if (addAA){
+                            
+                            if (addAA) {
+                                
                                 String modName = parser.getAttributeValue("", "modified") + "@" + parser.getAttributeValue("", "type");
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
-                                peptide.getModificationMatches().add(new ModificationMatch(modName, true, modPosition));
-                                
+                                peptide.addModificationMatch(new ModificationMatch(modName, true, modPosition));
+
                             }
                             break;
-                            
+
                         default:
                             break;
                     }
                     break;
-                    
 
-                default: break;
+                default:
+                    break;
             }
         }
     }
@@ -411,40 +462,56 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT: return;
-                case XMLStreamConstants.END_DOCUMENT: return;
-                case XMLStreamConstants.NAMESPACE: break;
+                case XMLStreamConstants.START_DOCUMENT:
+                    return;
+                case XMLStreamConstants.END_DOCUMENT:
+                    return;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
                 case XMLStreamConstants.CHARACTERS:
-                    switch (theCase){
-                        case 1: modifications.put(changeModificationName(parser.getText()), false); break;
-                        case 2: modifications.put(changeModificationName(parser.getText()), true); break;
-                        case 3: softwareVersion = parser.getText().trim();
-                        default: break;
+                    switch (theCase) {
+                        case 1:
+                            modifications.put(changeModificationName(parser.getText()), false);
+                            break;
+                        case 2:
+                            modifications.put(changeModificationName(parser.getText()), true);
+                            break;
+                        case 3:
+                            softwareVersion = parser.getText().trim();
+                        default:
+                            break;
                     }
                     theCase = 0;
                     break;
                 case XMLStreamConstants.END_ELEMENT:
-                    if ("group".equalsIgnoreCase(parser.getLocalName())) return;
-                    break;
-
-                case XMLStreamConstants.START_ELEMENT:
-                    if ("note".equalsIgnoreCase(parser.getLocalName())){
-                        String label = parser.getAttributeValue("", "label").toLowerCase();
-                        if (label.startsWith("residue, modification mass")) theCase = 1;
-                        else if (label.startsWith("residue, potential modification mass")) theCase = 2;
-                        else if ("process, version".equalsIgnoreCase(label)) theCase = 3;
+                    if ("group".equalsIgnoreCase(parser.getLocalName())) {
+                        return;
                     }
                     break;
 
-                default: break;
+                case XMLStreamConstants.START_ELEMENT:
+                    if ("note".equalsIgnoreCase(parser.getLocalName())) {
+                        String label = parser.getAttributeValue("", "label").toLowerCase();
+                        if (label.startsWith("residue, modification mass")) {
+                            theCase = 1;
+                        } else if (label.startsWith("residue, potential modification mass")) {
+                            theCase = 2;
+                        } else if ("process, version".equalsIgnoreCase(label)) {
+                            theCase = 3;
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
     }
-    
-    private String changeModificationName(String modification){
+
+    private String changeModificationName(String modification) {
         int indexPoint = modification.indexOf(".");
         int size = modification.length();
-        if (indexPoint >= 0){
+        if (indexPoint >= 0) {
             modification = modification.substring(0, indexPoint + 5) + modification.substring(size - 2, size);
         }
         return modification;

@@ -178,7 +178,7 @@
             <Component class="javax.swing.JComboBox" name="scoreCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new DefaultComboBoxModel(PtmScore.getScoresAsList())" type="code"/>
+                  <Connection code="new DefaultComboBoxModel(com.compomics.util.experiment.identification.modification.ModificationLocalizationScore.values())" type="code"/>
                 </Property>
               </Properties>
               <Events>

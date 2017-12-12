@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
-import com.compomics.util.experiment.identification.protein_sequences.ProteinUtils;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
 import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.parameters.tools.UtilitiesUserParameters;
@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import no.uib.jsparklines.renderers.util.Util;
 
@@ -26,7 +27,7 @@ public class FastaSummary {
     /**
      * The species occurrence in the fasta file.
      */
-    public final HashMap<String, Integer> speciesOccurrence;
+    public final TreeMap<String, Integer> speciesOccurrence;
     /**
      * The database type occurrence in the fasta file.
      */
@@ -54,7 +55,7 @@ public class FastaSummary {
      * @param nTarget the number of target sequences
      * @param lastModified the last time the file was modified
      */
-    public FastaSummary(File fastaFile, HashMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
+    public FastaSummary(File fastaFile, TreeMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
 
         this.fastaFile = fastaFile;
         this.speciesOccurrence = speciesOccurrence;
@@ -205,7 +206,7 @@ public class FastaSummary {
 
         long lastModified = fastaFile.lastModified();
         
-        HashMap<String, Integer> speciesOccurrence = new HashMap<>(1);
+        TreeMap<String, Integer> speciesOccurrence = new TreeMap<>();
         HashMap<ProteinDatabase, Integer> databaseType = new HashMap<>(1);
         int nSequences = 0;
         int nTarget = 0;

@@ -280,18 +280,30 @@ public class GeneMaps implements Serializable {
      * @return the go terms names
      */
     public HashSet<String> getGoNamesForProtein(String proteinAccession) {
+    
         HashSet<String> goTerms = getGoTermsForProtein(proteinAccession);
+        
         if (goTerms != null) {
+        
             HashSet<String> goNames = new HashSet<>(goTerms.size());
+            
             for (String goTerm : goTerms) {
+            
                 String goName = getNameForGoTerm(goTerm);
+                
                 if (goName != null) {
+                
                     goNames.add(goName);
+                
                 }
             }
+            
             return goNames;
+        
         }
+        
         return null;
+    
     }
 
     /**

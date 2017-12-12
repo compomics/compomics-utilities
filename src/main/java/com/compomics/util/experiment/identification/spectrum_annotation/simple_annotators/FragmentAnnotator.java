@@ -25,7 +25,7 @@ public class FragmentAnnotator {
     /**
      * The modifications factory.
      */
-    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * Array of the forward ion m/z with charge 1.
      */
@@ -75,41 +75,50 @@ public class FragmentAnnotator {
         complementaryIonMz1 = new double[peptideLength];
 
         double[] modificationsMasses = new double[peptideLength];
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-        if (modificationMatches != null) {
+        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-            for (ModificationMatch modificationMatch : modificationMatches) {
+        for (ModificationMatch modificationMatch : modificationMatches) {
 
-                String modificationName = modificationMatch.getModification();
-                Modification modification = ptmFactory.getModification(modificationName);
-                double modificationMass = modification.getMass();
+            String modificationName = modificationMatch.getModification();
+            Modification modification = modificationFactory.getModification(modificationName);
+            double modificationMass = modification.getMass();
 
-                int site = modificationMatch.getModificationSite();
+            int site = modificationMatch.getModificationSite();
 
-                modificationsMasses[site - 1] += modificationMass;
-            }
+            modificationsMasses[site - 1] += modificationMass;
+
         }
 
         double forwardMass;
         double complementaryMass;
+        
         if (ionSeries == IonSeries.by) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass();
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2];
             forwardIonType = PeptideFragmentIon.B_ION;
             complementaryIonType = PeptideFragmentIon.Y_ION;
+            
         } else if (ionSeries == IonSeries.cz) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() + StandardMasses.nh3.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] - StandardMasses.nh3.mass;
             forwardIonType = PeptideFragmentIon.C_ION;
             complementaryIonType = PeptideFragmentIon.Z_ION;
+            
         } else if (ionSeries == IonSeries.ax) {
+            
             forwardMass = ElementaryIon.proton.getTheoreticMass() - StandardMasses.co.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] + StandardMasses.co.mass;
             forwardIonType = PeptideFragmentIon.A_ION;
             complementaryIonType = PeptideFragmentIon.X_ION;
+            
         } else {
+            
             throw new UnsupportedOperationException("Ion series " + ionSeries + " not supported.");
+            
         }
+        
         for (int i = 0; i < peptideLength; i++) {
 
             char aa = aas[i];
@@ -119,10 +128,15 @@ public class FragmentAnnotator {
             forwardMass += modificationsMasses[i];
 
             if (forward) {
+                
                 forwardIonMz1[i] = forwardMass;
+                
             }
+            
             if (complementary) {
+                
                 complementaryIonMz1[i] = complementaryMass - forwardMass;
+                
             }
         }
     }
@@ -137,7 +151,7 @@ public class FragmentAnnotator {
      */
     public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge) {
 
-        ArrayList<IonMatch> results = new ArrayList<IonMatch>(0);
+        ArrayList<IonMatch> results = new ArrayList<>(0);
 
         for (int i = 0; i < peptideLength; i++) {
 

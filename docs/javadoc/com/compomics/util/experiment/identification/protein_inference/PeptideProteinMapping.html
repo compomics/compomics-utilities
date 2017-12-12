@@ -141,18 +141,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#PeptideProteinMapping-java.lang.String-java.lang.String-int-java.util.ArrayList-">PeptideProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#PeptideProteinMapping-java.lang.String-java.lang.String-int-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">PeptideProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideSequence,
                      int&nbsp;index,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</code>
+                     <a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#PeptideProteinMapping-java.lang.String-java.lang.String-int-java.util.ArrayList-com.compomics.util.experiment.identification.matches.PeptideVariantMatches-">PeptideProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#PeptideProteinMapping-java.lang.String-java.lang.String-int-com.compomics.util.experiment.identification.matches.ModificationMatch:A-com.compomics.util.experiment.identification.matches.PeptideVariantMatches-">PeptideProteinMapping</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideSequence,
                      int&nbsp;index,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches,
+                     <a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
                      <a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches">PeptideVariantMatches</a>&nbsp;peptideVariantMatches)</code>
 <div class="block">Constructor.</div>
 </td>
@@ -179,7 +179,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#getModificationMatches--">getModificationMatches</a></span>()</code>
 <div class="block">Returns eventual modifications found.</div>
 </td>
@@ -246,7 +246,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PeptideProteinMapping-java.lang.String-java.lang.String-int-java.util.ArrayList-com.compomics.util.experiment.identification.matches.PeptideVariantMatches-">
+<a name="PeptideProteinMapping-java.lang.String-java.lang.String-int-com.compomics.util.experiment.identification.matches.ModificationMatch:A-com.compomics.util.experiment.identification.matches.PeptideVariantMatches-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -255,7 +255,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;PeptideProteinMapping(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideSequence,
                              int&nbsp;index,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches,
+                             <a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
                              <a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches">PeptideVariantMatches</a>&nbsp;peptideVariantMatches)</pre>
 <div class="block">Constructor.</div>
 <dl>
@@ -286,7 +286,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="PeptideProteinMapping-java.lang.String-java.lang.String-int-java.util.ArrayList-">
+<a name="PeptideProteinMapping-java.lang.String-java.lang.String-int-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -295,7 +295,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public&nbsp;PeptideProteinMapping(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession,
                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptideSequence,
                              int&nbsp;index,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</pre>
+                             <a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -362,7 +362,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>getModificationMatches</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;getModificationMatches()</pre>
+<pre>public&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;getModificationMatches()</pre>
 <div class="block">Returns eventual modifications found.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

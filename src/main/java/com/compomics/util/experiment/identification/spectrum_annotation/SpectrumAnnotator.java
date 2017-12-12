@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
@@ -268,6 +267,7 @@ public abstract class SpectrumAnnotator {
      * @param tiesResolution the method used to resolve ties
      */
     protected void setMassTolerance(double mzTolerance, boolean isPpm, TiesResolution tiesResolution) {
+        
         if (mzTolerance != this.mzTolerance || tiesResolution != this.tiesResolution) {
 
             // Clear previous index
@@ -585,7 +585,6 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param sequenceProvider a sequence provide able to retrieve the protein sequence for the given peptide
      * @param sequenceMatchingPreferences the sequence matching settings for
      * peptide to protein mapping
      * @param ptmSequenceMatchingPreferences the sequence matching settings for
@@ -593,16 +592,23 @@ public abstract class SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceProvider sequenceProvider, SequenceMatchingParameters sequenceMatchingPreferences,
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingParameters sequenceMatchingPreferences,
             SequenceMatchingParameters ptmSequenceMatchingPreferences) {
+        
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
+        
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceProvider, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
+        
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
+            
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
             return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), ptmSequenceMatchingPreferences);
+        
         } else {
+        
             throw new IllegalArgumentException("Default neutral loss map not implemented for SpectrumIdentificationAssumption " + spectrumIdentificationAssumption.getClass() + ".");
+        
         }
     }
 

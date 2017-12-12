@@ -2,7 +2,7 @@ package com.compomics.software.settings;
 
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.genes.GeneFactory;
+import com.compomics.util.experiment.biology.genes.ProteinGeneDetailsProvider;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.parameters.tools.UtilitiesUserParameters;
 import com.compomics.util.pride.PrideObjectsFactory;
@@ -184,7 +184,7 @@ public class UtilitiesPathParameters {
     public static void setPathParameter(UtilitiesPathKey utilitiesPathKey, String path) {
         switch (utilitiesPathKey) {
             case geneMappingKey:
-                GeneFactory.setGeneMappingFolder(path);
+                ProteinGeneDetailsProvider.setGeneMappingFolder(path);
                 return;
             case prideAnnotationKey:
                 PrideObjectsFactory.setPrideFolder(path);
@@ -216,7 +216,7 @@ public class UtilitiesPathParameters {
     public static String getPathParameter(UtilitiesPathKey utilitiesPathKey) {
         switch (utilitiesPathKey) {
             case geneMappingKey:
-                return GeneFactory.getGeneMappingFolder().getAbsolutePath();
+                return ProteinGeneDetailsProvider.getGeneMappingFolder().getAbsolutePath();
             case prideAnnotationKey:
                 return PrideObjectsFactory.getPrideFolder();
             case ptmFactoryKey:
@@ -327,7 +327,7 @@ public class UtilitiesPathParameters {
         String toWrite = "";
         switch (pathKey) {
             case geneMappingKey:
-                toWrite = GeneFactory.getGeneMappingFolder().getAbsolutePath();
+                toWrite = ProteinGeneDetailsProvider.getGeneMappingFolder().getAbsolutePath();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
                 }

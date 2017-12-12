@@ -31,7 +31,7 @@ public abstract class MatchesIterator {
      * list of potential keys for the iterator, if empty all instances of the
      * class are being iterated
      */
-    private ArrayList<String> keys = null;
+    private long[] keys = null;
     /**
      * current absolute index
      */
@@ -66,10 +66,8 @@ public abstract class MatchesIterator {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
         this(null, className, identification, waitingHandler, displayProgress, null);
     }
 
@@ -85,24 +83,34 @@ public abstract class MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      * @param filters filters for the class
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public MatchesIterator(ArrayList<String> keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) throws InterruptedException {
+    public MatchesIterator(long[] keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
+        
         if (keys != null) {
-            num = keys.size();
+            
+            num = keys.length;
             this.keys = keys;
+            
         } else {
+            
             if (filters == null) {
+                
                 longKeys = new ArrayList<>(identification.getClassObjects(className));
+                
             } else {
+                
                 iterator = identification.getIterator(className, filters);
                 longKeys = new ArrayList<>(identification.getNumber(className));
+                
                 while (iterator.hasNext()) {
+                    
                     longKeys.add(((DbObject) iterator.next()).getId());
+                    
                 }
             }
+            
             num = longKeys.size();
+            
         }
 
         index = 0;
@@ -115,21 +123,26 @@ public abstract class MatchesIterator {
      * Returns the next match and updates the buffer. Null if the iterator is
      * done iterating.
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the next match
      */
-    public Object nextObject() throws InterruptedException {
+    public Object nextObject() {
 
         Object obj = null;
         int currentIndex = getIndex();
+        
         if (currentIndex < num) {
+            
             if (keys == null) {
+                
                 obj = identification.retrieveObject(longKeys.get(currentIndex));
+                
             } else {
-                obj = identification.retrieveObject(keys.get(currentIndex));
+                
+                obj = identification.retrieveObject(keys[currentIndex]);
+                
             }
         }
+        
         return obj;
     }
 
@@ -139,6 +152,7 @@ public abstract class MatchesIterator {
      * @return the index
      */
     private int getIndex() {
+        
         try {
 
             nextMutex.acquire();

@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.experiment.identification.modification.PtmScore;
+import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import java.io.Serializable;
 
 /**
@@ -26,7 +26,7 @@ public class ModificationLocalizationParameters implements Serializable {
     /**
      * The probabilistic score selected.
      */
-    private PtmScore selectedProbabilisticScore = PtmScore.PhosphoRS;
+    private ModificationLocalizationScore selectedProbabilisticScore = ModificationLocalizationScore.PhosphoRS;
     /**
      * Boolean indicating whether the threshold should be FLR based.
      */
@@ -83,7 +83,7 @@ public class ModificationLocalizationParameters implements Serializable {
      *
      * @return the selected probabilistic score
      */
-    public PtmScore getSelectedProbabilisticScore() {
+    public ModificationLocalizationScore getSelectedProbabilisticScore() {
         return selectedProbabilisticScore;
     }
 
@@ -92,7 +92,7 @@ public class ModificationLocalizationParameters implements Serializable {
      *
      * @param selectedProbabilisticScore the selected probabilistic score
      */
-    public void setSelectedProbabilisticScore(PtmScore selectedProbabilisticScore) {
+    public void setSelectedProbabilisticScore(ModificationLocalizationScore selectedProbabilisticScore) {
         this.selectedProbabilisticScore = selectedProbabilisticScore;
     }
 

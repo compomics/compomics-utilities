@@ -64,13 +64,15 @@ com.compomics.util.experiment.identification.spectrum_annotation
 com.compomics.util.experiment.identification.spectrum_annotation.simple_annotators
 com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators
 com.compomics.util.experiment.identification.spectrum_assumptions
+com.compomics.util.experiment.identification.utils
 com.compomics.util.experiment.io.biology.protein
 com.compomics.util.experiment.io.biology.protein.converters
 com.compomics.util.experiment.io.biology.protein.iterators
 com.compomics.util.experiment.io.identification
 com.compomics.util.experiment.io.identification.idfilereaders
-com.compomics.util.experiment.io.mass_spectrometry
 com.compomics.util.experiment.io.mass_spectrometry.export
+com.compomics.util.experiment.io.mass_spectrometry.mgf
+com.compomics.util.experiment.io.mass_spectrometry.msp
 com.compomics.util.experiment.io.parameters
 com.compomics.util.experiment.mass_spectrometry
 com.compomics.util.experiment.mass_spectrometry.indexes
@@ -78,7 +80,6 @@ com.compomics.util.experiment.mass_spectrometry.proteowizard
 com.compomics.util.experiment.mass_spectrometry.proteowizard.gui
 com.compomics.util.experiment.mass_spectrometry.spectra
 com.compomics.util.experiment.mass_spectrometry.utils
-com.compomics.util.experiment.massspectrometry
 com.compomics.util.experiment.normalization
 com.compomics.util.experiment.patient
 com.compomics.util.experiment.personalization

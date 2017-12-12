@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
@@ -275,25 +276,22 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 }
 
                 // create the peptide
-                Peptide peptide = new Peptide(unmodifiedPeptideSequence, utilitiesModifications, true);
+                Peptide peptide = new Peptide(unmodifiedPeptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
 
                 // create the peptide assumption
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.tide.getIndex(), charge, tideEValue, Util.getFileName(tideTsvFile));
                 peptideAssumption.setRawScore(rawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
-                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
-                            newModificationMatches = null;
-                    if (previousModificationMatches != null) {
-                        newModificationMatches = new ArrayList<>(previousModificationMatches.size());
-                    }
+                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                        ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                .map(modificationMatch -> modificationMatch.clone())
+                                .toArray(ModificationMatch[]::new);
+
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                        if (previousModificationMatches != null) {
-                            for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()));
-                            }
-                        }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(rawScore);
                         currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), newAssumption);

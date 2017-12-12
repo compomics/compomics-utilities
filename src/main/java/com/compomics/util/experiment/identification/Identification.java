@@ -7,21 +7,27 @@ import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
-import com.compomics.util.experiment.identification.matches_iterators.PsmIterator;
+import com.compomics.util.experiment.identification.matches_iterators.SpectrumMatchesIterator;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
 /**
- * This class contains identification results.
+ * This class interacts with the back-end database to manage identification
+ * objects. Interacting with the back-end database might cause
+ * InterruptedException. These exceptions are passed as runtime exceptions for
+ * methods returning identification objects.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
@@ -35,15 +41,19 @@ public class Identification extends ExperimentObject {
     /**
      * List of the keys of all imported proteins.
      */
-    protected HashSet<String> proteinIdentification = new HashSet<>();
+    protected HashSet<Long> proteinIdentification = new HashSet<>();
     /**
      * List of the keys of all imported peptides.
      */
-    protected HashSet<String> peptideIdentification = new HashSet<>();
+    protected HashSet<Long> peptideIdentification = new HashSet<>();
+    /**
+     * Map mapping spectra per file.
+     */
+    private HashMap<String, HashSet<Long>> spectrumIdentification = null;
     /**
      * A map linking protein accessions to all their protein matches keys.
      */
-    protected HashMap<String, HashSet<String>> proteinMap = new HashMap<>();
+    protected HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
     /**
      * The directory where the database stored.
      */
@@ -52,17 +62,9 @@ public class Identification extends ExperimentObject {
      * The database which will contain the objects.
      */
     private final ObjectsDB objectsDB;
-    /**
-     * Map mapping spectra per file.
-     */
-    private HashMap<String, ArrayList<String>> spectraPerFile = null;
-    /**
-     * Ordered list of spectrum file names
-     */
-    private ArrayList<String> orderedSpectrumFileNames = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param objectsDB the database for storing all objects on disk when memory
      * is too low
@@ -81,82 +83,39 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Set the ordered list of spectrum file names. Note that the list provided
-     * has to be the same size as the number of spectrum files used.
-     *
-     * @param orderedSpectrumFileNames the ordered list of spectrum file names
+     * Fills the spectra per file map.
      */
-    public void setOrderedListOfSpectrumFileNames(ArrayList<String> orderedSpectrumFileNames) {
-        this.orderedSpectrumFileNames = orderedSpectrumFileNames;
-    }
+    private void fillSpectrumIdentification() {
 
-    /**
-     * Fills the spectra per file map
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     */
-    public void fillSpectraPerFile() throws InterruptedException {
+        try {
 
-        spectraPerFile = new HashMap<>(getNumber(SpectrumMatch.class));
-        PsmIterator psmIterator = getPsmIterator(null);
-        SpectrumMatch spectrumMatch;
+            spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
+                    .collect(Collectors.groupingBy(
+                            key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
+                            HashMap::new,
+                            Collectors.toCollection(HashSet::new)));
 
-        while ((spectrumMatch = psmIterator.next()) != null) {
+        } catch (Exception e) {
 
-            String key = spectrumMatch.getKey();
-            String fileName = Spectrum.getSpectrumFile(key);
-            String title = Spectrum.getSpectrumTitle(key);
+            throw new RuntimeException(e);
 
-            ArrayList<String> spectrumTitles = spectraPerFile.get(fileName);
-
-            if (spectrumTitles == null) {
-
-                spectrumTitles = new ArrayList<>();
-                spectraPerFile.put(fileName, spectrumTitles);
-
-            }
-
-            spectrumTitles.add(title);
         }
     }
 
     /**
-     * Returns the names of the mgf files used in the spectrum identification
-     * map as a list. To get the complete file path use
-     * projectDetails.getSpectrumFile(...).
+     * Returns a map of the spectrum matches keys indexed by spectrum file name.
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return the mgf files used in the spectrum identification map
+     * @return a map of the spectrum matches keys indexed by spectrum file name
      */
-    public ArrayList<String> getSpectrumFiles() throws InterruptedException {
+    public HashMap<String, HashSet<Long>> getSpectrumIdentification() {
 
-        if (spectraPerFile == null) {
+        if (spectrumIdentification == null) {
 
-            fillSpectraPerFile();
+            fillSpectrumIdentification();
 
         }
 
-        return new ArrayList<>(spectraPerFile.keySet());
-    }
-
-    /**
-     * Returns the ordered list of spectrum file names.
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return the ordered list of spectrum file names
-     */
-    public ArrayList<String> getOrderedSpectrumFileNames() throws InterruptedException {
-
-        if (orderedSpectrumFileNames == null) {
-
-            orderedSpectrumFileNames = getSpectrumFiles();
-            Collections.sort(orderedSpectrumFileNames);
-
-        }
-
-        return orderedSpectrumFileNames;
+        return spectrumIdentification;
     }
 
     /**
@@ -172,6 +131,7 @@ public class Identification extends ExperimentObject {
      * Returns the number of objects of a given class
      *
      * @param className the class name of a given class
+     *
      * @return the number of objects
      */
     public int getNumber(Class className) {
@@ -184,13 +144,19 @@ public class Identification extends ExperimentObject {
      * @param className the class name of a given class
      * @param filters filters for the class
      *
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the iterator
      */
-    public Iterator<?> getIterator(Class className, String filters) throws InterruptedException {
-        return objectsDB.getObjectsIterator(className, filters);
+    public Iterator<?> getIterator(Class className, String filters) {
+
+        try {
+
+            return objectsDB.getObjectsIterator(className, filters);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -213,13 +179,11 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return returns the list of hashed keys
      */
-    public ArrayList<Long> loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        return objectsDB.loadObjects(className, waitingHandler, displayProgress);
+    public void loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
 
     /**
@@ -231,13 +195,11 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
-     * @return returns the list of hashed keys
      */
-    public ArrayList<Long> loadObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        return objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
+    public void loadObjects(ArrayList<Long> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
     }
 
     /**
@@ -245,26 +207,51 @@ public class Identification extends ExperimentObject {
      *
      * @param longKey the hash key
      *
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return the objects
      */
-    public Object retrieveObject(long longKey) throws InterruptedException {
+    public Object retrieveObject(long longKey) {
+
         return objectsDB.retrieveObject(longKey);
+
     }
 
     /**
-     * Returns an array of all objects of a given list of keys
+     * Returns the spectrum match with the given key.
      *
-     * @param key the key
+     * @param key the key of the match
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return the objects
+     * @return the spectrum match with the given key
      */
-    public Object retrieveObject(String key) throws InterruptedException {
-        return objectsDB.retrieveObject(key);
+    public SpectrumMatch getSpectrumMatch(long key) {
+
+        return (SpectrumMatch) retrieveObject(key);
+
+    }
+
+    /**
+     * Returns the peptide match with the given key.
+     *
+     * @param key the key of the match
+     *
+     * @return the peptide match with the given key
+     */
+    public PeptideMatch getPeptideMatch(long key) {
+
+        return (PeptideMatch) retrieveObject(key);
+
+    }
+
+    /**
+     * Returns the protein match with the given key.
+     *
+     * @param key the key of the match
+     *
+     * @return the protein match with the given key
+     */
+    public ProteinMatch getProteinMatch(long key) {
+
+        return (ProteinMatch) retrieveObject(key);
+
     }
 
     /**
@@ -276,12 +263,19 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return list of objects
      */
-    public ArrayList<Object> retrieveObjects(ArrayList<String> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+    public ArrayList<Object> retrieveObjects(Collection<Long> keyList, WaitingHandler waitingHandler, boolean displayProgress) {
+
+        try {
+
+            return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -294,11 +288,18 @@ public class Identification extends ExperimentObject {
      * method should be displayed on the waiting handler
      *
      * @return list of objects
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
-        return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+
+        try {
+
+            return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -306,11 +307,18 @@ public class Identification extends ExperimentObject {
      *
      * @param key the key of the object
      * @param object the object
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void addObject(String key, Object object) throws InterruptedException {
-        objectsDB.insertObject(key, object);
+    public void addObject(long key, Object object) {
+
+        try {
+
+            objectsDB.insertObject(key, object);
+
+        } catch (InterruptedException ex) {
+
+            throw new RuntimeException(ex);
+
+        }
     }
 
     /**
@@ -324,7 +332,7 @@ public class Identification extends ExperimentObject {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void addObjects(HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void addObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         objectsDB.insertObjects(objects, waitingHandler, displayProgress);
     }
 
@@ -332,39 +340,40 @@ public class Identification extends ExperimentObject {
      * Removes an object from the database.
      *
      * @param key the key of the object
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void removeObject(String key) throws InterruptedException {
+    public void removeObject(long key) throws InterruptedException {
 
         Object object = objectsDB.retrieveObject(key);
 
         if (object instanceof ProteinMatch) {
-            if (proteinIdentification.contains(key)) {
 
-                ProteinMatch proteinMatch = (ProteinMatch) object;
+            ProteinMatch proteinMatch = (ProteinMatch) object;
 
-                for (String protein : proteinMatch.getAccessions()) {
+            for (String accession : proteinMatch.getAccessions()) {
 
-                    HashSet<String> proteinKeys = proteinMap.get(protein);
+                HashSet<Long> proteinKeys = proteinMap.get(accession);
 
-                    if (proteinKeys != null) {
+                if (proteinKeys != null) {
 
-                        proteinKeys.remove(key);
+                    proteinKeys.remove(key);
 
-                        if (proteinKeys.isEmpty()) {
+                    if (proteinKeys.isEmpty()) {
 
-                            proteinMap.remove(protein);
+                        proteinMap.remove(accession);
 
-                        }
                     }
                 }
             }
 
             proteinIdentification.remove(key);
+
         }
 
         objectsDB.removeObject(key);
+
     }
 
     /**
@@ -374,7 +383,7 @@ public class Identification extends ExperimentObject {
      *
      * @return true if database contains a certain object otherwise false
      */
-    public boolean contains(String key) {
+    public boolean contains(long key) {
         return objectsDB.inDB(key);
     }
 
@@ -389,7 +398,7 @@ public class Identification extends ExperimentObject {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void removeObjects(ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void removeObjects(ArrayList<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
         objectsDB.removeObjects(keys, waitingHandler, displayProgress);
     }
 
@@ -403,27 +412,11 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether a match indexed by the given key exists.
-     *
-     * @param matchKey the key of the match looked for
-     *
-     * @return a boolean indicating whether a match indexed by the given key
-     * exists
-     */
-    public boolean matchExists(String matchKey) {
-
-        if (matchKey == null || matchKey.length() == 0) {
-            return false;
-        }
-        return objectsDB.inDB(matchKey);
-    }
-
-    /**
      * Returns a list of the keys of all encountered proteins.
      *
      * @return the corresponding identification results
      */
-    public HashSet<String> getProteinIdentification() {
+    public HashSet<Long> getProteinIdentification() {
         return proteinIdentification;
     }
 
@@ -432,21 +425,8 @@ public class Identification extends ExperimentObject {
      *
      * @return the corresponding identification results
      */
-    public HashSet<String> getPeptideIdentification() {
+    public HashSet<Long> getPeptideIdentification() {
         return peptideIdentification;
-    }
-
-    /**
-     * Returns the keys of the spectrum identifications
-     *
-     * @return the corresponding list of spectrum matches keys. See
-     * Spectrum.getKey() for more details.
-     */
-    public HashSet<String> getSpectrumIdentification() {
-
-        return spectraPerFile.values().stream()
-                .flatMap(spectrumKeys -> spectrumKeys.stream())
-                .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -459,23 +439,24 @@ public class Identification extends ExperimentObject {
      *
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceProvider a provider of protein sequences
+     *
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences) throws InterruptedException {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) throws InterruptedException {
 
-        String spectrumMatchKey = spectrumMatch.getKey();
+        long spectrumMatchKey = spectrumMatch.getKey();
 
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
-        String peptideKey = peptide.getMatchingKey(sequenceMatchingPreferences);
-        PeptideMatch peptideMatch = (PeptideMatch) retrieveObject(peptideKey);
+        long peptideMatchKey = peptide.getMatchingKey(sequenceMatchingPreferences);
+        PeptideMatch peptideMatch = getPeptideMatch(peptideMatchKey);
 
         if (peptideMatch == null) {
 
-            peptideMatch = new PeptideMatch(peptide, peptideKey);
-            peptideMatch.addSpectrumMatchKey(spectrumMatchKey);
-            peptideIdentification.add(peptideKey);
-            objectsDB.insertObject(peptideKey, peptideMatch);
+            peptideMatch = new PeptideMatch(peptide, peptideMatchKey, spectrumMatchKey);
+            peptideIdentification.add(peptideMatchKey);
+            objectsDB.insertObject(peptideMatchKey, peptideMatch);
 
         } else {
 
@@ -483,17 +464,18 @@ public class Identification extends ExperimentObject {
 
         }
 
-        String proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
-        ProteinMatch proteinMatch = (ProteinMatch) retrieveObject(proteinMatchKey);
+        long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
+        ProteinMatch proteinMatch = getProteinMatch(proteinMatchKey);
 
         if (proteinMatch == null) {
 
-            proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideKey);
-            proteinIdentification.add(proteinMatchKey);
+            proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
+            proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
+                    .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
 
             for (String proteinAccession : proteinMatch.getAccessions()) {
 
-                HashSet<String> proteinMatchKeys = proteinMap.get(proteinAccession);
+                HashSet<Long> proteinMatchKeys = proteinMap.get(proteinAccession);
 
                 if (proteinMatchKeys == null) {
 
@@ -506,11 +488,12 @@ public class Identification extends ExperimentObject {
 
             }
 
+            proteinIdentification.add(proteinMatchKey);
             objectsDB.insertObject(proteinMatchKey, proteinMatch);
 
-        } else if (!proteinMatch.getPeptideMatchesKeys().contains(peptideKey)) {
+        } else {
 
-            proteinMatch.addPeptideMatchKey(peptideKey);
+            proteinMatch.addPeptideMatchKey(peptideMatchKey);
 
         }
     }
@@ -522,17 +505,17 @@ public class Identification extends ExperimentObject {
      * @return a map of all the protein matches which can be ascribed to a
      * protein indexed by its accession.
      */
-    public HashMap<String, HashSet<String>> getProteinMap() {
+    public HashMap<String, HashSet<Long>> getProteinMap() {
         return proteinMap;
     }
 
     /**
      * Closes the database connection.
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void close() throws InterruptedException {
+    public void close() {
+
         objectsDB.close();
+
     }
 
     /**
@@ -551,49 +534,35 @@ public class Identification extends ExperimentObject {
      *
      * @return the keys of the protein matches
      */
-    public HashSet<String> getProteinMatches(Peptide peptide) {
-        
+    public HashSet<Long> getProteinMatches(Peptide peptide) {
+
         return peptide.getProteinMapping().navigableKeySet().stream()
+                .filter(accession -> proteinMap.containsKey(accession))
                 .flatMap(accession -> proteinMap.get(accession).stream())
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
-     * Indicates whether a peptide is found in a single protein match.
+     * Returns a spectrum matches iterator for a given key list.
      *
-     * @param peptide the peptide of interest
+     * @param spectrumMatches the keys of the spectra to iterate
+     * @param waitingHandler the waiting handler
      *
-     * @return true if peptide is found in a single protein match
+     * @return a spectrum matches iterator
      */
-    public boolean isUniqueProteinGroup(Peptide peptide) {
-        return getProteinMatches(peptide).size() == 1;
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(long[] spectrumMatches, WaitingHandler waitingHandler) {
+        return new SpectrumMatchesIterator(spectrumMatches, this, waitingHandler, false);
     }
 
     /**
-     * Returns a psm iterator for a given key list.
-     *
-     * @param spectrumKeys the keys of the spectra to iterate
-     * @param waitingHandler the waiting handler
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return a peptide matches iterator
-     */
-    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws InterruptedException {
-        return new PsmIterator(spectrumKeys, this, waitingHandler, false);
-    }
-
-    /**
-     * Returns a psm iterator for all SpectrumMatches.
+     * Returns a spectrum matches iterator for all SpectrumMatches.
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
-     * @return a peptide matches iterator
+     * @return a spectrum matches iterator
      */
-    public PsmIterator getPsmIterator(WaitingHandler waitingHandler) throws InterruptedException {
-        return new PsmIterator(this, waitingHandler, false);
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler) {
+        return new SpectrumMatchesIterator(this, waitingHandler, false);
     }
 
     /**
@@ -602,12 +571,10 @@ public class Identification extends ExperimentObject {
      * @param waitingHandler the waiting handler
      * @param filters filters for the class
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PsmIterator getPsmIterator(WaitingHandler waitingHandler, String filters) throws InterruptedException {
-        return new PsmIterator(null, this, waitingHandler, false, filters);
+    public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler, String filters) {
+        return new SpectrumMatchesIterator(null, this, waitingHandler, false, filters);
     }
 
     /**
@@ -616,11 +583,9 @@ public class Identification extends ExperimentObject {
      * @param peptideKeys the keys of the peptides to iterate
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws InterruptedException {
+    public PeptideMatchesIterator getPeptideMatchesIterator(long[] peptideKeys, WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(peptideKeys, this, waitingHandler, false);
     }
 
@@ -629,11 +594,9 @@ public class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) throws InterruptedException {
+    public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(this, waitingHandler, false);
     }
 
@@ -643,11 +606,9 @@ public class Identification extends ExperimentObject {
      * @param proteinKeys the keys of the peptides to iterate
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws InterruptedException {
+    public ProteinMatchesIterator getProteinMatchesIterator(long[] proteinKeys, WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(proteinKeys, this, waitingHandler, false);
     }
 
@@ -656,11 +617,9 @@ public class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      * @return a peptide matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) throws InterruptedException {
+    public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, waitingHandler, false);
     }
 

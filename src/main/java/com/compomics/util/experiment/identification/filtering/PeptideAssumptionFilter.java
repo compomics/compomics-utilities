@@ -7,17 +7,17 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
-import com.compomics.util.experiment.identification.protein_sequences.ProteinUtils;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.TreeMap;
+import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -49,10 +49,10 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     private boolean isPpm;
     /**
-     * Boolean indicating whether peptides presenting unknown PTMs should be
-     * ignored.
+     * Boolean indicating whether peptides presenting unknown modifications
+     * should be ignored.
      */
-    private boolean unknownPtm;
+    private boolean unknownModification;
     /**
      * The minimum number of missed cleavages allowed. Null means no lower
      * limit.
@@ -80,7 +80,7 @@ public class PeptideAssumptionFilter implements Serializable {
         maxPepLength = 30;
         maxMassDeviation = -1;
         isPpm = true;
-        unknownPtm = true;
+        unknownModification = true;
         minMissedCleavages = null;
         maxMissedCleavages = null;
         minIsotopes = null;
@@ -98,7 +98,8 @@ public class PeptideAssumptionFilter implements Serializable {
      * disabled)
      * @param isPpm boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
-     * @param unknownPTM shall peptides presenting unknownPTMs be ignored
+     * @param unknownModification shall peptides presenting unknown
+     * modifications be removed
      * @param minMissedCleavages the minimum number of missed cleavages allowed
      * (null for disabled)
      * @param maxMissedCleavages the maximum number of missed cleavages allowed
@@ -108,16 +109,18 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param maxIsotopes the maximum number of isotopes allowed (null for
      * disabled)
      */
-    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM, Integer minMissedCleavages, Integer maxMissedCleavages, Integer minIsotopes, Integer maxIsotopes) {
+    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownModification, Integer minMissedCleavages, Integer maxMissedCleavages, Integer minIsotopes, Integer maxIsotopes) {
+
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.maxMassDeviation = maxMzDeviation;
         this.isPpm = isPpm;
-        this.unknownPtm = unknownPTM;
+        this.unknownModification = unknownModification;
         this.minMissedCleavages = minMissedCleavages;
         this.maxMissedCleavages = maxMissedCleavages;
         this.minIsotopes = minIsotopes;
         this.maxIsotopes = maxIsotopes;
+
     }
 
     /**
@@ -127,11 +130,13 @@ public class PeptideAssumptionFilter implements Serializable {
      * information from
      */
     public void setFilterFromSearchParameters(SearchParameters searchParameters) {
+
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
         this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
         this.minIsotopes = searchParameters.getMinIsotopicCorrection();
         this.maxIsotopes = searchParameters.getMaxIsotopicCorrection();
-        this.unknownPtm = true;
+        this.unknownModification = true;
+
     }
 
     /**
@@ -152,12 +157,17 @@ public class PeptideAssumptionFilter implements Serializable {
 
         if ((maxPepLength > 0 && sequenceLength > maxPepLength)
                 || (minPepLength > 0 && sequenceLength < minPepLength)) {
+
             return false;
+
         }
 
         double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
+
         if (xShare > sequenceMatchingPreferences.getLimitX()) {
+
             return false;
+
         }
 
         if (minMissedCleavages != null || maxMissedCleavages != null) {
@@ -165,10 +175,15 @@ public class PeptideAssumptionFilter implements Serializable {
             Integer peptideMinMissedCleavages = peptide.getNMissedCleavages(digestionPreferences);
 
             if (minMissedCleavages != null && peptideMinMissedCleavages != null && peptideMinMissedCleavages < minMissedCleavages) {
+
                 return false;
+
             }
+
             if (maxMissedCleavages != null && peptideMinMissedCleavages != null && peptideMinMissedCleavages > maxMissedCleavages) {
+
                 return false;
+
             }
         }
 
@@ -176,59 +191,40 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before.
+     * Validates a peptide depending on its protein inference status.
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param fmIndex the FM-Index.
-     *
-     * @return a boolean indicating whether the peptide passed the test
-     */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, FMIndex fmIndex) {
-        
-        return validateProteins(peptide, sequenceMatchingPreferences, fmIndex, fmIndex);
-        
-    }
-
-    /**
-     * Validates a peptide depending on its protein inference status. Maps the
-     * peptide to proteins in case it was not done before.
-     *
-     * @param peptide the peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideMapper the peptide mapper to use for peptide to protein
-     * mapping
      * @param sequenceProvider a sequence provider
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, PeptideMapper peptideMapper, SequenceProvider sequenceProvider) {
+    public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) {
 
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
-            
+
             boolean target = false;
             boolean decoy = false;
-            
+
             for (String accession : proteinMapping.navigableKeySet()) {
-                
+
                 if (ProteinUtils.isDecoy(accession, sequenceProvider)) {
-                    
+
                     decoy = true;
-                    
+
                 } else {
-                    
+
                     target = true;
-                    
+
                 }
             }
-            
+
             if (target && decoy) {
-                
+
                 return false;
-                
+
             }
         }
 
@@ -241,27 +237,28 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param peptide the peptide of interest
      * @param sequenceMatchingPreferences the sequence matching preferences for
      * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for modification to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateModifications(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences,
-            SequenceMatchingParameters ptmSequenceMatchingPreferences, ModificationParameters modificationProfile) {
+            SequenceMatchingParameters modificationSequenceMatchingPreferences, ModificationParameters modificationProfile) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
-        // check if it is an unknown peptide
-        if (unknownPtm) {
-            ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-            if (modificationMatches != null) {
-                for (ModificationMatch modMatch : modificationMatches) {
-                    String ptmName = modMatch.getModification();
-                    if (!modificationFactory.containsModification(ptmName)) {
-                        return false;
-                    }
-                }
+        // check if a modification could not be parsed
+        if (unknownModification) {
+
+            ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+
+            if (Arrays.stream(modificationMatches)
+                    .map(ModificationMatch::getModification)
+                    .anyMatch(modName -> !modificationFactory.containsModification(modName))) {
+
+                return false;
+
             }
         }
 
@@ -281,7 +278,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * filter
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) {
-        
+
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {
@@ -295,21 +292,27 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether unknown PTMs shall be removed.
+     * Returns a boolean indicating whether unknown modifications shall be
+     * removed.
      *
-     * @return a boolean indicating whether unknown PTMs shall be removed
+     * @return a boolean indicating whether unknown modifications shall be
+     * removed
      */
-    public boolean removeUnknownPTMs() {
-        return unknownPtm;
+    public boolean removeUnknownModifications() {
+
+        return unknownModification;
+
     }
 
     /**
-     * Set whether unknown PTMs shall be removed.
+     * Set whether unknown modifications shall be removed.
      *
-     * @param unknownPtm whether unknown PTMs shall be removed
+     * @param unknownModification whether unknown modifications shall be removed
      */
-    public void setRemoveUnknownPTMs(boolean unknownPtm) {
-        this.unknownPtm = unknownPtm;
+    public void setRemoveUnknownModifications(boolean unknownModification) {
+
+        this.unknownModification = unknownModification;
+
     }
 
     /**
@@ -477,7 +480,7 @@ public class PeptideAssumptionFilter implements Serializable {
         }
 
         return isPpm == anotherFilter.isPpm
-                && unknownPtm == anotherFilter.removeUnknownPTMs()
+                && unknownModification == anotherFilter.removeUnknownModifications()
                 && minPepLength == anotherFilter.getMinPepLength()
                 && maxPepLength == anotherFilter.getMaxPepLength()
                 && maxMassDeviation == anotherFilter.getMaxMzDeviation();
@@ -503,7 +506,7 @@ public class PeptideAssumptionFilter implements Serializable {
                 output.append(" Da.").append(newLine);
             }
         }
-        output.append("Ignore Unknown PTMs: ").append(unknownPtm).append(".").append(newLine);
+        output.append("Remove Unknown Modifications: ").append(unknownModification).append(".").append(newLine);
 
         if (minMissedCleavages != null || maxMissedCleavages != null) {
 

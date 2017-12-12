@@ -3,6 +3,7 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +85,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * calibrated on the median, 15.9% and 84.1% percentiles.
      *
      * @param input the input list
+     * 
      * @return the non symmetrical distribution calibrated on the median, 15.9%
      * and 84.1% percentiles.
      */
@@ -99,6 +101,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * calibrated on the median, 15.9% and 84.1% percentiles.
      *
      * @param input the input list
+     * 
      * @return the non symmetrical distribution calibrated on the median, 15.9%
      * and 84.1% percentiles.
      */
@@ -112,75 +115,67 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getProbabilityAt(double x) {
+    public double getProbabilityAt(double x) {
         
-        if (x >= mean) {
-            return distributionUp.getProbabilityAt(x);
-        } else {
-            return distributionDown.getProbabilityAt(x);
-        }
+        return x >= mean ?
+            distributionUp.getProbabilityAt(x)
+                : distributionDown.getProbabilityAt(x);
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) {
+    public double getCumulativeProbabilityAt(double x) {
         
-        if (x >= mean) {
-            return distributionUp.getCumulativeProbabilityAt(x);
-        } else {
-            return distributionDown.getCumulativeProbabilityAt(x);
-        }
+        return x >= mean ?
+                distributionUp.getCumulativeProbabilityAt(x)
+        : distributionDown.getCumulativeProbabilityAt(x);
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) {
+    public double getDescendingCumulativeProbabilityAt(double x) {
         
-        if (x > mean) {
-            return distributionUp.getDescendingCumulativeProbabilityAt(x);
-        } else {
-            return distributionDown.getDescendingCumulativeProbabilityAt(x);
-        }
+        return x > mean ? 
+                distributionUp.getDescendingCumulativeProbabilityAt(x)
+                : distributionDown.getDescendingCumulativeProbabilityAt(x);
+        
     }
 
     @Override
-    public Double getSmallestCumulativeProbabilityAt(double x) {
+    public double getSmallestCumulativeProbabilityAt(double x) {
         
-        if (x > mean) {
-            return getDescendingCumulativeProbabilityAt(x);
-        } else {
-            getCumulativeProbabilityAt(x);
-        }
-        return 0.5;
+        return x > mean ? 
+                getDescendingCumulativeProbabilityAt(x)
+                : getCumulativeProbabilityAt(x);
     }
 
     @Override
-    public Double getMaxValueForProbability(double p) {
+    public double getMaxValueForProbability(double p) {
         
         return distributionUp.getMaxValueForProbability(p);
+        
     }
 
     @Override
-    public Double getMinValueForProbability(double p) {
+    public double getMinValueForProbability(double p) {
         
         return distributionDown.getMinValueForProbability(p);
+        
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) {
+    public double getValueAtCumulativeProbability(double p) {
         
-        if (p < 0.5) {
-            return distributionDown.getValueAtCumulativeProbability(p);
-        } else {
-            return distributionUp.getValueAtCumulativeProbability(p);
-        }
+        return p < 0.5 ?
+                distributionDown.getValueAtCumulativeProbability(p)
+                : distributionUp.getValueAtCumulativeProbability(p);
+        
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) {
+    public double getValueAtDescendingCumulativeProbability(double p) {
         
-        if (p < 0.5) {
-            return distributionUp.getValueAtDescendingCumulativeProbability(p);
-        } else {
-            return distributionDown.getValueAtDescendingCumulativeProbability(p);
-        }
+        return p < 0.5 ? 
+                distributionUp.getValueAtDescendingCumulativeProbability(p)
+                : distributionDown.getValueAtDescendingCumulativeProbability(p);
+        
     }
 }

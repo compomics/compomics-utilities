@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
@@ -41,13 +40,18 @@ public class MassGap extends ExperimentObject implements TagComponent {
 
     @Override
     public String asSequence() {
+        
         if (sequence == null) {
-            String valueAsString = value + "";
+        
+            String valueAsString = Double.toString(value);
             StringBuilder stringBuilder = new StringBuilder(valueAsString.length() + 2);
             stringBuilder.append('<').append(valueAsString).append('>');
             sequence = stringBuilder.toString();
+            
         }
+        
         return sequence;
+    
     }
 
     @Override

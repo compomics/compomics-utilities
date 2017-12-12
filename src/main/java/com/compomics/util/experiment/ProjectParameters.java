@@ -1,17 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
- * All project specific parameters are supposed to be stored here
+ * This class contains project specific parameters.
+ * 
  * @author Dominik Kopczynski
  */
 public class ProjectParameters extends DbObject {
@@ -21,7 +18,7 @@ public class ProjectParameters extends DbObject {
     private HashMap<String, Integer> integerParameters = new HashMap<>();
     private HashMap<String, Double> numericParameters = new HashMap<>();
     
-    public static String nameForDatabase = "Project_parameters_object";
+    public static final long key = ExperimentObject.asLong("Project_parameters_object");
     
     public ProjectParameters(){
         projectUniqueName = "undefined project";

@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
@@ -341,6 +342,23 @@ public class PeptideUtils {
                         entry.getKey(), 
                         sequenceProvider.getSequence(entry.getKey()), 
                         enzymes));
+        
+    }
+
+    /**
+     * Returns a boolean indicating whether the peptide needs variants to be mapped to the given protein.
+     * 
+     * @param peptide the peptide
+     * @param accession the accession of the protein
+     * 
+     * @return a boolean indicating whether the peptide needs variants to be mapped to the given protein
+     */
+    public static boolean isVariant(Peptide peptide, String accession) {
+        
+        int[] indexesOnProtein = peptide.getProteinMapping().get(accession);
+        HashMap<Integer, PeptideVariantMatches> variantOnProtein = peptide.getVariantMatches().get(accession);
+        
+        return indexesOnProtein.length == variantOnProtein.size();
         
     }
     

@@ -1573,9 +1573,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id, arg)) {
                 return false;
             }
         }
@@ -3403,8 +3403,8 @@ public class IdentificationParametersInputBean {
             }
             proteinInferencePreferences.setSimplifyGroups(value);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id);
             Integer intValue = new Integer(arg);
             boolean value;
             switch (intValue) {
@@ -3415,9 +3415,9 @@ public class IdentificationParametersInputBean {
                     value = false;
                     break;
                 default:
-                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id + ": " + arg + ". 0 or 1 expected.");
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id + ": " + arg + ". 0 or 1 expected.");
             }
-            proteinInferencePreferences.setSimplifyGroupsScore(value);
+            proteinInferencePreferences.setSimplifyGroupsVariants(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);

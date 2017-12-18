@@ -266,7 +266,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the sequence variant matches of this peptide.
+     * Returns the sequence variant matches of this peptide indexed by protein accession and peptide start.
      *
      * @return the sequence variant matches of this peptide
      */

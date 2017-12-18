@@ -3,8 +3,6 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import com.compomics.util.experiment.identification.utils.ProteinUtils;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
 
@@ -203,6 +201,22 @@ public class ProteinMatch extends IdentificationMatch {
 
         peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + 1);
         peptideMatchesKeys[peptideMatchesKeys.length - 1] = peptideMatchKey;
+
+    }
+
+    /**
+     * Add a subordinated peptide key.
+     *
+     * @param newKeys peptide keys
+     */
+    public void addPeptideMatchKeys(long[] newKeys) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+
+        peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + newKeys.length);
+        System.arraycopy(newKeys, 0, peptideMatchesKeys, peptideMatchesKeys.length, newKeys.length);
 
     }
 

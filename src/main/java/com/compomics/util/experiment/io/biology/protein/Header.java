@@ -111,7 +111,7 @@ public class Header implements Cloneable, Serializable {
      * The protein evidence for the protein. Note that this is only available
      * for UniProt-based databases.
      */
-    private String iProteinEvidence = null;
+    private Integer iProteinEvidence = null;
     /**
      * The name of the taxonomy the protein comes from. Note that this is only
      * available for UniProt-based databases.
@@ -1123,11 +1123,11 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * Returns the protein evidence level.
+     * Returns the protein evidence level as indexed in UniProt.
      * 
      * @return the protein evidence level
      */
-    public String getProteinEvidence() {
+    public Integer getProteinEvidence() {
         return iProteinEvidence;
     }
 
@@ -1136,7 +1136,7 @@ public class Header implements Cloneable, Serializable {
      * 
      * @param aProteinEvidence the protein evidence level
      */
-    public void setProteinEvidence(String aProteinEvidence) {
+    public void setProteinEvidence(Integer aProteinEvidence) {
         iProteinEvidence = aProteinEvidence;
     }
 
@@ -1668,9 +1668,13 @@ public class Header implements Cloneable, Serializable {
             int evidenceEndIndex = header.iDescription.indexOf(" ", evidenceStartIndex);
 
             if (evidenceEndIndex != -1) {
-                header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex, evidenceEndIndex);
+                
+                header.iProteinEvidence = new Integer(header.iDescription.substring(evidenceStartIndex, evidenceEndIndex));
+                
             } else {
-                header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex);
+                
+                header.iProteinEvidence = new Integer(header.iDescription.substring(evidenceStartIndex));
+            
             }
 
             // http://www.uniprot.org/manual/protein_existence

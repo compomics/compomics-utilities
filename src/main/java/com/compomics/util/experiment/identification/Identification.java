@@ -340,11 +340,8 @@ public class Identification extends ExperimentObject {
      * Removes an object from the database.
      *
      * @param key the key of the object
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void removeObject(long key) throws InterruptedException {
+    public void removeObject(long key) {
 
         Object object = objectsDB.retrieveObject(key);
 
@@ -372,8 +369,15 @@ public class Identification extends ExperimentObject {
 
         }
 
+        try {
+        
         objectsDB.removeObject(key);
-
+        
+        } catch (InterruptedException e) {
+            
+            throw new RuntimeException(e);
+            
+        }
     }
 
     /**
@@ -384,7 +388,9 @@ public class Identification extends ExperimentObject {
      * @return true if database contains a certain object otherwise false
      */
     public boolean contains(long key) {
+        
         return objectsDB.inDB(key);
+    
     }
 
     /**

@@ -51,5 +51,14 @@ public interface ProteinDetailsProvider {
      * @return the taxonomy for the given protein
      */
     public String getTaxonomy(String accession);
+    
+    /**
+     * Returns an integer representing the protein evidence level as indexed by uniprot.
+     * 
+     * @param accession the protein accession
+     * 
+     * @return an integer representing the protein evidence level as indexed by uniprot
+     */
+    public Integer getProteinEvidence(String accession);
 
 }

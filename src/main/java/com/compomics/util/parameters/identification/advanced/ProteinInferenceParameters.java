@@ -29,21 +29,21 @@ public class ProteinInferenceParameters implements Serializable {
      */
     private boolean simplifyProteinGroups = true;
     /**
-     * Simplify groups based on PeptideShaker score.
-     */
-    private boolean simplifyGroupsScore = true;
-    /**
      * Simplify groups based on UniProt evidence level.
      */
     private boolean simplifyGroupsEvidence = true;
+    /**
+     * Simplify groups of uncharacterized proteins.
+     */
+    private boolean simplifyGroupsUncharacterized = true;
     /**
      * Simplify groups based on enzymaticity.
      */
     private boolean simplifyGroupsEnzymaticity = true;
     /**
-     * Simplify groups of uncharacterized proteins.
+     * Simplify groups based on variant matching.
      */
-    private boolean simplifyGroupsUncharacterized = true;
+    private boolean simplifyGroupsVariants = true;
 
     /**
      * Returns the path to the database used.
@@ -80,10 +80,10 @@ public class ProteinInferenceParameters implements Serializable {
         }
         output.append(".").append(newLine);
         output.append("Simplify Groups: ").append(getSimplifyGroups()).append(newLine);
-        output.append("Simplify on score: ").append(getSimplifyGroupsScore()).append(newLine);
-        output.append("Simplify on enzymaticity: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
         output.append("Simplify on evidence: ").append(getSimplifyGroupsEvidence()).append(newLine);
         output.append("Simplify uncharacterized: ").append(getSimplifyGroupsUncharacterized()).append(newLine);
+        output.append("Simplify on enzymaticity: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
+        output.append("Simplify on variants: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
 
         return output.toString();
     }
@@ -111,7 +111,11 @@ public class ProteinInferenceParameters implements Serializable {
             return false;
         }
 
-        if (getSimplifyGroupsScore() != otherProteinInferencePreferences.getSimplifyGroupsScore()) {
+        if (getSimplifyGroupsEvidence() != otherProteinInferencePreferences.getSimplifyGroupsEvidence()) {
+            return false;
+        }
+
+        if (getSimplifyGroupsUncharacterized() != otherProteinInferencePreferences.getSimplifyGroupsUncharacterized()) {
             return false;
         }
 
@@ -119,11 +123,7 @@ public class ProteinInferenceParameters implements Serializable {
             return false;
         }
 
-        if (getSimplifyGroupsEvidence() != otherProteinInferencePreferences.getSimplifyGroupsEvidence()) {
-            return false;
-        }
-
-        if (getSimplifyGroupsUncharacterized() != otherProteinInferencePreferences.getSimplifyGroupsUncharacterized()) {
+        if (getSimplifyGroupsVariants()!= otherProteinInferencePreferences.getSimplifyGroupsVariants()) {
             return false;
         }
 
@@ -158,28 +158,6 @@ public class ProteinInferenceParameters implements Serializable {
 
     /**
      * Returns a boolean indicating whether the protein groups should be
-     * simplified based on the PeptideShaker score.
-     *
-     * @return a boolean indicating whether the protein groups should be
-     * simplified based on the PeptideShaker score
-     */
-    public boolean getSimplifyGroupsScore() {
-        return simplifyGroupsScore;
-    }
-
-    /**
-     * Sets whether the protein groups should be simplified based on the
-     * PeptideShaker score.
-     *
-     * @param simplifyGroupsScore whether the protein groups should be
-     * simplified based on the PeptideShaker score
-     */
-    public void setSimplifyGroupsScore(boolean simplifyGroupsScore) {
-        this.simplifyGroupsScore = simplifyGroupsScore;
-    }
-
-    /**
-     * Returns a boolean indicating whether the protein groups should be
      * simplified based on the Uniprot evidence level.
      *
      * @return a boolean indicating whether the protein groups should be
@@ -198,6 +176,27 @@ public class ProteinInferenceParameters implements Serializable {
      */
     public void setSimplifyGroupsEvidence(boolean simplifyGroupsEvidence) {
         this.simplifyGroupsEvidence = simplifyGroupsEvidence;
+    }
+
+    /**
+     * Returns a boolean indicating whether the protein groups consisting of
+     * uncharacterized proteins.
+     *
+     * @return a boolean indicating whether the protein groups consisting of
+     * uncharacterized proteins
+     */
+    public boolean getSimplifyGroupsUncharacterized() {
+        return simplifyGroupsUncharacterized;
+    }
+
+    /**
+     * Sets whether the protein groups consisting of uncharacterized proteins.
+     *
+     * @param simplifyGroupsUncharacterized whether the protein groups
+     * consisting of uncharacterized proteins
+     */
+    public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
+        this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
     }
 
     /**
@@ -223,24 +222,25 @@ public class ProteinInferenceParameters implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether the protein groups consisting of
-     * uncharacterized proteins.
+     * Returns a boolean indicating whether the protein groups should be
+     * simplified based on the peptide variant matching.
      *
-     * @return a boolean indicating whether the protein groups consisting of
-     * uncharacterized proteins
+     * @return a boolean indicating whether the protein groups should be
+     * simplified based on the peptide variant matching
      */
-    public boolean getSimplifyGroupsUncharacterized() {
-        return simplifyGroupsUncharacterized;
+    public boolean getSimplifyGroupsVariants() {
+        return simplifyGroupsVariants;
     }
 
     /**
-     * Sets whether the protein groups consisting of uncharacterized proteins.
+     * Sets whether the protein groups should be simplified based on the peptide
+     * variant matching.
      *
-     * @param simplifyGroupsUncharacterized whether the protein groups
-     * consisting of uncharacterized proteins
+     * @param simplifyGroupsVariants whether the protein groups should be
+     * simplified based on the peptide variant matching
      */
-    public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
-        this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
+    public void setSimplifyGroupsVariants(boolean simplifyGroupsVariants) {
+        this.simplifyGroupsVariants = simplifyGroupsVariants;
     }
 
     /**

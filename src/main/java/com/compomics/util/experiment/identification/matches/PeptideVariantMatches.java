@@ -29,8 +29,16 @@ public class PeptideVariantMatches extends DbObject {
      * @param lengthDiff the length difference induced by the variants
      */
     public PeptideVariantMatches(HashMap<Integer, Variant> variantMatches, int lengthDiff) {
+        
+        if (variantMatches.isEmpty()) {
+            
+            throw new IllegalArgumentException("Empty map of variant provided to constructor.");
+            
+        }
+        
         this.variantMatches = variantMatches;
         this.lengthDiff = lengthDiff;
+    
     }
 
     /**
@@ -39,7 +47,9 @@ public class PeptideVariantMatches extends DbObject {
      * @return the length difference induced by the variants
      */
     public int getLengthDiff() {
+        
         return lengthDiff;
+    
     }
 
     /**
@@ -48,7 +58,9 @@ public class PeptideVariantMatches extends DbObject {
      * @return the map of variants 
      */
     public HashMap<Integer, Variant> getVariantMatches() {
+    
         return variantMatches;
+    
     }
 
 }

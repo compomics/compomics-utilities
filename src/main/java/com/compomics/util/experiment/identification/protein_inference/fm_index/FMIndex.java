@@ -5185,4 +5185,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         return Header.parseFromFASTA(getHeader(accession)).getTaxonomy();
         
     }
+
+    @Override
+    public Integer getProteinEvidence(String accession) {
+        
+        return Header.parseFromFASTA(getHeader(accession)).getProteinEvidence();
+        
+    }
 }

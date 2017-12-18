@@ -333,10 +333,10 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", false, true),
     SIMPLIFY_GOUPS("simplify_groups", "Simplify protein groups, 1: yes, 0: no, default is 1.", false, true),
-    SIMPLIFY_GOUPS_SCORE("simplify_score", "Simplify protein groups based on the PeptideShaker target/decoy score, 1: yes, 0: no, default is 1.", false, true),
-    SIMPLIFY_GOUPS_ENZYMATICITY("simplify_enzymaticity", "Simplify protein groups based on the peptide enzymaticity, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_EVIDENCE("simplify_evidence", "Simplify protein groups based on the Uniprot protein evidence, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_UNCHARACTERIZED("simplify_uncharacterized", "Simplify protein groups based on the protein characterization, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_ENZYMATICITY("simplify_enzymaticity", "Simplify protein groups based on the peptide enzymaticity, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_VARIANT("simplify_variant", "Simplify protein groups based on the variant matching, 1: yes, 0: no, default is 1.", false, true),
     //////////////////////////////////
     // Validation parameters
     //////////////////////////////////

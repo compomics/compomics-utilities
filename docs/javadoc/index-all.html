@@ -672,6 +672,10 @@
 <dd>
 <div class="block">Add a subordinated peptide key.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#addPeptideMatchKeys-long:A-">addPeptideMatchKeys(long[])</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
+<dd>
+<div class="block">Add a subordinated peptide key.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#addPeptideNormalisationFactor-java.lang.String-double-">addPeptideNormalisationFactor(String, double)</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
 <div class="block">Adds a peptide normalization factor.</div>
@@ -4426,6 +4430,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/iterators/FastaIterator.html#FastaIterator-java.io.File-boolean-">FastaIterator(File, boolean)</a></span> - Constructor for class com.compomics.util.experiment.io.biology.protein.iterators.<a href="com/compomics/util/experiment/io/biology/protein/iterators/FastaIterator.html" title="class in com.compomics.util.experiment.io.biology.protein.iterators">FastaIterator</a></dt>
 <dd>
 <div class="block">Constructor.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/identification/protein_inference/FastaMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference"><span class="typeNameLink">FastaMapper</span></a> - Interface in <a href="com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a></dt>
+<dd>
+<div class="block">Interface for a class mapping peptides to a protein.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein"><span class="typeNameLink">FastaParameters</span></a> - Class in <a href="com/compomics/util/experiment/io/biology/protein/package-summary.html">com.compomics.util.experiment.io.biology.protein</a></dt>
 <dd>
@@ -11475,9 +11483,15 @@
 <dd>
 <div class="block">Return the Uniprot protein evidence type as text.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinEvidence-java.lang.String-">getProteinEvidence(String)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#getProteinEvidence--">getProteinEvidence()</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
 <dd>
-<div class="block">Returns the protein evidence level.</div>
+<div class="block">Returns the protein evidence level as indexed in UniProt.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html#getProteinEvidence-java.lang.String-">getProteinEvidence(String)</a></span> - Method in interface com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a></dt>
+<dd>
+<div class="block">Returns an integer representing the protein evidence level as indexed by uniprot.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html#getProteinFilters--">getProteinFilters()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ValidationQcParameters</a></dt>
 <dd>
@@ -11535,34 +11549,21 @@
 <div class="block">Returns the proteins mapping as a map of 0 based indexes for every
  protein accession.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(String, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
-<dd>
-<div class="block">Main method for mapping a peptide with all variants against all
- registered proteins in the experiment.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.lang.Double-">getProteinMapping(Tag, SequenceMatchingParameters, Double)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
-<dd>
-<div class="block">Mapping tags against the proteome.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(Tag, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
-<dd>
-<div class="block">Mapping tags against the proteome.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(String, SequenceMatchingParameters)</a></span> - Method in interface com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/FastaMapper.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(String, SequenceMatchingParameters)</a></span> - Method in interface com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/FastaMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">FastaMapper</a></dt>
 <dd>
 <div class="block">Returns the protein mapping in the FASTA file loaded in the sequence
  factory for the given peptide sequence in a map: peptide sequence found
  in the FASTA file | protein accession | list of indexes of the peptide
  sequence on the protein sequence.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.lang.Double-">getProteinMapping(Tag, SequenceMatchingParameters, Double)</a></span> - Method in interface com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/FastaMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(Tag, SequenceMatchingParameters)</a></span> - Method in interface com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/FastaMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">FastaMapper</a></dt>
 <dd>
 <div class="block">Returns the protein mappings for the given peptide sequence.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(Tag, SequenceMatchingParameters)</a></span> - Method in interface com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">PeptideMapper</a></dt>
-<dd>
-<div class="block">Returns the protein mappings for the given peptide sequence.</div>
-</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(String, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getProteinMapping(Tag, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithoutVariants-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithoutVariants(String, SequenceMatchingParameters, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
 <div class="block">Exact mapping peptides against the proteome.</div>
@@ -11689,10 +11690,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html#getPsmFilters--">getPsmFilters()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ValidationQcParameters</a></dt>
 <dd>
 <div class="block">Returns the list of PSM quality filters.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getPsmIterator(WaitingHandler, String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
-<dd>
-<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#getPsmNormalisationFactor-java.lang.String-">getPsmNormalisationFactor(String)</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
@@ -12221,7 +12218,7 @@
 <dd>
 <div class="block">Returns the score.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html#getScoreForAlgorithm-java.lang.Integer-">getScoreForAlgorithm(Integer)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html#getScoreForAlgorithm-int-">getScoreForAlgorithm(int)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PsmScoringParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PsmScoringParameters</a></dt>
 <dd>
 <div class="block">Returns the scores set for a given algorithm.</div>
 </dd>
@@ -12513,15 +12510,15 @@
 <div class="block">Returns a boolean indicating whether the protein groups should be
  simplified based on the Uniprot evidence level.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#getSimplifyGroupsScore--">getSimplifyGroupsScore()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
-<dd>
-<div class="block">Returns a boolean indicating whether the protein groups should be
- simplified based on the PeptideShaker score.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#getSimplifyGroupsUncharacterized--">getSimplifyGroupsUncharacterized()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
 <dd>
 <div class="block">Returns a boolean indicating whether the protein groups consisting of
  uncharacterized proteins.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#getSimplifyGroupsVariants--">getSimplifyGroupsVariants()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
+<dd>
+<div class="block">Returns a boolean indicating whether the protein groups should be
+ simplified based on the peptide variant matching.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getSingleAAModification-com.compomics.util.experiment.biology.modifications.Modification-">getSingleAAModification(Modification)</a></span> - Static method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
@@ -12833,6 +12830,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator(WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">Returns a spectrum matches iterator for all SpectrumMatches.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getSpectrumMatchesIterator(WaitingHandler, String)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>
+<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html#getSpectrumMatchesKeys--">getSpectrumMatchesKeys()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a></dt>
 <dd>
@@ -13746,11 +13747,16 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getVariantMatches--">getVariantMatches()</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
-<div class="block">Returns the sequence variant matches of this peptide.</div>
+<div class="block">Returns the sequence variant matches of this peptide indexed by protein accession and peptide start.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html#getVariantMatches--">getVariantMatches()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches">PeptideVariantMatches</a></dt>
 <dd>
 <div class="block">Returns the map of variants indexed by 0 based position on the peptide.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#getVariantMatches-java.util.ArrayList-">getVariantMatches(ArrayList&lt;PeptideProteinMapping&gt;)</a></span> - Static method in class com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a></dt>
+<dd>
+<div class="block">Returns the variant matches summarized in a map indexed by protein
+ accession and peptide index on the protein sequence.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/VennDiagramDialog.html#getVennDiagramPanel--">getVennDiagramPanel()</a></span> - Method in class com.compomics.util.gui.<a href="com/compomics/util/gui/VennDiagramDialog.html" title="class in com.compomics.util.gui">VennDiagramDialog</a></dt>
 <dd>
@@ -16357,6 +16363,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html#isValidStartup-org.apache.commons.cli.CommandLine-">isValidStartup(CommandLine)</a></span> - Static method in class com.compomics.cli.modifications.<a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html" title="class in com.compomics.cli.modifications">ModificationsCLIInputBean</a></dt>
 <dd>
 <div class="block">Verifies the command line start parameters.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isVariant-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-">isVariant(Peptide, String)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns a boolean indicating whether the peptide needs variants to be mapped to the given protein.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/ModificationImplementation.html#iTemplate">iTemplate</a></span> - Variable in class com.compomics.util.protein.<a href="com/compomics/util/protein/ModificationImplementation.html" title="class in com.compomics.util.protein">ModificationImplementation</a></dt>
 <dd>
@@ -19205,10 +19215,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#peptideIdentification">peptideIdentification</a></span> - Variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
 <div class="block">List of the keys of all imported peptides.</div>
-</dd>
-<dt><a href="com/compomics/util/experiment/identification/protein_inference/PeptideMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference"><span class="typeNameLink">PeptideMapper</span></a> - Interface in <a href="com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a></dt>
-<dd>
-<div class="block">Interface for a class mapping peptides to a protein.</div>
 </dd>
 <dt><a href="com/compomics/cli/peptide_mapper/PeptideMapperCLI.html" title="class in com.compomics.cli.peptide_mapper"><span class="typeNameLink">PeptideMapperCLI</span></a> - Class in <a href="com/compomics/cli/peptide_mapper/package-summary.html">com.compomics.cli.peptide_mapper</a></dt>
 <dd>
@@ -23713,7 +23719,7 @@
 <dd>
 <div class="block">Sets the protein confidence for inclusion in MW plots.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#setProteinEvidence-java.lang.String-">setProteinEvidence(String)</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#setProteinEvidence-java.lang.Integer-">setProteinEvidence(Integer)</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
 <dd>
 <div class="block">Sets the protein evidence level.</div>
 </dd>
@@ -24251,14 +24257,14 @@
 <div class="block">Sets whether the protein groups should be simplified based on the Uniprot
  evidence level.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#setSimplifyGroupsScore-boolean-">setSimplifyGroupsScore(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
-<dd>
-<div class="block">Sets whether the protein groups should be simplified based on the
- PeptideShaker score.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#setSimplifyGroupsUncharacterized-boolean-">setSimplifyGroupsUncharacterized(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
 <dd>
 <div class="block">Sets whether the protein groups consisting of uncharacterized proteins.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html#setSimplifyGroupsVariants-boolean-">setSimplifyGroupsVariants(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ProteinInferenceParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ProteinInferenceParameters</a></dt>
+<dd>
+<div class="block">Sets whether the protein groups should be simplified based on the peptide
+ variant matching.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html#setSingleChargeWindow-int-">setSingleChargeWindow(int)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">OmssaParameters</a></dt>
 <dd>
@@ -27566,6 +27572,6 @@ the order they are declared.</div>
 <!--   -->
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
-<p class="legalCopy"><small>Copyright &#169; 2017. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2018. All rights reserved.</small></p>
 </body>
 </html>

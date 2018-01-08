@@ -35,21 +35,6 @@ public interface FastaMapper {
      * amino acid sequence of longer or equal size than the initialTagSize of
      * the tree
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the MS2 m/z tolerance
-     *
-     * @return the protein mapping for the given peptide sequence
-     */
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, Double massTolerance);
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. Peptide
-     * sequence | Protein accession | Index in the protein. An empty map if not
-     * found.
-     *
-     * @param tag the tag to look for in the tree. Must contain a consecutive
-     * amino acid sequence of longer or equal size than the initialTagSize of
-     * the tree
-     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the protein mapping for the given peptide sequence
      */

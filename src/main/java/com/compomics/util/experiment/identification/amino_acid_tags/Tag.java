@@ -162,15 +162,9 @@ public class Tag extends ExperimentObject {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
-        StringBuilder result = new StringBuilder(content.size() * 4);
-
-        for (TagComponent tagComponent : content) {
-
-            result.append(tagComponent.asSequence());
-
-        }
-
-        return result.toString();
+        return content.stream()
+                .map(TagComponent::asSequence)
+                .collect(Collectors.joining());
 
     }
 

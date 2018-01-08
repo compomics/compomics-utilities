@@ -3970,26 +3970,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
     }
 
-    /**
-     * Mapping tags against the proteome.
-     *
-     * @param tag information about the identified peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the mass tolerance
-     * @return the protein mapping
-     */
-    @Override
-    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, Double massTolerance) {
-        return getProteinMapping(tag, sequenceMatchingPreferences);
-    }
-
-    /**
-     * Mapping tags against the proteome.
-     *
-     * @param tag information about the identified peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @return the protein mapping
-     */
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences) {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();

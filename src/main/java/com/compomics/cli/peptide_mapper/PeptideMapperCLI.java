@@ -197,7 +197,7 @@ public class PeptideMapperCLI {
                 long startTimeMapping = System.nanoTime();
                 for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), sequenceMatchingPreferences, searchParameters.getFragmentIonAccuracyInDaltons());
+                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), sequenceMatchingPreferences);
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                     for (int j = 0; j < peptideProteinMappings.size(); ++j) {
                         tagIndexes.add(i);

@@ -347,41 +347,41 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </td>
 </tr>
 <tr id="i20" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getPsmIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
-<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
-</td>
-</tr>
-<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentification--">getSpectrumIdentification</a></span>()</code>
 <div class="block">Returns a map of the spectrum matches keys indexed by spectrum file name.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumIdentificationSize--">getSpectrumIdentificationSize</a></span>()</code>
 <div class="block">Returns the number of spectrum identifications.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatch-long-">getSpectrumMatch</a></span>(long&nbsp;key)</code>
 <div class="block">Returns the spectrum match with the given key.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(long[]&nbsp;spectrumMatches,
                           <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a spectrum matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a spectrum matches iterator for all SpectrumMatches.</div>
+</td>
+</tr>
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getSpectrumMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
+<div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 </td>
 </tr>
 <tr id="i26" class="altColor">
@@ -850,15 +850,11 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <ul class="blockList">
 <li class="blockList">
 <h4>removeObject</h4>
-<pre>public&nbsp;void&nbsp;removeObject(long&nbsp;key)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;void&nbsp;removeObject(long&nbsp;key)</pre>
 <div class="block">Removes an object from the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key of the object</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -1061,14 +1057,14 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 </dl>
 </li>
 </ul>
-<a name="getPsmIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">
+<a name="getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getPsmIterator</h4>
-<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getPsmIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
+<h4>getSpectrumMatchesIterator</h4>
+<pre>public&nbsp;<a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a>&nbsp;getSpectrumMatchesIterator(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+                                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1216,6 +1212,6 @@ extends <a href="../../../../../com/compomics/util/experiment/personalization/Ex
 <!--   -->
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
-<p class="legalCopy"><small>Copyright &#169; 2017. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2018. All rights reserved.</small></p>
 </body>
 </html>

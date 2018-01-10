@@ -10,24 +10,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * This converter writes a fasta file with standardized headers.
+ * This converter writes a FASTA file with standardized headers.
  *
  * @author Marc Vaudel
  */
 public class GenericFastaConverter {
 
-    
-
     /**
-     * Appends decoy sequences to the provided fasta file.
+     * Appends decoy sequences to the provided FASTA file.
      *
-     * @param fastaIn the fasta file to read
-     * @param fastaOut the fasta file to write
+     * @param fastaIn the FASTA file to read
+     * @param fastaOut the FASTA file to write
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
      *
      * @throws IOException exception thrown whenever an error happened while
-     * reading or writing a fasta file
+     * reading or writing a FASTA file
      */
     public static void convertFile(File fastaIn, File fastaOut, WaitingHandler waitingHandler) throws IOException {
 
@@ -40,7 +38,7 @@ public class GenericFastaConverter {
 
                 Header header = fastaIterator.getLastHeader();
                 String genericHeader = header.asGenericHeader();
-                
+
                 bw.write(genericHeader);
                 bw.newLine();
                 bw.write(protein.getSequence());

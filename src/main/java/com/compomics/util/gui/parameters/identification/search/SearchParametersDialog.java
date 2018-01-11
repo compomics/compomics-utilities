@@ -2614,6 +2614,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 case specificNTermOnly:
                 case specificCTermOnly:
                     msgfParameters.setNumberTolerableTermini(1);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
@@ -2637,6 +2638,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 case specificNTermOnly:
                 case specificCTermOnly:
                     myriMatchParameters.setMinTerminiCleavages(1);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }

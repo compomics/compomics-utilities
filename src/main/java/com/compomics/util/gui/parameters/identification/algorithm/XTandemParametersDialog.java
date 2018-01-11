@@ -209,6 +209,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
     private void populateGUI(XtandemParameters xtandemParameters) {
 
         dynamicRangeTxt.setText(xtandemParameters.getDynamicRange() + "");
+        nPeaksTxt.setText(xtandemParameters.getnPeaks() + "");
         minFragmentMzTxt.setText(xtandemParameters.getMinFragmentMz() + "");
         minPeaksTxt.setText(xtandemParameters.getMinPeaksPerSpectrum() + "");
 
@@ -221,6 +222,12 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         }
 
         minPrecMassTxt.setText(xtandemParameters.getMinPrecursorMass() + "");
+        
+        if (xtandemParameters.getParentMonoisotopicMassIsotopeError()) {
+            parentMonoisotopicMassIsotopeErrorCmb.setSelectedIndex(0);
+        } else {
+            parentMonoisotopicMassIsotopeErrorCmb.setSelectedIndex(1);
+        }
 
         if (xtandemParameters.isProteinQuickAcetyl()) {
             quickAcetylCmb.setSelectedIndex(0);

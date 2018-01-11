@@ -22,7 +22,7 @@ public class EnsemblVersion {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
         if (ensemblGenomeDivision != null) {
-            return 37;
+            return 38;
         } else {
             return 91;
         }

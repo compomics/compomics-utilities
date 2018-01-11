@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * This class appends decoy sequences to the given fasta file.
+ * This class appends decoy sequences to the given FASTA file.
  *
  * @author Marc Vaudel
  */
@@ -29,15 +29,15 @@ public class DecoyConverter {
     public static final String decoyFlag = "-REVERSED";
 
     /**
-     * Appends decoy sequences to the provided fasta file.
+     * Appends decoy sequences to the provided FASTA file.
      *
-     * @param fastaIn the fasta file to read
-     * @param fastaOut the fasta file to write
+     * @param fastaIn the FASTA file to read
+     * @param fastaOut the FASTA file to write
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
      *
      * @throws IOException exception thrown whenever an error happened while
-     * reading or writing a fasta file
+     * reading or writing a FASTA file
      */
     public static void appendDecoySequences(File fastaIn, File fastaOut, WaitingHandler waitingHandler) throws IOException {
 
@@ -100,11 +100,11 @@ public class DecoyConverter {
     }
 
     /**
-     * Returns the fasta parameters of the target-decoy database based on the parameters of the target database.
+     * Returns the FASTA parameters of the target-decoy database based on the parameters of the target database.
      * 
      * @param targetParameters the parameters of the target database
      * 
-     * @return the fasta parameters of the target-decoy database
+     * @return the FASTA parameters of the target-decoy database
      */
     public static FastaParameters getDecoyParameters(FastaParameters targetParameters) {
         
@@ -120,12 +120,12 @@ public class DecoyConverter {
     }
 
     /**
-     * Returns the fasta summary of the target-decoy database based on the summary of the target database.
+     * Returns the FASTA summary of the target-decoy database based on the summary of the target database.
      * 
-     * @param newFastaFile the new fasta file
+     * @param newFastaFile the new FASTA file
      * @param targetSummary the summary of the target database
      * 
-     * @return the fasta summary of the target-decoy database
+     * @return the FASTA summary of the target-decoy database
      */
     public static FastaSummary getDecoySummary(File newFastaFile, FastaSummary targetSummary) {
         

@@ -241,9 +241,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nPeaksLblMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nPeaksLblMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nPeaksLblMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nPeaksLblMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="minFragMzLbl">

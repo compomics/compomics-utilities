@@ -3333,7 +3333,6 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_THRESHOLD.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_THRESHOLD.id);
             Double value = new Double(arg);
-            ptmScoringPreferences.setEstimateFlr(false);
             ptmScoringPreferences.setProbabilisticScoreThreshold(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id)) {
@@ -3359,7 +3358,7 @@ public class IdentificationParametersInputBean {
             SequenceMatchingParameters ptmSequenceMatchingPreferences = new SequenceMatchingParameters();
             ptmSequenceMatchingPreferences.setLimitX(sequenceMatchingPreferences.getLimitX());
             ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
-            ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
+            ptmScoringPreferences.setSequenceMatchingParameters(ptmSequenceMatchingPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);

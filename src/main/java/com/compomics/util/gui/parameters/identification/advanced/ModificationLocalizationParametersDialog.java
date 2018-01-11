@@ -74,14 +74,13 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
      * Set up the GUI.
      */
     private void setUpGui() {
-        thresholdAutoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         alignOnConfidentCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
         scoreCmb.setEnabled(editable);
         neutralLossesCmb.setEnabled(editable);
-        thresholdAutoCmb.setEnabled(editable);
         alignOnConfidentCmb.setEnabled(editable);
         thresholdTxt.setEditable(editable);
         thresholdTxt.setEnabled(editable);
@@ -104,22 +103,17 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
             } else {
                 neutralLossesCmb.setSelectedIndex(1);
             }
-            thresholdAutoCmb.setEnabled(editable);
-            if (ptmScoringPreferences.isEstimateFlr()) {
-                thresholdAutoCmb.setSelectedIndex(0);
-                thresholdTxt.setEnabled(false);
-                thresholdTxt.setEditable(false);
-            } else {
-                thresholdAutoCmb.setSelectedIndex(1);
-                thresholdTxt.setEnabled(editable);
-                thresholdTxt.setEditable(editable);
-                thresholdTxt.setText(ptmScoringPreferences.getProbabilisticScoreThreshold() + "");
-            }
+
+            thresholdTxt.setEnabled(editable);
+            thresholdTxt.setEditable(editable);
+            thresholdTxt.setText(ptmScoringPreferences.getProbabilisticScoreThreshold() + "");
+
         } else {
+
             neutralLossesCmb.setEnabled(false);
-            thresholdAutoCmb.setEnabled(false);
             thresholdTxt.setEnabled(false);
             thresholdTxt.setEditable(false);
+
         }
 
         if (ptmScoringPreferences.getAlignNonConfidentPTMs()) {
@@ -145,7 +139,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
      */
     public boolean validateInput() {
         try {
-            if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None && thresholdAutoCmb.getSelectedIndex() == 1) {
+            if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None) {
                 Double temp = new Double(thresholdTxt.getText().trim());
                 if (temp < 0 || temp > 100) {
                     JOptionPane.showMessageDialog(this, "Please verify the input for the score threshold.",
@@ -194,13 +188,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != ModificationLocalizationScore.None);
         ptmScoringPreferences.setSelectedProbabilisticScore((ModificationLocalizationScore) scoreCmb.getSelectedItem());
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
-
-        if (thresholdAutoCmb.getSelectedIndex() == 0) {
-            ptmScoringPreferences.setEstimateFlr(true);
-        } else {
-            ptmScoringPreferences.setEstimateFlr(false);
-            ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
-        }
+        ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
 
         ptmScoringPreferences.setAlignNonConfidentPTMs(alignOnConfidentCmb.getSelectedIndex() == 0);
 
@@ -227,8 +215,6 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         scoreTypeLabel = new javax.swing.JLabel();
         neutralLossesLabel = new javax.swing.JLabel();
         neutralLossesCmb = new javax.swing.JComboBox();
-        thresholdAutoLabel = new javax.swing.JLabel();
-        thresholdAutoCmb = new javax.swing.JComboBox();
         siteAlignmentPanel = new javax.swing.JPanel();
         alignOnConfidentLbl = new javax.swing.JLabel();
         alignOnConfidentCmb = new javax.swing.JComboBox();
@@ -278,15 +264,6 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
 
         neutralLossesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        thresholdAutoLabel.setText("Threshold Auto");
-
-        thresholdAutoCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        thresholdAutoCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                thresholdAutoCmbActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout ptmScoringPanelLayout = new javax.swing.GroupLayout(ptmScoringPanel);
         ptmScoringPanel.setLayout(ptmScoringPanelLayout);
         ptmScoringPanelLayout.setHorizontalGroup(
@@ -303,13 +280,10 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
                         .addComponent(scoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ptmScoringPanelLayout.createSequentialGroup()
                         .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(thresholdAutoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scoreTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(thresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(thresholdTxt)
-                            .addComponent(thresholdAutoCmb, 0, 150, Short.MAX_VALUE))))
+                        .addComponent(thresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         ptmScoringPanelLayout.setVerticalGroup(
@@ -323,10 +297,6 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
                 .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neutralLossesLabel)
                     .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(thresholdAutoLabel)
-                    .addComponent(thresholdAutoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(thresholdLabel)
@@ -409,13 +379,13 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
                 .addContainerGap()
                 .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -461,36 +431,14 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
     private void scoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreCmbActionPerformed
         if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None) {
             neutralLossesCmb.setEnabled(true);
-            thresholdAutoCmb.setEnabled(true);
-            if (thresholdAutoCmb.getSelectedIndex() == 1) {
-                thresholdTxt.setEnabled(true);
-                thresholdTxt.setEditable(true);
-            } else {
-                thresholdTxt.setEnabled(false);
-                thresholdTxt.setEditable(false);
-            }
+            thresholdTxt.setEnabled(false);
+            thresholdTxt.setEditable(false);
         } else {
             neutralLossesCmb.setEnabled(false);
-            thresholdAutoCmb.setEnabled(false);
             thresholdTxt.setEnabled(false);
             thresholdTxt.setEditable(false);
         }
     }//GEN-LAST:event_scoreCmbActionPerformed
-
-    /**
-     * Enable/disable the threshold setting.
-     *
-     * @param evt
-     */
-    private void thresholdAutoCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thresholdAutoCmbActionPerformed
-        if (thresholdAutoCmb.getSelectedIndex() == 1) {
-            thresholdTxt.setEnabled(true);
-            thresholdTxt.setEditable(true);
-        } else {
-            thresholdTxt.setEnabled(false);
-            thresholdTxt.setEditable(false);
-        }
-    }//GEN-LAST:event_thresholdAutoCmbActionPerformed
 
     /**
      * Cancel the dialog.
@@ -527,9 +475,9 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/PtmLocalizationPreferences.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-            "PTM Localization - Help");
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                "PTM Localization - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 
@@ -547,8 +495,6 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
     private javax.swing.JComboBox scoreCmb;
     private javax.swing.JLabel scoreTypeLabel;
     private javax.swing.JPanel siteAlignmentPanel;
-    private javax.swing.JComboBox thresholdAutoCmb;
-    private javax.swing.JLabel thresholdAutoLabel;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JTextField thresholdTxt;
     // End of variables declaration//GEN-END:variables

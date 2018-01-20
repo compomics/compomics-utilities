@@ -370,13 +370,13 @@ public class Identification extends ExperimentObject {
         }
 
         try {
-        
-        objectsDB.removeObject(key);
-        
+
+            objectsDB.removeObject(key);
+
         } catch (InterruptedException e) {
-            
+
             throw new RuntimeException(e);
-            
+
         }
     }
 
@@ -388,9 +388,9 @@ public class Identification extends ExperimentObject {
      * @return true if database contains a certain object otherwise false
      */
     public boolean contains(long key) {
-        
+
         return objectsDB.inDB(key);
-    
+
     }
 
     /**
@@ -446,11 +446,8 @@ public class Identification extends ExperimentObject {
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param sequenceProvider a provider of protein sequences
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) throws InterruptedException {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) {
 
         long spectrumMatchKey = spectrumMatch.getKey();
 
@@ -462,7 +459,16 @@ public class Identification extends ExperimentObject {
 
             peptideMatch = new PeptideMatch(peptide, peptideMatchKey, spectrumMatchKey);
             peptideIdentification.add(peptideMatchKey);
-            objectsDB.insertObject(peptideMatchKey, peptideMatch);
+
+            try {
+
+                objectsDB.insertObject(peptideMatchKey, peptideMatch);
+
+            } catch (InterruptedException interruptedException) {
+
+                throw new RuntimeException(interruptedException);
+
+            }
 
         } else {
 
@@ -495,7 +501,16 @@ public class Identification extends ExperimentObject {
             }
 
             proteinIdentification.add(proteinMatchKey);
-            objectsDB.insertObject(proteinMatchKey, proteinMatch);
+
+            try {
+
+                objectsDB.insertObject(proteinMatchKey, proteinMatch);
+
+            } catch (InterruptedException interruptedException) {
+
+                throw new RuntimeException(interruptedException);
+
+            }
 
         } else {
 

@@ -1696,13 +1696,8 @@ public class IdentificationParametersInputBean {
 
     /**
      * Updates the identification parameters according to the command line.
-     *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if aClassNotFoundException
-     * ClassNotFoundException occurs
      */
-    public void updateIdentificationParameters() throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void updateIdentificationParameters() {
 
         ///////////////////////////////////
         // General search parameters

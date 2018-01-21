@@ -50,7 +50,7 @@ public class IdMatchValidationParameters implements Serializable {
         defaultProteinFDR = idMatchValidationPreferences.getDefaultProteinFDR();
         defaultPeptideFDR = idMatchValidationPreferences.getDefaultPeptideFDR();
         defaultPsmFDR = idMatchValidationPreferences.getDefaultPsmFDR();
-        validationQCPreferences = new ValidationQcParameters(idMatchValidationPreferences.getValidationQCPreferences());
+        validationQCPreferences = new ValidationQcParameters(idMatchValidationPreferences.getValidationQCParameters());
     
     }
 
@@ -125,7 +125,7 @@ public class IdMatchValidationParameters implements Serializable {
      *
      * @return the validation QC preferences
      */
-    public ValidationQcParameters getValidationQCPreferences() {
+    public ValidationQcParameters getValidationQCParameters() {
 
         return validationQCPreferences;
 
@@ -195,15 +195,15 @@ public class IdMatchValidationParameters implements Serializable {
 
         }
 
-        if ((validationQCPreferences == null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null)
-                || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() == null)) {
+        if ((validationQCPreferences == null && otherIdMatchValidationPreferences.getValidationQCParameters() != null)
+                || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCParameters() == null)) {
          
             return false;
         
         }
 
-        if (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null
-                && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCPreferences())) {
+        if (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCParameters() != null
+                && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCParameters())) {
         
             return false;
         

@@ -2,6 +2,9 @@ package com.compomics.util.gui.utils.user_choice;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
@@ -140,12 +143,12 @@ public abstract class ListChooser extends javax.swing.JDialog {
      *
      * @return the items selected by the user in a list
      */
-    public ArrayList<String> getSelectedItems() {
-        ArrayList<String> result = new ArrayList<>(itemsTable.getSelectedRowCount());
-        for (int row : itemsTable.getSelectedRows()) {
-            result.add(items.get(row));
-        }
-        return result;
+    public HashSet<String> getSelectedItems() {
+        
+        return Arrays.stream(itemsTable.getSelectedRows())
+                .mapToObj(row -> items.get(row))
+                .collect(Collectors.toCollection(HashSet::new));
+        
     }
 
     /**

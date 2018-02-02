@@ -1151,7 +1151,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             accessionEndings.put(accession, tmpN + proteinLen);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
-            accssions[tmpNumProtein++] = currentProtein.getAccession();
+            accssions[tmpNumProtein++] = accession;
             bndaries[tmpNumProtein] = tmpN + 1;
 
         }

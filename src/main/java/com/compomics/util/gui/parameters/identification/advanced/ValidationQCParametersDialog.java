@@ -917,7 +917,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      *
      * @return the validation QC preferences as set by the user
      */
-    public ValidationQcParameters getValidationQCPreferences() {
+    public ValidationQcParameters getValidationQCParameters() {
         ValidationQcParameters validationQCPreferences = new ValidationQcParameters();
         validationQCPreferences.setDbSize(dbCheck.isSelected());
         validationQCPreferences.setFirstDecoy(nTargetCheck.isSelected());

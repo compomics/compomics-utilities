@@ -70,12 +70,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * factory.
      *
      * @param tag the tag of interest
-     * @param modificationSequenceMatchingSettings the sequence matching settings for modification
-     * to peptide mapping
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingParameters modificationSequenceMatchingSettings) {
+    public static NeutralLossesMap getDefaultLosses(Tag tag) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -163,9 +161,6 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         
         }
 
-        int modMin = tagLength;
-        int modMax = 0;
-
         offset = 0;
         
         for (TagComponent component : tag.getContent()) {
@@ -181,18 +176,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                         Modification modification = modificationFactory.getModification(modificationMatch.getModification());
                         
                         for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
-                        
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(modification, modificationSequenceMatchingSettings); // @TODO: could end in a null pointer?
                             
-                            if (!indexes.isEmpty()) {
-                            
-                                Collections.sort(indexes);
-                                modMin = indexes.get(0);
-                                modMax = indexes.get(indexes.size() - 1);
-                            
-                            }
-                            
-                            neutralLossesMap.addNeutralLoss(neutralLoss, modMin, tag.getLengthInAminoAcid() - modMax + 1);
+                            neutralLossesMap.addNeutralLoss(neutralLoss, i, tag.getLengthInAminoAcid() - i + 1);
                         
                         }
                     }

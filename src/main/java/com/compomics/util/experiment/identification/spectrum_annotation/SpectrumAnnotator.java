@@ -585,25 +585,20 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param sequenceMatchingPreferences the sequence matching settings for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching settings for
-     * PTM to peptide mapping
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingParameters sequenceMatchingPreferences,
-            SequenceMatchingParameters ptmSequenceMatchingPreferences) {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
         
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
         
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide());
         
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), ptmSequenceMatchingPreferences);
+            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag());
         
         } else {
         

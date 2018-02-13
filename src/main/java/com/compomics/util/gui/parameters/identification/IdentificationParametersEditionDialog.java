@@ -964,7 +964,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         
         if (!genePreferencesDialog.isCanceled()) {
             
-            genePreferences = genePreferencesDialog.getGenePreferences();
+            genePreferences = genePreferencesDialog.getGeneParameters();
             updateGUI();
             
         }
@@ -1032,7 +1032,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         if (!validationSettingsDialog.isCanceled()) {
             ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCParameters();
             idValidationPreferences = validationSettingsDialog.getIdMatchValidationPreferences();
-            idValidationPreferences.setValidationQCPreferences(validationQCPreferences);
+            idValidationPreferences.setValidationQCParameters(validationQCPreferences);
             updateGUI();
         }
     }//GEN-LAST:event_validationButtonActionPerformed
@@ -1047,7 +1047,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         ValidationQCParametersDialog validationQCPreferencesDialog = new ValidationQCParametersDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences = new IdMatchValidationParameters(idValidationPreferences);
-            idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
+            idValidationPreferences.setValidationQCParameters(validationQCPreferencesDialog.getValidationQCParameters());
             updateGUI();
         }
     }//GEN-LAST:event_qualityControlButtonActionPerformed

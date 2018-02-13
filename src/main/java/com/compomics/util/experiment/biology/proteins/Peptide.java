@@ -836,7 +836,7 @@ public class Peptide extends ExperimentObject {
 
         return proteinMapping.entrySet().stream()
                 .flatMap(entry -> Arrays.stream(entry.getValue())
-                    .mapToObj(site -> site)
+                    .boxed()
                     .flatMap(site -> getPotentialModificationSites(modification, sequenceProvider.getSequence(entry.getKey()), site, modificationSequenceMatchingPreferences).stream()))
                 .collect(Collectors.toCollection(HashSet::new));
 

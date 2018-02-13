@@ -193,7 +193,7 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      *
      * @return the gene preferences
      */
-    public GeneParameters getGenePreferences() {
+    public GeneParameters getGeneParameters() {
 
         GeneParameters tempGenePreferences = new GeneParameters();
 

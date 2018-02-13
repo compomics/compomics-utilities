@@ -134,23 +134,18 @@ public class AnnotationParameters implements Serializable {
      * @param spectrumKey the key of the spectrum to annotate
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
-     * @param sequenceMatchingParameters the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingParameters the sequence matching preferences
-     * for PTM to peptide mapping
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption,
-            SequenceMatchingParameters sequenceMatchingParameters, SequenceMatchingParameters ptmSequenceMatchingParameters) {
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
         
         if (neutralLossesAuto) {
             
-            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingParameters, ptmSequenceMatchingParameters));
+            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption));
         
         } else {
         
@@ -416,7 +411,7 @@ public class AnnotationParameters implements Serializable {
         if (selectedSubtypes == null) {
 
             selectedSubtypes = Arrays.stream(possibleSubtypes)
-                    .mapToObj(Integer::new)
+                    .boxed()
                     .collect(Collectors.toCollection(HashSet::new));
             selectedIonsMap.put(ionType, selectedSubtypes);
 

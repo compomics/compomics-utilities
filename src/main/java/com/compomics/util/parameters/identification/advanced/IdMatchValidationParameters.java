@@ -136,7 +136,7 @@ public class IdMatchValidationParameters implements Serializable {
      *
      * @param validationQCPreferences the validation QC preferences
      */
-    public void setValidationQCPreferences(ValidationQcParameters validationQCPreferences) {
+    public void setValidationQCParameters(ValidationQcParameters validationQCPreferences) {
 
         this.validationQCPreferences = validationQCPreferences;
 

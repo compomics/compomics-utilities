@@ -11,6 +11,10 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
@@ -44,15 +48,23 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * The number of rows loaded at a time.
      */
-    private static final int batchSize = 100;
+    private static final int BATCH_SIZE = 100;
+    /**
+     * Executor for the loading threads.
+     */
+    private final ExecutorService loadingPool = Executors.newFixedThreadPool(1);
+    /**
+     * Executor for the updating threads.
+     */
+    private final ExecutorService updatingPool = Executors.newFixedThreadPool(1);
     /**
      * If false, the table will not update automatically.
      */
     private boolean selfUpdating = true;
     /**
-     * boolean indicating whether an update was scheduled.
+     * Mutex for the table update.
      */
-    private boolean updateScheduled = false;
+    private Semaphore updateMutex = new Semaphore(1);
     /**
      * The last loading runnable.
      */
@@ -95,16 +107,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     protected abstract int loadDataForRows(ArrayList<Integer> indexes, WaitingHandler waitingHandler);
 
     /**
-     * Loads the data for a column. Use this method to cache data before working
-     * on the given column.
-     *
-     * @param column the column number
-     * @param waitingHandler a waiting handler used to display progress to the
-     * user or interrupt the process
-     */
-    protected abstract void loadDataForColumn(int column, WaitingHandler waitingHandler);
-
-    /**
      * This method is called whenever an exception is encountered in a separate
      * thread.
      *
@@ -117,17 +119,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * data will be loaded in a separate thread and the table updated later on.
      *
      * @param row the row number (not the view index)
-     * @throws InterruptedException if an InterruptedException occurs
      */
-    protected void dataMissingAtRow(int row) throws InterruptedException {
+    protected void dataMissingAtRow(int row) {
 
-        int anticipatedStart = (int) (row + 0.9 * batchSize);
+        int anticipatedStart = (int) (row + 0.9 * BATCH_SIZE);
 
         if (lastLoadingRunnable == null || lastLoadingRunnable.isFinished()
                 || row < rowStartLoading || row >= anticipatedStart) {
 
             rowStartLoading = row;
-            rowEndLoading = Math.min(row + batchSize, getRowCount() - 1);
+            rowEndLoading = Math.min(row + BATCH_SIZE, getRowCount() - 1);
 
             if (lastLoadingRunnable != null) {
                 lastLoadingRunnable.cancel();
@@ -135,7 +136,8 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
             lastLoadingRunnable = new LoadingRunnable();
 
-            new Thread(lastLoadingRunnable, "identificationFeatures").start();
+            loadingPool.execute(lastLoadingRunnable);
+
         }
 
         updateContent();
@@ -145,24 +147,29 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * Checks whether the protein table is filled properly and updates it later
      * on if not.
      *
-     * @throws InterruptedException
      */
-    private synchronized void updateContent() throws InterruptedException {
-        if (selfUpdating && !updateScheduled) {
-            updateScheduled = true;
-            wait(100);
-            new Thread(new Runnable() {
-                public synchronized void run() {
-                    try {
-                        if (selfUpdating) {
-                            fireTableDataChanged();
-                        }
-                    } catch (Exception e) {
-                        catchException(e);
+    private void updateContent() {
+
+        if (selfUpdating && !updateMutex.tryAcquire()) {
+
+            updatingPool.execute(() -> {
+                
+                try {
+                    
+                    if (selfUpdating) {
+                        
+                        fireTableDataChanged();
+                        
                     }
-                    updateScheduled = false;
+                } catch (Exception e) {
+                    
+                    catchException(e);
+                    
                 }
-            }, "tableUpdate").start();
+                
+                updateMutex.release();
+                
+            });
         }
     }
 
@@ -336,10 +343,8 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             public void run() {
 
                 try {
+                    
                     setSelfUpdating(false);
-                    progressDialog.setDisplayProgress(false);
-                    loadDataForColumn(finalColumn, progressDialog); // @TODO: update the progress bar here as well?
-                    progressDialog.setDisplayProgress(true);
 
                     initiateSorter();
                     lastColumnSorted = 0;
@@ -477,18 +482,31 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
         @Override
         public synchronized void run() {
+            
             try {
-                ArrayList<Integer> viewIndexes = new ArrayList<>(batchSize);
+            
+                ArrayList<Integer> viewIndexes = new ArrayList<>(BATCH_SIZE);
+                
                 for (int row = rowStartLoading; row <= rowEndLoading; row++) {
+
                     viewIndexes.add(getViewIndex(row));
+
                 }
+
                 if (!viewIndexes.isEmpty() && !waitingHandler.isRunCanceled()) {
+
                     rowEndLoading = getRowNumber(loadDataForRows(viewIndexes, waitingHandler));
+
                 }
+
             } catch (Exception e) {
+
                 catchException(e);
+
             }
+
             waitingHandler.setRunFinished();
+
         }
 
         /**
@@ -523,10 +541,13 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * @param isScrolling the isScrolling to set
      */
     public void setIsScrolling(boolean isScrolling) {
+        
         this.isScrolling = isScrolling;
 
         if (isScrolling && lastLoadingRunnable != null) {
+            
             lastLoadingRunnable.cancel();
+        
         }
     }
 

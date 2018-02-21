@@ -44,6 +44,7 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import java.util.stream.Collectors;
 
 /**
  * The FM index.
@@ -116,7 +117,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * The accessions ending positions in the index, important for getSequences function
      */
-    private final HashMap<String, int[]> accessionsIndexPos = new HashMap<>();
+    private final HashMap<String, AccessionMetaData> accessionMetaData = new HashMap<>();
     /**
      * List of all amino acid masses.
      */
@@ -1138,6 +1139,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
             
             String accession = currentProtein.getAccession();
+            Header headerObject = ((FastaIterator)pi).getLastHeader();
+            String header = (headerObject.getRawHeader().charAt(0) == '>' ? headerObject.getRawHeader().substring(1) : headerObject.getRawHeader());
+            accessionMetaData.put(accession, new AccessionMetaData(header));
+            
+            if (accession == null || accession.equals("")) accession = header;
             
             if (fastaParameters != null && ProteinUtils.isDecoy(accession, fastaParameters)) {
                 
@@ -1180,7 +1186,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         for (String accession : accessionEndings.keySet()){
             int truePos = accessionEndings.get(accession);
-            accessionsIndexPos.put(accession, new int[]{inversedSampledSuffixArray[truePos], indexPart});
+            AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+            accessionMeta.index = inversedSampledSuffixArray[truePos];
+            accessionMeta.indexPart = indexPart;
         }
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -5075,12 +5083,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     @Override
     public String getSequence(String proteinAccession) {
         
-        int[] accessionIndexPos = accessionsIndexPos.get(proteinAccession);
+        AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
         
-        if (accessionIndexPos != null){
+        if (accessionMeta != null){
             
-            int index = accessionIndexPos[0];
-            int indexPart = accessionIndexPos[1];
+            int index = accessionMeta.index;
+            int indexPart = accessionMeta.indexPart;
             int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
             WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
             StringBuilder stringBuilder = new StringBuilder();
@@ -5112,9 +5120,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
     @Override
     public Collection<String> getAccessions() {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //@Dominik - what type of object is most convenient here, array, list, set..?
-        
+        return accessions.stream().flatMap(f -> Arrays.stream(f)).collect(Collectors.toList());
     }
 
     @Override
@@ -5126,8 +5132,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     
     @Override
     public String getHeader(String proteinAccession) {
+        AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
         
-        throw new UnsupportedOperationException("Not supported yet."); //@Dominik
+        if (accessionMeta != null){
+            
+            return accessionMeta.header;
+            
+        }
+        
+        throw new UnsupportedOperationException("Protein accession '" + proteinAccession + "' not found in index.");
         
     }
 
@@ -5171,5 +5184,21 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         
         return Header.parseFromFASTA(getHeader(accession)).getProteinEvidence();
         
+    }
+    
+    private class AccessionMetaData {
+        String header;
+        int index;
+        int indexPart;
+        
+        public AccessionMetaData(String header){
+            this.header = header;
+        }
+        
+        public AccessionMetaData(String header, int index, int indexPart){
+            this.header = header;
+            this.index = index;
+            this.indexPart = indexPart;
+        }
     }
 }

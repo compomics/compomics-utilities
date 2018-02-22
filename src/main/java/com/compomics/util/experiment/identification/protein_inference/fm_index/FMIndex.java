@@ -5132,73 +5132,125 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     
     @Override
     public String getHeader(String proteinAccession) {
+        
         AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
-        
-        if (accessionMeta != null){
             
-            return accessionMeta.header;
-            
-        }
-        
-        throw new UnsupportedOperationException("Protein accession '" + proteinAccession + "' not found in index.");
+            return accessionMeta.headerAsString;
         
     }
 
     @Override
     public String getDescription(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getDescription();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getDescription();
         
     }
 
     @Override
     public String getSimpleDescription(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getSimpleProteinDescription();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getSimpleProteinDescription();
         
     }
 
     @Override
     public ProteinDatabase getProteinDatabase(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getDatabaseType();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getDatabaseType();
         
     }
 
     @Override
     public String getGeneName(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getGeneName();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getGeneName();
         
     }
 
     @Override
     public String getTaxonomy(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getTaxonomy();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getTaxonomy();
         
     }
 
     @Override
     public Integer getProteinEvidence(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getProteinEvidence();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getProteinEvidence();
         
     }
     
+    /**
+     * Class gathering metadata on a protein accession.
+     */
     private class AccessionMetaData {
-        String header;
+        
+        /**
+         * The header as string
+         */
+        String headerAsString;
+        /**
+         * The header
+         */
+        private Header header = null;
+        /**
+         * The index
+         */
         int index;
+        /**
+         * the index part
+         */
         int indexPart;
         
+        /**
+         * Constructor.
+         * 
+         * @param header the header as parsed from the fasta file
+         */
         public AccessionMetaData(String header){
-            this.header = header;
+            this.headerAsString = header;
         }
         
+        /**
+         * Constructor.
+         * 
+         * @param header the header as parsed from the fasta file
+         * @param index the index
+         * @param indexPart the index part
+         */
         public AccessionMetaData(String header, int index, int indexPart){
-            this.header = header;
+            this.headerAsString = header;
             this.index = index;
             this.indexPart = indexPart;
+        }
+
+        /**
+         * Returns the parsed header.
+         * 
+         * @return the parsed header
+         */
+        public Header getHeader() {
+            
+            if (header == null) {
+                
+                header = Header.parseFromFASTA(headerAsString);
+                
+            }
+            
+            return header;
         }
     }
 }

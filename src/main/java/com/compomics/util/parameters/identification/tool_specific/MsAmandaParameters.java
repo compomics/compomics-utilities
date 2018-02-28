@@ -81,6 +81,10 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      * The maximum allowed length of the FASTA file name.
      */
     public static final int MAX_MS_AMANDA_FASTA_FILE_NAME_LENGTH = 80;
+    /**
+     * The output format: csv or mzIdentML.
+     */
+    private String outputFormat = "csv";
 
     /**
      * Constructor.
@@ -135,6 +139,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!maxLoadedSpectra.equals(msAmandaParameters.getMaxLoadedSpectra())) {
+                return false;
+            }
+            if (!getOutputFormat().equalsIgnoreCase(msAmandaParameters.getOutputFormat())) {
                 return false;
             }
             return true;
@@ -199,6 +206,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_LOADED_SPECTRA=");
         output.append(getMaxLoadedSpectra());
+        output.append(newLine);
+        output.append("OUTPUT_FORMAT=");
+        output.append(outputFormat);
         output.append(newLine);
 
         return output.toString();
@@ -500,5 +510,26 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      */
     public void setMaxLoadedSpectra(Integer maxLoadedSpectra) {
         this.maxLoadedSpectra = maxLoadedSpectra;
+    }
+    
+    /**
+     * Returns the output format.
+     *
+     * @return the outputFormat
+     */
+    public String getOutputFormat() {
+        if (outputFormat == null) {
+            outputFormat = "csv";
+        }
+        return outputFormat;
+    }
+
+    /**
+     * Set the output format.
+     *
+     * @param outputFormat the outputFormat to set
+     */
+    public void setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat;
     }
 }

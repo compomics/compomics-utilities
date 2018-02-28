@@ -147,6 +147,7 @@ public enum IdentificationParametersCLIParams {
     MS_AMANDA_MIN_PEPTIDE_LENGTH("ms_amanda_min_pep_length", "MS Amanda minimum peptide length, default is '6'", false, true),
     MS_AMANDA_LOADED_PROTEINS("ms_amanda_loaded_proteins", "MS Amanda maximum number of proteins loaded into memory (1000-500000), default is '100000'", false, true),
     MS_AMANDA_LOADED_SPECTRA("ms_amanda_loaded_spectra", "MS Amanda maximum number of spectra loaded into memory (1000-500000), default is '2000'", false, true),
+    MS_AMANDA_OUTPUT_FORMAT("ms_amanda_output", "MS Amanda output format option, csv or mzIdentML, default is 'csv'.", false, true),
     //////////////////////////////////
     // MyriMatch specific parameters
     //////////////////////////////////
@@ -479,6 +480,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id) + " " + IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id) + " " + IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id) + " " + IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id) + " " + IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.description + "\n";
 
         output += "\n\nMS Amanda advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_DECOY.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_DECOY.description + "\n";
@@ -494,6 +496,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS   .description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.description + "\n";
 
         output += "\n\nMS-GF+ advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_DECOY.id) + " " + IdentificationParametersCLIParams.MSGF_DECOY.description + "\n";

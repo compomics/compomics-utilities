@@ -707,6 +707,13 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id);
+            List<String> supportedInput = Arrays.asList("csv", "mzIdentML");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id, arg, supportedInput)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id, arg, false)) {
@@ -2499,6 +2506,10 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setMaxLoadedSpectra(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id);
+            msAmandaParameters.setOutputFormat(arg);
         }
 
         ///////////////////////////////////

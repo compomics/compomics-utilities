@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
- * This class contains the spectrum annotation preferences.
+ * This class contains the spectrum annotation parameters.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -81,20 +81,20 @@ public class AnnotationParameters implements Serializable {
     /**
      * List of neutral losses to annotate.
      */
-    private ArrayList<NeutralLoss> neutralLossesList;
+    private ArrayList<NeutralLoss> neutralLossesList = new ArrayList<>(0);
     /**
      * If true neutral losses will be automatically deduced from the spectrum
      * identification assumption.
      */
-    private Boolean neutralLossesAuto = true;
+    private boolean neutralLossesAuto = true;
     /**
      * If true reporter ions will be annotated by default.
      */
-    private Boolean reporterIons = true;
+    private boolean reporterIons = true;
     /**
      * If true related ions will be annotated by default.
      */
-    private Boolean relatedIons = true;
+    private boolean relatedIons = true;
     /**
      * Fragment ion accuracy used for peak matching.
      */
@@ -102,7 +102,7 @@ public class AnnotationParameters implements Serializable {
     /**
      * Indicates whether the fragment ion accuracy is in ppm.
      */
-    private Boolean fragmentIonPpm = false;
+    private boolean fragmentIonPpm = false;
     /**
      * If true, the automatic forward ion de novo tags are shown.
      */
@@ -115,14 +115,6 @@ public class AnnotationParameters implements Serializable {
      * The charge for the fragment ions in the de novo sequencing.
      */
     private int deNovoCharge = 1;
-    /**
-     * If there are more than one matching peak for a given annotation setting
-     * this value to true results in the most accurate peak being annotated,
-     * while setting this to false annotates the most intense peak.
-     *
-     * @deprecated use tiesResolution instead
-     */
-    private Boolean highResolutionAnnotation = true;
     /**
      * The method to use for resolution of ties when multiple peaks can be
      * assigned to a fragment.
@@ -142,23 +134,18 @@ public class AnnotationParameters implements Serializable {
      * @param spectrumKey the key of the spectrum to annotate
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
-     * @param sequenceMatchingPreferences the sequence matching preferences for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption,
-            SequenceMatchingParameters sequenceMatchingPreferences, SequenceMatchingParameters ptmSequenceMatchingPreferences) {
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
 
-        SpecificAnnotationParameters specificAnnotationPreferences = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
-        specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
+        SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
+        specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
         
         if (neutralLossesAuto) {
             
-            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
+            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption));
         
         } else {
         
@@ -170,7 +157,7 @@ public class AnnotationParameters implements Serializable {
             
             }
             
-            specificAnnotationPreferences.setNeutralLossesMap(tempNeutralLossesMap);
+            specificAnnotationParameters.setNeutralLossesMap(tempNeutralLossesMap);
         
         }
         
@@ -190,11 +177,11 @@ public class AnnotationParameters implements Serializable {
             }
         }
         
-        specificAnnotationPreferences.setSelectedCharges(charges);
-        specificAnnotationPreferences.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
-        specificAnnotationPreferences.setFragmentIonAccuracy(fragmentIonAccuracy);
-        specificAnnotationPreferences.setFragmentIonPpm(fragmentIonPpm);
-        return specificAnnotationPreferences;
+        specificAnnotationParameters.setSelectedCharges(charges);
+        specificAnnotationParameters.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
+        specificAnnotationParameters.setFragmentIonAccuracy(fragmentIonAccuracy);
+        specificAnnotationParameters.setFragmentIonPpm(fragmentIonPpm);
+        return specificAnnotationParameters;
         
     }
 
@@ -204,7 +191,7 @@ public class AnnotationParameters implements Serializable {
      * @param searchParameters the search parameters
      */
     public AnnotationParameters(SearchParameters searchParameters) {
-        setPreferencesFromSearchParameters(searchParameters);
+        setParametersFromSearchParameters(searchParameters);
     }
 
     /**
@@ -213,31 +200,48 @@ public class AnnotationParameters implements Serializable {
      * @param searchParameters the search parameters where to take the
      * information from
      */
-    public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
+    public void setParametersFromSearchParameters(SearchParameters searchParameters) {
+        
         clearIonTypes();
+        
         for (Integer ion : searchParameters.getForwardIons()) {
+        
             addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
             addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
+        
         }
+        
         for (Integer ion : searchParameters.getRewindIons()) {
+        
             addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
             addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
+        
         }
+        
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);
         addIonType(Ion.IonType.RELATED_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
+       
         ModificationParameters ptmSettings = searchParameters.getModificationParameters();
+        
         if (getReporterIons()) {
+        
             HashSet<Integer> ptmReporterIons = IonFactory.getReporterIons(ptmSettings);
             selectedIonsMap.put(ReporterIon.IonType.REPORTER_ION, ptmReporterIons);
+        
         }
+        
         if (isAutomaticAnnotation() || areNeutralLossesSequenceAuto()) {
+        
             ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
+            
             for (NeutralLoss neutralLoss : neutralLosses) {
+            
                 addNeutralLoss(neutralLoss);
+            
             }
         }
     }
@@ -249,7 +253,7 @@ public class AnnotationParameters implements Serializable {
      * @return a boolean indicating whether neutral losses are considered only
      * for amino acids of interest or not
      */
-    public Boolean areNeutralLossesSequenceAuto() {
+    public boolean areNeutralLossesSequenceAuto() {
         return neutralLossesAuto;
     }
 
@@ -260,7 +264,7 @@ public class AnnotationParameters implements Serializable {
      * @param neutralLossesAuto a boolean indicating whether neutral losses are
      * considered only for amino acids of interest or not
      */
-    public void setNeutralLossesSequenceAuto(Boolean neutralLossesAuto) {
+    public void setNeutralLossesSequenceAuto(boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
     }
 
@@ -270,10 +274,7 @@ public class AnnotationParameters implements Serializable {
      * @return a boolean indicating whether reporter ions should be annotated by
      * default
      */
-    public Boolean getReporterIons() {
-        if (reporterIons == null) {
-            reporterIons = true;
-        }
+    public boolean getReporterIons() {
         return reporterIons;
     }
 
@@ -283,7 +284,7 @@ public class AnnotationParameters implements Serializable {
      * @param reporterIons a boolean indicating whether reporter ions should be
      * annotated by default
      */
-    public void setReporterIons(Boolean reporterIons) {
+    public void setReporterIons(boolean reporterIons) {
         this.reporterIons = reporterIons;
     }
 
@@ -293,10 +294,7 @@ public class AnnotationParameters implements Serializable {
      * @return a boolean indicating whether related ions should be annotated by
      * default
      */
-    public Boolean getRelatedIons() {
-        if (relatedIons == null) {
-            relatedIons = true;
-        }
+    public boolean getRelatedIons() {
         return relatedIons;
     }
 
@@ -306,7 +304,7 @@ public class AnnotationParameters implements Serializable {
      * @param relatedIons a boolean indicating whether related ions should be
      * annotated by default
      */
-    public void setRelatedIons(Boolean relatedIons) {
+    public void setRelatedIons(boolean relatedIons) {
         this.relatedIons = relatedIons;
     }
 
@@ -323,9 +321,6 @@ public class AnnotationParameters implements Serializable {
      * @return the considered neutral losses
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        if (neutralLossesList == null) {
-            neutralLossesList = new ArrayList<>(2);
-        }
         return neutralLossesList;
     }
 
@@ -335,18 +330,23 @@ public class AnnotationParameters implements Serializable {
      * @param neutralLoss a new neutral loss
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
-        if (neutralLossesList == null) {
-            neutralLossesList = new ArrayList<>(2);
-        }
+        
         boolean alreadyInList = false;
+        
         for (NeutralLoss tempNeutralLoss : neutralLossesList) {
+        
             if (neutralLoss.isSameAs(tempNeutralLoss)) {
+            
                 alreadyInList = true;
                 break;
+            
             }
         }
+        
         if (!alreadyInList) {
+        
             neutralLossesList.add(neutralLoss);
+        
         }
     }
 
@@ -365,10 +365,15 @@ public class AnnotationParameters implements Serializable {
      * @return the type of peptide fragment ions annotated
      */
     public HashSet<Integer> getFragmentIonTypes() {
+        
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-            return new HashSet<>();
+        
+            return new HashSet<>(0);
+        
         } else {
+        
             return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION); // @TOOO: what about tags..?
+        
         }
     }
 
@@ -379,11 +384,16 @@ public class AnnotationParameters implements Serializable {
      * @param subType the ion sub type
      */
     public void addIonType(Ion.IonType ionType, int subType) {
+        
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
+        
         if (selectedSubtypes == null) {
+        
             selectedSubtypes = new HashSet<>(1);
             selectedIonsMap.put(ionType, selectedSubtypes);
+        
         }
+        
         selectedSubtypes.add(subType);
 
     }
@@ -401,7 +411,7 @@ public class AnnotationParameters implements Serializable {
         if (selectedSubtypes == null) {
 
             selectedSubtypes = Arrays.stream(possibleSubtypes)
-                    .mapToObj(Integer::new)
+                    .boxed()
                     .collect(Collectors.toCollection(HashSet::new));
             selectedIonsMap.put(ionType, selectedSubtypes);
 
@@ -429,10 +439,13 @@ public class AnnotationParameters implements Serializable {
      * settings should be automatically inferred
      */
     public void setAutomaticAnnotation(boolean automaticAnnotation) {
+        
         this.automaticAnnotation = automaticAnnotation;
 
         if (automaticAnnotation) {
+           
             neutralLossesAuto = true;
+        
         }
     }
 
@@ -464,11 +477,9 @@ public class AnnotationParameters implements Serializable {
      * @return the fragment ion accuracy
      */
     public double getFragmentIonAccuracyInDa(Double refMass) {
-        if (fragmentIonPpm) {
-            return fragmentIonAccuracy * refMass / 1000000;
-        } else {
-            return fragmentIonAccuracy;
-        }
+       
+        return fragmentIonPpm ? fragmentIonAccuracy * refMass / 1000000 : fragmentIonAccuracy;
+        
     }
 
     /**
@@ -477,7 +488,9 @@ public class AnnotationParameters implements Serializable {
      * @param fragmentIonAccuracy the fragment ion accuracy
      */
     public void setFragmentIonAccuracy(double fragmentIonAccuracy) {
+       
         this.fragmentIonAccuracy = fragmentIonAccuracy;
+    
     }
 
     /**
@@ -486,10 +499,9 @@ public class AnnotationParameters implements Serializable {
      * @return a boolean indicating whether the fragment ion accuracy is in ppm
      */
     public boolean isFragmentIonPpm() {
-        if (fragmentIonPpm == null) { // Backward compatibility
-            fragmentIonPpm = false;
-        }
+        
         return fragmentIonPpm;
+        
     }
 
     /**
@@ -529,9 +541,6 @@ public class AnnotationParameters implements Serializable {
      */
     public IntensityThresholdType getIntensityThresholdType() {
 
-        if (intensityThresholdType == null) { // Backward compatibility
-            intensityThresholdType = IntensityThresholdType.percentile;
-        }
         return intensityThresholdType;
     }
 
@@ -640,42 +649,12 @@ public class AnnotationParameters implements Serializable {
     }
 
     /**
-     * Returns true if the peak annotation should be based on the most accurate
-     * mz value, false bases the annotation on the most intense peak.
-     *
-     * @deprecated use tiesResolution instead
-     *
-     * @return the highResolutionAnnotation
-     */
-    public boolean isHighResolutionAnnotation() {
-        if (highResolutionAnnotation == null) {
-            highResolutionAnnotation = true;
-        }
-        return highResolutionAnnotation;
-    }
-
-    /**
-     * Set if the peak annotation should be based on the most accurate mz value,
-     * or on the most intense peak.
-     *
-     * @deprecated use tiesResolution instead
-     *
-     * @param highResolutionAnnotation the highResolutionAnnotation to set
-     */
-    public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
-        this.highResolutionAnnotation = highResolutionAnnotation;
-    }
-
-    /**
      * Returns the ties resolution method to use when multiple peaks can be
      * assigned to an ion.
      *
      * @return the ties resolution method to use
      */
     public SpectrumAnnotator.TiesResolution getTiesResolution() {
-        if (tiesResolution == null) { // backward compatibility
-            tiesResolution = highResolutionAnnotation ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
-        }
         return tiesResolution;
     }
 
@@ -763,13 +742,13 @@ public class AnnotationParameters implements Serializable {
         if (getTiesResolution() != annotationSettings.getTiesResolution()) {
             return false;
         }
-        if (!neutralLossesAuto.equals(annotationSettings.areNeutralLossesSequenceAuto())) {
+        if (neutralLossesAuto != annotationSettings.areNeutralLossesSequenceAuto()) {
             return false;
         }
-        if (!getReporterIons().equals(annotationSettings.getReporterIons())) {
+        if (getReporterIons() != annotationSettings.getReporterIons()) {
             return false;
         }
-        if (!getRelatedIons().equals(annotationSettings.getRelatedIons())) {
+        if (getRelatedIons() != annotationSettings.getRelatedIons()) {
             return false;
         }
         ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();

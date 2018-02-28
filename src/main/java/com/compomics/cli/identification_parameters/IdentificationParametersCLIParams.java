@@ -323,10 +323,10 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // PTM localization parameters
     //////////////////////////////////
-    PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + ModificationLocalizationScore.getCommandLineOptions() + ", default is '1').", false, true),
-    PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false, true),
+    PTM_SCORE("ptm_score", "The PTM probabilistic score to use for modification localization (" + ModificationLocalizationScore.getCommandLineOptions() + ", default is '1').", false, true),
+    PTM_THRESHOLD("ptm_threshold", "The threshold to use for the modification localizatoin score. Default is 95.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
-    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
+    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The modification to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
             + ", default is " + SequenceMatchingParameters.MatchingType.aminoAcid + ")", false, true),
     PTM_ALIGNMENT("ptm_alignment", "Align peptide ambiguously localized PTMs on confident sites (1: true, 0: false, default is '1').", false, true),
     //////////////////////////////////
@@ -344,9 +344,6 @@ public enum IdentificationParametersCLIParams {
     PSM_FDR("psm_fdr", "FDR at the PSM level in percent, default is 1.", false, true),
     PEPTIDE_FDR("peptide_fdr", "FDR at the peptide level in percent, default is 1.", false, true),
     PROTEIN_FDR("protein_fdr", "FDR at the protein level in percent, default is 1.", false, true),
-    SEPARATE_PSMs("group_psms", "Group PSMs by charge for scoring and validation, 1: yes, 0: no, default is 1.", false, true),
-    SEPARATE_PEPTIDES("group_peptides", "Group peptides by modification status for scoring and validation, 1: yes, 0: no, default is 1.", false, true),
-    MERGE_SUBGROUPS("merge_subgroups", "Merge small PSM and peptide groups for scoring and validation, 1: yes, 0: no, default is 1.", false, true),
     //////////////////////////////////
     // Fraction parameters
     //////////////////////////////////
@@ -661,9 +658,6 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PSM_FDR.id) + " " + IdentificationParametersCLIParams.PSM_FDR.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPTIDE_FDR.id) + " " + IdentificationParametersCLIParams.PEPTIDE_FDR.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PROTEIN_FDR.id) + " " + IdentificationParametersCLIParams.PROTEIN_FDR.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SEPARATE_PSMs.id) + " " + IdentificationParametersCLIParams.SEPARATE_PSMs.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id) + " " + IdentificationParametersCLIParams.SEPARATE_PEPTIDES.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MERGE_SUBGROUPS.id) + " " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.description + "\n";
 
         output += "\n\nFraction Analysis:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id) + " " + IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.description + "\n";

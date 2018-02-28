@@ -608,6 +608,7 @@ public class Tag extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(Modification modification, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         ArrayList<Integer> possibleSites = new ArrayList<>();
         AminoAcidPattern modificationPattern = modification.getPattern(); 
         int patternLength = modificationPattern.length();

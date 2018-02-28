@@ -35,7 +35,7 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PtmDialog extends javax.swing.JDialog {
+public class ModificationDialog extends javax.swing.JDialog {
 
     /**
      * The post translational modifications factory.
@@ -90,7 +90,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the user can edit the Modification
      * details
      */
-    public PtmDialog(JDialog parent, Modification currentModification, boolean editable) {
+    public ModificationDialog(JDialog parent, Modification currentModification, boolean editable) {
         super(parent, true);
 
         this.currentPtm = currentModification;
@@ -120,7 +120,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the user can edit the Modification
      * details
      */
-    public PtmDialog(JFrame parent, PtmToPrideMap modificationToPrideMap, Modification currentModification, boolean editable) {
+    public ModificationDialog(JFrame parent, PtmToPrideMap modificationToPrideMap, Modification currentModification, boolean editable) {
         super(parent, true);
 
         this.currentPtm = currentModification;

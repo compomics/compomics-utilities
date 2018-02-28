@@ -11,79 +11,83 @@ import no.uib.jsparklines.renderers.JSparklinesColorTableCellRenderer;
 import org.jfree.chart.plot.PlotOrientation;
 
 /**
- * Dialog for choosing an item in a list of PTMs.
+ * Dialog for choosing an item in a list of modifications.
  *
  * @author Marc Vaudel
  */
-public class PtmChooser extends ListChooser {
+public class ModificationChooser extends ListChooser {
 
     /**
-     * The post translational modifications factory.
+     * The modifications factory.
      */
-    private ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private ModificationFactory modificationsFactory = ModificationFactory.getInstance();
     /**
-     * List of PTMs to display.
+     * List of modifications to display.
      */
-    private ArrayList<String> ptmList = new ArrayList<>();
+    private ArrayList<String> modificationsList = new ArrayList<>();
 
     /**
      * Constructor. Null values will be replaced by default.
      *
      * @param parent the parent frame
-     * @param ptms list of the names of the PTMs for the user to select
+     * @param modifications list of the names of the modifications for the user to select
      * @param dialogTitle the title to give to the dialog
      * @param panelTitle the title to give to the panel containing the table
      * @param instructionsLabel the instructions label on top of the table
      * @param multipleSelection boolean indicating whether the user should be
      * allowed to select multiple items
      */
-    public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
-        super(parent, ptms, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
-        this.ptmList = ptms;
-        if (ptms == null || ptms.isEmpty()) {
+    public ModificationChooser(java.awt.Frame parent, ArrayList<String> modifications, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+        
+        super(parent, modifications, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
+        this.modificationsList = modifications;
+        
+        if (modifications == null || modifications.isEmpty()) {
+        
             throw new IllegalArgumentException("No item to select.");
+        
         }
+        
         setUpTable();
         setVisible(true);
+    
     }
 
     /**
      * Constructor with default values.
      *
      * @param parent the parent frame
-     * @param ptms list of the names of the PTMs for the user to select
+     * @param modifications list of the names of the modifications for the user to select
      * @param multipleSelection boolean indicating whether the user should be
      * allowed to select multiple items
      */
-    public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, boolean multipleSelection) {
-        this(parent, ptms, "PTM Selection", "Searched PTMs", "Please select a PTM from the list of possibilities.", multipleSelection);
+    public ModificationChooser(java.awt.Frame parent, ArrayList<String> modifications, boolean multipleSelection) {
+        this(parent, modifications, "Modification Selection", "Searched Modifications", "Please select a modification from the list of possibilities.", multipleSelection);
     }
 
     @Override
     protected void formatTable() {
 
-        JTable ptmTable = getTable();
-        ptmTable.setModel(new PtmTable());
+        JTable modificationsJTable = getTable();
+        modificationsJTable.setModel(new ModificationsTableModel());
 
-        double minMass = 0;
-        double maxMass = 0;
-        for (String modification : ptmList) {
-            Modification ptm = ptmFactory.getModification(modification);
-            double mass = ptm.getMass();
-            if (mass < minMass) {
-                minMass = mass;
-            }
-            if (mass > maxMass) {
-                maxMass = mass;
-            }
-        }
+        double minMass = modificationsList.stream()
+                .map(modName -> modificationsFactory.getModification(modName))
+                .mapToDouble(Modification::getMass)
+                .min()
+                .orElse(0.0);
+        double maxMass = modificationsList.stream()
+                .map(modName -> modificationsFactory.getModification(modName))
+                .mapToDouble(Modification::getMass)
+                .max()
+                .orElse(0.0);
 
-        ptmTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
-        ptmTable.getColumn(" ").setMaxWidth(35);
+        modificationsJTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
+        modificationsJTable.getColumn(" ").setMaxWidth(35);
 
-        ptmTable.getColumn("Mass").setMaxWidth(100);
-        ptmTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
-        ((JSparklinesBarChartTableCellRenderer) ptmTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
+        modificationsJTable.getColumn("Mass").setMaxWidth(100);
+        modificationsJTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
+        ((JSparklinesBarChartTableCellRenderer) modificationsJTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
 
         ArrayList<String> modificationTableToolTips = getTableTooltips();
         modificationTableToolTips.add(null);
@@ -93,13 +97,13 @@ public class PtmChooser extends ListChooser {
     }
 
     /**
-     * Table model for the PTM table.
+     * Table model for the modifications table.
      */
-    private class PtmTable extends DefaultTableModel {
+    private class ModificationsTableModel extends DefaultTableModel {
 
         @Override
         public int getRowCount() {
-            return ptmList.size();
+            return modificationsList.size();
         }
 
         @Override
@@ -123,15 +127,15 @@ public class PtmChooser extends ListChooser {
 
         @Override
         public Object getValueAt(int row, int column) {
-            String ptmName = ptmList.get(row);
+            String modName = modificationsList.get(row);
             switch (column) {
                 case 0:
-                    return ptmFactory.getColor(ptmName);
+                    return modificationsFactory.getColor(modName);
                 case 1:
-                    return ptmName;
+                    return modName;
                 case 2:
-                    Modification ptm = ptmFactory.getModification(ptmName);
-                    return ptm.getMass();
+                    Modification modification = modificationsFactory.getModification(modName);
+                    return modification.getMass();
                 default:
                     return "";
             }

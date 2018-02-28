@@ -5,7 +5,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import java.util.ArrayList;
 
 /**
- * Interface for a class mapping peptides to a protein.
+ * Interface for a class mapping peptides and tags to a protein.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski

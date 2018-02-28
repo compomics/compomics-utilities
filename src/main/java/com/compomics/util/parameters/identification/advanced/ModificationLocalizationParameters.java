@@ -16,10 +16,6 @@ public class ModificationLocalizationParameters implements Serializable {
      */
     static final long serialVersionUID = -6656074270981104708L;
     /**
-     * The FLR threshold in percent.
-     */
-    private double flr = 1.0;
-    /**
      * Boolean indicating whether a probabilistic score is to be calculated.
      */
     private boolean probabilisticScoreCalculation = true;
@@ -27,10 +23,6 @@ public class ModificationLocalizationParameters implements Serializable {
      * The probabilistic score selected.
      */
     private ModificationLocalizationScore selectedProbabilisticScore = ModificationLocalizationScore.PhosphoRS;
-    /**
-     * Boolean indicating whether the threshold should be FLR based.
-     */
-    private boolean estimateFlr = false;
     /**
      * The probabilistic score threshold.
      */
@@ -41,9 +33,9 @@ public class ModificationLocalizationParameters implements Serializable {
      */
     private boolean probabilisticScoreNeutralLosses = false;
     /**
-     * The preferences to use when matching PTMs to amino acid sequences.
+     * The preferences to use when matching modifications to amino acid sequences.
      */
-    private SequenceMatchingParameters sequenceMatchingPreferences;
+    private SequenceMatchingParameters sequenceMatchingParameters;
     /**
      * Boolean indicating whether the non confidently localized PTMs should be
      * aligned on the confident sites.
@@ -54,8 +46,10 @@ public class ModificationLocalizationParameters implements Serializable {
      * Constructor.
      */
     public ModificationLocalizationParameters() {
-        sequenceMatchingPreferences = new SequenceMatchingParameters();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.aminoAcid);
+        
+        sequenceMatchingParameters = new SequenceMatchingParameters();
+        sequenceMatchingParameters.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.aminoAcid);
+    
     }
 
     /**
@@ -65,7 +59,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * required
      */
     public boolean isProbabilisticScoreCalculation() {
+        
         return probabilisticScoreCalculation;
+    
     }
 
     /**
@@ -75,7 +71,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * probabilistic PTM score is required
      */
     public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
+        
         this.probabilisticScoreCalculation = probabilisticScoreCalculation;
+    
     }
 
     /**
@@ -84,7 +82,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * @return the selected probabilistic score
      */
     public ModificationLocalizationScore getSelectedProbabilisticScore() {
+        
         return selectedProbabilisticScore;
+    
     }
 
     /**
@@ -93,25 +93,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * @param selectedProbabilisticScore the selected probabilistic score
      */
     public void setSelectedProbabilisticScore(ModificationLocalizationScore selectedProbabilisticScore) {
+        
         this.selectedProbabilisticScore = selectedProbabilisticScore;
-    }
-
-    /**
-     * Indicates whether the threshold is FLR based.
-     *
-     * @return a boolean indicating whether the threshold is FLR based
-     */
-    public boolean isEstimateFlr() {
-        return estimateFlr;
-    }
-
-    /**
-     * Sets whether the threshold is FLR based.
-     *
-     * @param estimateFlr indicates whether the threshold is FLR based
-     */
-    public void setEstimateFlr(boolean estimateFlr) {
-        this.estimateFlr = estimateFlr;
+    
     }
 
     /**
@@ -120,7 +104,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * @return the probabilistic score threshold
      */
     public double getProbabilisticScoreThreshold() {
+        
         return probabilisticScoreThreshold;
+    
     }
 
     /**
@@ -129,7 +115,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * @param probabilisticScoreThreshold the probabilistic score threshold
      */
     public void setProbabilisticScoreThreshold(double probabilisticScoreThreshold) {
+    
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;
+    
     }
 
     /**
@@ -141,7 +129,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * score
      */
     public boolean isProbabilisticScoreNeutralLosses() {
+
         return probabilisticScoreNeutralLosses;
+
     }
 
     /**
@@ -153,7 +143,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * calculating the probabilistic score
      */
     public void setProbabilisticScoreNeutralLosses(boolean probabilisticScoreNeutralLosses) {
+
         this.probabilisticScoreNeutralLosses = probabilisticScoreNeutralLosses;
+
     }
 
     /**
@@ -163,41 +155,23 @@ public class ModificationLocalizationParameters implements Serializable {
      * @return the sequence matching preferences to use when mapping PTMs on
      * amino acid sequences
      */
-    public SequenceMatchingParameters getSequenceMatchingPreferences() {
-        if (sequenceMatchingPreferences == null) {
-            sequenceMatchingPreferences = new SequenceMatchingParameters();
-            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.aminoAcid);
-        }
-        return sequenceMatchingPreferences;
+    public SequenceMatchingParameters getSequenceMatchingParameters() {
+        
+        return sequenceMatchingParameters;
+        
     }
 
     /**
      * Sets the sequence matching preferences to use when mapping PTMs on amino
      * acid sequences.
      *
-     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * @param sequenceMatchingParameters the sequence matching preferences to
      * use when mapping PTMs on amino acid sequences
      */
-    public void setSequenceMatchingPreferences(SequenceMatchingParameters sequenceMatchingPreferences) {
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
-    }
+    public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
 
-    /**
-     * Returns the FLR threshold.
-     *
-     * @return the FLR threshold
-     */
-    public double getFlrThreshold() {
-        return flr;
-    }
+        this.sequenceMatchingParameters = sequenceMatchingParameters;
 
-    /**
-     * Sets the FLR threshold.
-     *
-     * @param flr the FLR threshold
-     */
-    public void setFlrThreshold(double flr) {
-        this.flr = flr;
     }
 
     /**
@@ -208,7 +182,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * should be aligned on the confident sites
      */
     public boolean getAlignNonConfidentPTMs() {
+
         return alignNonConfidentPTMs;
+
     }
 
     /**
@@ -219,7 +195,9 @@ public class ModificationLocalizationParameters implements Serializable {
      * confidently localized PTMs should be aligned on the confident sites
      */
     public void setAlignNonConfidentPTMs(boolean alignNonConfidentPTMs) {
+
         this.alignNonConfidentPTMs = alignNonConfidentPTMs;
+
     }
 
     /**
@@ -235,60 +213,59 @@ public class ModificationLocalizationParameters implements Serializable {
 
         output.append("Score: ").append(selectedProbabilisticScore).append(".").append(newLine);
         output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
-        output.append("Threshold Auto: ").append(estimateFlr).append(".").append(newLine);
         output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
         output.append("Align PTMs: ").append(getAlignNonConfidentPTMs()).append(".").append(newLine);
 
         return output.toString();
+        
     }
 
     /**
      * Returns true if the objects have identical settings.
      *
-     * @param otherPtmScoringPreferences the PTMScoringPreferences to compare to
+     * @param otherPtmScoringParameters the PTMScoringParameters to compare to
      *
      * @return true if the objects have identical settings
      */
-    public boolean equals(ModificationLocalizationParameters otherPtmScoringPreferences) {
+    public boolean equals(ModificationLocalizationParameters otherPtmScoringParameters) {
 
-        if (otherPtmScoringPreferences == null) {
+        if (otherPtmScoringParameters == null) {
+            
             return false;
+        
         }
 
-        double diff = Math.abs(flr - otherPtmScoringPreferences.getFlrThreshold());
-        if (diff > Double.MIN_VALUE) {
+        if (probabilisticScoreCalculation != otherPtmScoringParameters.isProbabilisticScoreCalculation()) {
+         
             return false;
+        
         }
 
-        if (probabilisticScoreCalculation != otherPtmScoringPreferences.isProbabilisticScoreCalculation()) {
+        if (selectedProbabilisticScore != otherPtmScoringParameters.getSelectedProbabilisticScore()) {
+         
             return false;
+        
         }
 
-        if (selectedProbabilisticScore != otherPtmScoringPreferences.getSelectedProbabilisticScore()) {
+        if (probabilisticScoreNeutralLosses != otherPtmScoringParameters.isProbabilisticScoreNeutralLosses()) {
+           
             return false;
+        
         }
 
-        if (estimateFlr != otherPtmScoringPreferences.isEstimateFlr()) {
+        if (!getAlignNonConfidentPTMs() == otherPtmScoringParameters.getAlignNonConfidentPTMs()) {
+        
             return false;
+        
         }
 
-        diff = Math.abs(probabilisticScoreThreshold - otherPtmScoringPreferences.getProbabilisticScoreThreshold());
-        if (diff > Double.MIN_VALUE) {
+        if (!sequenceMatchingParameters.isSameAs(otherPtmScoringParameters.getSequenceMatchingParameters())) {
+        
             return false;
-        }
-
-        if (probabilisticScoreNeutralLosses != otherPtmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
-            return false;
-        }
-
-        if (!getAlignNonConfidentPTMs() == otherPtmScoringPreferences.getAlignNonConfidentPTMs()) {
-            return false;
-        }
-
-        if (!sequenceMatchingPreferences.isSameAs(otherPtmScoringPreferences.getSequenceMatchingPreferences())) {
-            return false;
+        
         }
 
         return true;
+        
     }
 }

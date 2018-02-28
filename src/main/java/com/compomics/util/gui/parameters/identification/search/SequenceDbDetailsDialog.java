@@ -982,8 +982,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
         
-        
-        
         dispose();
 
     }//GEN-LAST:event_okButtonActionPerformed

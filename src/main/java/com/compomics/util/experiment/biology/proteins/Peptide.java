@@ -13,6 +13,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.identification.utils.PeptideUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -246,9 +247,9 @@ public class Peptide extends ExperimentObject {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        
+
         this.proteinMapping = proteinMapping;
-        
+
     }
 
     /**
@@ -266,7 +267,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the sequence variant matches of this peptide indexed by protein accession and peptide start.
+     * Returns the sequence variant matches of this peptide indexed by protein
+     * accession and peptide start.
      *
      * @return the sequence variant matches of this peptide
      */
@@ -485,7 +487,7 @@ public class Peptide extends ExperimentObject {
         return digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme
                 ? digestionPreferences.getEnzymes().stream()
                         .mapToInt(enzyme -> getNMissedCleavages(enzyme))
-                        .min().orElse(0) 
+                        .min().orElse(0)
                 : 0;
     }
 
@@ -815,6 +817,28 @@ public class Peptide extends ExperimentObject {
             default:
                 throw new UnsupportedOperationException("Modification site not implemented for modification of type " + modification.getModificationType() + ".");
         }
+    }
+
+    /**
+     * Returns the potential modification sites as a set. 1
+     * is the first amino acid. An empty list is returned if no modification
+     * site was found. All proteins and all positions are used.
+     *
+     * @param modification the Modification considered
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for Modification to peptide mapping
+     *
+     * @return a list of potential modification sites
+     */
+    public HashSet<Integer> getPotentialModificationSites(Modification modification, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
+
+        return proteinMapping.entrySet().stream()
+                .flatMap(entry -> Arrays.stream(entry.getValue())
+                    .boxed()
+                    .flatMap(site -> getPotentialModificationSites(modification, sequenceProvider.getSequence(entry.getKey()), site, modificationSequenceMatchingPreferences).stream()))
+                .collect(Collectors.toCollection(HashSet::new));
+
     }
 
     /**

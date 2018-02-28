@@ -191,7 +191,7 @@ public abstract class Ion extends ExperimentObject {
         int[] possibleSubtypes = getPossibleSubtypes(ionType);
         
         return Arrays.stream(possibleSubtypes)
-                .mapToObj(Integer::new)
+                .boxed()
                 .collect(Collectors.toCollection(HashSet::new));
         
     }

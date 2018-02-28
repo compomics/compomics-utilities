@@ -806,27 +806,44 @@ public class Util {
      * @param out the file to copy to
      * @param overwrite boolean indicating whether out should be overwritten
      *
-     * @throws IOException if a problem occurs when writing to the file
+     * @throws IOException if an error occurred while reading or writing a file
      */
     public static void copyFile(File in, File out, boolean overwrite) throws IOException {
+        
         long start = 0;
+        
         if (out.exists() && out.length() > 0) {
+        
             if (overwrite) {
+            
                 out.delete();
+            
             } else {
+            
                 start = out.length();
+            
             }
         }
+        
         FileChannel inChannel = new FileInputStream(in).getChannel();
         FileChannel outChannel = new FileOutputStream(out).getChannel();
+        
         try {
+        
             inChannel.transferTo(start, inChannel.size(), outChannel);
+        
         } finally {
+        
             if (inChannel != null) {
+            
                 inChannel.close();
+            
             }
+            
             if (outChannel != null) {
+            
                 outChannel.close();
+            
             }
         }
     }

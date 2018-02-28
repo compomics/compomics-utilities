@@ -37,13 +37,16 @@ public class IdfileReaderFactory {
      * the Java service loader
      */
     static {
+        
         ServiceLoader<IdfileReader> ifdrServiceLoader = ServiceLoader.load(IdfileReader.class);
         Iterator<IdfileReader> idfrIterator = ifdrServiceLoader.iterator();
 
         while (idfrIterator.hasNext()) {
+        
             IdfileReader idfileReader = idfrIterator.next();
             logger.info("Found IdfileReader '" + idfileReader.getClass().getCanonicalName() + "' in Java service loader.");
             IdfileReaderFactory.registerIdFileReader(idfileReader.getClass(), idfileReader.getExtension());
+        
         }
     }
 
@@ -59,10 +62,15 @@ public class IdfileReaderFactory {
      * @return the factory instance
      */
     public static IdfileReaderFactory getInstance() {
+
         if (singleton == null) {
+
             singleton = new IdfileReaderFactory();
+
         }
+
         return singleton;
+
     }
 
     /**
@@ -79,25 +87,40 @@ public class IdfileReaderFactory {
      * this extension, or 'null' if the extension was not yet registered at all.
      */
     public static Class registerIdFileReader(Class aReader, String aExtension) {
+
         Class result = null;
         // See if we have the right type of class!
+
         if (IdfileReader.class.isAssignableFrom(aReader)) {
+
             // Now verify the presence of a correct constructor!
             try {
+
                 aReader.getConstructor(File.class);
                 result = idFileReaders.put(aExtension, aReader);
                 logger.info("Registered IdfileReader implementation '" + aReader.getCanonicalName() + "' for extension '" + aExtension + "'.");
+
                 if (result != null) {
+
                     logger.warn("Overwrite occurred for extension '" + aExtension + "'; replaced old IdfileReader '" + result.getCanonicalName() + "' with new IdfileReader '" + aReader.getCanonicalName() + "'!");
+
                 }
+
             } catch (NoSuchMethodException nsme) {
+
                 logger.warn("Unable to find required constructor with single java.io.File parameter in IdfileReader implementation '" + aReader.getCanonicalName() + "'! IdfileReader is ignored!");
                 nsme.printStackTrace();
+
             }
+
         } else {
+
             logger.warn("Was expecting an implementation of '" + IdfileReader.class.getCanonicalName() + "', but got class '" + aReader.getCanonicalName() + "' instead! Ignoring IdfileReader!");
+
         }
+
         return result;
+
     }
 
     /**
@@ -106,14 +129,10 @@ public class IdfileReaderFactory {
      * reader after creation.
      *
      * @param aFile the file to parse
-     * @return an adapted file reader
      * 
-     * @throws SAXException if a SAXException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws OutOfMemoryError thrown if the parser runs out of memory
+     * @return an adapted file reader
      */
-    public IdfileReader getFileReader(File aFile) throws SAXException, FileNotFoundException, IOException, OutOfMemoryError {
+    public IdfileReader getFileReader(File aFile) {
 
         // @TODO: create parsers using waiting handlers and indexed files.
         // The return value, defaulting to null.
@@ -129,36 +148,56 @@ public class IdfileReaderFactory {
         Iterator<String> extensions = idFileReaders.keySet().iterator();
 
         while (extensions.hasNext()) {
+
             String key = extensions.next();
             String extension = key.toLowerCase();
+
             if (name.endsWith(extension)) {
+
                 Class idfileReaderClass = idFileReaders.get(key);
+
                 try {
+
                     result = (IdfileReader) idfileReaderClass.getConstructor(File.class).newInstance(aFile);
                     break;
+
                 } catch (NoSuchMethodException nsme) {
+
                     logger.error("Unable to find required constructor with single java.io.File parameter in IdfileReader implementation '"
                             + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "'!", nsme);
                     nsme.printStackTrace();
+
                 } catch (IllegalAccessException iae) {
+
                     logger.error("Required public constructor with single java.io.File parameter in IdfileReader implementation '"
                             + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' has incorrect access modifier!", iae);
                     iae.printStackTrace();
+
                 } catch (InvocationTargetException ite) {
+
                     if (ite.getCause() instanceof OutOfMemoryError) {
+
                         ite.printStackTrace();
                         throw (OutOfMemoryError) ite.getCause();
+
                     } else {
+
                         logger.error("Required constructor with single java.io.File parameter in IdfileReader implementation '"
                                 + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' threw an exception!", ite);
                         ite.printStackTrace();
+
                     }
+
                 } catch (InstantiationException ie) {
+
                     logger.error("Required constructor with single java.io.File parameter in IdfileReader implementation '"
                             + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' inaccessible; probably abstract class?!", ie);
                     ie.printStackTrace();
+
                 } catch (Exception e) {
+
                     e.printStackTrace();
+
                 }
             }
         }

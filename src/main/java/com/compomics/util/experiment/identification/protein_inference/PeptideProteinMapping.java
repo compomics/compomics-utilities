@@ -138,13 +138,12 @@ public class PeptideProteinMapping {
      * @return a map of the mapping
      */
     public static HashMap<String, HashMap<String, int[]>> getPeptideProteinIndexesMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
-
         return peptideProteinMappings.stream()
-                .collect(Collectors.groupingBy(PeptideProteinMapping::getProteinAccession)).entrySet().stream()
+                .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence)).entrySet().stream()
                 .collect(Collectors.toMap(
                         Entry::getKey,
                         entry -> entry.getValue().stream()
-                                .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence)).entrySet().stream()
+                                .collect(Collectors.groupingBy(PeptideProteinMapping::getProteinAccession)).entrySet().stream()
                                 .collect(Collectors.toMap(
                                         Entry::getKey,
                                         entry2 -> entry2.getValue().stream()

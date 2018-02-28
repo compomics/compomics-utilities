@@ -88,13 +88,13 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * Sets the theoretic PTM.
      *
-     * @param ptm the theoretic PTM name
+     * @param modName the theoretic PTM name
      */
-    public void setModification(String ptm) {
+    public void setModification(String modName) {
         
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
-        this.modification = ptm;
+        this.modification = modName;
     }
 
     /**

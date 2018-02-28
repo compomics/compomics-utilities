@@ -293,7 +293,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 + "<td><font size=2>" + formatDescription(fractionSettings.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
 
         qualityControlButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Quality Control</b></td>"
-                + "<td><font size=2>" + formatDescription(idValidationPreferences.getValidationQCPreferences().getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+                + "<td><font size=2>" + formatDescription(idValidationPreferences.getValidationQCParameters().getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
 
         geneMappingButton.setEnabled(true);
         spectrumAnnotationButton.setEnabled(true);
@@ -964,7 +964,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         
         if (!genePreferencesDialog.isCanceled()) {
             
-            genePreferences = genePreferencesDialog.getGenePreferences();
+            genePreferences = genePreferencesDialog.getGeneParameters();
             updateGUI();
             
         }
@@ -1030,9 +1030,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
         ValidationParametersDialog validationSettingsDialog = new ValidationParametersDialog(this, parentFrame, idValidationPreferences, editable);
         if (!validationSettingsDialog.isCanceled()) {
-            ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+            ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCParameters();
             idValidationPreferences = validationSettingsDialog.getIdMatchValidationPreferences();
-            idValidationPreferences.setValidationQCPreferences(validationQCPreferences);
+            idValidationPreferences.setValidationQCParameters(validationQCPreferences);
             updateGUI();
         }
     }//GEN-LAST:event_validationButtonActionPerformed
@@ -1043,11 +1043,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
-        ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+        ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCParameters();
         ValidationQCParametersDialog validationQCPreferencesDialog = new ValidationQCParametersDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences = new IdMatchValidationParameters(idValidationPreferences);
-            idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
+            idValidationPreferences.setValidationQCParameters(validationQCPreferencesDialog.getValidationQCParameters());
             updateGUI();
         }
     }//GEN-LAST:event_qualityControlButtonActionPerformed

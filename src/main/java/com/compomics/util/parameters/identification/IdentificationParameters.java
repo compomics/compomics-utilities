@@ -593,7 +593,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         
         if (searchParameters != null) {
             
-            annotationParameters.setPreferencesFromSearchParameters(searchParameters);
+            annotationParameters.setParametersFromSearchParameters(searchParameters);
             
         }
         

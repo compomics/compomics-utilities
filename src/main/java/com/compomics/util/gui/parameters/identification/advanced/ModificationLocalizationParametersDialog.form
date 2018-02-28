@@ -36,7 +36,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" alignment="0" max="32767" attributes="0"/>
+          <Component id="backgroundPanel" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -75,14 +75,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="ptmScoringPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="siteAlignmentPanel" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="siteAlignmentPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="helpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cancelButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -131,15 +131,11 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="thresholdAutoLabel" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                                   <Component id="scoreTypeLabel" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                                   <Component id="thresholdLabel" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="209" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="thresholdTxt" max="32767" attributes="0"/>
-                                  <Component id="thresholdAutoCmb" pref="150" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="thresholdTxt" min="-2" pref="150" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -160,11 +156,6 @@
                           <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="thresholdAutoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="thresholdAutoCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="thresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="thresholdTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -214,24 +205,6 @@
                   </StringArray>
                 </Property>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="thresholdAutoLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Threshold Auto"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="thresholdAutoCmb">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Yes"/>
-                    <StringItem index="1" value="No"/>
-                  </StringArray>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="thresholdAutoCmbActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -310,15 +310,10 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * peptide.
      *
      * @param peptide the peptide of interest
-     * @param sequenceMatchingSettings the sequence matching settings for
-     * peptide to protein mapping
-     * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
-     * to peptide mapping
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingParameters sequenceMatchingSettings,
-            SequenceMatchingParameters ptmSequenceMatchingSettings) {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 

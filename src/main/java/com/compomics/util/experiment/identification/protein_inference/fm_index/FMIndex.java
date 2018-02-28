@@ -44,6 +44,7 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import java.util.stream.Collectors;
 
 /**
  * The FM index.
@@ -116,7 +117,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * The accessions ending positions in the index, important for getSequences function
      */
-    private final HashMap<String, int[]> accessionsIndexPos = new HashMap<>();
+    private final HashMap<String, AccessionMetaData> accessionMetaData = new HashMap<>();
     /**
      * List of all amino acid masses.
      */
@@ -1138,6 +1139,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
             
             String accession = currentProtein.getAccession();
+            Header headerObject = ((FastaIterator)pi).getLastHeader();
+            String header = (headerObject.getRawHeader().charAt(0) == '>' ? headerObject.getRawHeader().substring(1) : headerObject.getRawHeader());
+            accessionMetaData.put(accession, new AccessionMetaData(header));
+            
+            if (accession == null || accession.equals("")) accession = header;
             
             if (fastaParameters != null && ProteinUtils.isDecoy(accession, fastaParameters)) {
                 
@@ -1151,7 +1157,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             accessionEndings.put(accession, tmpN + proteinLen);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
-            accssions[tmpNumProtein++] = currentProtein.getAccession();
+            accssions[tmpNumProtein++] = accession;
             bndaries[tmpNumProtein] = tmpN + 1;
 
         }
@@ -1180,7 +1186,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         for (String accession : accessionEndings.keySet()){
             int truePos = accessionEndings.get(accession);
-            accessionsIndexPos.put(accession, new int[]{inversedSampledSuffixArray[truePos], indexPart});
+            AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+            accessionMeta.index = inversedSampledSuffixArray[truePos];
+            accessionMeta.indexPart = indexPart;
         }
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -5075,12 +5083,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     @Override
     public String getSequence(String proteinAccession) {
         
-        int[] accessionIndexPos = accessionsIndexPos.get(proteinAccession);
+        AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
         
-        if (accessionIndexPos != null){
+        if (accessionMeta != null){
             
-            int index = accessionIndexPos[0];
-            int indexPart = accessionIndexPos[1];
+            int index = accessionMeta.index;
+            int indexPart = accessionMeta.indexPart;
             int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
             WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
             StringBuilder stringBuilder = new StringBuilder();
@@ -5112,9 +5120,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
     @Override
     public Collection<String> getAccessions() {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //@Dominik - what type of object is most convenient here, array, list, set..?
-        
+        return accessions.stream().flatMap(f -> Arrays.stream(f)).collect(Collectors.toList());
     }
 
     @Override
@@ -5127,49 +5133,124 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     @Override
     public String getHeader(String proteinAccession) {
         
-        throw new UnsupportedOperationException("Not supported yet."); //@Dominik
+        AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
+            
+            return accessionMeta.headerAsString;
         
     }
 
     @Override
     public String getDescription(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getDescription();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getDescription();
         
     }
 
     @Override
     public String getSimpleDescription(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getSimpleProteinDescription();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getSimpleProteinDescription();
         
     }
 
     @Override
     public ProteinDatabase getProteinDatabase(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getDatabaseType();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getDatabaseType();
         
     }
 
     @Override
     public String getGeneName(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getGeneName();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getGeneName();
         
     }
 
     @Override
     public String getTaxonomy(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getTaxonomy();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getTaxonomy();
         
     }
 
     @Override
     public Integer getProteinEvidence(String accession) {
         
-        return Header.parseFromFASTA(getHeader(accession)).getProteinEvidence();
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getProteinEvidence();
         
+    }
+    
+    /**
+     * Class gathering metadata on a protein accession.
+     */
+    private class AccessionMetaData {
+        
+        /**
+         * The header as string
+         */
+        String headerAsString;
+        /**
+         * The header
+         */
+        private Header header = null;
+        /**
+         * The index
+         */
+        int index;
+        /**
+         * the index part
+         */
+        int indexPart;
+        
+        /**
+         * Constructor.
+         * 
+         * @param header the header as parsed from the fasta file
+         */
+        public AccessionMetaData(String header){
+            this.headerAsString = header;
+        }
+        
+        /**
+         * Constructor.
+         * 
+         * @param header the header as parsed from the fasta file
+         * @param index the index
+         * @param indexPart the index part
+         */
+        public AccessionMetaData(String header, int index, int indexPart){
+            this.headerAsString = header;
+            this.index = index;
+            this.indexPart = indexPart;
+        }
+
+        /**
+         * Returns the parsed header.
+         * 
+         * @return the parsed header
+         */
+        public Header getHeader() {
+            
+            if (header == null) {
+                
+                header = Header.parseFromFASTA(headerAsString);
+                
+            }
+            
+            return header;
+        }
     }
 }

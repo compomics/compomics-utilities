@@ -37,12 +37,17 @@ public class PeptideMapperCLI {
         if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))) {
 
             System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-            System.out.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [utilities-parameter-file]");
+            System.out.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [additonal options]");
             System.out.println();
             System.out.println("Options are:");
             System.out.println("\t-p\tpeptide mapping");
             System.out.println("\t-t\tsequence tag mapping");
             System.out.println("\t-h\tprint this info");
+            
+            System.out.println("Additional options are:");
+            System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
+            System.out.println("\t-f\tadd flanking amino acids to peptide in output");
+            
             System.out.println();
             System.out.println("Default parameters:");
             System.out.println("\tindexing method:\t\tfm-index");
@@ -54,27 +59,48 @@ public class PeptideMapperCLI {
         System.out.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);
+        boolean flanking = false;
 
         SearchParameters searchParameters = null;
-        PeptideVariantsParameters peptideVariantsPreferences = null;
+        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
         SequenceMatchingParameters sequenceMatchingPreferences = null;
+        boolean customParameters = false;
         if (args.length >= 5) {
-            File parameterFile = new File(args[4]);
-            IdentificationParameters identificationParameters = null;
-            try {
-                identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
-            } catch (Exception e) {
-                System.err.println("Error: cound not open / parse parameter file");
-                e.printStackTrace();
-                System.exit(-1);
+            int argPos = 4;
+            while (argPos < args.length){
+                switch(args[argPos]){
+                    case "-f":  // flanking
+                        flanking = true;
+                        ++argPos;
+                        break;
+                        
+                    case "-u":  // use utilities parameter file
+                        
+                        IdentificationParameters identificationParameters = null;
+                        try {
+                            File parameterFile = new File(args[argPos + 1]);
+                            identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
+                        } catch (Exception e) {
+                            System.err.println("Error: cound not open / parse parameter file");
+                            e.printStackTrace();
+                            System.exit(-1);
+                        }
+
+                        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
+                        searchParameters = identificationParameters.getSearchParameters();
+                        customParameters = true;
+                        argPos += 2;
+                        break;
+                        
+                    default:
+                        ++argPos;
+                        break;
+                }
             }
 
-            peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
-            sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
-            searchParameters = identificationParameters.getSearchParameters();
-
-        } else {
-            peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
+        } 
+        
+        if (!customParameters) {
             searchParameters = new SearchParameters();
             searchParameters.setModificationParameters(new ModificationParameters());
             searchParameters.setFragmentIonAccuracy(0.02);
@@ -145,6 +171,17 @@ public class PeptideMapperCLI {
                     String peptide = peptideProteinMapping.getPeptideSequence();
                     String accession = peptideProteinMapping.getProteinAccession();
                     int startIndex = peptideProteinMapping.getIndex();
+                    if (flanking){
+                        int peptideLength = peptide.length();
+                        String proteinSequence = ((FMIndex)peptideMapper).getSequence(accession);
+                        
+                        if (startIndex > 0) peptide = proteinSequence.charAt(startIndex - 1) + "." + peptide;
+                        else peptide = "-" + peptide;
+                        
+                        if (startIndex + peptideLength + 1 < proteinSequence.length()) peptide = peptide + "." + proteinSequence.charAt(startIndex + peptideLength);
+                        else peptide = peptide + "-";
+                    }
+                    ++startIndex; // + 1 because we start counting from one -_-
                     writer.println(peptide + "," + accession + "," + startIndex);
                 }
                 writer.close();

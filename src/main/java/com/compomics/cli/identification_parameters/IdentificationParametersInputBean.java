@@ -1622,27 +1622,6 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PSMs.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PSMs.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SEPARATE_PSMs.id, arg, supportedInput)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SEPARATE_PSMs.id, arg, supportedInput)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id, arg, supportedInput)) {
-                return false;
-            }
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id);
             if (!CommandParameter.inDoubleRange(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id, arg, 0.0, 100.0)) {
@@ -1724,13 +1703,8 @@ public class IdentificationParametersInputBean {
 
     /**
      * Updates the identification parameters according to the command line.
-     *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if aClassNotFoundException
-     * ClassNotFoundException occurs
      */
-    public void updateIdentificationParameters() throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void updateIdentificationParameters() {
 
         ///////////////////////////////////
         // General search parameters
@@ -3344,7 +3318,6 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_THRESHOLD.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_THRESHOLD.id);
             Double value = new Double(arg);
-            ptmScoringPreferences.setEstimateFlr(false);
             ptmScoringPreferences.setProbabilisticScoreThreshold(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id)) {
@@ -3370,7 +3343,7 @@ public class IdentificationParametersInputBean {
             SequenceMatchingParameters ptmSequenceMatchingPreferences = new SequenceMatchingParameters();
             ptmSequenceMatchingPreferences.setLimitX(sequenceMatchingPreferences.getLimitX());
             ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
-            ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
+            ptmScoringPreferences.setSequenceMatchingParameters(ptmSequenceMatchingPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);
@@ -3501,54 +3474,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FDR.id);
             Double value = new Double(arg);
             idMatchValidationPreferences.setDefaultProteinFDR(value);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PSMs.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PSMs.id);
-            Integer intValue = new Integer(arg);
-            boolean value;
-            switch (intValue) {
-                case 1:
-                    value = true;
-                    break;
-                case 0:
-                    value = false;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PSMs.id + ": " + arg + ". 0 or 1 expected.");
-            }
-            idMatchValidationPreferences.setSeparatePsms(value);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id);
-            Integer intValue = new Integer(arg);
-            boolean value;
-            switch (intValue) {
-                case 1:
-                    value = true;
-                    break;
-                case 0:
-                    value = false;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id + ": " + arg + ". 0 or 1 expected.");
-            }
-            idMatchValidationPreferences.setSeparatePeptides(value);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id);
-            Integer intValue = new Integer(arg);
-            boolean value;
-            switch (intValue) {
-                case 1:
-                    value = true;
-                    break;
-                case 0:
-                    value = false;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.id + ": " + arg + ". 0 or 1 expected.");
-            }
-            idMatchValidationPreferences.setMergeSmallSubgroups(value);
         }
 
         //////////////////////////////////

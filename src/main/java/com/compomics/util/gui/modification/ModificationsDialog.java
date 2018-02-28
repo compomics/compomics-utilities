@@ -634,7 +634,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
             String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
-            new PtmDialog(this, modification, false);
+            new ModificationDialog(this, modification, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
 
@@ -793,25 +793,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             searchNextButtonActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT & searchPreviousButton.isEnabled()) {
             searchPreviousButtonActionPerformed(null);
-        } else {
-            String modificationName, mass;
-            ArrayList<Integer> toAdd = new ArrayList<>();
-            searchPossibilities.clear();
-            searchCurrentSelection = 0;
-            String input = searchInputTxt.getText().trim().toLowerCase();
-            if (!input.equals("")) {
-                for (int row = 0; row < modificationFactory.getDefaultModifications().size(); row++) {
-                    modificationName = modificationFactory.getDefaultModifications().get(row).toLowerCase();
-                    mass = modificationFactory.getModification(modificationName).getMass() + "";
-                    if (mass.startsWith(input)) {
-                        searchPossibilities.add(row);
-                    } else if (modificationName.contains(input)) {
-                        toAdd.add(row);
-                    }
-                }
-                searchPossibilities.addAll(toAdd);
-            }
-        }
+        } else 
         if (searchPossibilities.size() > 1) {
             searchPreviousButton.setEnabled(true);
             searchNextButton.setEnabled(true);
@@ -831,7 +813,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_searchInputTxtKeyReleased
 
     /**
-     * Opens the user mods pop up dialog or the PtmDialog.
+     * Opens the user mods pop up dialog or the ModificationDialog.
      *
      * @param evt
      */
@@ -844,7 +826,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String modificationName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
-            PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+            ModificationDialog modificationDialog = new ModificationDialog(this, modification, true);
             if (!modificationDialog.isCanceled()) {
                 updateModifications();
             }
@@ -943,7 +925,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int row = userModificationsTable.getSelectedRow();
         String modificationName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
         Modification modification = modificationFactory.getModification(modificationName);
-        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        ModificationDialog modificationDialog = new ModificationDialog(this, modification, true);
         if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
@@ -956,7 +938,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
         if (modificationFactory.getUserModifications().size() < 30) {
-            PtmDialog modificationDialog = new PtmDialog(this, null, true);
+            ModificationDialog modificationDialog = new ModificationDialog(this, null, true);
             if (!modificationDialog.isCanceled()) {
                 updateModifications();
             }
@@ -1006,7 +988,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
         String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         Modification modification = modificationFactory.getModification(modificationName);
-        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        ModificationDialog modificationDialog = new ModificationDialog(this, modification, true);
         if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
@@ -1020,7 +1002,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String modificationName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
         Modification modification = modificationFactory.getModification(modificationName);
-        PtmDialog modificationDialog = new PtmDialog(this, modification, true);
+        ModificationDialog modificationDialog = new ModificationDialog(this, modification, true);
         if (!modificationDialog.isCanceled()) {
             updateModifications();
         }

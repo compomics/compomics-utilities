@@ -143,7 +143,6 @@ public class FastaIterator implements ProteinIterator {
             if (sequence.length() > 0) {
                 
                 lastHeader = header;
-
                 return new Protein(header.getAccession(), sequence);
 
             } else if (header == null) {

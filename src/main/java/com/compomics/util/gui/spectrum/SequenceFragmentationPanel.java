@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * This class was imported from the Peptizer and MascotDatfile parser, and was
@@ -21,6 +22,7 @@ import java.util.Iterator;
  * @author Kenny Helsens
  * @author Lennart Martens
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class SequenceFragmentationPanel extends JPanel {
 
@@ -36,7 +38,7 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * The list of fragment ion matches.
      */
-    private ArrayList<IonMatch> iIonMatches;
+    private Stream<IonMatch> iIonMatches;
     /**
      * Double array on b-ions for the sequence components. If '0', no
      * corresponding ions were given for the component. Otherwise, a double
@@ -106,29 +108,6 @@ public class SequenceFragmentationPanel extends JPanel {
     private Color rewindColor;
 
     /**
-     * Creates a new SequenceFragmentationPanel.
-     *
-     * @deprecated use the panel with ion selection instead
-     * @param aSequence String with the Modified Sequence of an peptide
-     * identification.
-     * @param aIonMatches ArrayList with Fragmentation ion matches.
-     * @param boolModifiedSequence boolean describing the sequence. This
-     * constructor can be used to enter a ModifiedSequence or a normal sequence.
-     * @param aHighlightModifications boolean decides whether the modification
-     * are highlighted by adding a star above the modified residue instead if
-     * displaying the PTM short name
-     * @param modificationProfile the modification profile
-     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
-     * returns true.
-     * @see java.awt.GraphicsEnvironment#isHeadless
-     * @see javax.swing.JComponent#getDefaultLocale
-     */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, ModificationParameters modificationProfile) throws HeadlessException {
-        this(aSequence, aIonMatches, boolModifiedSequence, aHighlightModifications, modificationProfile, PeptideFragmentIon.B_ION, PeptideFragmentIon.Y_ION);
-    }
-
-    /**
      * Creates a new SequenceFragmentationPanel working with B and Y ions.
      *
      * @param aSequence String with the Modified Sequence of an peptide
@@ -144,13 +123,12 @@ public class SequenceFragmentationPanel extends JPanel {
      * the PeptideFragmentIon static fields
      * @param rewindIon the rewind ion type (for instance Y ion) as indexed by
      * the PeptideFragmentIon static fields
-     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
-     * returns true.
+     * 
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, ModificationParameters modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
+    public SequenceFragmentationPanel(String aSequence, Stream<IonMatch> aIonMatches, boolean boolModifiedSequence,
+            boolean aHighlightModifications, ModificationParameters modificationProfile, int forwardIon, int rewindIon) {
         super();
 
         this.forwardIon = forwardIon;
@@ -176,7 +154,7 @@ public class SequenceFragmentationPanel extends JPanel {
             }
         });
     }
-    
+
     /**
      * Creates a new SequenceFragmentationPanel working with B and Y ions.
      *
@@ -195,7 +173,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String taggedModifiedSequence, ArrayList<IonMatch> aIonMatches, 
+    public SequenceFragmentationPanel(String taggedModifiedSequence, Stream<IonMatch> aIonMatches,
             boolean aHighlightModifications, ModificationParameters modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
         super();
 
@@ -228,8 +206,8 @@ public class SequenceFragmentationPanel extends JPanel {
      *
      * Based on the given ModifiedSequence Components and Fragmentions, a
      * visualization (inspired by X!Tandem) is drawn on a Graphics object. Next
-     * to every possible fragmentation site of the peptide a bar is drawn whether
-     * b or y ions were found originating from this fragmentation side.
+     * to every possible fragmentation site of the peptide a bar is drawn
+     * whether b or y ions were found originating from this fragmentation side.
      *
      * @param g the specified Graphics window
      * @see java.awt.Component#update(java.awt.Graphics)
@@ -496,37 +474,31 @@ public class SequenceFragmentationPanel extends JPanel {
         yIons = new double[iSequenceComponents.length - 1];
 
         // Dig up the most intense matched ion.
-        double lMaxIntensity = 0.0;
-        for (IonMatch lMatch : iIonMatches) {
-            if (lMaxIntensity < lMatch.peak.intensity) {
-                lMaxIntensity = lMatch.peak.intensity;
-            }
-        }
+        double lMaxIntensity = iIonMatches.mapToDouble(ionMatch -> ionMatch.peak.intensity).max().orElse(0.0);
 
-        for (IonMatch lMatch : iIonMatches) {
-            if (lMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                double lRatio = lMatch.peak.intensity / lMaxIntensity;
-                PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
-                if (lFragmentIon.getSubType() == rewindIon) {
-                    // If array unit is not '0', another ion for this fragmentation site is already found.
-                    if (yIons[lFragmentIon.getNumber() - 1] != 0) {
-                        // We want to save the most intense.
-                        if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                            // Reset lRatio to the most intense.
-                            lRatio = yIons[lFragmentIon.getNumber() - 1];
+        iIonMatches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                .forEach(lMatch -> {
+                    double lRatio = lMatch.peak.intensity / lMaxIntensity;
+                    PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
+                    if (lFragmentIon.getSubType() == rewindIon) {
+                        // If array unit is not '0', another ion for this fragmentation site is already found.
+                        if (yIons[lFragmentIon.getNumber() - 1] != 0) {
+                            // We want to save the most intense.
+                            if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {
+                                // Reset lRatio to the most intense.
+                                lRatio = yIons[lFragmentIon.getNumber() - 1];
+                            }
                         }
-                    }
-                    yIons[lFragmentIon.getNumber() - 1] = lRatio;
-                } else if (lFragmentIon.getSubType() == forwardIon) {
-                    if (bIons[lFragmentIon.getNumber() - 1] != 0) {
-                        if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                            lRatio = bIons[lFragmentIon.getNumber() - 1];
+                        yIons[lFragmentIon.getNumber() - 1] = lRatio;
+                    } else if (lFragmentIon.getSubType() == forwardIon) {
+                        if (bIons[lFragmentIon.getNumber() - 1] != 0) {
+                            if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
+                                lRatio = bIons[lFragmentIon.getNumber() - 1];
+                            }
                         }
+                        bIons[lFragmentIon.getNumber() - 1] = lRatio;
                     }
-                    bIons[lFragmentIon.getNumber() - 1] = lRatio;
-                }
-            }
-        }
+                });
     }
 
     /**
@@ -547,7 +519,7 @@ public class SequenceFragmentationPanel extends JPanel {
      *
      * @param lIonMatches ArrayList
      */
-    public void setIonMatches(ArrayList lIonMatches) {
+    public void setIonMatches(Stream<IonMatch> lIonMatches) {
         iIonMatches = lIonMatches;
         normalizeMatchedIons();
     }

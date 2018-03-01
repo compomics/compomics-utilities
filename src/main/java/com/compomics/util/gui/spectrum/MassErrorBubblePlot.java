@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -82,17 +84,14 @@ public class MassErrorBubblePlot extends JPanel {
      * data series key, otherwise the psm index is used
      * @param addMarkers if true interval markers for the fragment ions will be
      * shown
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<ArrayList<IonMatch>> annotations,
+            ArrayList<Stream<IonMatch>> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
-            boolean addMarkers) throws InterruptedException {
+            boolean addMarkers) {
         this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, false);
     }
 
@@ -109,18 +108,15 @@ public class MassErrorBubblePlot extends JPanel {
      * shown
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<ArrayList<IonMatch>> annotations,
+            ArrayList<Stream<IonMatch>> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) throws InterruptedException {
+            boolean useRelativeError) {
         this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, useRelativeError);
     }
 
@@ -138,19 +134,16 @@ public class MassErrorBubblePlot extends JPanel {
      * shown
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
-     *
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<ArrayList<IonMatch>> annotations,
+            ArrayList<Stream<IonMatch>> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             double bubbleScale,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) throws InterruptedException {
+            boolean useRelativeError) {
         super();
 
         setOpaque(false);
@@ -164,11 +157,11 @@ public class MassErrorBubblePlot extends JPanel {
 
         for (int j = 0; j < annotations.size(); j++) {
 
-            ArrayList<IonMatch> currentAnnotations = annotations.get(j);
+            Stream<IonMatch> currentAnnotations = annotations.get(j);
             Spectrum currentSpectrum = currentSpectra.get(j);
 
             // the annotated ion matches
-            currentlyUsedIonMatches = currentAnnotations;
+            currentlyUsedIonMatches = currentAnnotations.collect(Collectors.toCollection(ArrayList::new));
 
             if (currentlyUsedIonMatches.size() > 0) {
 

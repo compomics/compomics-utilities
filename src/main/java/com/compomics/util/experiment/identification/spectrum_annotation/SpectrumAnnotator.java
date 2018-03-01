@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The spectrum annotator annotates peaks in a spectrum.
@@ -147,13 +149,12 @@ public abstract class SpectrumAnnotator {
      *
      * @return vector of default spectrum annotations
      */
-    public static Vector<SpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
-        Vector<SpectrumAnnotation> currentAnnotations = new Vector();
-        for (IonMatch ionMatch : ionMatches) {
-            currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
-                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()));
-        }
-        return currentAnnotations;
+    public static Vector<SpectrumAnnotation> getSpectrumAnnotation(Stream<IonMatch> ionMatches) {
+        
+        return ionMatches.map(ionMatch -> new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
+                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()))
+                .collect(Collectors.toCollection(Vector::new));
+        
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -23,6 +24,7 @@ import org.jfree.data.statistics.HistogramType;
  * Creates an IntensityHistogram plot.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class IntensityHistogram extends JPanel {
 
@@ -40,7 +42,7 @@ public class IntensityHistogram extends JPanel {
      * @param intensityThreshold the intensity threshold
      */
     public IntensityHistogram(
-            ArrayList<IonMatch> annotations,
+            Stream<IonMatch> annotations,
             Spectrum currentSpectrum,
             AnnotationParameters.IntensityThresholdType intensityThresholdType,
             double intensityThreshold) {
@@ -50,8 +52,7 @@ public class IntensityHistogram extends JPanel {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         // the annotated intensities
-        double[] annotatedPeakIntensities = annotations.stream()
-                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+        double[] annotatedPeakIntensities = annotations.mapToDouble(ionMatch -> ionMatch.peak.intensity)
                 .toArray();
         HashSet<Double> annotatedPeakIntensitiesSet = Arrays.stream(annotatedPeakIntensities)
                 .boxed().collect(Collectors.toCollection(HashSet::new));

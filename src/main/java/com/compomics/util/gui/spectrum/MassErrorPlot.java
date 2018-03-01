@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,13 +20,14 @@ import org.jfree.data.xy.DefaultXYDataset;
  * Creates a MassErrorPlot displaying the mz values vs the mass error.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class MassErrorPlot extends JPanel {
 
     /**
      * The complete list of possible spectrum annotations.
      */
-    private ArrayList<IonMatch> annotations;
+    private Stream<IonMatch> annotations;
     /**
      * The chart panel.
      */
@@ -37,12 +39,12 @@ public class MassErrorPlot extends JPanel {
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
      * @param massTolerance the mass error tolerance
-     * 
+     *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
      */
     public MassErrorPlot(
-            ArrayList<IonMatch> annotations,
+            Stream<IonMatch> annotations,
             Spectrum currentSpectrum,
             double massTolerance) throws InterruptedException {
         this(annotations, currentSpectrum, massTolerance, false);
@@ -56,15 +58,12 @@ public class MassErrorPlot extends JPanel {
      * @param massTolerance the mass error tolerance
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
-     * 
-     * @throws java.lang.InterruptedException exception thrown if the thread is
-     * interrupted
      */
     public MassErrorPlot(
-            ArrayList<IonMatch> annotations,
+            Stream<IonMatch> annotations,
             Spectrum currentSpectrum,
             double massTolerance,
-            boolean useRelativeError) throws InterruptedException {
+            boolean useRelativeError) {
         super();
 
         setOpaque(false);
@@ -72,48 +71,32 @@ public class MassErrorPlot extends JPanel {
 
         this.annotations = annotations;
 
-        if (annotations.size() > 0) {
+        if (annotations.count() > 0) {
 
             boolean useIntensityGrading = false;  // @TODO: make this selectable by the user?
             DefaultXYDataset xyDataset = new DefaultXYDataset();
             ArrayList<Color> colors = new ArrayList<>();
 
             // find the most intense annotated peak
-            double maxAnnotatedIntensity = 0.0;
+            double maxAnnotatedIntensity = annotations.mapToDouble(ionMatch -> ionMatch.peak.intensity).max().orElse(0.0);
 
-            for (IonMatch annotation : annotations) {
-                IonMatch ionMatch = (IonMatch) annotation;
-                if (ionMatch.peak.intensity > maxAnnotatedIntensity) {
-                    maxAnnotatedIntensity = ionMatch.peak.intensity;
-                }
-            }
+            double maxError = useRelativeError ? annotations.mapToDouble(ionMatch -> ionMatch.getRelativeError()).max().orElse(0.0)
+                    : annotations.mapToDouble(ionMatch -> ionMatch.getAbsoluteError()).max().orElse(0.0);
 
-            double maxError = 0.0;
-
-            for (IonMatch annotation : annotations) {
+            annotations.forEach(ionMatch -> {
                 double[][] dataXY = new double[2][1];
-                IonMatch ionMatch = (IonMatch) annotation;
                 dataXY[0][0] = ionMatch.peak.mz;
 
-                if (useRelativeError) {
-                    dataXY[1][0] = ionMatch.getRelativeError();
-                } else {
-                    dataXY[1][0] = ionMatch.getAbsoluteError();
-                }
-
-                if (Math.abs(dataXY[1][0]) > maxError) {
-                    maxError = Math.abs(dataXY[1][0]);
-                }
+                dataXY[1][0] = useRelativeError ? ionMatch.getRelativeError() : ionMatch.getAbsoluteError();
 
                 xyDataset.addSeries(ionMatch.getPeakAnnotation(true), dataXY);
 
                 // use the two lines below if all points ought to have the same color
                 //int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();
                 //colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
-
                 // use the same colors as for the SpectrumPanel annotation
                 colors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.ion, false));
-            }
+            });
 
             JFreeChart chart = ChartFactory.createScatterPlot(null, null, null, xyDataset, PlotOrientation.VERTICAL, false, false, false);
 
@@ -160,6 +143,7 @@ public class MassErrorPlot extends JPanel {
             chartPanel = new ChartPanel(chart);
             chartPanel.setBackground(Color.WHITE);
             this.add(chartPanel);
+
         }
     }
 
@@ -169,7 +153,7 @@ public class MassErrorPlot extends JPanel {
      * @return the current number of data points
      */
     public int getNumberOfDataPointsInPlot() {
-        return annotations.size();
+        return (int) annotations.count();
     }
 
     /**

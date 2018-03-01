@@ -4,11 +4,13 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.JOptionEditorPane;
 import java.awt.Dialog;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the MS Amanda specific settings.
@@ -79,6 +81,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxPotentialModSitePerPeptideCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         maxNeutralLossesPerPeptideCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         maxPtmNeutalLossesPerPeptideCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         decoyDatabaseCmb.setEnabled(editable);
         instrumentCmb.setEnabled(editable);
@@ -133,6 +136,12 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         minPeptideLengthTxt.setText(msAmandaParameters.getMinPeptideLength().toString());
         maxProteinsLoadedTxt.setText(msAmandaParameters.getMaxLoadedProteins().toString());
         maxSpectraLoadedTxt.setText(msAmandaParameters.getMaxLoadedSpectra().toString());
+        
+        if (msAmandaParameters.getOutputFormat().equalsIgnoreCase("csv")) {
+            outputFormatCmb.setSelectedIndex(0);
+        } else {
+            outputFormatCmb.setSelectedIndex(1);
+        }
     }
 
     @Override
@@ -185,6 +194,8 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         if (!input.equals("")) {
             result.setMaxLoadedSpectra(new Integer(input));
         }
+        
+        result.setOutputFormat((String) outputFormatCmb.getSelectedItem());
 
         return result;
     }
@@ -226,6 +237,8 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxProteinsLoadedTxt = new javax.swing.JTextField();
         maxSpectraLoadedLabel = new javax.swing.JLabel();
         maxSpectraLoadedTxt = new javax.swing.JTextField();
+        outputFormatLabel = new javax.swing.JLabel();
+        outputFormatCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -338,6 +351,15 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
             }
         });
 
+        outputFormatLabel.setText("Output Format");
+
+        outputFormatCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "csv", "mzIdentML" }));
+        outputFormatCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputFormatCmbActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -393,10 +415,14 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                         .addComponent(maxProteinsLoadedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxProteinsLoadedTxt))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(maxSpectraLoadedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxSpectraLoadedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(outputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxSpectraLoadedTxt)))
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(outputFormatCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(maxSpectraLoadedTxt))))
                 .addContainerGap())
         );
         advancedSearchSettingsPanelLayout.setVerticalGroup(
@@ -450,10 +476,14 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxProteinsLoadedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxProteinsLoadedLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxSpectraLoadedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxSpectraLoadedLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputFormatLabel)
+                    .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -515,8 +545,8 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
@@ -626,6 +656,24 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     }//GEN-LAST:event_maxSpectraLoadedTxtKeyReleased
 
     /**
+     * Show warning if mzIdentML is selected.
+     *
+     * @param evt
+     */
+    private void outputFormatCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatCmbActionPerformed
+        if (outputFormatCmb.getSelectedIndex() != 0 && this.isVisible()) {
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(MsAmandaParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "Note that the MS Amanda mzIdentML format is not yet compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            "Format Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
+    }//GEN-LAST:event_outputFormatCmbActionPerformed
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -709,6 +757,8 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private javax.swing.JLabel monoIsotopicLabel;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
+    private javax.swing.JComboBox outputFormatCmb;
+    private javax.swing.JLabel outputFormatLabel;
     private javax.swing.JComboBox performDeisotopingCmb;
     private javax.swing.JLabel performDeisotopingLabel;
     // End of variables declaration//GEN-END:variables

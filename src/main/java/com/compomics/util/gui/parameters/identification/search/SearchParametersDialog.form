@@ -397,7 +397,7 @@
               <Properties>
                 <Property name="maximumRowCount" type="int" value="15"/>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new DefaultComboBoxModel(CleavagePreference.values())" type="code"/>
+                  <Connection code="new DefaultComboBoxModel(CleavageParameter.values())" type="code"/>
                 </Property>
               </Properties>
               <Events>

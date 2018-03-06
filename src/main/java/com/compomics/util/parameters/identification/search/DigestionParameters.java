@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * This class groups the preferences for the digestion of proteins.
+ * This class groups the parameters for the digestion of proteins.
  *
  * @author Marc Vaudel
  */
@@ -99,7 +99,7 @@ public class DigestionParameters implements Serializable {
     /**
      * Enum for the different types of digestion.
      */
-    public enum CleavagePreference {
+    public enum CleavageParameter {
 
         /**
          * Digestion with an enzyme.
@@ -129,25 +129,25 @@ public class DigestionParameters implements Serializable {
          * @param index the index as integer
          * @param name the name
          */
-        private CleavagePreference(int index, String name) {
+        private CleavageParameter(int index, String name) {
             this.index = index;
             this.name = name;
         }
 
         /**
-         * Returns the cleavage preference of the given index.
+         * Returns the cleavage parameter of the given index.
          *
-         * @param index the index of the cleavage preference
+         * @param index the index of the cleavage parameter
          *
-         * @return the corresponding cleavage preference
+         * @return the corresponding cleavage parameter
          */
-        public static CleavagePreference getCleavagePreferences(int index) {
-            for (CleavagePreference cleavagePreference : values()) {
-                if (cleavagePreference.index == index) {
-                    return cleavagePreference;
+        public static CleavageParameter getCleavageParameters(int index) {
+            for (CleavageParameter cleavageParameter : values()) {
+                if (cleavageParameter.index == index) {
+                    return cleavageParameter;
                 }
             }
-            throw new IllegalArgumentException("No cleavage preference found for index " + index + ".");
+            throw new IllegalArgumentException("No cleavage parameter found for index " + index + ".");
         }
 
         /**
@@ -157,11 +157,11 @@ public class DigestionParameters implements Serializable {
          */
         public static String getCommandLineDescription() {
             StringBuilder stringBuilder = new StringBuilder();
-            for (CleavagePreference cleavagePreference : values()) {
+            for (CleavageParameter cleavageParameter : values()) {
                 if (stringBuilder.length() > 0) {
                     stringBuilder.append(", ");
                 }
-                stringBuilder.append(cleavagePreference.index).append(": ").append(cleavagePreference.name);
+                stringBuilder.append(cleavageParameter.index).append(": ").append(cleavageParameter.name);
             }
             return stringBuilder.toString();
         }
@@ -174,7 +174,7 @@ public class DigestionParameters implements Serializable {
     /**
      * Boolean indicating whether the sample was not digested.
      */
-    private CleavagePreference cleavagePreference;
+    private CleavageParameter cleavageParameter;
     /**
      * List of enzyme used.
      */
@@ -189,46 +189,46 @@ public class DigestionParameters implements Serializable {
     private HashMap<String, Specificity> specificity;
 
     /**
-     * Constructor for empty preferences.
+     * Constructor for empty parameters.
      */
     public DigestionParameters() {
     }
 
     /**
-     * Clones the given preferences.
+     * Clones the given parameters.
      *
-     * @param digestionPreferences the preferences to clone
+     * @param digestionParameters the parameters to clone
      *
-     * @return a new object containing the same preferences
+     * @return a new object containing the same parameters
      */
-    public static DigestionParameters clone(DigestionParameters digestionPreferences) {
+    public static DigestionParameters clone(DigestionParameters digestionParameters) {
         DigestionParameters clone = new DigestionParameters();
-        clone.setCleavagePreference(digestionPreferences.getCleavagePreference());
-        if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme) {
-            for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
+        clone.setCleavageParameter(digestionParameters.getCleavageParameter());
+        if (digestionParameters.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+            for (Enzyme enzyme : digestionParameters.getEnzymes()) {
                 clone.addEnzyme(enzyme);
                 String enzymeName = enzyme.getName();
-                clone.setSpecificity(enzymeName, digestionPreferences.getSpecificity(enzymeName));
-                clone.setnMissedCleavages(enzymeName, digestionPreferences.getnMissedCleavages(enzymeName));
+                clone.setSpecificity(enzymeName, digestionParameters.getSpecificity(enzymeName));
+                clone.setnMissedCleavages(enzymeName, digestionParameters.getnMissedCleavages(enzymeName));
             }
         }
         return clone;
     }
 
     /**
-     * Returns default digestion preferences. Trypsin specific with two missed
+     * Returns default digestion parameters. Trypsin specific with two missed
      * cleavages.
      *
-     * @return default digestion preferences
+     * @return default digestion parameters
      */
-    public static DigestionParameters getDefaultPreferences() {
-        DigestionParameters digestionPreferences = new DigestionParameters();
-        digestionPreferences.setCleavagePreference(CleavagePreference.enzyme);
+    public static DigestionParameters getDefaultParameters() {
+        DigestionParameters digestionParameters = new DigestionParameters();
+        digestionParameters.setCleavageParameter(CleavageParameter.enzyme);
         String enzymeName = "Trypsin";
         Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
-        digestionPreferences.addEnzyme(trypsin);
-        digestionPreferences.setnMissedCleavages(enzymeName, 2);
-        return digestionPreferences;
+        digestionParameters.addEnzyme(trypsin);
+        digestionParameters.setnMissedCleavages(enzymeName, 2);
+        return digestionParameters;
     }
 
     /**
@@ -277,7 +277,7 @@ public class DigestionParameters implements Serializable {
      * Clears the parameters.
      */
     public void clear() {
-        cleavagePreference = null;
+        cleavageParameter = null;
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
@@ -349,21 +349,21 @@ public class DigestionParameters implements Serializable {
     }
 
     /**
-     * Returns the cleavage preferences.
+     * Returns the cleavage parameters.
      *
-     * @return the cleavage preferences
+     * @return the cleavage parameters
      */
-    public CleavagePreference getCleavagePreference() {
-        return cleavagePreference;
+    public CleavageParameter getCleavageParameter() {
+        return cleavageParameter;
     }
 
     /**
-     * Sets the cleavage preferences.
+     * Sets the cleavage parameters.
      *
-     * @param cleavagePreference the cleavage preferences
+     * @param cleavageParameter the cleavage parameters
      */
-    public void setCleavagePreference(CleavagePreference cleavagePreference) {
-        this.cleavagePreference = cleavagePreference;
+    public void setCleavageParameter(CleavageParameter cleavageParameter) {
+        this.cleavageParameter = cleavageParameter;
     }
 
     /**
@@ -372,12 +372,12 @@ public class DigestionParameters implements Serializable {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        DigestionParameters defaultPreferences = DigestionParameters.getDefaultPreferences();
+        DigestionParameters defaultParameters = DigestionParameters.getDefaultParameters();
         StringBuilder stringBuilder = new StringBuilder();
         String newLine = System.getProperty("line.separator");
-        if (!defaultPreferences.isSameAs(this)) {
+        if (!defaultParameters.isSameAs(this)) {
             stringBuilder.append("Digestion: ");
-            switch (cleavagePreference) { // @TODO: can be null..?
+            switch (cleavageParameter) { // @TODO: can be null..?
                 case wholeProtein:
                     stringBuilder.append("Whole Protein").append(newLine);
                     break;
@@ -399,7 +399,7 @@ public class DigestionParameters implements Serializable {
                     }
                     break;
                 default:
-                    throw new UnsupportedOperationException("Description not implemented for cleavage preference " + cleavagePreference + ".");
+                    throw new UnsupportedOperationException("Description not implemented for cleavage parameter " + cleavageParameter + ".");
             }
             stringBuilder.append(".").append(newLine);
         }
@@ -407,19 +407,19 @@ public class DigestionParameters implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether these digestion preferences are the
-     * same as the given other preferences.
+     * Returns a boolean indicating whether these digestion parameters are the
+     * same as the given other parameters.
      *
-     * @param otherDigestionPreferences the other digestion preferences
+     * @param otherDigestionParameters the other digestion parameters
      *
-     * @return a boolean indicating whether these digestion preferences are the
-     * same as the given other preferences
+     * @return a boolean indicating whether these digestion parameters are the
+     * same as the given other parameters
      */
-    public boolean isSameAs(DigestionParameters otherDigestionPreferences) {
-        if (cleavagePreference != otherDigestionPreferences.getCleavagePreference()) {
+    public boolean isSameAs(DigestionParameters otherDigestionParameters) {
+        if (cleavageParameter != otherDigestionParameters.getCleavageParameter()) {
             return false;
         }
-        ArrayList<Enzyme> otherEnzymes = otherDigestionPreferences.getEnzymes();
+        ArrayList<Enzyme> otherEnzymes = otherDigestionParameters.getEnzymes();
         if ((enzymes != null && otherEnzymes == null)
                 || (enzymes == null && otherEnzymes != null)) {
             return false;
@@ -440,8 +440,8 @@ public class DigestionParameters implements Serializable {
                 return false;
             }
             for (String enzymeName : enzymeNames) {
-                if (getSpecificity(enzymeName) != otherDigestionPreferences.getSpecificity(enzymeName)
-                        || !getnMissedCleavages(enzymeName).equals(otherDigestionPreferences.getnMissedCleavages(enzymeName))) {
+                if (getSpecificity(enzymeName) != otherDigestionParameters.getSpecificity(enzymeName)
+                        || !getnMissedCleavages(enzymeName).equals(otherDigestionParameters.getnMissedCleavages(enzymeName))) {
                     return false;
                 }
             }
@@ -456,7 +456,7 @@ public class DigestionParameters implements Serializable {
      */
     public String getXTandemFormat() {
 
-        switch (cleavagePreference) {
+        switch (cleavageParameter) {
             case wholeProtein:
                 return "";
             case unSpecific:
@@ -512,7 +512,7 @@ public class DigestionParameters implements Serializable {
                 }
                 return result.toString();
             default:
-                throw new UnsupportedOperationException("X!Tandem format not implemented for cleavage preference " + cleavagePreference + ".");
+                throw new UnsupportedOperationException("X!Tandem format not implemented for cleavage parameter " + cleavageParameter + ".");
         }
     }
 

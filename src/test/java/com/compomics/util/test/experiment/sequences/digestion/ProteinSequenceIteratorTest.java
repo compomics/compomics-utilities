@@ -36,7 +36,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         DigestionParameters digestionPreferences = new DigestionParameters();
         
         // No digestion
-        digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.wholeProtein);
+        digestionPreferences.setCleavageParameter(DigestionParameters.CleavageParameter.wholeProtein);
         
         // No modification
         SequenceIterator sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -98,7 +98,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         
         // Unspecific digestion
-        digestionPreferences.setCleavagePreference(DigestionParameters.CleavagePreference.unSpecific);
+        digestionPreferences.setCleavageParameter(DigestionParameters.CleavageParameter.unSpecific);
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -174,7 +174,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         
         // Trypsin digestion
-        digestionPreferences = DigestionParameters.getDefaultPreferences();
+        digestionPreferences = DigestionParameters.getDefaultParameters();
         
         // No modification
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);

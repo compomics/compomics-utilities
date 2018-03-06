@@ -39,7 +39,7 @@ public enum IdentificationParametersCLIParams {
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance, default is '0.5'.", false, true),
-    DIGESTION("digestion", "The type of digestion to consider: " + DigestionParameters.CleavagePreference.getCommandLineDescription() + ". Default is 0.", false, true),
+    DIGESTION("digestion", "The type of digestion to consider: " + DigestionParameters.CleavageParameter.getCommandLineDescription() + ". Default is 0.", false, true),
     ENZYME("enzyme", "Enzyme used, default is 'Trypsin'. If more than one enzyme was used, please provide them as comma separated list with quotes, e.g. \"Trypsin, Glu-C\". See EnzymesCLI to list and edit the enzymes.", false, true),
     MC("mc", "Number of allowed missed cleavages, default is '2'. If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"2, 1\".", false, true),
     SPECIFICITY("specificity", "Specificity of the enzyme." + DigestionParameters.Specificity.getCommandLineDescription() + ". If more than one enzyme was used, please provide the missed cleavages for every enzyme in the same order as comma separated list with quotes, e.g. \"0, 1\".", false, true),

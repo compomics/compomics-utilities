@@ -61,7 +61,7 @@ public class IteratorFactory {
      * interrupted
      */
     public SequenceIterator getSequenceIterator(String sequence, DigestionParameters digestionPreferences, double massMin, double massMax) throws InterruptedException {
-        switch (digestionPreferences.getCleavagePreference()) {
+        switch (digestionPreferences.getCleavageParameter()) {
             case unSpecific:
                 if (AminoAcidSequence.hasCombination(sequence)) {
                     return new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax);
@@ -83,7 +83,7 @@ public class IteratorFactory {
                     return new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
                 }
             default:
-                throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavagePreference() + " not supported.");
+                throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavageParameter() + " not supported.");
         }
     }
 }

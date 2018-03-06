@@ -23,8 +23,8 @@ public class FractionParameters implements Serializable {
      */
     private Double proteinConfidenceMwPlots = 95.0;
     /**
-     * The list of fraction molecular weights. The key is the fraction file
-     * path.
+     * The list of fraction molecular weights. The key is the fraction
+     * name.
      */
     private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<>();
 
@@ -91,7 +91,7 @@ public class FractionParameters implements Serializable {
 
     /**
      * Set the user provided molecular weight ranges for the fractions. The key
-     * is the fraction file path.
+     * is the fraction file name.
      *
      * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to
      * set

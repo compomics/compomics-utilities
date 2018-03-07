@@ -13,8 +13,8 @@ import com.compomics.util.parameters.identification.search.ModificationParameter
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.IntStream;
 
 /**
@@ -910,11 +910,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
-     * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
-
+     * @param displayedModifications the modifications to display
+     * 
 * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName, HashSet<String> displayedModifications) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -932,6 +932,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 for (ModificationMatch modificationMatch : modifications.get(modSite)) {
 
                     String modName = modificationMatch.getModification();
+                    
+                    if (displayedModifications == null || displayedModifications.contains(modName)) {
 
                     if (modificationMatch.getVariable()) {
 
@@ -957,7 +959,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
                         }
 
-                    } else if (!excludeAllFixedPtms) {
+                    } else {
 
                         if (!fixedModificationSites.containsKey(modSite)) {
 
@@ -967,6 +969,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
                         fixedModificationSites.get(modSite).add(modName);
 
+                    }
                     }
                 }
             }

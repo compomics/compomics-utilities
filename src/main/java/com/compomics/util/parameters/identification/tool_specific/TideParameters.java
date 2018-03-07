@@ -53,7 +53,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      */
     private String keepTerminalAminoAcids = "NC"; // N|C|NC|none
     /**
-     * The seeed of the random number generator with the given unsigned integer
+     * The seed of the random number generator with the given unsigned integer
      * when generating the decoy decoys. When given the string "time," the seed
      * is set with the system time.
      */
@@ -102,7 +102,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      */
     private Double minSpectrumMz = 0.0;
     /**
-     * The maximum spectrum m/z to search for. Null if not maximum.
+     * The maximum spectrum m/z to search for. Null if no maximum.
      */
     private Double maxSpectrumMz = null;
     /**

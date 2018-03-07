@@ -19,7 +19,7 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.modification.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
-import com.compomics.util.parameters.identification.search.DigestionParameters.CleavagePreference;
+import com.compomics.util.parameters.identification.search.DigestionParameters.CleavageParameter;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.parameters.tools.UtilitiesUserParameters;
@@ -167,7 +167,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
-            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
+            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultParameters());
         } else {
             this.searchParameters = searchParameters;
             this.selectedFastaFile = searchParameters.getFastaFile();
@@ -221,7 +221,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
-            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
+            this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultParameters());
         } else {
             this.searchParameters = searchParameters;
             this.selectedFastaFile = searchParameters.getFastaFile();
@@ -277,8 +277,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         // set the settings editable or not
         digestionCmb.setEnabled(editable);
-        enzymesCmb.setEnabled(editable && ((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme);
-        specificityComboBox.setEnabled(editable && ((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme);
+        enzymesCmb.setEnabled(editable && ((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme);
+        specificityComboBox.setEnabled(editable && ((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme);
         precursorIonAccuracyTxt.setEditable(editable);
         precursorIonUnit.setEnabled(editable);
         fragmentIon1Cmb.setEnabled(editable);
@@ -573,7 +573,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         digestionLabel.setText("Digestion");
 
         digestionCmb.setMaximumRowCount(15);
-        digestionCmb.setModel(new DefaultComboBoxModel(CleavagePreference.values()));
+        digestionCmb.setModel(new DefaultComboBoxModel(CleavageParameter.values()));
         digestionCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 digestionCmbActionPerformed(evt);
@@ -1043,7 +1043,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 820, 0);
+        modificationsPanel.setBounds(0, 0, 820, 316);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1944,11 +1944,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private void digestionCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_digestionCmbActionPerformed
 
-        enzymesCmb.setEnabled(((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme);
-        maxMissedCleavagesTxt.setEnabled((((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme));
-        specificityComboBox.setEnabled(((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme);
+        enzymesCmb.setEnabled(((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme);
+        maxMissedCleavagesTxt.setEnabled((((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme));
+        specificityComboBox.setEnabled(((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme);
 
-        if (!(((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == DigestionParameters.CleavagePreference.enzyme)) {
+        if (!(((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == DigestionParameters.CleavageParameter.enzyme)) {
             enzymesCmb.setSelectedIndex(0);
         }
 
@@ -2186,14 +2186,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         DigestionParameters digestionPreferences = searchParameters.getDigestionParameters();
 
-        if (digestionPreferences.getCleavagePreference() != null) {
+        if (digestionPreferences.getCleavageParameter() != null) {
 
-            digestionCmb.setSelectedItem(digestionPreferences.getCleavagePreference());
+            digestionCmb.setSelectedItem(digestionPreferences.getCleavageParameter());
 
         }
 
         // set enzyme
-        if (digestionPreferences.getCleavagePreference() == CleavagePreference.enzyme) {
+        if (digestionPreferences.getCleavageParameter() == CleavageParameter.enzyme) {
 
             if (digestionPreferences.hasEnzymes()) {
 
@@ -2424,7 +2424,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         // valdiate that an enzyme is selected
-        if (((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == CleavagePreference.enzyme && enzymesCmb.getSelectedIndex() == 0) {
+        if (((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == CleavageParameter.enzyme && enzymesCmb.getSelectedIndex() == 0) {
 
             if (showMessage && valid) {
 
@@ -2439,7 +2439,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         // validate missed cleavages
-        if (((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem()) == CleavagePreference.enzyme) {
+        if (((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == CleavageParameter.enzyme) {
 
             valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
 
@@ -2469,10 +2469,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         DigestionParameters digestionPreferences = new DigestionParameters();
 
         // set the digestion type
-        digestionPreferences.setCleavagePreference((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem());
+        digestionPreferences.setCleavageParameter((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem());
 
         // set the enzyme
-        if ((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem() == DigestionParameters.CleavagePreference.enzyme) {
+        if ((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem() == DigestionParameters.CleavageParameter.enzyme) {
             Enzyme enzyme = enzymeFactory.getEnzyme(enzymesCmb.getSelectedItem().toString());
             digestionPreferences.addEnzyme(enzyme);
 
@@ -2577,7 +2577,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         } else {
             cometParameters.setIsotopeCorrection(0);
         }
-        if ((DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem() == DigestionParameters.CleavagePreference.enzyme) {
+        if ((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem() == DigestionParameters.CleavageParameter.enzyme) {
             DigestionParameters.Specificity specificity = (DigestionParameters.Specificity) specificityComboBox.getSelectedItem();
             switch (specificity) {
                 case specific:
@@ -2603,8 +2603,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             msgfParameters = new MsgfParameters();
             searchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), msgfParameters);
         }
-        DigestionParameters.CleavagePreference cleavagePreference = (DigestionParameters.CleavagePreference) digestionCmb.getSelectedItem();
-        if (cleavagePreference == DigestionParameters.CleavagePreference.enzyme) {
+        DigestionParameters.CleavageParameter cleavagePreference = (DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem();
+        if (cleavagePreference == DigestionParameters.CleavageParameter.enzyme) {
             DigestionParameters.Specificity specificity = (DigestionParameters.Specificity) specificityComboBox.getSelectedItem();
             switch (specificity) {
                 case specific:
@@ -2618,7 +2618,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
-        } else if (cleavagePreference == CleavagePreference.unSpecific) {
+        } else if (cleavagePreference == CleavageParameter.unSpecific) {
             msgfParameters.setNumberTolerableTermini(0);
         }
 
@@ -2628,7 +2628,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             myriMatchParameters = new MyriMatchParameters();
             searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
         }
-        if (cleavagePreference == DigestionParameters.CleavagePreference.enzyme) {
+        if (cleavagePreference == DigestionParameters.CleavageParameter.enzyme) {
             DigestionParameters.Specificity specificity = (DigestionParameters.Specificity) specificityComboBox.getSelectedItem();
             switch (specificity) {
                 case specific:
@@ -2642,7 +2642,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
-        } else if (cleavagePreference == CleavagePreference.unSpecific) {
+        } else if (cleavagePreference == CleavageParameter.unSpecific) {
             myriMatchParameters.setMinTerminiCleavages(0);
         }
 

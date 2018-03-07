@@ -120,7 +120,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
-            for (DigestionParameters.CleavagePreference cleavagePreference : DigestionParameters.CleavagePreference.values()) {
+            for (DigestionParameters.CleavageParameter cleavagePreference : DigestionParameters.CleavageParameter.values()) {
                 possibleValues.add(cleavagePreference.index + "");
             }
             if (!CommandParameter.isInList(IdentificationParametersCLIParams.DIGESTION.id, arg, possibleValues)) {
@@ -1751,17 +1751,17 @@ public class IdentificationParametersInputBean {
         }
         DigestionParameters digestionPreferences = searchParameters.getDigestionParameters();
         if (digestionPreferences == null) {
-            digestionPreferences = DigestionParameters.getDefaultPreferences();
+            digestionPreferences = DigestionParameters.getDefaultParameters();
             searchParameters.setDigestionParameters(digestionPreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             Integer option = new Integer(arg);
-            DigestionParameters.CleavagePreference cleavagePreference = DigestionParameters.CleavagePreference.getCleavagePreferences(option);
-            if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() != cleavagePreference) {
+            DigestionParameters.CleavageParameter cleavagePreference = DigestionParameters.CleavageParameter.getCleavageParameters(option);
+            if (digestionPreferences.getCleavageParameter() != null && digestionPreferences.getCleavageParameter() != cleavagePreference) {
                 digestionPreferences.clear();
             }
-            digestionPreferences.setCleavagePreference(cleavagePreference);
+            digestionPreferences.setCleavageParameter(cleavagePreference);
         }
 
         if (commandLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
@@ -1807,7 +1807,7 @@ public class IdentificationParametersInputBean {
                 }
                 digestionPreferences.setSpecificity(enzymeName, specificity);
             }
-        } else if (digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme && !digestionPreferences.hasEnzymes()) {
+        } else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme && !digestionPreferences.hasEnzymes()) {
             String enzymeName = "Trypsin";
             Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
             digestionPreferences.addEnzyme(enzyme);

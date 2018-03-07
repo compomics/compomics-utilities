@@ -800,7 +800,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
 
-        if (digestionParameters != null && !DigestionParameters.getDefaultPreferences().equals(digestionParameters)) {
+        if (digestionParameters != null && !DigestionParameters.getDefaultParameters().equals(digestionParameters)) {
             output.append(digestionParameters.getShortDescription());
         }
 
@@ -897,7 +897,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         output.append(newLine);
 
-        if (digestionParameters.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme) {
+        if (digestionParameters.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
             ArrayList<Enzyme> enzymes = digestionParameters.getEnzymes();
             for (int i = 0; i < enzymes.size(); i++) {
                 Enzyme tempEnzyme = enzymes.get(i);
@@ -909,7 +909,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 output.append(newLine);
             }
         } else {
-            output.append("ENZYME").append("=").append(digestionParameters.getCleavagePreference().name);
+            output.append("ENZYME").append("=").append(digestionParameters.getCleavageParameter().name);
         }
 
         output.append("FIXED_MODIFICATIONS=");

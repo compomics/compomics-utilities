@@ -484,7 +484,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return digestionPreferences.getCleavagePreference() == DigestionParameters.CleavagePreference.enzyme
+        return digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme
                 ? digestionPreferences.getEnzymes().stream()
                         .mapToInt(enzyme -> getNMissedCleavages(enzyme))
                         .min().orElse(0)

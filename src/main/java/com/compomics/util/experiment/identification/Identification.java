@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -53,11 +54,16 @@ public class Identification extends ExperimentObject {
     /**
      * A map linking protein accessions to all their protein matches keys.
      */
-    protected HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
+    private final HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
+    /**
+     * The spectrum files that were used for the psms.
+     * @TODO: allow multiple files per fraction.
+     */
+    private ArrayList<String> fractions = new ArrayList<>();
     /**
      * The directory where the database stored.
      */
-    protected String dbDirectory;
+    private String dbDirectory;
     /**
      * The database which will contain the objects.
      */
@@ -643,5 +649,39 @@ public class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, waitingHandler, false);
     }
+    
+    /**
+     * Adds a fraction, fractions correspond to the PSM files names. Fractions are ordered alphabetically upon adding of a new fraction.
+     * 
+     * @param fraction the fraction name
+     */
+    public void addFraction(String fraction) {
+        
+        TreeSet orderedFractions = new TreeSet(fractions);
+        orderedFractions.add(fraction);
+        
+        setFractions(new ArrayList<>(orderedFractions));
+        
+    }
 
+    /**
+     * Returns the fractions.
+     * 
+     * @return the fractions
+     */
+    public ArrayList<String> getFractions() {
+        return fractions;
+    }
+    
+    /**
+     * Sets the fractions.
+     * 
+     * @param fractions the fractions
+     */
+    public void setFractions(ArrayList<String> fractions) {
+        
+        this.fractions = fractions;
+        
+    }
+    
 }

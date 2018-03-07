@@ -65,7 +65,7 @@ public class TestSearchParameterMarshaller {
         parameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         parameters.setPrecursorAccuracy(0.5);
         parameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
-        parameters.setDigestionParameters(DigestionParameters.getDefaultPreferences());
+        parameters.setDigestionParameters(DigestionParameters.getDefaultParameters());
         parameters.setMaxChargeSearched(5);
         parameters.setMinChargeSearched(1);
         parameters.setModificationParameters(createMockUpPTMSettings());

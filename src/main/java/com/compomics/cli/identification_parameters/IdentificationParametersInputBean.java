@@ -1566,14 +1566,6 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
-            File fastaFile = new File(arg);
-            if (!fastaFile.exists()) {
-                System.out.println(System.getProperty("line.separator") + "Protein inference database not found." + System.getProperty("line.separator"));
-                return false;
-            }
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id, arg)) {
@@ -1818,12 +1810,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
             searchParameters.setFastaFile(fastaFile);
-
-            // also update the protein inference database if that option is not set
-            if (identificationParameters != null && !commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
-                ProteinInferenceParameters proteinInferencePreferences = identificationParameters.getProteinInferenceParameters();
-                proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
-            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
@@ -3366,11 +3352,6 @@ public class IdentificationParametersInputBean {
         // Protein inference parameters
         //////////////////////////////////
         ProteinInferenceParameters proteinInferencePreferences = identificationParameters.getProteinInferenceParameters();
-        if (commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
-            File fastaFile = new File(arg);
-            proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
             Integer intValue = new Integer(arg);

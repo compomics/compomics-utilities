@@ -1,7 +1,6 @@
 package com.compomics.util.parameters.identification;
 
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.parameters.identification.advanced.ValidationQcParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters;
 import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
 import com.compomics.util.parameters.identification.advanced.FractionParameters;
@@ -12,12 +11,10 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.parameters.identification.advanced.IdMatchValidationParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
-import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import java.io.IOException;
@@ -642,11 +639,6 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             
             proteinInferenceParameters = new ProteinInferenceParameters();
             
-            if (searchParameters != null && searchParameters.getFastaFile() != null) {
-                
-                proteinInferenceParameters.setProteinSequenceDatabase(searchParameters.getFastaFile());
-                
-            }
         }
         
         if (idValidationParameters == null) {

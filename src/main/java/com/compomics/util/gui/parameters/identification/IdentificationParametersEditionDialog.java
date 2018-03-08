@@ -243,9 +243,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         peptideAssumptionFilter = identificationParameters.getPeptideAssumptionFilter();
         ptmScoringPreferences = identificationParameters.getModificationLocalizationParameters();
         proteinInferencePreferences = identificationParameters.getProteinInferenceParameters();
-        if (proteinInferencePreferences.getProteinSequenceDatabase() == null && searchParameters.getFastaFile() != null) {
-            proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
-        }
         idValidationPreferences = identificationParameters.getIdValidationParameters();
         fractionSettings = identificationParameters.getFractionParameters();
     }

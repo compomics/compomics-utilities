@@ -332,7 +332,6 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Protein inference parameters
     //////////////////////////////////
-    DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", false, true),
     SIMPLIFY_GOUPS("simplify_groups", "Simplify protein groups, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_EVIDENCE("simplify_evidence", "Simplify protein groups based on the Uniprot protein evidence, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_UNCHARACTERIZED("simplify_uncharacterized", "Simplify protein groups based on the protein characterization, 1: yes, 0: no, default is 1.", false, true),
@@ -652,7 +651,11 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id) + " " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.description + "\n";
 
         output += "\n\nProtein Inference:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DB_PI.id) + " " + IdentificationParametersCLIParams.DB_PI.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.description + "\n";
 
         output += "\n\nValidation Levels:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PSM_FDR.id) + " " + IdentificationParametersCLIParams.PSM_FDR.description + "\n";

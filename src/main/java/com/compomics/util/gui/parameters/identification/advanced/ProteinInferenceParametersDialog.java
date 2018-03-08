@@ -45,10 +45,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      */
     private boolean editable;
     /**
-     * The selected fasta file.
-     */
-    private File selectedFastaFile = null;
-    /**
      * The parameters used to parse the fasta file.
      */
     private FastaParameters fastaParameters = null;
@@ -76,7 +72,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
         this.lastSelectedFolder = lastSelectedFolder;
         this.editable = editable;
 
-        selectedFastaFile = proteinInferencePreferences.getProteinSequenceDatabase();
         fastaParameters = proteinInferencePreferences.getFastaParameters();
 
         initComponents();
@@ -120,12 +115,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
 
-        if (!editable) {
-
-            editDatabaseDetailsButton.setText("View");
-
-        }
-
         simplifyGroupsCmb.setEnabled(editable);
         simplifyEvidenceCmb.setEnabled(editable);
         simplifyCharacterizationCmb.setEnabled(editable);
@@ -147,13 +136,8 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * display
      */
     private void populateGUI(ProteinInferenceParameters proteinInferencePreferences) {
-
-        if (proteinInferencePreferences.getProteinSequenceDatabase() != null) {
-
-            databaseSettingsTxt.setText(proteinInferencePreferences.getProteinSequenceDatabase().getAbsolutePath());
+        
             okButton.setEnabled(true);
-
-        }
 
         if (proteinInferencePreferences.getSimplifyGroups()) {
 
@@ -218,7 +202,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     public ProteinInferenceParameters getProteinInferencePreferences() {
 
         ProteinInferenceParameters proteinInferencePreferences = new ProteinInferenceParameters();
-        proteinInferencePreferences.setProteinSequenceDatabase(selectedFastaFile);
         proteinInferencePreferences.setFastaParameters(fastaParameters);
 
         proteinInferencePreferences.setSimplifyGroups(simplifyGroupsCmb.getSelectedIndex() == 0);
@@ -251,10 +234,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        dataBasePanelSettings = new javax.swing.JPanel();
-        databaseSettingsLbl = new javax.swing.JLabel();
-        databaseSettingsTxt = new javax.swing.JTextField();
-        editDatabaseDetailsButton = new javax.swing.JButton();
         proteinGroupPanel = new javax.swing.JPanel();
         simplifyGroupsLbl = new javax.swing.JLabel();
         simplifyEnzymaticityLbl = new javax.swing.JLabel();
@@ -292,44 +271,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
                 okButtonActionPerformed(evt);
             }
         });
-
-        dataBasePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Database"));
-        dataBasePanelSettings.setOpaque(false);
-
-        databaseSettingsLbl.setText("Database (FASTA)");
-
-        databaseSettingsTxt.setEditable(false);
-
-        editDatabaseDetailsButton.setText("Edit");
-        editDatabaseDetailsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editDatabaseDetailsButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout dataBasePanelSettingsLayout = new javax.swing.GroupLayout(dataBasePanelSettings);
-        dataBasePanelSettings.setLayout(dataBasePanelSettingsLayout);
-        dataBasePanelSettingsLayout.setHorizontalGroup(
-            dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dataBasePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(databaseSettingsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(databaseSettingsTxt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editDatabaseDetailsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        dataBasePanelSettingsLayout.setVerticalGroup(
-            dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dataBasePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(databaseSettingsLbl)
-                    .addComponent(editDatabaseDetailsButton)
-                    .addComponent(databaseSettingsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         proteinGroupPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Groups Simplification"));
         proteinGroupPanel.setOpaque(false);
@@ -452,16 +393,13 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(proteinGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -503,33 +441,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    /**
-     * Edit the database.
-     *
-     * @param evt
-     */
-    private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
-
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, selectedFastaFile, fastaParameters, lastSelectedFolder, editable, normalIcon, waitingIcon);
-
-        boolean success = sequenceDbDetailsDialog.selectDB(true);
-
-        if (success) {
-
-            sequenceDbDetailsDialog.setVisible(true);
-
-            if (!sequenceDbDetailsDialog.isCanceled()) {
-
-                selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
-                fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
-
-                databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
-                okButton.setEnabled(true);
-
-            }
-        }
-    }//GEN-LAST:event_editDatabaseDetailsButtonActionPerformed
 
     /**
      * Cancel the dialog.
@@ -589,10 +500,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel dataBasePanelSettings;
-    private javax.swing.JLabel databaseSettingsLbl;
-    private javax.swing.JTextField databaseSettingsTxt;
-    private javax.swing.JButton editDatabaseDetailsButton;
     private javax.swing.JButton helpJButton;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel proteinGroupPanel;

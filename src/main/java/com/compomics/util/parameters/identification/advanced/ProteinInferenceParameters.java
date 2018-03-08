@@ -17,10 +17,6 @@ public class ProteinInferenceParameters implements Serializable {
      */
     static final long serialVersionUID = 447785006299636157L;
     /**
-     * The database to use for protein inference.
-     */
-    private File proteinSequenceDatabase;
-    /**
      * The parameters used to parse the fasta file.
      */
     private FastaParameters fastaParameters = null;
@@ -46,24 +42,6 @@ public class ProteinInferenceParameters implements Serializable {
     private boolean simplifyGroupsVariants = true;
 
     /**
-     * Returns the path to the database used.
-     *
-     * @return the path to the database used
-     */
-    public File getProteinSequenceDatabase() {
-        return proteinSequenceDatabase;
-    }
-
-    /**
-     * Sets the path to the database used.
-     *
-     * @param proteinSequenceDatabase the path to the database used
-     */
-    public void setProteinSequenceDatabase(File proteinSequenceDatabase) {
-        this.proteinSequenceDatabase = proteinSequenceDatabase;
-    }
-
-    /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
@@ -73,12 +51,6 @@ public class ProteinInferenceParameters implements Serializable {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         output.append("DB: ");
-        if (proteinSequenceDatabase != null) {
-            output.append(proteinSequenceDatabase.getName());
-        } else {
-            output.append("not set");
-        }
-        output.append(".").append(newLine);
         output.append("Simplify Groups: ").append(getSimplifyGroups()).append(newLine);
         output.append("Simplify on evidence: ").append(getSimplifyGroupsEvidence()).append(newLine);
         output.append("Simplify uncharacterized: ").append(getSimplifyGroupsUncharacterized()).append(newLine);
@@ -102,11 +74,6 @@ public class ProteinInferenceParameters implements Serializable {
             return false;
         }
 
-        if ((proteinSequenceDatabase != null && otherProteinInferencePreferences.getProteinSequenceDatabase() == null)
-                || (proteinSequenceDatabase == null && otherProteinInferencePreferences.getProteinSequenceDatabase() != null)) {
-            return false;
-        }
-
         if (getSimplifyGroups() != otherProteinInferencePreferences.getSimplifyGroups()) {
             return false;
         }
@@ -124,10 +91,6 @@ public class ProteinInferenceParameters implements Serializable {
         }
 
         if (getSimplifyGroupsVariants()!= otherProteinInferencePreferences.getSimplifyGroupsVariants()) {
-            return false;
-        }
-
-        if (proteinSequenceDatabase != null && !proteinSequenceDatabase.equals(otherProteinInferencePreferences.getProteinSequenceDatabase())) {
             return false;
         }
 

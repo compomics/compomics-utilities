@@ -21,10 +21,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     private String modification;
     /**
-     * Is the modification variable?
-     */
-    private boolean variable;
-    /**
      * The location in the sequence, 1 is the first residue.
      */
     private int modifiedSite;
@@ -43,14 +39,12 @@ public class ModificationMatch extends ExperimentObject {
      * Constructor for a modification match.
      *
      * @param theoreticPtm the theoretic PTM
-     * @param variable true for variable modifications, false otherwise
      * @param modifiedSite the position of the modification in the sequence, 1
      * is the first residue
      */
-    public ModificationMatch(String theoreticPtm, boolean variable, int modifiedSite) {
+    public ModificationMatch(String theoreticPtm, int modifiedSite) {
         
         this.modification = theoreticPtm;
-        this.variable = variable;
         this.modifiedSite = modifiedSite;
         
     }
@@ -59,18 +53,6 @@ public class ModificationMatch extends ExperimentObject {
      * Default constructor for a modification match.
      */
     public ModificationMatch() {
-    }
-
-    /**
-     * Returns a boolean indicating if the modification is variable.
-     *
-     * @return a boolean indicating if the modification is variable
-     */
-    public boolean getVariable() {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
-        return variable;
     }
 
     /**
@@ -174,13 +156,6 @@ public class ModificationMatch extends ExperimentObject {
         
         this.inferred = inferred;
     }
-    
-    public void setVariable(boolean variable){
-        
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        
-        this.variable = variable;
-    }
 
     /**
      * Indicates whether this modification match is the same of another one. The
@@ -196,10 +171,8 @@ public class ModificationMatch extends ExperimentObject {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
-        if (!modification.equals(anotherModificationMatch.getModification())) {
-            return false;
-        }
-        return variable == anotherModificationMatch.getVariable();
+        return modification.equals(anotherModificationMatch.getModification());
+        
     }
     
     /**
@@ -211,7 +184,7 @@ public class ModificationMatch extends ExperimentObject {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
-        ModificationMatch newMatch = new ModificationMatch(modification, variable, modifiedSite);
+        ModificationMatch newMatch = new ModificationMatch(modification, modifiedSite);
         newMatch.setConfident(confident);
         newMatch.setInferred(inferred);
         

@@ -190,10 +190,8 @@ public class AminoAcidPattern extends ExperimentObject {
      * instance (S, T, Y)
      *
      * @param targetResidues a list of targeted residues
-     * @throws IllegalArgumentException exception thrown whenever a letter is
-     * not recognized as amino acid
      */
-    public AminoAcidPattern(ArrayList<String> targetResidues) throws IllegalArgumentException {
+    public AminoAcidPattern(ArrayList<String> targetResidues) {
         
         ArrayList<Character> aminoAcids = targetResidues.stream()
                 .map(aa -> aa.charAt(0))
@@ -248,7 +246,11 @@ public class AminoAcidPattern extends ExperimentObject {
      */
     public int getMinIndex() {
         
-        return Math.min(residueTargeted.keySet().stream().mapToInt(index -> (int) index).min().orElse(0), 0);
+        return Math.min(residueTargeted.keySet().stream()
+                .mapToInt(index -> index)
+                .min()
+                .orElse(0)
+                , 0);
     }
     
     /**
@@ -258,7 +260,11 @@ public class AminoAcidPattern extends ExperimentObject {
      */
     public int getMaxIndex() {
         
-        return Math.max(residueTargeted.keySet().stream().mapToInt(index -> (int) index).max().orElse(0), 0);
+        return Math.max(residueTargeted.keySet().stream()
+                .mapToInt(index -> (int) index)
+                .max()
+                .orElse(0)
+                , 0);
     }
 
     /**
@@ -569,7 +575,7 @@ public class AminoAcidPattern extends ExperimentObject {
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public int[] getIndexes(String input, SequenceMatchingParameters sequenceMatchingPreferences) {
         
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
@@ -581,7 +587,7 @@ public class AminoAcidPattern extends ExperimentObject {
             
         }
         
-        return result;
+        return result.stream().mapToInt(a -> a).toArray();
     }
 
     /**
@@ -857,21 +863,19 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @return a boolean indicating whether the pattern is found in the given
-     * amino acid sequence
+     * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino acid sequence.
+     * Indicates whether the pattern matches the given amino acid sequence
      *
      * @param aminoAcidPattern the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @return a boolean indicating whether the pattern is found in the given
-     * amino acid sequence
+     * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
         return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;

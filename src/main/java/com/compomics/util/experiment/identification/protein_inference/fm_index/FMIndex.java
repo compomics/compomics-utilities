@@ -427,7 +427,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             if (modificationPatternNames.containsKey(modificationMatch.getModification())) {
                 int[] ptmPatternData = modificationPatternNames.get(modificationMatch.getModification()); //(ptmPattern index, starting position, pattern length)
                 Long[] masks = modificationPatterns.get(ptmPatternData[0]);
-                int textPos = modificationMatch.getModificationSite() - 1;
+                int textPos = modificationMatch.getSite() - 1;
                 if (textPos + ptmPatternData[1] < 0) {
                     return false; // TODO: handle this
                 }
@@ -4244,7 +4244,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                     } else {
 
-                        modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), content.length - currentContent.modification.getModificationSite() + 1));
+                        modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), content.length - currentContent.modification.getSite() + 1));
 
                     }
                 }
@@ -4270,7 +4270,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
             for (ModificationMatch modificationMatch : currentContent.modifications) {
 
-                modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+                modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getSite() + content.length - currentContent.length));
 
             }
 
@@ -4294,7 +4294,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                 for (ModificationMatch modificationMatch : modifications) {
 
-                    modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
+                    modificationMatch.setSite(peptide.length() - modificationMatch.getSite() + 1);
 
                 }
 
@@ -4405,7 +4405,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                             for (ModificationMatch m : currentModifications) {
 
-                                newModifications.add(new ModificationMatch(m.getModification(), m.getVariable(), m.getModificationSite()));
+                                newModifications.add(new ModificationMatch(m.getModification(), m.getVariable(), m.getSite()));
 
                             }
 
@@ -4776,7 +4776,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             }
                         } else {
 
-                            modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), currentContent.modification.getModificationSite() + content.length - currentContent.length + 1));
+                            modifications.add(new ModificationMatch(currentContent.modification.getModification(), currentContent.modification.getVariable(), currentContent.modification.getSite() + content.length - currentContent.length + 1));
 
                         }
                     }
@@ -4790,7 +4790,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                 for (ModificationMatch modificationMatch : currentContent.modifications) {
 
-                    modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite() + content.length - currentContent.length));
+                    modifications.add(new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getSite() + content.length - currentContent.length));
 
                 }
 
@@ -4840,7 +4840,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                     for (ModificationMatch modificationMatch : modifications) {
 
-                        modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
+                        modificationMatch.setSite(peptide.length() - modificationMatch.getSite() + 1);
 
                     }
 

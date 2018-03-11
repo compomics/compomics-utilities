@@ -190,7 +190,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                     for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
                                         boolean ptmFound = false;
                                         for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
-                                            if (originalMatch.getModification().equals(otherMatch.getModification()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
+                                            if (originalMatch.getModification().equals(otherMatch.getModification()) && originalMatch.getSite() == otherMatch.getSite()) {
                                                 ptmFound = true;
                                                 break;
                                             }

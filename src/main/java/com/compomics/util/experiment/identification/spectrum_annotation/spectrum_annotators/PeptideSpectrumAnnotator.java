@@ -352,8 +352,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         for (ModificationMatch modMatch : modificationMatches) {
 
             Modification ptm = modificationFactory.getModification(modMatch.getModification());
-            aaMin = modMatch.getModificationSite();
-            aaMax = sequence.length() - modMatch.getModificationSite() + 1;
+            aaMin = modMatch.getSite();
+            aaMax = sequence.length() - modMatch.getSite() + 1;
 
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                 

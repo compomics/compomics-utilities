@@ -336,7 +336,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(sequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
-            aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
+            aminoAcidSequence.addModificationMatch(modificationMatch.getSite(), modificationMatch);
         }
         Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, charge, pepNovoScore);

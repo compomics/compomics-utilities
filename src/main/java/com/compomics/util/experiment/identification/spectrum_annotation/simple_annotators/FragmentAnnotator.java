@@ -83,7 +83,7 @@ public class FragmentAnnotator {
             Modification modification = modificationFactory.getModification(modificationName);
             double modificationMass = modification.getMass();
 
-            int site = modificationMatch.getModificationSite();
+            int site = modificationMatch.getSite();
 
             modificationsMasses[site - 1] += modificationMass;
 

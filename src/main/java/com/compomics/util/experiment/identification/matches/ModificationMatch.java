@@ -84,7 +84,7 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @return the index of the modification in the sequence
      */
-    public int getModificationSite() {
+    public int getSite() {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
@@ -96,7 +96,7 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @param site the index of the modification in the sequence
      */
-    public void setModificationSite(int site) {
+    public void setSite(int site) {
         
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         

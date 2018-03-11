@@ -146,7 +146,7 @@ public class PeptideUtils {
         TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(peptide.getVariableModifications())
                 .collect(Collectors.groupingBy(ModificationMatch::getModification,
                         TreeMap::new,
-                        Collectors.mapping(ModificationMatch::getModificationSite,
+                        Collectors.mapping(ModificationMatch::getSite,
                                 Collectors.toCollection(HashSet::new))));
 
         return modMap.entrySet().stream()

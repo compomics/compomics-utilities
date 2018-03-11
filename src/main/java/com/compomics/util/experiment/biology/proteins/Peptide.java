@@ -635,7 +635,7 @@ public class Peptide extends ExperimentObject {
                 ? Arrays.stream(new String[]{
             modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey(),
             MODIFICATION_LOCALIZATION_SEPARATOR,
-            Integer.toString(modificationMatch.getModificationSite())})
+            Integer.toString(modificationMatch.getSite())})
                         .collect(Collectors.joining())
                 : modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey())
                 .sorted()
@@ -1012,7 +1012,7 @@ public class Peptide extends ExperimentObject {
                     sites = new ArrayList<>();
                     modificationToPositionsMap1.put(tempMass, sites);
                 }
-                int position = modificationMatch.getModificationSite();
+                int position = modificationMatch.getSite();
                 sites.add(position);
             }
         }
@@ -1025,7 +1025,7 @@ public class Peptide extends ExperimentObject {
                     sites = new ArrayList<>();
                     modificationToPositionsMap2.put(tempMass, sites);
                 }
-                int position = modificationMatch.getModificationSite();
+                int position = modificationMatch.getSite();
                 sites.add(position);
             }
         }
@@ -1237,7 +1237,7 @@ public class Peptide extends ExperimentObject {
 
                     if (modification.getModificationType() == ModificationType.modaa) {
 
-                        int modSite = modMatch.getModificationSite();
+                        int modSite = modMatch.getSite();
 
                         if (modMatch.getConfident()) {
 

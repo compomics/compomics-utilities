@@ -237,7 +237,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
-            aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
+            aminoAcidSequence.addModificationMatch(modificationMatch.getSite(), modificationMatch);
         }
         Tag tag = new Tag(0, aminoAcidSequence, 0);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, 1, pNovoScore); // @TODO: how to get the charge?

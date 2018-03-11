@@ -103,7 +103,7 @@ public class FeaturesGenerator {
         for (int i = 0; i < modificationMatches.length; i++) {
 
             ModificationMatch modificationMatch = modificationMatches[i];
-            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getModificationSite() + 1);
+            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getSite() + 1);
             reversedModificationMatches[i] = reversedModificationMatch;
 
         }
@@ -779,7 +779,7 @@ public class FeaturesGenerator {
                 String modificationName = modificationMatch.getModification();
                 Modification modification = ptmFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
-                int modificationSite = modificationMatch.getModificationSite();
+                int modificationSite = modificationMatch.getSite();
 
                 peptideMass += modificationMass;
 

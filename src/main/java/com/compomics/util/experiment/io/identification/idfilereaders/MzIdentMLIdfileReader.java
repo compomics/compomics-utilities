@@ -1212,7 +1212,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
                     ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
-                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getModificationSite()))
+                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getSite()))
                             .toArray(ModificationMatch[]::new);
 
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);

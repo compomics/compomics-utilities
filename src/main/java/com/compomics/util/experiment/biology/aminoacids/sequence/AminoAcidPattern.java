@@ -911,105 +911,7 @@ public class AminoAcidPattern extends ExperimentObject {
         if (!matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
         }
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
-            ArrayList<ModificationMatch> mods2 = anotherPattern.getModificationsAt(i);
-            if (mods1.size() != mods2.size()) {
-                return false;
-            }
-            for (ModificationMatch modificationMatch1 : mods1) {
-                Modification modification1 = modificationFactory.getModification(modificationMatch1.getModification());
-                boolean found = false;
-                for (ModificationMatch modificationMatch2 : mods2) {
-                    Modification modification2 = modificationFactory.getModification(modificationMatch2.getModification());
-                    if (modification1.getMass() == modification2.getMass()) { // @TODO: compare against the accuracy
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Indicates whether another AminoAcidPattern targets the same pattern
-     * without accounting for Modification localization. Modifications are considered
-     * equal when of same mass. Modifications should be loaded in the Modification
-     * factory.
-     *
-     * @param anotherPattern the other AminoAcidPattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return true if the other AminoAcidPattern targets the same pattern
-     */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        if (!matches(anotherPattern, sequenceMatchingPreferences)) {
-            return false;
-        }
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<>(1);
-        for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses1.get(mass);
-                if (occurrence == null) {
-                    masses1.put(mass, 1);
-                } else {
-                    masses1.put(mass, occurrence + 1);
-                }
-            }
-        }
-
-        HashMap<Double, Integer> masses2 = new HashMap<>(1);
-        for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses2.get(mass);
-                if (occurrence == null) {
-                    masses2.put(mass, 1);
-                } else {
-                    masses2.put(mass, occurrence + 1);
-                }
-            }
-        }
-
-        if (masses1.size() != masses2.size()) {
-            return false;
-        }
-        for (Double mass : masses1.keySet()) {
-            Integer occurrence1 = masses1.get(mass);
-            Integer occurrence2 = masses2.get(mass);
-            if (occurrence2 == null || occurrence2.intValue() != occurrence1) {
-                return false;
-            }
-        }
-        for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
-            ArrayList<ModificationMatch> mods2 = anotherPattern.getModificationsAt(i);
-            if (mods1.size() != mods2.size()) {
-                return false;
-            }
-            for (int j = 0; j < mods1.size(); j++) {
-                ModificationMatch modificationMatch1 = mods1.get(j);
-                ModificationMatch modificationMatch2 = mods2.get(j);
-                if (!modificationMatch1.equals(modificationMatch2)) {
-                    return false;
-                }
-            }
-        }
-
+        
         return true;
     }
 
@@ -1086,16 +988,6 @@ public class AminoAcidPattern extends ExperimentObject {
                 } else {
                     targetedAA.clear();
                 }
-                if (i + 1 > length) {
-                    length = i + 1;
-                }
-            }
-        }
-
-        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherPattern.getModificationMatches();
-        if (modificationMatches != null) {
-            for (int i : modificationMatches.keySet()) {
-                addModificationMatches(i, otherPattern.getModificationMatches().get(i));
                 if (i + 1 > length) {
                     length = i + 1;
                 }

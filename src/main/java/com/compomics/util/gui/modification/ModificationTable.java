@@ -100,7 +100,7 @@ public class ModificationTable extends JTable {
 
         for (ModificationMatch modMatch : peptideMatch.getPeptide().getModificationMatches()) {
             if (modMatch.getModification().equals(ptm.getName())) {
-                modificationSites.add(modMatch.getModificationSite());
+                modificationSites.add(modMatch.getSite());
                 nPTM++;
             }
         }

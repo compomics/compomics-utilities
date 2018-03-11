@@ -12,9 +12,14 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.awt.Color;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -33,14 +38,14 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     private StringBuilder sequenceStringBuilder = null;
     /**
-     * The sequence as amino acid pattern.
-     */
-    private AminoAcidPattern aminoAcidPattern = null;
-    /**
      * The modifications carried by the amino acid sequence at target amino
      * acids. 1 is the first amino acid.
      */
-    private HashMap<Integer, ArrayList<ModificationMatch>> modifications = null;
+    private ModificationMatch[] modifications = null;
+    /**
+     * Convenience array for no modifications
+     */
+    private static final ModificationMatch[] noMod = new ModificationMatch[0];
 
     /**
      * Creates a blank sequence. All maps are null.
@@ -63,7 +68,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param sequence a sequence of amino acids
      * @param modifications the modifications of this sequence in a map
      */
-    public AminoAcidSequence(String sequence, HashMap<Integer, ArrayList<ModificationMatch>> modifications) {
+    public AminoAcidSequence(String sequence, ModificationMatch[] modifications) {
         this.sequence = sequence;
         this.modifications = modifications;
     }
@@ -74,28 +79,16 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param sequence the other sequence
      */
     public AminoAcidSequence(AminoAcidSequence sequence) {
-        
+
         this.sequence = sequence.getSequence();
-        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = sequence.getModificationMatches();
-        
+        ModificationMatch[] modificationMatches = sequence.getModificationMatches();
+
         if (modificationMatches != null) {
-        
-            modifications = new HashMap<>(modificationMatches.size());
-            
-            for (int site : modificationMatches.keySet()) {
-            
-                ArrayList<ModificationMatch> oldModifications = modificationMatches.get(site);
-                ArrayList<ModificationMatch> newModifications = new ArrayList<>(oldModifications.size());
-                
-                for (ModificationMatch modificationMatch : oldModifications) {
-                
-                    newModifications.add(modificationMatch.clone());
-                    
-                }
-                
-                modifications.put(site, newModifications);
-            
-            }
+
+            modifications = Arrays.stream(modificationMatches)
+                    .map(ModificationMatch::clone)
+                    .toArray(ModificationMatch[]::new);
+
         }
     }
 
@@ -105,15 +98,15 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the sequence as String
      */
     public String getSequence() {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
+
         setSequenceStringBuilder(false);
-        
+
         return sequence == null ? "" : sequence;
-        
+
     }
 
     /**
@@ -126,15 +119,15 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * letter code
      */
     public char charAt(int aa) {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
+
         setSequenceStringBuilder(false);
-        
+
         return sequence.charAt(aa);
-    
+
     }
 
     /**
@@ -146,13 +139,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the amino acid at the given index on the sequence
      */
     public AminoAcid getAminoAcidAt(int aa) {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-     
+
         return AminoAcid.getAminoAcid(charAt(aa));
-    
+
     }
 
     /**
@@ -161,15 +154,15 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param aminoAcidSequence the sequence
      */
     public void setSequence(String aminoAcidSequence) {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        
+
         sequenceStringBuilder = null;
-        
+
         this.sequence = aminoAcidSequence;
-    
+
     }
 
     /**
@@ -180,59 +173,25 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param aa the amino acid to be set
      */
     public void setAaAtIndex(int index, char aa) {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        
+
         setSequenceStringBuilder(true);
         sequenceStringBuilder.setCharAt(index, aa);
-    
-    }
 
-    /**
-     * Returns this amino acid sequence as amino acid pattern.
-     *
-     * @return this amino acid sequence as amino acid pattern
-     */
-    public AminoAcidPattern getAsAminoAcidPattern() {
-        
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        
-        setSequenceStringBuilder(false);
-        
-        if (aminoAcidPattern == null) {
-        
-            aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString(sequence);
-            
-            if (modifications != null) {
-            
-                for (int location : modifications.keySet()) {
-                
-                    for (ModificationMatch modMatch : modifications.get(location)) {
-                    
-                        aminoAcidPattern.addModificationMatch(location, modMatch);
-                        
-                    }
-                }
-            }
-        }
-        
-        return aminoAcidPattern;
-    
     }
 
     /**
      * Loads the sequence in the string builder.
      */
     private void setSequenceStringBuilder(boolean stringbuilder) {
-    
+
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-        
+
         if (stringbuilder && sequenceStringBuilder == null) {
 
             if (sequence != null) {
@@ -264,7 +223,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         ObjectsDB.decreaseRWCounter();
 
         sequenceStringBuilder = null;
-        aminoAcidPattern = null;
 
     }
 
@@ -361,117 +319,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return getAsAminoAcidPattern().firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
-
-    }
-
-    /**
-     * Indicates whether another AminoAcidPattern targets the same sequence
-     * without accounting for PTM localization. Modifications are considered
-     * equal when of same mass. Modifications should be loaded in the PTM
-     * factory.
-     *
-     * @param anotherPattern the other AminoAcidPattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return true if the other AminoAcidPattern targets the same sequence
-     */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        if (!anotherPattern.matches(anotherPattern, sequenceMatchingPreferences)) {
-            return false;
-        }
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<>();
-
-        for (int i = 1; i <= length(); i++) {
-
-            ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
-
-            for (ModificationMatch modMatch : tempModifications) {
-
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses1.get(mass);
-
-                if (occurrence == null) {
-
-                    masses1.put(mass, 1);
-
-                } else {
-
-                    masses1.put(mass, occurrence + 1);
-
-                }
-            }
-        }
-
-        HashMap<Double, Integer> masses2 = new HashMap<>();
-
-        for (int i = 1; i <= length(); i++) {
-
-            ArrayList<ModificationMatch> tempModifications = anotherPattern.getModificationsAt(i);
-
-            for (ModificationMatch modMatch : tempModifications) {
-
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses2.get(mass);
-
-                if (occurrence == null) {
-
-                    masses2.put(mass, 1);
-
-                } else {
-
-                    masses2.put(mass, occurrence + 1);
-
-                }
-            }
-        }
-
-        if (masses1.size() != masses2.size()) {
-
-            return false;
-
-        }
-
-        for (Double mass : masses1.keySet()) {
-
-            Integer occurrence1 = masses1.get(mass);
-            Integer occurrence2 = masses2.get(mass);
-
-            if (occurrence2 == null || occurrence2.intValue() != occurrence1) {
-                return false;
-            }
-        }
-
-        for (int i = 1; i <= length(); i++) {
-
-            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
-            ArrayList<ModificationMatch> mods2 = anotherPattern.getModificationsAt(i);
-
-            if (mods1.size() != mods2.size()) {
-                return false;
-            }
-
-            for (int j = 0; j < mods1.size(); j++) {
-
-                ModificationMatch modificationMatch1 = mods1.get(j);
-                ModificationMatch modificationMatch2 = mods2.get(j);
-
-                if (!modificationMatch1.equals(modificationMatch2)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return AminoAcidPattern.getAminoAcidPatternFromString(sequence).firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
 
     }
 
@@ -515,21 +363,27 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         int previousLength = length();
         sequenceStringBuilder.append(otherSequence.getSequence());
-        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherSequence.getModificationMatches();
 
-        if (modificationMatches != null) {
+        ModificationMatch[] otherModifications = otherSequence.getModificationMatches();
 
-            for (int otherSite : modificationMatches.keySet()) {
+        if (otherModifications.length > 0) {
 
-                int newSite = otherSite + previousLength;
+            otherModifications = Arrays.stream(otherModifications)
+                    .map(ModificationMatch::clone)
+                    .peek(modificationMatch -> modificationMatch.setSite(modificationMatch.getSite() + previousLength))
+                    .toArray(ModificationMatch[]::new);
 
-                for (ModificationMatch oldModificationMatch : modificationMatches.get(otherSite)) {
+            if (modifications == null) {
 
-                    ModificationMatch newModificationMatch = oldModificationMatch.clone();
-                    oldModificationMatch.setModificationSite(newSite);
-                    addModificationMatch(newSite, newModificationMatch);
+                modifications = otherModifications;
 
-                }
+            } else {
+
+                ModificationMatch[] mergedModifications = new ModificationMatch[modifications.length + otherModifications.length];
+                System.arraycopy(modifications, 0, mergedModifications, 0, modifications.length);
+                System.arraycopy(otherModifications, 0, mergedModifications, modifications.length, otherModifications.length);
+                modifications = mergedModifications;
+
             }
         }
     }
@@ -567,69 +421,38 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         setSequenceStringBuilder(true);
         sequenceStringBuilder.insert(0, otherSequence.getSequence());
         int otherSequenceLength = otherSequence.length();
-        HashMap<Integer, ArrayList<ModificationMatch>> otherModificationMatches = otherSequence.getModificationMatches();
+        ModificationMatch[] otherModifications = otherSequence.getModificationMatches();
 
-        if (otherModificationMatches != null || modifications != null) {
+        if (otherModifications.length > 0) {
 
-            int otherSize = 0;
+            otherModifications = Arrays.stream(otherModifications)
+                    .map(ModificationMatch::clone)
+                    .peek(modificationMatch -> modificationMatch.setSite(modificationMatch.getSite() + offset))
+                    .toArray(ModificationMatch[]::new);
 
-            if (otherModificationMatches != null) {
+            if (modifications == null) {
 
-                otherSize = otherModificationMatches.size();
+                modifications = otherModifications;
 
-            }
+            } else {
 
-            int newSize = 0;
+                for (ModificationMatch modificationMatch : modifications) {
 
-            if (modifications != null) {
+                    int oldSite = modificationMatch.getSite();
 
-                newSize = modifications.size();
+                    if (oldSite > offset + 1) {
 
-            }
-
-            HashMap<Integer, ArrayList<ModificationMatch>> newModificationMatches = new HashMap<>(otherSize + newSize);
-
-            if (otherModificationMatches != null) {
-
-                for (int site : otherModificationMatches.keySet()) {
-
-                    ArrayList<ModificationMatch> modMatches = otherModificationMatches.get(site);
-                    ArrayList<ModificationMatch> newModMatches = new ArrayList<>(modMatches.size());
-
-                    for (ModificationMatch modificationMatch : modMatches) {
-
-                        newModMatches.add(modificationMatch.clone());
+                        int newSite = oldSite + otherSequenceLength;
+                        modificationMatch.setSite(newSite);
 
                     }
 
-                    newModificationMatches.put(site, newModMatches);
-
                 }
+
+                modifications = Arrays.copyOf(modifications, modifications.length + otherModifications.length);
+                System.arraycopy(otherModifications, 0, modifications, modifications.length, otherModifications.length);
+
             }
-
-            if (modifications != null) {
-
-                for (int site : modifications.keySet()) {
-
-                    int newSite = site + otherSequenceLength;
-                    ArrayList<ModificationMatch> modMatches = modifications.get(site);
-                    ArrayList<ModificationMatch> newModMatches = new ArrayList<>(modMatches.size());
-
-                    for (ModificationMatch oldModificationMatch : modifications.get(site)) {
-
-                        ModificationMatch newModificationMatch = oldModificationMatch.clone();
-                        oldModificationMatch.setModificationSite(newSite);
-                        newModMatches.add(newModificationMatch);
-
-                    }
-
-                    newModificationMatches.put(site, newModMatches);
-
-                }
-            }
-
-            modifications = newModificationMatches;
-
         }
     }
 
@@ -690,7 +513,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return the modifications matches as found by the search engine
      */
-    public HashMap<Integer, ArrayList<ModificationMatch>> getModificationMatches() {
+    public ModificationMatch[] getModificationMatches() {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -701,292 +524,44 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Returns a list of the indexes of the amino acids carrying a modification.
-     * 1 is the first amino acid.
-     *
-     * @return a list of the indexes of the amino acids carrying a modification
-     */
-    public ArrayList<Integer> getModificationIndexes() {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        return modifications == null ? new ArrayList<>(0) : new ArrayList<>(modifications.keySet());
-        
-    }
-
-    /**
-     * Returns the modifications found at a given localization.
-     *
-     * @param localization the localization as amino acid number. 1 is the first
-     * amino acid.
-     *
-     * @return the modifications found at a given localization as a list.
-     */
-    public ArrayList<ModificationMatch> getModificationsAt(int localization) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        
-        if (modifications != null) {
-
-            ArrayList<ModificationMatch> result = modifications.get(localization);
-
-            if (result != null) {
-
-                return result;
-
-            }
-        }
-
-        return new ArrayList<>(0);
-
-    }
-
-    /**
-     * Removes a modification match in the given sequence.
-     *
-     * @param localisation the localization of the modification
-     * @param modificationMatch the modification match to remove
-     */
-    public void removeModificationMatch(int localisation, ModificationMatch modificationMatch) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-
-        ArrayList<ModificationMatch> modificationMatches = modifications.get(localisation);
-
-        if (modificationMatches != null) {
-
-            modificationMatches.remove(modificationMatch);
-
-            if (modificationMatches.isEmpty()) {
-
-                modifications.remove(localisation);
-
-            }
-        }
-    }
-
-    /**
-     * Clears the list of imported modification matches.
-     */
-    public void clearModificationMatches() {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-
-        if (modifications != null) {
-
-            modifications.clear();
-
-        }
-    }
-
-    /**
      * Adds a modification to one of the amino acid sequence.
      *
-     * @param localization the index of the amino acid retained as target of the
-     * modification. 1 is the first amino acid.
      * @param modificationMatch the modification match
      */
-    public void addModificationMatch(int localization, ModificationMatch modificationMatch) {
+    public void addModificationMatch(ModificationMatch modificationMatch) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        int index = localization - 1;
+        modifications = modifications == null ? new ModificationMatch[1] : Arrays.copyOf(modifications, modifications.length + 1);
 
-        if (index < 0) {
-
-            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
-
-        }
-
-        if (modifications == null) {
-
-            modifications = new HashMap<>(1);
-
-        }
-
-        ArrayList<ModificationMatch> modificationMatches = modifications.get(localization);
-
-        if (modificationMatches == null) {
-
-            modificationMatches = new ArrayList<>();
-            modifications.put(localization, modificationMatches);
-
-        }
-
-        modificationMatches.add(modificationMatch);
+        modifications[modifications.length - 1] = modificationMatch;
 
     }
 
     /**
-     * Adds a list of modifications to one of the amino acid sequence.
+     * Sets the modifications.
      *
-     * @param localization the index of the amino acid retained as target of the
-     * modification. 1 is the first amino acid.
-     * @param modificationMatches the modification matches
+     * @param modifications the modifications
      */
-    public void addModificationMatches(int localization, ArrayList<ModificationMatch> modificationMatches) {
+    public void setModifications(ModificationMatch[] modifications) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        int index = localization - 1;
-        
-        if (index < 0) {
+        this.modifications = modifications;
 
-            throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
-
-        }
-
-        if (modifications == null) {
-
-            modifications = new HashMap<>(1);
-
-        }
-
-        ArrayList<ModificationMatch> modificationMatchesAtIndex = modifications.get(localization);
-
-        if (modificationMatchesAtIndex == null) {
-
-            modificationMatchesAtIndex = new ArrayList<>();
-            modifications.put(localization, modificationMatchesAtIndex);
-
-        }
-
-        modificationMatches.addAll(modificationMatches);
-
-    }
-
-    /**
-     * Changes the localization of a modification match.
-     *
-     * @param modificationMatch the modification match of interest
-     * @param oldLocalization the old localization
-     * @param newLocalization the new localization
-     */
-    public void changeModificationSite(ModificationMatch modificationMatch, int oldLocalization, int newLocalization) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-
-        int oldIndex = oldLocalization - 1;
-
-        if (oldIndex < 0) {
-
-            throw new IllegalArgumentException("Wrong modification old target index " + oldLocalization + ", 1 is the first amino acid for PTM localization.");
-
-        }
-
-        if (modifications == null || !modifications.containsKey(oldIndex) || !modifications.get(oldIndex).contains(modificationMatch)) {
-
-            throw new IllegalArgumentException("Modification match " + modificationMatch + " not found at index " + oldLocalization + ".");
-
-        }
-
-        modifications.get(oldIndex).remove(modificationMatch);
-        addModificationMatch(newLocalization, modificationMatch);
-
-    }
-
-    /**
-     * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them. Note: this
-     * does not include HTML start end tags or terminal annotation.
-     *
-     * @param modificationProfile the modification profile of the search
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     * @param displayedModifications the modifications to display
-     * 
-* @return the modified sequence as a tagged string
-     */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName, HashSet<String> displayedModifications) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>(1);
-        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>(1);
-        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>(1);
-        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>(1);
-
-        if (modifications != null) {
-
-            for (int modSite : modifications.keySet()) {
-
-                for (ModificationMatch modificationMatch : modifications.get(modSite)) {
-
-                    String modName = modificationMatch.getModification();
-                    
-                    if (displayedModifications == null || displayedModifications.contains(modName)) {
-
-                    if (modificationMatch.getVariable()) {
-
-                        if (modificationMatch.getConfident()) {
-
-                            if (!confidentModificationSites.containsKey(modSite)) {
-
-                                confidentModificationSites.put(modSite, new ArrayList<>(1));
-
-                            }
-
-                            confidentModificationSites.get(modSite).add(modName);
-
-                        } else {
-
-                            if (!representativeModificationSites.containsKey(modSite)) {
-
-                                representativeModificationSites.put(modSite, new ArrayList<>(1));
-
-                            }
-
-                            representativeModificationSites.get(modSite).add(modName);
-
-                        }
-
-                    } else {
-
-                        if (!fixedModificationSites.containsKey(modSite)) {
-
-                            fixedModificationSites.put(modSite, new ArrayList<>(1));
-
-                        }
-
-                        fixedModificationSites.get(modSite).add(modName);
-
-                    }
-                    }
-                }
-            }
-        }
-        
-        setSequenceStringBuilder(false);
-        
-        return getTaggedModifiedSequence(modificationProfile, sequence, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
-                fixedModificationSites, useHtmlColorCoding, useShortName);
-    
     }
 
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
      * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory.
+     * PTMFactory. Modifications should be provided indexed by site as follows:
+     * N-term modifications are at index 0, C-term at sequence length + 1, and
+     * amino acid at 1-based index on the sequence.
      *
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate
@@ -1004,38 +579,30 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
-     * 
+     *
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, String sequence,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites,
-            HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
-            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
-            HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding,
+            String[] confidentModificationSites,
+            String[] representativeAmbiguousModificationSites,
+            String[] secondaryAmbiguousModificationSites,
+            String[] fixedModificationSites, boolean useHtmlColorCoding,
             boolean useShortName) {
 
         if (confidentModificationSites == null) {
-
-            confidentModificationSites = new HashMap<>(0);
-
+            confidentModificationSites = new String[sequence.length()];
         }
 
         if (representativeAmbiguousModificationSites == null) {
-
-            representativeAmbiguousModificationSites = new HashMap<>(0);
-
+            representativeAmbiguousModificationSites = new String[sequence.length()];
         }
 
         if (secondaryAmbiguousModificationSites == null) {
-
-            secondaryAmbiguousModificationSites = new HashMap<>(0);
-
+            secondaryAmbiguousModificationSites = new String[sequence.length()];
         }
 
         if (fixedModificationSites == null) {
-
-            fixedModificationSites = new HashMap<>(0);
-
+            fixedModificationSites = new String[sequence.length()];
         }
 
         StringBuilder modifiedSequence = new StringBuilder(sequence.length());
@@ -1045,79 +612,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             int aaIndex = aa - 1;
             char aminoAcid = sequence.charAt(aaIndex);
 
-            if (confidentModificationSites.containsKey(aa) && !confidentModificationSites.get(aa).isEmpty()) {
+            appendTaggedResidue(modifiedSequence, aminoAcid,
+                    confidentModificationSites[aa], representativeAmbiguousModificationSites[aa], secondaryAmbiguousModificationSites[aa], fixedModificationSites[aa],
+                    modificationProfile, useHtmlColorCoding, useShortName);
 
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, 1, modificationProfile, confidentModificationSites, useHtmlColorCoding, useShortName);
-
-            } else if (representativeAmbiguousModificationSites.containsKey(aa) && !representativeAmbiguousModificationSites.get(aa).isEmpty()) {
-
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, 2, modificationProfile, representativeAmbiguousModificationSites, useHtmlColorCoding, useShortName);
-
-            } else if (secondaryAmbiguousModificationSites.containsKey(aa) && !secondaryAmbiguousModificationSites.get(aa).isEmpty()) {
-
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, 3, modificationProfile, secondaryAmbiguousModificationSites, useHtmlColorCoding, useShortName);
-
-            } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, 1, modificationProfile, fixedModificationSites, useHtmlColorCoding, useShortName);
-
-            } else {
-
-                modifiedSequence.append(aminoAcid);
-
-            }
         }
 
         return modifiedSequence.toString();
-    }
-
-    /**
-     * Helper method for annotating the modified sequence as an tagged string
-     * with potential modification sites.
-     *
-     * @param modifiedSequence the modified sequence to add the new annotations
-     * to
-     * @param aaIndex the current sequence index
-     * @param aminoAcid the current amino acid
-     * @param localizationConfidenceLevel the localization confidence level
-     * @param modificationProfile the modification profile of the search
-     * @param modificationSites the current modification sites
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     * 
-     * @return the tagged modified sequence as a string
-     */
-    private static void addTaggedResidue(StringBuilder modifiedSequence, int aaIndex, char aminoAcid, int localizationConfidenceLevel, ModificationParameters modificationProfile,
-            HashMap<Integer, ArrayList<String>> modificationSites, boolean useHtmlColorCoding, boolean useShortName) {
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
-        if (modificationSites.get(aaIndex).size() == 1) {
-
-            modifiedSequence.append(getTaggedResidue(aminoAcid, modificationSites.get(aaIndex).get(0), modificationProfile, localizationConfidenceLevel, useHtmlColorCoding, useShortName));
-
-        } else {
-
-            boolean modificationAdded = false;
-            for (String modificationName : modificationSites.get(aaIndex)) {
-
-                Modification modification = modificationFactory.getModification(modificationName);
-
-                if (modification.getModificationType() == ModificationType.modaa && !modificationAdded) {
-
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, modificationName, modificationProfile, localizationConfidenceLevel, useHtmlColorCoding, useShortName));
-                    modificationAdded = true;
-
-                }
-            }
-
-            if (!modificationAdded) {
-                
-                modifiedSequence.append(aminoAcid);
-            
-            }
-        }
     }
 
     /**
@@ -1126,6 +627,54 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * foreground, colored background 2- colored foreground, white background 3-
      * colored foreground
      *
+     * @param stringBuilder the string builder
+     * @param residue the residue to tag
+     * @param confidentModification the confident ptm at site
+     * @param representativeAmbiguousModification the representative ptm at site
+     * @param secondaryAmbiguousModification the secondary ptm at site
+     * @param fixedModification the fixed ptm at site
+     * @param modificationProfile the modification profile
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
+     * @param useShortName if true the short names are used in the tags
+     */
+    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue,
+            String confidentModification,
+            String representativeAmbiguousModification,
+            String secondaryAmbiguousModification,
+            String fixedModification,
+            ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName) {
+
+        if (confidentModification != null) {
+
+            appendTaggedResidue(stringBuilder, residue, confidentModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
+
+        } else if (representativeAmbiguousModification != null) {
+
+            appendTaggedResidue(stringBuilder, residue, representativeAmbiguousModification, modificationProfile, 2, useHtmlColorCoding, useShortName);
+
+        } else if (secondaryAmbiguousModification != null) {
+
+            appendTaggedResidue(stringBuilder, residue, secondaryAmbiguousModification, modificationProfile, 3, useHtmlColorCoding, useShortName);
+
+        } else if (fixedModification != null) {
+
+            appendTaggedResidue(stringBuilder, residue, fixedModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
+
+        } else {
+
+            Character.toString(residue);
+
+        }
+    }
+
+    /**
+     * Appends the single residue as a tagged string (HTML color or PTM tag).
+     * Modified sites are color coded according to three levels: 1- black
+     * foreground, colored background 2- colored foreground, white background 3-
+     * colored foreground
+     *
+     * @param stringBuilder the string builder
      * @param residue the residue to tag
      * @param modificationName the name of the PTM
      * @param modificationProfile the modification profile
@@ -1133,69 +682,55 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
-     *
-     * @return the single residue as a tagged string
      */
-    public static String getTaggedResidue(char residue, String modificationName, ModificationParameters modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
+    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue, String modificationName, ModificationParameters modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
 
-        StringBuilder taggedResidue = new StringBuilder();
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         Modification modification = modificationFactory.getModification(modificationName);
 
-        if (modification.getModificationType() == ModificationType.modaa) {
+        if (!useHtmlColorCoding) {
 
-            if (!useHtmlColorCoding) {
+            if (localizationConfidenceLevel == 1 || localizationConfidenceLevel == 2) {
 
-                if (localizationConfidenceLevel == 1 || localizationConfidenceLevel == 2) {
+                if (useShortName) {
 
-                    if (useShortName) {
+                    stringBuilder.append(residue).append("<").append(modification.getShortName()).append(">");
 
-                        taggedResidue.append(residue).append("<").append(modification.getShortName()).append(">");
+                } else {
 
-                    } else {
-
-                        taggedResidue.append(residue).append("<").append(modificationName).append(">");
-
-                    }
-
-                } else if (localizationConfidenceLevel == 3) {
-
-                    taggedResidue.append(residue);
+                    stringBuilder.append(residue).append("<").append(modificationName).append(">");
 
                 }
 
-            } else {
+            } else if (localizationConfidenceLevel == 3) {
 
-                Color modificationColor = modificationProfile.getColor(modificationName);
+                stringBuilder.append(residue);
 
-                switch (localizationConfidenceLevel) {
-                    case 1:
-                        taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
-                        break;
-
-                    case 2:
-                        taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                        break;
-
-                    case 3:
-                        // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
-                        // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                        taggedResidue.append(residue);
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
-                }
             }
 
         } else {
 
-            taggedResidue.append(residue);
+            Color modificationColor = modificationProfile.getColor(modificationName);
 
+            switch (localizationConfidenceLevel) {
+                case 1:
+                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
+                    break;
+
+                case 2:
+                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                    break;
+
+                case 3:
+                    // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
+                    // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                    stringBuilder.append(residue);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
+            }
         }
-
-        return taggedResidue.toString();
-
     }
 
     /**
@@ -1214,7 +749,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        if (!matches(anotherSequence, sequenceMatchingPreferences)) {
+        if (!isSameSequenceAndModificationStatusAs(anotherSequence, sequenceMatchingPreferences)) {
 
             return false;
 
@@ -1222,39 +757,27 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
-        for (int i = 1; i <= length(); i++) {
+        ModificationMatch[] modificationMatches1 = getModificationMatches();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getModificationMatches();
 
-            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
-            ArrayList<ModificationMatch> mods2 = anotherSequence.getModificationsAt(i);
+        Map<Double, HashSet<ModificationMatch>> mods1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
+        Map<Double, HashSet<ModificationMatch>> mods2 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
 
-            if (mods1.size() != mods2.size()) {
+        for (Entry<Double, HashSet<ModificationMatch>> entry1 : mods1.entrySet()) {
+
+            HashSet<Integer> sites1 = entry1.getValue().stream()
+                    .map(ModificationMatch::getSite)
+                    .collect(Collectors.toCollection(HashSet::new));
+            HashSet<Integer> sites2 = mods2.get(entry1.getKey()).stream()
+                    .map(ModificationMatch::getSite)
+                    .collect(Collectors.toCollection(HashSet::new));
+
+            if (!Util.sameSets(sites1, sites2)) {
 
                 return false;
 
-            }
-
-            for (ModificationMatch modificationMatch1 : mods1) {
-
-                Modification modification1 = modificationFactory.getModification(modificationMatch1.getModification());
-                boolean found = false;
-
-                for (ModificationMatch modificationMatch2 : mods2) {
-
-                    Modification modification2 = modificationFactory.getModification(modificationMatch2.getModification());
-
-                    if (modification1.getMass() == modification2.getMass()) { // @TODO: compare against the accuracy
-
-                        found = true;
-                        break;
-
-                    }
-                }
-
-                if (!found) {
-
-                    return false;
-
-                }
             }
         }
 
@@ -1282,99 +805,28 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             return false;
         }
 
+        ModificationMatch[] modificationMatches1 = getModificationMatches();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getModificationMatches();
+
+        if (modificationMatches1.length != modificationMatches2.length) {
+            return false;
+        }
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        HashMap<Double, Integer> masses1 = new HashMap<>(1);
 
-        for (int i = 1; i <= length(); i++) {
+        Map<Double, Long> masses1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
 
-            ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
-
-            for (ModificationMatch modMatch : tempModifications) {
-
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses1.get(mass);
-
-                if (occurrence == null) {
-
-                    masses1.put(mass, 1);
-
-                } else {
-
-                    masses1.put(mass, occurrence + 1);
-
-                }
-            }
-        }
-
-        HashMap<Double, Integer> masses2 = new HashMap<>();
-
-        for (int i = 1; i <= length(); i++) {
-
-            ArrayList<ModificationMatch> tempModifications = anotherSequence.getModificationsAt(i);
-
-            for (ModificationMatch modMatch : tempModifications) {
-
-                Modification modification = modificationFactory.getModification(modMatch.getModification());
-                double mass = modification.getMass();
-                Integer occurrence = masses2.get(mass);
-
-                if (occurrence == null) {
-
-                    masses2.put(mass, 1);
-
-                } else {
-
-                    masses2.put(mass, occurrence + 1);
-
-                }
-            }
-        }
+        Map<Double, Long> masses2 = Arrays.stream(modificationMatches2).collect(Collectors.groupingBy(
+                modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.counting()));
 
         if (masses1.size() != masses2.size()) {
-
             return false;
-
         }
 
-        for (Double mass : masses1.keySet()) {
-
-            Integer occurrence1 = masses1.get(mass);
-            Integer occurrence2 = masses2.get(mass);
-
-            if (occurrence2.intValue() != occurrence1) {
-
-                return false;
-
-            }
-        }
-
-        for (int i = 1; i <= length(); i++) {
-
-            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
-            ArrayList<ModificationMatch> mods2 = anotherSequence.getModificationsAt(i);
-
-            if (mods1.size() != mods2.size()) {
-
-                return false;
-
-            }
-
-            for (int j = 0; j < mods1.size(); j++) {
-
-                ModificationMatch modificationMatch1 = mods1.get(j);
-                ModificationMatch modificationMatch2 = mods2.get(j);
-
-                if (!modificationMatch1.equals(modificationMatch2)) {
-
-                    return false;
-
-                }
-            }
-        }
-
-        return true;
-
+        return !masses1.entrySet().stream()
+                .anyMatch(entry -> masses2.get(entry.getKey()) == null
+                || !entry.getValue().equals(masses2.get(entry.getKey())));
     }
 
     /**
@@ -1385,44 +837,23 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * pattern
      */
     public AminoAcidSequence reverse() {
-        
+
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
-        
+
         setSequenceStringBuilder(false);
         AminoAcidSequence newSequence = new AminoAcidSequence((new StringBuilder(sequence)).reverse().toString());
-        
-        if (modifications != null) {
-            
-            for (int i : modifications.keySet()) {
-                
-                int reversed = length() - i + 1;
-                
-                for (ModificationMatch modificationMatch : modifications.get(i)) {
-                    
-                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), reversed);
-                    
-                    if (modificationMatch.getConfident()) {
-                        
-                        newMatch.setConfident(true);
-                        
-                    }
-                    
-                    if (modificationMatch.getInferred()) {
-                        
-                        newMatch.setInferred(true);
-                        
-                    }
-                    
-                    newSequence.addModificationMatch(reversed, newMatch);
-                    
-                }
-            }
-        }
-        
+
+        ModificationMatch[] newModifications = Arrays.stream(modifications)
+                .map(ModificationMatch::clone)
+                .peek(modificationMatch -> modificationMatch.setSite(sequence.length() - modificationMatch.getSite()))
+                .toArray(ModificationMatch[]::new);
+
+        newSequence.setModifications(modifications);
+
         return newSequence;
-        
+
     }
 
     /**
@@ -1503,16 +934,16 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 char[] subAa = aminoAcid.getSubAminoAcids(false);
                 aminoAcid = AminoAcid.getAminoAcid(subAa[0]);
                 double minMassTemp = aminoAcid.getMonoisotopicMass();
-                
+
                 for (int i = 1; i < subAa.length; i++) {
-                
+
                     aminoAcid = AminoAcid.getAminoAcid(subAa[i]);
                     double massTemp = aminoAcid.getMonoisotopicMass();
-                    
+
                     if (massTemp < minMassTemp) {
-                    
+
                         minMassTemp = massTemp;
-                    
+
                     }
                 }
 
@@ -1612,27 +1043,18 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         setSequenceStringBuilder(false);
 
-        double mass = 0;
+        double mass = CharBuffer.wrap(sequence.toCharArray()).chars()
+                .mapToObj(aa -> AminoAcid.getAminoAcid((char) aa))
+                .mapToDouble(AminoAcid::getMonoisotopicMass)
+                .sum();
 
-        for (int i = 0; i < length(); i++) {
+        if (modifications != null) {
 
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(sequence.charAt(i));
-            mass += aminoAcid.getMonoisotopicMass();
+            ModificationFactory modificationFactory = ModificationFactory.getInstance();
+            mass += Arrays.stream(modifications)
+                    .mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass())
+                    .sum();
 
-            if (modifications != null) {
-
-                ArrayList<ModificationMatch> modificationAtIndex = modifications.get(i + 1);
-
-                if (modificationAtIndex != null) {
-
-                    for (ModificationMatch modificationMatch : modificationAtIndex) {
-
-                        Modification modification = ModificationFactory.getInstance().getModification(modificationMatch.getModification());
-                        mass += modification.getMass();
-
-                    }
-                }
-            }
         }
 
         return mass;

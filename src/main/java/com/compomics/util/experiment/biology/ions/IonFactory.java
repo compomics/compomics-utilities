@@ -217,7 +217,7 @@ public class IonFactory {
 
         for (ModificationMatch modMatch : modMatches) {
 
-            int location = modMatch.getModificationSite();
+            int location = modMatch.getSite();
             String modName = modMatch.getModification();
             Modification modification = ptmFactory.getModification(modName);
 

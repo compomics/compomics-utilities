@@ -181,14 +181,15 @@ public class PeptideUtils {
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with Modification tags, e.g,
      * &lt;mox&gt;. /!\ This method will work only if the Modification found in
-     * the peptide are in the ModificationFactory.
+     * the peptide are in the ModificationFactory. Modifications should be provided indexed by site as follows: N-term modifications are at index 0, C-term at sequence length + 1, and amino acid at 1-based index on the sequence.
      *
      * @param modificationProfile the modification profile of the search
+     * @param nTermAsString the annotated N-term
+     * @param cTermAsString the annotated C-term
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number &gt; list of modifications (1 is
-     * the first AA) (can be null)
+     * modification sites indexed by site. 
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
      * &gt; list of modifications (1 is the first AA) (can be null)
@@ -203,51 +204,53 @@ public class PeptideUtils {
      *
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationProfile, HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+    public static String getTaggedModifiedSequence(Peptide peptide, String nTermAsString, String cTermAsString, ModificationParameters modificationProfile, String[] confidentModificationSites, String[] representativeAmbiguousModificationSites, String[] secondaryAmbiguousModificationSites, String[] fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
+        String peptideSequence = peptide.getSequence();
+        
         if (confidentModificationSites == null) {
 
-            confidentModificationSites = new HashMap<>(0);
+            confidentModificationSites = new String[peptideSequence.length()];
 
         }
 
         if (representativeAmbiguousModificationSites == null) {
 
-            representativeAmbiguousModificationSites = new HashMap<>(0);
+            representativeAmbiguousModificationSites = new String[peptideSequence.length()];
 
         }
 
         if (secondaryAmbiguousModificationSites == null) {
 
-            secondaryAmbiguousModificationSites = new HashMap<>(0);
+            secondaryAmbiguousModificationSites = new String[peptideSequence.length()];
 
         }
 
         if (fixedModificationSites == null) {
 
-            fixedModificationSites = new HashMap<>(0);
+            fixedModificationSites = new String[peptideSequence.length()];
 
         }
 
-        String modifiedSequence = "";
+        StringBuilder modifiedSequence = new StringBuilder(peptideSequence.length());
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
 
-            modifiedSequence += "<html>";
+            modifiedSequence.append("<html>");
 
         }
 
-        modifiedSequence += peptide.getNTerminal() + "-";
-        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.getSequence(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
-        modifiedSequence += "-" + peptide.getCTerminal();
+        modifiedSequence.append(nTermAsString).append('-');
+        modifiedSequence.append(AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.getSequence(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName));
+        modifiedSequence.append('-').append(cTermAsString);
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
 
-            modifiedSequence += "</html>";
+            modifiedSequence.append("</html>");
 
         }
 
-        return modifiedSequence;
+        return modifiedSequence.toString();
 
     }
 

@@ -22,7 +22,9 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideAminoAcidFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.PeptideFeature;
 import com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.AAPropertyFeature;
-import java.util.ArrayList;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.HashSet;
 
 /**
@@ -40,7 +42,7 @@ public class FeaturesGenerator {
     /**
      * The PTM factory.
      */
-    private final ModificationFactory ptmFactory = ModificationFactory.getInstance();
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
      * The map of the different features to include.
      */
@@ -62,15 +64,20 @@ public class FeaturesGenerator {
      * @param peptide the peptide
      * @param charge the charge
      * @param ionIndex the ion index
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the ms2pip features for the b ions
      */
-    public int[] getForwardIonsFeatures(Peptide peptide, int charge, int ionIndex) {
+    public int[] getForwardIonsFeatures(Peptide peptide, int charge, int ionIndex, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingPreferences);
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
-        return getIonsFeatures(peptideSequence, modificationMatches, charge, ionIndex);
+        return getIonsFeatures(peptideSequence, fixedModifications, modificationMatches, charge, ionIndex);
     }
 
     /**
@@ -80,22 +87,31 @@ public class FeaturesGenerator {
      * @param peptide the peptide
      * @param charge the charge
      * @param ionIndex the ion index
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the ms2pip features for the b ions
      */
-    public int[] getComplementaryIonsFeatures(Peptide peptide, int charge, int ionIndex) {
+    public int[] getComplementaryIonsFeatures(Peptide peptide, int charge, int ionIndex, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
         char[] peptideSequence = peptide.getSequence().toCharArray();
         int sequenceLength = peptideSequence.length;
         char[] reversedSequence = new char[sequenceLength];
 
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingPreferences);
+        String[] reversedModifications = new String[fixedModifications.length];
+        
         for (int i = 0; i < sequenceLength; i++) {
 
-            reversedSequence[i] = peptideSequence[sequenceLength - i - 1];
+            int j = sequenceLength - i - 1;
+            reversedSequence[i] = peptideSequence[j];
+            reversedModifications[i] = fixedModifications[j];
 
         }
 
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
         ModificationMatch[] reversedModificationMatches;
 
         reversedModificationMatches = new ModificationMatch[modificationMatches.length];
@@ -103,12 +119,12 @@ public class FeaturesGenerator {
         for (int i = 0; i < modificationMatches.length; i++) {
 
             ModificationMatch modificationMatch = modificationMatches[i];
-            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), sequenceLength - modificationMatch.getSite() + 1);
+            ModificationMatch reversedModificationMatch = new ModificationMatch(modificationMatch.getModification(), sequenceLength - modificationMatch.getSite() + 1);
             reversedModificationMatches[i] = reversedModificationMatch;
 
         }
 
-        return getIonsFeatures(reversedSequence, reversedModificationMatches, charge, ionIndex);
+        return getIonsFeatures(reversedSequence, reversedModifications, reversedModificationMatches, charge, ionIndex);
     }
 
     /**
@@ -116,13 +132,14 @@ public class FeaturesGenerator {
      * with modifications at the given charge.
      *
      * @param peptideSequence the peptide sequence as char array
-     * @param modificationMatches the modification matches
+     * @param fixedModifications the fixed modifications
+     * @param variableModifications the modification matches
      * @param charge the charge
      * @param ionIndex the ion index
      *
      * @return the ms2pip features for the b ions
      */
-    private int[] getIonsFeatures(char[] peptideSequence, ModificationMatch[] modificationMatches, int charge, int ionIndex) {
+    private int[] getIonsFeatures(char[] peptideSequence, String[] fixedModifications, ModificationMatch[] variableModifications, int charge, int ionIndex) {
 
         // Get the properties needed for peptides, ions, and amino acids
         AminoAcid.Property[] peptideProperties = getAaProperties(PeptideAminoAcidFeature.class);
@@ -134,7 +151,7 @@ public class FeaturesGenerator {
         );
 
         // Get the properties along the peptide sequence
-        PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, modificationMatches, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
+        PeptideAttributes peptideAttributes = new PeptideAttributes(peptideSequence, fixedModifications, variableModifications, peptideProperties, forwardIonProperties, complementaryIonProperties, individualAaProperties);
 
         // Prepare an array for the resutls
         int[] features = new int[featuresMap.getnFeatures()];
@@ -652,13 +669,16 @@ public class FeaturesGenerator {
          * Constructor.
          *
          * @param peptideSequence a peptide sequence as char array
-         * @param modificationMatches the modifications carried by the sequence
-         * @param peptideAminoAcidProperties
-         * @param forwardIonAminoAcidProperties
-         * @param complementaryIonAminoAcidProperties
-         * @param individualAminoAcidProperties
+         * @param fixedModifications the fixed modifications
+         * @param variableModifications the variable modifications
+         * @param peptideAminoAcidProperties the peptide amino acid properties
+         * @param forwardIonAminoAcidProperties the forward ion properties
+         * @param complementaryIonAminoAcidProperties the complementary ions
+         * properties
+         * @param individualAminoAcidProperties the individual amino acid
+         * properties
          */
-        private PeptideAttributes(char[] peptideSequence, ModificationMatch[] modificationMatches,
+        private PeptideAttributes(char[] peptideSequence, String[] fixedModifications, ModificationMatch[] variableModifications,
                 AminoAcid.Property[] peptideAminoAcidProperties, AminoAcid.Property[] forwardIonAminoAcidProperties,
                 AminoAcid.Property[] complementaryIonAminoAcidProperties, AminoAcid.Property[] individualAminoAcidProperties) {
 
@@ -773,13 +793,44 @@ public class FeaturesGenerator {
                 }
             }
 
-            // Iterate modifications
-            for (ModificationMatch modificationMatch : modificationMatches) {
+            // Iterate fixed modifications
+            for (int i = 0; i < fixedModifications.length; i++) {
+
+                String modificationName = fixedModifications[i];
+
+                if (modificationName != null) {
+
+                    Modification modification = modificationFactory.getModification(modificationName);
+                    double modificationMass = modification.getMass();
+
+                    peptideMass += modificationMass;
+
+                    int modificationSite = i == 0 ? 0 : i - 1;
+                    if (modificationSite == peptideSequence.length) {
+                        modificationSite = peptideSequence.length - 1;
+                    }
+
+                    modificationsMasses[modificationSite - 1] += modificationMass;
+
+                    for (int j = modificationSite - 1; j < peptideSequence.length; j++) {
+                        forwardIonMass[i] += modificationMass;
+                    }
+                }
+            }
+
+            // Iterate variable modifications
+            for (ModificationMatch modificationMatch : variableModifications) {
 
                 String modificationName = modificationMatch.getModification();
-                Modification modification = ptmFactory.getModification(modificationName);
+                Modification modification = modificationFactory.getModification(modificationName);
                 double modificationMass = modification.getMass();
                 int modificationSite = modificationMatch.getSite();
+
+                if (modificationSite == 0) {
+                    modificationSite = 1;
+                } else if (modificationSite == peptideSequence.length + 1) {
+                    modificationSite = peptideSequence.length;
+                }
 
                 peptideMass += modificationMass;
 

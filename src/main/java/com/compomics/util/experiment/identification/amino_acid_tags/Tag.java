@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
+import com.compomics.util.Util;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
@@ -7,6 +8,7 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -15,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
-import no.uib.jsparklines.renderers.util.Util;
 
 /**
  * This class represents a sequence mass tag.
@@ -46,23 +47,23 @@ public class Tag extends ExperimentObject {
      * @param tag the reference tag
      */
     public Tag(Tag tag) {
-        
+
         for (TagComponent tagComponent : tag.getContent()) {
-        
+
             if (tagComponent instanceof MassGap) {
-            
+
                 MassGap massGap = (MassGap) tagComponent;
                 addMassGap(massGap.getMass());
-            
+
             } else if (tagComponent instanceof AminoAcidSequence) {
-            
+
                 AminoAcidSequence aminoAcidSequence = new AminoAcidSequence((AminoAcidSequence) tagComponent);
                 addAminoAcidSequence(aminoAcidSequence);
-            
+
             } else {
-            
+
                 throw new UnsupportedOperationException("Tag constructor not implemeted for tag component " + tagComponent.getClass() + ".");
-            
+
             }
         }
     }
@@ -75,11 +76,11 @@ public class Tag extends ExperimentObject {
      * @param cTermGap the C-term mass gap
      */
     public Tag(double nTermGap, AminoAcidSequence sequenceTag, double cTermGap) {
-        
+
         addMassGap(nTermGap);
         addAminoAcidSequence(sequenceTag);
         addMassGap(cTermGap);
-    
+
     }
 
     /**
@@ -88,24 +89,28 @@ public class Tag extends ExperimentObject {
      * @return the content of this tag as a list
      */
     public ArrayList<TagComponent> getContent() {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         return content;
-    
+
     }
-    
+
     /**
      * Sets the content for the given tag.
-     * 
+     *
      * @param content an array of tag components
      */
-    public void setContent(ArrayList<TagComponent> content){
-    
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        
+    public void setContent(ArrayList<TagComponent> content) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+
         this.content = content;
-    
+
     }
 
     /**
@@ -114,13 +119,15 @@ public class Tag extends ExperimentObject {
      * @param massGap the value of the mass gap
      */
     public void addMassGap(double massGap) {
-    
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+
         if (massGap != 0) {
-        
+
             content.add(new MassGap(massGap));
-        
+
         }
     }
 
@@ -130,15 +137,17 @@ public class Tag extends ExperimentObject {
      * @param aminoAcidSequence the amino acid sequence with modifications
      */
     public void addAminoAcidSequence(AminoAcidSequence aminoAcidSequence) {
-    
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
+
         if (aminoAcidSequence.length() > 0) {
-        
+
             if (!content.isEmpty()) {
-            
+
                 TagComponent lastComponent = content.get(content.size() - 1);
-                
+
                 if (lastComponent instanceof AminoAcidSequence) {
 
                     AminoAcidSequence sequence = (AminoAcidSequence) lastComponent;
@@ -161,7 +170,9 @@ public class Tag extends ExperimentObject {
      */
     public String asSequence() {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         return content.stream()
                 .map(TagComponent::asSequence)
@@ -176,7 +187,9 @@ public class Tag extends ExperimentObject {
      */
     public String getLongestAminoAcidSequence() {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         String result = "";
         AminoAcidSequence lastAminoAcidSequence = null;
@@ -184,41 +197,40 @@ public class Tag extends ExperimentObject {
         for (TagComponent tagComponent : content) {
 
             if (tagComponent instanceof MassGap) {
-                
+
                 if (lastAminoAcidSequence != null && lastAminoAcidSequence.length() > result.length()) {
-                
+
                     result = lastAminoAcidSequence.asSequence();
-                
+
                 }
-                
+
                 lastAminoAcidSequence = null;
-                
+
             } else if (tagComponent instanceof AminoAcidSequence) {
-              
+
                 AminoAcidSequence currentSequence = (AminoAcidSequence) tagComponent;
-                
+
                 if (lastAminoAcidSequence != null) {
-                    
+
                     lastAminoAcidSequence.appendCTerm(currentSequence);
- 
+
                 }
-            
+
             } else {
-            
+
                 throw new UnsupportedOperationException("Longest amino acid sequence not implemented for tag component " + tagComponent.getClass() + ".");
-            
+
             }
         }
-        
-        
+
         if (lastAminoAcidSequence != null && lastAminoAcidSequence.length() > result.length()) {
-        
+
             result = lastAminoAcidSequence.asSequence();
-        
+
         }
-        
+
         return result;
-    
+
     }
 
     /**
@@ -227,14 +239,16 @@ public class Tag extends ExperimentObject {
      * @return the mass of the tag
      */
     public double getMass() {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         return StandardMasses.h2o.mass
                 + content.stream()
-                .mapToDouble(tagComponent -> tagComponent.getMass())
-                .sum();
-        
+                        .mapToDouble(tagComponent -> tagComponent.getMass())
+                        .sum();
+
     }
 
     /**
@@ -248,25 +262,27 @@ public class Tag extends ExperimentObject {
      * @return the theoretic mass of the tag
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         double mass = getMass();
-        
+
         if (!includeCTermGap) {
-        
+
             mass -= getCTerminalGap();
-        
+
         }
-        
+
         if (!includeNTermGap) {
-        
+
             mass -= getNTerminalGap();
-        
+
         }
-        
+
         return mass;
-    
+
     }
 
     /**
@@ -275,19 +291,21 @@ public class Tag extends ExperimentObject {
      * @return the N-terminal gap of the tag
      */
     public double getNTerminalGap() {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         if (content.isEmpty()) {
-        
+
             return 0.0;
-        
+
         }
-        
+
         TagComponent tagComponent = content.get(0);
-        
+
         if (tagComponent instanceof MassGap) {
-        
+
             return tagComponent.getMass();
 
         } else {
@@ -303,19 +321,21 @@ public class Tag extends ExperimentObject {
      * @return the C-terminal gap of the tag
      */
     public double getCTerminalGap() {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         if (content.isEmpty()) {
-        
+
             return 0.0;
-        
+
         }
-        
+
         TagComponent tagComponent = content.get(content.size() - 1);
-        
+
         if (tagComponent instanceof MassGap) {
-        
+
             return tagComponent.getMass();
 
         } else {
@@ -327,116 +347,122 @@ public class Tag extends ExperimentObject {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the modification found in the tag components are in the
-     * factory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+     * modification sites color coded or with modification tags, e.g,
+     * &lt;mox&gt;. /!\ this method will work only if the modification found in
+     * the tag components are in the factory. /!\ This method uses the
+     * modifications as set in the modification matches of this peptide and
+     * displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * modification tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true. the short names are used in the tags
-     * @param includeTerminalGaps if true. the terminal gaps will be displayed on
-     * the sequence
+     * @param includeTerminalGaps if true. the terminal gaps will be displayed
+     * on the sequence
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, null);
-    
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, null);
+
     }
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the modifications found in the tag components are in the
-     * factory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+     * modification sites color coded or with modification tags, e.g,
+     * &lt;mox&gt;. /!\ this method will work only if the modifications found in
+     * the tag components are in the factory. /!\ This method uses the
+     * modifications as set in the modification matches of this peptide and
+     * displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * modification tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true, the short names are used in the tags
-     * @param includeTerminalGaps if true, the terminal gaps will be displayed on
-     * the sequence
+     * @param includeTerminalGaps if true, the terminal gaps will be displayed
+     * on the sequence
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param displayedModifications the modifications to display
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, HashSet<String> displayedModifications) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, null);
-    
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
+        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, null);
+
     }
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the modification found in the peptide are in the
-     * factory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+     * modification sites color coded or with modification tags, e.g,
+     * &lt;mox&gt;. /!\ This method will work only if the modification found in
+     * the peptide are in the factory. /!\ This method uses the modifications as
+     * set in the modification matches of this peptide and displays all of them.
      *
-     * @param modificationProfile the modification profile of the search
+     * @param modificationParameters the modification profile of the search
      * @param tag the tag
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true, the short names are used in the tags
      * @return the tagged modified sequence as a string
-     * @param includeTerminalGaps if true, the terminal gaps will be displayed on
-     * the sequence
+     * @param includeTerminalGaps if true, the terminal gaps will be displayed
+     * on the sequence
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param displayedModifications the modifications to display
      */
-    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, Tag tag,
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, HashSet<String> displayedModifications) {
+    public static String getTaggedModifiedSequence(ModificationParameters modificationParameters, Tag tag,
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
 
         StringBuilder modifiedSequence = new StringBuilder();
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
-        
             modifiedSequence.append("<html>");
-        
         }
 
-        modifiedSequence.append(tag.getNTerminal(includeTerminalGaps));
+        modifiedSequence.append(tag.getNTerminal(includeTerminalGaps, modificationParameters, modificationsSequenceMatchingParameters)).append('-');
 
         for (int i = 0; i < tag.getContent().size(); i++) {
-            
+
             TagComponent tagComponent = tag.getContent().get(i);
-            
+
             if (tagComponent instanceof AminoAcidSequence) {
-            
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                modifiedSequence.append(aminoAcidSequence.getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, useShortName, displayedModifications));
-            
+                String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
+                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
+                modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, aminoAcidSequence.getSequence(), variableModifications, null, null, fixedModifications, useHtmlColorCoding, useShortName));
+
             } else if (tagComponent instanceof MassGap) {
-            
+
                 if (includeTerminalGaps || i > 0 && i < tag.getContent().size() - 1) {
-                
                     modifiedSequence.append(tagComponent.asSequence());
-                
                 }
-            
+
             } else {
-            
                 throw new UnsupportedOperationException("Tagged sequence not implemented for tag component " + tagComponent.getClass() + ".");
-            
             }
         }
 
-        modifiedSequence.append(tag.getCTerminal(includeTerminalGaps));
+        modifiedSequence.append('-').append(tag.getCTerminal(includeTerminalGaps, modificationParameters, modificationsSequenceMatchingParameters));
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
-        
             modifiedSequence.append("</html>");
-        
         }
 
         return modifiedSequence.toString();
@@ -446,57 +472,48 @@ public class Tag extends ExperimentObject {
      * Returns the N-terminal tag of this tag as a string for sequence display.
      *
      * @param includeTerminalGaps indicates whether mass gaps shall be included
+     * @param modificationParameters the modification profile of the search
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
      * @return the N-terminal tag of this tag
      */
-    public String getNTerminal(boolean includeTerminalGaps) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+    public String getNTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         if (content.isEmpty()) {
-        
             return "";
-        
         }
-        
+
         TagComponent firstComponent = content.get(0);
-        
-        if (firstComponent instanceof AminoAcidSequence) {
-        
+
+        if (firstComponent instanceof MassGap) {
+
+            return includeTerminalGaps ? firstComponent.asSequence() : Double.toString(Util.roundDouble(firstComponent.getMass(), 2));
+
+        } else if (firstComponent instanceof AminoAcidSequence) {
+
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) firstComponent;
-            String nTerm = "NH2";
-            ModificationFactory modificationFactory = ModificationFactory.getInstance();
-            
-            for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(1)) {
-            
-                Modification modification = modificationFactory.getModification(modificationMatch.getModification());
-                
-                if (modification.getModificationType() != ModificationType.modaa) {
-                
-                    nTerm = modification.getShortName();
-                
-                }
+
+            String nTermMod = aminoAcidSequence.getFixedModifications(true, false, modificationParameters, modificationsSequenceMatchingParameters)[0];
+
+            if (nTermMod != null) {
+                return Util.replaceAll(nTermMod, '-', ' ');
             }
-            
-            nTerm = nTerm.replaceAll("-", " ");
-            return nTerm + "-";
-        
-        } else if (firstComponent instanceof MassGap) {
-        
-            if (includeTerminalGaps) {
-            
-                return firstComponent.asSequence();
-            
-            } else {
-            
-                return Util.roundDouble(firstComponent.getMass(), 2) + "-";
-            
+
+            nTermMod = aminoAcidSequence.getIndexedVariableModifications()[0];
+
+            if (nTermMod != null) {
+                return Util.replaceAll(nTermMod, '-', ' ');
             }
-        
+
+            return "NH2";
+
         } else {
-        
             throw new UnsupportedOperationException("N-terminal tag not implemented for tag component " + firstComponent.getClass() + ".");
-        
         }
     }
 
@@ -504,12 +521,17 @@ public class Tag extends ExperimentObject {
      * Returns the C-terminal tag of this tag as a string for sequence display.
      *
      * @param includeTerminalGaps indicates whether mass gaps shall be included
+     * @param modificationParameters the modification profile of the search
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
      * @return the C-terminal tag of this tag
      */
-    public String getCTerminal(boolean includeTerminalGaps) {
+    public String getCTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         if (content.isEmpty()) {
 
@@ -519,43 +541,30 @@ public class Tag extends ExperimentObject {
 
         TagComponent lastComponent = content.get(content.size() - 1);
 
-        
-        if (lastComponent instanceof AminoAcidSequence) {
-        
+        if (lastComponent instanceof MassGap) {
+
+            return includeTerminalGaps ? lastComponent.asSequence() : Double.toString(Util.roundDouble(lastComponent.getMass(), 2));
+
+        } else if (lastComponent instanceof AminoAcidSequence) {
+
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) lastComponent;
-            String cTerm = "COOH";
-            ModificationFactory modificationFactory = ModificationFactory.getInstance();
-            
-            for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(aminoAcidSequence.length())) {
 
-                Modification modification = modificationFactory.getModification(modificationMatch.getModification());
+            String cTermMod = aminoAcidSequence.getFixedModifications(true, false, modificationParameters, modificationsSequenceMatchingParameters)[aminoAcidSequence.length() + 1];
 
-                if (modification.getModificationType() != ModificationType.modaa) {
-
-                    cTerm = modification.getShortName();
-
-                }
+            if (cTermMod != null) {
+                return Util.replaceAll(cTermMod, '-', ' ');
             }
 
-            cTerm = cTerm.replaceAll("-", " ");
-            return "-" + cTerm;
+            cTermMod = aminoAcidSequence.getIndexedVariableModifications()[aminoAcidSequence.length() + 1];
 
-        } else if (lastComponent instanceof MassGap) {
-
-            if (includeTerminalGaps) {
-
-                return lastComponent.asSequence();
-
-            } else {
-
-                return "-" + Util.roundDouble(lastComponent.getMass(), 2);
-
+            if (cTermMod != null) {
+                return Util.replaceAll(cTermMod, '-', ' ');
             }
+
+            return "COOH";
 
         } else {
-
             throw new UnsupportedOperationException("C-terminal tag not implemented for tag component " + lastComponent.getClass() + ".");
-
         }
     }
 
@@ -567,13 +576,14 @@ public class Tag extends ExperimentObject {
      */
     public int getLengthInAminoAcid() {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         int length = 0;
 
         for (TagComponent tagComponent : content) {
 
-            
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
@@ -600,17 +610,19 @@ public class Tag extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param modification the modification considered
-     * @param modificationSequenceMatchingPreferences the sequence matching preferences
-     * for the modification to amino acid sequence mapping
+     * @param modificationSequenceMatchingPreferences the sequence matching
+     * preferences for the modification to amino acid sequence mapping
      *
      * @return a list of potential modification sites
      */
     public ArrayList<Integer> getPotentialModificationSites(Modification modification, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         ArrayList<Integer> possibleSites = new ArrayList<>();
-        AminoAcidPattern modificationPattern = modification.getPattern(); 
+        AminoAcidPattern modificationPattern = modification.getPattern();
         int patternLength = modificationPattern.length();
 
         switch (modification.getModificationType()) {
@@ -621,7 +633,6 @@ public class Tag extends ExperimentObject {
 
                 for (TagComponent tagComponent : content) {
 
-                    
                     if (tagComponent instanceof AminoAcidSequence) {
 
                         AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
@@ -739,29 +750,31 @@ public class Tag extends ExperimentObject {
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         if (content.size() != anotherTag.getContent().size()) {
-        
+
             return false;
-        
+
         }
-        
+
         for (int i = 0; i < content.size(); i++) {
-        
+
             TagComponent component1 = content.get(i);
             TagComponent component2 = anotherTag.getContent().get(i);
-            
+
             if (!component1.isSameAs(component2, sequenceMatchingPreferences)) {
-            
+
                 return false;
-            
+
             }
         }
-        
+
         return true;
-    
+
     }
 
     /**
@@ -774,101 +787,100 @@ public class Tag extends ExperimentObject {
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         if (content.size() != anotherTag.getContent().size()) {
-        
+
             return false;
-        
+
         }
-        
+
         for (int i = 0; i < content.size(); i++) {
-        
+
             TagComponent component1 = content.get(i);
             TagComponent component2 = anotherTag.getContent().get(i);
-            
+
             if (!component1.isSameSequenceAndModificationStatusAs(component2, sequenceMatchingPreferences)) {
-            
+
                 return false;
-            
+
             }
         }
-        
+
         return true;
-    
+
     }
 
     /**
      * Returns the tag modifications as a string.
      *
      * @param tag the tag
+     *
      * @return the peptide modifications as a string
      */
     public static String getTagModificationsAsString(Tag tag) {
-        
+
         HashMap<String, ArrayList<Integer>> modMap = new HashMap<>();
         int offset = 0;
-        
+
         for (TagComponent tagComponent : tag.getContent()) {
-        
+
             if (tagComponent instanceof MassGap) {
-            
+
                 offset++;
-            
+
             } else if (tagComponent instanceof AminoAcidSequence) {
-                
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                
-                for (int i = 1; i <= aminoAcidSequence.length(); i++) {
-                
-                    for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i)) {
-                    
-                        if (modificationMatch.getVariable()) {
-                        
-                            if (!modMap.containsKey(modificationMatch.getModification())) {
-                            
-                                modMap.put(modificationMatch.getModification(), new ArrayList<>());
-                            
-                            }
-                            
-                            modMap.get(modificationMatch.getModification()).add(i + offset);
-                        
-                        }
+
+                ModificationMatch[] variableModifications = aminoAcidSequence.getVariableModifications();
+
+                for (ModificationMatch modificationMatch : variableModifications) {
+
+                    if (!modMap.containsKey(modificationMatch.getModification())) {
+
+                        modMap.put(modificationMatch.getModification(), new ArrayList<>(1));
+
                     }
+
+                    modMap.get(modificationMatch.getModification()).add(modificationMatch.getSite() + offset);
+
                 }
-                
+
                 offset += aminoAcidSequence.length();
-            
+
             } else {
-            
+
                 throw new UnsupportedOperationException("Modification summary not implemented for TagComponent " + tagComponent.getClass() + ".");
-            
+
             }
         }
-        
+
         return modMap.entrySet().stream()
                 .map(entry -> getModificationLine(entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(","));
     }
-    
+
     /**
      * Returns a description line for a modification and its sites.
-     * 
+     *
      * @param modName the name of the modification
      * @param sites the list of sites
-     * 
+     *
      * @return a description line for a modification and its sites
      */
     private static String getModificationLine(String modName, ArrayList<Integer> sites) {
-        
+
         String sitesString = sites.stream()
                 .map(site -> site.toString())
                 .collect(Collectors.joining(","));
-        
+
         StringBuilder modLine = new StringBuilder(modName.length() + sitesString.length() + 2);
         modLine.append(modName).append("(").append(sitesString).append(")");
-        
+
         return modLine.toString();
     }
 
@@ -881,23 +893,25 @@ public class Tag extends ExperimentObject {
      * @return a new tag instance which is a reversed version of the current tag
      */
     public Tag reverse(boolean yIon) {
-        
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
-        
+
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
+
         Tag newTag = new Tag();
-        
+
         for (int i = content.size() - 1; i >= 0; i--) {
-            
+
             TagComponent tagComponent = content.get(i);
-            
+
             if (tagComponent instanceof MassGap) {
-            
+
                 double mass = tagComponent.getMass();
-                
+
                 if (i == content.size() - 1) {
-                
+
                     if (yIon) {
-                    
+
                         mass += StandardMasses.h2o.mass;
 
                     } else {
@@ -944,7 +958,9 @@ public class Tag extends ExperimentObject {
      */
     public boolean canReverse() {
 
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         TagComponent terminalComponent = content.get(0);
 

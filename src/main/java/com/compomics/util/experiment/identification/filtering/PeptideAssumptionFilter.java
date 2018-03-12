@@ -7,9 +7,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
@@ -17,7 +15,6 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.TreeMap;
-import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 
 /**
  * This class filters peptide assumptions based on various properties.
@@ -251,7 +248,7 @@ public class PeptideAssumptionFilter implements Serializable {
         // check if a modification could not be parsed
         if (unknownModification) {
 
-            ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+            ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
             if (Arrays.stream(modificationMatches)
                     .map(ModificationMatch::getModification)

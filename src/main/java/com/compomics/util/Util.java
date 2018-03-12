@@ -193,6 +193,29 @@ public class Util {
         }
         return false;
     }
+    
+    /**
+     * Replaces all characters equals to a by b in the given string.
+     * 
+     * @param string the string
+     * @param a a
+     * @param b b
+     * 
+     * @return a string equal to string with a replaced by b
+     */
+    public static String replaceAll(String string, char a, char b) {
+        
+        char[] stringArray = string.toCharArray();
+        
+        for (int i = 0 ; i < stringArray.length ; i++) {
+            
+            if (stringArray[i] == a) {
+                stringArray[i] = b;
+            }
+        }
+        
+        return new String(stringArray);
+    }
 
     /**
      * Rounds a double value to the wanted number of decimal places.

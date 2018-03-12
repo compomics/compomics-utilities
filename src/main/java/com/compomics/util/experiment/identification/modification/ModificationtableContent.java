@@ -13,8 +13,6 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Annotati
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.parameters.identification.IdentificationParameters;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -246,7 +244,7 @@ public class ModificationtableContent {
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
             AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
 
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
         ModificationMatch[] newMatches = Arrays.stream(modificationMatches)
                 .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))

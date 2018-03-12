@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.identification.utils.PeptideUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
@@ -320,10 +321,9 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the variable modifications indexed by site. Modifications should
-     * be provided indexed by site as follows: N-term modifications are at index
-     * 0, C-term at sequence length + 1, and amino acid at 1-based index on the
-     * sequence.
+     * Returns the variable modifications indexed by site. Modifications are
+     * indexed by site as follows: N-term modifications are at index 0, C-term
+     * at sequence length + 1, and amino acid at 1-based index on the sequence.
      *
      * @return the variable modifications indexed by site
      */
@@ -363,7 +363,7 @@ public class Peptide extends ExperimentObject {
      * modification parameters
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
-     * paramters to use for modifications
+     * parameters to use for modifications
      *
      * @return the fixed modifications for this peptide
      */
@@ -377,7 +377,7 @@ public class Peptide extends ExperimentObject {
 
             Modification modification = modificationFactory.getModification(modName);
 
-            int[] sites = PeptideUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+            int[] sites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
 
             for (int site : sites) {
 
@@ -1145,7 +1145,7 @@ public class Peptide extends ExperimentObject {
 
             if (modification.getModificationType().isNTerm()) {
 
-                int[] possibleSites = PeptideUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
 
                 if (possibleSites.length > 0) {
 
@@ -1199,7 +1199,7 @@ public class Peptide extends ExperimentObject {
 
             if (modification.getModificationType().isCTerm()) {
 
-                int[] possibleSites = PeptideUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
 
                 if (possibleSites.length > 0) {
 
@@ -1294,7 +1294,7 @@ public class Peptide extends ExperimentObject {
 
                 if (modification.getModificationType() == ModificationType.modaa) {
 
-                    int[] sites = PeptideUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+                    int[] sites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
 
                     for (int site : sites) {
 

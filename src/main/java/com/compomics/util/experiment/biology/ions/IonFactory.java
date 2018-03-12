@@ -188,7 +188,7 @@ public class IonFactory {
      * modification parameters
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
-     * paramters to use for modifications
+     * parameters to use for modifications
      *
      * @return the expected fragment ions
      */
@@ -754,9 +754,16 @@ public class IonFactory {
      * PTMFactory.
      *
      * @param tag the considered tag
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
+     *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag) {
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<>();
         HashSet<String> possibleNeutralLosses = new HashSet<>(getDefaultNeutralLosses());
@@ -769,40 +776,54 @@ public class IonFactory {
         int ionNumberOffset = 1;
         ArrayList<Double> massOffsets = new ArrayList<>();
         massOffsets.add(0.0);
-        for (TagComponent tagComponent : tag.getContent()) {
+
+        ArrayList<TagComponent> tagContent = tag.getContent();
+
+        for (int tagIndex = 0; tagIndex < tagContent.size(); tagIndex++) {
+
+            TagComponent tagComponent = tagContent.get(tagIndex);
 
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 double sequenceMass = 0;
 
-                ModificationMatch[] modificationMatches = aminoAcidSequence.getModifications();
-                ArrayList<Modification>[] indexedModifications = new ArrayList[aminoAcidSequence.length()];
+                String[] variableModNames = aminoAcidSequence.getIndexedVariableModifications();
+                String[] fixedModNames = aminoAcidSequence.getFixedModifications(tagIndex == 0, tagIndex == tagContent.size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
 
-                HashSet<String> newModifications = new HashSet<>(2);
+                HashSet<String> newModifications = new HashSet<>(0);
+                Modification[] variableModifications = new Modification[variableModNames.length];
+                Modification[] fixedModifications = new Modification[fixedModNames.length];
 
-                for (ModificationMatch modificationMatch : modificationMatches) {
+                for (int i = 0; i < variableModifications.length; i++) {
 
-                    int site = modificationMatch.getSite();
-                    String modificationName = modificationMatch.getModification();
+                    String modName = variableModNames[i];
 
-                    if (!allModifications.contains(modificationName)) {
-                        newModifications.add(modificationName);
-                        allModifications.add(modificationName);
+                    if (modName != null) {
+
+                        if (!allModifications.contains(modName)) {
+                            newModifications.add(modName);
+                            allModifications.add(modName);
+                        }
+
+                        Modification modification = modificationFactory.getModification(modName);
+                        variableModifications[i] = modification;
+
                     }
 
-                    ArrayList<Modification> modsAtSite = indexedModifications[site - 1];
+                    modName = fixedModNames[i];
 
-                    if (modsAtSite == null) {
+                    if (modName != null) {
 
-                        modsAtSite = new ArrayList<>(1);
-                        indexedModifications[site - 1] = modsAtSite;
+                        if (!allModifications.contains(modName)) {
+                            newModifications.add(modName);
+                            allModifications.add(modName);
+                        }
+
+                        Modification modification = modificationFactory.getModification(modName);
+                        fixedModifications[i] = modification;
 
                     }
-
-                    Modification modification = ModificationFactory.getInstance().getModification(modificationName);
-                    modsAtSite.add(modification);
-
                 }
 
                 for (String modName : newModifications) {
@@ -870,17 +891,19 @@ public class IonFactory {
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
-                    ArrayList<Modification> modificationsAtSite = indexedModifications[i];
                     
-                    if (modificationsAtSite != null) {
-                    
-                        for (Modification modification : modificationsAtSite) {
-                            
-                            mass += modification.getMass();
-                            
-                        }
+                    Modification modification = variableModifications[i];
+
+                    if (modification != null) {
+                        mass += modification.getMass();
                     }
                     
+                    modification = fixedModifications[i];
+
+                    if (modification != null) {
+                        mass += modification.getMass();
+                    }
+
                     sequenceMass += mass;
 
                     ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
@@ -1002,40 +1025,52 @@ public class IonFactory {
         massOffsets.add(0.0);
         allModifications.clear();
         possibleNeutralLosses.clear();
-        for (TagComponent tagComponent : reversedTag) {
-            
+
+        for (int tagIndex = 0; tagIndex < tagContent.size(); tagIndex++) {
+
+            TagComponent tagComponent = tagContent.get(tagIndex);
+
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 double sequenceMass = 0;
 
-                ModificationMatch[] modificationMatches = aminoAcidSequence.getModifications();
-                ArrayList<Modification>[] indexedModifications = new ArrayList[aminoAcidSequence.length()];
+                String[] variableModNames = aminoAcidSequence.getIndexedVariableModifications();
+                String[] fixedModNames = aminoAcidSequence.getFixedModifications(tagIndex == 0, tagIndex == tagContent.size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
 
-                HashSet<String> newModifications = new HashSet<>(2);
+                HashSet<String> newModifications = new HashSet<>(0);
+                Modification[] variableModifications = new Modification[variableModNames.length];
+                Modification[] fixedModifications = new Modification[fixedModNames.length];
 
-                for (ModificationMatch modificationMatch : modificationMatches) {
+                for (int i = 0; i < variableModifications.length; i++) {
 
-                    int site = modificationMatch.getSite();
-                    String modificationName = modificationMatch.getModification();
+                    String modName = variableModNames[i];
 
-                    if (!allModifications.contains(modificationName)) {
-                        newModifications.add(modificationName);
-                        allModifications.add(modificationName);
+                    if (modName != null) {
+
+                        if (!allModifications.contains(modName)) {
+                            newModifications.add(modName);
+                            allModifications.add(modName);
+                        }
+
+                        Modification modification = modificationFactory.getModification(modName);
+                        variableModifications[i] = modification;
+
                     }
 
-                    ArrayList<Modification> modsAtSite = indexedModifications[site - 1];
+                    modName = fixedModNames[i];
 
-                    if (modsAtSite == null) {
+                    if (modName != null) {
 
-                        modsAtSite = new ArrayList<>(1);
-                        indexedModifications[site - 1] = modsAtSite;
+                        if (!allModifications.contains(modName)) {
+                            newModifications.add(modName);
+                            allModifications.add(modName);
+                        }
+
+                        Modification modification = modificationFactory.getModification(modName);
+                        fixedModifications[i] = modification;
 
                     }
-
-                    Modification modification = ModificationFactory.getInstance().getModification(modificationName);
-                    modsAtSite.add(modification);
-
                 }
 
                 for (String modName : newModifications) {
@@ -1088,17 +1123,19 @@ public class IonFactory {
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
-                    ArrayList<Modification> modificationsAtSite = indexedModifications[i];
                     
-                    if (modificationsAtSite != null) {
-                    
-                        for (Modification modification : modificationsAtSite) {
-                            
-                            mass += modification.getMass();
-                            
-                        }
+                    Modification modification = variableModifications[i];
+
+                    if (modification != null) {
+                        mass += modification.getMass();
                     }
                     
+                    modification = fixedModifications[i];
+
+                    if (modification != null) {
+                        mass += modification.getMass();
+                    }
+
                     sequenceMass += mass;
 
                     ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);

@@ -5,18 +5,15 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import java.awt.Color;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,10 +36,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     private StringBuilder sequenceStringBuilder = null;
     /**
-     * The modifications carried by the amino acid sequence at target amino
-     * acids. 1 is the first amino acid.
+     * The variable modifications carried by the amino acid sequence at target
+     * amino acids. 1 is the first amino acid.
      */
-    private ModificationMatch[] modifications = null;
+    private ModificationMatch[] variableModifications = null;
     /**
      * Convenience array for no modifications
      */
@@ -67,11 +64,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * Constructor taking a sequence of amino acids as input.
      *
      * @param sequence a sequence of amino acids
-     * @param modifications the modifications of this sequence in a map
+     * @param variableModifications the variable modifications of this sequence
      */
-    public AminoAcidSequence(String sequence, ModificationMatch[] modifications) {
+    public AminoAcidSequence(String sequence, ModificationMatch[] variableModifications) {
         this.sequence = sequence;
-        this.modifications = modifications;
+        this.variableModifications = variableModifications;
     }
 
     /**
@@ -82,11 +79,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     public AminoAcidSequence(AminoAcidSequence sequence) {
 
         this.sequence = sequence.getSequence();
-        ModificationMatch[] modificationMatches = sequence.getModifications();
+        ModificationMatch[] modificationMatches = sequence.getVariableModifications();
 
         if (modificationMatches.length > 0) {
 
-            modifications = Arrays.stream(modificationMatches)
+            variableModifications = Arrays.stream(modificationMatches)
                     .map(ModificationMatch::clone)
                     .toArray(ModificationMatch[]::new);
 
@@ -365,7 +362,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         int previousLength = length();
         sequenceStringBuilder.append(otherSequence.getSequence());
 
-        ModificationMatch[] otherModifications = otherSequence.getModifications();
+        ModificationMatch[] otherModifications = otherSequence.getVariableModifications();
 
         if (otherModifications.length > 0) {
 
@@ -374,16 +371,16 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     .peek(modificationMatch -> modificationMatch.setSite(modificationMatch.getSite() + previousLength))
                     .toArray(ModificationMatch[]::new);
 
-            if (modifications == null) {
+            if (variableModifications == null) {
 
-                modifications = otherModifications;
+                variableModifications = otherModifications;
 
             } else {
 
-                ModificationMatch[] mergedModifications = new ModificationMatch[modifications.length + otherModifications.length];
-                System.arraycopy(modifications, 0, mergedModifications, 0, modifications.length);
-                System.arraycopy(otherModifications, 0, mergedModifications, modifications.length, otherModifications.length);
-                modifications = mergedModifications;
+                ModificationMatch[] mergedModifications = new ModificationMatch[variableModifications.length + otherModifications.length];
+                System.arraycopy(variableModifications, 0, mergedModifications, 0, variableModifications.length);
+                System.arraycopy(otherModifications, 0, mergedModifications, variableModifications.length, otherModifications.length);
+                variableModifications = mergedModifications;
 
             }
         }
@@ -422,7 +419,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         setSequenceStringBuilder(true);
         sequenceStringBuilder.insert(0, otherSequence.getSequence());
         int otherSequenceLength = otherSequence.length();
-        ModificationMatch[] otherModifications = otherSequence.getModifications();
+        ModificationMatch[] otherModifications = otherSequence.getVariableModifications();
 
         if (otherModifications.length > 0) {
 
@@ -431,13 +428,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     .peek(modificationMatch -> modificationMatch.setSite(modificationMatch.getSite() + offset))
                     .toArray(ModificationMatch[]::new);
 
-            if (modifications == null) {
+            if (variableModifications == null) {
 
-                modifications = otherModifications;
+                variableModifications = otherModifications;
 
             } else {
 
-                for (ModificationMatch modificationMatch : modifications) {
+                for (ModificationMatch modificationMatch : variableModifications) {
 
                     int oldSite = modificationMatch.getSite();
 
@@ -450,8 +447,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
                 }
 
-                modifications = Arrays.copyOf(modifications, modifications.length + otherModifications.length);
-                System.arraycopy(otherModifications, 0, modifications, modifications.length, otherModifications.length);
+                variableModifications = Arrays.copyOf(variableModifications, variableModifications.length + otherModifications.length);
+                System.arraycopy(otherModifications, 0, variableModifications, variableModifications.length, otherModifications.length);
 
             }
         }
@@ -514,13 +511,47 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return the modifications matches as found by the search engine
      */
-    public ModificationMatch[] getModifications() {
+    public ModificationMatch[] getVariableModifications() {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return modifications == null ? noMod : modifications;
+        return variableModifications == null ? noMod : variableModifications;
+
+    }
+
+    /**
+     * Returns the variable modifications indexed by site. Modifications are
+     * indexed by site as follows: N-term modifications are at index 0, C-term
+     * at sequence length + 1, and amino acid at 1-based index on the sequence.
+     *
+     * @return the variable modifications indexed by site
+     */
+    public String[] getIndexedVariableModifications() {
+
+        String[] result = new String[length()];
+
+        if (variableModifications != null) {
+
+            for (ModificationMatch modificationMatch : variableModifications) {
+
+                String modName = modificationMatch.getModification();
+                int site = modificationMatch.getSite();
+
+                if (result[site] == null) {
+
+                    result[site] = modName;
+
+                } else {
+
+                    throw new IllegalArgumentException("Two modifications (" + result[site] + " and " + modName + ") found on sequence " + getSequence() + " at site " + site + ".");
+
+                }
+            }
+        }
+
+        return result;
 
     }
 
@@ -529,209 +560,81 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @param modificationMatch the modification match
      */
-    public void addModificationMatch(ModificationMatch modificationMatch) {
+    public void addVariableModification(ModificationMatch modificationMatch) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        modifications = modifications == null ? new ModificationMatch[1] : Arrays.copyOf(modifications, modifications.length + 1);
+        variableModifications = variableModifications == null ? new ModificationMatch[1] : Arrays.copyOf(variableModifications, variableModifications.length + 1);
 
-        modifications[modifications.length - 1] = modificationMatch;
+        variableModifications[variableModifications.length - 1] = modificationMatch;
 
     }
 
     /**
-     * Sets the modifications.
+     * Sets the variable modifications.
      *
-     * @param modifications the modifications
+     * @param variableModifications the modifications
      */
-    public void setModifications(ModificationMatch[] modifications) {
+    public void setVariableModifications(ModificationMatch[] variableModifications) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        this.modifications = modifications;
+        this.variableModifications = variableModifications;
 
     }
 
     /**
-     * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. Modifications should be provided indexed by site as follows:
-     * N-term modifications are at index 0, C-term at sequence length + 1, and
-     * amino acid at 1-based index on the sequence.
+     * Returns the fixed modifications for this sequence based on the given
+     * modification parameters. Modifications are returned as array of
+     * modification names as they appear on the sequence. N-term modifications
+     * are at index 0, C-term at index sequence length + 1, and other
+     * modifications at amino acid index starting from 1. An error is thrown if
+     * attempting to stack modifications. Protein modifications are not taken
+     * into account.
      *
-     * @param modificationProfile the modification profile of the search
-     * @param sequence the amino acid sequence to annotate
-     * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number &gt; list of modifications (1 is
-     * the first AA) (can be null)
-     * @param representativeAmbiguousModificationSites the representative site
-     * of the ambiguously localized variable modifications in a map: aa number
-     * &gt; list of modifications (1 is the first AA) (can be null)
-     * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number &gt;
-     * list of modifications (1 is the first AA) (can be null)
-     * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number &gt; list of modifications (1 is the first AA) (can be null)
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
+     * @param nTerm boolean indicating whether the sequence is located at the
+     * n-term
+     * @param cTerm boolean indicating whether the sequence is located at the
+     * c-term
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
-     * @return the tagged modified sequence as a string
+     * @return the fixed modifications for this peptide
      */
-    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, String sequence,
-            String[] confidentModificationSites,
-            String[] representativeAmbiguousModificationSites,
-            String[] secondaryAmbiguousModificationSites,
-            String[] fixedModificationSites, boolean useHtmlColorCoding,
-            boolean useShortName) {
-
-        if (confidentModificationSites == null) {
-            confidentModificationSites = new String[sequence.length()];
-        }
-
-        if (representativeAmbiguousModificationSites == null) {
-            representativeAmbiguousModificationSites = new String[sequence.length()];
-        }
-
-        if (secondaryAmbiguousModificationSites == null) {
-            secondaryAmbiguousModificationSites = new String[sequence.length()];
-        }
-
-        if (fixedModificationSites == null) {
-            fixedModificationSites = new String[sequence.length()];
-        }
-
-        StringBuilder modifiedSequence = new StringBuilder(sequence.length());
-
-        for (int aa = 1; aa <= sequence.length(); aa++) {
-
-            int aaIndex = aa - 1;
-            char aminoAcid = sequence.charAt(aaIndex);
-
-            appendTaggedResidue(modifiedSequence, aminoAcid,
-                    confidentModificationSites[aa], representativeAmbiguousModificationSites[aa], secondaryAmbiguousModificationSites[aa], fixedModificationSites[aa],
-                    modificationProfile, useHtmlColorCoding, useShortName);
-
-        }
-
-        return modifiedSequence.toString();
-    }
-
-    /**
-     * Returns the single residue as a tagged string (HTML color or PTM tag).
-     * Modified sites are color coded according to three levels: 1- black
-     * foreground, colored background 2- colored foreground, white background 3-
-     * colored foreground
-     *
-     * @param stringBuilder the string builder
-     * @param residue the residue to tag
-     * @param confidentModification the confident ptm at site
-     * @param representativeAmbiguousModification the representative ptm at site
-     * @param secondaryAmbiguousModification the secondary ptm at site
-     * @param fixedModification the fixed ptm at site
-     * @param modificationProfile the modification profile
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     */
-    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue,
-            String confidentModification,
-            String representativeAmbiguousModification,
-            String secondaryAmbiguousModification,
-            String fixedModification,
-            ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName) {
-
-        if (confidentModification != null) {
-
-            appendTaggedResidue(stringBuilder, residue, confidentModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
-
-        } else if (representativeAmbiguousModification != null) {
-
-            appendTaggedResidue(stringBuilder, residue, representativeAmbiguousModification, modificationProfile, 2, useHtmlColorCoding, useShortName);
-
-        } else if (secondaryAmbiguousModification != null) {
-
-            appendTaggedResidue(stringBuilder, residue, secondaryAmbiguousModification, modificationProfile, 3, useHtmlColorCoding, useShortName);
-
-        } else if (fixedModification != null) {
-
-            appendTaggedResidue(stringBuilder, residue, fixedModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
-
-        } else {
-
-            Character.toString(residue);
-
-        }
-    }
-
-    /**
-     * Appends the single residue as a tagged string (HTML color or PTM tag).
-     * Modified sites are color coded according to three levels: 1- black
-     * foreground, colored background 2- colored foreground, white background 3-
-     * colored foreground
-     *
-     * @param stringBuilder the string builder
-     * @param residue the residue to tag
-     * @param modificationName the name of the PTM
-     * @param modificationProfile the modification profile
-     * @param localizationConfidenceLevel the localization confidence level
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     */
-    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue, String modificationName, ModificationParameters modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
+    public String[] getFixedModifications(boolean nTerm, boolean cTerm, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        Modification modification = modificationFactory.getModification(modificationName);
 
-        if (!useHtmlColorCoding) {
+        String[] result = new String[sequence.length() + 2];
 
-            if (localizationConfidenceLevel == 1 || localizationConfidenceLevel == 2) {
+        for (String modName : modificationParameters.getFixedModifications()) {
 
-                if (useShortName) {
+            Modification modification = modificationFactory.getModification(modName);
 
-                    stringBuilder.append(residue).append("<").append(modification.getShortName()).append(">");
+            int[] sites = ModificationUtils.getPossibleModificationSites(this, nTerm, cTerm, modification, modificationsSequenceMatchingParameters);
+
+            for (int site : sites) {
+
+                if (result[site] == null) {
+
+                    result[site] = modification.getName();
 
                 } else {
 
-                    stringBuilder.append(residue).append("<").append(modificationName).append(">");
+                    throw new IllegalArgumentException("Attempting to put two fixed modifications (" + result[site] + " and " + modification.getName() + " on amino acid " + site + " of peptide " + getSequence() + ".");
 
                 }
-
-            } else if (localizationConfidenceLevel == 3) {
-
-                stringBuilder.append(residue);
-
-            }
-
-        } else {
-
-            Color modificationColor = modificationProfile.getColor(modificationName);
-
-            switch (localizationConfidenceLevel) {
-                case 1:
-                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
-                    break;
-
-                case 2:
-                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                    break;
-
-                case 3:
-                    // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
-                    // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                    stringBuilder.append(residue);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
             }
         }
+
+        return result;
+
     }
 
     /**
@@ -758,8 +661,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
-        ModificationMatch[] modificationMatches1 = getModifications();
-        ModificationMatch[] modificationMatches2 = anotherSequence.getModifications();
+        ModificationMatch[] modificationMatches1 = getVariableModifications();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getVariableModifications();
 
         Map<Double, HashSet<ModificationMatch>> mods1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
@@ -806,8 +709,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             return false;
         }
 
-        ModificationMatch[] modificationMatches1 = getModifications();
-        ModificationMatch[] modificationMatches2 = anotherSequence.getModifications();
+        ModificationMatch[] modificationMatches1 = getVariableModifications();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getVariableModifications();
 
         if (modificationMatches1.length != modificationMatches2.length) {
             return false;
@@ -846,12 +749,12 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         setSequenceStringBuilder(false);
         AminoAcidSequence newSequence = new AminoAcidSequence((new StringBuilder(sequence)).reverse().toString());
 
-        ModificationMatch[] newModifications = Arrays.stream(modifications)
+        ModificationMatch[] newModifications = Arrays.stream(variableModifications)
                 .map(ModificationMatch::clone)
                 .peek(modificationMatch -> modificationMatch.setSite(sequence.length() - modificationMatch.getSite()))
                 .toArray(ModificationMatch[]::new);
 
-        newSequence.setModifications(modifications);
+        newSequence.setVariableModifications(variableModifications);
 
         return newSequence;
 
@@ -1049,10 +952,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 .mapToDouble(AminoAcid::getMonoisotopicMass)
                 .sum();
 
-        if (modifications != null) {
+        if (variableModifications != null) {
 
             ModificationFactory modificationFactory = ModificationFactory.getInstance();
-            mass += Arrays.stream(modifications)
+            mass += Arrays.stream(variableModifications)
                     .mapToDouble(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass())
                     .sum();
 

@@ -8,6 +8,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -81,9 +82,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     public AminoAcidSequence(AminoAcidSequence sequence) {
 
         this.sequence = sequence.getSequence();
-        ModificationMatch[] modificationMatches = sequence.getModificationMatches();
+        ModificationMatch[] modificationMatches = sequence.getModifications();
 
-        if (modificationMatches != null) {
+        if (modificationMatches.length > 0) {
 
             modifications = Arrays.stream(modificationMatches)
                     .map(ModificationMatch::clone)
@@ -364,7 +365,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         int previousLength = length();
         sequenceStringBuilder.append(otherSequence.getSequence());
 
-        ModificationMatch[] otherModifications = otherSequence.getModificationMatches();
+        ModificationMatch[] otherModifications = otherSequence.getModifications();
 
         if (otherModifications.length > 0) {
 
@@ -421,7 +422,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         setSequenceStringBuilder(true);
         sequenceStringBuilder.insert(0, otherSequence.getSequence());
         int otherSequenceLength = otherSequence.length();
-        ModificationMatch[] otherModifications = otherSequence.getModificationMatches();
+        ModificationMatch[] otherModifications = otherSequence.getModifications();
 
         if (otherModifications.length > 0) {
 
@@ -513,13 +514,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @return the modifications matches as found by the search engine
      */
-    public ModificationMatch[] getModificationMatches() {
+    public ModificationMatch[] getModifications() {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return modifications;
+        return modifications == null ? noMod : modifications;
 
     }
 
@@ -757,8 +758,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
-        ModificationMatch[] modificationMatches1 = getModificationMatches();
-        ModificationMatch[] modificationMatches2 = anotherSequence.getModificationMatches();
+        ModificationMatch[] modificationMatches1 = getModifications();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getModifications();
 
         Map<Double, HashSet<ModificationMatch>> mods1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
@@ -805,8 +806,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             return false;
         }
 
-        ModificationMatch[] modificationMatches1 = getModificationMatches();
-        ModificationMatch[] modificationMatches2 = anotherSequence.getModificationMatches();
+        ModificationMatch[] modificationMatches1 = getModifications();
+        ModificationMatch[] modificationMatches2 = anotherSequence.getModifications();
 
         if (modificationMatches1.length != modificationMatches2.length) {
             return false;

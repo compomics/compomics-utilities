@@ -2,6 +2,7 @@ package com.compomics.util.experiment.biology.atoms;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -22,24 +23,12 @@ public class AtomChain implements Serializable {
     private ArrayList<AtomImpl> atomChain;
     /**
      * The mass of the atom chain.
-     * 
-     * @deprecated use the double value instead
      */
-    private final Double mass = null;
-    /**
-     * The mass of the atom chain.
-     */
-    private double mass1 = -1.0;
-    /**
-     * Cache for the string value.
-     * 
-     * @deprecated deprecated since utilities version 4.8.2. Use stringValue1 instead.
-     */
-    private final String stringValue = null;
+    private double mass = -1.0;
     /**
      * Cache for the string value.
      */
-    private String stringValue1 = null;
+    private String stringValue = null;
 
     /**
      * Creates an empty atom chain.
@@ -152,7 +141,7 @@ public class AtomChain implements Serializable {
      */
     public void append(AtomImpl atom) {
         atomChain.add(atom);
-        stringValue1 = null;
+        stringValue = null;
     }
 
     /**
@@ -168,7 +157,7 @@ public class AtomChain implements Serializable {
         for (int i = 0; i < occurrence; i++) {
             atomChain.add(atom);
         }
-        stringValue1 = null;
+        stringValue = null;
     }
 
     /**
@@ -186,10 +175,10 @@ public class AtomChain implements Serializable {
      * @return the mass of the atomic chain as sum of the individual atoms
      */
     public double getMass() {
-        if (mass1 == -1.0) {
+        if (mass == -1.0) {
             estimateMass();
         }
-        return mass1;
+        return mass;
     }
 
     /**
@@ -205,12 +194,10 @@ public class AtomChain implements Serializable {
      * Estimates the mass of the atom chain.
      */
     private synchronized void estimateMass() {
-        if (mass1 == -1.0) {
-            double tempMass = 0.0;
-            for (AtomImpl atom : atomChain) {
-                tempMass += atom.getMass();
-            }
-            mass1 = tempMass;
+        if (mass == -1.0) {
+            mass = atomChain.stream()
+                    .mapToDouble(AtomImpl::getMass)
+                    .sum();
         }
     }
 
@@ -224,7 +211,7 @@ public class AtomChain implements Serializable {
      */
     private synchronized String getStringValue(boolean includeSpaces) {
 
-        if (stringValue1 == null) {
+        if (stringValue == null) {
             HashMap<String, Integer> composition = new HashMap<>(atomChain.size());
             HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<>(atomChain.size());
 
@@ -267,9 +254,9 @@ public class AtomChain implements Serializable {
                 }
             }
 
-            stringValue1 = compositionAsString.toString();
+            stringValue = compositionAsString.toString();
         }
-        return stringValue1;
+        return stringValue;
     }
 
     /**
@@ -306,8 +293,8 @@ public class AtomChain implements Serializable {
             }
         }
         atomChain = newAtomChain;
-        mass1 = -1.0;
-        stringValue1 = null;
+        mass = -1.0;
+        stringValue = null;
     }
 
     /**
@@ -320,8 +307,8 @@ public class AtomChain implements Serializable {
     public void setOccurrence(Atom atom, Integer isotope, Integer occurrence) {
         remove(atom, isotope);
         append(new AtomImpl(atom, isotope), occurrence);
-        mass1 = -1.0;
-        stringValue1 = null;
+        mass = -1.0;
+        stringValue = null;
     }
 
     /**
@@ -343,10 +330,10 @@ public class AtomChain implements Serializable {
 
     @Override
     public String toString() {
-        if (stringValue1 == null) {
+        if (stringValue == null) {
             return getStringValue(false);
         }
-        return stringValue1;
+        return stringValue;
     }
 
     @Override

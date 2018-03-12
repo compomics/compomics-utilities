@@ -320,6 +320,38 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the variable modifications indexed by site. Modifications should
+     * be provided indexed by site as follows: N-term modifications are at index
+     * 0, C-term at sequence length + 1, and amino acid at 1-based index on the
+     * sequence.
+     *
+     * @return the variable modifications indexed by site
+     */
+    public String[] getIndexedVariableModifications() {
+
+        String[] result = new String[sequence.length() + 2];
+
+        if (variableModifications != null) {
+
+            for (ModificationMatch modificationMatch : variableModifications) {
+
+                int site = modificationMatch.getSite();
+
+                if (result[site] == null) {
+
+                    result[site] = modificationMatch.getModification();
+
+                } else {
+
+                    throw new IllegalArgumentException("Two modifications found (" + result[site] + " and " + modificationMatch.getModification() + ") at site " + site + " of peptide " + sequence + ".");
+
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Returns the fixed modifications for this peptide based on the given
      * modification parameters. Modifications are returned as array of
      * modification names as they appear on the peptide. N-term modifications

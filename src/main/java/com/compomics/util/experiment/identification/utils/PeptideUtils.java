@@ -181,7 +181,10 @@ public class PeptideUtils {
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with Modification tags, e.g,
      * &lt;mox&gt;. /!\ This method will work only if the Modification found in
-     * the peptide are in the ModificationFactory. Modifications should be provided indexed by site as follows: N-term modifications are at index 0, C-term at sequence length + 1, and amino acid at 1-based index on the sequence.
+     * the peptide are in the ModificationFactory. Modifications should be
+     * provided indexed by site as follows: N-term modifications are at index 0,
+     * C-term at sequence length + 1, and amino acid at 1-based index on the
+     * sequence.
      *
      * @param modificationProfile the modification profile of the search
      * @param nTermAsString the annotated N-term

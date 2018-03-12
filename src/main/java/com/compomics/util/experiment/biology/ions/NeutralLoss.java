@@ -42,12 +42,6 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      */
     public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", AtomChain.getAtomChain("C(3)H(9)N"), false);
     /**
-     * The mass lost.
-     *
-     * @deprecated use the composition instead.
-     */
-    private Double mass;
-    /**
      * The composition of the ion.
      */
     private AtomChain composition;
@@ -58,11 +52,11 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
     /**
      * Boolean indicating whether the neutral loss will always be accounted for.
      */
-    private Boolean fixed = false;
+    private boolean fixed = false;
     /**
      * Map of available neutral losses.
      */
-    private static HashMap<String, NeutralLoss> neutralLosses;
+    private final static HashMap<String, NeutralLoss> neutralLosses = new HashMap<>(0);
     /**
      * The PSI MS CV term of the neutral loss, null if not set.
      */
@@ -123,9 +117,6 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @param neutralLoss the neutral loss to add
      */
     public static void addNeutralLoss(NeutralLoss neutralLoss) {
-        if (neutralLosses == null) {
-            neutralLosses = new HashMap<>();
-        }
         neutralLosses.put(neutralLoss.name, neutralLoss);
     }
 
@@ -138,9 +129,6 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return the neutral loss
      */
     public static NeutralLoss getNeutralLoss(String name) {
-        if (neutralLosses == null) {
-            return null;
-        }
         return neutralLosses.get(name);
     }
 
@@ -151,9 +139,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @param name the name of the neutral loss to remove
      */
     public static void removeNeutralLoss(String name) {
-        if (neutralLosses != null) {
             neutralLosses.remove(name);
-        }
     }
 
     /**
@@ -176,9 +162,6 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return a boolean indicating whether the neutral loss is fixed or not
      */
     public boolean isFixed() {
-        if (fixed == null) {
-            fixed = false;
-        }
         return fixed;
     }
 
@@ -215,28 +198,21 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      *
      * @return the mass of the neutral loss
      */
-    public Double getMass() {
-        if (composition != null) {
+    public double getMass() {
             return composition.getMass();
-        }
-        return mass;
     }
 
     /**
      * Method indicating whether another neutral loss is the same as the one
-     * considered.
+     * considered. 
      *
      * @param anotherNeutralLoss another neutral loss
+     * 
      * @return boolean indicating whether the other neutral loss is the same as
      * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
-        if (anotherNeutralLoss.getComposition() == null || getComposition() == null) { // Backward compatibility
-            return anotherNeutralLoss.name.equals(name)
-                    && anotherNeutralLoss.mass.equals(mass);
-        }
-        return anotherNeutralLoss.name.equals(name)
-                && anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
+        return anotherNeutralLoss.name.equals(name);
     }
 
     @Override

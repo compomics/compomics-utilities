@@ -8,7 +8,6 @@ import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -236,10 +235,11 @@ public class AnnotationParameters implements Serializable {
         
         if (isAutomaticAnnotation() || areNeutralLossesSequenceAuto()) {
         
-            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
+            HashSet<String> lossesNames = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
             
-            for (NeutralLoss neutralLoss : neutralLosses) {
+            for (String lossName : lossesNames) {
             
+                NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(lossName);
                 addNeutralLoss(neutralLoss);
             
             }

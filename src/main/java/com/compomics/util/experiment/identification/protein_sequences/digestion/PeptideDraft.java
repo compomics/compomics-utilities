@@ -316,46 +316,55 @@ public class PeptideDraft {
 
             if (tempMass >= massMin) {
 
-                ArrayList<ModificationMatch> modificationMatches = null;
-
-                if (nTermModification != null) {
-                    
-                    modificationMatches = new ArrayList<>(fixedAaModifications.size());
-                    modificationMatches.add(new ModificationMatch(nTermModification, false, 1));
-                
-                }
-
-                if (cTermModification != null) {
-
-                    if (modificationMatches == null) {
-                
-                        modificationMatches = new ArrayList<>(fixedAaModifications.size());
-                    
-                    }
-
-                    modificationMatches.add(new ModificationMatch(cTermModification, false, length()));
-
-                }
-
-                for (Integer site : fixedAaModifications.keySet()) {
-
-                    if (modificationMatches == null) {
-
-                        modificationMatches = new ArrayList<>(fixedAaModifications.size());
-
-                    }
-
-                    String modificationName = fixedAaModifications.get(site);
-                    modificationMatches.add(new ModificationMatch(modificationName, false, site));
-
-                }
-
-                return modificationMatches == null ? new Peptide(new String(getSequence()), null, false, tempMass) :
-                        new Peptide(new String(getSequence()), modificationMatches.toArray(new ModificationMatch[modificationMatches.size()]), false, tempMass);
+                return new Peptide(new String(getSequence()), null, false, tempMass);
 
             }
         }
 
         return null;
+    }
+
+    /**
+     * Returns the fixed modifications for the peptide.
+     *
+     * @return the fixed modifications for the peptide.
+     */
+    public ModificationMatch[] getFixedModifications() {
+
+        ArrayList<ModificationMatch> fixedModificationMatches = null;
+
+        if (nTermModification != null) {
+
+            fixedModificationMatches = new ArrayList<>(fixedAaModifications.size());
+            fixedModificationMatches.add(new ModificationMatch(nTermModification, 1));
+
+        }
+
+        if (cTermModification != null) {
+
+            if (fixedModificationMatches == null) {
+
+                fixedModificationMatches = new ArrayList<>(fixedAaModifications.size());
+
+            }
+
+            fixedModificationMatches.add(new ModificationMatch(cTermModification, length()));
+
+        }
+
+        for (Integer site : fixedAaModifications.keySet()) {
+
+            if (fixedModificationMatches == null) {
+
+                fixedModificationMatches = new ArrayList<>(fixedAaModifications.size());
+
+            }
+
+            String modificationName = fixedAaModifications.get(site);
+            fixedModificationMatches.add(new ModificationMatch(modificationName, site));
+
+        }
+
+        return fixedModificationMatches.toArray(new ModificationMatch[fixedModificationMatches.size()]);
     }
 }

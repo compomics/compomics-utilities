@@ -1346,16 +1346,16 @@ public class Peptide extends ExperimentObject {
      * Modification tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
-     * @param excludeAllFixedPtms if true, all fixed Modifications are excluded
+     * @param displayedModifications the modifications to display
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, HashSet<String> displayedModifications) {
 
-        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>();
-        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>();
-        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>();
-        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>();
+        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<>(sequence.length());
+        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<>(sequence.length());
+        HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<>(sequence.length());
+        HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<>(sequence.length());
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -1366,6 +1366,9 @@ public class Peptide extends ExperimentObject {
             for (ModificationMatch modMatch : modificationMatches) {
 
                 String modName = modMatch.getModification();
+                
+                if (displayedModifications == null || displayedModifications.contains(modName)) {
+                
                 int modSite = modMatch.getModificationSite();
 
                 if (modMatch.getVariable()) {
@@ -1392,7 +1395,7 @@ public class Peptide extends ExperimentObject {
 
                     }
 
-                } else if (!excludeAllFixedPtms) {
+                } else {
 
                     if (!fixedModificationSites.containsKey(modSite)) {
 
@@ -1402,6 +1405,7 @@ public class Peptide extends ExperimentObject {
 
                     fixedModificationSites.get(modSite).add(modName);
 
+                }
                 }
             }
         }
@@ -1431,7 +1435,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
+        return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, null);
     }
 
     /**

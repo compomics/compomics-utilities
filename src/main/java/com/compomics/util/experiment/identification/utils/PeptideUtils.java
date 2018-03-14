@@ -2,6 +2,9 @@ package com.compomics.util.experiment.identification.utils;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
@@ -52,9 +55,9 @@ public class PeptideUtils {
      * based on the peptide protein mapping
      */
     public static String getAaBefore(Peptide peptide, String accession, int index, int nAa, SequenceProvider sequenceProvider) {
-        
+
         return sequenceProvider.getSubsequence(accession, index - nAa - 1, index - 1);
-        
+
     }
 
     /**
@@ -95,9 +98,9 @@ public class PeptideUtils {
      * based on the peptide protein mapping
      */
     public static String getAaAfter(Peptide peptide, String accession, int index, int nAa, SequenceProvider sequenceProvider) {
-        
+
         return sequenceProvider.getSubsequence(accession, index + peptide.getSequence().length(), index + peptide.getSequence().length() + nAa);
-        
+
     }
 
     /**
@@ -198,7 +201,7 @@ public class PeptideUtils {
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationProfile, HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
-        
+
         if (confidentModificationSites == null) {
 
             confidentModificationSites = new HashMap<>(0);
@@ -297,69 +300,75 @@ public class PeptideUtils {
     }
 
     /**
-     * Returns a boolean indicating whether the peptide is enzymatic using one of the given enzymes.
-     * 
+     * Returns a boolean indicating whether the peptide is enzymatic using one
+     * of the given enzymes.
+     *
      * @param peptide the peptide
      * @param proteinAccession the accession of the protein
      * @param proteinSequence the sequence of the protein
      * @param enzymes the enzymes used for digestion
-     * 
-     * @return a boolean indicating whether the peptide is enzymatic using one of the given enzymes
+     *
+     * @return a boolean indicating whether the peptide is enzymatic using one
+     * of the given enzymes
      */
     public static boolean isEnzymatic(Peptide peptide, String proteinAccession, String proteinSequence, ArrayList<Enzyme> enzymes) {
 
-            int[] startIndexes = peptide.getProteinMapping().get(proteinAccession);
+        int[] startIndexes = peptide.getProteinMapping().get(proteinAccession);
 
-            if (startIndexes == null) {
+        if (startIndexes == null) {
 
-                return false;
+            return false;
 
-            }
+        }
 
-            return enzymes.stream()
-                    .anyMatch(enzyme -> Arrays.stream(startIndexes)
-                            .anyMatch(startIndex -> getNEnzymaticTermini(
-                                    startIndex, 
-                                    peptide.getPeptideEnd(proteinAccession, startIndex),
-                                    proteinSequence,
-                                    enzyme) == 2));
+        return enzymes.stream()
+                .anyMatch(enzyme -> Arrays.stream(startIndexes)
+                .anyMatch(startIndex -> getNEnzymaticTermini(
+                startIndex,
+                peptide.getPeptideEnd(proteinAccession, startIndex),
+                proteinSequence,
+                enzyme) == 2));
     }
 
     /**
-     * Returns a boolean indicating whether the peptide is enzymatic in at least one protein using one of the given enzymes.
-     * 
+     * Returns a boolean indicating whether the peptide is enzymatic in at least
+     * one protein using one of the given enzymes.
+     *
      * @param peptide the peptide
      * @param sequenceProvider the sequence provider
      * @param enzymes the enzymes used for digestion
-     * 
-     * @return a boolean indicating whether the peptide is enzymatic using one of the given enzymes
+     *
+     * @return a boolean indicating whether the peptide is enzymatic using one
+     * of the given enzymes
      */
     public static boolean isEnzymatic(Peptide peptide, SequenceProvider sequenceProvider, ArrayList<Enzyme> enzymes) {
-        
+
         return peptide.getProteinMapping().entrySet().stream()
                 .anyMatch(entry -> isEnzymatic(
-                        peptide, 
-                        entry.getKey(), 
-                        sequenceProvider.getSequence(entry.getKey()), 
-                        enzymes));
-        
+                peptide,
+                entry.getKey(),
+                sequenceProvider.getSequence(entry.getKey()),
+                enzymes));
+
     }
 
     /**
-     * Returns a boolean indicating whether the peptide needs variants to be mapped to the given protein.
-     * 
+     * Returns a boolean indicating whether the peptide needs variants to be
+     * mapped to the given protein.
+     *
      * @param peptide the peptide
      * @param accession the accession of the protein
-     * 
-     * @return a boolean indicating whether the peptide needs variants to be mapped to the given protein
+     *
+     * @return a boolean indicating whether the peptide needs variants to be
+     * mapped to the given protein
      */
     public static boolean isVariant(Peptide peptide, String accession) {
-        
+
         int[] indexesOnProtein = peptide.getProteinMapping().get(accession);
         HashMap<Integer, PeptideVariantMatches> variantOnProtein = peptide.getVariantMatches().get(accession);
-        
+
         return indexesOnProtein.length == variantOnProtein.size();
-        
+
     }
-    
+
 }

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -643,7 +644,7 @@ public class FragmentIonTable extends JTable {
         HashMap<String, ArrayList<Double>> values = new HashMap<>();
 
         double maxIntensity = allAnnotations.stream()
-                .flatMap(a -> a)
+                .flatMap(Function.identity())
                 .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                 .mapToDouble(ionMatch -> ionMatch.peak.intensity)
                 .max()

@@ -13,6 +13,7 @@ import com.compomics.util.parameters.identification.search.ModificationParameter
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import no.uib.jsparklines.renderers.util.Util;
 
@@ -338,16 +339,14 @@ public class Tag extends ExperimentObject {
      * @param useShortName if true. the short names are used in the tags
      * @param includeTerminalGaps if true. the terminal gaps will be displayed on
      * the sequence
-     * @param excludeAllFixedModifications if true. fixed modifications will not
-     * be displayed on the sequence
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedModifications, boolean includeTerminalGaps) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps) {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, excludeAllFixedModifications, includeTerminalGaps);
+        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, null);
     
     }
 
@@ -365,14 +364,15 @@ public class Tag extends ExperimentObject {
      * @param useShortName if true, the short names are used in the tags
      * @param includeTerminalGaps if true, the terminal gaps will be displayed on
      * the sequence
+     * @param displayedModifications the modifications to display
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, HashSet<String> displayedModifications) {
         
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false, includeTerminalGaps);
+        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, null);
     
     }
 
@@ -390,22 +390,22 @@ public class Tag extends ExperimentObject {
      * modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true, the short names are used in the tags
      * @return the tagged modified sequence as a string
-     * @param excludeAllFixedModifications if true, the fixed modifications will not be displayed
      * @param includeTerminalGaps if true, the terminal gaps will be displayed on
      * the sequence
+     * @param displayedModifications the modifications to display
      */
     public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, Tag tag,
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedModifications, boolean includeTerminalGaps) {
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, HashSet<String> displayedModifications) {
 
-        String modifiedSequence = "";
+        StringBuilder modifiedSequence = new StringBuilder();
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
         
-            modifiedSequence += "<html>";
+            modifiedSequence.append("<html>");
         
         }
 
-        modifiedSequence += tag.getNTerminal(includeTerminalGaps);
+        modifiedSequence.append(tag.getNTerminal(includeTerminalGaps));
 
         for (int i = 0; i < tag.getContent().size(); i++) {
             
@@ -414,13 +414,13 @@ public class Tag extends ExperimentObject {
             if (tagComponent instanceof AminoAcidSequence) {
             
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                modifiedSequence += aminoAcidSequence.getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, useShortName, excludeAllFixedModifications);
+                modifiedSequence.append(aminoAcidSequence.getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, useShortName, displayedModifications));
             
             } else if (tagComponent instanceof MassGap) {
             
                 if (includeTerminalGaps || i > 0 && i < tag.getContent().size() - 1) {
                 
-                    modifiedSequence += tagComponent.asSequence();
+                    modifiedSequence.append(tagComponent.asSequence());
                 
                 }
             
@@ -431,15 +431,15 @@ public class Tag extends ExperimentObject {
             }
         }
 
-        modifiedSequence += tag.getCTerminal(includeTerminalGaps);
+        modifiedSequence.append(tag.getCTerminal(includeTerminalGaps));
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
         
-            modifiedSequence += "</html>";
+            modifiedSequence.append("</html>");
         
         }
 
-        return modifiedSequence;
+        return modifiedSequence.toString();
     }
 
     /**

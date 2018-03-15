@@ -11,8 +11,11 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 
 /**
@@ -51,23 +54,33 @@ public class FragmentAnnotator {
      * Constructor.
      *
      * @param peptide the peptide
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param ionSeries the ion series to annotate
      */
-    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries) {
-        this(peptide, ionSeries, true, true);
+    public FragmentAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries) {
+        this(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, true, true);
     }
 
     /**
      * Constructor.
      *
      * @param peptide the peptide
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param ionSeries the ion series to annotate
      * @param forward boolean indicating whether forward ions should be
      * annotated
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotator(Peptide peptide, IonSeries ionSeries, boolean forward, boolean complementary) {
+    public FragmentAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean forward, boolean complementary) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -75,7 +88,39 @@ public class FragmentAnnotator {
         complementaryIonMz1 = new double[peptideLength];
 
         double[] modificationsMasses = new double[peptideLength];
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
+        
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+        
+        for (int i = 0 ; i < fixedModifications.length ; i++) {
+            
+            String modName = fixedModifications[i];
+            
+            if (modName != null) {
+            
+                Modification modification = modificationFactory.getModification(modName);
+            
+            int site;
+            
+            if (i > 0 && i < peptideLength + 1) {
+                
+                site = i-1;
+                
+            } else if (i == 0) {
+                
+                site = i;
+                
+            } else {
+                
+                site = i-2;
+                
+            }
+            
+            modificationsMasses[site] += modification.getMass();
+                
+            }
+        }
+        
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
         for (ModificationMatch modificationMatch : modificationMatches) {
 
@@ -83,9 +128,24 @@ public class FragmentAnnotator {
             Modification modification = modificationFactory.getModification(modificationName);
             double modificationMass = modification.getMass();
 
-            int site = modificationMatch.getSite();
+            int i = modificationMatch.getSite();
+            int site;
+            
+            if (i > 0 && i < peptideLength + 1) {
+                
+                site = i-1;
+                
+            } else if (i == 0) {
+                
+                site = i;
+                
+            } else {
+                
+                site = i-2;
+                
+            }
 
-            modificationsMasses[site - 1] += modificationMass;
+            modificationsMasses[site] += modificationMass;
 
         }
 

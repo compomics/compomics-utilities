@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Class for a specific atom.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class AtomImpl implements Serializable {
 
@@ -15,7 +16,7 @@ public class AtomImpl implements Serializable {
     static final long serialVersionUID = 3269643086590455656L;
     /**
      * The reference atom.
-     * 
+     *
      * @deprecated use the atom name instead.
      */
     private Atom atom;
@@ -56,18 +57,25 @@ public class AtomImpl implements Serializable {
      * @return the mass of the atom
      */
     public Double getMass() {
+        if (atomSymbol == null) {
+            atomSymbol = atom.getLetter();
+        }
         Atom atom = Atom.getAtom(atomSymbol);
         return atom.getIsotopeMass(isotope);
     }
-    
+
     /**
-     * Returns the isotope number corresponding to the given rounded mass. e.g. returns +1 for 13 if the atom is C. Null if no isotope was found.
-     * 
+     * Returns the isotope number corresponding to the given rounded mass. e.g.
+     * returns +1 for 13 if the atom is C. Null if no isotope was found.
+     *
      * @param roundedMass the rounded mass as integer
-     * 
+     *
      * @return the isotope number
      */
     public Integer getIsotopeNumber(Integer roundedMass) {
+        if (atomSymbol == null) {
+            atomSymbol = atom.getLetter();
+        }
         Atom atom = Atom.getAtom(atomSymbol);
         for (Integer isotopeNumber : atom.getImplementedIsotopes()) {
             Double isotopeMass = atom.getIsotopeMass(isotopeNumber);
@@ -81,6 +89,9 @@ public class AtomImpl implements Serializable {
 
     @Override
     public String toString() {
+        if (atomSymbol == null) {
+            atomSymbol = atom.getLetter();
+        }
         Atom atom = Atom.getAtom(atomSymbol);
         if (isotope == 0) {
             return atom.getLetter();
@@ -105,7 +116,7 @@ public class AtomImpl implements Serializable {
 
     /**
      * Returns the atom symbol as specified in the Atom class.
-     * 
+     *
      * @return the atom symbol
      */
     public String getAtomSymbol() {
@@ -117,7 +128,7 @@ public class AtomImpl implements Serializable {
 
     /**
      * Sets the atom symbol as specified in the Atom class.
-     * 
+     *
      * @param atomSymbol the atom symbol
      */
     public void setAtomSymbol(String atomSymbol) {
@@ -135,11 +146,10 @@ public class AtomImpl implements Serializable {
 
     /**
      * Sets the isotope, 0 for monoisotope.
-     * 
+     *
      * @param isotope the isotope
      */
     public void setIsotope(Integer isotope) {
         this.isotope = isotope;
     }
-    
 }

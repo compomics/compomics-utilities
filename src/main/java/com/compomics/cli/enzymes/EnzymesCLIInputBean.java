@@ -75,7 +75,7 @@ public class EnzymesCLIInputBean {
             String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_BEFORE.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
             for (String aa : aaInput) {
-                if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_BEFORE.id, arg, aaInput)) {
+                if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_BEFORE.id, aa, aaInput)) {
                     return false;
                 }
             }
@@ -89,7 +89,7 @@ public class EnzymesCLIInputBean {
             String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_AFTER.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
             for (String aa : aaInput) {
-                if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_AFTER.id, arg, aaInput)) {
+                if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_AFTER.id, aa, aaInput)) {
                     return false;
                 }
             }
@@ -103,7 +103,7 @@ public class EnzymesCLIInputBean {
             String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_BEFORE.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
             for (String aa : aaInput) {
-                if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_BEFORE.id, arg, aaInput)) {
+                if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_BEFORE.id, aa, aaInput)) {
                     return false;
                 }
             }
@@ -117,7 +117,7 @@ public class EnzymesCLIInputBean {
             String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_AFTER.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
             for (String aa : aaInput) {
-                if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_AFTER.id, arg, aaInput)) {
+                if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_AFTER.id, aa, aaInput)) {
                     return false;
                 }
             }

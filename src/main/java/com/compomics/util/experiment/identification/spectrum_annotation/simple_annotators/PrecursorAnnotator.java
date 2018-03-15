@@ -3,15 +3,17 @@ package com.compomics.util.experiment.identification.spectrum_annotation.simple_
 import com.compomics.util.experiment.biology.atoms.ElementaryElement;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
-import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -46,41 +48,56 @@ public class PrecursorAnnotator {
      * Constructor.
      *
      * @param peptide the peptide of interest.
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      */
-    public PrecursorAnnotator(Peptide peptide) {
+    public PrecursorAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
         precursorMass = peptide.getMass();
 
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
-        
-            HashSet<String> modificationLosses = Arrays.stream(modificationMatches)
-                    .map(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()))
-                    .flatMap(modification -> modification.getNeutralLosses().stream())
-                    .map(neutralLoss -> neutralLoss.name)
-                    .collect(Collectors.toCollection(HashSet::new));
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+        HashSet<String> fixedModificationLosses = Arrays.stream(fixedModifications)
+                .filter(modName -> modName != null)
+                .map(modName -> modificationFactory.getModification(modName))
+                .flatMap(modification -> modification.getNeutralLosses().stream())
+                .map(neutralLoss -> neutralLoss.name)
+                .collect(Collectors.toCollection(HashSet::new));
 
-            if (!modificationLosses.isEmpty()) {
-                
-                int nNeutralLosses = modificationLosses.size() + 2;
-                neutralLosses = new NeutralLoss[nNeutralLosses];
-                neutralLossesMasses = new double[nNeutralLosses];
-                int cpt = 0;
-                neutralLosses[cpt] = NeutralLoss.H2O;
-                neutralLossesMasses[cpt++] = NeutralLoss.H2O.getMass();
-                neutralLosses[cpt] = NeutralLoss.NH3;
-                neutralLossesMasses[cpt++] = NeutralLoss.NH3.getMass();
-                for (String modificationLoss : modificationLosses) {
-                    NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(modificationLoss);
-                    neutralLosses[cpt] = neutralLoss;
-                    neutralLossesMasses[cpt++] = neutralLoss.getMass();
-                }
-                
-            } else {
-                
-                neutralLosses = new NeutralLoss[]{NeutralLoss.H2O, NeutralLoss.NH3};
-                neutralLossesMasses = new double[]{NeutralLoss.H2O.getMass(), NeutralLoss.NH3.getMass()};
-                
+        ModificationMatch[] variableModifications = peptide.getVariableModifications();
+        HashSet<String> variableModificationLosses = Arrays.stream(variableModifications)
+                .map(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()))
+                .flatMap(modification -> modification.getNeutralLosses().stream())
+                .map(neutralLoss -> neutralLoss.name)
+                .collect(Collectors.toCollection(HashSet::new));
+
+        HashSet<String> modificationLosses = new HashSet<>(fixedModificationLosses);
+        modificationLosses.addAll(variableModificationLosses);
+
+        if (!modificationLosses.isEmpty()) {
+
+            int nNeutralLosses = modificationLosses.size() + 2;
+            neutralLosses = new NeutralLoss[nNeutralLosses];
+            neutralLossesMasses = new double[nNeutralLosses];
+            int cpt = 0;
+            neutralLosses[cpt] = NeutralLoss.H2O;
+            neutralLossesMasses[cpt++] = NeutralLoss.H2O.getMass();
+            neutralLosses[cpt] = NeutralLoss.NH3;
+            neutralLossesMasses[cpt++] = NeutralLoss.NH3.getMass();
+            for (String modificationLoss : modificationLosses) {
+                NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(modificationLoss);
+                neutralLosses[cpt] = neutralLoss;
+                neutralLossesMasses[cpt++] = neutralLoss.getMass();
             }
+
+        } else {
+
+            neutralLosses = new NeutralLoss[]{NeutralLoss.H2O, NeutralLoss.NH3};
+            neutralLossesMasses = new double[]{NeutralLoss.H2O.getMass(), NeutralLoss.NH3.getMass()};
+
+        }
 
     }
 

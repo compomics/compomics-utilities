@@ -12,8 +12,11 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,11 +74,16 @@ public class FragmentAnnotatorNL {
      * Constructor.
      *
      * @param peptide the peptide
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param ionSeries the ion series to annotate
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
      */
-    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent) {
+    public FragmentAnnotatorNL(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean sequenceDependent) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -93,88 +101,149 @@ public class FragmentAnnotatorNL {
 
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
         // Keep track of the modified amino acids and possible losses
         HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+
+        for (int i = 0; i < fixedModifications.length; i++) {
+
+            String modName = fixedModifications[i];
+
+            if (modName != null) {
+
+                Modification modification = modificationFactory.getModification(modName);
+
+                int site;
+
+                if (i > 0 && i < peptideLength + 1) {
+
+                    site = i - 1;
+
+                } else if (i == 0) {
+
+                    site = i;
+
+                } else {
+
+                    site = i - 2;
+
+                }
+
+                modificationsMasses[site] += modification.getMass();
+
+                for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+
+                    int[] sites = modificationLossesSites.get(neutralLoss.name);
+                    if (sites == null) {
+                        sites = new int[]{site, site};
+                        modificationLossesSites.put(neutralLoss.name, sites);
+                    } else {
+                        if (site < sites[0]) {
+                            sites[0] = site;
+                        } else if (site > sites[1]) {
+                            sites[1] = site;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
+
         for (ModificationMatch modificationMatch : modificationMatches) {
 
             String modificationName = modificationMatch.getModification();
             Modification modification = modificationFactory.getModification(modificationName);
             double modificationMass = modification.getMass();
 
-            int site = modificationMatch.getSite();
-            int siteIndex = site - 1;
+            int i = modificationMatch.getSite();
+            int site;
 
-            modificationsMasses[siteIndex] += modificationMass;
+            if (i > 0 && i < peptideLength + 1) {
+
+                site = i - 1;
+
+            } else if (i == 0) {
+
+                site = i;
+
+            } else {
+
+                site = i - 2;
+
+            }
+
+            modificationsMasses[site] += modificationMass;
 
             for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
 
                 int[] sites = modificationLossesSites.get(neutralLoss.name);
                 if (sites == null) {
-                    sites = new int[]{siteIndex, siteIndex};
+                    sites = new int[]{site, site};
                     modificationLossesSites.put(neutralLoss.name, sites);
                 } else {
-                    if (siteIndex < sites[0]) {
-                        sites[0] = siteIndex;
-                    } else if (siteIndex > sites[1]) {
-                        sites[1] = siteIndex;
+                    if (site < sites[0]) {
+                        sites[0] = site;
+                    } else if (site > sites[1]) {
+                        sites[1] = site;
                     }
                 }
             }
         }
-        
+
         if (!modificationLossesSites.isEmpty()) {
-            
+
             int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
             System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
             NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
             System.arraycopy(losses, 0, newLosses, 0, losses.length);
             int index = lossesIndexes.length;
-            
+
             for (String lossName : modificationLossesSites.keySet()) {
-                
+
                 int[] sites = modificationLossesSites.get(lossName);
                 newIndexes[index][1] = sites[0];
                 newIndexes[index][1] = sites[1];
                 newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
                 index++;
-                
+
             }
-            
+
             lossesIndexes = newIndexes;
             losses = newLosses;
-            
+
         }
 
         double forwardMass;
         double complementaryMass;
-        
+
         if (ionSeries == IonSeries.by) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass();
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2];
             forwardIonType = PeptideFragmentIon.B_ION;
             complementaryIonType = PeptideFragmentIon.Y_ION;
-            
+
         } else if (ionSeries == IonSeries.cz) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass() + StandardMasses.nh3.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] - StandardMasses.nh3.mass;
             forwardIonType = PeptideFragmentIon.C_ION;
             complementaryIonType = PeptideFragmentIon.Z_ION;
-            
+
         } else if (ionSeries == IonSeries.ax) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass() - StandardMasses.co.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] + StandardMasses.co.mass;
             forwardIonType = PeptideFragmentIon.A_ION;
             complementaryIonType = PeptideFragmentIon.X_ION;
-            
+
         } else {
-            
+
             throw new UnsupportedOperationException("Ion series " + ionSeries + " not supported.");
-            
+
         }
 
         forwardNeutralLossesMasses = new ArrayList<>(peptideLength);
@@ -222,6 +291,11 @@ public class FragmentAnnotatorNL {
      * Constructor.
      *
      * @param peptide the peptide
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      * @param ionSeries the ion series to annotate
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
@@ -230,7 +304,7 @@ public class FragmentAnnotatorNL {
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotatorNL(Peptide peptide, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
+    public FragmentAnnotatorNL(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -248,105 +322,165 @@ public class FragmentAnnotatorNL {
 
         // See if the peptide is modified
         double[] modificationsMasses = new double[peptideLength];
-        ModificationMatch[] modificationMatches = peptide.getModificationMatches();
 
-            // Keep track of the modified amino acids and possible losses
-            HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
+        // Keep track of the modified amino acids and possible losses
+        HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
-            for (ModificationMatch modificationMatch : modificationMatches) {
+        for (int i = 0; i < fixedModifications.length; i++) {
 
-                String modificationName = modificationMatch.getModification();
-                Modification modification = modificationFactory.getModification(modificationName);
-                double modificationMass = modification.getMass();
+            String modName = fixedModifications[i];
 
-                int site = modificationMatch.getSite();
-                int siteIndex = site - 1;
+            if (modName != null) {
 
-                modificationsMasses[siteIndex] += modificationMass;
+                Modification modification = modificationFactory.getModification(modName);
+
+                int site;
+
+                if (i > 0 && i < peptideLength + 1) {
+
+                    site = i - 1;
+
+                } else if (i == 0) {
+
+                    site = i;
+
+                } else {
+
+                    site = i - 2;
+
+                }
+
+                modificationsMasses[site] += modification.getMass();
 
                 for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
 
                     int[] sites = modificationLossesSites.get(neutralLoss.name);
                     if (sites == null) {
-                        sites = new int[]{siteIndex, siteIndex};
+                        sites = new int[]{site, site};
                         modificationLossesSites.put(neutralLoss.name, sites);
                     } else {
-                        if (siteIndex < sites[0]) {
-                            sites[0] = siteIndex;
-                        } else if (siteIndex > sites[1]) {
-                            sites[1] = siteIndex;
+                        if (site < sites[0]) {
+                            sites[0] = site;
+                        } else if (site > sites[1]) {
+                            sites[1] = site;
                         }
                     }
                 }
+
             }
-            if (!modificationLossesSites.isEmpty()) {
-                int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
-                System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
-                NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
-                System.arraycopy(losses, 0, newLosses, 0, losses.length);
-                int index = lossesIndexes.length;
-                for (String lossName : modificationLossesSites.keySet()) {
-                    int[] sites = modificationLossesSites.get(lossName);
-                    newIndexes[index][1] = sites[0];
-                    newIndexes[index][1] = sites[1];
-                    newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
-                    index++;
+        }
+
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
+
+        for (ModificationMatch modificationMatch : modificationMatches) {
+
+            String modificationName = modificationMatch.getModification();
+            Modification modification = modificationFactory.getModification(modificationName);
+            double modificationMass = modification.getMass();
+
+            int i = modificationMatch.getSite();
+            int site;
+
+            if (i > 0 && i < peptideLength + 1) {
+
+                site = i - 1;
+
+            } else if (i == 0) {
+
+                site = i;
+
+            } else {
+
+                site = i - 2;
+
+            }
+
+            modificationsMasses[site] += modificationMass;
+
+            for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
+
+                int[] sites = modificationLossesSites.get(neutralLoss.name);
+                if (sites == null) {
+                    sites = new int[]{site, site};
+                    modificationLossesSites.put(neutralLoss.name, sites);
+                } else {
+                    if (site < sites[0]) {
+                        sites[0] = site;
+                    } else if (site > sites[1]) {
+                        sites[1] = site;
+                    }
                 }
-                lossesIndexes = newIndexes;
-                losses = newLosses;
             }
+        }
+        if (!modificationLossesSites.isEmpty()) {
+            int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
+            System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
+            NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
+            System.arraycopy(losses, 0, newLosses, 0, losses.length);
+            int index = lossesIndexes.length;
+            for (String lossName : modificationLossesSites.keySet()) {
+                int[] sites = modificationLossesSites.get(lossName);
+                newIndexes[index][1] = sites[0];
+                newIndexes[index][1] = sites[1];
+                newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
+                index++;
+            }
+            lossesIndexes = newIndexes;
+            losses = newLosses;
+        }
 
         double forwardMass;
         double complementaryMass;
-        
+
         if (ionSeries == IonSeries.by) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass();
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2];
             forwardIonType = PeptideFragmentIon.B_ION;
             complementaryIonType = PeptideFragmentIon.Y_ION;
-            
+
         } else if (ionSeries == IonSeries.cz) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass() + StandardMasses.nh3.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] - StandardMasses.nh3.mass;
             forwardIonType = PeptideFragmentIon.C_ION;
             complementaryIonType = PeptideFragmentIon.Z_ION;
-            
+
         } else if (ionSeries == IonSeries.ax) {
-            
+
             forwardMass = ElementaryIon.proton.getTheoreticMass() - StandardMasses.co.mass;
             complementaryMass = peptide.getMass() + ElementaryIon.protonMassMultiples[2] + StandardMasses.co.mass;
             forwardIonType = PeptideFragmentIon.A_ION;
             complementaryIonType = PeptideFragmentIon.X_ION;
-            
+
         } else {
-            
+
             throw new UnsupportedOperationException("Ion series " + ionSeries + " not supported.");
-            
+
         }
 
         if (forward) {
-            
+
             forwardNeutralLossesMasses = new ArrayList<>(peptideLength);
             forwardNeutralLosses = new ArrayList<>(peptideLength);
-            
+
         } else {
-            
+
             forwardNeutralLossesMasses = null;
             forwardNeutralLosses = null;
-            
+
         }
         if (complementary) {
-            
+
             complementaryNeutralLossesMasses = new ArrayList<>(peptideLength);
             complementaryNeutralLosses = new ArrayList<>(peptideLength);
-            
+
         } else {
-            
+
             complementaryNeutralLossesMasses = null;
             complementaryNeutralLosses = null;
-            
+
         }
 
         for (int i = 0; i < peptideLength; i++) {

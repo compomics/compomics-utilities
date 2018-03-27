@@ -9,12 +9,15 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.Peptid
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.HistogramUtils;
 import com.compomics.util.math.statistics.linear_regression.LinearRegression;
 import com.compomics.util.math.statistics.linear_regression.RegressionStatistics;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,11 +80,17 @@ public class HyperScore {
      * @param specificAnnotationSettings the annotation settings specific to
      * this PSM
      * @param peptideSpectrumAnnotator the spectrum annotator to use
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide).collect(Collectors.toCollection(ArrayList::new));
+    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters)
+                .collect(Collectors.toCollection(ArrayList::new));
         return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
     }
 

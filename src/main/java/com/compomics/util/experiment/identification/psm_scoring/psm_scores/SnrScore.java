@@ -8,8 +8,11 @@ import com.compomics.util.experiment.identification.protein_sequences.AaOccurren
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.MathException;
@@ -50,11 +53,17 @@ public class SnrScore {
      * @param specificAnnotationSettings the annotation settings specific to
      * this PSM
      * @param peptideSpectrumAnnotator the spectrum annotator to use
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
-        ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, false);
+    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+        ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, false);
         return getScore(peptide, spectrum, ionMatchesList);
     }
 

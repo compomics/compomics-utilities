@@ -90,7 +90,7 @@ public class PhosphoRS {
      * this peptide and spectrum
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * @param sequenceMatchingParameters the sequence matching preferences for
      * peptide to protein mapping
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
@@ -100,7 +100,7 @@ public class PhosphoRS {
      * @return a map site &gt; phosphoRS site probability
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<Modification> modifications, ModificationParameters modificationParameters, Spectrum spectrum, SequenceProvider sequenceProvider, AnnotationParameters annotationSettings,
-            SpecificAnnotationParameters specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingParameters sequenceMatchingPreferences,
+            SpecificAnnotationParameters specificAnnotationSettings, boolean accountNeutralLosses, SequenceMatchingParameters sequenceMatchingParameters,
             SequenceMatchingParameters modificationSequenceMatchingParameters, PeptideSpectrumAnnotator spectrumAnnotator) {
 
         if (modifications.isEmpty()) {
@@ -581,6 +581,10 @@ public class PhosphoRS {
      * @param spectrumAnnotator the spectrum annotator
      * @param scoringAnnotationSetttings the spectrum scoring annotation
      * settings
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return a map of the number of possible fragment ions for every peptide
      */
@@ -613,19 +617,19 @@ public class PhosphoRS {
      * settings
      * @param modificationParameters the modification parameters
      * @param sequenceProvider the sequence provider
-     * @param modificationSequenceMatchingPreferences the sequence matching preferences to use for modifications
+     * @param modificationSequenceMatchingParameters the sequence matching preferences to use for modifications
      *
      * @return a map of the possible ions for every peptide of every profile
      */
     private static HashMap<Long, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> getPossiblePeptideFragments(HashMap<Long, Peptide> possiblePeptides, SpecificAnnotationParameters scoringAnnotationSetttings,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
         
         HashMap<Long, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> result = new HashMap<>(possiblePeptides.size());
         IonFactory fragmentFactory = IonFactory.getInstance();
         
         for (Entry<Long, Peptide> entry : possiblePeptides.entrySet()) {
         
-            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = fragmentFactory.getFragmentIons(entry.getValue(), scoringAnnotationSetttings, modificationParameters, sequenceProvider, modificationSequenceMatchingPreferences);
+            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = fragmentFactory.getFragmentIons(entry.getValue(), scoringAnnotationSetttings, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
             result.put(entry.getKey(), possibleFragmentIons);
         }
         

@@ -12,7 +12,10 @@ import com.compomics.util.experiment.identification.spectrum_annotation.spectrum
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -235,14 +238,19 @@ public class ModificationtableContent {
      * @param modification the modification to score
      * @param nMod the number of times the modification is expected
      * @param spectrum the corresponding spectrum
-     * @param annotationPreferences the annotation preferences
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param annotationParameters the annotation preferences
+     * @param specificAnnotationParameters the specific annotation preferences
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the modification plot series in the JFreechart format for one
      * PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
-            AnnotationParameters annotationPreferences, SpecificAnnotationParameters specificAnnotationPreferences) {
+            AnnotationParameters annotationParameters, SpecificAnnotationParameters specificAnnotationParameters, 
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
@@ -254,14 +262,15 @@ public class ModificationtableContent {
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons
-                = spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
+                = spectrumAnnotator.getExpectedIons(specificAnnotationParameters, noModPeptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>(); //@TODO: refactor using another key for the map
 
         for (int i = 0; i <= nMod; i++) {
 
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide)
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters)
                     .collect(Collectors.toCollection(ArrayList::new));
 
             for (IonMatch ionMatch : matches) {
@@ -293,11 +302,16 @@ public class ModificationtableContent {
      * @param nMod the number of times the modification is expected
      * @param spectrum the corresponding spectrum
      * @param annotationParameters the annotation parameters
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the table content
      */
     public static ModificationtableContent getModificationTableContent(PeptideAssumption peptideAssumption, Modification modification, int nMod, Spectrum spectrum,
-            AnnotationParameters annotationParameters) {
+            AnnotationParameters annotationParameters, 
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         Peptide peptide = peptideAssumption.getPeptide();
         ModificationtableContent tableContent = new ModificationtableContent();
@@ -322,14 +336,16 @@ public class ModificationtableContent {
         }
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
-        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationParameters.getPrecursorCharge(), specificAnnotationParameters);
+        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationParameters.getPrecursorCharge(), 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, specificAnnotationParameters);
 
         for (int i = 0; i <= nMod; i++) {
 
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
             final int index = i;
-            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide);
+            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
             matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                     .forEach(ionMatch -> {
                         PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;

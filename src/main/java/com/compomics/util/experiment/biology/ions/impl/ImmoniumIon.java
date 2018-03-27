@@ -5,12 +5,12 @@ import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.pride.CvTerm;
-import java.util.ArrayList;
 
 /**
  * Represents an immonium ion.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ImmoniumIon extends Ion {
 
@@ -101,7 +101,11 @@ public class ImmoniumIon extends Ion {
     /**
      * Valine immonium ion.
      */
-    public static final ImmoniumIon VALINE = new ImmoniumIon(21, 'V');
+    public static final ImmoniumIon VALINE = new ImmoniumIon(20, 'V');
+    /**
+     * Pyrrolysine immonium ion.
+     */
+    public static final ImmoniumIon PYRROLYSINE = new ImmoniumIon(21, 'O');
     /**
      * Subtype of immonium ion.
      */
@@ -136,7 +140,7 @@ public class ImmoniumIon extends Ion {
      * 
      * @return the immonium ion 
      */
-    public static ImmoniumIon getImmoniumIon(int subType) {
+    public static ImmoniumIon getImmoniumIon(int subType) { // @TODO: what about B, J, Z and X?
         switch (subType) {
             case 0:
                 return ALANINE;
@@ -180,6 +184,8 @@ public class ImmoniumIon extends Ion {
                 return TYROSINE;
             case 20:
                 return VALINE;
+            case 21:
+                return PYRROLYSINE;
             default:
                 throw new UnsupportedOperationException("No immonium ion implemented for subtype " + subType + ".");
         }
@@ -192,7 +198,7 @@ public class ImmoniumIon extends Ion {
      * 
      * @return the immonium ion 
      */
-    public static ImmoniumIon getImmoniumIon(char residue) {
+    public static ImmoniumIon getImmoniumIon(char residue) { // @TODO: what about B, J, Z and X?
         switch (residue) {
             case 'A':
                 return ALANINE;
@@ -236,6 +242,8 @@ public class ImmoniumIon extends Ion {
                 return TRYPTOPHAN;
             case 'Y':
                 return TYROSINE;
+            case 'O':
+                return PYRROLYSINE;
             default:
                 throw new UnsupportedOperationException("No immonium ion implemented for amino acid " + residue + ".");
         }
@@ -295,8 +303,8 @@ public class ImmoniumIon extends Ion {
                 return new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", "0");
             case 'Y':
                 return new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", "0");
-                default:
-                    return null;
+            default:
+                return null;
         }
     }
 

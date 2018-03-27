@@ -596,4 +596,30 @@ public class ModificationUtils {
             }
         }
     }
+    
+    /**
+     * Returns the 1-based index on the peptide.
+     * 
+     * @param index the modification index
+     * @param sequenceLength the sequence length
+     * 
+     * @return the 1-based index on the sequence
+     */
+    public static int getSite(int index, int sequenceLength) {
+        
+        if (index > 0 && index < sequenceLength + 1) {
+                
+                return index;
+                
+            } else if (index == 0) {
+                
+                return 1;
+                
+            } else {
+                
+                return index-1;
+                
+            }
+        
+    }
 }

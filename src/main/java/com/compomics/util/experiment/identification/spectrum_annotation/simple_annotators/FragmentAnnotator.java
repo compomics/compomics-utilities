@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
@@ -99,21 +100,7 @@ public class FragmentAnnotator {
             
                 Modification modification = modificationFactory.getModification(modName);
             
-            int site;
-            
-            if (i > 0 && i < peptideLength + 1) {
-                
-                site = i-1;
-                
-            } else if (i == 0) {
-                
-                site = i;
-                
-            } else {
-                
-                site = i-2;
-                
-            }
+            int site = ModificationUtils.getSite(i, peptideLength)-1;
             
             modificationsMasses[site] += modification.getMass();
                 

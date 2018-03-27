@@ -103,9 +103,9 @@ public class FeaturesGenerator {
         String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingPreferences);
         String[] reversedModifications = new String[fixedModifications.length];
         
-        for (int i = 0; i < sequenceLength; i++) {
+        for (int i = 0; i < fixedModifications.length; i++) {
 
-            int j = sequenceLength - i - 1;
+            int j = fixedModifications.length - i - 1;
             reversedSequence[i] = peptideSequence[j];
             reversedModifications[i] = fixedModifications[j];
 

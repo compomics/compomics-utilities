@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.TagSpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
@@ -19,6 +20,7 @@ import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -150,11 +152,11 @@ public abstract class SpectrumAnnotator {
      * @return vector of default spectrum annotations
      */
     public static Vector<SpectrumAnnotation> getSpectrumAnnotation(Stream<IonMatch> ionMatches) {
-        
+
         return ionMatches.map(ionMatch -> new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
-                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()))
+                SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()))
                 .collect(Collectors.toCollection(Vector::new));
-        
+
     }
 
     /**
@@ -268,7 +270,7 @@ public abstract class SpectrumAnnotator {
      * @param tiesResolution the method used to resolve ties
      */
     protected void setMassTolerance(double mzTolerance, boolean isPpm, TiesResolution tiesResolution) {
-        
+
         if (mzTolerance != this.mzTolerance || tiesResolution != this.tiesResolution) {
 
             // Clear previous index
@@ -395,16 +397,23 @@ public abstract class SpectrumAnnotator {
     }
 
     /**
-     * Returns the currently matched ions with the given settings using the intensity filter.
+     * Returns the currently matched ions with the given settings using the
+     * intensity filter.
      *
      * @param spectrum the spectrum of interest
      * @param annotationSettings the annotation settings
      * @param specificAnnotationSettings the specific annotation settings
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
      * @return the currently matched ions with the given settings
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings) {
-        return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, true);
+    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+        return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, true);
     }
 
     /**
@@ -413,11 +422,19 @@ public abstract class SpectrumAnnotator {
      * @param spectrum the spectrum of interest
      * @param annotationSettings the annotation settings
      * @param specificAnnotationSettings the specific annotation settings
-     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
+     * @param useIntensityFilter boolean indicating whether intensity filters
+     * should be used
      *
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, boolean useIntensityFilter);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter);
 
     /**
      * Returns the spectrum currently inspected.
@@ -586,25 +603,32 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
-        
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
-        
+
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide());
-        
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
-            
+
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
             return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag());
-        
+
         } else {
-        
+
             throw new IllegalArgumentException("Default neutral loss map not implemented for SpectrumIdentificationAssumption " + spectrumIdentificationAssumption.getClass() + ".");
-        
+
         }
     }
 

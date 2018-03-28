@@ -48,7 +48,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         Peptide peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches().length == 0);
+        Assert.assertTrue(peptide.getVariableModifications().length == 0);
         
         // Combination
         sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequenceCombination, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -83,7 +83,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches().length == 0);
+        Assert.assertTrue(peptide.getVariableModifications().length == 0);
         
         // Modifications
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
@@ -94,7 +94,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getModificationMatches().length == 3);
+        Assert.assertTrue(peptide.getVariableModifications().length == 3);
         
         
         // Unspecific digestion
@@ -217,7 +217,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
-        Assert.assertTrue(peptide.getModificationMatches().length == 3);
+        Assert.assertTrue(peptide.getVariableModifications().length == 3);
         
         
         // No missed cleavages

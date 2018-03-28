@@ -3,7 +3,6 @@ package com.compomics.util.gui.parameters.identification;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.IonFactory;
-import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
@@ -37,6 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import com.compomics.util.gui.parameters.identification.advanced.ValidationQCParametersDialogParent;
+import java.util.HashSet;
 
 /**
  * IdentificationParametersEditionDialog.
@@ -49,7 +49,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * The parent frame.
      */
-    private java.awt.Frame parentFrame;
+    private final java.awt.Frame parentFrame;
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -57,19 +57,19 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * The normal icon.
      */
-    private Image normalIcon;
+    private final Image normalIcon;
     /**
      * The waiting icon.
      */
-    private Image waitingIcon;
+    private final Image waitingIcon;
     /**
      * The last selected folder
      */
-    private LastSelectedFolder lastSelectedFolder;
+    private final LastSelectedFolder lastSelectedFolder;
     /**
      * Boolean indicating whether the parameters can be edited.
      */
-    private boolean editable;
+    private final boolean editable;
     /**
      * The peak annotation settings.
      */
@@ -126,10 +126,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * The identification parameters factory.
      */
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();
-    /**
-     * The old identification settings.
-     */
-    private IdentificationParameters oldIdentificationParameters;
 
     /**
      * Creates a new IdentificationParametersEditionDialog with a frame as
@@ -150,7 +146,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
-        this.oldIdentificationParameters = identificationParameters;
 
         if (identificationParameters != null) {
             extractParameters(identificationParameters);
@@ -195,7 +190,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         super(owner, true);
 
         this.parentFrame = parentFrame;
-        this.oldIdentificationParameters = identificationParameters;
 
         if (identificationParameters != null) {
             extractParameters(identificationParameters);
@@ -874,7 +868,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
+        HashSet<String> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
         ArrayList<Integer> reporterIons = new ArrayList<>(IonFactory.getReporterIons(searchParameters.getModificationParameters()));
         AnnotationParametersDialog annotationSettingsDialog = new AnnotationParametersDialog(this, parentFrame, annotationSettings,
                 searchParameters.getFragmentIonAccuracy(), neutralLosses, reporterIons, editable);
@@ -1220,7 +1214,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             lastSelectedFolder.setLastSelectedFolder(selectedFile.getAbsolutePath());
 
             try {
-                oldIdentificationParameters = null;
+                
                 IdentificationParameters identificationParameters = IdentificationParameters.getIdentificationParameters(selectedFile);
                 extractParameters(identificationParameters);
                 nameTxt.setText(identificationParameters.getName());
@@ -1228,6 +1222,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 updateGUI();
 
                 validateParametersInput(true);
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error occurred while reading " + selectedFile + ". Please verify the file.", "File Error", JOptionPane.ERROR_MESSAGE);

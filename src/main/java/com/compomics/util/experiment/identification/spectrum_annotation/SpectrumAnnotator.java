@@ -623,7 +623,7 @@ public abstract class SpectrumAnnotator {
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
 
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag());
+            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), modificationParameters, modificationsSequenceMatchingParameters);
 
         } else {
 

@@ -9,9 +9,12 @@ import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.gui.renderers.AlignedTableCellRenderer;
 import com.compomics.util.gui.renderers.FragmentIonTableCellRenderer;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.google.common.base.Functions;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -47,19 +50,19 @@ public class FragmentIonTable extends JTable {
     /**
      * The list of currently selected fragment ion types.
      */
-    private HashSet<Integer> currentFragmentIonTypes;
+    private final HashSet<Integer> currentFragmentIonTypes;
     /**
      * The list of the currently selected neutral loss types.
      */
-    private NeutralLossesMap neutralLosses;
+    private final NeutralLossesMap neutralLosses;
     /**
      * If true, singly charge ions are included in the table.
      */
-    private boolean singleCharge;
+    private final boolean singleCharge;
     /**
      * If true, doubly charged ions are included in the table.
      */
-    private boolean twoCharges;
+    private final boolean twoCharges;
     /**
      * The table tooltips.
      */
@@ -67,19 +70,31 @@ public class FragmentIonTable extends JTable {
     /**
      * The current peptide.
      */
-    private Peptide currentPeptide;
+    private final Peptide currentPeptide;
     /**
      * The current peptide sequence.
      */
-    private String peptideSequence;
+    private final String peptideSequence;
     /**
      * The spectrum annotations map.
      */
-    private ArrayList<Stream<IonMatch>> allAnnotations;
+    private final ArrayList<Stream<IonMatch>> allAnnotations;
     /**
      * The list of spectra. Needed for intensity normalization.
      */
     private ArrayList<Spectrum> allSpectra;
+    /**
+     * The modification parameters.
+     */
+    private final ModificationParameters modificationParameters;
+    /**
+     * The protein sequence provider.
+     */
+    private final SequenceProvider sequenceProvider;
+    /**
+     * The modification sequence matching parameters.
+     */
+    private final SequenceMatchingParameters modificationSequenceMatchingParameters;
 
     /**
      * Creates a traditional fragment ion table with the theoretical mz values
@@ -93,13 +108,18 @@ public class FragmentIonTable extends JTable {
      * types
      * @param singleCharge if true, singly charge ions are included in the table
      * @param twoCharges if true, doubly charged ions are included in the table
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public FragmentIonTable(
             Peptide currentPeptide,
             ArrayList<Stream<IonMatch>> allAnnotations,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
-            boolean singleCharge, boolean twoCharges) {
+            boolean singleCharge, boolean twoCharges,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
         super();
 
         this.currentPeptide = currentPeptide;
@@ -108,6 +128,9 @@ public class FragmentIonTable extends JTable {
         this.singleCharge = singleCharge;
         this.twoCharges = twoCharges;
         this.allAnnotations = allAnnotations;
+        this.modificationParameters = modificationParameters;
+        this.sequenceProvider = sequenceProvider;
+        this.modificationSequenceMatchingParameters = modificationSequenceMatchingParameters;
 
         peptideSequence = currentPeptide.getSequence();
 
@@ -135,6 +158,10 @@ public class FragmentIonTable extends JTable {
      * types
      * @param singleCharge if true, singly charge ions are included in the table
      * @param twoCharges if true, doubly charged ions are included in the table
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public FragmentIonTable(
             Peptide currentPeptide,
@@ -142,7 +169,8 @@ public class FragmentIonTable extends JTable {
             ArrayList<Spectrum> allSpectra,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
-            boolean singleCharge, boolean twoCharges) {
+            boolean singleCharge, boolean twoCharges,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
         super();
 
         this.currentPeptide = currentPeptide;
@@ -152,6 +180,9 @@ public class FragmentIonTable extends JTable {
         this.twoCharges = twoCharges;
         this.allAnnotations = allAnnotations;
         this.allSpectra = allSpectra;
+        this.modificationParameters = modificationParameters;
+        this.sequenceProvider = sequenceProvider;
+        this.modificationSequenceMatchingParameters = modificationSequenceMatchingParameters;
 
         peptideSequence = currentPeptide.getSequence();
 
@@ -372,7 +403,7 @@ public class FragmentIonTable extends JTable {
 
         // get all fragmentions for the peptide
         IonFactory fragmentFactory = IonFactory.getInstance();
-        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(currentPeptide);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(currentPeptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
         HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
 
         // add the theoretical masses to the table

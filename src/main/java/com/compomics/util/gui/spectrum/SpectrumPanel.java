@@ -14,9 +14,13 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
@@ -1156,7 +1160,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Add reference areas annotating the de novo tags, using default percent
      * height of 0.9 for the forward ions and 1.0 for the reverse ions default
-     * alpha levels of 0.2. Fixed modificatoins are not annotated.
+     * alpha levels of 0.2. Fixed modifications are not annotated.
      *
      * @param currentPeptide the current peptide sequence
      * @param annotations the current fragment ion annotations
@@ -1172,13 +1176,19 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param showRewindTags if true, the reverse de novo sequencing tags are
      * displayed
      * @param mirrored if true the annotation is for the mirrored spectrum
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, Stream<IonMatch> annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags, boolean mirrored) {
+            boolean showForwardTags, boolean showRewindTags, boolean mirrored,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored);
+                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored,
+                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
     }
 
     /**
@@ -1203,14 +1213,20 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
      * @param mirrored if true the annotation is for the mirrored spectrum
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, Stream<IonMatch> annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored) {
+            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored,
+                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
     }
 
     /**
@@ -1235,17 +1251,22 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
      * @param excludeFixedModifications are fixed modifications to be annotated?
-     *
      * @param mirrored if true the annotation is for the mirrored spectrum
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, Stream<IonMatch> annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedModifications, boolean mirrored) {
+            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedModifications, boolean mirrored,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, excludeFixedModifications, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, excludeFixedModifications, mirrored,
+                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
     }
 
@@ -1370,16 +1391,22 @@ public class SpectrumPanel extends GraphicsPanel {
      * forwardIonAlphaLevel and rewindIonAlphaLevel
      * @param excludeFixedModifications are fixed modifications to be annotated?
      * @param mirrored if true the annotation is for the mirrored spectrum
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, Stream<IonMatch> annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
-            ArrayList<float[]> alphaLevels, boolean excludeFixedModifications, boolean mirrored) {
+            ArrayList<float[]> alphaLevels, boolean excludeFixedModifications, boolean mirrored,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedModifications, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedModifications, mirrored,
+                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
     }
 
@@ -1409,6 +1436,10 @@ public class SpectrumPanel extends GraphicsPanel {
      * forwardIonAlphaLevel and rewindIonAlphaLevel
      * @param excludeFixedModifications are fixed modifications to be annotated?
      * @param mirrored if true the annotation is for the mirrored spectrum
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, Stream<IonMatch> annotations,
@@ -1416,7 +1447,8 @@ public class SpectrumPanel extends GraphicsPanel {
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
             float forwardIonAlphaLevel, float rewindIonAlphaLevel, ArrayList<float[]> alphaLevels,
-            boolean excludeFixedModifications, boolean mirrored) {
+            boolean excludeFixedModifications, boolean mirrored,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         int forwardIon = aForwardIon;
         int reverseIon = aRewindIon;
@@ -1444,10 +1476,24 @@ public class SpectrumPanel extends GraphicsPanel {
                     }
                 });
 
-        HashSet<Integer> modifiedIndexes = Arrays.stream(currentPeptide.getModificationMatches())
-                .filter(modificationMatch -> !excludeFixedModifications | modificationMatch.getVariable())
-                .map(modificationMatch -> modificationMatch.getModificationSite())
+        HashSet<Integer> modifiedIndexes = Arrays.stream(currentPeptide.getVariableModifications())
+                .map(modificationMatch -> modificationMatch.getSite())
+                .map(i -> ModificationUtils.getSite(i, currentPeptide.getSequence().length()))
                 .collect(Collectors.toCollection(HashSet::new));
+
+        if (!excludeFixedModifications) {
+
+            String[] fixedModifications = currentPeptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+
+            for (int i = 0; i < fixedModifications.length; i++) {
+
+                if (fixedModifications[i] != null) {
+
+                    modifiedIndexes.add(ModificationUtils.getSite(i, currentPeptide.getSequence().length()));
+
+                }
+            }
+        }
 
         // add reverse ion de novo tags (x, y or z)
         if (showRewindTags) {
@@ -1574,15 +1620,26 @@ public class SpectrumPanel extends GraphicsPanel {
                 if (showForwardTags) {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
+                    
+                    String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
 
                     for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                        
                         IonMatch ionMatch1 = forwardMap.get(i);
                         IonMatch ionMatch2 = forwardMap.get(i + 1);
+                        
                         if (ionMatch1 != null && ionMatch2 != null) {
-                            String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(i + 1);
-                            if (!modificationMatches.isEmpty()) {
+                            
+                            String mod = variableModifications[i + 1] != null ? "*" : "";
+                            
+                            if (i == 0 && variableModifications[0] != null) {
+                                
                                 mod = "*";
+                                
+                            } else if (i == aminoAcidSequence.length() - 1 && variableModifications[aminoAcidSequence.length() + 1] != null) {
+                                
+                                mod = "*";
+                                
                             }
 
                             float currentAlphaLevel = forwardIonAlphaLevel;
@@ -1626,6 +1683,8 @@ public class SpectrumPanel extends GraphicsPanel {
                 if (showReverseTags) {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
+                    
+                    String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
 
                     for (int i = 0; i < aminoAcidSequence.length(); i++) {
 
@@ -1635,13 +1694,17 @@ public class SpectrumPanel extends GraphicsPanel {
                         if (ionMatch1 != null && ionMatch2 != null) {
 
                             int sequenceIndex = aminoAcidSequence.length() - i - 1;
-                            String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(sequenceIndex + 1);
-
-                            if (!modificationMatches.isEmpty()) {
-
+                            
+                            String mod = variableModifications[sequenceIndex + 1] != null ? "*" : "";
+                            
+                            if (sequenceIndex == 0 && variableModifications[0] != null) {
+                                
                                 mod = "*";
-
+                                
+                            } else if (sequenceIndex == aminoAcidSequence.length() - 1 && variableModifications[aminoAcidSequence.length() + 1] != null) {
+                                
+                                mod = "*";
+                                
                             }
 
                             float currentAlphaLevel = rewindIonAlphaLevel;

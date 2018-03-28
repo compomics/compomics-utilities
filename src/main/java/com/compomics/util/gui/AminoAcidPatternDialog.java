@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.google.common.collect.Sets;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 import java.awt.event.MouseEvent;
@@ -12,6 +13,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * This dialog allows the design and test of amino acid patterns. (see class
@@ -628,7 +632,9 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingParameters.defaultStringMatching);
+        HashSet<Integer> indexes = Arrays.stream(pattern.getIndexes(tempSequence, SequenceMatchingParameters.defaultStringMatching))
+                .boxed()
+                .collect(Collectors.toCollection(HashSet::new));
 
         String result = "";
 

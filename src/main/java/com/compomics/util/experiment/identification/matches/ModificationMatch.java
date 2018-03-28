@@ -21,7 +21,10 @@ public class ModificationMatch extends ExperimentObject {
      */
     private String modification;
     /**
-     * The location in the sequence, 1 is the first residue.
+     * The location in the sequence. N-term modifications
+     * are at index 0, C-term at index sequence length + 1, and other
+     * modifications at amino acid index starting from 1. An error is thrown if
+     * attempting to stack modifications.
      */
     private int modifiedSite;
     /**
@@ -80,7 +83,10 @@ public class ModificationMatch extends ExperimentObject {
     }
 
     /**
-     * Getter for the modification site, 1 is the first amino acid.
+     * Getter for the modification site. N-term modifications
+     * are at index 0, C-term at index sequence length + 1, and other
+     * modifications at amino acid index starting from 1. An error is thrown if
+     * attempting to stack modifications.
      *
      * @return the index of the modification in the sequence
      */

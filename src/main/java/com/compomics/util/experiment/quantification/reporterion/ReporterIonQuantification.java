@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.normalization.NormalizationFactors;
 import com.compomics.util.experiment.quantification.Quantification;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * The sample assignment to the various reporter ions indexed by their name.
      */
-    private final HashMap<String, Sample> sampleAssignement = new HashMap<>();
+    private final HashMap<String, String> sampleAssignement = new HashMap<>();
     /**
      * The sample index map. The key is the sample reference and the element the
      * index as a zero based integer.
@@ -55,7 +54,7 @@ public class ReporterIonQuantification extends Quantification {
      * @param reporterName the name of the reporter ion
      * @param sample the sample
      */
-    public void assignSample(String reporterName, Sample sample) {
+    public void assignSample(String reporterName, String sample) {
         sampleAssignement.put(reporterName, sample);
     }
     
@@ -91,7 +90,7 @@ public class ReporterIonQuantification extends Quantification {
      * @param reporterIonName the static index of the reporter ion
      * @return the corresponding sample
      */
-    public Sample getSample(String reporterIonName) {
+    public String getSample(String reporterIonName) {
         return sampleAssignement.get(reporterIonName);
     }
 
@@ -103,9 +102,9 @@ public class ReporterIonQuantification extends Quantification {
      *
      * @return the static index of the associated ion
      */
-    public String getReporterIndex(Sample aSample) {
+    public String getReporterIndex(String aSample) {
         for (String ionName : sampleAssignement.keySet()) {
-            if (sampleAssignement.get(ionName).isSameAs(aSample)) {
+            if (sampleAssignement.get(ionName).equals(aSample)) {
                 return ionName;
             }
         }

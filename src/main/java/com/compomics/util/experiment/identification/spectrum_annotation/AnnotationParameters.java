@@ -7,6 +7,8 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class AnnotationParameters implements Serializable {
         snp("Signal to noise probability.");
 
         /**
-         * The description of the thresold.
+         * The description of the threshold.
          */
         public final String description;
 
@@ -65,7 +67,7 @@ public class AnnotationParameters implements Serializable {
      */
     private IntensityThresholdType intensityThresholdType = IntensityThresholdType.percentile;
     /**
-     * The intensity thresold to use. The type of threshold is defined according
+     * The intensity threshold to use. The type of threshold is defined according
      * to the IntensityThreshold enum.
      */
     private double intensityLimit = 0.75;
@@ -133,18 +135,23 @@ public class AnnotationParameters implements Serializable {
      * @param spectrumKey the key of the spectrum to annotate
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
         
         if (neutralLossesAuto) {
             
-            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption));
+            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters));
         
         } else {
         

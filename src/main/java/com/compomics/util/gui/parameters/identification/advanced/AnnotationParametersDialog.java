@@ -12,6 +12,9 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +44,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
     /**
      * Map of the neutral losses selection.
      */
-    private HashMap<NeutralLoss, Boolean> neutralLossesMap;
+    private HashMap<String, Boolean> neutralLossesMap;
     /**
      * Boolean indicating whether the settings can be edited by the user.
      */
@@ -65,7 +68,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * the user
      */
     public AnnotationParametersDialog(java.awt.Frame parentFrame, AnnotationParameters annotationSettings, double maxFragmentIonAccuracy,
-            ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+            HashSet<String> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
@@ -93,7 +96,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * the user
      */
     public AnnotationParametersDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationParameters annotationSettings, double maxFragmentIonAccuracy,
-            ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+            HashSet<String> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
@@ -151,20 +154,20 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
      * @param annotationSettings the annotation settings to display
      * @param possibleNeutralLosses the possible neutral losses
      */
-    private void populateGui(AnnotationParameters annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
+    private void populateGui(AnnotationParameters annotationSettings, HashSet<String> possibleNeutralLosses) {
 
-        neutralLossesMap = new HashMap<>(possibleNeutralLosses.size()); // @TODO: should not use NeutralLoss as key?
+        neutralLossesMap = new HashMap<>(possibleNeutralLosses.size());
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
-        for (NeutralLoss possibleNeutralLoss : possibleNeutralLosses) {
-            boolean found = false;
-            for (NeutralLoss selectedNeutralLoss : selectedNeutralLosses) {
-                if (possibleNeutralLoss.isSameAs(selectedNeutralLoss)) {
-                    found = true;
-                    break;
-                }
-            }
-            neutralLossesMap.put(possibleNeutralLoss, found);
+        HashSet<String> selectedNeutralLossesNames = selectedNeutralLosses.stream()
+                .map(neutralLoss -> neutralLoss.name)
+                .collect(Collectors.toCollection(HashSet::new));
+        
+        for (String nlName : possibleNeutralLosses) {
+            
+            neutralLossesMap.put(nlName, selectedNeutralLossesNames.contains(nlName));
+        
         }
+        
         ((NeutralLossesTableModel) neutralLossesTable.getModel()).updateData();
 
         intensityThresholdCmb.setSelectedItem(annotationSettings.getIntensityThresholdType());
@@ -312,9 +315,12 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
         SpectrumAnnotator.TiesResolution tiesResolution = highResolutionBox.isSelected() ? SpectrumAnnotator.TiesResolution.mostAccurateMz : SpectrumAnnotator.TiesResolution.mostIntense;
         annotationSettings.setTiesResolution(tiesResolution); //@TODO: replace by a drop down menu
 
-        for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
-            if (neutralLossesMap.get(neutralLoss)) {
-                annotationSettings.addNeutralLoss(neutralLoss);
+        for (Entry<String, Boolean> entry : neutralLossesMap.entrySet()) {
+            
+            if (entry.getValue()) {
+                
+                annotationSettings.addNeutralLoss(NeutralLoss.getNeutralLoss(entry.getKey()));
+                
             }
         }
 
@@ -736,14 +742,9 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
     private class NeutralLossesTableModel extends DefaultTableModel {
 
         /**
-         * Name to neutral loss map.
-         */
-        private final HashMap<String, NeutralLoss> namesMap = new HashMap<>();
-
-        /**
          * List of the names of the neutral losses to display.
          */
-        private ArrayList<String> namesList = new ArrayList<>();
+        private String[] nlNames = new String[0];
 
         /**
          * Constructor.
@@ -757,20 +758,18 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
          */
         public void updateData() {
             if (neutralLossesMap != null) {
-                for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
-                    namesMap.put(neutralLoss.name, neutralLoss);
-                }
-                namesList = new ArrayList<>(namesMap.keySet());
-                Collections.sort(namesList);
+                nlNames = neutralLossesMap.keySet().stream()
+                        .sorted()
+                        .toArray(String[]::new);
             }
         }
 
         @Override
         public int getRowCount() {
-            if (namesList == null) {
+            if (nlNames == null) {
                 return 0;
             }
-            return namesList.size();
+            return nlNames.length;
         }
 
         @Override
@@ -798,9 +797,10 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
                 case 0:
                     return row + 1;
                 case 1:
-                    return namesList.get(row);
+                    return nlNames[row];
                 case 2:
-                    return neutralLossesMap.get(namesMap.get(namesList.get(row)));
+                    String name = nlNames[row];
+                    return neutralLossesMap.get(name);
                 default:
                     return "";
             }
@@ -823,8 +823,8 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
 
         @Override
         public void setValueAt(Object aValue, int row, int column) {
-            NeutralLoss neutralLoss = namesMap.get(namesList.get(row));
-            neutralLossesMap.put(neutralLoss, !neutralLossesMap.get(neutralLoss));
+            String name = nlNames[row];
+            neutralLossesMap.put(name, !neutralLossesMap.get(name));
         }
     }
 }

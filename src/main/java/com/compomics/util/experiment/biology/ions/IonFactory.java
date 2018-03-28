@@ -1314,7 +1314,7 @@ public class IonFactory {
      */
     private ArrayList<NeutralLoss[]> estimateNeutralLossesCombinations(HashSet<String> possibleNeutralLosses) {
 
-        String[] lossesNames = possibleNeutralLosses.toArray(new String[possibleNeutralLosses.size()]);
+        String[] lossesNames = possibleNeutralLosses.stream().sorted().toArray(String[]::new);
 
         // We will account for up to two neutral losses per ion maximum
         ArrayList<NeutralLoss[]> neutralLossesCombinations = new ArrayList<>();

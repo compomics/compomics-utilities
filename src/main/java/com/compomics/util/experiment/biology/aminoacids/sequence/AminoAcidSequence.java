@@ -530,7 +530,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public String[] getIndexedVariableModifications() {
 
-        String[] result = new String[length()];
+        String[] result = new String[length() + 2];
 
         if (variableModifications != null) {
 

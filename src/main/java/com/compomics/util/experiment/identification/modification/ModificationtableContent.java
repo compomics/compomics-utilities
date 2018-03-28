@@ -320,7 +320,7 @@ public class ModificationtableContent {
         forbiddenMod.add(modification.getName());
         Peptide noModPeptide = peptide.getNoModPeptide(forbiddenMod);
         
-        SpecificAnnotationParameters specificAnnotationParameters = annotationParameters.getSpecificAnnotationParameters(spectrum.getSpectrumKey(), peptideAssumption);
+        SpecificAnnotationParameters specificAnnotationParameters = annotationParameters.getSpecificAnnotationParameters(spectrum.getSpectrumKey(), peptideAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         

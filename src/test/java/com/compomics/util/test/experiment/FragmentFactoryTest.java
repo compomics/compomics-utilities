@@ -1,6 +1,5 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.IonFactory;
@@ -10,7 +9,9 @@ import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -42,13 +43,17 @@ public class FragmentFactoryTest extends TestCase {
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
         
         Peptide peptide = new Peptide(sequence);
+        
+        ModificationParameters modificationParameters = new ModificationParameters();
+        SequenceProvider sequenceProvider = null;
+        SequenceMatchingParameters modificationMatchingParameters = null;
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
 
-        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(peptide);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(peptide, modificationParameters, sequenceProvider, modificationMatchingParameters);
         HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
 
         for (Integer subType : fragmentIons.keySet()) {
@@ -378,13 +383,17 @@ public class FragmentFactoryTest extends TestCase {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
         Tag tag = new Tag(0, new AminoAcidSequence(sequence), 0);
+        
+        ModificationParameters modificationParameters = new ModificationParameters();
+        SequenceProvider sequenceProvider = null;
+        SequenceMatchingParameters modificationMatchingParameters = null;
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<>();
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
 
-        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(tag);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(tag, modificationParameters, modificationMatchingParameters);
         HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.TAG_FRAGMENT_ION.index);
 
         // add the theoretical masses to the table

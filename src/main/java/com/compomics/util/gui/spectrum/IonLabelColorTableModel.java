@@ -5,6 +5,9 @@ import com.compomics.util.experiment.biology.ions.Ion.IonType;
 import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.NeutralLossCombination;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +39,7 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      * @param iontypes the ion types
      * @param neutralLosses the neutral losses
      */
-    public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
+    public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, HashSet<String> neutralLosses) {
 
         ionMap = new HashMap<>();
         keys = new ArrayList<>();
@@ -46,11 +49,11 @@ public class IonLabelColorTableModel extends DefaultTableModel {
             if (null != ionType) {
                 switch (ionType) {
                     case IMMONIUM_ION:
-                        ionMap.put("Immonium Ion", Ion.getGenericIon(ionType, 0)); //@TODO: we usually group immonium ions, is it a good idea?
+                        ionMap.put("Immonium Ion", Ion.getGenericIon(ionType, 0));
                         keys.add("Immonium Ion");
                         break;
                     case RELATED_ION:
-                        ionMap.put("Related Ion", Ion.getGenericIon(ionType, 0)); //@TODO: we usually group related ions, is it a good idea?
+                        ionMap.put("Related Ion", Ion.getGenericIon(ionType, 0));
                         keys.add("Related Ion");
                         break;
                     default:

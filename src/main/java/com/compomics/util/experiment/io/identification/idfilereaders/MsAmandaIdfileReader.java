@@ -250,7 +250,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             if (location.equalsIgnoreCase("N-Term")) {
                                 modSite = 1;
                             } else if (location.equalsIgnoreCase("C-Term")) {
-                                modSite = peptideSequence.length() + 1;
+                                modSite = peptideSequence.length();
                             } else {
                                 // amino acid type and index expected, e.g., C4 or M3
                                 modSite = Integer.parseInt(modificationString.substring(1, modificationString.indexOf("(")));
@@ -266,7 +266,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                             if (modFixedStatus.equalsIgnoreCase("variable")) {
 
-                                utilitiesModifications.add(new ModificationMatch(modMass + "@" + peptideSequence.charAt(modSite - 1), true, modSite));
+                                utilitiesModifications.add(new ModificationMatch(modMass + "@" + peptideSequence.charAt(modSite - 1), modSite));
 
                             }
 
@@ -285,7 +285,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 

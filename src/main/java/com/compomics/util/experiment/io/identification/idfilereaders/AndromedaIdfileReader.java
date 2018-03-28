@@ -118,7 +118,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
 
                     Peptide peptide = peptideAssumption.getPeptide();
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
@@ -164,7 +164,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
             if (!mod.equals("A")) {
 
-                modMatches.add(new ModificationMatch(mod, true, aa));
+                modMatches.add(new ModificationMatch(mod, aa+1));
 
             }
         }

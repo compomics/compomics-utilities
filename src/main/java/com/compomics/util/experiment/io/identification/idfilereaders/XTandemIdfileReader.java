@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;
@@ -42,7 +43,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     private File inputFileName = null;
     private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
-    private HashMap<String, Boolean> modifications = new HashMap<>();
+    private HashSet<String> variableModifications = new HashSet<>();
     private int specNumber = 0;
     private String PSMFileName;
     private String softwareVersion;
@@ -145,30 +146,17 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (expandAaCombinations) {
-            
+
             for (SpectrumMatch spectrumMatch : allMatches.values()) {
 
                 spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
+                    
                     Peptide peptide = currentAssumption.getPeptide();
-
-                    // updating modifications
-                    for (ModificationMatch mods : peptide.getModificationMatches()) {
-                        
-                        String modName = mods.getModification();
-                        String modNameCheck = changeModificationName(modName);
-                        
-                        if (modifications.containsKey(modNameCheck)) {
-                            
-                            mods.setVariable(modifications.get(modNameCheck));
-                            
-                        }
-                    }
-
                     String peptideSequence = peptide.getSequence();
-                    ModificationMatch[] foundModifications = peptide.getModificationMatches();
+                    ModificationMatch[] foundModifications = peptide.getVariableModifications();
 
                     if (AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -436,13 +424,18 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             break;
 
                         case "aa":
-                            
+
                             if (addAA) {
-                                
+
                                 String modName = parser.getAttributeValue("", "modified") + "@" + parser.getAttributeValue("", "type");
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
-                                peptide.addModificationMatch(new ModificationMatch(modName, true, modPosition));
+                                String modNameCheck = changeModificationName(modName);
 
+                                if (variableModifications.contains(modNameCheck)) {
+
+                                    peptide.addVariableModification(new ModificationMatch(modName, modPosition));
+
+                                }
                             }
                             break;
 
@@ -471,10 +464,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 case XMLStreamConstants.CHARACTERS:
                     switch (theCase) {
                         case 1:
-                            modifications.put(changeModificationName(parser.getText()), false);
+                            // Ignore
                             break;
                         case 2:
-                            modifications.put(changeModificationName(parser.getText()), true);
+                            variableModifications.add(changeModificationName(parser.getText()));
                             break;
                         case 3:
                             softwareVersion = parser.getText().trim();

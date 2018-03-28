@@ -392,7 +392,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                     location -= 1; // c-term
                                 }
 
-                                utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), true, location));
+                                utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), location));
                             }
                         }
 
@@ -415,7 +415,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
 
-                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                            ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
@@ -1191,7 +1191,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     }
 
-                    modMatches.add(new ModificationMatch(tempMod.getMassDelta() + "@" + tempPeptide.getPeptideSequence().charAt(location - 1), true, location));
+                    modMatches.add(new ModificationMatch(tempMod.getMassDelta() + "@" + tempPeptide.getPeptideSequence().charAt(location - 1), location));
 
                 }
             }
@@ -1207,12 +1207,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
             if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
 
-                ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
                     ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
-                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getVariable(), modificationMatch.getSite()))
+                            .map(modificationMatch -> new ModificationMatch(modificationMatch.getModification(), modificationMatch.getSite()))
                             .toArray(ModificationMatch[]::new);
 
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);

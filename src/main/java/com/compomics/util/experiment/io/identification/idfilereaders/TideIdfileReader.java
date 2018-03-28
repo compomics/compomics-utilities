@@ -267,7 +267,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             // we've arrived at a modification, for example: [15.9949]
                             char modifiedResidue = modifiedPeptideSequence.charAt(i - 1); // @TODO: test for terminal ptms!
                             double ptmMass = Double.parseDouble(modifiedPeptideSequence.substring(i + 1, modifiedPeptideSequence.indexOf("]", i + 1)));
-                            utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + modifiedResidue, true, i));
+                            utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + modifiedResidue, i));
                             i = modifiedPeptideSequence.indexOf("]", i + 1);
                         }
                     }
@@ -283,7 +283,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 peptideAssumption.setRawScore(rawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 

@@ -300,7 +300,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                             }
 
                             pepNovoPtmTag += modificationMass;
-                            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, true, currentPtmLocation);
+                            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, currentPtmLocation);
                             modMatch.setConfident(true);
                             modificationMatches.add(modMatch);
                             modificationMass = "";
@@ -330,13 +330,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
             pepNovoPtmTag += modificationMass;
 
-            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, true, currentPtmLocation);
+            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, currentPtmLocation);
             modificationMatches.add(modMatch);
         }
 
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(sequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
-            aminoAcidSequence.addModificationMatch(modificationMatch.getSite(), modificationMatch);
+            aminoAcidSequence.addVariableModification(modificationMatch);
         }
         Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, charge, pepNovoScore);

@@ -185,17 +185,17 @@ public class PepxmlIdfileReader implements IdfileReader {
                         for (PeptideAssumption tempPeptideAssumption : currentMatch.getAllPeptideAssumptions().collect(Collectors.toList())) {
                             Peptide tempPeptide = tempPeptideAssumption.getPeptide();
                             if (peptide.getSequence().equals(tempPeptide.getSequence())) {
-                                boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
+                                boolean sameModifications = peptide.getNVariableModifications() == tempPeptide.getNVariableModifications();
                                 if (sameModifications) {
-                                    for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
-                                        boolean ptmFound = false;
-                                        for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
+                                    for (ModificationMatch originalMatch : peptide.getVariableModifications()) {
+                                        boolean modFound = false;
+                                        for (ModificationMatch otherMatch : tempPeptide.getVariableModifications()) {
                                             if (originalMatch.getModification().equals(otherMatch.getModification()) && originalMatch.getSite() == otherMatch.getSite()) {
-                                                ptmFound = true;
+                                                modFound = true;
                                                 break;
                                             }
                                         }
-                                        if (!ptmFound) {
+                                        if (!modFound) {
                                             sameModifications = false;
                                             break;
                                         }
@@ -213,7 +213,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                         Advocate advocate = Advocate.getAdvocate(searchEngine);
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 
-                            ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                            ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                             for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
@@ -232,26 +232,26 @@ public class PepxmlIdfileReader implements IdfileReader {
                         }
                     }
                 }
-                
+
                 if (type == XmlPullParser.END_TAG && tagName.equals("spectrum_query")) {
-                    
+
                     if (hasMatch) {
-                        
+
                         long key = currentMatch.getKey();
-                        
+
                         if (!spectrumMatchesMap.containsKey(key)) {
-                            
+
                             spectrumMatchesMap.put(key, currentMatch);
                             spectrumMatches.add(currentMatch);
-                            
+
                         }
-                        
+
                         hasMatch = false;
                         currentMatch = null;
                         currentCharge = null;
-                        
+
                     }
-                    
+
                     if (waitingHandler != null && spectrumFactory.fileLoaded(inputFileName)) {
                         waitingHandler.increaseSecondaryProgressCounter();
                     }
@@ -324,28 +324,32 @@ public class PepxmlIdfileReader implements IdfileReader {
                         variableModification = !fixedCTerminalModifications.contains(terminalMass);
                     }
 
-                    int site;
-                    if (attributeName.equals("mod_nterm_mass")) {
-                        site = 1;
-                        terminalMass -= Atom.H.getMonoisotopicMass();
-                    } else { // c-term
-                        site = sequence.length();
-                        terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
+                    if (variableModification) {
 
-                        // fix for older comet pepxml files
-                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet")
-                                && searchEngineVersion != null
-                                && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")
-                                && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 5")) { // @TODO: make more generic...
+                        int site;
+                        if (attributeName.equals("mod_nterm_mass")) {
+                            site = 1;
                             terminalMass -= Atom.H.getMonoisotopicMass();
-                        }
-                    }
+                        } else { // c-term
+                            site = sequence.length();
+                            terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
 
-                    char aa = sequence.charAt(site - 1);
-                    terminalMass = Util.roundDouble(terminalMass, 2);
-                    String tempModificationName = terminalMass + "@" + aa;
-                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, variableModification, site);
-                    modificationMatches.add(modificationMatch);
+                            // fix for older comet pepxml files
+                            if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet")
+                                    && searchEngineVersion != null
+                                    && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")
+                                    && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 5")) { // @TODO: make more generic...
+                                terminalMass -= Atom.H.getMonoisotopicMass();
+                            }
+                        }
+
+                        char aa = sequence.charAt(site - 1);
+                        terminalMass = Util.roundDouble(terminalMass, 2);
+                        String tempModificationName = terminalMass + "@" + aa;
+                        ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, site);
+                        modificationMatches.add(modificationMatch);
+
+                    }
                 }
             }
 
@@ -410,7 +414,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                     double modificationMass = modifiedAaMass - fixedModificationMass - aminoAcid.getMonoisotopicMass();
                                     modificationMass = Util.roundDouble(modificationMass, 2);
                                     String tempModificationName = modificationMass + "@" + aa;
-                                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
+                                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, site);
                                     modificationMatches.add(modificationMatch);
                                 }
                             }

@@ -259,7 +259,7 @@ public class OnyaseIdfileReader implements IdfileReader {
         String[] modifications = decodedString.split(Peptide.MODIFICATION_SEPARATOR);
         ModificationMatch[] modificationMatches = Arrays.stream(modifications)
                 .map(modification -> modification.split(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR))
-                .map(modificationSplit -> new ModificationMatch(modificationSplit[0], true, Integer.parseInt(modificationSplit[1])))
+                .map(modificationSplit -> new ModificationMatch(modificationSplit[0], Integer.parseInt(modificationSplit[1])))
                 .toArray(ModificationMatch[]::new);
         
         return modificationMatches;

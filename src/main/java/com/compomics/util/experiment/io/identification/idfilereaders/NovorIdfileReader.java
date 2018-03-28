@@ -309,27 +309,21 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             if (currentMod.toLowerCase().startsWith("n-term|")) {
                                 int currentModAsInt = new Integer(currentMod.substring("n-term|".length()));
                                 if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, 1));
-                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, 1));
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), 1));
                                 } else if (novorParameters.getNovorPtmMap() == null) {
                                     throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
                             } else if (currentMod.toLowerCase().startsWith("c-term|")) {
                                 int currentModAsInt = new Integer(currentMod.substring("c-term|".length()));
                                 if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, peptideSequence.length()));
-                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, peptideSequence.length()));
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
                                 } else if (novorParameters.getNovorPtmMap() == null) {
                                     throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
                             } else {
                                 int currentModAsInt = new Integer(currentMod);
                                 if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, peptideSequence.length()));
-                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
-                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, peptideSequence.length()));
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
                                 } else if (novorParameters.getNovorPtmMap() == null) {
                                     throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
@@ -377,7 +371,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 //peptideAssumption.setRawScore(novorScore);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
 
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 

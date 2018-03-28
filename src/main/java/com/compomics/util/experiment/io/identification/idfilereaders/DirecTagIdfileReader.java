@@ -575,7 +575,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     String modIndexString = charAtI + "";
                     int modIndex = new Integer(modIndexString);
                     String utilitiesPtm = direcTagParameters.getUtilitiesModificationName(modIndex);
-                    modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, true, i + 1));
+                    modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, i + 1));
                     residues.append(dynamicModsResidues.get(modIndexString.charAt(0)));
                 } catch (Exception e1) {
                     throw new IllegalArgumentException("No amino acid or modification could be mapped to tag component \"" + charAtI + "\" in tag \"" + tagSequence + "\".");
@@ -585,7 +585,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
         AminoAcidSequence tagAaSequence = new AminoAcidSequence(residues.toString());
         for (int i : modificationMatches.keySet()) {
-            tagAaSequence.addModificationMatch(i, modificationMatches.get(i));
+            tagAaSequence.addVariableModification(modificationMatches.get(i));
         }
         Tag tag = new Tag(nGap, tagAaSequence, cGap);
 

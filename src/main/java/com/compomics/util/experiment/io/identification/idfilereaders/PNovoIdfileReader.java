@@ -227,7 +227,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
                 char currentChar = pNovoSequence.charAt(i);
 
                 if (pNovoParameters.getPtmResidue(currentChar) != null) {
-                    modificationMatches.add(new ModificationMatch(pNovoParameters.getUtilitiesPtmName(currentChar), true, i + 1));
+                    modificationMatches.add(new ModificationMatch(pNovoParameters.getUtilitiesPtmName(currentChar), i + 1));
                     peptideSequence += pNovoParameters.getPtmResidue(currentChar);
                 } else {
                     peptideSequence += currentChar;
@@ -237,7 +237,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
-            aminoAcidSequence.addModificationMatch(modificationMatch.getSite(), modificationMatch);
+            aminoAcidSequence.addVariableModification(modificationMatch);
         }
         Tag tag = new Tag(0, aminoAcidSequence, 0);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, 1, pNovoScore); // @TODO: how to get the charge?

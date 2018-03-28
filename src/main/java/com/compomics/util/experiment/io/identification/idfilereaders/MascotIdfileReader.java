@@ -32,7 +32,6 @@ import javax.xml.bind.JAXBException;
 public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
 
     private ArrayList<String> varMods = new ArrayList<>();
-    private HashMap<Character, String> fixMods = new HashMap<>();
     private String softwareVersion;
 
     private ArrayList<Integer> charges = new ArrayList<>();
@@ -165,7 +164,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     
                     Peptide peptide = currentAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
-                    ModificationMatch[] previousModificationMatches = peptide.getModificationMatches();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
 
                     if (AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -251,7 +250,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                             throw new Exception("File format not parsable.");
                         }
                         theCase = 0;
-                        fixMods.put(parts[1].charAt(0), mass);
                         break;
                 }
             }
@@ -379,14 +377,11 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 String varModSequence = content[6];
                 ArrayList<ModificationMatch> foundModifications = new ArrayList<>(1);
 
-                // check for fixed and variable modifications
+                // check for variable modifications
                 for (int pos = 1; pos < varModSequence.length() - 1; ++pos) {
-                    char c = peptideSequence.charAt(pos - 1);
                     char vC = varModSequence.charAt(pos);
-                    if (fixMods.containsKey(c)) {
-                        foundModifications.add(new ModificationMatch(fixMods.get(c) + "@" + c, false, pos));
-                    } else if (vC != '0' && vC != 'X') {
-                        foundModifications.add(new ModificationMatch(varMods.get(vC - '0') + "@" + peptideSequence.charAt(pos - 1), true, pos));
+                    if (vC != '0' && vC != 'X') {
+                        foundModifications.add(new ModificationMatch(varMods.get(vC - '0') + "@" + peptideSequence.charAt(pos - 1), pos));
                     }
                 }
 

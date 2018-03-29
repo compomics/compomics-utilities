@@ -1,6 +1,7 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
+import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import java.awt.event.KeyEvent;
 
 /**
@@ -100,8 +101,7 @@ public class AaMass extends javax.swing.JDialog {
     private void processInput() {
 
         String input = sequenceTxt.getText().trim();
-        char[] array = input.toCharArray();
-        double mass = input.chars()
+        double mass = StandardMasses.h2o.mass + input.chars()
                 .mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass())
                 .sum();
         

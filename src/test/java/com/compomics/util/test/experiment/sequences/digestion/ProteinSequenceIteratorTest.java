@@ -1,5 +1,6 @@
 package com.compomics.util.test.experiment.sequences.digestion;
 
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.IteratorFactory;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
@@ -86,6 +87,10 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptide.getVariableModifications().length == 0);
         
         // Modifications
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        double modMass = 0.0;
+        modMass += modificationFactory.getModification("Acetylation of protein N-term").getMass();
+        modMass += 2 * modificationFactory.getModification("Carbamidomethylation of C").getMass();
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
         peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
@@ -94,7 +99,8 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
-        Assert.assertTrue(peptide.getVariableModifications().length == 3);
+        Assert.assertTrue(peptide.getVariableModifications().length == 0);
+        Assert.assertTrue(Math.abs(peptide.getMass() -  (1734.7287955683 + modMass)) < 1e-6);
         
         
         // Unspecific digestion
@@ -209,6 +215,9 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 6);
         
         // Modification with mass limits
+        modMass = 0.0;
+        modMass += modificationFactory.getModification("Pyrolidone from carbamidomethylated C").getMass();
+        modMass += 2 * modificationFactory.getModification("Carbamidomethylation of C").getMass();
         sequenceIterator = iteratorFactoryModifications.getSequenceIterator(testSequence, digestionPreferences, 867.0, 868.0);
         peptides = new ArrayList<>();
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
@@ -217,7 +226,8 @@ public class ProteinSequenceIteratorTest extends TestCase {
         Assert.assertTrue(peptides.size() == 1);
         peptide = peptides.get(0).getPeptide();
         Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
-        Assert.assertTrue(peptide.getVariableModifications().length == 3);
+        Assert.assertTrue(peptide.getVariableModifications().length == 0);
+        Assert.assertTrue(Math.abs(peptide.getMass() -  (770.29387569618 + modMass)) < 1e-6);
         
         
         // No missed cleavages

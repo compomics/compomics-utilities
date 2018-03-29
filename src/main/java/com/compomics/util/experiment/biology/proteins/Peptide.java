@@ -287,11 +287,32 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Getter for the mass.
+     * Returns the mass, does not attempt to estimate it. An exception is thrown
+     * if the mass was not previously estimated.
      *
      * @return the peptide mass
      */
     public double getMass() {
+
+        if (mass == -1.0) {
+            throw new IllegalArgumentException("Mass not estimated.");
+        }
+
+        return mass;
+
+    }
+
+    /**
+     * Returns the mass, estimates it if not done before.
+     *
+     * @param modificationParameters the modifications parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationSequenceMatchingParameters the modifications sequence
+     * matching parameters
+     *
+     * @return the peptide mass
+     */
+    public double getMass(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -299,7 +320,7 @@ public class Peptide extends ExperimentObject {
 
         if (mass == -1.0) {
 
-            estimateTheoreticMass();
+            estimateTheoreticMass(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
         }
 
@@ -1315,8 +1336,13 @@ public class Peptide extends ExperimentObject {
     /**
      * Estimates the theoretic mass of the peptide. The previous version is
      * silently overwritten.
+     *
+     * @param modificationParameters the modifications parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationSequenceMatchingParameters the modifications sequence
+     * matching parameters
      */
-    public void estimateTheoreticMass() {
+    public void estimateTheoreticMass(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
@@ -1335,6 +1361,14 @@ public class Peptide extends ExperimentObject {
                     .sum();
 
         }
+
+        String[] fixedModifications = getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+
+        tempMass += Arrays.stream(fixedModifications)
+                .filter(modName -> modName != null)
+                .mapToDouble(modName -> modificationFactory.getModification(modName).getMass())
+                .sum();
 
         setMass(tempMass);
     }

@@ -56,34 +56,42 @@ public class IteratorFactory {
      * @param massMax the maximal mass of a peptide
      *
      * @return a sequence iterator
-     * 
+     *
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
     public SequenceIterator getSequenceIterator(String sequence, DigestionParameters digestionPreferences, double massMin, double massMax) throws InterruptedException {
-        switch (digestionPreferences.getCleavageParameter()) {
-            case unSpecific:
-                if (AminoAcidSequence.hasCombination(sequence)) {
-                    return new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax);
-                }
-                return new UnspecificIterator(proteinIteratorUtils, sequence, massMin, massMax);
-            case wholeProtein:
-                if (AminoAcidSequence.hasCombination(sequence)) {
-                    return new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax);
-                }
-                return new NoDigestionIterator(proteinIteratorUtils, sequence, massMin, massMax);
-            case enzyme:
-                ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
-                if (enzymes.size() == 1) {
-                    Enzyme enzyme = enzymes.get(0);
-                    int nMissedCleavages = digestionPreferences.getnMissedCleavages(enzyme.getName());
-                    if (AminoAcidSequence.hasCombination(sequence)) {
-                        return new SpecificSingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
-                    }
-                    return new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
-                }
-            default:
-                throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavageParameter() + " not supported.");
+
+        DigestionParameters.CleavageParameter cleavageParameter = digestionPreferences.getCleavageParameter();
+
+        if (cleavageParameter == DigestionParameters.CleavageParameter.enzyme) {
+
+            ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+
+            if (enzymes.size() == 1) {
+
+                Enzyme enzyme = enzymes.get(0);
+                int nMissedCleavages = digestionPreferences.getnMissedCleavages(enzyme.getName());
+
+                return AminoAcidSequence.hasCombination(sequence)
+                        ? new SpecificSingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax)
+                        : new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
+            }
+
+        } else if (cleavageParameter == DigestionParameters.CleavageParameter.unSpecific) {
+
+            return AminoAcidSequence.hasCombination(sequence)
+                    ? new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
+                    : new UnspecificIterator(proteinIteratorUtils, sequence, massMin, massMax);
+
+        } else if (cleavageParameter == DigestionParameters.CleavageParameter.wholeProtein) {
+
+            return AminoAcidSequence.hasCombination(sequence)
+                    ? new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
+                    : new NoDigestionIterator(proteinIteratorUtils, sequence, massMin, massMax);
+
         }
+
+        throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavageParameter() + " not supported.");
     }
 }

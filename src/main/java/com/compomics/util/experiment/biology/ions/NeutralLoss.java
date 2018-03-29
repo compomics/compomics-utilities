@@ -18,6 +18,10 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      */
     static final long serialVersionUID = 5540846193082177391L;
     /**
+     * Map of available neutral losses.
+     */
+    private final static HashMap<String, NeutralLoss> neutralLosses = new HashMap<>(0);
+    /**
      * H2O loss.
      */
     public static final NeutralLoss H2O = new NeutralLoss("H2O", AtomChain.getAtomChain("H(2)O"), false, new char[]{'D', 'E', 'S', 'T'});
@@ -53,10 +57,6 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * Boolean indicating whether the neutral loss will always be accounted for.
      */
     private boolean fixed = false;
-    /**
-     * Map of available neutral losses.
-     */
-    private final static HashMap<String, NeutralLoss> neutralLosses = new HashMap<>(0);
     /**
      * The PSI MS CV term of the neutral loss, null if not set.
      */

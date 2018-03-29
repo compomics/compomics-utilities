@@ -2274,6 +2274,7 @@ public class IdentificationParametersInputBean {
                 case specificNTermOnly:
                 case specificCTermOnly:
                     msgfParameters.setNumberTolerableTermini(1);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }

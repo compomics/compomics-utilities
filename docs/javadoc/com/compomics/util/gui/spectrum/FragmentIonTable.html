@@ -140,7 +140,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.htm
  showing the intensities as bar charts for each ion type.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Harald Barsnes</dd>
+<dd>Harald Barsnes, Marc Vaudel</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../serialized-form.html#com.compomics.util.gui.spectrum.FragmentIonTable">Serialized Form</a></dd>
 </dl>
@@ -234,24 +234,30 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/FragmentIonTable.html#FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-">FragmentIonTable</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/FragmentIonTable.html#FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">FragmentIonTable</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
                 <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&gt;&nbsp;allSpectra,
                 <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;currentFragmentIonTypes,
                 <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a>&nbsp;neutralLosses,
                 boolean&nbsp;singleCharge,
-                boolean&nbsp;twoCharges)</code>
+                boolean&nbsp;twoCharges,
+                <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Creates a novel fragment ion table displaying bar charts with the
  intensity of each fragment ion type.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/FragmentIonTable.html#FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-">FragmentIonTable</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/FragmentIonTable.html#FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">FragmentIonTable</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
                 <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;currentFragmentIonTypes,
                 <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a>&nbsp;neutralLosses,
                 boolean&nbsp;singleCharge,
-                boolean&nbsp;twoCharges)</code>
+                boolean&nbsp;twoCharges,
+                <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Creates a traditional fragment ion table with the theoretical mz values
  and the detected fragment ions highlighted.</div>
 </td>
@@ -325,18 +331,21 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.htm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-">
+<a name="FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>FragmentIonTable</h4>
 <pre>public&nbsp;FragmentIonTable(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
+                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;currentFragmentIonTypes,
                         <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a>&nbsp;neutralLosses,
                         boolean&nbsp;singleCharge,
-                        boolean&nbsp;twoCharges)</pre>
+                        boolean&nbsp;twoCharges,
+                        <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                        <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                        <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Creates a traditional fragment ion table with the theoretical mz values
  and the detected fragment ions highlighted.</div>
 <dl>
@@ -349,23 +358,29 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.htm
  types</dd>
 <dd><code>singleCharge</code> - if true, singly charge ions are included in the table</dd>
 <dd><code>twoCharges</code> - if true, doubly charged ions are included in the table</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>
-<a name="FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-">
+<a name="FragmentIonTable-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-java.util.ArrayList-java.util.HashSet-com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>FragmentIonTable</h4>
 <pre>public&nbsp;FragmentIonTable(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
+                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&gt;&nbsp;allAnnotations,
                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&gt;&nbsp;allSpectra,
                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;currentFragmentIonTypes,
                         <a href="../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a>&nbsp;neutralLosses,
                         boolean&nbsp;singleCharge,
-                        boolean&nbsp;twoCharges)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                        boolean&nbsp;twoCharges,
+                        <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                        <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                        <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Creates a novel fragment ion table displaying bar charts with the
  intensity of each fragment ion type. If more than one spectrum annotation
  set is provided the bars show the average intensities.</div>
@@ -380,9 +395,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.htm
  types</dd>
 <dd><code>singleCharge</code> - if true, singly charge ions are included in the table</dd>
 <dd><code>twoCharges</code> - if true, doubly charged ions are included in the table</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>

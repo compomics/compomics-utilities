@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -160,8 +160,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#ModificationMatch-java.lang.String-boolean-int-">ModificationMatch</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;theoreticPtm,
-                 boolean&nbsp;variable,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#ModificationMatch-java.lang.String-int-">ModificationMatch</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;theoreticPtm,
                  int&nbsp;modifiedSite)</code>
 <div class="block">Constructor for a modification match.</div>
 </td>
@@ -209,49 +208,39 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#getModificationSite--">getModificationSite</a></span>()</code>
-<div class="block">Getter for the modification site, 1 is the first amino acid.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#getSite--">getSite</a></span>()</code>
+<div class="block">Getter for the modification site.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#getVariable--">getVariable</a></span>()</code>
-<div class="block">Returns a boolean indicating if the modification is variable.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#isSameAs-com.compomics.util.experiment.identification.matches.ModificationMatch-">isSameAs</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;anotherModificationMatch)</code>
 <div class="block">Indicates whether this modification match is the same of another one.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setConfident-boolean-">setConfident</a></span>(boolean&nbsp;confident)</code>
 <div class="block">Sets whether the modification is confidently localized on the sequence.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setInferred-boolean-">setInferred</a></span>(boolean&nbsp;inferred)</code>
 <div class="block">Sets whether the modification is inferred from another peptide.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setModification-java.lang.String-">setModification</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptm)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setModification-java.lang.String-">setModification</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;modName)</code>
 <div class="block">Sets the theoretic PTM.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setModificationSite-int-">setModificationSite</a></span>(int&nbsp;site)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setSite-int-">setSite</a></span>(int&nbsp;site)</code>
 <div class="block">Setter for the modification site, 1 is the first amino acid.</div>
 </td>
-</tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html#setVariable-boolean-">setVariable</a></span>(boolean&nbsp;variable)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -296,20 +285,18 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ModificationMatch-java.lang.String-boolean-int-">
+<a name="ModificationMatch-java.lang.String-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>ModificationMatch</h4>
 <pre>public&nbsp;ModificationMatch(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;theoreticPtm,
-                         boolean&nbsp;variable,
                          int&nbsp;modifiedSite)</pre>
 <div class="block">Constructor for a modification match.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>theoreticPtm</code> - the theoretic PTM</dd>
-<dd><code>variable</code> - true for variable modifications, false otherwise</dd>
 <dd><code>modifiedSite</code> - the position of the modification in the sequence, 1
  is the first residue</dd>
 </dl>
@@ -333,20 +320,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getVariable--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getVariable</h4>
-<pre>public&nbsp;boolean&nbsp;getVariable()</pre>
-<div class="block">Returns a boolean indicating if the modification is variable.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating if the modification is variable</dd>
-</dl>
-</li>
-</ul>
 <a name="getModification--">
 <!--   -->
 </a>
@@ -367,35 +340,38 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 <ul class="blockList">
 <li class="blockList">
 <h4>setModification</h4>
-<pre>public&nbsp;void&nbsp;setModification(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptm)</pre>
+<pre>public&nbsp;void&nbsp;setModification(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;modName)</pre>
 <div class="block">Sets the theoretic PTM.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ptm</code> - the theoretic PTM name</dd>
+<dd><code>modName</code> - the theoretic PTM name</dd>
 </dl>
 </li>
 </ul>
-<a name="getModificationSite--">
+<a name="getSite--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getModificationSite</h4>
-<pre>public&nbsp;int&nbsp;getModificationSite()</pre>
-<div class="block">Getter for the modification site, 1 is the first amino acid.</div>
+<h4>getSite</h4>
+<pre>public&nbsp;int&nbsp;getSite()</pre>
+<div class="block">Getter for the modification site. N-term modifications
+ are at index 0, C-term at index sequence length + 1, and other
+ modifications at amino acid index starting from 1. An error is thrown if
+ attempting to stack modifications.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the index of the modification in the sequence</dd>
 </dl>
 </li>
 </ul>
-<a name="setModificationSite-int-">
+<a name="setSite-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setModificationSite</h4>
-<pre>public&nbsp;void&nbsp;setModificationSite(int&nbsp;site)</pre>
+<h4>setSite</h4>
+<pre>public&nbsp;void&nbsp;setSite(int&nbsp;site)</pre>
 <div class="block">Setter for the modification site, 1 is the first amino acid.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -463,15 +439,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 <dd><code>inferred</code> - a boolean indicating whether the modification is inferred
  from another peptide</dd>
 </dl>
-</li>
-</ul>
-<a name="setVariable-boolean-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setVariable</h4>
-<pre>public&nbsp;void&nbsp;setVariable(boolean&nbsp;variable)</pre>
 </li>
 </ul>
 <a name="isSameAs-com.compomics.util.experiment.identification.matches.ModificationMatch-">

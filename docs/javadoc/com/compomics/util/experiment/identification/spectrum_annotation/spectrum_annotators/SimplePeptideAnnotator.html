@@ -155,14 +155,20 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.html#SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-">SimplePeptideAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.html#SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-">SimplePeptideAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                      <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                      <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                       int&nbsp;charge,
                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.html#SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-int-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-com.compomics.util.experiment.biology.ions.impl.ReporterIon:A-">SimplePeptideAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/SimplePeptideAnnotator.html#SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-com.compomics.util.experiment.biology.ions.impl.ReporterIon:A-">SimplePeptideAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                      <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                      <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                       int&nbsp;charge,
                       boolean&nbsp;a,
                       boolean&nbsp;b,
@@ -225,31 +231,42 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-int-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-">
+<a name="SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>SimplePeptideAnnotator</h4>
 <pre>public&nbsp;SimplePeptideAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                              <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                              <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                              <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                               int&nbsp;charge,
                               <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide to annotate</dd>
+<dd><code>modificationParameters</code> - the modification parameters the
+ modification parameters</dd>
+<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dd><code>charge</code> - the charge of the peptide</dd>
 <dd><code>annotationSettings</code> - the annotation preferences</dd>
 </dl>
 </li>
 </ul>
-<a name="SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-int-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-com.compomics.util.experiment.biology.ions.impl.ReporterIon:A-">
+<a name="SimplePeptideAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-boolean-com.compomics.util.experiment.biology.ions.impl.ReporterIon:A-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SimplePeptideAnnotator</h4>
 <pre>public&nbsp;SimplePeptideAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                              <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                              <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                              <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                               int&nbsp;charge,
                               boolean&nbsp;a,
                               boolean&nbsp;b,
@@ -268,6 +285,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide to annotate</dd>
+<dd><code>modificationParameters</code> - the modification parameters the
+ modification parameters</dd>
+<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dd><code>charge</code> - the charge of the peptide</dd>
 <dd><code>a</code> - boolean indicating whether a ions should be annotated</dd>
 <dd><code>b</code> - boolean indicating whether b ions should be annotated</dd>

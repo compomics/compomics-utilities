@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":6,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":6,"i10":6,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+var methods = {"i0":9,"i1":9,"i2":6,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":6,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -264,45 +264,38 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/table/Defa
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>protected abstract void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#loadDataForColumn-int-com.compomics.util.waiting.WaitingHandler-">loadDataForColumn</a></span>(int&nbsp;column,
-                 <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
-<div class="block">Loads the data for a column.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected abstract int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#loadDataForRows-java.util.ArrayList-com.compomics.util.waiting.WaitingHandler-">loadDataForRows</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;indexes,
                <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Loads the data needed for objects at rows of the given view indexes.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#needsUpdate-int-java.lang.String-">needsUpdate</a></span>(int&nbsp;column,
            <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;waitingContent)</code>
 <div class="block">Indicates whether the given column needs an update, i.e.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#resetSorting-com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX-">resetSorting</a></span>(<a href="../../../../../com/compomics/util/gui/waiting/waitinghandlers/ProgressDialogX.html" title="class in com.compomics.util.gui.waiting.waitinghandlers">ProgressDialogX</a>&nbsp;aProgressDialog)</code>
 <div class="block">Sorts the table according to a given column using the built in sorter.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#setIsScrolling-boolean-">setIsScrolling</a></span>(boolean&nbsp;isScrolling)</code>
 <div class="block">Set if the user is currently scrolling or not.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#setSelfUpdating-boolean-">setSelfUpdating</a></span>(boolean&nbsp;selfUpdating)</code>
 <div class="block">Sets whether the table is in self update mode.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/tablemodels/SelfUpdatingTableModel.html#sort-int-com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX-">sort</a></span>(int&nbsp;column,
     <a href="../../../../../com/compomics/util/gui/waiting/waitinghandlers/ProgressDialogX.html" title="class in com.compomics.util.gui.waiting.waitinghandlers">ProgressDialogX</a>&nbsp;aProgressDialog)</code>
@@ -401,24 +394,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/table/Defa
 </dl>
 </li>
 </ul>
-<a name="loadDataForColumn-int-com.compomics.util.waiting.WaitingHandler-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>loadDataForColumn</h4>
-<pre>protected abstract&nbsp;void&nbsp;loadDataForColumn(int&nbsp;column,
-                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
-<div class="block">Loads the data for a column. Use this method to cache data before working
- on the given column.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>column</code> - the column number</dd>
-<dd><code>waitingHandler</code> - a waiting handler used to display progress to the
- user or interrupt the process</dd>
-</dl>
-</li>
-</ul>
 <a name="catchException-java.lang.Exception-">
 <!--   -->
 </a>
@@ -440,15 +415,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/table/Defa
 <ul class="blockList">
 <li class="blockList">
 <h4>dataMissingAtRow</h4>
-<pre>protected&nbsp;void&nbsp;dataMissingAtRow(int&nbsp;row)
-                         throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>protected&nbsp;void&nbsp;dataMissingAtRow(int&nbsp;row)</pre>
 <div class="block">Calling this method indicates that data is missing at the given row. The
  data will be loaded in a separate thread and the table updated later on.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>row</code> - the row number (not the view index)</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - if an InterruptedException occurs</dd>
 </dl>
 </li>
 </ul>

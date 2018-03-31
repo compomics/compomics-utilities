@@ -140,7 +140,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
  inspired by X!Tandem.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Kenny Helsens, Lennart Martens, Harald Barsnes</dd>
+<dd>Kenny Helsens, Lennart Martens, Harald Barsnes, Marc Vaudel</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../serialized-form.html#com.compomics.util.gui.spectrum.SequenceFragmentationPanel">Serialized Form</a></dd>
 </dl>
@@ -227,19 +227,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
-                          boolean&nbsp;boolModifiedSequence,
-                          boolean&nbsp;aHighlightModifications,
-                          <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile)</code>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">use the panel with ion selection instead</span></div>
-</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
                           boolean&nbsp;boolModifiedSequence,
                           boolean&nbsp;aHighlightModifications,
                           <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
@@ -248,9 +237,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <div class="block">Creates a new SequenceFragmentationPanel working with B and Y ions.</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
                           boolean&nbsp;aHighlightModifications,
                           <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                           int&nbsp;forwardIon,
@@ -281,7 +270,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#setIonMatches-java.util.ArrayList-">setIonMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&nbsp;lIonMatches)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#setIonMatches-java.util.stream.Stream-">setIonMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;lIonMatches)</code>
 <div class="block">Set the ArrayList with FragmentIon matches.</div>
 </td>
 </tr>
@@ -342,54 +331,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-">
+<a name="SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>SequenceFragmentationPanel</h4>
 <pre>public&nbsp;SequenceFragmentationPanel(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
-                                  boolean&nbsp;boolModifiedSequence,
-                                  boolean&nbsp;aHighlightModifications,
-                                  <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/awt/HeadlessException.html?is-external=true" title="class or interface in java.awt">HeadlessException</a></pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use the panel with ion selection instead</span></div>
-<div class="block">Creates a new SequenceFragmentationPanel.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>aSequence</code> - String with the Modified Sequence of an peptide
- identification.</dd>
-<dd><code>aIonMatches</code> - ArrayList with Fragmentation ion matches.</dd>
-<dd><code>boolModifiedSequence</code> - boolean describing the sequence. This
- constructor can be used to enter a ModifiedSequence or a normal sequence.</dd>
-<dd><code>aHighlightModifications</code> - boolean decides whether the modification
- are highlighted by adding a star above the modified residue instead if
- displaying the PTM short name</dd>
-<dd><code>modificationProfile</code> - the modification profile</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/HeadlessException.html?is-external=true" title="class or interface in java.awt">HeadlessException</a></code> - if GraphicsEnvironment.isHeadless()
- returns true.</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/GraphicsEnvironment.html?is-external=true#isHeadless--" title="class or interface in java.awt"><code>GraphicsEnvironment.isHeadless()</code></a>, 
-<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComponent.html?is-external=true#getDefaultLocale--" title="class or interface in javax.swing"><code>JComponent.getDefaultLocale()</code></a></dd>
-</dl>
-</li>
-</ul>
-<a name="SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>SequenceFragmentationPanel</h4>
-<pre>public&nbsp;SequenceFragmentationPanel(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
                                   boolean&nbsp;boolModifiedSequence,
                                   boolean&nbsp;aHighlightModifications,
                                   <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                                   int&nbsp;forwardIon,
-                                  int&nbsp;rewindIon)
-                           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/awt/HeadlessException.html?is-external=true" title="class or interface in java.awt">HeadlessException</a></pre>
+                                  int&nbsp;rewindIon)</pre>
 <div class="block">Creates a new SequenceFragmentationPanel working with B and Y ions.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -406,23 +360,20 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
  the PeptideFragmentIon static fields</dd>
 <dd><code>rewindIon</code> - the rewind ion type (for instance Y ion) as indexed by
  the PeptideFragmentIon static fields</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/HeadlessException.html?is-external=true" title="class or interface in java.awt">HeadlessException</a></code> - if GraphicsEnvironment.isHeadless()
- returns true.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/GraphicsEnvironment.html?is-external=true#isHeadless--" title="class or interface in java.awt"><code>GraphicsEnvironment.isHeadless()</code></a>, 
 <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComponent.html?is-external=true#getDefaultLocale--" title="class or interface in javax.swing"><code>JComponent.getDefaultLocale()</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="SequenceFragmentationPanel-java.lang.String-java.util.ArrayList-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
+<a name="SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SequenceFragmentationPanel</h4>
 <pre>public&nbsp;SequenceFragmentationPanel(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
                                   boolean&nbsp;aHighlightModifications,
                                   <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                                   int&nbsp;forwardIon,
@@ -469,8 +420,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 
  Based on the given ModifiedSequence Components and Fragmentions, a
  visualization (inspired by X!Tandem) is drawn on a Graphics object. Next
- to every possible fragmentation site of the peptide a bar is drawn whether
- b or y ions were found originating from this fragmentation side.</div>
+ to every possible fragmentation site of the peptide a bar is drawn
+ whether b or y ions were found originating from this fragmentation side.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComponent.html?is-external=true#paint-java.awt.Graphics-" title="class or interface in javax.swing">paint</a></code>&nbsp;in class&nbsp;<code><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComponent.html?is-external=true" title="class or interface in javax.swing">JComponent</a></code></dd>
@@ -498,13 +449,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </dl>
 </li>
 </ul>
-<a name="setIonMatches-java.util.ArrayList-">
+<a name="setIonMatches-java.util.stream.Stream-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>setIonMatches</h4>
-<pre>public&nbsp;void&nbsp;setIonMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&nbsp;lIonMatches)</pre>
+<pre>public&nbsp;void&nbsp;setIonMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;lIonMatches)</pre>
 <div class="block">Set the ArrayList with FragmentIon matches. The double[] indexing b and y
  ion intensities will be recalculated.</div>
 <dl>

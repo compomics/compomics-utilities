@@ -1549,32 +1549,6 @@
 </ul>
 </li>
 <li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.biology</h2>
-<ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.biology.Sample">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/biology/Sample.html" title="class in com.compomics.util.experiment.biology">com.compomics.util.experiment.biology.Sample</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>303393644914835325L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockListLast">
-<h4>reference</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> reference</pre>
-<div class="block">Sample reference.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.biology.aminoacids</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.compomics.util.experiment.biology.aminoacids.AminoAcid">
@@ -1904,17 +1878,11 @@
 <pre>int length</pre>
 <div class="block">The length of the pattern, -1 if not set.</div>
 </li>
-<li class="blockList">
+<li class="blockListLast">
 <h4>residueTargeted</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; residueTargeted</pre>
 <div class="block">The list of targeted amino acids at a given index represented by their
  single letter code. For trypsin: 0 &gt; {R, K} 1 &gt; {all but P}</div>
-</li>
-<li class="blockListLast">
-<h4>targetModifications</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; targetModifications</pre>
-<div class="block">The modifications carried by the amino acid sequence at target amino
- acids.</div>
 </li>
 </ul>
 </li>
@@ -1938,16 +1906,11 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/StringBuilder.html?is-external=true" title="class or interface in java.lang">StringBuilder</a> sequenceStringBuilder</pre>
 <div class="block">The sequence as string builder.</div>
 </li>
-<li class="blockList">
-<h4>aminoAcidPattern</h4>
-<pre><a href="com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html" title="class in com.compomics.util.experiment.biology.aminoacids.sequence">AminoAcidPattern</a> aminoAcidPattern</pre>
-<div class="block">The sequence as amino acid pattern.</div>
-</li>
 <li class="blockListLast">
-<h4>modifications</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; modifications</pre>
-<div class="block">The modifications carried by the amino acid sequence at target amino
- acids. 1 is the first amino acid.</div>
+<h4>variableModifications</h4>
+<pre><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[] variableModifications</pre>
+<div class="block">The variable modifications carried by the amino acid sequence at target
+ amino acids. 1 is the first amino acid.</div>
 </li>
 </ul>
 </li>
@@ -2019,24 +1982,12 @@
 </li>
 <li class="blockList">
 <h4>mass</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> mass</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use the double value instead</span></div>
+<pre>double mass</pre>
 <div class="block">The mass of the atom chain.</div>
-</li>
-<li class="blockList">
-<h4>mass1</h4>
-<pre>double mass1</pre>
-<div class="block">The mass of the atom chain.</div>
-</li>
-<li class="blockList">
-<h4>stringValue</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> stringValue</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">deprecated since utilities version 4.8.2. Use stringValue1 instead.</span></div>
-<div class="block">Cache for the string value.</div>
 </li>
 <li class="blockListLast">
-<h4>stringValue1</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> stringValue1</pre>
+<h4>stringValue</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> stringValue</pre>
 <div class="block">Cache for the string value.</div>
 </li>
 </ul>
@@ -2318,12 +2269,6 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>mass</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> mass</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use the composition instead.</span></div>
-<div class="block">The mass lost.</div>
-</li>
-<li class="blockList">
 <h4>composition</h4>
 <pre><a href="com/compomics/util/experiment/biology/atoms/AtomChain.html" title="class in com.compomics.util.experiment.biology.atoms">AtomChain</a> composition</pre>
 <div class="block">The composition of the ion.</div>
@@ -2335,7 +2280,7 @@
 </li>
 <li class="blockList">
 <h4>fixed</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> fixed</pre>
+<pre>boolean fixed</pre>
 <div class="block">Boolean indicating whether the neutral loss will always be accounted for.</div>
 </li>
 <li class="blockList">
@@ -2780,9 +2725,9 @@
  Position on protein sequences is 0 based.</div>
 </li>
 <li class="blockList">
-<h4>modificationMatches</h4>
-<pre><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[] modificationMatches</pre>
-<div class="block">The modifications carried by the peptide.</div>
+<h4>variableModifications</h4>
+<pre><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[] variableModifications</pre>
+<div class="block">The variable modifications carried by the peptide.</div>
 </li>
 <li class="blockListLast">
 <h4>variantMatches</h4>
@@ -2899,6 +2844,11 @@
 <h4>proteinMap</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; proteinMap</pre>
 <div class="block">A map linking protein accessions to all their protein matches keys.</div>
+</li>
+<li class="blockList">
+<h4>fractions</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fractions</pre>
+<div class="block">The spectrum files that were used for the psms.</div>
 </li>
 <li class="blockList">
 <h4>dbDirectory</h4>
@@ -3168,14 +3118,12 @@
  the factory.</div>
 </li>
 <li class="blockList">
-<h4>variable</h4>
-<pre>boolean variable</pre>
-<div class="block">Is the modification variable?</div>
-</li>
-<li class="blockList">
 <h4>modifiedSite</h4>
 <pre>int modifiedSite</pre>
-<div class="block">The location in the sequence, 1 is the first residue.</div>
+<div class="block">The location in the sequence. N-term modifications
+ are at index 0, C-term at index sequence length + 1, and other
+ modifications at amino acid index starting from 1. An error is thrown if
+ attempting to stack modifications.</div>
 </li>
 <li class="blockList">
 <h4>confident</h4>
@@ -3382,7 +3330,7 @@
 <li class="blockList">
 <h4>intensityLimit</h4>
 <pre>double intensityLimit</pre>
-<div class="block">The intensity thresold to use. The type of threshold is defined according
+<div class="block">The intensity threshold to use. The type of threshold is defined according
  to the IntensityThreshold enum.</div>
 </li>
 <li class="blockList">
@@ -3402,18 +3350,18 @@
 </li>
 <li class="blockList">
 <h4>neutralLossesAuto</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> neutralLossesAuto</pre>
+<pre>boolean neutralLossesAuto</pre>
 <div class="block">If true neutral losses will be automatically deduced from the spectrum
  identification assumption.</div>
 </li>
 <li class="blockList">
 <h4>reporterIons</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> reporterIons</pre>
+<pre>boolean reporterIons</pre>
 <div class="block">If true reporter ions will be annotated by default.</div>
 </li>
 <li class="blockList">
 <h4>relatedIons</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> relatedIons</pre>
+<pre>boolean relatedIons</pre>
 <div class="block">If true related ions will be annotated by default.</div>
 </li>
 <li class="blockList">
@@ -3423,7 +3371,7 @@
 </li>
 <li class="blockList">
 <h4>fragmentIonPpm</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> fragmentIonPpm</pre>
+<pre>boolean fragmentIonPpm</pre>
 <div class="block">Indicates whether the fragment ion accuracy is in ppm.</div>
 </li>
 <li class="blockList">
@@ -3440,14 +3388,6 @@
 <h4>deNovoCharge</h4>
 <pre>int deNovoCharge</pre>
 <div class="block">The charge for the fragment ions in the de novo sequencing.</div>
-</li>
-<li class="blockList">
-<h4>highResolutionAnnotation</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> highResolutionAnnotation</pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">use tiesResolution instead</span></div>
-<div class="block">If there are more than one matching peak for a given annotation setting
- this value to true results in the most accurate peak being annotated,
- while setting this to false annotates the most intense peak.</div>
 </li>
 <li class="blockListLast">
 <h4>tiesResolution</h4>
@@ -3851,10 +3791,6 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; varMods</pre>
 </li>
 <li class="blockList">
-<h4>fixMods</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; fixMods</pre>
-</li>
-<li class="blockList">
 <h4>softwareVersion</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> softwareVersion</pre>
 </li>
@@ -4141,8 +4077,8 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; allMatches</pre>
 </li>
 <li class="blockList">
-<h4>modifications</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; modifications</pre>
+<h4>variableModifications</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; variableModifications</pre>
 </li>
 <li class="blockList">
 <h4>specNumber</h4>
@@ -7287,165 +7223,10 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.gui.modification</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.gui.modification.ModificationsDialog">
+<li class="blockList"><a name="com.compomics.util.gui.modification.ModificationDialog">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/gui/modification/ModificationsDialog.html" title="class in com.compomics.util.gui.modification">com.compomics.util.gui.modification.ModificationsDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>modificationFactory</h4>
-<pre><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a> modificationFactory</pre>
-<div class="block">The post translational modifications factory.</div>
-</li>
-<li class="blockList">
-<h4>sparklineColor</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a> sparklineColor</pre>
-<div class="block">The color used for the sparkline bar chart plots.</div>
-</li>
-<li class="blockList">
-<h4>selectedRowHtmlTagFontColor</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> selectedRowHtmlTagFontColor</pre>
-<div class="block">The color to use for the HTML tags for the selected rows, in HTML color
- code.</div>
-</li>
-<li class="blockList">
-<h4>notSelectedRowHtmlTagFontColor</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> notSelectedRowHtmlTagFontColor</pre>
-<div class="block">The color to use for the HTML tags for the rows that are not selected, in
- HTML color code.</div>
-</li>
-<li class="blockList">
-<h4>defaultModsTableToolTips</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; defaultModsTableToolTips</pre>
-<div class="block">The default mods table column header tooltips.</div>
-</li>
-<li class="blockList">
-<h4>userModsTableToolTips</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; userModsTableToolTips</pre>
-<div class="block">The user mods table column header tooltips.</div>
-</li>
-<li class="blockList">
-<h4>searchPossibilities</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; searchPossibilities</pre>
-<div class="block">The lines of the Modifications concerned by the search.</div>
-</li>
-<li class="blockList">
-<h4>searchCurrentSelection</h4>
-<pre>int searchCurrentSelection</pre>
-<div class="block">The search current selection.</div>
-</li>
-<li class="blockList">
-<h4>searchWelcomeText</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> searchWelcomeText</pre>
-<div class="block">The search text to display by default.</div>
-</li>
-<li class="blockList">
-<h4>addUserPTM</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> addUserPTM</pre>
-</li>
-<li class="blockList">
-<h4>defaultModificationsTable</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> defaultModificationsTable</pre>
-</li>
-<li class="blockList">
-<h4>defaultModsPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> defaultModsPanel</pre>
-</li>
-<li class="blockList">
-<h4>defaultModsScrollPane</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> defaultModsScrollPane</pre>
-</li>
-<li class="blockList">
-<h4>defaultPtmPopupMenu</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> defaultPtmPopupMenu</pre>
-</li>
-<li class="blockList">
-<h4>deleteUserModification</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> deleteUserModification</pre>
-</li>
-<li class="blockList">
-<h4>editUserModification</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> editUserModification</pre>
-</li>
-<li class="blockList">
-<h4>editUserPtmJMenuItem</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> editUserPtmJMenuItem</pre>
-</li>
-<li class="blockList">
-<h4>exportDefaultModsLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> exportDefaultModsLabel</pre>
-</li>
-<li class="blockList">
-<h4>exportUserModsLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> exportUserModsLabel</pre>
-</li>
-<li class="blockList">
-<h4>findJLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> findJLabel</pre>
-</li>
-<li class="blockList">
-<h4>modificationsEditorPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> modificationsEditorPanel</pre>
-</li>
-<li class="blockList">
-<h4>modificationsHelpJButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> modificationsHelpJButton</pre>
-</li>
-<li class="blockList">
-<h4>modificationsSplitPane</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JSplitPane.html?is-external=true" title="class or interface in javax.swing">JSplitPane</a> modificationsSplitPane</pre>
-</li>
-<li class="blockList">
-<h4>okButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
-</li>
-<li class="blockList">
-<h4>searchIndexLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> searchIndexLabel</pre>
-</li>
-<li class="blockList">
-<h4>searchInputTxt</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> searchInputTxt</pre>
-</li>
-<li class="blockList">
-<h4>searchNextButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> searchNextButton</pre>
-</li>
-<li class="blockList">
-<h4>searchPreviousButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> searchPreviousButton</pre>
-</li>
-<li class="blockList">
-<h4>userModificationsTable</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> userModificationsTable</pre>
-</li>
-<li class="blockList">
-<h4>userModsPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> userModsPanel</pre>
-</li>
-<li class="blockList">
-<h4>userModsScrollPane</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> userModsScrollPane</pre>
-</li>
-<li class="blockList">
-<h4>userPtmPopupMenu</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> userPtmPopupMenu</pre>
-</li>
-<li class="blockListLast">
-<h4>viewDefaultPtmJMenuItem</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> viewDefaultPtmJMenuItem</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList"><a name="com.compomics.util.gui.modification.PtmDialog">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/gui/modification/PtmDialog.html" title="class in com.compomics.util.gui.modification">com.compomics.util.gui.modification.PtmDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/gui/modification/ModificationDialog.html" title="class in com.compomics.util.gui.modification">com.compomics.util.gui.modification.ModificationDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -7653,6 +7434,233 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.compomics.util.gui.modification.ModificationsDialog">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/gui/modification/ModificationsDialog.html" title="class in com.compomics.util.gui.modification">com.compomics.util.gui.modification.ModificationsDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>modificationFactory</h4>
+<pre><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a> modificationFactory</pre>
+<div class="block">The post translational modifications factory.</div>
+</li>
+<li class="blockList">
+<h4>sparklineColor</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a> sparklineColor</pre>
+<div class="block">The color used for the sparkline bar chart plots.</div>
+</li>
+<li class="blockList">
+<h4>selectedRowHtmlTagFontColor</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> selectedRowHtmlTagFontColor</pre>
+<div class="block">The color to use for the HTML tags for the selected rows, in HTML color
+ code.</div>
+</li>
+<li class="blockList">
+<h4>notSelectedRowHtmlTagFontColor</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> notSelectedRowHtmlTagFontColor</pre>
+<div class="block">The color to use for the HTML tags for the rows that are not selected, in
+ HTML color code.</div>
+</li>
+<li class="blockList">
+<h4>defaultModsTableToolTips</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; defaultModsTableToolTips</pre>
+<div class="block">The default mods table column header tooltips.</div>
+</li>
+<li class="blockList">
+<h4>userModsTableToolTips</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; userModsTableToolTips</pre>
+<div class="block">The user mods table column header tooltips.</div>
+</li>
+<li class="blockList">
+<h4>searchPossibilities</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; searchPossibilities</pre>
+<div class="block">The lines of the Modifications concerned by the search.</div>
+</li>
+<li class="blockList">
+<h4>searchCurrentSelection</h4>
+<pre>int searchCurrentSelection</pre>
+<div class="block">The search current selection.</div>
+</li>
+<li class="blockList">
+<h4>searchWelcomeText</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> searchWelcomeText</pre>
+<div class="block">The search text to display by default.</div>
+</li>
+<li class="blockList">
+<h4>addUserPTM</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> addUserPTM</pre>
+</li>
+<li class="blockList">
+<h4>defaultModificationsTable</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> defaultModificationsTable</pre>
+</li>
+<li class="blockList">
+<h4>defaultModsPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> defaultModsPanel</pre>
+</li>
+<li class="blockList">
+<h4>defaultModsScrollPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> defaultModsScrollPane</pre>
+</li>
+<li class="blockList">
+<h4>defaultPtmPopupMenu</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> defaultPtmPopupMenu</pre>
+</li>
+<li class="blockList">
+<h4>deleteUserModification</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> deleteUserModification</pre>
+</li>
+<li class="blockList">
+<h4>editUserModification</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> editUserModification</pre>
+</li>
+<li class="blockList">
+<h4>editUserPtmJMenuItem</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> editUserPtmJMenuItem</pre>
+</li>
+<li class="blockList">
+<h4>exportDefaultModsLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> exportDefaultModsLabel</pre>
+</li>
+<li class="blockList">
+<h4>exportUserModsLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> exportUserModsLabel</pre>
+</li>
+<li class="blockList">
+<h4>findJLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> findJLabel</pre>
+</li>
+<li class="blockList">
+<h4>modificationsEditorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> modificationsEditorPanel</pre>
+</li>
+<li class="blockList">
+<h4>modificationsHelpJButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> modificationsHelpJButton</pre>
+</li>
+<li class="blockList">
+<h4>modificationsSplitPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JSplitPane.html?is-external=true" title="class or interface in javax.swing">JSplitPane</a> modificationsSplitPane</pre>
+</li>
+<li class="blockList">
+<h4>okButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
+</li>
+<li class="blockList">
+<h4>searchIndexLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> searchIndexLabel</pre>
+</li>
+<li class="blockList">
+<h4>searchInputTxt</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> searchInputTxt</pre>
+</li>
+<li class="blockList">
+<h4>searchNextButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> searchNextButton</pre>
+</li>
+<li class="blockList">
+<h4>searchPreviousButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> searchPreviousButton</pre>
+</li>
+<li class="blockList">
+<h4>userModificationsTable</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> userModificationsTable</pre>
+</li>
+<li class="blockList">
+<h4>userModsPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> userModsPanel</pre>
+</li>
+<li class="blockList">
+<h4>userModsScrollPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> userModsScrollPane</pre>
+</li>
+<li class="blockList">
+<h4>userPtmPopupMenu</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> userPtmPopupMenu</pre>
+</li>
+<li class="blockListLast">
+<h4>viewDefaultPtmJMenuItem</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> viewDefaultPtmJMenuItem</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.gui.modification.ModificationTable">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/gui/modification/ModificationTable.html" title="class in com.compomics.util.gui.modification">com.compomics.util.gui.modification.ModificationTable</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>annotationParameters</h4>
+<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a> annotationParameters</pre>
+<div class="block">The annotation parameters.</div>
+</li>
+<li class="blockList">
+<h4>identification</h4>
+<pre><a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a> identification</pre>
+<div class="block">The identification object.</div>
+</li>
+<li class="blockList">
+<h4>modificationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a> modificationParameters</pre>
+<div class="block">The modification parameters.</div>
+</li>
+<li class="blockList">
+<h4>sequenceProvider</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a> sequenceProvider</pre>
+<div class="block">The protein sequence provider.</div>
+</li>
+<li class="blockList">
+<h4>modificationSequenceMatchingParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> modificationSequenceMatchingParameters</pre>
+<div class="block">The modification sequence matching parameters.</div>
+</li>
+<li class="blockList">
+<h4>tooltips</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; tooltips</pre>
+<div class="block">The table tooltips.</div>
+</li>
+<li class="blockList">
+<h4>ptm</h4>
+<pre><a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a> ptm</pre>
+<div class="block">The PTM to analyze.</div>
+</li>
+<li class="blockList">
+<h4>nPTM</h4>
+<pre>int nPTM</pre>
+<div class="block">Number of PTMs.</div>
+</li>
+<li class="blockList">
+<h4>areaChart</h4>
+<pre>boolean areaChart</pre>
+<div class="block">If true, area charts are used, false results in bar charts.</div>
+</li>
+<li class="blockList">
+<h4>maxAreaChartValue</h4>
+<pre>double maxAreaChartValue</pre>
+<div class="block">The max value for the area charts.</div>
+</li>
+<li class="blockList">
+<h4>modificationSites</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; modificationSites</pre>
+<div class="block">A list of the modification site indexes.</div>
+</li>
+<li class="blockListLast">
+<h4>peptideMatch</h4>
+<pre><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a> peptideMatch</pre>
+<div class="block">The peptide match.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="blockList">
@@ -7765,11 +7773,6 @@
 <h4>identificationParametersFactory</h4>
 <pre><a href="com/compomics/util/experiment/identification/identification_parameters/IdentificationParametersFactory.html" title="class in com.compomics.util.experiment.identification.identification_parameters">IdentificationParametersFactory</a> identificationParametersFactory</pre>
 <div class="block">The identification parameters factory.</div>
-</li>
-<li class="blockList">
-<h4>oldIdentificationParameters</h4>
-<pre><a href="com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a> oldIdentificationParameters</pre>
-<div class="block">The old identification settings.</div>
 </li>
 <li class="blockList">
 <h4>advancedSettingsLabel</h4>
@@ -8631,14 +8634,6 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> siteAlignmentPanel</pre>
 </li>
 <li class="blockList">
-<h4>thresholdAutoCmb</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; thresholdAutoCmb</pre>
-</li>
-<li class="blockList">
-<h4>thresholdAutoLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> thresholdAutoLabel</pre>
-</li>
-<li class="blockList">
 <h4>thresholdLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> thresholdLabel</pre>
 </li>
@@ -8800,11 +8795,6 @@
 <div class="block">Boolean indicating whether the settings can be edited by the user.</div>
 </li>
 <li class="blockList">
-<h4>selectedFastaFile</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a> selectedFastaFile</pre>
-<div class="block">The selected fasta file.</div>
-</li>
-<li class="blockList">
 <h4>fastaParameters</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
 <div class="block">The parameters used to parse the fasta file.</div>
@@ -8816,22 +8806,6 @@
 <li class="blockList">
 <h4>cancelButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
-</li>
-<li class="blockList">
-<h4>dataBasePanelSettings</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> dataBasePanelSettings</pre>
-</li>
-<li class="blockList">
-<h4>databaseSettingsLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> databaseSettingsLbl</pre>
-</li>
-<li class="blockList">
-<h4>databaseSettingsTxt</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> databaseSettingsTxt</pre>
-</li>
-<li class="blockList">
-<h4>editDatabaseDetailsButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> editDatabaseDetailsButton</pre>
 </li>
 <li class="blockList">
 <h4>helpJButton</h4>
@@ -9075,18 +9049,6 @@
 <li class="blockList">
 <h4>cancelButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
-</li>
-<li class="blockList">
-<h4>groupsComboBox</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; groupsComboBox</pre>
-</li>
-<li class="blockList">
-<h4>groupsLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> groupsLabel</pre>
-</li>
-<li class="blockList">
-<h4>groupsPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> groupsPanel</pre>
 </li>
 <li class="blockList">
 <h4>helpJButton</h4>
@@ -10060,6 +10022,14 @@
 <li class="blockList">
 <h4>openDialogHelpJButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> openDialogHelpJButton</pre>
+</li>
+<li class="blockList">
+<h4>outputFormatCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; outputFormatCmb</pre>
+</li>
+<li class="blockList">
+<h4>outputFormatLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> outputFormatLabel</pre>
 </li>
 <li class="blockList">
 <h4>performDeisotopingCmb</h4>
@@ -12549,10 +12519,25 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; allAnnotations</pre>
 <div class="block">The spectrum annotations map.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>allSpectra</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; allSpectra</pre>
 <div class="block">The list of spectra. Needed for intensity normalization.</div>
+</li>
+<li class="blockList">
+<h4>modificationParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a> modificationParameters</pre>
+<div class="block">The modification parameters.</div>
+</li>
+<li class="blockList">
+<h4>sequenceProvider</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a> sequenceProvider</pre>
+<div class="block">The protein sequence provider.</div>
+</li>
+<li class="blockListLast">
+<h4>modificationSequenceMatchingParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> modificationSequenceMatchingParameters</pre>
+<div class="block">The modification sequence matching parameters.</div>
 </li>
 </ul>
 </li>
@@ -13273,7 +13258,7 @@
 <ul class="blockList">
 <li class="blockList">
 <h4>annotations</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; annotations</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">T</a>&gt; annotations</pre>
 <div class="block">The complete list of possible spectrum annotations.</div>
 </li>
 <li class="blockListLast">
@@ -13306,7 +13291,7 @@
 </li>
 <li class="blockList">
 <h4>iIonMatches</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; iIonMatches</pre>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">T</a>&gt; iIonMatches</pre>
 <div class="block">The list of fragment ion matches.</div>
 </li>
 <li class="blockList">
@@ -13440,14 +13425,24 @@
 <div class="block">The view end index of the rows being loaded.</div>
 </li>
 <li class="blockList">
+<h4>loadingPool</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html?is-external=true" title="class or interface in java.util.concurrent">ExecutorService</a> loadingPool</pre>
+<div class="block">Executor for the loading threads.</div>
+</li>
+<li class="blockList">
+<h4>updatingPool</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html?is-external=true" title="class or interface in java.util.concurrent">ExecutorService</a> updatingPool</pre>
+<div class="block">Executor for the updating threads.</div>
+</li>
+<li class="blockList">
 <h4>selfUpdating</h4>
 <pre>boolean selfUpdating</pre>
 <div class="block">If false, the table will not update automatically.</div>
 </li>
 <li class="blockList">
-<h4>updateScheduled</h4>
-<pre>boolean updateScheduled</pre>
-<div class="block">boolean indicating whether an update was scheduled.</div>
+<h4>updateMutex</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Semaphore.html?is-external=true" title="class or interface in java.util.concurrent">Semaphore</a> updateMutex</pre>
+<div class="block">Mutex for the table update.</div>
 </li>
 <li class="blockList">
 <h4>lastLoadingRunnable</h4>
@@ -13662,23 +13657,23 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.gui.utils.user_choice.list_choosers</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.gui.utils.user_choice.list_choosers.PtmChooser">
+<li class="blockList"><a name="com.compomics.util.gui.utils.user_choice.list_choosers.ModificationChooser">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/gui/utils/user_choice/list_choosers/PtmChooser.html" title="class in com.compomics.util.gui.utils.user_choice.list_choosers">com.compomics.util.gui.utils.user_choice.list_choosers.PtmChooser</a> extends <a href="com/compomics/util/gui/utils/user_choice/ListChooser.html" title="class in com.compomics.util.gui.utils.user_choice">ListChooser</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/gui/utils/user_choice/list_choosers/ModificationChooser.html" title="class in com.compomics.util.gui.utils.user_choice.list_choosers">com.compomics.util.gui.utils.user_choice.list_choosers.ModificationChooser</a> extends <a href="com/compomics/util/gui/utils/user_choice/ListChooser.html" title="class in com.compomics.util.gui.utils.user_choice">ListChooser</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>ptmFactory</h4>
-<pre><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a> ptmFactory</pre>
-<div class="block">The post translational modifications factory.</div>
+<h4>modificationsFactory</h4>
+<pre><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a> modificationsFactory</pre>
+<div class="block">The modifications factory.</div>
 </li>
 <li class="blockListLast">
-<h4>ptmList</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; ptmList</pre>
-<div class="block">List of PTMs to display.</div>
+<h4>modificationsList</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; modificationsList</pre>
+<div class="block">List of modifications to display.</div>
 </li>
 </ul>
 </li>
@@ -14429,8 +14424,8 @@
 <li class="blockListLast">
 <h4>fractionMolecularWeightRanges</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; fractionMolecularWeightRanges</pre>
-<div class="block">The list of fraction molecular weights. The key is the fraction file
- path.</div>
+<div class="block">The list of fraction molecular weights. The key is the fraction
+ name.</div>
 </li>
 </ul>
 </li>
@@ -14494,23 +14489,6 @@
 <pre>double defaultPsmFDR</pre>
 <div class="block">The default PSM FDR.</div>
 </li>
-<li class="blockList">
-<h4>separatePeptides</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> separatePeptides</pre>
-<div class="block">Boolean indicating whether Peptides should be grouped according to their
- modification status.</div>
-</li>
-<li class="blockList">
-<h4>separatePsms</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> separatePsms</pre>
-<div class="block">Boolean indicating whether PSMs should be grouped according to their
- modification status.</div>
-</li>
-<li class="blockList">
-<h4>mergeSmallSubgroups</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a> mergeSmallSubgroups</pre>
-<div class="block">If true, groups of matches of small size will be merged.</div>
-</li>
 <li class="blockListLast">
 <h4>validationQCPreferences</h4>
 <pre><a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ValidationQcParameters</a> validationQCPreferences</pre>
@@ -14533,11 +14511,6 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>flr</h4>
-<pre>double flr</pre>
-<div class="block">The FLR threshold in percent.</div>
-</li>
-<li class="blockList">
 <h4>probabilisticScoreCalculation</h4>
 <pre>boolean probabilisticScoreCalculation</pre>
 <div class="block">Boolean indicating whether a probabilistic score is to be calculated.</div>
@@ -14546,11 +14519,6 @@
 <h4>selectedProbabilisticScore</h4>
 <pre><a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html" title="enum in com.compomics.util.experiment.identification.modification">ModificationLocalizationScore</a> selectedProbabilisticScore</pre>
 <div class="block">The probabilistic score selected.</div>
-</li>
-<li class="blockList">
-<h4>estimateFlr</h4>
-<pre>boolean estimateFlr</pre>
-<div class="block">Boolean indicating whether the threshold should be FLR based.</div>
 </li>
 <li class="blockList">
 <h4>probabilisticScoreThreshold</h4>
@@ -14564,9 +14532,9 @@
  calculation of the probabilistic score.</div>
 </li>
 <li class="blockList">
-<h4>sequenceMatchingPreferences</h4>
-<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingPreferences</pre>
-<div class="block">The preferences to use when matching PTMs to amino acid sequences.</div>
+<h4>sequenceMatchingParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> sequenceMatchingParameters</pre>
+<div class="block">The preferences to use when matching modifications to amino acid sequences.</div>
 </li>
 <li class="blockListLast">
 <h4>alignNonConfidentPTMs</h4>
@@ -14641,11 +14609,6 @@
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockList">
-<h4>proteinSequenceDatabase</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a> proteinSequenceDatabase</pre>
-<div class="block">The database to use for protein inference.</div>
-</li>
 <li class="blockList">
 <h4>fastaParameters</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
@@ -14800,8 +14763,8 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>cleavagePreference</h4>
-<pre><a href="com/compomics/util/parameters/identification/search/DigestionParameters.CleavagePreference.html" title="enum in com.compomics.util.parameters.identification.search">DigestionParameters.CleavagePreference</a> cleavagePreference</pre>
+<h4>cleavageParameter</h4>
+<pre><a href="com/compomics/util/parameters/identification/search/DigestionParameters.CleavageParameter.html" title="enum in com.compomics.util.parameters.identification.search">DigestionParameters.CleavageParameter</a> cleavageParameter</pre>
 <div class="block">Boolean indicating whether the sample was not digested.</div>
 </li>
 <li class="blockList">
@@ -15516,10 +15479,15 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxLoadedProteins</pre>
 <div class="block">Maximum number of proteins loaded into memory (1000-500000).</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>maxLoadedSpectra</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxLoadedSpectra</pre>
 <div class="block">Maximum number of spectra loaded into memory (1000-500000).</div>
+</li>
+<li class="blockListLast">
+<h4>outputFormat</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> outputFormat</pre>
+<div class="block">The output format: csv or mzIdentML.</div>
 </li>
 </ul>
 </li>
@@ -16120,7 +16088,7 @@
 <li class="blockList">
 <h4>decoySeed</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> decoySeed</pre>
-<div class="block">The seeed of the random number generator with the given unsigned integer
+<div class="block">The seed of the random number generator with the given unsigned integer
  when generating the decoy decoys. When given the string "time," the seed
  is set with the system time.</div>
 </li>
@@ -16180,7 +16148,7 @@
 <li class="blockList">
 <h4>maxSpectrumMz</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> maxSpectrumMz</pre>
-<div class="block">The maximum spectrum m/z to search for. Null if not maximum.</div>
+<div class="block">The maximum spectrum m/z to search for. Null if no maximum.</div>
 </li>
 <li class="blockList">
 <h4>minSpectrumPeaks</h4>

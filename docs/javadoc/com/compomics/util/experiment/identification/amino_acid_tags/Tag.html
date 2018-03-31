@@ -219,7 +219,9 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getCTerminal-boolean-">getCTerminal</a></span>(boolean&nbsp;includeTerminalGaps)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getCTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getCTerminal</a></span>(boolean&nbsp;includeTerminalGaps,
+            <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+            <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
 <div class="block">Returns the C-terminal tag of this tag as a string for sequence display.</div>
 </td>
 </tr>
@@ -257,7 +259,9 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getNTerminal-boolean-">getNTerminal</a></span>(boolean&nbsp;includeTerminalGaps)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getNTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getNTerminal</a></span>(boolean&nbsp;includeTerminalGaps,
+            <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+            <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
 <div class="block">Returns the N-terminal tag of this tag as a string for sequence display.</div>
 </td>
 </tr>
@@ -276,38 +280,44 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                          boolean&nbsp;useHtmlColorCoding,
                          boolean&nbsp;includeHtmlStartEndTags,
                          boolean&nbsp;useShortName,
-                         boolean&nbsp;includeTerminalGaps)</code>
+                         boolean&nbsp;includeTerminalGaps,
+                         <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-boolean-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.util.HashSet-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                          boolean&nbsp;useHtmlColorCoding,
                          boolean&nbsp;includeHtmlStartEndTags,
                          boolean&nbsp;useShortName,
-                         boolean&nbsp;excludeAllFixedModifications,
-                         boolean&nbsp;includeTerminalGaps)</code>
+                         boolean&nbsp;includeTerminalGaps,
+                         <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
+                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;displayedModifications)</code>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-boolean-boolean-boolean-boolean-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.util.HashSet-">getTaggedModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
                          <a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
                          boolean&nbsp;useHtmlColorCoding,
                          boolean&nbsp;includeHtmlStartEndTags,
                          boolean&nbsp;useShortName,
-                         boolean&nbsp;excludeAllFixedModifications,
-                         boolean&nbsp;includeTerminalGaps)</code>
+                         boolean&nbsp;includeTerminalGaps,
+                         <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
+                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;displayedModifications)</code>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
@@ -588,7 +598,7 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 </dl>
 </li>
 </ul>
-<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-boolean-">
+<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -598,13 +608,14 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
                                         boolean&nbsp;useHtmlColorCoding,
                                         boolean&nbsp;includeHtmlStartEndTags,
                                         boolean&nbsp;useShortName,
-                                        boolean&nbsp;excludeAllFixedModifications,
-                                        boolean&nbsp;includeTerminalGaps)</pre>
+                                        boolean&nbsp;includeTerminalGaps,
+                                        <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
- this method will work only if the modification found in the tag components are in the
- factory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;. /!\ this method will work only if the modification found in
+ the tag components are in the factory. /!\ This method uses the
+ modifications as set in the modification matches of this peptide and
+ displays all of them.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>modificationProfile</code> - the modification profile of the search</dd>
@@ -612,16 +623,16 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
  modification tags, e.g, &lt;mox&gt;, are used</dd>
 <dd><code>includeHtmlStartEndTags</code> - if true, start and end HTML tags are added</dd>
 <dd><code>useShortName</code> - if true. the short names are used in the tags</dd>
-<dd><code>includeTerminalGaps</code> - if true. the terminal gaps will be displayed on
- the sequence</dd>
-<dd><code>excludeAllFixedModifications</code> - if true. fixed modifications will not
- be displayed on the sequence</dd>
+<dd><code>includeTerminalGaps</code> - if true. the terminal gaps will be displayed
+ on the sequence</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the modified sequence as a tagged string</dd>
 </dl>
 </li>
 </ul>
-<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-">
+<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.util.HashSet-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -631,12 +642,15 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
                                         boolean&nbsp;useHtmlColorCoding,
                                         boolean&nbsp;includeHtmlStartEndTags,
                                         boolean&nbsp;useShortName,
-                                        boolean&nbsp;includeTerminalGaps)</pre>
+                                        boolean&nbsp;includeTerminalGaps,
+                                        <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
+                                        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;displayedModifications)</pre>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
- this method will work only if the modifications found in the tag components are in the
- factory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;. /!\ this method will work only if the modifications found in
+ the tag components are in the factory. /!\ This method uses the
+ modifications as set in the modification matches of this peptide and
+ displays all of them.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>modificationProfile</code> - the modification profile of the search</dd>
@@ -644,74 +658,90 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
  modification tags, e.g, &lt;mox&gt;, are used</dd>
 <dd><code>includeHtmlStartEndTags</code> - if true, start and end HTML tags are added</dd>
 <dd><code>useShortName</code> - if true, the short names are used in the tags</dd>
-<dd><code>includeTerminalGaps</code> - if true, the terminal gaps will be displayed on
- the sequence</dd>
+<dd><code>includeTerminalGaps</code> - if true, the terminal gaps will be displayed
+ on the sequence</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
+<dd><code>displayedModifications</code> - the modifications to display</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the modified sequence as a tagged string</dd>
 </dl>
 </li>
 </ul>
-<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-boolean-boolean-boolean-boolean-">
+<a name="getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.util.HashSet-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTaggedModifiedSequence</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getTaggedModifiedSequence(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getTaggedModifiedSequence(<a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
                                                <a href="../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
                                                boolean&nbsp;useHtmlColorCoding,
                                                boolean&nbsp;includeHtmlStartEndTags,
                                                boolean&nbsp;useShortName,
-                                               boolean&nbsp;excludeAllFixedModifications,
-                                               boolean&nbsp;includeTerminalGaps)</pre>
+                                               boolean&nbsp;includeTerminalGaps,
+                                               <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
+                                               <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;displayedModifications)</pre>
 <div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g, &lt;mox&gt;. /!\
- This method will work only if the modification found in the peptide are in the
- factory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them.</div>
+ modification sites color coded or with modification tags, e.g,
+ &lt;mox&gt;. /!\ This method will work only if the modification found in
+ the peptide are in the factory. /!\ This method uses the modifications as
+ set in the modification matches of this peptide and displays all of them.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>modificationProfile</code> - the modification profile of the search</dd>
+<dd><code>modificationParameters</code> - the modification profile of the search</dd>
 <dd><code>tag</code> - the tag</dd>
 <dd><code>includeHtmlStartEndTags</code> - if true, start and end HTML tags are added</dd>
 <dd><code>useHtmlColorCoding</code> - if true, color coded HTML is used, otherwise
  modification tags, e.g, &lt;mox&gt;, are used</dd>
 <dd><code>useShortName</code> - if true, the short names are used in the tags</dd>
-<dd><code>excludeAllFixedModifications</code> - if true, the fixed modifications will not be displayed</dd>
-<dd><code>includeTerminalGaps</code> - if true, the terminal gaps will be displayed on
- the sequence</dd>
+<dd><code>includeTerminalGaps</code> - if true, the terminal gaps will be displayed
+ on the sequence</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
+<dd><code>displayedModifications</code> - the modifications to display</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the tagged modified sequence as a string</dd>
 </dl>
 </li>
 </ul>
-<a name="getNTerminal-boolean-">
+<a name="getNTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getNTerminal</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getNTerminal(boolean&nbsp;includeTerminalGaps)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getNTerminal(boolean&nbsp;includeTerminalGaps,
+                           <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                           <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
 <div class="block">Returns the N-terminal tag of this tag as a string for sequence display.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>includeTerminalGaps</code> - indicates whether mass gaps shall be included</dd>
+<dd><code>modificationParameters</code> - the modification profile of the search</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the N-terminal tag of this tag</dd>
 </dl>
 </li>
 </ul>
-<a name="getCTerminal-boolean-">
+<a name="getCTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCTerminal</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getCTerminal(boolean&nbsp;includeTerminalGaps)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getCTerminal(boolean&nbsp;includeTerminalGaps,
+                           <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                           <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
 <div class="block">Returns the C-terminal tag of this tag as a string for sequence display.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>includeTerminalGaps</code> - indicates whether mass gaps shall be included</dd>
+<dd><code>modificationParameters</code> - the modification profile of the search</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the C-terminal tag of this tag</dd>
 </dl>
@@ -746,8 +776,8 @@ extends <a href="../../../../../../com/compomics/util/experiment/personalization
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>modification</code> - the modification considered</dd>
-<dd><code>modificationSequenceMatchingPreferences</code> - the sequence matching preferences
- for the modification to amino acid sequence mapping</dd>
+<dd><code>modificationSequenceMatchingPreferences</code> - the sequence matching
+ preferences for the modification to amino acid sequence mapping</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a list of potential modification sites</dd>
 </dl>

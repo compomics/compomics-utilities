@@ -138,7 +138,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <div class="block">Creates a MassErrorPlot displaying the mz values vs the mass error.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Harald Barsnes</dd>
+<dd>Harald Barsnes, Marc Vaudel</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../serialized-form.html#com.compomics.util.gui.spectrum.MassErrorPlot">Serialized Form</a></dd>
 </dl>
@@ -225,14 +225,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/MassErrorPlot.html#MassErrorPlot-java.util.ArrayList-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-">MassErrorPlot</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/MassErrorPlot.html#MassErrorPlot-java.util.stream.Stream-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-">MassErrorPlot</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
              <a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;currentSpectrum,
              double&nbsp;massTolerance)</code>
 <div class="block">Creates a new MassErrorPlot.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/MassErrorPlot.html#MassErrorPlot-java.util.ArrayList-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-boolean-">MassErrorPlot</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/MassErrorPlot.html#MassErrorPlot-java.util.stream.Stream-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-boolean-">MassErrorPlot</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
              <a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;currentSpectrum,
              double&nbsp;massTolerance,
              boolean&nbsp;useRelativeError)</code>
@@ -316,13 +316,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="MassErrorPlot-java.util.ArrayList-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-">
+<a name="MassErrorPlot-java.util.stream.Stream-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>MassErrorPlot</h4>
-<pre>public&nbsp;MassErrorPlot(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<pre>public&nbsp;MassErrorPlot(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                      <a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;currentSpectrum,
                      double&nbsp;massTolerance)
               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
@@ -338,17 +338,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </dl>
 </li>
 </ul>
-<a name="MassErrorPlot-java.util.ArrayList-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-boolean-">
+<a name="MassErrorPlot-java.util.stream.Stream-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-double-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>MassErrorPlot</h4>
-<pre>public&nbsp;MassErrorPlot(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<pre>public&nbsp;MassErrorPlot(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                      <a href="../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;currentSpectrum,
                      double&nbsp;massTolerance,
-                     boolean&nbsp;useRelativeError)
-              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                     boolean&nbsp;useRelativeError)</pre>
 <div class="block">Creates a new MassErrorPlot.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -357,9 +356,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <dd><code>massTolerance</code> - the mass error tolerance</dd>
 <dd><code>useRelativeError</code> - if true the relative error (ppm) is used instead
  of the absolute error (Da)</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if the thread is
- interrupted</dd>
 </dl>
 </li>
 </ul>

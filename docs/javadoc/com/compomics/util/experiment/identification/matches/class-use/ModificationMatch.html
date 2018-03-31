@@ -112,6 +112,12 @@
 <div class="block">Protein sequence database indexing classes based on Burrows-Wheeler transform.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.protein_sequences.digestion">com.compomics.util.experiment.identification.protein_sequences.digestion</a></td>
+<td class="colLast">
+<div class="block">This package contains classes used to digest protein sequences into peptides.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -122,36 +128,17 @@
 </a>
 <h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a> in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a></h3>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a> that return types with arguments of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a> that return <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#getModificationMatches--">getModificationMatches</a></span>()</code>
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]</code></td>
+<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#getVariableModifications--">getVariableModifications</a></span>()</code>
 <div class="block">Getter for the modifications carried by this sequence in a map: aa number
  &gt; modification matches.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#getModificationMatches--">getModificationMatches</a></span>()</code>
-<div class="block">Getter for the modifications carried by this sequence in a map: aa number
- &gt; modification matches.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#getModificationsAt-int-">getModificationsAt</a></span>(int&nbsp;localization)</code>
-<div class="block">Returns the modifications found at a given localization.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#getModificationsAt-int-">getModificationsAt</a></span>(int&nbsp;localization)</code>
-<div class="block">Returns the modifications found at a given localization.</div>
 </td>
 </tr>
 </tbody>
@@ -165,82 +152,27 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#addModificationMatch-int-com.compomics.util.experiment.identification.matches.ModificationMatch-">addModificationMatch</a></span>(int&nbsp;localization,
-                    <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
+<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#addVariableModification-com.compomics.util.experiment.identification.matches.ModificationMatch-">addVariableModification</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
 <div class="block">Adds a modification to one of the amino acid sequence.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#addModificationMatch-int-com.compomics.util.experiment.identification.matches.ModificationMatch-">addModificationMatch</a></span>(int&nbsp;localization,
-                    <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
-<div class="block">Adds a modification to one of the amino acid pattern.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#changeModificationSite-com.compomics.util.experiment.identification.matches.ModificationMatch-int-int-">changeModificationSite</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch,
-                      int&nbsp;oldLocalization,
-                      int&nbsp;newLocalization)</code>
-<div class="block">Changes the localization of a modification match.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#changeModificationSite-com.compomics.util.experiment.identification.matches.ModificationMatch-int-int-">changeModificationSite</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch,
-                      int&nbsp;oldLocalization,
-                      int&nbsp;newLocalization)</code>
-<div class="block">Changes the localization of a modification match.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#removeModificationMatch-int-com.compomics.util.experiment.identification.matches.ModificationMatch-">removeModificationMatch</a></span>(int&nbsp;localisation,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
-<div class="block">Removes a modification match in the given sequence.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#removeModificationMatch-int-com.compomics.util.experiment.identification.matches.ModificationMatch-">removeModificationMatch</a></span>(int&nbsp;localisation,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
-<div class="block">Removes a modification match in the given pattern.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Method parameters in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a> with type arguments of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#addModificationMatches-int-java.util.ArrayList-">addModificationMatches</a></span>(int&nbsp;localization,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</code>
-<div class="block">Adds a list of modifications to one of the amino acid sequence.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AminoAcidPattern.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidPattern.html#addModificationMatches-int-java.util.ArrayList-">addModificationMatches</a></span>(int&nbsp;localization,
-                      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&nbsp;modificationMatches)</code>
-<div class="block">Adds a list of modifications to one of the amino acid pattern.</div>
+<td class="colLast"><span class="typeNameLabel">AminoAcidSequence.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#setVariableModifications-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">setVariableModifications</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications)</code>
+<div class="block">Sets the variable modifications.</div>
 </td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing constructors, and an explanation">
-<caption><span>Constructor parameters in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a> with type arguments of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Constructors in <a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/package-summary.html">com.compomics.util.experiment.biology.aminoacids.sequence</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#AminoAcidSequence-java.lang.String-java.util.HashMap-">AminoAcidSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence,
-                 <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&gt;&gt;&nbsp;modifications)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#AminoAcidSequence-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">AminoAcidSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence,
+                 <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications)</code>
 <div class="block">Constructor taking a sequence of amino acids as input.</div>
 </td>
 </tr>
@@ -260,8 +192,8 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]</code></td>
-<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#getModificationMatches--">getModificationMatches</a></span>()</code>
-<div class="block">Getter for the modifications carried by this peptide.</div>
+<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#getVariableModifications--">getVariableModifications</a></span>()</code>
+<div class="block">Returns the variable modifications.</div>
 </td>
 </tr>
 </tbody>
@@ -275,21 +207,21 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#addModificationMatch-com.compomics.util.experiment.identification.matches.ModificationMatch-">addModificationMatch</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
+<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#addVariableModification-com.compomics.util.experiment.identification.matches.ModificationMatch-">addVariableModification</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>&nbsp;modificationMatch)</code>
 <div class="block">Adds a modification match.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static long</code></td>
 <td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#getKey-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">getKey</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence,
-      <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches)</code>
+      <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications)</code>
 <div class="block">Returns the reference key of a peptide.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#setModificationMatches-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">setModificationMatches</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches)</code>
-<div class="block">Sets new modification matches for the peptide.</div>
+<td class="colLast"><span class="typeNameLabel">Peptide.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#setVariableModifications-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">setVariableModifications</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications)</code>
+<div class="block">Sets the variable modifications.</div>
 </td>
 </tr>
 </tbody>
@@ -302,20 +234,20 @@
 <tbody>
 <tr class="altColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modifications)</code>
+       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-boolean-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
+       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications,
        boolean&nbsp;sanityCheck)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-boolean-double-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
+       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications,
        boolean&nbsp;sanityCheck,
        double&nbsp;mass)</code>
 <div class="block">Constructor.</div>
@@ -323,7 +255,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-java.util.HashMap-boolean-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
+       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="../../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches">PeptideVariantMatches</a>&gt;&gt;&nbsp;variantMatches,
        boolean&nbsp;sanityCheck)</code>
 <div class="block">Constructor for the peptide.</div>
@@ -331,7 +263,7 @@
 </tr>
 <tr class="altColor">
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html#Peptide-java.lang.String-com.compomics.util.experiment.identification.matches.ModificationMatch:A-java.util.HashMap-boolean-double-">Peptide</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;modificationMatches,
+       <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]&nbsp;variableModifications,
        <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>,<a href="../../../../../../../com/compomics/util/experiment/identification/matches/PeptideVariantMatches.html" title="class in com.compomics.util.experiment.identification.matches">PeptideVariantMatches</a>&gt;&gt;&nbsp;variantMatches,
        boolean&nbsp;sanityCheck,
        double&nbsp;mass)</code>
@@ -389,7 +321,7 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]</code></td>
-<td class="colLast"><span class="typeNameLabel">PeptideProteinMapping.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#getModificationMatches--">getModificationMatches</a></span>()</code>
+<td class="colLast"><span class="typeNameLabel">PeptideProteinMapping.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html#getVariableModifications--">getVariableModifications</a></span>()</code>
 <div class="block">Returns eventual modifications found.</div>
 </td>
 </tr>
@@ -607,6 +539,26 @@
              int&nbsp;modifictationPos,
              int&nbsp;ambiguousChar)</code>
 <div class="block">Constructor.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_sequences.digestion">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/package-summary.html">com.compomics.util.experiment.identification.protein_sequences.digestion</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/package-summary.html">com.compomics.util.experiment.identification.protein_sequences.digestion</a> that return <a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a>[]</code></td>
+<td class="colLast"><span class="typeNameLabel">PeptideDraft.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html#getFixedModifications--">getFixedModifications</a></span>()</code>
+<div class="block">Returns the fixed modifications for the peptide.</div>
 </td>
 </tr>
 </tbody>

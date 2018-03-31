@@ -57,7 +57,6 @@ public class Identification extends ExperimentObject {
     private final HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
     /**
      * The spectrum files that were used for the psms.
-     * @TODO: allow multiple files per fraction.
      */
     private ArrayList<String> fractions = new ArrayList<>();
     /**

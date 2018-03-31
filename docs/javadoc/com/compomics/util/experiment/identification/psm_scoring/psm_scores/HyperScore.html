@@ -252,11 +252,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/HyperScore.html#getScore-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/psm_scoring/psm_scores/HyperScore.html#getScore-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getScore</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
         <a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
         <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
-        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator)</code>
+        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator,
+        <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+        <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+        <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Returns the hyperscore.</div>
 </td>
 </tr>
@@ -314,7 +317,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getScore-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">
+<a name="getScore-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -324,7 +327,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
                        <a href="../../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
                        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
                        <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
-                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator)</pre>
+                       <a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators">PeptideSpectrumAnnotator</a>&nbsp;peptideSpectrumAnnotator,
+                       <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                       <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                       <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Returns the hyperscore.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -334,6 +340,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>specificAnnotationSettings</code> - the annotation settings specific to
  this PSM</dd>
 <dd><code>peptideSpectrumAnnotator</code> - the spectrum annotator to use</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the score of the match</dd>
 </dl>

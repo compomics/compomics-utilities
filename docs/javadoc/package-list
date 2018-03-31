@@ -3,6 +3,7 @@ com.compomics.cli.fasta
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
 com.compomics.cli.peptide_mapper
+com.compomics.scripts_marc
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli
@@ -20,7 +21,6 @@ com.compomics.util.examples
 com.compomics.util.exceptions
 com.compomics.util.exceptions.exception_handlers
 com.compomics.util.experiment
-com.compomics.util.experiment.biology
 com.compomics.util.experiment.biology.aminoacids
 com.compomics.util.experiment.biology.aminoacids.impl
 com.compomics.util.experiment.biology.aminoacids.sequence

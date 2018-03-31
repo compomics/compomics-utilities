@@ -309,17 +309,24 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-">getCurrentAnnotation</a></span>(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getCurrentAnnotation</a></span>(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
                     <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
-                    <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings)</code>
-<div class="block">Returns the currently matched ions with the given settings using the intensity filter.</div>
+                    <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
+                    <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                    <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                    <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
+<div class="block">Returns the currently matched ions with the given settings using the
+ intensity filter.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>abstract <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-boolean-">getCurrentAnnotation</a></span>(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-boolean-">getCurrentAnnotation</a></span>(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
                     <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
                     <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
+                    <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                    <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                    <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                     boolean&nbsp;useIntensityFilter)</code>
 <div class="block">Returns the currently matched ions with the given settings.</div>
 </td>
@@ -332,9 +339,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getDefaultLosses-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getDefaultLosses</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;spectrumIdentificationAssumption,
-                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getDefaultLosses-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getDefaultLosses</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;spectrumIdentificationAssumption,
+                <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
 <div class="block">Returns the possible neutral losses expected by default for a given
  peptide.</div>
 </td>
@@ -365,7 +373,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Vector.html?is-external=true" title="class or interface in java.util">Vector</a>&lt;<a href="../../../../../../com/compomics/util/gui/interfaces/SpectrumAnnotation.html" title="interface in com.compomics.util.gui.interfaces">SpectrumAnnotation</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getSpectrumAnnotation-java.util.ArrayList-">getSpectrumAnnotation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatches)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getSpectrumAnnotation-java.util.stream.Stream-">getSpectrumAnnotation</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatches)</code>
 <div class="block">Translates the list of ion matches into a vector of annotations which can
  be read by the SpectrumPanel.</div>
 </td>
@@ -668,13 +676,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getSpectrumAnnotation-java.util.ArrayList-">
+<a name="getSpectrumAnnotation-java.util.stream.Stream-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSpectrumAnnotation</h4>
-<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Vector.html?is-external=true" title="class or interface in java.util">Vector</a>&lt;<a href="../../../../../../com/compomics/util/gui/interfaces/SpectrumAnnotation.html" title="interface in com.compomics.util.gui.interfaces">SpectrumAnnotation</a>&gt;&nbsp;getSpectrumAnnotation(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatches)</pre>
+<pre>public static&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Vector.html?is-external=true" title="class or interface in java.util">Vector</a>&lt;<a href="../../../../../../com/compomics/util/gui/interfaces/SpectrumAnnotation.html" title="interface in com.compomics.util.gui.interfaces">SpectrumAnnotation</a>&gt;&nbsp;getSpectrumAnnotation(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;ionMatches)</pre>
 <div class="block">Translates the list of ion matches into a vector of annotations which can
  be read by the SpectrumPanel.</div>
 <dl>
@@ -821,7 +829,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-">
+<a name="getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -829,19 +837,28 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getCurrentAnnotation</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;getCurrentAnnotation(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
                                                 <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
-                                                <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings)</pre>
-<div class="block">Returns the currently matched ions with the given settings using the intensity filter.</div>
+                                                <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
+                                                <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                                <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
+<div class="block">Returns the currently matched ions with the given settings using the
+ intensity filter.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>spectrum</code> - the spectrum of interest</dd>
 <dd><code>annotationSettings</code> - the annotation settings</dd>
 <dd><code>specificAnnotationSettings</code> - the specific annotation settings</dd>
+<dd><code>modificationParameters</code> - the modification parameters the
+ modification parameters</dd>
+<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the currently matched ions with the given settings</dd>
 </dl>
 </li>
 </ul>
-<a name="getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-boolean-">
+<a name="getCurrentAnnotation-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -850,6 +867,9 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <pre>public abstract&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;getCurrentAnnotation(<a href="../../../../../../com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a>&nbsp;spectrum,
                                                          <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
                                                          <a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a>&nbsp;specificAnnotationSettings,
+                                                         <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                                         <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                                         <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
                                                          boolean&nbsp;useIntensityFilter)</pre>
 <div class="block">Returns the currently matched ions with the given settings.</div>
 <dl>
@@ -857,7 +877,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>spectrum</code> - the spectrum of interest</dd>
 <dd><code>annotationSettings</code> - the annotation settings</dd>
 <dd><code>specificAnnotationSettings</code> - the specific annotation settings</dd>
-<dd><code>useIntensityFilter</code> - boolean indicating whether intensity filters should be used</dd>
+<dd><code>modificationParameters</code> - the modification parameters the
+ modification parameters</dd>
+<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
+<dd><code>useIntensityFilter</code> - boolean indicating whether intensity filters
+ should be used</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the currently matched ions with the given settings</dd>
 </dl>
@@ -982,15 +1008,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">Updates the mass shifts.</div>
 </li>
 </ul>
-<a name="getDefaultLosses-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
+<a name="getDefaultLosses-com.compomics.util.experiment.identification.SpectrumIdentificationAssumption-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getDefaultLosses</h4>
 <pre>public static&nbsp;<a href="../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/NeutralLossesMap.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">NeutralLossesMap</a>&nbsp;getDefaultLosses(<a href="../../../../../../com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a>&nbsp;spectrumIdentificationAssumption,
-                                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;ptmSequenceMatchingPreferences)</pre>
+                                                <a href="../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                                <a href="../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                                <a href="../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
 <div class="block">Returns the possible neutral losses expected by default for a given
  peptide. /!\ this method will work only if the PTM found in the peptide
  are in the PTMFactory.</div>
@@ -998,10 +1025,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>spectrumIdentificationAssumption</code> - the
  spectrumIdentificationAssumption of interest</dd>
-<dd><code>sequenceMatchingPreferences</code> - the sequence matching settings for
- peptide to protein mapping</dd>
-<dd><code>ptmSequenceMatchingPreferences</code> - the sequence matching settings for
- PTM to peptide mapping</dd>
+<dd><code>modificationParameters</code> - the modification parameters the
+ modification parameters</dd>
+<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
+<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
+ parameters to use for modifications</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the expected possible neutral losses</dd>
 </dl>

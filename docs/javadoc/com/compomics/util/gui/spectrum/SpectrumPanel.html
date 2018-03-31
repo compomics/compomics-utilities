@@ -146,7 +146,7 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 <dt><span class="simpleTagLabel">Version:</span></dt>
 <dd>$Id: SpectrumPanel.java,v 1.9 2009/08/17 15:15:28 lennart Exp $</dd>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Lennart Martens, Harald Barsnes</dd>
+<dd>Lennart Martens, Harald Barsnes, Marc Vaudel</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../serialized-form.html#com.compomics.util.gui.spectrum.SpectrumPanel">Serialized Form</a></dd>
 </dl>
@@ -444,14 +444,17 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
                             boolean&nbsp;showForwardTags,
                             boolean&nbsp;showRewindTags,
-                            boolean&nbsp;mirrored)</code>
+                            boolean&nbsp;mirrored,
+                            <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default percent
  height of 0.9 for the forward ions and 1.0 for the reverse ions default
  alpha levels of 0.2.</div>
@@ -459,8 +462,8 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -470,30 +473,17 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             double&nbsp;rewindIonPercentHeight,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
                             boolean&nbsp;excludeFixedModifications,
-                            boolean&nbsp;mirrored)</code>
+                            boolean&nbsp;mirrored,
+                            <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
-                            int&nbsp;aForwardIon,
-                            int&nbsp;aRewindIon,
-                            int&nbsp;aDeNovoCharge,
-                            boolean&nbsp;showForwardTags,
-                            boolean&nbsp;showRewindTags,
-                            double&nbsp;forwardIonPercentHeight,
-                            double&nbsp;rewindIonPercentHeight,
-                            boolean&nbsp;mirrored)</code>
-<div class="block">Add reference areas annotating the de novo tags, using default alpha
- levels of 0.2.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -502,15 +492,37 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             double&nbsp;forwardIonPercentHeight,
                             double&nbsp;rewindIonPercentHeight,
                             boolean&nbsp;excludeFixedModifications,
-                            boolean&nbsp;mirrored)</code>
+                            boolean&nbsp;mirrored,
+                            <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
+<div class="block">Add reference areas annotating the de novo tags, using default alpha
+ levels of 0.2.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                            int&nbsp;aForwardIon,
+                            int&nbsp;aRewindIon,
+                            int&nbsp;aDeNovoCharge,
+                            boolean&nbsp;showForwardTags,
+                            boolean&nbsp;showRewindTags,
+                            double&nbsp;forwardIonPercentHeight,
+                            double&nbsp;rewindIonPercentHeight,
+                            boolean&nbsp;mirrored,
+                            <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
+                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -522,7 +534,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                             float&nbsp;rewindIonAlphaLevel,
                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
                             boolean&nbsp;excludeFixedModifications,
-                            boolean&nbsp;mirrored)</code>
+                            boolean&nbsp;mirrored,
+                            <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</code>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 </td>
 </tr>
@@ -1464,23 +1479,26 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 </dl>
 </li>
 </ul>
-<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-boolean-">
+<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAutomaticDeNovoSequencing</h4>
 <pre>public&nbsp;void&nbsp;addAutomaticDeNovoSequencing(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                                          int&nbsp;aForwardIon,
                                          int&nbsp;aRewindIon,
                                          int&nbsp;aDeNovoCharge,
                                          boolean&nbsp;showForwardTags,
                                          boolean&nbsp;showRewindTags,
-                                         boolean&nbsp;mirrored)</pre>
+                                         boolean&nbsp;mirrored,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default percent
  height of 0.9 for the forward ions and 1.0 for the reverse ions default
- alpha levels of 0.2. Fixed modificatoins are not annotated.</div>
+ alpha levels of 0.2. Fixed modifications are not annotated.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>currentPeptide</code> - the current peptide sequence</dd>
@@ -1497,17 +1515,21 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 <dd><code>showRewindTags</code> - if true, the reverse de novo sequencing tags are
  displayed</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>
-<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-boolean-">
+<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAutomaticDeNovoSequencing</h4>
 <pre>public&nbsp;void&nbsp;addAutomaticDeNovoSequencing(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                                          int&nbsp;aForwardIon,
                                          int&nbsp;aRewindIon,
                                          int&nbsp;aDeNovoCharge,
@@ -1515,7 +1537,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          boolean&nbsp;showRewindTags,
                                          double&nbsp;forwardIonPercentHeight,
                                          double&nbsp;rewindIonPercentHeight,
-                                         boolean&nbsp;mirrored)</pre>
+                                         boolean&nbsp;mirrored,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2. Fixed modifications are not annotated.</div>
 <dl>
@@ -1538,17 +1563,21 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 <dd><code>rewindIonPercentHeight</code> - the percent height of the reverse ion
  annotation [0-1]</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>
-<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-boolean-boolean-">
+<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAutomaticDeNovoSequencing</h4>
 <pre>public&nbsp;void&nbsp;addAutomaticDeNovoSequencing(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                                          int&nbsp;aForwardIon,
                                          int&nbsp;aRewindIon,
                                          int&nbsp;aDeNovoCharge,
@@ -1557,7 +1586,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;forwardIonPercentHeight,
                                          double&nbsp;rewindIonPercentHeight,
                                          boolean&nbsp;excludeFixedModifications,
-                                         boolean&nbsp;mirrored)</pre>
+                                         boolean&nbsp;mirrored,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Add reference areas annotating the de novo tags, using default alpha
  levels of 0.2.</div>
 <dl>
@@ -1581,6 +1613,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  annotation [0-1]</dd>
 <dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>
@@ -1707,14 +1743,14 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
 </dl>
 </li>
 </ul>
-<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-">
+<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAutomaticDeNovoSequencing</h4>
 <pre>public&nbsp;void&nbsp;addAutomaticDeNovoSequencing(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                                          int&nbsp;aForwardIon,
                                          int&nbsp;aRewindIon,
                                          int&nbsp;aDeNovoCharge,
@@ -1724,7 +1760,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          double&nbsp;rewindIonPercentHeight,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
                                          boolean&nbsp;excludeFixedModifications,
-                                         boolean&nbsp;mirrored)</pre>
+                                         boolean&nbsp;mirrored,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1749,17 +1788,21 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
 <dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>
-<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.ArrayList-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-">
+<a name="addAutomaticDeNovoSequencing-com.compomics.util.experiment.biology.proteins.Peptide-java.util.stream.Stream-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addAutomaticDeNovoSequencing</h4>
 <pre>public&nbsp;void&nbsp;addAutomaticDeNovoSequencing(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;currentPeptide,
-                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+                                         <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
                                          int&nbsp;aForwardIon,
                                          int&nbsp;aRewindIon,
                                          int&nbsp;aDeNovoCharge,
@@ -1771,7 +1814,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
                                          float&nbsp;rewindIonAlphaLevel,
                                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;float[]&gt;&nbsp;alphaLevels,
                                          boolean&nbsp;excludeFixedModifications,
-                                         boolean&nbsp;mirrored)</pre>
+                                         boolean&nbsp;mirrored,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                         <a href="../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                         <a href="../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingParameters)</pre>
 <div class="block">Add reference areas annotating the de novo tags.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1798,6 +1844,10 @@ extends <a href="../../../../../com/compomics/util/gui/spectrum/GraphicsPanel.ht
  forwardIonAlphaLevel and rewindIonAlphaLevel</dd>
 <dd><code>excludeFixedModifications</code> - are fixed modifications to be annotated?</dd>
 <dd><code>mirrored</code> - if true the annotation is for the mirrored spectrum</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingParameters</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 </dl>
 </li>
 </ul>

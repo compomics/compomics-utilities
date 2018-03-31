@@ -160,18 +160,24 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>int[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_generation/FeaturesGenerator.html#getComplementaryIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-">getComplementaryIonsFeatures</a></span>(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_generation/FeaturesGenerator.html#getComplementaryIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getComplementaryIonsFeatures</a></span>(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                             int&nbsp;charge,
-                            int&nbsp;ionIndex)</code>
+                            int&nbsp;ionIndex,
+                            <a href="../../../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                            <a href="../../../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                            <a href="../../../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences)</code>
 <div class="block">Returns the ms2pip features for the complementary ions of the given
  peptide at the given charge.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>int[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_generation/FeaturesGenerator.html#getForwardIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-">getForwardIonsFeatures</a></span>(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_generation/FeaturesGenerator.html#getForwardIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getForwardIonsFeatures</a></span>(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                       int&nbsp;charge,
-                      int&nbsp;ionIndex)</code>
+                      int&nbsp;ionIndex,
+                      <a href="../../../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                      <a href="../../../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                      <a href="../../../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences)</code>
 <div class="block">Returns the ms2pip features for the forward ions of the given peptide at
  the given charge.</div>
 </td>
@@ -220,7 +226,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getForwardIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-">
+<a name="getForwardIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -228,7 +234,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getForwardIonsFeatures</h4>
 <pre>public&nbsp;int[]&nbsp;getForwardIonsFeatures(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                                     int&nbsp;charge,
-                                    int&nbsp;ionIndex)</pre>
+                                    int&nbsp;ionIndex,
+                                    <a href="../../../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                    <a href="../../../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                    <a href="../../../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences)</pre>
 <div class="block">Returns the ms2pip features for the forward ions of the given peptide at
  the given charge.</div>
 <dl>
@@ -236,12 +245,16 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>charge</code> - the charge</dd>
 <dd><code>ionIndex</code> - the ion index</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingPreferences</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the ms2pip features for the b ions</dd>
 </dl>
 </li>
 </ul>
-<a name="getComplementaryIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-">
+<a name="getComplementaryIonsFeatures-com.compomics.util.experiment.biology.proteins.Peptide-int-int-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -249,7 +262,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>getComplementaryIonsFeatures</h4>
 <pre>public&nbsp;int[]&nbsp;getComplementaryIonsFeatures(<a href="../../../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
                                           int&nbsp;charge,
-                                          int&nbsp;ionIndex)</pre>
+                                          int&nbsp;ionIndex,
+                                          <a href="../../../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
+                                          <a href="../../../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                                          <a href="../../../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationSequenceMatchingPreferences)</pre>
 <div class="block">Returns the ms2pip features for the complementary ions of the given
  peptide at the given charge.</div>
 <dl>
@@ -257,6 +273,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>peptide</code> - the peptide</dd>
 <dd><code>charge</code> - the charge</dd>
 <dd><code>ionIndex</code> - the ion index</dd>
+<dd><code>modificationParameters</code> - the modification parameters</dd>
+<dd><code>sequenceProvider</code> - a provider for the protein sequences</dd>
+<dd><code>modificationSequenceMatchingPreferences</code> - the sequence matching
+ preferences for modification to peptide mapping</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the ms2pip features for the b ions</dd>
 </dl>

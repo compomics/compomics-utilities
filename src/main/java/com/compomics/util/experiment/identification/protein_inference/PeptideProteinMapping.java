@@ -115,7 +115,7 @@ public class PeptideProteinMapping {
      *
      * @return eventual modifications found
      */
-    public ModificationMatch[] getModificationMatches() {
+    public ModificationMatch[] getVariableModifications() {
         return modificationMatches;
     }
 
@@ -238,7 +238,7 @@ public class PeptideProteinMapping {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
 
             Peptide tempPeptide = new Peptide(peptideProteinMapping.getPeptideSequence(),
-                    peptideProteinMapping.getModificationMatches());
+                    peptideProteinMapping.getVariableModifications());
 
             long peptideKey = tempPeptide.getMatchingKey(sequenceMatchingPreferences);
             Peptide peptide = peptidesMap.get(peptideKey);

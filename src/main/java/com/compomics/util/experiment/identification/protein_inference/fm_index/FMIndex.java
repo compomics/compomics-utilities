@@ -3496,7 +3496,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     hasFixed = true;
 
                                     for (int i = 0; i < fmodp.size(); ++i) {
-
+                                        
                                         double massDiffDiff = massDiff - fmodpMass.get(i);
                                         double massDiffDiffAbs = Math.abs(massDiffDiff);
                                         boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);

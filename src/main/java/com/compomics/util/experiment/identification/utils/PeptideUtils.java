@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +14,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class groups functions that can be used to work with peptides.
@@ -129,17 +132,44 @@ public class PeptideUtils {
      * Returns the peptide modifications as a string.
      *
      * @param peptide the peptide
-     * @param variable if true, only variable Modifications are shown, false
-     * return only the fixed Modifications
      *
      * @return the peptide modifications as a string
      */
-    public static String getVariablePeptideModificationsAsString(Peptide peptide, boolean variable) {
+    public static String getVariableModificationsAsString(Peptide peptide) {
 
         TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(peptide.getVariableModifications())
                 .collect(Collectors.groupingBy(ModificationMatch::getModification,
                         TreeMap::new,
                         Collectors.mapping(ModificationMatch::getSite,
+                                Collectors.toCollection(HashSet::new))));
+
+        return modMap.entrySet().stream()
+                .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(";"));
+    }
+
+    /**
+     * Returns the peptide modifications as a string.
+     *
+     * @param peptide the peptide
+     *
+     * @return the peptide modifications as a string
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider a provider for the protein sequences
+     * @param modificationSequenceMatchingParameters the sequence matching
+     * preferences for modification to peptide mapping
+     */
+    public static String getFixedModificationsAsString(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters) {
+
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+        
+        TreeMap<String, HashSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
+                .mapToObj(i -> fixedModifications[i])
+                .filter(modName -> modName != null)
+                .collect(Collectors.groupingBy(Function.identity(),
+                        TreeMap::new,
+                        Collectors.mapping(i -> new Integer(i),
                                 Collectors.toCollection(HashSet::new))));
 
         return modMap.entrySet().stream()

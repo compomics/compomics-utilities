@@ -143,7 +143,9 @@ public class AnnotationParameters implements Serializable {
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, 
+            SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
             SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);

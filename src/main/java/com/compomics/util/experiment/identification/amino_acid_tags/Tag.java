@@ -14,6 +14,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -348,36 +349,6 @@ public class Tag extends ExperimentObject {
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with modification tags, e.g,
-     * &lt;mox&gt;. /!\ this method will work only if the modification found in
-     * the tag components are in the factory. /!\ This method uses the
-     * modifications as set in the modification matches of this peptide and
-     * displays all of them.
-     *
-     * @param modificationProfile the modification profile of the search
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * modification tags, e.g, &lt;mox&gt;, are used
-     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
-     * @param useShortName if true. the short names are used in the tags
-     * @param includeTerminalGaps if true. the terminal gaps will be displayed
-     * on the sequence
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
-     *
-     * @return the modified sequence as a tagged string
-     */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, null);
-
-    }
-
-    /**
-     * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with modification tags, e.g,
      * &lt;mox&gt;. /!\ this method will work only if the modifications found in
      * the tag components are in the factory. /!\ This method uses the
      * modifications as set in the modification matches of this peptide and
@@ -396,13 +367,15 @@ public class Tag extends ExperimentObject {
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, 
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
 
         ObjectsDB.increaseRWCounter();
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, null);
+        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, displayedModifications);
 
     }
 
@@ -444,8 +417,12 @@ public class Tag extends ExperimentObject {
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
-                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
+                String[] variableModifications = Arrays.stream(aminoAcidSequence.getIndexedVariableModifications())
+                        .filter(modName -> displayedModifications.contains(modName))
+                        .toArray(String[]::new);
+                String[] fixedModifications = Arrays.stream(aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters))
+                        .filter(modName -> displayedModifications.contains(modName))
+                        .toArray(String[]::new);
                 modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, aminoAcidSequence.getSequence(), variableModifications, null, null, fixedModifications, useHtmlColorCoding, useShortName));
 
             } else if (tagComponent instanceof MassGap) {

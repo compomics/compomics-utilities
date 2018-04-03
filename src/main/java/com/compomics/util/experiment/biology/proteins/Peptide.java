@@ -1137,113 +1137,113 @@ public class Peptide extends ExperimentObject {
         }
         return sameModificationsAs(anotherPeptide, modifications);
     }
-
-    /**
-     * Returns the N-terminal of the peptide as a String. Returns "NH2" if the
-     * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ this method will work only if the Modification found in the peptide
-     * are in the ModificationFactory.
-     *
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * paramters to use for modifications
-     *
-     * @return the N-terminal of the peptide as a String, e.g., "NH2"
-     */
-    public String getNTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
-        for (String modName : modificationParameters.getFixedModifications()) {
-
-            Modification modification = modificationFactory.getModification(modName);
-
-            if (modification.getModificationType().isNTerm()) {
-
-                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
-
-                if (possibleSites.length > 0) {
-
-                    return modName.replaceAll("-", " ");
-
-                }
-            }
-        }
-
-        for (ModificationMatch modificationMatch : getVariableModifications()) {
-
-            String modName = modificationMatch.getModification();
-            Modification modification = modificationFactory.getModification(modName);
-
-            if (modification.getModificationType().isNTerm()) {
-
-                return modName.replaceAll("-", " ");
-
-            }
-        }
-
-        return "NH2";
-
-    }
-
-    /**
-     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
-     * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ This method will work only if the Modification found in the peptide
-     * are in the ModificationFactory.
-     *
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
-     *
-     * @return the C-terminal of the peptide as a String, e.g., "COOH"
-     */
-    public String getCTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
-        for (String modName : modificationParameters.getFixedModifications()) {
-
-            Modification modification = modificationFactory.getModification(modName);
-
-            if (modification.getModificationType().isCTerm()) {
-
-                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
-
-                if (possibleSites.length > 0) {
-
-                    return modName.replaceAll("-", " ");
-
-                }
-            }
-        }
-
-        for (ModificationMatch modificationMatch : getVariableModifications()) {
-
-            String modName = modificationMatch.getModification();
-            Modification modification = modificationFactory.getModification(modName);
-
-            if (modification.getModificationType().isCTerm()) {
-
-                return modName.replaceAll("-", " ");
-
-            }
-        }
-
-        return "COOH";
-    }
+//
+//    /**
+//     * Returns the N-terminal of the peptide as a String. Returns "NH2" if the
+//     * terminal is not modified, otherwise returns the name of the modification.
+//     * /!\ this method will work only if the Modification found in the peptide
+//     * are in the ModificationFactory.
+//     *
+//     * @param modificationParameters the modification parameters the
+//     * modification parameters
+//     * @param sequenceProvider a protein sequence provider
+//     * @param modificationsSequenceMatchingParameters the sequence matching
+//     * paramters to use for modifications
+//     *
+//     * @return the N-terminal of the peptide as a String, e.g., "NH2"
+//     */
+//    public String getNTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+//
+//        ObjectsDB.increaseRWCounter();
+//        zooActivateRead();
+//        ObjectsDB.decreaseRWCounter();
+//
+//        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+//
+//        for (String modName : modificationParameters.getFixedModifications()) {
+//
+//            Modification modification = modificationFactory.getModification(modName);
+//
+//            if (modification.getModificationType().isNTerm()) {
+//
+//                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+//
+//                if (possibleSites.length > 0) {
+//
+//                    return modName.replaceAll("-", " ");
+//
+//                }
+//            }
+//        }
+//
+//        for (ModificationMatch modificationMatch : getVariableModifications()) {
+//
+//            String modName = modificationMatch.getModification();
+//            Modification modification = modificationFactory.getModification(modName);
+//
+//            if (modification.getModificationType().isNTerm()) {
+//
+//                return modName.replaceAll("-", " ");
+//
+//            }
+//        }
+//
+//        return "NH2";
+//
+//    }
+//
+//    /**
+//     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
+//     * terminal is not modified, otherwise returns the name of the modification.
+//     * /!\ This method will work only if the Modification found in the peptide
+//     * are in the ModificationFactory.
+//     *
+//     * @param modificationParameters the modification parameters the
+//     * modification parameters
+//     * @param sequenceProvider a protein sequence provider
+//     * @param modificationsSequenceMatchingParameters the sequence matching
+//     * parameters to use for modifications
+//     *
+//     * @return the C-terminal of the peptide as a String, e.g., "COOH"
+//     */
+//    public String getCTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+//
+//        ObjectsDB.increaseRWCounter();
+//        zooActivateRead();
+//        ObjectsDB.decreaseRWCounter();
+//
+//        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+//
+//        for (String modName : modificationParameters.getFixedModifications()) {
+//
+//            Modification modification = modificationFactory.getModification(modName);
+//
+//            if (modification.getModificationType().isCTerm()) {
+//
+//                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+//
+//                if (possibleSites.length > 0) {
+//
+//                    return modName.replaceAll("-", " ");
+//
+//                }
+//            }
+//        }
+//
+//        for (ModificationMatch modificationMatch : getVariableModifications()) {
+//
+//            String modName = modificationMatch.getModification();
+//            Modification modification = modificationFactory.getModification(modName);
+//
+//            if (modification.getModificationType().isCTerm()) {
+//
+//                return modName.replaceAll("-", " ");
+//
+//            }
+//        }
+//
+//        return "COOH";
+//    }
 
     /**
      * Returns the modified sequence as an tagged string with potential
@@ -1326,10 +1326,7 @@ public class Peptide extends ExperimentObject {
             }
         }
 
-        String nTermAsString = getNTerminalAsString(modificationProfile, sequenceProvider, modificationsSequenceMatchingParameters);
-        String cTermAsString = getCTerminalAsString(modificationProfile, sequenceProvider, modificationsSequenceMatchingParameters);
-
-        return PeptideUtils.getTaggedModifiedSequence(this, nTermAsString, cTermAsString, modificationProfile, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
+        return PeptideUtils.getTaggedModifiedSequence(this, modificationProfile, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
 

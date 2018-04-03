@@ -209,9 +209,7 @@ public class PeptideUtils {
      * C-term at sequence length + 1, and amino acid at 1-based index on the
      * sequence.
      *
-     * @param modificationProfile the modification profile of the search
-     * @param nTermAsString the annotated N-term
-     * @param cTermAsString the annotated C-term
+     * @param modificationParameters the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param confidentModificationSites the confidently localized variable
@@ -230,7 +228,9 @@ public class PeptideUtils {
      *
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(Peptide peptide, String nTermAsString, String cTermAsString, ModificationParameters modificationProfile, String[] confidentModificationSites, String[] representativeAmbiguousModificationSites, String[] secondaryAmbiguousModificationSites, String[] fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+    public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationParameters, 
+            String[] confidentModificationSites, String[] representativeAmbiguousModificationSites, String[] secondaryAmbiguousModificationSites, String[] fixedModificationSites, 
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
         String peptideSequence = peptide.getSequence();
         
@@ -265,9 +265,12 @@ public class PeptideUtils {
             modifiedSequence.append("<html>");
 
         }
+        
+        String nTermAsString = getNtermAsString(confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
+        String cTermAsString = getCtermAsString(peptideSequence.length(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
 
         modifiedSequence.append(nTermAsString).append('-');
-        modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationProfile, peptide.getSequence(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName));
+        modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, peptideSequence, confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName));
         modifiedSequence.append('-').append(cTermAsString);
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
@@ -278,6 +281,57 @@ public class PeptideUtils {
 
         return modifiedSequence.toString();
 
+    }
+    
+    /** 
+     * Returns the N-terminal annotation as string.
+     * 
+     * @param modificationArrays modifications to annotate in arrays corresponding to the peptide sequence with N-terminus at index 0
+     * 
+     * @return the N-terminal annotation as string
+     */
+    public static String getNtermAsString(String[]... modificationArrays) {
+        
+        for (String[] modificationArray : modificationArrays) {
+            
+            String modName = modificationArray[0];
+            
+            if (modName != null) {
+                
+                return modName.replaceAll(" ", ".");
+                
+            }
+            
+        }
+        
+        return "NH2";
+        
+    }
+    
+    /** 
+     * Returns the  C-terminal annotation as string.
+     * 
+     * @param length the length of the peptide
+     * @param modificationArrays modifications to annotate in arrays corresponding to the peptide sequence with C-terminus at index length + 2
+     * 
+     * @return the C-terminal annotation as string
+     */
+    public static String getCtermAsString(int length, String[]... modificationArrays) {
+        
+        for (String[] modificationArray : modificationArrays) {
+            
+            String modName = modificationArray[length + 2];
+            
+            if (modName != null) {
+                
+                return modName.replaceAll(" ", ".");
+                
+            }
+            
+        }
+        
+        return "COOH";
+        
     }
 
     /**

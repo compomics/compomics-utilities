@@ -666,7 +666,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         Map<Double, HashSet<ModificationMatch>> mods1 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
-        Map<Double, HashSet<ModificationMatch>> mods2 = Arrays.stream(modificationMatches1).collect(Collectors.groupingBy(
+        Map<Double, HashSet<ModificationMatch>> mods2 = Arrays.stream(modificationMatches2).collect(Collectors.groupingBy(
                 modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()).getMass(), Collectors.toCollection(HashSet::new)));
 
         for (Entry<Double, HashSet<ModificationMatch>> entry1 : mods1.entrySet()) {

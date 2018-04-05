@@ -7,13 +7,19 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -35,37 +41,41 @@ public class ModificationUtils {
      * map of arrays for c-term.
      */
     public static final HashMap<Integer, int[]> arraysMap = new HashMap<>();
-    
+
     /**
      * Returns an array containing only the given index.
-     * 
+     *
      * @param index the index
-     * 
+     *
      * @return an array containing only the given index
      */
     public static int[] getArray(int index) {
-        
+
         int[] result = arraysMap.get(index);
-        
+
         if (result == null) {
-            
+
             result = new int[1];
             result[0] = index;
             arraysMap.put(index, result);
-            
+
         }
-        
+
         return result;
     }
 
     /**
-     * Returns an array of the possible modification sites for the given modification on the given peptide. N-term modifications are at index 0, C-term at sequence length + 1, and amino acid at 1-based index on the sequence.
-     * 
+     * Returns an array of the possible modification sites for the given
+     * modification on the given peptide. N-term modifications are at index 0,
+     * C-term at sequence length + 1, and amino acid at 1-based index on the
+     * sequence.
+     *
      * @param peptide the peptide
      * @param modification the modification
      * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching paramters to use for modifications
-     * 
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * paramters to use for modifications
+     *
      * @return an array of the possible modification sites
      */
     public static int[] getPossibleModificationSites(Peptide peptide, Modification modification, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
@@ -255,7 +265,7 @@ public class ModificationUtils {
                 int tempStart = peptideSequence.length() + minIndex;
 
                 if (maxIndex == 0 && tempStart > 0) {
-                    return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length()-1) ? getArray(peptideSequence.length() + 1) : empty;
+                    return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : empty;
                 }
 
                 for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
@@ -308,7 +318,7 @@ public class ModificationUtils {
                     int tempStart = peptideSequence.length() + minIndex;
 
                     if (tempStart > 0) {
-                        return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length()-1) ? getArray(peptideSequence.length() + 1) : empty;
+                        return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : empty;
                     }
 
                     for (String accession : accessions) {
@@ -351,8 +361,10 @@ public class ModificationUtils {
      * sequence. Protein modifications are not taken into account.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param nTerm boolean indicating whether the sequence is located at the n-term
-     * @param cTerm boolean indicating whether the sequence is located at the c-term
+     * @param nTerm boolean indicating whether the sequence is located at the
+     * n-term
+     * @param cTerm boolean indicating whether the sequence is located at the
+     * c-term
      * @param modification the modification
      * @param modificationsSequenceMatchingParameters the sequence matching
      * parameters to use for modifications
@@ -417,7 +429,6 @@ public class ModificationUtils {
 
         }
     }
-    
 
     /**
      * Returns the modified sequence as an tagged string with potential
@@ -596,30 +607,94 @@ public class ModificationUtils {
             }
         }
     }
-    
+
     /**
      * Returns the 1-based index on the peptide.
-     * 
+     *
      * @param index the modification index
      * @param sequenceLength the sequence length
-     * 
+     *
      * @return the 1-based index on the sequence
      */
     public static int getSite(int index, int sequenceLength) {
-        
+
         if (index > 0 && index < sequenceLength + 1) {
-                
-                return index;
-                
-            } else if (index == 0) {
-                
-                return 1;
-                
-            } else {
-                
-                return index-1;
-                
+
+            return index;
+
+        } else if (index == 0) {
+
+            return 1;
+
+        } else {
+
+            return index - 1;
+
+        }
+    }
+
+    /**
+     * Returns a set of the names of all modifications found on a peptide.
+     *
+     * @param peptide the peptide
+     * @param modificationParameters the modification parameters
+     * @param sequenceProvider the protein sequence provider
+     * @param modificationsSequenceMatchingParameters the modification sequences
+     * parameters
+     *
+     * @return a set of the names of all modifications found on a peptide
+     */
+    public static HashSet<String> getAllModifications(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        HashSet<String> modNames = Arrays.stream(peptide.getVariableModifications())
+                .map(ModificationMatch::getModification)
+                .collect(Collectors.toCollection(HashSet::new));
+
+        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+
+        modNames.addAll(Arrays.stream(fixedModifications)
+                .filter(modName -> modName != null)
+                .collect(Collectors.toSet()));
+
+        return modNames;
+    }
+
+    /**
+     * Returns a set of the names of all modifications found on a tag.
+     *
+     * @param tag the tag
+     * @param modificationParameters the modification parameters
+     * @param modificationsSequenceMatchingParameters the modification sequences
+     * parameters
+     *
+     * @return a set of the names of all modifications found on a peptide
+     */
+    public static HashSet<String> getAllModifications(Tag tag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        HashSet<String> modNames = new HashSet<>(2);
+
+        ArrayList<TagComponent> tagComponents = tag.getContent();
+
+        for (int i = 0; i < tagComponents.size(); i++) {
+
+            TagComponent tagComponent = tagComponents.get(i);
+
+            if (tagComponent instanceof AminoAcidSequence) {
+
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+
+                modNames.addAll(Arrays.stream(aminoAcidSequence.getVariableModifications())
+                        .map(ModificationMatch::getModification)
+                        .collect(Collectors.toCollection(HashSet::new)));
+
+                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tagComponents.size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
+                modNames.addAll(Arrays.stream(fixedModifications)
+                        .filter(modName -> modName != null)
+                        .collect(Collectors.toSet()));
+
             }
-        
+        }
+
+        return modNames;
     }
 }

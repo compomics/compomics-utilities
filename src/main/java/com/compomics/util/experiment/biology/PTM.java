@@ -317,7 +317,7 @@ public class PTM extends ExperimentObject {
      * @return true if the atomic composition of the PTM is the same as the
      * other one
      */
-    public boolean isSameAtomicComposition(PTM anotherPTM) {
+    public boolean isSameAtomicComposition(PTM anotherPTM) {    
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
             return false;
@@ -339,6 +339,11 @@ public class PTM extends ExperimentObject {
      * one
      */
     public boolean isSamePattern(PTM anotherPTM) {
+
+        if (pattern != null && pattern.length() == 0 && anotherPTM.getPattern() == null) {  // backwards compatibility fix
+            return true;
+        }
+
         if (pattern == null && anotherPTM.getPattern() != null && anotherPTM.getPattern().length() > 0) {
             return false;
         }

@@ -338,6 +338,11 @@ public class AtomChain implements Serializable {
         if (!atomChain.isEmpty() && (anotherChain == null || anotherChain.getAtomChain().isEmpty())) {
             return false;
         }
+
+        if (atomChain.isEmpty() && anotherChain == null) { // backwards compatibility fix
+            return true;
+        }
+
         return anotherChain.toString().equals(toString());
     }
 

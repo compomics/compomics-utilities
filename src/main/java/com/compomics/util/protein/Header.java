@@ -1739,16 +1739,23 @@ public class Header implements Cloneable, Serializable {
 
         // try to get the taxonomy name from the description
         if (header.iDescription.contains(" OS=")) {
-            int taxonomyStartIndex = header.iDescription.indexOf(" OS=") + 4;
-            int taxonomyEndIndex = header.iDescription.indexOf(" GN=");
 
-            // have to check if gene name is in the header
-            if (taxonomyEndIndex == -1) {
-                if (header.iDescription.contains(" PE=")) {
-                    taxonomyEndIndex = header.iDescription.indexOf(" PE=");
-                } else {
-                    taxonomyEndIndex = header.iDescription.length();
-                }
+            int taxonomyStartIndex = header.iDescription.indexOf(" OS=") + 4;
+            int ncbiTaxIdStartIndex = header.iDescription.indexOf(" OX=");
+            int geneNameStartIndex = header.iDescription.indexOf(" GN=");
+            int proteinEvidenceStartIndex = header.iDescription.indexOf(" PE=");
+
+            int taxonomyEndIndex;
+            
+            // have to check if OX, GN or PE is in the header
+            if (ncbiTaxIdStartIndex != -1) {
+                taxonomyEndIndex = ncbiTaxIdStartIndex;
+            } else if (geneNameStartIndex != -1) {
+                taxonomyEndIndex = geneNameStartIndex;
+            } else if (proteinEvidenceStartIndex != -1) {
+                taxonomyEndIndex = proteinEvidenceStartIndex;
+            } else {
+                taxonomyEndIndex = header.iDescription.length();
             }
 
             header.iTaxonomy = header.iDescription.substring(taxonomyStartIndex, taxonomyEndIndex);
@@ -1761,7 +1768,7 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * Return the Uniprot protein evidence type as text.
+     * Return the UniProt protein evidence type as text.
      *
      * @param type the type of evidence
      * 

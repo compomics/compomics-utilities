@@ -1774,7 +1774,9 @@ public class IdentificationParametersInputBean {
                 }
                 digestionPreferences.setSpecificity(enzymeName, specificity);
             }
-        } else if (digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme && !digestionPreferences.hasEnzymes()) {
+        } else if (digestionPreferences.getCleavagePreference() != null 
+                && digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme 
+                && !digestionPreferences.hasEnzymes()) {
             String enzymeName = "Trypsin";
             Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
             digestionPreferences.addEnzyme(enzyme);
@@ -2238,20 +2240,22 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setNumberTolerableTermini(option);
         } else {
-            // Infer this setting from the general settings
-            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
-            String enzymeName = enzyme.getName();
-            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
-            switch (specificity) {
-                case specific:
-                    msgfParameters.setNumberTolerableTermini(2);
-                    break;
-                case semiSpecific:
-                case specificNTermOnly:
-                case specificCTermOnly:
-                    msgfParameters.setNumberTolerableTermini(1);
-                default:
-                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+                // Infer this setting from the general settings
+                Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used
+                String enzymeName = enzyme.getName();
+                Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+                switch (specificity) {
+                    case specific:
+                        msgfParameters.setNumberTolerableTermini(2);
+                        break;
+                    case semiSpecific:
+                    case specificNTermOnly:
+                    case specificCTermOnly:
+                        msgfParameters.setNumberTolerableTermini(1);
+                    default:
+                        throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+                }
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
@@ -2312,19 +2316,21 @@ public class IdentificationParametersInputBean {
             myriMatchParameters.setMinTerminiCleavages(option);
         } else {
             // Infer this setting from the general settings
-            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
-            String enzymeName = enzyme.getName();
-            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
-            switch (specificity) {
-                case specific:
-                    myriMatchParameters.setMinTerminiCleavages(2);
-                    break;
-                case semiSpecific:
-                case specificNTermOnly:
-                case specificCTermOnly:
-                    myriMatchParameters.setMinTerminiCleavages(1);
-                default:
-                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+                Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used
+                String enzymeName = enzyme.getName();
+                Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+                switch (specificity) {
+                    case specific:
+                        myriMatchParameters.setMinTerminiCleavages(2);
+                        break;
+                    case semiSpecific:
+                    case specificNTermOnly:
+                    case specificCTermOnly:
+                        myriMatchParameters.setMinTerminiCleavages(1);
+                    default:
+                        throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+                }
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id)) {
@@ -2467,24 +2473,26 @@ public class IdentificationParametersInputBean {
             cometParameters.setEnzymeType(option);
         } else {
             // Infer this setting from the general settings
-            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
-            String enzymeName = enzyme.getName();
-            Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
-            switch (specificity) {
-                case specific:
-                    cometParameters.setEnzymeType(2);
-                    break;
-                case semiSpecific:
-                    cometParameters.setEnzymeType(1);
-                    break;
-                case specificNTermOnly:
-                    cometParameters.setEnzymeType(8);
-                    break;
-                case specificCTermOnly:
-                    cometParameters.setEnzymeType(9);
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+            if (digestionPreferences.getCleavagePreference() != null && digestionPreferences.getCleavagePreference() == DigestionPreferences.CleavagePreference.enzyme) {
+                Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used
+                String enzymeName = enzyme.getName();
+                Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
+                switch (specificity) {
+                    case specific:
+                        cometParameters.setEnzymeType(2);
+                        break;
+                    case semiSpecific:
+                        cometParameters.setEnzymeType(1);
+                        break;
+                    case specificNTermOnly:
+                        cometParameters.setEnzymeType(8);
+                        break;
+                    case specificCTermOnly:
+                        cometParameters.setEnzymeType(9);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
+                }
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {

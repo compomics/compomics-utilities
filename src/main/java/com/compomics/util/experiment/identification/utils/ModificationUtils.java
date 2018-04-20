@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.gui.protein.ModificationProfile;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -696,5 +698,51 @@ public class ModificationUtils {
         }
 
         return modNames;
+    }
+    
+    /**
+     * Returns the expected modifications for a given protein mass indexed by site.
+     * 
+     * @param modMass the modification mass
+     * @param modificationParameters the modification parameters
+     * @param peptide the peptide where to map the modification
+     * @param massTolerance the mass tolerance to use
+     * @param sequenceProvider a sequence provider
+     * @param modificationSequenceMatchingParameters the modification parameters
+     * 
+     * @return the expected modifications for a given protein mass indexed by site
+     */
+    public static HashMap<Integer, HashSet<String>> getExpectedModifications(double modMass, ModificationParameters modificationParameters, Peptide peptide, double massTolerance, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+        
+        HashMap<Integer, HashSet<String>> results = new HashMap<>(1);
+                
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        
+        for (String possibleModName : modificationParameters.getAllNotFixedModifications()) {
+            
+            Modification possibleModification = modificationFactory.getModification(possibleModName);
+            
+            if (Math.abs(modMass - possibleModification.getMass()) < massTolerance) {
+                
+                int[] possibleSites = getPossibleModificationSites(peptide, possibleModification, sequenceProvider, modificationSequenceMatchingParameters);
+                
+                for (int site : possibleSites) {
+                    
+                    HashSet<String> modifications = results.get(site);
+                    
+                    if (modifications == null) {
+                        
+                        modifications = new HashSet<>(1);
+                        results.put(site, modifications);
+                        
+                    }
+                    
+                    modifications.add(possibleModName);
+                    
+                }
+            }
+        }
+        
+        return results;
     }
 }

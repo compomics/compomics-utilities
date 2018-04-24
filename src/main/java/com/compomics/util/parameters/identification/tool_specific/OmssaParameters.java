@@ -976,7 +976,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      *
      * @return true if an PTM indexes map is set
      */
-    public boolean hasPtmIndexes() {
+    public boolean hasModificationIndexes() {
         return ptmIndexes != null && !ptmIndexes.isEmpty();
     }
 

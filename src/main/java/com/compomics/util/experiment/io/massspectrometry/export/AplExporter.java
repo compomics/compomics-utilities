@@ -87,7 +87,7 @@ public class AplExporter {
                 for (Double mass : masses) {
                     HashMap<String, Integer> titles = precursorMassToTitleMap.get(mass);
                     for (String title : titles.keySet()) {
-                        MSnSpectrum spectrum = (MSnSpectrum) spectrumFactory.getSpectrum(fileName, title);
+                        MSnSpectrum spectrum = (MSnSpectrum) spectrumFactory.getSpectrum(fileName, title, false);
                         writeSpectrum(bw, spectrum, fragmentationMethod, titles.get(title));
                     }
                 }

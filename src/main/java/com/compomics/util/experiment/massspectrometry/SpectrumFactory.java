@@ -738,7 +738,7 @@ public class SpectrumFactory {
 
         return currentPrecursor;
     }
-
+    
     /**
      * Returns the desired spectrum.
      *
@@ -753,6 +753,24 @@ public class SpectrumFactory {
      * occurred while parsing the mzML file
      */
     public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException, MzMLUnmarshallerException {
+        return getSpectrum(spectrumFile, spectrumTitle, true);
+    }
+
+    /**
+     * Returns the desired spectrum.
+     *
+     * @param spectrumFile name of the spectrum file
+     * @param spectrumTitle title of the spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     * 
+     * @return the desired spectrum
+     * 
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws MzMLUnmarshallerException exception thrown whenever an error
+     * occurred while parsing the mzML file
+     */
+    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle, boolean toCacheSpectrum) throws IOException, MzMLUnmarshallerException {
         HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
         if (fileMap != null) {
             Spectrum currentSpectrum = fileMap.get(spectrumTitle);
@@ -760,7 +778,7 @@ public class SpectrumFactory {
                 return currentSpectrum;
             }
         }
-        return getSpectrum(spectrumFile, spectrumTitle, 1);
+        return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 1);
     }
 
     /**
@@ -776,9 +794,27 @@ public class SpectrumFactory {
      * occurred while parsing the file
      */
     public Spectrum getSpectrum(String spectrumKey) throws IOException, MzMLUnmarshallerException {
+        return getSpectrum(spectrumKey, true);
+    }
+    
+    /**
+     * Returns the desired spectrum.
+     *
+     * @param spectrumKey key of the spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     * 
+     * @return the desired spectrum
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while parsing the file
+     * @throws MzMLUnmarshallerException exception thrown whenever an error
+     * occurred while parsing the file
+     */
+    public Spectrum getSpectrum(String spectrumKey, boolean toCacheSpectrum) throws IOException, MzMLUnmarshallerException {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
-        return getSpectrum(fileName, spectrumTitle);
+        return getSpectrum(fileName, spectrumTitle, toCacheSpectrum);
     }
 
     /**
@@ -802,6 +838,31 @@ public class SpectrumFactory {
      * occurred while parsing the file
      */
     private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, MzMLUnmarshallerException {
+        return getSpectrum(spectrumFile, spectrumTitle, true, waitingTime);
+    }
+    
+    /**
+     * Returns the desired spectrum. It can be that the IO is busy (especially
+     * when working on distant servers) thus returning an error. The method will
+     * then retry after waiting waitingTime milliseconds. The waitingTime is
+     * doubled for the next try. The method throws an exception after timeout
+     * (see timeOut attribute).
+     *
+     * @param spectrumFile the name of the file containing the spectrum
+     * @param spectrumTitle the title of the desired spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     * @param waitingTime the waiting time before retry
+     *
+     * @return the desired spectrum
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while parsing the file
+     * @throws MzMLUnmarshallerException exception thrown whenever an error
+     * occurred while parsing the file
+     */
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, boolean toCacheSpectrum, long waitingTime) throws IOException, MzMLUnmarshallerException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -828,7 +889,7 @@ public class SpectrumFactory {
                         wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
+                    return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
@@ -853,7 +914,7 @@ public class SpectrumFactory {
                         wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
+                    return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
@@ -934,12 +995,15 @@ public class SpectrumFactory {
                 fileMap.remove(tempTitle);
             }
         }
-        HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
-        if (fileMap == null) {
-            fileMap = new HashMap<String, Spectrum>();
-            currentSpectrumMap.put(spectrumFile, fileMap);
+        // @TODO: currentSpectrumMap is currently growing forever. Its growth should be limited in some way.
+        if (toCacheSpectrum){
+            HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
+            if (fileMap == null) {
+                fileMap = new HashMap<String, Spectrum>();
+                currentSpectrumMap.put(spectrumFile, fileMap);
+            }
+            fileMap.put(spectrumTitle, currentSpectrum);
         }
-        fileMap.put(spectrumTitle, currentSpectrum);
         String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
         loadedSpectra.add(spectrumKey);
         return currentSpectrum;

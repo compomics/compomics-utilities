@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.12.2</version>
+    <version>4.12.3</version>
     <name>computational omics utilities</name>
     <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
@@ -93,6 +93,15 @@
             <id>dominik</id>
             <email>dominik.kopczynski AT isas.de</email>
             <organization>Leibniz-Institut für Analytische Wissenschaften – ISAS – e.V.</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Carlos Horro</name>
+            <id>carlos</id>
+            <email>carlos.horro AT uib.no</email>
+            <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>

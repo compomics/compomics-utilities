@@ -209,13 +209,11 @@ public class SpectrumFactory {
             }
 
             if (mgfIndex == null) {
-                 if(fileName.endsWith(".mgf")){
+                 if(fileName.toLowerCase().endsWith(".mgf")){
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                }
-                else{
+                } else{
                     mgfIndex = MspReader.getIndexMap(spectrumFile, waitingHandler);
                 }
-                
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return; // return without saving the partial index

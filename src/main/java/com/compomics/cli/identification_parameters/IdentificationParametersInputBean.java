@@ -2329,6 +2329,7 @@ public class IdentificationParametersInputBean {
                     case specificNTermOnly:
                     case specificCTermOnly:
                         myriMatchParameters.setMinTerminiCleavages(1);
+                        break;
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }

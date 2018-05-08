@@ -558,7 +558,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
 
         isotopeCorrectionLabel.setText("Isotope Correction");
 
-        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "-1, 0, +1, +2, and +3", "-8, -4, 0, +4 and +8" }));
+        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "0, +1", "0, +1, +2", "0, +1, +2, +3", "-8, -4, 0, +4, +8", "-1, 0, +1, +2, +3" }));
 
         precursorMassLabel.setText("Precursor Mass (min - max)");
 

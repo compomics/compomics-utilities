@@ -629,6 +629,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TASKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TASKS.id);
+            if (!CommandParameter.isInteger(IdentificationParametersCLIParams.MSGF_TASKS.id, arg)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id, arg)) {
@@ -2263,6 +2269,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfPtmsPerPeptide(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_TASKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TASKS.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setNumberOfTasks(option);
         }
 
         ///////////////////////////////////

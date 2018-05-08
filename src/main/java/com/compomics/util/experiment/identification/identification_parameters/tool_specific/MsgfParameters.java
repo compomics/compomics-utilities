@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.identification_parameters.tool_specific;
 
-import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 
@@ -20,13 +19,13 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     private boolean searchDecoyDatabase = false;
     /**
-     * The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1: High-res LTQ,
-     * 2: TOF, 3: Q-Exactive.
+     * The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1:
+     * Orbitrap/FTICR, 2: TOF, 3: Q-Exactive.
      */
     private int instrumentID = 3;
     /**
      * The MS-GF+ fragmentation type ID: 0: As written in the spectrum or CID if
-     * no info (Default), 1: CID, 2: ETD, 3: HCD.
+     * no info (Default), 1: CID, 2: ETD, 3: HCD, 4: UVPD.
      */
     private int fragmentationType = 3;
     /**
@@ -52,13 +51,13 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     private boolean additionalOutput = false;
     /**
      * The lower isotope error range.
-     * 
+     *
      * @deprecated now a generic search setting
      */
     private Integer lowerIsotopeErrorRange = -1;
     /**
      * The upper isotope error range.
-     * 
+     *
      * @deprecated now a generic search setting
      */
     private Integer upperIsotopeErrorRange = 2;
@@ -71,6 +70,16 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      * The maximum number of PTMs per peptide.
      */
     private Integer numberOfPtmsPerPeptide = 2;
+    /**
+     * The number of tasks. Null if not set, meaning that it will be internally
+     * calculated based on the inputs. More tasks than threads will reduce the
+     * memory requirements of the search, but will be slower (how much depends
+     * on the inputs). If the spectrum file is particularly large, a larger
+     * number of tasks will decrease the possibility of out of memory errors. If
+     * the FASTA file being searched is larger than 10MB, more tasks will cause
+     * a noticeably longer search time.
+     */
+    private Integer numberOfTasks = null;
 
     /**
      * Constructor.
@@ -116,6 +125,11 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!numberOfPtmsPerPeptide.equals(msgfParameters.getNumberOfPtmsPerPeptide())) {
+                return false;
+            }
+            if (numberOfTasks != null && msgfParameters.getNumberOfTasks() == null
+                    || numberOfTasks == null && msgfParameters.getNumberOfTasks() != null
+                    || (numberOfTasks != null && msgfParameters.getNumberOfTasks() != null && !numberOfTasks.equals(msgfParameters.getNumberOfTasks()))) {
                 return false;
             }
             return true;
@@ -171,6 +185,9 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_NUMBER_PTMS=");
         output.append(numberOfPtmsPerPeptide);
+        output.append(newLine);
+        output.append("NUMBER_TASKS=");
+        output.append(numberOfTasks);
         output.append(newLine);
 
         return output.toString();
@@ -350,9 +367,27 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the maximum number of PTMs per peptide.
      *
-     * @param numberOfPtmsPerPeptide the numberOfPtmsPerPeptide to set
+     * @param numberOfPtmsPerPeptide the maximum number of PTMs per peptide
      */
     public void setNumberOfPtmsPerPeptide(Integer numberOfPtmsPerPeptide) {
         this.numberOfPtmsPerPeptide = numberOfPtmsPerPeptide;
+    }
+
+    /**
+     * Returns the number of tasks, null if not set.
+     *
+     * @return the number of tasks
+     */
+    public Integer getNumberOfTasks() {
+        return numberOfTasks;
+    }
+
+    /**
+     * Set the number of tasks. Set to null to leave the choice to MS-GF+.
+     *
+     * @param numberOfTasks the number of tasks
+     */
+    public void setNumberOfTasks(Integer numberOfTasks) {
+        this.numberOfTasks = numberOfTasks;
     }
 }

@@ -5343,6 +5343,14 @@
 <dd>
 <div class="block">Static method that gives all the isotopicElements from the isotopicElement.txt file</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getAllModifications-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getAllModifications(Peptide, ModificationParameters, SequenceProvider, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
+<dd>
+<div class="block">Returns a set of the names of all modifications found on a peptide.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getAllModifications-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getAllModifications(Tag, ModificationParameters, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
+<dd>
+<div class="block">Returns a set of the names of all modifications found on a tag.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/search/ModificationParameters.html#getAllModifications--">getAllModifications()</a></span> - Method in class com.compomics.util.parameters.identification.search.<a href="com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a></dt>
 <dd>
 <div class="block">Returns a list of all searched modifications.</div>
@@ -6296,13 +6304,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/ProjectParameters.html#getCreationTime--">getCreationTime()</a></span> - Method in class com.compomics.util.experiment.<a href="com/compomics/util/experiment/ProjectParameters.html" title="class in com.compomics.util.experiment">ProjectParameters</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getCtermAsString-int-java.lang.String:A...-">getCtermAsString(int, String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the  C-terminal annotation as string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getCTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getCTerminal(boolean, ModificationParameters, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
 <div class="block">Returns the C-terminal tag of this tag as a string for sequence display.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getCTerminalAsString-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getCTerminalAsString(ModificationParameters, SequenceProvider, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
-<dd>
-<div class="block">Returns the C-terminal of the peptide as a String.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getCTerminalGap--">getCTerminalGap()</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
@@ -7165,6 +7173,10 @@
 <dd>
 <div class="block">Returns the expected ions in a map indexed by the possible charges.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getExpectedModifications-double-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.biology.proteins.Peptide-double-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getExpectedModifications(double, ModificationParameters, Peptide, double, SequenceProvider, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
+<dd>
+<div class="block">Returns the expected modifications for a given protein mass indexed by site.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/pdbfinder/pdb/PdbParameter.html#getExperiment_type--">getExperiment_type()</a></span> - Method in class com.compomics.util.pdbfinder.pdb.<a href="com/compomics/util/pdbfinder/pdb/PdbParameter.html" title="class in com.compomics.util.pdbfinder.pdb">PdbParameter</a></dt>
 <dd>
 <div class="block">Returns the experiment type.</div>
@@ -7436,6 +7448,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/search/ModificationParameters.html#getFixedModifications--">getFixedModifications()</a></span> - Method in class com.compomics.util.parameters.identification.search.<a href="com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a></dt>
 <dd>
 <div class="block">Returns the searched fixed modifications names.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getFixedModificationsAsString-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getFixedModificationsAsString(Peptide, ModificationParameters, SequenceProvider, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the peptide modifications as a string.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/CommandLineParser.html#getFlags--">getFlags()</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/CommandLineParser.html" title="class in com.compomics.util.general">CommandLineParser</a></dt>
 <dd>
@@ -10190,13 +10206,13 @@
 <dd>
 <div class="block">Returns the number of targeted amino acids at the given index.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getNtermAsString-java.lang.String:A...-">getNtermAsString(String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the N-terminal annotation as string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getNTerminal-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getNTerminal(boolean, ModificationParameters, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
 <div class="block">Returns the N-terminal tag of this tag as a string for sequence display.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#getNTerminalAsString-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getNTerminalAsString(ModificationParameters, SequenceProvider, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
-<dd>
-<div class="block">Returns the N-terminal of the peptide as a String.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getNTerminalGap--">getNTerminalGap()</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
@@ -11112,7 +11128,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getPossibleModificationSites-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.biology.modifications.Modification-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getPossibleModificationSites(Peptide, Modification, SequenceProvider, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
 <dd>
-<div class="block">Returns an array of the possible modification sites for the given modification on the given peptide.</div>
+<div class="block">Returns an array of the possible modification sites for the given
+ modification on the given peptide.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getPossibleModificationSites-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence-boolean-boolean-com.compomics.util.experiment.biology.modifications.Modification-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getPossibleModificationSites(AminoAcidSequence, boolean, boolean, Modification, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
 <dd>
@@ -13082,12 +13099,6 @@
  modification sites color coded or with Modification tags, e.g,
  &lt;mox&gt;.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getTaggedModifiedSequence(ModificationParameters, boolean, boolean, boolean, boolean, SequenceMatchingParameters)</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
-<dd>
-<div class="block">Returns the modified sequence as an tagged string with potential
- modification sites color coded or with modification tags, e.g,
- &lt;mox&gt;.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html#getTaggedModifiedSequence-com.compomics.util.parameters.identification.search.ModificationParameters-boolean-boolean-boolean-boolean-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.util.HashSet-">getTaggedModifiedSequence(ModificationParameters, boolean, boolean, boolean, boolean, SequenceMatchingParameters, HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.amino_acid_tags.<a href="com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a></dt>
 <dd>
 <div class="block">Returns the modified sequence as an tagged string with potential
@@ -13105,7 +13116,7 @@
 <div class="block">Returns the modified sequence as an tagged string with potential
  modification sites color coded or with PTM tags, e.g, &lt;mox&gt;.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getTaggedModifiedSequence-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-java.lang.String-com.compomics.util.parameters.identification.search.ModificationParameters-java.lang.String:A-java.lang.String:A-java.lang.String:A-java.lang.String:A-boolean-boolean-boolean-">getTaggedModifiedSequence(Peptide, String, String, ModificationParameters, String[], String[], String[], String[], boolean, boolean, boolean)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getTaggedModifiedSequence-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-java.lang.String:A-java.lang.String:A-java.lang.String:A-java.lang.String:A-boolean-boolean-boolean-">getTaggedModifiedSequence(Peptide, ModificationParameters, String[], String[], String[], String[], boolean, boolean, boolean)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
 <div class="block">Returns the modified sequence as an tagged string with potential
  modification sites color coded or with Modification tags, e.g,
@@ -13702,7 +13713,7 @@
 <div class="block">Returns the expected variable modification names included in this
  profile.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getVariablePeptideModificationsAsString-com.compomics.util.experiment.biology.proteins.Peptide-boolean-">getVariablePeptideModificationsAsString(Peptide, boolean)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getVariableModificationsAsString-com.compomics.util.experiment.biology.proteins.Peptide-">getVariableModificationsAsString(Peptide)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
 <div class="block">Returns the peptide modifications as a string.</div>
 </dd>
@@ -14038,6 +14049,14 @@
 <dd>
 <div class="block">Returns a hash code value for the object.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html#hasModificationIndexes--">hasModificationIndexes()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">AndromedaParameters</a></dt>
+<dd>
+<div class="block">Indicates whether the modification profile has PTM indexes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html#hasModificationIndexes--">hasModificationIndexes()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">OmssaParameters</a></dt>
+<dd>
+<div class="block">Indicates whether the modification profile has PTM indexes.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/Ion.html#hasNeutralLosses--">hasNeutralLosses()</a></span> - Method in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/Ion.html" title="class in com.compomics.util.experiment.biology.ions">Ion</a></dt>
 <dd>
 <div class="block">Indicates whether the ion has a neutral loss.</div>
@@ -14074,14 +14093,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#hasPsmNormalisationFactors--">hasPsmNormalisationFactors()</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
 <div class="block">Indicates whether the PSM normalization factors are set.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html#hasPtmIndexes--">hasPtmIndexes()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">AndromedaParameters</a></dt>
-<dd>
-<div class="block">Indicates whether the modification profile has PTM indexes.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html#hasPtmIndexes--">hasPtmIndexes()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">OmssaParameters</a></dt>
-<dd>
-<div class="block">Indicates whether the modification profile has PTM indexes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html#hasRTWindow--">hasRTWindow()</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Precursor</a></dt>
 <dd>

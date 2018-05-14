@@ -1,15 +1,12 @@
 package com.compomics.util.experiment.io.identification;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
 /**
  * This factory will provide the appropriate identification file reader for each

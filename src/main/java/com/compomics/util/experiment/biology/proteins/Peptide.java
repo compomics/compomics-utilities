@@ -65,9 +65,9 @@ public class Peptide extends ExperimentObject {
      */
     private ModificationMatch[] variableModifications = null;
     /**
-     * Convenience array for no modifications
+     * Convenience array for no modifications.
      */
-    private static final ModificationMatch[] noMod = new ModificationMatch[0];
+    private static final ModificationMatch[] NO_MOD = new ModificationMatch[0];
     /**
      * The variants observed when mapping this peptide to the database. Peptide
      * variant matches are indexed by protein and by peptide start.
@@ -188,7 +188,7 @@ public class Peptide extends ExperimentObject {
                     .filter((modificationName) -> (modificationName.contains(MODIFICATION_SEPARATOR) || modificationName.contains(MODIFICATION_LOCALIZATION_SEPARATOR)))
                     .toArray(String[]::new);
 
-            if (conflictingPtms.length == 0) {
+            if (conflictingPtms.length > 0) {
 
                 String conflictingPtmsString = Arrays.stream(conflictingPtms)
                         .collect(Collectors.joining(", "));
@@ -338,7 +338,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return variableModifications == null ? noMod : variableModifications;
+        return variableModifications == null ? NO_MOD : variableModifications;
     }
 
     /**

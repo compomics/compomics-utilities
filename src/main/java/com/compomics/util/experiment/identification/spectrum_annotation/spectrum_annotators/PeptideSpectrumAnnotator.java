@@ -267,7 +267,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 .filter(entry2 -> entry1.getValue().contains(entry2.getKey()))
                 .flatMap(entry2 -> entry2.getValue().stream())
                 .filter(ion -> lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion))
-                .flatMap(ion -> getPossibleCharges(ion.getType()).stream()
+                .flatMap(ion -> getPossibleCharges(ion.getType(), specificAnnotationSettings).stream()
                 .filter(charge -> chargeValidated(ion, charge, precursorCharge))
                 .map(charge -> matchInSpectrum(ion, charge))
                 .filter(ionMatch -> ionMatch != null)));
@@ -277,10 +277,11 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Returns the possible charges for the given ion type.
      *
      * @param ionType the ion type
+     * @param specificAnnotationSettings the specific annotation settings
      *
      * @return the possible charges for the given ion type
      */
-    private ArrayList<Integer> getPossibleCharges(Ion.IonType ionType) {
+    private ArrayList<Integer> getPossibleCharges(Ion.IonType ionType, SpecificAnnotationParameters specificAnnotationSettings) {
         return (ionType == Ion.IonType.PRECURSOR_ION) ? defaultPrecursorCharges : specificAnnotationSettings.getSelectedCharges();
     }
 
@@ -420,7 +421,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
         String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
-        for (int i = 0; i < fixedModifications.length + 1; i++) {
+        for (int i = 0; i < fixedModifications.length; i++) {
 
             String modName = fixedModifications[i];
 

@@ -83,6 +83,12 @@
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification">com.compomics.util.experiment.identification</a></td>
+<td class="colLast">
+<div class="block">Experiment classes related to identifications.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches</a></td>
 <td class="colLast">
 <div class="block">Experiment classes related to matches.</div>
@@ -93,6 +99,94 @@
 </li>
 <li class="blockList">
 <ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.experiment.identification">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a> in <a href="../../../../../../com/compomics/util/experiment/identification/package-summary.html">com.compomics.util.experiment.identification</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../com/compomics/util/experiment/identification/package-summary.html">com.compomics.util.experiment.identification</a> with parameters of type <a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getAmbiguousModificationSiteNumber-com.compomics.util.experiment.identification.IdentificationMatch-">getAmbiguousModificationSiteNumber</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;identificationMatch)</code>
+<div class="block">Returns a summary of the number of modifications present on the sequence
+ ambiguously assigned to an amino acid grouped by representative site
+ followed by secondary ambiguous sites.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getAmbiguousModificationSiteNumber-com.compomics.util.experiment.identification.IdentificationMatch-java.util.ArrayList-">getAmbiguousModificationSiteNumber</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;match,
+                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;targetedModifications)</code>
+<div class="block">Returns a summary of the number of modifications present on the sequence
+ ambiguously assigned to an amino acid grouped by representative site
+ followed by secondary ambiguous sites.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getAmbiguousModificationSites-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-">getAmbiguousModificationSites</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;identificationMatch,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence)</code>
+<div class="block">Returns a list of the modifications present on the sequence ambiguously
+ assigned to an amino acid grouped by representative site followed by
+ secondary ambiguous sites.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getAmbiguousModificationSites-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-java.util.ArrayList-">getAmbiguousModificationSites</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;match,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;targetedModifications)</code>
+<div class="block">Returns a list of the modifications present on the sequence ambiguously
+ assigned to an amino acid grouped by representative site followed by
+ secondary ambiguous sites.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getConfidentModificationSites-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-">getConfidentModificationSites</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;identificationMatch,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence)</code>
+<div class="block">Returns a summary of all modifications present on the sequence
+ confidently assigned to an amino acid.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getConfidentModificationSites-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-java.util.ArrayList-">getConfidentModificationSites</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;match,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence,
+                             <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;targetedModifications)</code>
+<div class="block">Returns a summary of the modifications present on the peptide sequence
+ confidently assigned to an amino acid with focus on given list of
+ modifications.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getConfidentModificationSitesNumber-com.compomics.util.experiment.identification.IdentificationMatch-">getConfidentModificationSitesNumber</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;identificationMatch)</code>
+<div class="block">Returns the number of confidently localized variable modifications.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getConfidentModificationSitesNumber-com.compomics.util.experiment.identification.IdentificationMatch-java.util.ArrayList-">getConfidentModificationSitesNumber</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;match,
+                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;targetedModifications)</code>
+<div class="block">Returns the number of confidently localized variable modifications.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getModifiedSequence-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-">getModifiedSequence</a></span>(<a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.html" title="class in com.compomics.util.experiment.identification">IdentificationMatch</a>&nbsp;identificationMatch,
+                   <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sequence)</code>
+<div class="block">Returns the match sequence annotated with modifications.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.compomics.util.experiment.identification.matches">
 <!--   -->
 </a>

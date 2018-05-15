@@ -89,6 +89,12 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.filtering">com.compomics.util.experiment.identification.filtering</a></td>
+<td class="colLast">
+<div class="block">Classes for the filtering of identification objects.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.gui.genes">com.compomics.util.gui.genes</a></td>
 <td class="colLast">
 <div class="block">Dialogs for the handling of genes.</div>
@@ -119,6 +125,100 @@
            <a href="../../../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns the gene maps for the given proteins.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.filtering">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/filtering/package-summary.html">com.compomics.util.experiment.identification.filtering</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/filtering/package-summary.html">com.compomics.util.experiment.identification.filtering</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">MatchFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/MatchFilter.html#isValidated-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(long&nbsp;matchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>
+<div class="block">Tests whether a match is validated by this filter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">PsmFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/PsmFilter.html#isValidated-java.lang.String-com.compomics.util.experiment.filtering.FilterItemComparator-java.lang.Object-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;itemName,
+           <a href="../../../../../../../com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a>&nbsp;filterItemComparator,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value,
+           long&nbsp;matchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">ProteinFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/ProteinFilter.html#isValidated-java.lang.String-com.compomics.util.experiment.filtering.FilterItemComparator-java.lang.Object-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;itemName,
+           <a href="../../../../../../../com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a>&nbsp;filterItemComparator,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value,
+           long&nbsp;matchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">PeptideFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/PeptideFilter.html#isValidated-java.lang.String-com.compomics.util.experiment.filtering.FilterItemComparator-java.lang.Object-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;itemName,
+           <a href="../../../../../../../com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a>&nbsp;filterItemComparator,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value,
+           long&nbsp;matchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>abstract boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">MatchFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/MatchFilter.html#isValidated-java.lang.String-com.compomics.util.experiment.filtering.FilterItemComparator-java.lang.Object-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;itemName,
+           <a href="../../../../../../../com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a>&nbsp;filterItemComparator,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value,
+           long&nbsp;matchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>
+<div class="block">Indicates whether the match designated by the match key validates the
+ given item using the given comparator and value threshold.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">AssumptionFilter.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/filtering/AssumptionFilter.html#isValidated-java.lang.String-com.compomics.util.experiment.filtering.FilterItemComparator-java.lang.Object-long-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.biology.genes.GeneMaps-com.compomics.util.experiment.identification.IdentificationFeaturesGenerator-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-">isValidated</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;itemName,
+           <a href="../../../../../../../com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a>&nbsp;filterItemComparator,
+           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value,
+           long&nbsp;spectrumMatchKey,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a>&nbsp;identification,
+           <a href="../../../../../../../com/compomics/util/experiment/biology/genes/GeneMaps.html" title="class in com.compomics.util.experiment.biology.genes">GeneMaps</a>&nbsp;geneMaps,
+           <a href="../../../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification">IdentificationFeaturesGenerator</a>&nbsp;identificationFeaturesGenerator,
+           <a href="../../../../../../../com/compomics/util/parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+           <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a>&nbsp;proteinDetailsProvider)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

@@ -42,6 +42,7 @@ com.compomics.util.experiment.filtering
 com.compomics.util.experiment.identification
 com.compomics.util.experiment.identification.amino_acid_tags
 com.compomics.util.experiment.identification.filtering
+com.compomics.util.experiment.identification.filtering.items
 com.compomics.util.experiment.identification.identification_parameters
 com.compomics.util.experiment.identification.matches
 com.compomics.util.experiment.identification.matches_iterators
@@ -53,6 +54,7 @@ com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip
 com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features
 com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic
 com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_generation
+com.compomics.util.experiment.identification.peptide_shaker
 com.compomics.util.experiment.identification.protein_inference
 com.compomics.util.experiment.identification.protein_inference.fm_index
 com.compomics.util.experiment.identification.protein_sequences
@@ -65,6 +67,7 @@ com.compomics.util.experiment.identification.spectrum_annotation.simple_annotato
 com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators
 com.compomics.util.experiment.identification.spectrum_assumptions
 com.compomics.util.experiment.identification.utils
+com.compomics.util.experiment.identification.validation
 com.compomics.util.experiment.io.biology.protein
 com.compomics.util.experiment.io.biology.protein.converters
 com.compomics.util.experiment.io.biology.protein.iterators
@@ -97,7 +100,8 @@ com.compomics.util.gui.error_handlers.notification
 com.compomics.util.gui.events
 com.compomics.util.gui.export.graphics
 com.compomics.util.gui.export.report
-com.compomics.util.gui.filehandling
+com.compomics.util.gui.file_handling
+com.compomics.util.gui.filtering
 com.compomics.util.gui.genes
 com.compomics.util.gui.interfaces
 com.compomics.util.gui.isotopic_calculator
@@ -145,10 +149,13 @@ com.compomics.util.math.statistics.linear_regression.regressions
 com.compomics.util.memory
 com.compomics.util.messages
 com.compomics.util.nucleotide
+com.compomics.util.parameters
 com.compomics.util.parameters.identification
 com.compomics.util.parameters.identification.advanced
 com.compomics.util.parameters.identification.search
 com.compomics.util.parameters.identification.tool_specific
+com.compomics.util.parameters.quantification.spectrum_counting
+com.compomics.util.parameters.searchgui
 com.compomics.util.parameters.tools
 com.compomics.util.pdbfinder
 com.compomics.util.pdbfinder.das.readers

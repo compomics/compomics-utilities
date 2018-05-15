@@ -1,10 +1,10 @@
 package com.compomics.util.parameters.quantification.spectrum_counting;
 
+import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import com.compomics.util.experiment.quantification.spectrumcounting.SpectrumCountingMethod;
 import com.compomics.util.experiment.units.MetricsPrefix;
 import com.compomics.util.experiment.units.StandardUnit;
 import com.compomics.util.experiment.units.UnitOfMeasurement;
-import eu.isas.peptideshaker.scoring.MatchValidationLevel;
 import java.io.Serializable;
 
 /**

@@ -2,7 +2,7 @@ package com.compomics.software.autoupdater;
 
 import com.compomics.software.settings.UtilitiesPathParameters;
 import com.compomics.util.Util;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
 import java.io.File;

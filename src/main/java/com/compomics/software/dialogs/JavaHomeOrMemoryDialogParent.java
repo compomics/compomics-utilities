@@ -1,6 +1,6 @@
 package com.compomics.software.dialogs;
 
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 
 /**
  * Interface for parents of JavaMemoryDialog and JavaHomeDialog.

@@ -4,7 +4,7 @@ import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JFrame;

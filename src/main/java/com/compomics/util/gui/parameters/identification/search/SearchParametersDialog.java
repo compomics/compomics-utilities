@@ -22,7 +22,7 @@ import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters.CleavageParameter;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
 import com.compomics.util.io.file.LastSelectedFolder;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;

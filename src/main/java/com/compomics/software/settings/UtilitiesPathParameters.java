@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.genes.ProteinGeneDetailsProvider;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.pride.PrideObjectsFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

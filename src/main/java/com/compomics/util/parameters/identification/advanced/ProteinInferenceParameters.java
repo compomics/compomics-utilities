@@ -1,7 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -17,9 +15,9 @@ public class ProteinInferenceParameters implements Serializable {
      */
     static final long serialVersionUID = 447785006299636157L;
     /**
-     * The parameters used to parse the fasta file.
+     * Refine based on terminal and pattern modifications.
      */
-    private FastaParameters fastaParameters = null;
+    private boolean modificationRefinement = true;
     /**
      * Simplify protein groups.
      */
@@ -207,20 +205,22 @@ public class ProteinInferenceParameters implements Serializable {
     }
 
     /**
-     * Returns the parameters to use to parse the fasta file.
+     * Returns whether the protein mapping should be refined based on terminal and pattern modifications.
      * 
-     * @return the parameters to use to parse the fasta file
+     * @return a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
-    public FastaParameters getFastaParameters() {
-        return fastaParameters;
+    public boolean isModificationRefinement() {
+        return modificationRefinement;
     }
 
     /**
-     * Sets the parameters to use to parse the fasta file.
+     * Sets whether the protein mapping should be refined based on terminal and pattern modifications.
      * 
-     * @param fastaParameters the parameters to use to parse the fasta file
+     * @param modificationRefinement a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
-    public void setFastaParameters(FastaParameters fastaParameters) {
-        this.fastaParameters = fastaParameters;
+    public void setModificationRefinement(boolean modificationRefinement) {
+        this.modificationRefinement = modificationRefinement;
     }
+    
+    
 }

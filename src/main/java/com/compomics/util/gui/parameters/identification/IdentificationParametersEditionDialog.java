@@ -993,10 +993,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void proteinInferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinInferenceButtonActionPerformed
-        ProteinInferenceParametersDialog proteinInferenceSettingsDialog = new ProteinInferenceParametersDialog(this, parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, lastSelectedFolder, editable);
+        
+        ProteinInferenceParametersDialog proteinInferenceSettingsDialog = new ProteinInferenceParametersDialog(this, parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, editable);
+        
         if (!proteinInferenceSettingsDialog.isCanceled()) {
+        
             proteinInferencePreferences = proteinInferenceSettingsDialog.getProteinInferencePreferences();
             updateGUI();
+        
         }
     }//GEN-LAST:event_proteinInferenceButtonActionPerformed
 

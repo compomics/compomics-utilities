@@ -1,7 +1,12 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
 import com.compomics.util.experiment.filtering.Filter;
+import com.compomics.util.experiment.identification.filtering.MatchFilter;
+import com.compomics.util.experiment.identification.filtering.PeptideFilter;
+import com.compomics.util.experiment.identification.filtering.ProteinFilter;
+import com.compomics.util.experiment.identification.filtering.PsmFilter;
 import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.gui.filtering.FilterDialog;
 import com.compomics.util.parameters.identification.advanced.ValidationQcParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.awt.Dialog;
@@ -21,10 +26,6 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * The parent frame.
      */
     private java.awt.Frame parentFrame;
-    /**
-     * A parent handling the edition of filters.
-     */
-    private ValidationQCParametersDialogParent validationQCPreferencesDialogParent;
     /**
      * List of the PSM quality filters.
      */
@@ -49,23 +50,27 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
+    /**
+     * The modifications that can be used for filtering.
+     */
+    private ArrayList<String> allModifications = null;
 
     /**
      * Creates a new ValidationQCPreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
-     * @param validationQCPreferencesDialogParent a parent handling the edition
-     * of filters
      * @param validationQCPreferences the validation QC preferences
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param allModifications all the modifications that can be used for filtering
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public ValidationQCParametersDialog(java.awt.Frame parentFrame, ValidationQCParametersDialogParent validationQCPreferencesDialogParent, ValidationQcParameters validationQCPreferences, boolean editable) {
+    public ValidationQCParametersDialog(java.awt.Frame parentFrame, ValidationQcParameters validationQCPreferences, ArrayList<String> allModifications, boolean editable) {
         super(parentFrame, true);
         initComponents();
 
         this.parentFrame = parentFrame;
-        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
+        this.allModifications = allModifications;
 
         ArrayList<Filter> originalPsmFilters = validationQCPreferences.getPsmFilters();
         if (originalPsmFilters != null) {
@@ -105,18 +110,18 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      *
      * @param owner the dialog owner
      * @param parentFrame the parent frame
-     * @param validationQCPreferencesDialogParent a parent handling the edition
-     * of filters
      * @param validationQCPreferences the validation QC preferences
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param allModifications all the modifications that can be used for filtering
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public ValidationQCParametersDialog(Dialog owner, java.awt.Frame parentFrame, ValidationQCParametersDialogParent validationQCPreferencesDialogParent, ValidationQcParameters validationQCPreferences, boolean editable) {
+    public ValidationQCParametersDialog(Dialog owner, java.awt.Frame parentFrame, ValidationQcParameters validationQCPreferences, ArrayList<String> allModifications, boolean editable) {
         super(owner, true);
         initComponents();
 
         this.parentFrame = parentFrame;
-        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
+        this.allModifications = allModifications;
 
         ArrayList<Filter> originalPsmFilters = validationQCPreferences.getPsmFilters();
         if (originalPsmFilters != null) {
@@ -157,7 +162,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * @param validationQCPreferences the validation QC preferences
      */
     private void setUpGUI(ValidationQcParameters validationQCPreferences) {
-        
+
         dbCheck.setSelected(validationQCPreferences.isDbSize());
         nTargetCheck.setSelected(validationQCPreferences.isFirstDecoy());
         confidenceCheck.setSelected(validationQCPreferences.getConfidenceMargin() != 0.0);
@@ -174,7 +179,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
         proteinTable.getTableHeader().setReorderingAllowed(false);
         peptideTable.getTableHeader().setReorderingAllowed(false);
         psmTable.getTableHeader().setReorderingAllowed(false);
-        
+
         dbCheck.setEnabled(editable);
         nTargetCheck.setEnabled(editable);
         confidenceCheck.setEnabled(editable);
@@ -593,7 +598,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addPsmFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPsmFilterMenuItemActionPerformed
-        Filter newFilter = validationQCPreferencesDialogParent.createPsmFilter();
+        Filter newFilter = createPsmFilter();
         if (newFilter != null) {
             psmFilters.add(newFilter);
             ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
@@ -609,7 +614,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
     private void editPsmFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPsmFilterMenuItemActionPerformed
         int row = psmTable.getSelectedRow();
         Filter selectedFilter = psmFilters.get(row);
-        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = editFilter(selectedFilter);
         if (editedFilter != null) {
             psmFilters.set(row, editedFilter);
             ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
@@ -643,7 +648,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addPeptideFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPeptideFilterMenuItemActionPerformed
-        Filter newFilter = validationQCPreferencesDialogParent.createPeptideFilter();
+        Filter newFilter = createPeptideFilter();
         if (newFilter != null) {
             peptideFilters.add(newFilter);
             ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
@@ -659,7 +664,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
     private void editPeptideFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPeptideFilterMenuItemActionPerformed
         int row = peptideTable.getSelectedRow();
         Filter selectedFilter = peptideFilters.get(row);
-        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = editFilter(selectedFilter);
         if (editedFilter != null) {
             peptideFilters.set(row, editedFilter);
             ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
@@ -673,7 +678,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addProteinFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProteinFilterMenuItemActionPerformed
-        Filter newFilter = validationQCPreferencesDialogParent.createProteinFilter();
+        Filter newFilter = createProteinFilter();
         if (newFilter != null) {
             proteinFilters.add(newFilter);
             ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
@@ -689,7 +694,7 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
     private void editProteinFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProteinFilterMenuItemActionPerformed
         int row = proteinTable.getSelectedRow();
         Filter selectedFilter = proteinFilters.get(row);
-        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = editFilter(selectedFilter);
         if (editedFilter != null) {
             proteinFilters.set(row, editedFilter);
             ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
@@ -811,8 +816,8 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
 
     /**
      * Set user input to true.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void dbCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbCheckActionPerformed
         userInput = true;
@@ -820,8 +825,8 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
 
     /**
      * Set user input to true.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void nTargetCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nTargetCheckActionPerformed
         userInput = true;
@@ -829,8 +834,8 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
 
     /**
      * Set user input to true.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void confidenceCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confidenceCheckActionPerformed
         userInput = true;
@@ -862,9 +867,9 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/QualityControlPreferences.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-            "Quality Control - Help");
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                "Quality Control - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
 
@@ -930,6 +935,60 @@ public class ValidationQCParametersDialog extends javax.swing.JDialog {
         validationQCPreferences.setPeptideFilters(peptideFilters);
         validationQCPreferences.setProteinFilters(proteinFilters);
         return validationQCPreferences;
+    }
+
+    /**
+     * Creates a new PSM filter.
+     *
+     * @return the new filter, null if canceled
+     */
+    public Filter createPsmFilter() {
+        FilterDialog filterDialog = new FilterDialog(this, new PsmFilter(), allModifications);
+        if (!filterDialog.isCanceled()) {
+            return filterDialog.getFilter();
+        }
+        return null;
+    }
+
+    /**
+     * Creates a new peptide filter.
+     *
+     * @return the new filter, null if canceled
+     */
+    public Filter createPeptideFilter() {
+        FilterDialog filterDialog = new FilterDialog(this, new PeptideFilter(), allModifications);
+        if (!filterDialog.isCanceled()) {
+            return filterDialog.getFilter();
+        }
+        return null;
+    }
+
+    /**
+     * Creates a new protein filter.
+     *
+     * @return the new filter, null if canceled
+     */
+    public Filter createProteinFilter() {
+        FilterDialog filterDialog = new FilterDialog(this, new ProteinFilter(), allModifications);
+        if (!filterDialog.isCanceled()) {
+            return filterDialog.getFilter();
+        }
+        return null;
+    }
+
+    /**
+     * Edits the given filter.
+     *
+     * @param filter the filter to edit
+     *
+     * @return the updated filter, null if canceled
+     */
+    public Filter editFilter(Filter filter) {
+        FilterDialog filterDialog = new FilterDialog(this, (MatchFilter) filter, allModifications);
+        if (!filterDialog.isCanceled()) {
+            return filterDialog.getFilter();
+        }
+        return null;
     }
 
     /**

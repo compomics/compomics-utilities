@@ -31,6 +31,26 @@ public class StringListChooser extends ListChooser {
         setVisible(true);
     }
 
+    /**
+     * Constructor. Null values will be replaced by default.
+     *
+     * @param parent the parent frame
+     * @param items list of items for the user to select
+     * @param dialogTitle the title to give to the dialog.
+     * @param panelTitle the title to give to the panel containing the table.
+     * @param instructionsLabel the instructions label on top of the table.
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items.
+     */
+    public StringListChooser(javax.swing.JDialog parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+        super(parent, items, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("No item to select.");
+        }
+        setUpTable();
+        setVisible(true);
+    }
+
     @Override
     protected void formatTable() {
         TableColumnModel tableColumnModel = getTable().getColumnModel();

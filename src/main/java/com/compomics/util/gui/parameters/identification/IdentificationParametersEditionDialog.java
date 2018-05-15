@@ -35,7 +35,6 @@ import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import com.compomics.util.gui.parameters.identification.advanced.ValidationQCParametersDialogParent;
 import java.util.HashSet;
 
 /**
@@ -115,10 +114,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     private FractionParameters fractionSettings;
     /**
-     * A parent handling the edition of QC filters.
-     */
-    private ValidationQCParametersDialogParent validationQCPreferencesDialogParent;
-    /**
      * If yes, the advanced settings are shown.
      */
     private boolean showAdvancedSettings = false;
@@ -136,13 +131,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
-     * @param validationQCPreferencesDialogParent a parent handling the edition
-     * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
-            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
-            ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -154,7 +146,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
-        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
 
         initComponents();
@@ -180,13 +171,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
-     * @param validationQCPreferencesDialogParent a parent handling the edition
-     * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
-            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
-            ValidationQCParametersDialogParent validationQCPreferencesDialogParent, boolean editable) {
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(owner, true);
 
         this.parentFrame = parentFrame;
@@ -198,7 +186,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
-        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
         this.editable = editable;
 
         initComponents();
@@ -1035,7 +1022,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQcParameters validationQCPreferences = idValidationPreferences.getValidationQCParameters();
-        ValidationQCParametersDialog validationQCPreferencesDialog = new ValidationQCParametersDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
+        ValidationQCParametersDialog validationQCPreferencesDialog = new ValidationQCParametersDialog(this, parentFrame, validationQCPreferences, searchParameters.getModificationParameters().getAllModifications(), editable);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences = new IdMatchValidationParameters(idValidationPreferences);
             idValidationPreferences.setValidationQCParameters(validationQCPreferencesDialog.getValidationQCParameters());

@@ -54,6 +54,33 @@ public class ModificationChooser extends ListChooser {
     }
 
     /**
+     * Constructor. Null values will be replaced by default.
+     *
+     * @param parent the parent frame
+     * @param modifications list of the names of the modifications for the user to select
+     * @param dialogTitle the title to give to the dialog
+     * @param panelTitle the title to give to the panel containing the table
+     * @param instructionsLabel the instructions label on top of the table
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items
+     */
+    public ModificationChooser(javax.swing.JDialog parent, ArrayList<String> modifications, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+        
+        super(parent, modifications, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
+        this.modificationsList = modifications;
+        
+        if (modifications == null || modifications.isEmpty()) {
+        
+            throw new IllegalArgumentException("No item to select.");
+        
+        }
+        
+        setUpTable();
+        setVisible(true);
+    
+    }
+
+    /**
      * Constructor with default values.
      *
      * @param parent the parent frame
@@ -62,6 +89,18 @@ public class ModificationChooser extends ListChooser {
      * allowed to select multiple items
      */
     public ModificationChooser(java.awt.Frame parent, ArrayList<String> modifications, boolean multipleSelection) {
+        this(parent, modifications, "Modification Selection", "Searched Modifications", "Please select a modification from the list of possibilities.", multipleSelection);
+    }
+
+    /**
+     * Constructor with default values.
+     *
+     * @param parent the parent frame
+     * @param modifications list of the names of the modifications for the user to select
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items
+     */
+    public ModificationChooser(javax.swing.JDialog parent, ArrayList<String> modifications, boolean multipleSelection) {
         this(parent, modifications, "Modification Selection", "Searched Modifications", "Please select a modification from the list of possibilities.", multipleSelection);
     }
 

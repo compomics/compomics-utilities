@@ -57,6 +57,28 @@ public abstract class ListChooser extends javax.swing.JDialog {
     /**
      * Constructor. Null values will be replaced by default.
      *
+     * @param parent the parent frame
+     * @param items list of items for the user to select
+     * @param dialogTitle the title to give to the dialog.
+     * @param panelTitle the title to give to the panel containing the table.
+     * @param instructionsLabel the instructions label on top of the table.
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items.
+     */
+    protected ListChooser(javax.swing.JDialog parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+        super(parent, true);
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("No item to select.");
+        }
+        initComponents();
+        this.items = items;
+        setUpGui(dialogTitle, panelTitle, instructionsLabel, multipleSelection);
+        setLocationRelativeTo(parent);
+    }
+
+    /**
+     * Constructor. Null values will be replaced by default.
+     *
      * @param dialogTitle the title to give to the dialog.
      * @param panelTitle the title to give to the panel containing the table.
      * @param instructionsLabel the instructions label on top of the table.

@@ -4,7 +4,7 @@ import com.compomics.util.experiment.identification.modification.ModificationLoc
 import java.io.Serializable;
 
 /**
- * This class contains the PTM localization preferences.
+ * This class contains the modification localization preferences.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -37,10 +37,10 @@ public class ModificationLocalizationParameters implements Serializable {
      */
     private SequenceMatchingParameters sequenceMatchingParameters;
     /**
-     * Boolean indicating whether the non confidently localized PTMs should be
+     * Boolean indicating whether the non confidently localized modificatoin should be
      * aligned on the confident sites.
      */
-    private boolean alignNonConfidentPTMs = true;
+    private boolean alignNonConfidentModifications = true;
 
     /**
      * Constructor.
@@ -53,9 +53,9 @@ public class ModificationLocalizationParameters implements Serializable {
     }
 
     /**
-     * Indicates whether a probabilistic PTM score is required.
+     * Indicates whether a probabilistic modification score is required.
      *
-     * @return a boolean indicating whether a probabilistic PTM score is
+     * @return a boolean indicating whether a probabilistic modification score is
      * required
      */
     public boolean isProbabilisticScoreCalculation() {
@@ -65,10 +65,10 @@ public class ModificationLocalizationParameters implements Serializable {
     }
 
     /**
-     * Sets whether a probabilistic PTM score is required.
+     * Sets whether a probabilistic modification score is required.
      *
      * @param probabilisticScoreCalculation a boolean indicating whether a
-     * probabilistic PTM score is required
+     * probabilistic modification score is required
      */
     public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
         
@@ -149,10 +149,10 @@ public class ModificationLocalizationParameters implements Serializable {
     }
 
     /**
-     * Returns the sequence matching preferences to use when mapping PTMs on
+     * Returns the sequence matching preferences to use when mapping modifications on
      * amino acid sequences.
      *
-     * @return the sequence matching preferences to use when mapping PTMs on
+     * @return the sequence matching preferences to use when mapping modifications on
      * amino acid sequences
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
@@ -162,11 +162,11 @@ public class ModificationLocalizationParameters implements Serializable {
     }
 
     /**
-     * Sets the sequence matching preferences to use when mapping PTMs on amino
+     * Sets the sequence matching preferences to use when mapping modifications on amino
      * acid sequences.
      *
      * @param sequenceMatchingParameters the sequence matching preferences to
-     * use when mapping PTMs on amino acid sequences
+     * use when mapping modifications on amino acid sequences
      */
     public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
 
@@ -175,28 +175,28 @@ public class ModificationLocalizationParameters implements Serializable {
     }
 
     /**
-     * Indicates whether the non confidently localized PTMs should be aligned on
+     * Indicates whether the non confidently localized modifications should be aligned on
      * the confident sites.
      *
-     * @return boolean indicating whether the non confidently localized PTMs
+     * @return boolean indicating whether the non confidently localized modifications
      * should be aligned on the confident sites
      */
-    public boolean getAlignNonConfidentPTMs() {
+    public boolean getAlignNonConfidentModifications() {
 
-        return alignNonConfidentPTMs;
+        return alignNonConfidentModifications;
 
     }
 
     /**
-     * Sets whether the non confidently localized PTMs should be aligned on the
+     * Sets whether the non confidently localized modifications should be aligned on the
      * confident sites.
      *
-     * @param alignNonConfidentPTMs a boolean indicating whether the non
-     * confidently localized PTMs should be aligned on the confident sites
+     * @param alignNonConfidentModifications a boolean indicating whether the non
+     * confidently localized modifications should be aligned on the confident sites
      */
-    public void setAlignNonConfidentPTMs(boolean alignNonConfidentPTMs) {
+    public void setAlignNonConfidentModifications(boolean alignNonConfidentModifications) {
 
-        this.alignNonConfidentPTMs = alignNonConfidentPTMs;
+        this.alignNonConfidentModifications = alignNonConfidentModifications;
 
     }
 
@@ -214,7 +214,7 @@ public class ModificationLocalizationParameters implements Serializable {
         output.append("Score: ").append(selectedProbabilisticScore).append(".").append(newLine);
         output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
         output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
-        output.append("Align PTMs: ").append(getAlignNonConfidentPTMs()).append(".").append(newLine);
+        output.append("Align modifications: ").append(getAlignNonConfidentModifications()).append(".").append(newLine);
 
         return output.toString();
         
@@ -223,43 +223,43 @@ public class ModificationLocalizationParameters implements Serializable {
     /**
      * Returns true if the objects have identical settings.
      *
-     * @param otherPtmScoringParameters the PTMScoringParameters to compare to
+     * @param otherParameters the parameters to compare to
      *
      * @return true if the objects have identical settings
      */
-    public boolean equals(ModificationLocalizationParameters otherPtmScoringParameters) {
+    public boolean equals(ModificationLocalizationParameters otherParameters) {
 
-        if (otherPtmScoringParameters == null) {
+        if (otherParameters == null) {
             
             return false;
         
         }
 
-        if (probabilisticScoreCalculation != otherPtmScoringParameters.isProbabilisticScoreCalculation()) {
+        if (probabilisticScoreCalculation != otherParameters.isProbabilisticScoreCalculation()) {
          
             return false;
         
         }
 
-        if (selectedProbabilisticScore != otherPtmScoringParameters.getSelectedProbabilisticScore()) {
+        if (selectedProbabilisticScore != otherParameters.getSelectedProbabilisticScore()) {
          
             return false;
         
         }
 
-        if (probabilisticScoreNeutralLosses != otherPtmScoringParameters.isProbabilisticScoreNeutralLosses()) {
+        if (probabilisticScoreNeutralLosses != otherParameters.isProbabilisticScoreNeutralLosses()) {
            
             return false;
         
         }
 
-        if (!getAlignNonConfidentPTMs() == otherPtmScoringParameters.getAlignNonConfidentPTMs()) {
+        if (!getAlignNonConfidentModifications() == otherParameters.getAlignNonConfidentModifications()) {
         
             return false;
         
         }
 
-        if (!sequenceMatchingParameters.isSameAs(otherPtmScoringParameters.getSequenceMatchingParameters())) {
+        if (!sequenceMatchingParameters.isSameAs(otherParameters.getSequenceMatchingParameters())) {
         
             return false;
         

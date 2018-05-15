@@ -23,6 +23,7 @@ import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.IdentificationParameters;
+import static com.compomics.util.parameters.identification.IdentificationParameters.CURRENT_VERSION;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,10 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * Name of the type of marshalled parameter.
      */
     private String marshallableParameterType = null;
+    /**
+     * Version number.
+     */
+    public final String version = CURRENT_VERSION;
 
     /**
      * Possible mass accuracy types.

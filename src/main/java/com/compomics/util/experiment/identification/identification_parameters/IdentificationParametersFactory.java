@@ -178,9 +178,13 @@ public class IdentificationParametersFactory {
      * Parses the parameters files in the parameters folder.
      */
     private void parseFolder() {
+
         for (File parameterFile : getParametersFolder().listFiles()) {
-            if (parameterFile.getName().endsWith(PARAMETERS_EXTENSION)) {
-                try {
+
+            try {
+                
+                if (parameterFile.getName().endsWith(PARAMETERS_EXTENSION) && IdentificationParameters.supportedVersion(parameterFile)) {
+                
                     // there should be only IdentificationParameters 
                     IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
                     Class expectedObjectType = IdentificationParameters.class;
@@ -192,10 +196,10 @@ public class IdentificationParametersFactory {
                         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // Not a valid parameters file
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Not a valid parameters file
             }
         }
     }

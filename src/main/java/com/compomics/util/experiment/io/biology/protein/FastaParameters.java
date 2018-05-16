@@ -366,4 +366,34 @@ public class FastaParameters {
         
         return fastaParameters;
     }
+    
+    public boolean equals(FastaParameters fastaParameters) {
+        
+        if (!name.equals(fastaParameters.getName())) {
+            return false;
+        }
+        
+        if (!description.equals(fastaParameters.getDescription())) {
+            return false;
+        }
+        
+        if (!version.equals(fastaParameters.getVersion())) {
+            return false;
+        }
+        
+        if (targetDecoy != fastaParameters.isTargetDecoy()) {
+            return false;
+        }
+        
+        if (!decoyFlag.equals(fastaParameters.getDecoyFlag())) {
+            return false;
+        }
+        
+        if (decoySuffix != fastaParameters.isDecoySuffix()) {
+            return false;
+        }
+        
+        return true;
+        
+    }
 }

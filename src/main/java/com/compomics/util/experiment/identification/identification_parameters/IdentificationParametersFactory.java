@@ -191,7 +191,7 @@ public class IdentificationParametersFactory {
                     Object object = jsonMarshaller.fromJson(expectedObjectType, parameterFile);
                     IdentificationParameters identificationParameters = (IdentificationParameters) object;
 
-                    // avoid incorrectly parsed parameters
+                    // avoid incorrectly parsed and outdated parameters
                     if (identificationParameters.getType() == MarshallableParameter.Type.identification_parameters) {
                         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
                     }

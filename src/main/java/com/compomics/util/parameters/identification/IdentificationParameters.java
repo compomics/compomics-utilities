@@ -728,68 +728,51 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
 
         if (otherIdentificationParameters == null) {
-
             return false;
-
         }
 
         if (!searchParameters.equals(otherIdentificationParameters.getSearchParameters())) {
-
             return false;
-
         }
+        
         if (!annotationParameters.isSameAs(otherIdentificationParameters.getAnnotationParameters())) {
-
             return false;
-
         }
 
         if (!sequenceMatchingParameters.isSameAs(otherIdentificationParameters.getSequenceMatchingParameters())) {
-
             return false;
-
         }
 
         if (!getPeptideVariantsParameters().isSameAs(otherIdentificationParameters.getPeptideVariantsParameters())) {
-
             return false;
-
         }
 
         if (!geneParameters.equals(otherIdentificationParameters.getGeneParameters())) {
-
             return false;
-
         }
 
         if (!psmScoringParameters.equals(otherIdentificationParameters.getPsmScoringParameters())) {
-
             return false;
-
         }
 
         if (!peptideAssumptionFilter.isSameAs(otherIdentificationParameters.getPeptideAssumptionFilter())) {
-
             return false;
-
         }
 
         if (!modificationLocalizationParameters.equals(otherIdentificationParameters.getModificationLocalizationParameters())) {
-
             return false;
-
         }
 
         if (!proteinInferenceParameters.equals(otherIdentificationParameters.getProteinInferenceParameters())) {
-
             return false;
-
         }
 
         if (!fractionParameters.isSameAs(otherIdentificationParameters.getFractionParameters())) {
-
             return false;
-
+        }
+        
+        if (!idValidationParameters.equals(otherIdentificationParameters.getIdValidationParameters())) {
+            return false;
         }
 
         return true;

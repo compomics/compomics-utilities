@@ -172,41 +172,30 @@ public class IdMatchValidationParameters implements Serializable {
     public boolean equals(IdMatchValidationParameters otherIdMatchValidationPreferences) {
 
         if (otherIdMatchValidationPreferences == null) {
-
             return false;
-
         }
         
         if (defaultProteinFDR != otherIdMatchValidationPreferences.getDefaultProteinFDR()) {
-
             return false;
-
         }
         
         if (defaultPeptideFDR != otherIdMatchValidationPreferences.getDefaultProteinFDR()) {
-
             return false;
-
         }
         
         if (defaultPsmFDR != otherIdMatchValidationPreferences.getDefaultProteinFDR()) {
-
             return false;
-
         }
 
         if ((validationQCPreferences == null && otherIdMatchValidationPreferences.getValidationQCParameters() != null)
-                || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCParameters() == null)) {
-         
+                || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCParameters() == null)) {         
             return false;
-        
+       
         }
 
         if (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCParameters() != null
-                && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCParameters())) {
-        
+                && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCParameters())) { 
             return false;
-        
         }
 
         return true;

@@ -451,8 +451,9 @@ public class Identification extends ExperimentObject {
      * @param spectrumMatch the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param sequenceProvider a provider of protein sequences
+     * @param protein boolean indicating whether proteins should be built
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) {
+    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider, boolean protein) {
 
         long spectrumMatchKey = spectrumMatch.getKey();
 
@@ -481,46 +482,49 @@ public class Identification extends ExperimentObject {
 
         }
 
-        long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
-        ProteinMatch proteinMatch = getProteinMatch(proteinMatchKey);
+        if (protein) {
 
-        if (proteinMatch == null) {
+            long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
+            ProteinMatch proteinMatch = getProteinMatch(proteinMatchKey);
 
-            proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
-            proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
-                    .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
+            if (proteinMatch == null) {
 
-            for (String proteinAccession : proteinMatch.getAccessions()) {
+                proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
+                proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
+                        .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
 
-                HashSet<Long> proteinMatchKeys = proteinMap.get(proteinAccession);
+                for (String proteinAccession : proteinMatch.getAccessions()) {
 
-                if (proteinMatchKeys == null) {
+                    HashSet<Long> proteinMatchKeys = proteinMap.get(proteinAccession);
 
-                    proteinMatchKeys = new HashSet<>(1);
-                    proteinMap.put(proteinAccession, proteinMatchKeys);
+                    if (proteinMatchKeys == null) {
+
+                        proteinMatchKeys = new HashSet<>(1);
+                        proteinMap.put(proteinAccession, proteinMatchKeys);
+
+                    }
+
+                    proteinMatchKeys.add(proteinMatchKey);
 
                 }
 
-                proteinMatchKeys.add(proteinMatchKey);
+                proteinIdentification.add(proteinMatchKey);
+
+                try {
+
+                    objectsDB.insertObject(proteinMatchKey, proteinMatch);
+
+                } catch (InterruptedException interruptedException) {
+
+                    throw new RuntimeException(interruptedException);
+
+                }
+
+            } else {
+
+                proteinMatch.addPeptideMatchKey(peptideMatchKey);
 
             }
-
-            proteinIdentification.add(proteinMatchKey);
-
-            try {
-
-                objectsDB.insertObject(proteinMatchKey, proteinMatch);
-
-            } catch (InterruptedException interruptedException) {
-
-                throw new RuntimeException(interruptedException);
-
-            }
-
-        } else {
-
-            proteinMatch.addPeptideMatchKey(peptideMatchKey);
-
         }
     }
 
@@ -648,39 +652,40 @@ public class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, waitingHandler, false);
     }
-    
+
     /**
-     * Adds a fraction, fractions correspond to the PSM files names. Fractions are ordered alphabetically upon adding of a new fraction.
-     * 
+     * Adds a fraction, fractions correspond to the PSM files names. Fractions
+     * are ordered alphabetically upon adding of a new fraction.
+     *
      * @param fraction the fraction name
      */
     public void addFraction(String fraction) {
-        
+
         TreeSet orderedFractions = new TreeSet(fractions);
         orderedFractions.add(fraction);
-        
+
         setFractions(new ArrayList<>(orderedFractions));
-        
+
     }
 
     /**
      * Returns the fractions.
-     * 
+     *
      * @return the fractions
      */
     public ArrayList<String> getFractions() {
         return fractions;
     }
-    
+
     /**
      * Sets the fractions.
-     * 
+     *
      * @param fractions the fractions
      */
     public void setFractions(ArrayList<String> fractions) {
-        
+
         this.fractions = fractions;
-        
+
     }
-    
+
 }

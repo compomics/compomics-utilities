@@ -154,6 +154,7 @@ com.compomics.util.parameters.identification
 com.compomics.util.parameters.identification.advanced
 com.compomics.util.parameters.identification.search
 com.compomics.util.parameters.identification.tool_specific
+com.compomics.util.parameters.peptide_shaker
 com.compomics.util.parameters.quantification.spectrum_counting
 com.compomics.util.parameters.searchgui
 com.compomics.util.parameters.tools

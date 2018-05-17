@@ -900,19 +900,19 @@ public class IdentificationFeaturesGenerator {
                 if (psParameter.getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()) {
 
                     Peptide peptide = peptideMatch.getPeptide();
-
+                    
                     int peptideOccurrence = identification.getProteinMatches(peptide).stream()
                             .map(groupKey -> identification.getProteinMatch(groupKey))
                             .filter(sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
-                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
-                            .mapToInt(sharedGroup -> peptide.getProteinMapping()
-                            .get(sharedGroup.getLeadingAccession()).length)
+                                    .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                            .filter(sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession()))
+                            .mapToInt(sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length)
                             .sum();
 
                     double spectrumCount = Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
                             .mapToObj(key -> identification.getSpectrumMatch(key))
                             .filter(spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
-                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                                .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
                             .count();
 
                     double ratio = spectrumCount / peptideOccurrence;

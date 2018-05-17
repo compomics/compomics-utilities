@@ -86,7 +86,7 @@ public class ProteinUtils {
                 
                 if (i - lastCleavage <= pepMaxLength) {
                     
-                    for (int k = lastCleavage ; k < i ; k++) {
+                    for (int k = lastCleavage + 1 ; k < i ; k++) {
                         
                         observableAas[k] = 1;
                         
@@ -100,7 +100,7 @@ public class ProteinUtils {
         
         if (sequence.length() - 1 - lastCleavage <= pepMaxLength) {
             
-            for (int k = lastCleavage ; k < sequence.length() ; k++) {
+            for (int k = lastCleavage + 1 ; k < sequence.length() ; k++) {
                 
                 observableAas[k] = 1;
                 

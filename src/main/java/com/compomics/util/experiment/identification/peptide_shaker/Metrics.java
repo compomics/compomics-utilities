@@ -122,6 +122,10 @@ public class Metrics implements Serializable {
      * The sum of all spectrum counting masses.
      */
     private Double totalSpectrumCountingMass = null;
+    /**
+     * The keys of the validated target protein matches.
+     */
+    private long[] validatedTargetProteinKeys;
 
     /**
      * Constructor.
@@ -615,6 +619,24 @@ public class Metrics implements Serializable {
      */
     public void setTotalSpectrumCounting(Double totalSpectrumCountingIndexes) {
         this.totalSpectrumCounting = totalSpectrumCountingIndexes;
+    }
+
+    /**
+     * Returns the keys of the validated target protein matches.
+     * 
+     * @return the keys of the validated target protein matches
+     */
+    public long[] getValidatedTargetProteinKeys() {
+        return validatedTargetProteinKeys;
+    }
+
+    /**
+     * Sets the keys of the validated target protein matches.
+     * 
+     * @param validatedTargetProteinKeys the keys of the validated target protein matches
+     */
+    public void setValidatedTargetProteinKeys(long[] validatedTargetProteinKeys) {
+        this.validatedTargetProteinKeys = validatedTargetProteinKeys;
     }
 
 }

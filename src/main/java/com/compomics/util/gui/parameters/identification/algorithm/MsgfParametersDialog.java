@@ -249,7 +249,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         protocolCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Automatic", "Phosphorylation", "iTRAQ", "iTRAQPhospho", "TMT", "Standard" }));
 
         minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.setText("6");
+        minPepLengthTxt.setText("8");
         minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 minPepLengthTxtKeyReleased(evt);
@@ -272,7 +272,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         numberMatchesLabel.setText("Number of Spectrum Matches");
 
         numberMatchesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        numberMatchesTxt.setText("1");
+        numberMatchesTxt.setText("10");
         numberMatchesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 numberMatchesTxtKeyReleased(evt);

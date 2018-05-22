@@ -5,13 +5,16 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * This class stores the information about the modification parameters (usage, colors,
- * names).
+ * This class stores the information about the modification parameters (usage,
+ * colors, names).
  *
  * @author Marc Vaudel
  */
@@ -24,27 +27,27 @@ public class ModificationParameters implements Serializable {
     /**
      * List of the expected fixed modifications.
      */
-    private ArrayList<String> fixedModifications = new ArrayList<>();
+    private ArrayList<String> fixedModifications = new ArrayList<>(0);
     /**
      * List of the expected variable modifications.
      */
-    private ArrayList<String> variableModifications = new ArrayList<>();
+    private ArrayList<String> variableModifications = new ArrayList<>(0);
     /**
      * List of variable modifications searched during the second pass search.
      */
-    private ArrayList<String> refinementVariableModifications = new ArrayList<>();
+    private ArrayList<String> refinementVariableModifications = new ArrayList<>(0);
     /**
      * List of variable modifications searched during the second pass search.
      */
-    private ArrayList<String> refinementFixedModifications = new ArrayList<>();
+    private ArrayList<String> refinementFixedModifications = new ArrayList<>(0);
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<>();
+    private HashMap<String, Color> colors = new HashMap<>(0);
     /**
      * Back-up mapping of the modifications for portability.
      */
-    private HashMap<String, Modification> backUp = new HashMap<>();
+    private HashMap<String, Modification> backUp = new HashMap<>(0);
 
     /**
      * Constructor.
@@ -54,7 +57,7 @@ public class ModificationParameters implements Serializable {
 
     /**
      * Constructor creating a new Modification profile based on the given one.
-     * 
+     *
      * @param modificationParameters the modification profile
      */
     public ModificationParameters(ModificationParameters modificationParameters) {
@@ -132,20 +135,11 @@ public class ModificationParameters implements Serializable {
      * @return a list of all searched modifications
      */
     public ArrayList<String> getAllModifications() {
-        ArrayList<String> result = new ArrayList<>();
-        result.addAll(fixedModifications);
-        result.addAll(variableModifications);
-        for (String modName : refinementFixedModifications) {
-            if (!result.contains(modName)) {
-                result.add(modName);
-            }
-        }
-        for (String modName : refinementVariableModifications) {
-            if (!result.contains(modName)) {
-                result.add(modName);
-            }
-        }
-        return result;
+
+        return Stream.concat(fixedModifications.stream(), variableModifications.stream())
+                .distinct()
+                .collect(Collectors.toCollection(ArrayList::new));
+
     }
 
     /**
@@ -156,18 +150,21 @@ public class ModificationParameters implements Serializable {
      * @return a list of all searched modifications but the fixed ones
      */
     public ArrayList<String> getAllNotFixedModifications() {
-        ArrayList<String> result = new ArrayList<>();
-        result.addAll(variableModifications);
-        for (String modName : refinementVariableModifications) {
-            if (!result.contains(modName)) {
-                result.add(modName);
-            }
+
+        ArrayList<String> result = Stream.concat(variableModifications.stream(), refinementVariableModifications.stream())
+                .distinct()
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (!refinementFixedModifications.isEmpty()) {
+
+            HashSet<String> fixedAsSet = new HashSet<>(fixedModifications);
+            result = Stream.concat(result.stream(), refinementFixedModifications.stream()
+                    .filter(modName -> !fixedAsSet.contains(modName)))
+                    .distinct()
+                    .collect(Collectors.toCollection(ArrayList::new));
+
         }
-        for (String modName : refinementFixedModifications) {
-            if (!fixedModifications.contains(modName) && !result.contains(modName)) {
-                result.add(modName);
-            }
-        }
+
         return result;
     }
 
@@ -184,6 +181,7 @@ public class ModificationParameters implements Serializable {
         if (!variableModifications.contains(modName)) {
             variableModifications.add(modName);
         }
+        Collections.sort(variableModifications);
         backUp.put(modName, modification);
     }
 
@@ -200,6 +198,7 @@ public class ModificationParameters implements Serializable {
         if (!refinementVariableModifications.contains(modName)) {
             refinementVariableModifications.add(modName);
         }
+        Collections.sort(refinementVariableModifications);
         backUp.put(modName, modification);
     }
 
@@ -216,6 +215,7 @@ public class ModificationParameters implements Serializable {
         if (!refinementFixedModifications.contains(modName)) {
             refinementFixedModifications.add(modName);
         }
+        Collections.sort(refinementFixedModifications);
         backUp.put(modName, modification);
     }
 
@@ -232,6 +232,7 @@ public class ModificationParameters implements Serializable {
         if (!fixedModifications.contains(modName)) {
             fixedModifications.add(modName);
         }
+        Collections.sort(fixedModifications);
         backUp.put(modName, modification);
     }
 
@@ -279,7 +280,8 @@ public class ModificationParameters implements Serializable {
     }
 
     /**
-     * Returns the modifications backed-up as a map. modification name &gt; modification.
+     * Returns the modifications backed-up as a map. modification name &gt;
+     * modification.
      *
      * @return the modifications backed-up as a map
      */
@@ -349,22 +351,20 @@ public class ModificationParameters implements Serializable {
 
     /**
      * Returns a list containing all not fixed modifications with the same mass.
-     * Warning: all modifications of the profile must be loaded in the modification
-     * factory.
+     * Warning: all modifications of the profile must be loaded in the
+     * modification factory.
      *
      * @param modificationMass the mass
      * @return a list of all not fixed modifications with the same mass
      */
     public ArrayList<String> getSameMassNotFixedModifications(double modificationMass) {
+        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        ArrayList<String> modifications = new ArrayList<>();
-        for (String modName : getAllNotFixedModifications()) {
-            Modification modification = modificationFactory.getModification(modName);
-            if (!modifications.contains(modName) && modification.getMass() == modificationMass) {
-                modifications.add(modName);
-            }
-        }
-        return modifications;
+        
+        return getAllNotFixedModifications().stream()
+                .filter(modName -> modificationFactory.getModification(modName).getMass() == modificationMass)
+                .collect(Collectors.toCollection(ArrayList::new));
+        
     }
 
     /**
@@ -378,8 +378,7 @@ public class ModificationParameters implements Serializable {
         if (otherProfile == null) {
             return false;
         }
-        
-        // note that the following three tests results in false even if only the order is different
+
         if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
             return false;
         }

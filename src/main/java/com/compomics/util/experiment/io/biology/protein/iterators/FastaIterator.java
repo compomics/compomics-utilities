@@ -101,7 +101,7 @@ public class FastaIterator implements ProteinIterator {
             while ((line = br.readLine()) != null) {
 
                 line = line.trim();
-                
+
                 if (line.length() > 0) {
                     if (line.charAt(0) == '>') {
 
@@ -139,9 +139,8 @@ public class FastaIterator implements ProteinIterator {
 
             }
 
-
             if (sequence.length() > 0) {
-                
+
                 lastHeader = header;
                 return new Protein(header.getAccession(), sequence);
 
@@ -163,10 +162,11 @@ public class FastaIterator implements ProteinIterator {
     }
 
     /**
-     * Removes forbidden characters from the file, verifies that amino acids can be parsed, makes all characters upper case.
-     * 
+     * Removes forbidden characters from the file, verifies that amino acids can
+     * be parsed, makes all characters upper case.
+     *
      * @param sequence the original sequence
-     * 
+     *
      * @return the cleaned sequence
      */
     private String getCleanedSequence(String sequence) {
@@ -178,16 +178,13 @@ public class FastaIterator implements ProteinIterator {
 
             char charAtI = lineAsCharArray[i];
 
-            if (charAtI == forbiddenCharacter) {
+            if (charAtI != forbiddenCharacter) {
 
-                continue;
+                char upperCase = Character.toUpperCase(charAtI);
+                AminoAcid.getAminoAcid(upperCase);
+                cleanedSequence.append(upperCase);
 
             }
-
-            char upperCase = Character.toUpperCase(charAtI);
-            AminoAcid.getAminoAcid(upperCase);
-            cleanedSequence.append(upperCase);
-
         }
 
         return cleanedSequence.toString();
@@ -195,28 +192,28 @@ public class FastaIterator implements ProteinIterator {
     }
 
     /**
-     * Returns the header corresponding to the last protein. 
-     * 
+     * Returns the header corresponding to the last protein.
+     *
      * @return the header corresponding to the last protein
      */
     public Header getLastHeader() {
         return lastHeader;
     }
-    
+
     /**
      * Closes the iterator.
      */
     public void close() {
-        
+
         try {
-            
+
             br.close();
-            
+
         } catch (Exception e) {
-            
+
             e.printStackTrace();
-            
+
         }
     }
-    
+
 }

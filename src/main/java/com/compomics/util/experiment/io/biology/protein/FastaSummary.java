@@ -3,7 +3,7 @@ package com.compomics.util.experiment.io.biology.protein;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
 import com.compomics.util.io.json.JsonMarshaller;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.compomics.util.gui.protein;
 
 import com.compomics.util.Util;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;

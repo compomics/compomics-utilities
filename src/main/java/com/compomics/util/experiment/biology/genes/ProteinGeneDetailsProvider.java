@@ -35,7 +35,7 @@ import java.util.HashSet;
  * @author Harald Barsnes
  */
 public class ProteinGeneDetailsProvider {
-    
+
     /**
      * The separator used to separate line contents.
      */
@@ -108,10 +108,13 @@ public class ProteinGeneDetailsProvider {
     }
 
     /**
-     * Returns the gene maps for the given proteins. For every protein, the species must be given as well as the gene name, in the format used in a Uniprot fasta file.
+     * Returns the gene maps for the given proteins. For every protein, the
+     * species must be given as well as the gene name, in the format used in a
+     * Uniprot fasta file.
      *
      * @param genePreferences the gene preferences
-     * @param fastaSummary summary information on the fasta file containing the proteins
+     * @param fastaSummary summary information on the fasta file containing the
+     * proteins
      * @param sequenceProvider the protein sequence provider
      * @param proteinDetailsProvider the protein details provider
      * @param waitingHandler waiting handler displaying progress for the
@@ -122,18 +125,18 @@ public class ProteinGeneDetailsProvider {
     public GeneMaps getGeneMaps(GeneParameters genePreferences, FastaSummary fastaSummary, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider, WaitingHandler waitingHandler) {
 
         Collection<String> accessions = sequenceProvider.getAccessions();
-        
+
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
         HashMap<String, GeneMapping> geneMappings = new HashMap<>(accessions.size());
         HashMap<String, GoMapping> goMappings = new HashMap<>(accessions.size());
-        
+
         // download/update species mapping, put them in maps per species
         for (String uniprotTaxonomy : fastaSummary.speciesOccurrence.keySet()) {
 
             if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
 
                 try {
-                    
+
                     Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
 
                     if (taxon != null) {
@@ -142,13 +145,14 @@ public class ProteinGeneDetailsProvider {
                         String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
 
                         if (ensemblDatasetName != null) {
+
                             File geneMappingFile = getGeneMappingFile(ensemblDatasetName);
                             File goMappingFile = getGoMappingFile(ensemblDatasetName);
 
                             if (genePreferences.getAutoUpdate()) {
                                 boolean success = true;
                                 try {
-                                    if (!geneMappingFile.exists() || !goMappingFile.exists() || newVersionExists(taxon)) {
+                                    if (!geneMappingFile.exists() || !goMappingFile.exists() || newVersionExists(taxon)) { //@TODO: seems like the current version is never found
                                         success = downloadMappings(waitingHandler, taxon);
                                     }
                                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
@@ -198,13 +202,13 @@ public class ProteinGeneDetailsProvider {
 
         // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
-        
+
         if (ensemblVersionsMap == null) {
-            
+
             ensemblVersionsMap = new HashMap<>(1);
-            
+
         }
-        
+
         HashMap<String, String> ensemblVersionsUsed = new HashMap<>(ensemblVersionsMap);
         HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<>(accessions.size());
         HashMap<String, String> geneNameToChromosomeMap = new HashMap<>(accessions.size());
@@ -226,80 +230,80 @@ public class ProteinGeneDetailsProvider {
                         String speciesName = speciesFactory.getName(taxon);
 
                         String geneName = proteinDetailsProvider.getGeneName(accession);
-                        
+
                         if (geneName != null) {
-                            
+
                             GeneMapping geneMapping = geneMappings.get(speciesName);
-                            
+
                             if (geneMapping != null) {
-                                
+
                                 String chromosome = geneMapping.getChromosome(geneName);
-                                
+
                                 if (chromosome != null) {
-                                    
+
                                     geneNameToChromosomeMap.put(geneName, chromosome);
-                                    
+
                                 }
-                                
+
                                 String ensemblId = geneMapping.getEnsemblAccession(geneName);
-                                
+
                                 if (ensemblId != null) {
-                                    
+
                                     geneNameToEnsemblIdMap.put(geneName, ensemblId);
-                                    
+
                                 }
                             }
                         }
 
                         GoMapping goMapping = goMappings.get(speciesName);
-                        
+
                         if (goMapping != null) {
-                            
+
                             HashSet<String> goTerms = proteinToGoMap.get(accession);
-                            
+
                             if (goTerms == null) {
-                                
+
                                 goTerms = new HashSet<>(1);
                                 proteinToGoMap.put(accession, goTerms);
-                                
+
                             }
-                            
+
                             HashSet<String> newTerms = goMapping.getGoAccessions(accession);
-                            
+
                             if (newTerms != null) {
-                                
+
                                 goTerms.addAll(newTerms);
-                                
+
                                 for (String goTerm : newTerms) {
-                                    
+
                                     String goName = goMapping.getTermName(goTerm);
-                                    
+
                                     if (goName != null) {
-                                        
+
                                         goNamesMap.put(goTerm, goName);
-                                        
+
                                     }
 
                                     HashSet<String> proteins = goToProteinMap.get(goTerm);
-                                    
+
                                     if (proteins == null) {
-                                        
+
                                         proteins = new HashSet<>(1);
                                         goToProteinMap.put(goTerm, proteins);
-                                        
+
                                     }
-                                    
+
                                     proteins.add(accession);
-                                    
+
                                 }
                             }
                         }
                     }
                 } catch (Exception e) {
-                    
+
                     // Taxon not available, ignore
                     e.printStackTrace();
-                    
+
                 }
             }
         }
@@ -345,7 +349,7 @@ public class ProteinGeneDetailsProvider {
                 + "</Query>";
 
         String waitingText = "Downloading gene sequences. Please Wait...";
-        
+
         return queryEnsembl(requestXml, waitingText, destinationFile, ensemblType, waitingHandler);
     }
 
@@ -384,7 +388,7 @@ public class ProteinGeneDetailsProvider {
                 + "<Attribute name = " + accessionMapping + " />";
 
         requestXml += "<Attribute name = \"goslim_goa_accession\" />"
-                    + "<Attribute name = \"goslim_goa_description\" />";
+                + "<Attribute name = \"goslim_goa_description\" />";
 
         requestXml += "</Dataset>"
                 + "</Query>";
@@ -835,29 +839,22 @@ public class ProteinGeneDetailsProvider {
      * Loads the given Ensembl species file.
      *
      * @param ensemblVersionsFile the Ensembl species file to load
-     * @throws FileNotFoundException if an FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws FileNotFoundException, IOException {
+    public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws IOException {
 
         // load the existing ensembl version numbers
-        FileReader r = new FileReader(ensemblVersionsFile);
-        try {
-            BufferedReader br = new BufferedReader(r);
-            try {
-                ensemblVersionsMap = new HashMap<>();
-                String line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new FileReader(ensemblVersionsFile))) {
 
-                while (line != null) {
-                    String[] elements = line.split("\\t");
-                    ensemblVersionsMap.put(elements[0], elements[1]);
-                    line = br.readLine();
-                }
-            } finally {
-                br.close();
+            ensemblVersionsMap = new HashMap<>();
+            String line = br.readLine();
+
+            while (line != null) {
+                String[] elements = line.split("\\t");
+                ensemblVersionsMap.put(elements[0], elements[1]);
+                line = br.readLine();
             }
-        } finally {
-            r.close();
         }
     }
 
@@ -865,33 +862,33 @@ public class ProteinGeneDetailsProvider {
      * Returns the Ensembl URL for the given Ensembl (sub-)version.
      *
      * @param ensemblType the Ensembl type, e.g., fungi or plants
-     * 
+     *
      * @return the Ensembl URL
-     * 
+     *
      * @throws MalformedURLException exception thrown if the URL is malformed
      */
     private URL getEnsemblUrl(String ensemblType) throws MalformedURLException {
-        
+
         if (ensemblType.equalsIgnoreCase("fungi")) {
-            
+
             return new URL("http://fungi.ensembl.org/biomart/martservice/result");
-            
+
         } else if (ensemblType.equalsIgnoreCase("plants")) {
-            
+
             return new URL("http://plants.ensembl.org/biomart/martservice/result");
-            
+
         } else if (ensemblType.equalsIgnoreCase("protists")) {
-            
+
             return new URL("http://protists.ensembl.org/biomart/martservice/result");
-            
+
         } else if (ensemblType.equalsIgnoreCase("metazoa")) {
-            
+
             return new URL("http://metazoa.ensembl.org/biomart/martservice/result");
-            
+
         } else {
-            
+
             return new URL("http://www.ensembl.org/biomart/martservice/result");
-            
+
         }
     }
 

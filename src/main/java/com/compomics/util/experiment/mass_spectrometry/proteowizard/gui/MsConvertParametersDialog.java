@@ -6,7 +6,7 @@ import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsConvertPar
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsFormat;
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.ProteoWizardFilter;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;

@@ -3346,7 +3346,7 @@ public class IdentificationParametersInputBean {
                 default:
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PTM_ALIGNMENT.id + ": " + arg + ". 0 or 1 expected.");
             }
-            ptmScoringPreferences.setAlignNonConfidentPTMs(value);
+            ptmScoringPreferences.setAlignNonConfidentModifications(value);
         }
 
         //////////////////////////////////

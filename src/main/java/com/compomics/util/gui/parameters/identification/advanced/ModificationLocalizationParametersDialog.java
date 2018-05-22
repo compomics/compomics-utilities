@@ -116,7 +116,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
 
         }
 
-        if (ptmScoringPreferences.getAlignNonConfidentPTMs()) {
+        if (ptmScoringPreferences.getAlignNonConfidentModifications()) {
             alignOnConfidentCmb.setSelectedIndex(0);
         } else {
             alignOnConfidentCmb.setSelectedIndex(1);
@@ -190,7 +190,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
         ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
 
-        ptmScoringPreferences.setAlignNonConfidentPTMs(alignOnConfidentCmb.getSelectedIndex() == 0);
+        ptmScoringPreferences.setAlignNonConfidentModifications(alignOnConfidentCmb.getSelectedIndex() == 0);
 
         return ptmScoringPreferences;
     }

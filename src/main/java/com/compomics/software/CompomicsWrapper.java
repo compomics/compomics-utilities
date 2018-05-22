@@ -10,7 +10,7 @@ import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.StreamGobbler;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Image;
 import java.io.*;
 import java.net.URLDecoder;

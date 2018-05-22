@@ -1,7 +1,7 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;

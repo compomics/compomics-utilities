@@ -61,7 +61,7 @@ public class Modification extends ExperimentObject {
      */
     private AtomChain atomChainRemoved = new AtomChain();
     /**
-     * The CV term associated with this PTM. Null if not set.
+     * The CV term associated with this modification. Null if not set.
      */
     private CvTerm cvTerm = null;
     /**
@@ -108,7 +108,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded atomic composition of the molecule added
      * @param atomChainRemoved atomic composition of the molecule removed
      * @param aminoAcidPattern residue pattern affected by this modification
-     * @param cvTerm the CV term associated with this PTM, null if not set
+     * @param cvTerm the CV term associated with this modification, null if not set
      */
     public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
         this.modificationType = modificationType;
@@ -121,7 +121,7 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Simple constructor for a PTM. This constructor does not set the atomic
+     * Simple constructor for a modification. This constructor does not set the atomic
      * composition or the cv term.
      *
      * @param modificationType type of modification
@@ -157,9 +157,9 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Sets the PTM name.
+     * Sets the modification name.
      *
-     * @param name the PTM name
+     * @param name the modification name
      */
     public void setName(String name) {
         this.name = name;
@@ -175,9 +175,9 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Sets the short PTM name.
+     * Sets the short modification name.
      *
-     * @param shortName the PTM name
+     * @param shortName the modification name
      */
     public void setShortName(String shortName) {
         this.shortName = shortName;
@@ -196,7 +196,7 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Estimates the mass of the PTM and stores it in the mass attribute.
+     * Estimates the mass of the modification and stores it in the mass attribute.
      */
     private synchronized void estimateMass() {
         if (mass == null) {
@@ -292,71 +292,71 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns true if the atomic composition of the PTM is the same as another
+     * Returns true if the atomic composition of the modification is the same as another
      * one.
      *
-     * @param anotherPTM the PTM to compare to
+     * @param anotherModification the modification to compare to
      *
-     * @return true if the atomic composition of the PTM is the same as the
+     * @return true if the atomic composition of the modification is the same as the
      * other one
      */
-    public boolean isSameAtomicComposition(Modification anotherPTM) {
-        if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
-                || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
+    public boolean isSameAtomicComposition(Modification anotherModification) {
+        if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherModification.getAtomChainAdded())
+                || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherModification.getAtomChainRemoved())) {
             return false;
         }
-        if (atomChainAdded == null && anotherPTM.getAtomChainAdded() != null && !anotherPTM.getAtomChainAdded().getAtomChain().isEmpty()
-                || atomChainRemoved == null && anotherPTM.getAtomChainRemoved() != null && !anotherPTM.getAtomChainRemoved().getAtomChain().isEmpty()) {
+        if (atomChainAdded == null && anotherModification.getAtomChainAdded() != null && !anotherModification.getAtomChainAdded().getAtomChain().isEmpty()
+                || atomChainRemoved == null && anotherModification.getAtomChainRemoved() != null && !anotherModification.getAtomChainRemoved().getAtomChain().isEmpty()) {
             return false;
         }
         return true;
     }
 
     /**
-     * Returns true if the targeted pattern of the PTM is the same as another
+     * Returns true if the targeted pattern of the modification is the same as another
      * one. An empty pattern is considered to be the same as a null pattern.
      *
-     * @param anotherPTM the PTM to compare to
+     * @param anotherModification the modification to compare to
      *
-     * @return true if the targeted pattern of the PTM is the same as the other
+     * @return true if the targeted pattern of the modification is the same as the other
      * one
      */
-    public boolean isSamePattern(Modification anotherPTM) {
-        if (pattern == null && anotherPTM.getPattern() != null && anotherPTM.getPattern().length() > 0) {
+    public boolean isSamePattern(Modification anotherModification) {
+        if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
         }
-        if (pattern != null && !pattern.isSameAs(anotherPTM.getPattern(), SequenceMatchingParameters.defaultStringMatching)) {
+        if (pattern != null && !pattern.isSameAs(anotherModification.getPattern(), SequenceMatchingParameters.defaultStringMatching)) {
             return false;
         }
         return true;
     }
 
     /**
-     * Returns true if the PTM is the same as another one.
+     * Returns true if the modification is the same as another one.
      *
-     * @param anotherPTM another PTM
+     * @param anotherModification another modification
      *
-     * @return true if the PTM is the same as the other one
+     * @return true if the modification is the same as the other one
      */
-    public boolean isSameAs(Modification anotherPTM) {
-        if (modificationType != anotherPTM.getModificationType()) {
+    public boolean isSameAs(Modification anotherModification) {
+        if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
 //            System.out.println("local: " + type);
-//            System.out.println("parameters: " + anotherPTM.getType());
+//            System.out.println("parameters: " + anotherModification.getType());
             return false;
         }
-        if (!isSamePattern(anotherPTM)) {
+        if (!isSamePattern(anotherModification)) {
 //            System.out.println("pattern difference");
 //            System.out.println("local: " + pattern);
-//            System.out.println("parameters: " + anotherPTM.getPattern());
+//            System.out.println("parameters: " + anotherModification.getPattern());
             return false;
         }
-        if (!isSameAtomicComposition(anotherPTM)) {
+        if (!isSameAtomicComposition(anotherModification)) {
 //            System.out.println("composition difference");
 //            System.out.println("local added: " + atomChainAdded);
 //            System.out.println("local removed: " + atomChainRemoved);
-//            System.out.println("parameters added: " + anotherPTM.getAtomChainAdded());
-//            System.out.println("parameters removed: " + anotherPTM.getAtomChainRemoved());
+//            System.out.println("parameters added: " + anotherModification.getAtomChainAdded());
+//            System.out.println("parameters removed: " + anotherModification.getAtomChainRemoved());
             return false;
         }
         return true;
@@ -449,9 +449,9 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns information about the PTM as an HTML tooltip.
+     * Returns information about the modification as an HTML tooltip.
      *
-     * @return information about the PTM as an HTML tooltip
+     * @return information about the modification as an HTML tooltip
      */
     public String getHtmlTooltip() {
 
@@ -499,7 +499,7 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns the CV term associated with this PTM.
+     * Returns the CV term associated with this modification.
      *
      * @return the cvTerm
      */
@@ -508,7 +508,7 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Set the CV term associated with this PTM.
+     * Set the CV term associated with this modification.
      *
      * @param cvTerm the cvTerm to set
      */

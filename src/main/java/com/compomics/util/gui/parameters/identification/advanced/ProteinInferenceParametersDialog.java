@@ -1,15 +1,11 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
-import com.compomics.util.gui.parameters.identification.search.SequenceDbDetailsDialog;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.File;
 import javax.swing.SwingConstants;
 
 /**
@@ -33,10 +29,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      */
     private Image waitingIcon;
     /**
-     * The last selected folder to use.
-     */
-    private final LastSelectedFolder lastSelectedFolder;
-    /**
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
@@ -44,10 +36,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
-    /**
-     * The parameters used to parse the fasta file.
-     */
-    private FastaParameters fastaParameters = null;
 
     /**
      * Creates a new ProteinInferenceSettingsDialog with a frame as owner.
@@ -57,22 +45,18 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * display
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
-     * @param lastSelectedFolder the last selected folder to use
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
     public ProteinInferenceParametersDialog(java.awt.Frame parentFrame, ProteinInferenceParameters proteinInferencePreferences,
-            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+            Image normalIcon, Image waitingIcon, boolean editable) {
 
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.lastSelectedFolder = lastSelectedFolder;
         this.editable = editable;
-
-        fastaParameters = proteinInferencePreferences.getFastaParameters();
 
         initComponents();
         setUpGui();
@@ -91,17 +75,15 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
      * display
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
-     * @param lastSelectedFolder the last selected folder to use
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
     public ProteinInferenceParametersDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferenceParameters proteinInferencePreferences,
-            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+            Image normalIcon, Image waitingIcon, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
-        this.lastSelectedFolder = lastSelectedFolder;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -202,7 +184,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     public ProteinInferenceParameters getProteinInferencePreferences() {
 
         ProteinInferenceParameters proteinInferencePreferences = new ProteinInferenceParameters();
-        proteinInferencePreferences.setFastaParameters(fastaParameters);
 
         proteinInferencePreferences.setSimplifyGroups(simplifyGroupsCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsEvidence(simplifyEvidenceCmb.getSelectedIndex() == 0);

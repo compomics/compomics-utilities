@@ -2,7 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.software.CompomicsWrapper;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Color;
 import java.io.File;
 import javax.swing.JDialog;

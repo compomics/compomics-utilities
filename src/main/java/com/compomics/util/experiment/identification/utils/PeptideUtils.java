@@ -402,9 +402,7 @@ public class PeptideUtils {
         int[] startIndexes = peptide.getProteinMapping().get(proteinAccession);
 
         if (startIndexes == null) {
-
             return false;
-
         }
 
         return enzymes.stream()

@@ -1,4 +1,4 @@
-package com.compomics.util.parameters.tools;
+package com.compomics.util.parameters.searchgui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.Collections;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public enum SearchGuiOutputParameters {
+public enum OutputParameters {
 
     /**
      * Groups all files in a single compressed zip folder.
@@ -48,7 +48,7 @@ public enum SearchGuiOutputParameters {
      * @param name the name of the option
      * @param description the description of the option
      */
-    private SearchGuiOutputParameters(int id, String name, String description) {
+    private OutputParameters(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -60,10 +60,10 @@ public enum SearchGuiOutputParameters {
      * @return an array of the indexes of the different output options
      */
     public static int[] getOutputOptions() {
-        SearchGuiOutputParameters[] options = values();
+        OutputParameters[] options = values();
         int[] result = new int[options.length];
         int i = 0;
-        for (SearchGuiOutputParameters outputOption : options) {
+        for (OutputParameters outputOption : options) {
             result[i] = outputOption.id;
             i++;
         }
@@ -76,10 +76,10 @@ public enum SearchGuiOutputParameters {
      * @return an array of the names of the different options
      */
     public static String[] getOutputParametersNames() {
-        SearchGuiOutputParameters[] options = values();
+        OutputParameters[] options = values();
         String[] result = new String[options.length];
         int i = 0;
-        for (SearchGuiOutputParameters outputOption : options) {
+        for (OutputParameters outputOption : options) {
             result[i] = outputOption.name;
             i++;
         }
@@ -93,8 +93,8 @@ public enum SearchGuiOutputParameters {
      *
      * @return the output option of interest
      */
-    public static SearchGuiOutputParameters getOutputParameters(int id) {
-        for (SearchGuiOutputParameters outputOption : values()) {
+    public static OutputParameters getOutputParameters(int id) {
+        for (OutputParameters outputOption : values()) {
             if (outputOption.id == id) {
                 return outputOption;
             }
@@ -108,9 +108,9 @@ public enum SearchGuiOutputParameters {
      * @return all possibilities in a command line option description format
      */
     public static String getCommandLineOptions() {
-        SearchGuiOutputParameters[] values = values();
+        OutputParameters[] values = values();
         ArrayList<Integer> options = new ArrayList<>(values.length);
-        for (SearchGuiOutputParameters option : values) {
+        for (OutputParameters option : values) {
             options.add(option.id);
         }
         Collections.sort(options);

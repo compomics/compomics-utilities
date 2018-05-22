@@ -5,7 +5,7 @@ import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;

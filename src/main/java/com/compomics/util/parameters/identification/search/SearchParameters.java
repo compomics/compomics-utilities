@@ -23,6 +23,7 @@ import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.IdentificationParameters;
+import static com.compomics.util.parameters.identification.IdentificationParameters.CURRENT_VERSION;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,10 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * Name of the type of marshalled parameter.
      */
     private String marshallableParameterType = null;
+    /**
+     * Version number.
+     */
+    public final String version = CURRENT_VERSION;
 
     /**
      * Possible mass accuracy types.
@@ -81,19 +86,15 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The fragment accuracy type. Default is Da.
      */
-    private MassAccuracyType fragmentAccuracyType = MassAccuracyType.DA;
+    private MassAccuracyType fragmentAccuracyType = MassAccuracyType.PPM;
     /**
      * The precursor mass tolerance.
      */
     private double precursorTolerance = 10.0;
     /**
-     * The precursor mass tolerance in Dalton.
-     */
-    private double precursorToleranceDalton = 0.5;
-    /**
      * The MS2 ion tolerance.
      */
-    private double fragmentIonMZTolerance = 0.5;
+    private double fragmentIonMZTolerance = 10;
     /**
      * The expected modifications. Modified peptides will be grouped and
      * displayed according to this classification.
@@ -180,7 +181,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         this.precursorAccuracyType = searchParameters.getPrecursorAccuracyType();
         this.fragmentAccuracyType = searchParameters.getFragmentAccuracyType();
         this.precursorTolerance = searchParameters.getPrecursorAccuracy();
-        this.precursorToleranceDalton = searchParameters.getPrecursorAccuracyDalton();
         this.fragmentIonMZTolerance = searchParameters.getFragmentIonAccuracy();
         this.modificationParameters = new ModificationParameters(searchParameters.getModificationParameters());
         this.digestionParameters = searchParameters.getDigestionParameters();
@@ -501,24 +501,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public void setPrecursorAccuracy(double precursorTolerance) {
         this.precursorTolerance = precursorTolerance;
-    }
-
-    /**
-     * Returns the precursor tolerance in Dalton (for de novo searches).
-     *
-     * @return the precursor tolerance
-     */
-    public double getPrecursorAccuracyDalton() {
-        return precursorToleranceDalton;
-    }
-
-    /**
-     * Sets the precursor tolerance in Dalton (for de novo searches).
-     *
-     * @param precursorToleranceDalton the precursor tolerance
-     */
-    public void setPrecursorAccuracyDalton(double precursorToleranceDalton) {
-        this.precursorToleranceDalton = precursorToleranceDalton;
     }
 
     /**

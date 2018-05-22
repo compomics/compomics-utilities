@@ -215,8 +215,9 @@ public class ProteinMatch extends IdentificationMatch {
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
 
-        peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + newKeys.length);
-        System.arraycopy(newKeys, 0, peptideMatchesKeys, peptideMatchesKeys.length, newKeys.length);
+        int originalLength = peptideMatchesKeys.length;
+        peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, originalLength + newKeys.length);
+        System.arraycopy(newKeys, 0, peptideMatchesKeys, originalLength, newKeys.length);
 
     }
 

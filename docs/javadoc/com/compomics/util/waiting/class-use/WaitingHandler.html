@@ -578,49 +578,77 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getNValidatedProteinGroups-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.waiting.WaitingHandler-">getNValidatedProteinGroups</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
+<div class="block">Indicates whether a peptide is found in a single protein match.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(long[]&nbsp;peptideKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/PeptideMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">PeptideMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getPeptideMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getPeptideMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a peptide matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>long[]</code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getProcessedProteinKeys-com.compomics.util.waiting.WaitingHandler-com.compomics.util.gui.filtering.FilterParameters-">getProcessedProteinKeys</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+                       <a href="../../../../../com/compomics/util/gui/filtering/FilterParameters.html" title="class in com.compomics.util.gui.filtering">FilterParameters</a>&nbsp;filterPreferences)</code>
+<div class="block">Returns the sorted list of protein keys.</div>
+</td>
+</tr>
 <tr class="rowColor">
+<td class="colFirst"><code>long[]</code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getProteinKeys-com.compomics.util.waiting.WaitingHandler-com.compomics.util.gui.filtering.FilterParameters-">getProteinKeys</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+              <a href="../../../../../com/compomics/util/gui/filtering/FilterParameters.html" title="class in com.compomics.util.gui.filtering">FilterParameters</a>&nbsp;filterPreferences)</code>
+<div class="block">Returns the ordered protein keys to display when no filtering is applied.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(long[]&nbsp;proteinKeys,
                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/ProteinMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">ProteinMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getProteinMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getProteinMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a protein matches iterator for all PeptideMatches.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-long:A-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(long[]&nbsp;spectrumMatches,
                           <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a spectrum matches iterator for a given key list.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-">getSpectrumMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Returns a spectrum matches iterator for all SpectrumMatches.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">SpectrumMatchesIterator</a></code></td>
 <td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/Identification.html#getSpectrumMatchesIterator-com.compomics.util.waiting.WaitingHandler-java.lang.String-">getSpectrumMatchesIterator</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
                           <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</code>
 <div class="block">Returns a psm iterator for all SpectrumMatches.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>long[]</code></td>
+<td class="colLast"><span class="typeNameLabel">IdentificationFeaturesGenerator.</span><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/identification/IdentificationFeaturesGenerator.html#getValidatedProteins-com.compomics.util.waiting.WaitingHandler-com.compomics.util.gui.filtering.FilterParameters-">getValidatedProteins</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+                    <a href="../../../../../com/compomics/util/gui/filtering/FilterParameters.html" title="class in com.compomics.util.gui.filtering">FilterParameters</a>&nbsp;filterPreferences)</code>
+<div class="block">Returns the list of validated protein keys.</div>
 </td>
 </tr>
 <tr class="altColor">

@@ -1,4 +1,4 @@
-package com.compomics.util.gui.filehandling;
+package com.compomics.util.gui.file_handling;
 
 import java.awt.event.MouseEvent;
 import java.io.File;

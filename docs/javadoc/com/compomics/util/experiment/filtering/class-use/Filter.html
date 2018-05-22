@@ -89,12 +89,18 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.filtering">com.compomics.util.experiment.identification.filtering</a></td>
+<td class="colLast">
+<div class="block">Classes for the filtering of identification objects.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.gui.parameters.identification.advanced">com.compomics.util.gui.parameters.identification.advanced</a></td>
 <td class="colLast">
 <div class="block">Dialogs for advanced identification parameters.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.parameters.identification.advanced">com.compomics.util.parameters.identification.advanced</a></td>
 <td class="colLast">
 <div class="block">Advanced Identification parameters.</div>
@@ -140,6 +146,63 @@
 </tbody>
 </table>
 </li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.filtering">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a> in <a href="../../../../../../com/compomics/util/experiment/identification/filtering/package-summary.html">com.compomics.util.experiment.identification.filtering</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../../com/compomics/util/experiment/identification/filtering/package-summary.html">com.compomics.util.experiment.identification.filtering</a> that implement <a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/AssumptionFilter.html" title="class in com.compomics.util.experiment.identification.filtering">AssumptionFilter</a></span></code>
+<div class="block">Peptide Assumption filter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/MatchFilter.html" title="class in com.compomics.util.experiment.identification.filtering">MatchFilter</a></span></code>
+<div class="block">Abstract representing a filter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PeptideFilter.html" title="class in com.compomics.util.experiment.identification.filtering">PeptideFilter</a></span></code>
+<div class="block">Peptide filter.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/ProteinFilter.html" title="class in com.compomics.util.experiment.identification.filtering">ProteinFilter</a></span></code>
+<div class="block">Protein filter.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/PsmFilter.html" title="class in com.compomics.util.experiment.identification.filtering">PsmFilter</a></span></code>
+<div class="block">PSM filter.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../com/compomics/util/experiment/identification/filtering/package-summary.html">com.compomics.util.experiment.identification.filtering</a> with parameters of type <a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">MatchFilter.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/filtering/MatchFilter.html#isSameAs-com.compomics.util.experiment.filtering.Filter-">isSameAs</a></span>(<a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a>&nbsp;anotherFilter)</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList"><a name="com.compomics.util.gui.parameters.identification.advanced">
 <!--   -->
 </a>
@@ -153,26 +216,26 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialogParent.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialogParent.html#createPeptideFilter--">createPeptideFilter</a></span>()</code>
-<div class="block">Allows the creation of a peptide filter.</div>
+<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialog.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialog.html#createPeptideFilter--">createPeptideFilter</a></span>()</code>
+<div class="block">Creates a new peptide filter.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialogParent.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialogParent.html#createProteinFilter--">createProteinFilter</a></span>()</code>
-<div class="block">Allows the creation of a protein filter.</div>
+<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialog.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialog.html#createProteinFilter--">createProteinFilter</a></span>()</code>
+<div class="block">Creates a new protein filter.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialogParent.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialogParent.html#createPsmFilter--">createPsmFilter</a></span>()</code>
-<div class="block">Allows the creation of a PSM filter.</div>
+<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialog.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialog.html#createPsmFilter--">createPsmFilter</a></span>()</code>
+<div class="block">Creates a new PSM filter.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialogParent.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialogParent.html#editFilter-com.compomics.util.experiment.filtering.Filter-">editFilter</a></span>(<a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a>&nbsp;filter)</code>
-<div class="block">Allows the edition of a filter.</div>
+<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialog.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialog.html#editFilter-com.compomics.util.experiment.filtering.Filter-">editFilter</a></span>(<a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a>&nbsp;filter)</code>
+<div class="block">Edits the given filter.</div>
 </td>
 </tr>
 </tbody>
@@ -186,8 +249,8 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a></code></td>
-<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialogParent.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialogParent.html#editFilter-com.compomics.util.experiment.filtering.Filter-">editFilter</a></span>(<a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a>&nbsp;filter)</code>
-<div class="block">Allows the edition of a filter.</div>
+<td class="colLast"><span class="typeNameLabel">ValidationQCParametersDialog.</span><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/gui/parameters/identification/advanced/ValidationQCParametersDialog.html#editFilter-com.compomics.util.experiment.filtering.Filter-">editFilter</a></span>(<a href="../../../../../../com/compomics/util/experiment/filtering/Filter.html" title="interface in com.compomics.util.experiment.filtering">Filter</a>&nbsp;filter)</code>
+<div class="block">Edits the given filter.</div>
 </td>
 </tr>
 </tbody>

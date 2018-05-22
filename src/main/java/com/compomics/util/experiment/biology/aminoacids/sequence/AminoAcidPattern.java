@@ -397,14 +397,14 @@ public class AminoAcidPattern extends ExperimentObject {
      * Returns the amino acid pattern as case insensitive pattern for String
      * matching.
      *
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      * @param includeMutations if true mutated amino acids will be included
      *
      * @return the amino acid pattern as java string pattern
      */
-    public Pattern getAsStringPattern(SequenceMatchingParameters sequenceMatchingPreferences, boolean includeMutations) {
+    public Pattern getAsStringPattern(SequenceMatchingParameters sequenceMatchingParameters, boolean includeMutations) {
 
-        MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
+        MatchingType matchingType = sequenceMatchingParameters.getSequenceMatchingType();
 
         int tempLength = length();
         StringBuilder regexBuilder = new StringBuilder(tempLength);
@@ -526,16 +526,16 @@ public class AminoAcidPattern extends ExperimentObject {
      * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as string
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public int[] getIndexes(String input, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public int[] getIndexes(String input, SequenceMatchingParameters sequenceMatchingParameters) {
         
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
         
-        while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
+        while ((index = firstIndex(input, sequenceMatchingParameters, index)) >= 0) {
         
             result.add(index + 1);
             index++;
@@ -550,14 +550,14 @@ public class AminoAcidPattern extends ExperimentObject {
      * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as AminoAcidPattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingParameters sequenceMatchingParameters) {
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
-        while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
+        while ((index = firstIndex(input, sequenceMatchingParameters, index)) >= 0) {
             result.add(index + 1);
             index++;
         }
@@ -569,12 +569,12 @@ public class AminoAcidPattern extends ExperimentObject {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        return firstIndex(aminoAcidSequence, sequenceMatchingParameters, 0);
     }
 
     /**
@@ -582,12 +582,12 @@ public class AminoAcidPattern extends ExperimentObject {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return firstIndex(aminoAcidSequence.getSequence(), sequenceMatchingPreferences, 0);
+    public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        return firstIndex(aminoAcidSequence.getSequence(), sequenceMatchingParameters, 0);
     }
 
     /**
@@ -595,37 +595,37 @@ public class AminoAcidPattern extends ExperimentObject {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidPattern the amino acid sequence to look into
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return firstIndex(aminoAcidPattern, sequenceMatchingPreferences, 0);
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        return firstIndex(aminoAcidPattern, sequenceMatchingParameters, 0);
     }
 
     /**
      * Indicates whether the pattern contains a subsequence of amino acids.
      *
      * @param aminoAcidSequence the amino acid sequence to look for
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean contains(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
         AminoAcidPattern pattern = getAminoAcidPatternFromString(aminoAcidSequence);
-        return pattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
+        return pattern.firstIndex(this, sequenceMatchingParameters) >= 0;
     }
 
     /**
      * Indicates whether the pattern contains a subsequence of amino acids.
      *
      * @param aminoAcidPattern the amino acid sequence to look for
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return aminoAcidPattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
+    public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        return aminoAcidPattern.firstIndex(this, sequenceMatchingParameters) >= 0;
     }
 
     /**
@@ -633,12 +633,12 @@ public class AminoAcidPattern extends ExperimentObject {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences, int startIndex) {
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidSequence.length();
@@ -650,7 +650,7 @@ public class AminoAcidPattern extends ExperimentObject {
 
             for (int j = 0; j < patternLength; j++) {
                 char aa = aminoAcidSequence.charAt(i + j);
-                if (!isTargeted(aa, j, sequenceMatchingPreferences)) {
+                if (!isTargeted(aa, j, sequenceMatchingParameters)) {
                     match = false;
                     break;
                 }
@@ -669,12 +669,12 @@ public class AminoAcidPattern extends ExperimentObject {
      * given pattern. -1 if not found. 0 is the first amino acid.
      *
      * @param aminoAcidPattern the amino acid sequence to look into
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences, int startIndex) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
@@ -687,7 +687,7 @@ public class AminoAcidPattern extends ExperimentObject {
                 if (!aminoAcids.isEmpty()) {
                     boolean aaMatched = false;
                     for (Character aa : aminoAcids) {
-                        if (isTargeted(aa, j, sequenceMatchingPreferences)) {
+                        if (isTargeted(aa, j, sequenceMatchingParameters)) {
                             aaMatched = true;
                             break;
                         }
@@ -711,16 +711,16 @@ public class AminoAcidPattern extends ExperimentObject {
      *
      * @param aa the amino acid as character
      * @param index the index in the pattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return true if the given amino acid at the given index of the pattern is
      * targeted
      */
-    public boolean isTargeted(Character aa, int index, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isTargeted(Character aa, int index, SequenceMatchingParameters sequenceMatchingParameters) {
 
         if (residueTargeted != null) {
 
-            MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
+            MatchingType matchingType = sequenceMatchingParameters.getSequenceMatchingType();
             ArrayList<Character> aaList = residueTargeted.get(index);
 
             if (aaList != null && !aaList.isEmpty()) {
@@ -765,26 +765,26 @@ public class AminoAcidPattern extends ExperimentObject {
      * Indicates whether the pattern is found in the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        return firstIndex(aminoAcidSequence, sequenceMatchingParameters) >= 0;
     }
 
     /**
      * Indicates whether the pattern is found in the given amino acid sequence.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
+    public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        return firstIndex(aminoAcidPattern, sequenceMatchingParameters) >= 0;
     }
 
     /**
@@ -793,13 +793,13 @@ public class AminoAcidPattern extends ExperimentObject {
      * entire pattern cannot be mapped to the sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      * @param index the index at which the matching should be done
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence at the given index
      */
-    public boolean matchesAt(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences, int index) {
+    public boolean matchesAt(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters, int index) {
         int startIndex = index;
         int endIndex = length();
         if (startIndex < 0) {
@@ -809,87 +809,87 @@ public class AminoAcidPattern extends ExperimentObject {
             return false;
         }
         String subSequence = aminoAcidSequence.substring(index, index + length());
-        return matches(subSequence, sequenceMatchingPreferences);
+        return matches(subSequence, sequenceMatchingParameters);
     }
 
     /**
      * Indicates whether the pattern matches the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
-    public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+    public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingParameters) >= 0;
     }
 
     /**
      * Indicates whether the pattern matches the given amino acid sequence
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
-    public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
-        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
+    public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingParameters) >= 0;
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isStarting(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
         int patternLength = length();
-        return matchesIn(aminoAcidSequence.substring(0, patternLength), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidSequence.substring(0, patternLength), sequenceMatchingParameters);
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
         int patternLength = length();
-        return matchesIn(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingParameters);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
         int patternLength = length();
-        return matchesIn(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingParameters);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isEnding(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
         int patternLength = length();
-        return matchesIn(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingParameters);
     }
 
     /**
@@ -898,17 +898,17 @@ public class AminoAcidPattern extends ExperimentObject {
      * should be loaded in the Modification factory.
      *
      * @param anotherPattern the other AminoAcidPattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingParameters the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingParameters) {
 
         if (anotherPattern == null) {
             return false;
         }
 
-        if (!matches(anotherPattern, sequenceMatchingPreferences)) {
+        if (!matches(anotherPattern, sequenceMatchingParameters)) {
             return false;
         }
         

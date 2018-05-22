@@ -2,7 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.parameters.tools.UtilitiesUserParameters;
+import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

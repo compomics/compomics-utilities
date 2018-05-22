@@ -1,5 +1,6 @@
-package com.compomics.util.parameters.tools;
+package com.compomics.util.parameters;
 
+import com.compomics.util.parameters.searchgui.OutputParameters;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.io.json.JsonMarshaller;
 import java.awt.Color;
@@ -172,7 +173,7 @@ public class UtilitiesUserParameters implements Serializable {
     /**
      * The way output files should be exported.
      */
-    private SearchGuiOutputParameters outputOption = SearchGuiOutputParameters.grouped;
+    private OutputParameters outputOption = OutputParameters.grouped;
     /**
      * Indicates whether data files (mgf and FASTA) should be copied in the
      * output.
@@ -924,7 +925,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @param outputOption the SearchGUI output option
      */
-    public void setSearchGuiOutputParameters(SearchGuiOutputParameters outputOption) {
+    public void setSearchGuiOutputParameters(OutputParameters outputOption) {
         this.outputOption = outputOption;
     }
 
@@ -933,7 +934,7 @@ public class UtilitiesUserParameters implements Serializable {
      *
      * @return the selected SearchGUI output option
      */
-    public SearchGuiOutputParameters getSearchGuiOutputParameters() {
+    public OutputParameters getSearchGuiOutputParameters() {
         return outputOption;
     }
 

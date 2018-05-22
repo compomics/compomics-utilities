@@ -33,9 +33,17 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      */
     static final long serialVersionUID = -5516259326385167746L;
     /**
+     * Currently supported version number.
+     */
+    public static final String CURRENT_VERSION = "5.0.1";
+    /**
      * Name of the type of marshalled parameter.
      */
     private String marshallableParameterType = null;
+    /**
+     * Version number.
+     */
+    public final String version = CURRENT_VERSION;
     /**
      * The name of the parameters.
      */
@@ -443,32 +451,37 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the parameters
      *
      * @throws IOException if an error occurs while reading the file
-     * @throws ClassNotFoundException if the file could not be casted
      */
-    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws IOException, ClassNotFoundException {
+    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws IOException {
 
         Object savedObject;
 
-            IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
-            Class expectedObjectType = DummyParameters.class;
-            Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
-            DummyParameters dummyParameters = (DummyParameters) object;
+        IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+        Class expectedObjectType = DummyParameters.class;
+        Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+        DummyParameters dummyParameters = (DummyParameters) object;
 
-            if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
-                
-                expectedObjectType = SearchParameters.class;
-                savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
-            
-            } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+        if (dummyParameters.version == null || !dummyParameters.version.equals(IdentificationParameters.CURRENT_VERSION)) {
 
-                expectedObjectType = IdentificationParameters.class;
-                savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+            throw new IllegalArgumentException("Version of parameters file " + identificationParametersFile + " not supported.");
 
-            } else {
+        }
 
-                throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
+        if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
 
-            }
+            expectedObjectType = SearchParameters.class;
+            savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+
+        } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+
+            expectedObjectType = IdentificationParameters.class;
+            savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+
+        } else {
+
+            throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
+
+        }
 
         IdentificationParameters identificationParameters;
 
@@ -495,6 +508,29 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
+     * Returns a boolean indicating whether the version of the parameters file
+     * is supported.
+     *
+     * @param identificationParametersFile the parameters file
+     *
+     * @return a boolean indicating whether the version of the parameters file
+     * is supported
+     *
+     * @throws IOException if an error occurs while reading the file
+     */
+    public static boolean supportedVersion(File identificationParametersFile) throws IOException {
+
+        IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+        Class expectedObjectType = DummyParameters.class;
+
+        Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+        DummyParameters dummyParameters = (DummyParameters) object;
+
+        return dummyParameters.version != null && dummyParameters.version.equals(IdentificationParameters.CURRENT_VERSION);
+        
+    }
+
+    /**
      * Saves the identification parameters to a file.
      *
      * @param identificationParameters the identification parameters
@@ -508,7 +544,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
-        
+
     }
 
     /**
@@ -517,9 +553,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the name of the parameters
      */
     public String getName() {
-        
+
         return name;
-        
+
     }
 
     /**
@@ -528,9 +564,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param name the name of the parameters
      */
     public void setName(String name) {
-        
+
         this.name = name;
-        
+
     }
 
     /**
@@ -539,9 +575,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the description of the parameters
      */
     public String getDescription() {
-        
+
         return description;
-        
+
     }
 
     /**
@@ -551,15 +587,15 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * generated
      */
     public boolean getDefaultDescription() {
-        
+
         if (defaultDescription == null) {
-            
+
             return false;
-            
+
         }
-        
+
         return defaultDescription;
-        
+
     }
 
     /**
@@ -570,10 +606,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * is automatically generated
      */
     public void setDescription(String description, boolean automaticallyGenerated) {
-        
+
         this.description = description;
         this.defaultDescription = automaticallyGenerated;
-        
+
     }
 
     /**
@@ -582,102 +618,102 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param searchParameters the parameters used for the search
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
-        
+
         setSearchParameters(searchParameters);
         annotationParameters = new AnnotationParameters();
         annotationParameters.addNeutralLoss(NeutralLoss.H2O);
         annotationParameters.addNeutralLoss(NeutralLoss.NH3);
-        
+
         if (searchParameters != null) {
-            
+
             annotationParameters.setParametersFromSearchParameters(searchParameters);
-            
+
         }
-        
+
         annotationParameters.setIntensityLimit(0.75);
         annotationParameters.setAutomaticAnnotation(true);
         peptideAssumptionFilter = new PeptideAssumptionFilter();
-        
+
         if (searchParameters != null) {
-            
+
             peptideAssumptionFilter.setFilterFromSearchParameters(searchParameters);
-            
+
         }
-        
+
         if (psmScoringParameters == null) {
-            
+
             psmScoringParameters = new PsmScoringParameters();
-            
+
         }
-        
+
         if (modificationLocalizationParameters == null) {
-            
+
             modificationLocalizationParameters = new ModificationLocalizationParameters();
-            
+
         }
-        
+
         if (sequenceMatchingParameters == null) {
-            
+
             sequenceMatchingParameters = SequenceMatchingParameters.getDefaultSequenceMatching();
-            
+
         }
-        
+
         if (peptideVariantsParameters == null) {
-            
+
             peptideVariantsParameters = new PeptideVariantsParameters();
-            
+
         }
-        
+
         if (geneParameters == null) {
-            
+
             geneParameters = new GeneParameters();
             geneParameters.setPreferencesFromSearchParameters(searchParameters);
-            
+
         }
-        
+
         if (proteinInferenceParameters == null) {
-            
+
             proteinInferenceParameters = new ProteinInferenceParameters();
-            
+
         }
-        
+
         if (idValidationParameters == null) {
-            
+
             idValidationParameters = new IdMatchValidationParameters();
-            
+
         }
-        
+
         if (fractionParameters == null) {
-            
+
             fractionParameters = new FractionParameters();
-            
+
         }
-        
+
         if (searchParameters != null) {
-            
+
             setDescription(searchParameters.getShortDescription(), true);
-            
+
         }
     }
 
     @Override
     public void setType() {
-        
+
         marshallableParameterType = Type.identification_parameters.name();
-        
+
     }
 
     @Override
     public Type getType() {
-        
+
         if (marshallableParameterType == null) {
-            
+
             return null;
-            
+
         }
-        
+
         return Type.valueOf(marshallableParameterType);
-        
+
     }
 
     /**
@@ -692,71 +728,54 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
 
         if (otherIdentificationParameters == null) {
-            
             return false;
-            
         }
 
         if (!searchParameters.equals(otherIdentificationParameters.getSearchParameters())) {
-            
             return false;
-            
         }
+        
         if (!annotationParameters.isSameAs(otherIdentificationParameters.getAnnotationParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!sequenceMatchingParameters.isSameAs(otherIdentificationParameters.getSequenceMatchingParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!getPeptideVariantsParameters().isSameAs(otherIdentificationParameters.getPeptideVariantsParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!geneParameters.equals(otherIdentificationParameters.getGeneParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!psmScoringParameters.equals(otherIdentificationParameters.getPsmScoringParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!peptideAssumptionFilter.isSameAs(otherIdentificationParameters.getPeptideAssumptionFilter())) {
-            
             return false;
-            
         }
-        
+
         if (!modificationLocalizationParameters.equals(otherIdentificationParameters.getModificationLocalizationParameters())) {
-            
             return false;
-            
         }
-        
+
         if (!proteinInferenceParameters.equals(otherIdentificationParameters.getProteinInferenceParameters())) {
-            
             return false;
-            
+        }
+
+        if (!fractionParameters.isSameAs(otherIdentificationParameters.getFractionParameters())) {
+            return false;
         }
         
-        if (!fractionParameters.isSameAs(otherIdentificationParameters.getFractionParameters())) {
-            
+        if (!idValidationParameters.equals(otherIdentificationParameters.getIdValidationParameters())) {
             return false;
-            
         }
 
         return true;
-        
+
     }
 }

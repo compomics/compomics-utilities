@@ -3647,10 +3647,15 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> totalSpectrumCounting</pre>
 <div class="block">The sum of all spectrum counting indexes.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>totalSpectrumCountingMass</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> totalSpectrumCountingMass</pre>
 <div class="block">The sum of all spectrum counting masses.</div>
+</li>
+<li class="blockListLast">
+<h4>validatedTargetProteinKeys</h4>
+<pre>long[] validatedTargetProteinKeys</pre>
+<div class="block">The keys of the validated target protein matches.</div>
 </li>
 </ul>
 </li>
@@ -16324,20 +16329,20 @@
 <li class="blockList">
 <h4>instrumentID</h4>
 <pre>int instrumentID</pre>
-<div class="block">The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1: High-res LTQ,
- 2: TOF, 3: Q-Exactive.</div>
+<div class="block">The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1:
+ Orbitrap/FTICR, 2: TOF, 3: Q-Exactive.</div>
 </li>
 <li class="blockList">
 <h4>fragmentationType</h4>
 <pre>int fragmentationType</pre>
 <div class="block">The MS-GF+ fragmentation type ID: 0: As written in the spectrum or CID if
- no info (Default), 1: CID, 2: ETD, 3: HCD.</div>
+ no info, 1: CID, 2: ETD, 3: HCD, 4: UVPD.</div>
 </li>
 <li class="blockList">
 <h4>protocol</h4>
 <pre>int protocol</pre>
-<div class="block">The MS-GF+ protocol ID: 0: Automatic (Default), 1: Phosphorylation, 2:
- iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.</div>
+<div class="block">The MS-GF+ protocol ID: 0: Automatic, 1: Phosphorylation, 2: iTRAQ, 3:
+ iTRAQPhospho, 4: TMT, 5: Standard.</div>
 </li>
 <li class="blockList">
 <h4>minPeptideLength</h4>

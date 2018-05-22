@@ -119,7 +119,7 @@
                       </Group>
                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="psmFdrTxt" alignment="1" max="32767" attributes="0"/>
+                          <Component id="psmFdrTxt" alignment="1" pref="135" max="32767" attributes="0"/>
                           <Component id="peptideFdrTxt" max="32767" attributes="0"/>
                           <Component id="proteinFdrTxt" alignment="1" max="32767" attributes="0"/>
                       </Group>

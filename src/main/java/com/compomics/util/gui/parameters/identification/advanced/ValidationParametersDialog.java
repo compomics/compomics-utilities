@@ -240,7 +240,7 @@ public class ValidationParametersDialog extends javax.swing.JDialog {
                     .addComponent(psmFdrLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                     .addComponent(peptideFdrTxt)
                     .addComponent(proteinFdrTxt, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())

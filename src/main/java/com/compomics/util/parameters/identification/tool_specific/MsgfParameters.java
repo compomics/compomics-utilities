@@ -19,18 +19,18 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     private boolean searchDecoyDatabase = false;
     /**
-     * The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1: High-res LTQ,
-     * 2: TOF, 3: Q-Exactive.
+     * The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1:
+     * Orbitrap/FTICR, 2: TOF, 3: Q-Exactive.
      */
     private int instrumentID = 3;
     /**
      * The MS-GF+ fragmentation type ID: 0: As written in the spectrum or CID if
-     * no info (Default), 1: CID, 2: ETD, 3: HCD.
+     * no info, 1: CID, 2: ETD, 3: HCD, 4: UVPD.
      */
     private int fragmentationType = 3;
     /**
-     * The MS-GF+ protocol ID: 0: Automatic (Default), 1: Phosphorylation, 2:
-     * iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.
+     * The MS-GF+ protocol ID: 0: Automatic, 1: Phosphorylation, 2: iTRAQ, 3:
+     * iTRAQPhospho, 4: TMT, 5: Standard.
      */
     private int protocol = 0;
     /**
@@ -337,7 +337,8 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the maximum number of modifications per peptide.
      *
-     * @param numberOfModificationsPerPeptide the maximum number of modifications per peptide
+     * @param numberOfModificationsPerPeptide the maximum number of
+     * modifications per peptide
      */
     public void setNumberOfModificationsPerPeptide(Integer numberOfModificationsPerPeptide) {
         this.numberOfModificationsPerPeptide = numberOfModificationsPerPeptide;

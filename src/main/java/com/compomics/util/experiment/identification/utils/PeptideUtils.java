@@ -320,7 +320,7 @@ public class PeptideUtils {
         
         for (String[] modificationArray : modificationArrays) {
             
-            String modName = modificationArray[length + 2];
+            String modName = modificationArray[length + 1];
             
             if (modName != null) {
                 

@@ -19,6 +19,7 @@ import com.google.common.base.Functions;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -78,7 +79,7 @@ public class FragmentIonTable extends JTable {
     /**
      * The spectrum annotations map.
      */
-    private final ArrayList<Stream<IonMatch>> allAnnotations;
+    private final ArrayList<IonMatch[]> allAnnotations;
     /**
      * The list of spectra. Needed for intensity normalization.
      */
@@ -115,7 +116,7 @@ public class FragmentIonTable extends JTable {
      */
     public FragmentIonTable(
             Peptide currentPeptide,
-            ArrayList<Stream<IonMatch>> allAnnotations,
+            ArrayList<IonMatch[]> allAnnotations,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
             boolean singleCharge, boolean twoCharges,
@@ -165,7 +166,7 @@ public class FragmentIonTable extends JTable {
      */
     public FragmentIonTable(
             Peptide currentPeptide,
-            ArrayList<Stream<IonMatch>> allAnnotations,
+            ArrayList<IonMatch[]> allAnnotations,
             ArrayList<Spectrum> allSpectra,
             HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
@@ -512,8 +513,9 @@ public class FragmentIonTable extends JTable {
         // highlight the detected ions
         for (int i = 0; i < allAnnotations.size(); i++) {
 
-            Stream<IonMatch> currentAnnotations = allAnnotations.get(i);
-            currentAnnotations.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+            IonMatch[] currentAnnotations = allAnnotations.get(i);
+            Arrays.stream(currentAnnotations)
+                    .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                     .forEach(ionMatch -> {
 
                         int currentCharge = ionMatch.charge;
@@ -675,7 +677,7 @@ public class FragmentIonTable extends JTable {
         HashMap<String, ArrayList<Double>> values = new HashMap<>();
 
         double maxIntensity = allAnnotations.stream()
-                .flatMap(Function.identity())
+                .flatMap(annotations -> Arrays.stream(annotations))
                 .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                 .mapToDouble(ionMatch -> ionMatch.peak.intensity)
                 .max()
@@ -683,13 +685,14 @@ public class FragmentIonTable extends JTable {
 
         for (int i = 0; i < allAnnotations.size(); i++) {
 
-            Stream<IonMatch> currentAnnotations = allAnnotations.get(i);
+            IonMatch[] currentAnnotations = allAnnotations.get(i);
 
             if (i < allSpectra.size()) { // escape possible null pointer
 
                 double totalIntensity = allSpectra.get(i).getTotalIntensity();
 
-                currentAnnotations.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                Arrays.stream(currentAnnotations)
+                        .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                         .forEach(ionMatch -> {
 
                             int currentCharge = ionMatch.charge;

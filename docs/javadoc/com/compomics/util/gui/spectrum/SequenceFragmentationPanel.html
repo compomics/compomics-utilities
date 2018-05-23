@@ -227,8 +227,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-com.compomics.util.experiment.identification.matches.IonMatch:A-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
+                          <a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;aIonMatches,
                           boolean&nbsp;boolModifiedSequence,
                           boolean&nbsp;aHighlightModifications,
                           <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
@@ -238,8 +238,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
-                          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#SequenceFragmentationPanel-java.lang.String-com.compomics.util.experiment.identification.matches.IonMatch:A-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">SequenceFragmentationPanel</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
+                          <a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;aIonMatches,
                           boolean&nbsp;aHighlightModifications,
                           <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                           int&nbsp;forwardIon,
@@ -270,7 +270,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#setIonMatches-java.util.stream.Stream-">setIonMatches</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;lIonMatches)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/gui/spectrum/SequenceFragmentationPanel.html#setIonMatches-com.compomics.util.experiment.identification.matches.IonMatch:A-">setIonMatches</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;lIonMatches)</code>
 <div class="block">Set the ArrayList with FragmentIon matches.</div>
 </td>
 </tr>
@@ -331,14 +331,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
+<a name="SequenceFragmentationPanel-java.lang.String-com.compomics.util.experiment.identification.matches.IonMatch:A-boolean-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>SequenceFragmentationPanel</h4>
 <pre>public&nbsp;SequenceFragmentationPanel(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;aSequence,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+                                  <a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;aIonMatches,
                                   boolean&nbsp;boolModifiedSequence,
                                   boolean&nbsp;aHighlightModifications,
                                   <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
@@ -349,7 +349,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>aSequence</code> - String with the Modified Sequence of an peptide
  identification.</dd>
-<dd><code>aIonMatches</code> - ArrayList with Fragmentation ion matches.</dd>
+<dd><code>aIonMatches</code> - Array with fragment ion matches.</dd>
 <dd><code>boolModifiedSequence</code> - boolean describing the sequence. This
  constructor can be used to enter a ModifiedSequence or a normal sequence.</dd>
 <dd><code>aHighlightModifications</code> - boolean decides whether the modification
@@ -366,14 +366,14 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </dl>
 </li>
 </ul>
-<a name="SequenceFragmentationPanel-java.lang.String-java.util.stream.Stream-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
+<a name="SequenceFragmentationPanel-java.lang.String-com.compomics.util.experiment.identification.matches.IonMatch:A-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-int-int-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SequenceFragmentationPanel</h4>
 <pre>public&nbsp;SequenceFragmentationPanel(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;taggedModifiedSequence,
-                                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;aIonMatches,
+                                  <a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;aIonMatches,
                                   boolean&nbsp;aHighlightModifications,
                                   <a href="../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationProfile,
                                   int&nbsp;forwardIon,
@@ -383,7 +383,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>taggedModifiedSequence</code> - the tagged modified peptide sequence</dd>
-<dd><code>aIonMatches</code> - ArrayList with Fragmentation ion matches.</dd>
+<dd><code>aIonMatches</code> - Array with fragment ion matches.</dd>
 <dd><code>aHighlightModifications</code> - boolean decides whether the modification
  are highlighted by adding a star above the modified residue instead if
  displaying the PTM short name</dd>
@@ -449,13 +449,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.htm
 </dl>
 </li>
 </ul>
-<a name="setIonMatches-java.util.stream.Stream-">
+<a name="setIonMatches-com.compomics.util.experiment.identification.matches.IonMatch:A-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>setIonMatches</h4>
-<pre>public&nbsp;void&nbsp;setIonMatches(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/stream.Stream.html?is-external=true" title="class or interface in java.util">java.util.stream.Stream</a>&lt;<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;lIonMatches)</pre>
+<pre>public&nbsp;void&nbsp;setIonMatches(<a href="../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;lIonMatches)</pre>
 <div class="block">Set the ArrayList with FragmentIon matches. The double[] indexing b and y
  ion intensities will be recalculated.</div>
 <dl>

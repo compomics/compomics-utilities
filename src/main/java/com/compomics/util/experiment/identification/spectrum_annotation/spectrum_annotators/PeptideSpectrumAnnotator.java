@@ -156,7 +156,35 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public Stream<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+
+        return getSpectrumAnnotationStream(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, true)
+                .toArray(IonMatch[]::new);
+    }
+
+    /**
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches
+     * using the intensity filter.
+     *
+     * Note that, except for +1 precursors, fragments ions will be expected to
+     * have a charge strictly smaller than the precursor ion charge.
+     *
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param spectrum the spectrum to match
+     * @param peptide the peptide of interest
+     * @param modificationParameters the modification parameters the
+     * modification parameters
+     * @param sequenceProvider a protein sequence provider
+     * @param modificationsSequenceMatchingParameters the sequence matching
+     * parameters to use for modifications
+     *
+     * @return an ArrayList of IonMatch containing the ion matches with the
+     * given settings
+     */
+    public Stream<IonMatch> getSpectrumAnnotationStream(AnnotationParameters annotationSettings,
             SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
@@ -188,7 +216,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
 
-        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, null, useIntensityFilter);
+        return getSpectrumAnnotationStream(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, null, useIntensityFilter);
     }
 
     /**
@@ -212,12 +240,12 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings,
             SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
 
-        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, null, useIntensityFilter)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return getSpectrumAnnotationStream(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, null, useIntensityFilter)
+                .toArray(IonMatch[]::new);
     }
 
     /**
@@ -243,7 +271,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public Stream<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings,
+    public Stream<IonMatch> getSpectrumAnnotationStream(AnnotationParameters annotationSettings,
             SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters,
             HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, boolean useIntensityFilter) {
@@ -308,7 +336,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             SpecificAnnotationParameters specificAnnotationSettings, Spectrum spectrum, Peptide peptide, ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
 
-        Stream<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide,
+        Stream<IonMatch> matches = getSpectrumAnnotationStream(annotationSettings, specificAnnotationSettings, spectrum, peptide,
                 modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
         return matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
@@ -366,7 +394,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, ModificationParameters modificationParameters,
+    public IonMatch[] getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, useIntensityFilter);
     }

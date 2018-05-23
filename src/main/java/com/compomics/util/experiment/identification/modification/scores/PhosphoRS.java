@@ -458,8 +458,10 @@ public class PhosphoRS {
             inCache = false;
         }
 
-        Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, possiblePeptideFragments, false);
-        int k = (int) matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION).count();
+        Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotationStream(annotationSettings, scoringAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, possiblePeptideFragments, false);
+        int k = (int) matches
+                .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                .count();
         if (k == 0) {
             return 1.0;
         }

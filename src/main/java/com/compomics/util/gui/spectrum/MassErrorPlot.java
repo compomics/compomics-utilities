@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
@@ -27,7 +28,7 @@ public class MassErrorPlot extends JPanel {
     /**
      * The complete list of possible spectrum annotations.
      */
-    private Stream<IonMatch> annotations;
+    private IonMatch[] annotations;
     /**
      * The chart panel.
      */
@@ -44,7 +45,7 @@ public class MassErrorPlot extends JPanel {
      * interrupted
      */
     public MassErrorPlot(
-            Stream<IonMatch> annotations,
+            IonMatch[] annotations,
             Spectrum currentSpectrum,
             double massTolerance) throws InterruptedException {
         this(annotations, currentSpectrum, massTolerance, false);
@@ -60,7 +61,7 @@ public class MassErrorPlot extends JPanel {
      * of the absolute error (Da)
      */
     public MassErrorPlot(
-            Stream<IonMatch> annotations,
+            IonMatch[] annotations,
             Spectrum currentSpectrum,
             double massTolerance,
             boolean useRelativeError) {
@@ -71,19 +72,29 @@ public class MassErrorPlot extends JPanel {
 
         this.annotations = annotations;
 
-        if (annotations.count() > 0) {
+        if (annotations.length > 0) {
 
             boolean useIntensityGrading = false;  // @TODO: make this selectable by the user?
             DefaultXYDataset xyDataset = new DefaultXYDataset();
             ArrayList<Color> colors = new ArrayList<>();
 
             // find the most intense annotated peak
-            double maxAnnotatedIntensity = annotations.mapToDouble(ionMatch -> ionMatch.peak.intensity).max().orElse(0.0);
+            double maxAnnotatedIntensity = Arrays.stream(annotations)
+                    .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+                    .max()
+                    .orElse(0.0);
 
-            double maxError = useRelativeError ? annotations.mapToDouble(ionMatch -> ionMatch.getRelativeError()).max().orElse(0.0)
-                    : annotations.mapToDouble(ionMatch -> ionMatch.getAbsoluteError()).max().orElse(0.0);
+            double maxError = useRelativeError ? Arrays.stream(annotations)
+                            .mapToDouble(ionMatch -> ionMatch.getRelativeError())
+                            .max()
+                            .orElse(0.0)
+                    : Arrays.stream(annotations)
+                            .mapToDouble(ionMatch -> ionMatch.getAbsoluteError())
+                            .max()
+                            .orElse(0.0);
 
-            annotations.forEach(ionMatch -> {
+            Arrays.stream(annotations)
+                    .forEach(ionMatch -> {
                 double[][] dataXY = new double[2][1];
                 dataXY[0][0] = ionMatch.peak.mz;
 
@@ -153,7 +164,7 @@ public class MassErrorPlot extends JPanel {
      * @return the current number of data points
      */
     public int getNumberOfDataPointsInPlot() {
-        return (int) annotations.count();
+        return annotations.length;
     }
 
     /**

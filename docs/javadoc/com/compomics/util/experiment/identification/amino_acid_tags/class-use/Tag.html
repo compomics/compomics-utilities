@@ -120,7 +120,9 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.identification.utils">com.compomics.util.experiment.identification.utils</a></td>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">This package contains utilities classes to handle identification objects.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.gui.spectrum">com.compomics.util.gui.spectrum</a></td>
@@ -325,7 +327,7 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]</code></td>
 <td class="colLast"><span class="typeNameLabel">TagSpectrumAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/TagSpectrumAnnotator.html#getSpectrumAnnotation-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.amino_acid_tags.Tag-">getSpectrumAnnotation</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
                      <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
@@ -336,7 +338,7 @@
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]</code></td>
 <td class="colLast"><span class="typeNameLabel">TagSpectrumAnnotator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/TagSpectrumAnnotator.html#getSpectrumAnnotation-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.amino_acid_tags.Tag-boolean-">getSpectrumAnnotation</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a>&nbsp;annotationSettings,
                      <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters,
@@ -444,8 +446,8 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-java.util.ArrayList-int-int-int-boolean-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.experiment.identification.matches.IonMatch:A-int-int-int-boolean-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                            <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -459,8 +461,8 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-java.util.ArrayList-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.experiment.identification.matches.IonMatch:A-int-int-int-boolean-boolean-double-double-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                            <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -477,8 +479,8 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-java.util.ArrayList-int-int-int-boolean-boolean-double-double-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.experiment.identification.matches.IonMatch:A-int-int-int-boolean-boolean-double-double-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                            <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,
@@ -493,8 +495,8 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-java.util.ArrayList-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
-                            <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>&gt;&nbsp;annotations,
+<td class="colLast"><span class="typeNameLabel">SpectrumPanel.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/gui/spectrum/SpectrumPanel.html#addAutomaticDeNovoSequencing-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.experiment.identification.matches.IonMatch:A-int-int-int-boolean-boolean-double-double-float-float-java.util.ArrayList-boolean-boolean-">addAutomaticDeNovoSequencing</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/amino_acid_tags/Tag.html" title="class in com.compomics.util.experiment.identification.amino_acid_tags">Tag</a>&nbsp;tag,
+                            <a href="../../../../../../../com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">IonMatch</a>[]&nbsp;annotations,
                             int&nbsp;aForwardIon,
                             int&nbsp;aRewindIon,
                             int&nbsp;aDeNovoCharge,

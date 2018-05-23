@@ -269,9 +269,8 @@ public class ModificationtableContent {
 
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters)
-                    .collect(Collectors.toCollection(ArrayList::new));
+            IonMatch[] matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -344,7 +343,7 @@ public class ModificationtableContent {
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
             final int index = i;
-            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
+            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotationStream(annotationParameters, specificAnnotationParameters, spectrum, noModPeptide, 
                     modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
             matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
                     .forEach(ionMatch -> {

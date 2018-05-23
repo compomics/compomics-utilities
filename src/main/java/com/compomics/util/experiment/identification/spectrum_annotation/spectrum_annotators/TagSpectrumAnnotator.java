@@ -241,7 +241,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
+    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
             Spectrum spectrum, Tag tag) {
         return getSpectrumAnnotation(annotationSettings, modificationParameters, modificationsSequenceMatchingParameters, specificAnnotationSettings, spectrum, tag, true);
     }
@@ -265,10 +265,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
+    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
             Spectrum spectrum, Tag tag, boolean useIntensityFilter) {
 
-        ArrayList<IonMatch> result = new ArrayList<>();
+        ArrayList<IonMatch> annotationList = new ArrayList<>(0);
 
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
         if (spectrum != null) {
@@ -309,7 +309,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                                         if (chargeValidated(ion, charge, precursorCharge)) {
                                             IonMatch ionMatch = matchInSpectrum(ion, charge);
                                             if (ionMatch != null) {
-                                                result.add(ionMatch);
+                                                annotationList.add(ionMatch);
                                             }
                                         }
                                     }
@@ -321,11 +321,11 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             }
         }
 
-        return result;
+        return annotationList.toArray(new IonMatch[annotationList.size()]);
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
+    public IonMatch[] getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
         return getSpectrumAnnotation(annotationSettings, modificationParameters, modificationsSequenceMatchingParameters, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
     }

@@ -1182,7 +1182,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, Stream<IonMatch> annotations,
+            Peptide currentPeptide, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags, boolean mirrored,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
@@ -1219,7 +1219,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, Stream<IonMatch> annotations,
+            Peptide currentPeptide, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored,
@@ -1258,7 +1258,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, Stream<IonMatch> annotations,
+            Peptide currentPeptide, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedModifications, boolean mirrored,
@@ -1291,7 +1291,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, ArrayList<IonMatch> annotations,
+            Tag tag, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags, boolean mirrored) {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
@@ -1322,7 +1322,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, ArrayList<IonMatch> annotations,
+            Tag tag, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored) {
@@ -1357,7 +1357,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, ArrayList<IonMatch> annotations,
+            Tag tag, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, ArrayList<float[]> alphaLevels, boolean excludeFixedModifications, boolean mirrored) {
@@ -1397,7 +1397,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, Stream<IonMatch> annotations,
+            Peptide currentPeptide, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
@@ -1442,7 +1442,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, Stream<IonMatch> annotations,
+            Peptide currentPeptide, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
@@ -1458,7 +1458,8 @@ public class SpectrumPanel extends GraphicsPanel {
         IonMatch[] reverseIons = new IonMatch[currentPeptide.getSequence().length()];
 
         // iterate the annotations and find the de novo tags
-        annotations.filter(tempMatch -> tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
+        Arrays.stream(annotations)
+                .filter(tempMatch -> tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
                 && !tempMatch.ion.hasNeutralLosses()
                 && tempMatch.charge == deNovoCharge)
                 .forEach(tempMatch -> {
@@ -1580,7 +1581,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, ArrayList<IonMatch> annotations,
+            Tag tag, IonMatch[] annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showReverseTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
@@ -1620,26 +1621,26 @@ public class SpectrumPanel extends GraphicsPanel {
                 if (showForwardTags) {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
-                    
+
                     String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
 
                     for (int i = 0; i < aminoAcidSequence.length(); i++) {
-                        
+
                         IonMatch ionMatch1 = forwardMap.get(i);
                         IonMatch ionMatch2 = forwardMap.get(i + 1);
-                        
+
                         if (ionMatch1 != null && ionMatch2 != null) {
-                            
+
                             String mod = variableModifications[i + 1] != null ? "*" : "";
-                            
+
                             if (i == 0 && variableModifications[0] != null) {
-                                
+
                                 mod = "*";
-                                
+
                             } else if (i == aminoAcidSequence.length() - 1 && variableModifications[aminoAcidSequence.length() + 1] != null) {
-                                
+
                                 mod = "*";
-                                
+
                             }
 
                             float currentAlphaLevel = forwardIonAlphaLevel;
@@ -1683,7 +1684,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 if (showReverseTags) {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
-                    
+
                     String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
 
                     for (int i = 0; i < aminoAcidSequence.length(); i++) {
@@ -1694,17 +1695,17 @@ public class SpectrumPanel extends GraphicsPanel {
                         if (ionMatch1 != null && ionMatch2 != null) {
 
                             int sequenceIndex = aminoAcidSequence.length() - i - 1;
-                            
+
                             String mod = variableModifications[sequenceIndex + 1] != null ? "*" : "";
-                            
+
                             if (sequenceIndex == 0 && variableModifications[0] != null) {
-                                
+
                                 mod = "*";
-                                
+
                             } else if (sequenceIndex == aminoAcidSequence.length() - 1 && variableModifications[aminoAcidSequence.length() + 1] != null) {
-                                
+
                                 mod = "*";
-                                
+
                             }
 
                             float currentAlphaLevel = rewindIonAlphaLevel;

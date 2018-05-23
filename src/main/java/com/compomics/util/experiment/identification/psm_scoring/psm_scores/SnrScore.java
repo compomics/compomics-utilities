@@ -15,7 +15,6 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -62,7 +61,7 @@ public class SnrScore {
      */
     public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        ArrayList<IonMatch> ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
+        IonMatch[] ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
                     modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, false);
         return getScore(peptide, spectrum, ionMatchesList);
     }
@@ -76,8 +75,8 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, ArrayList<IonMatch> ionMatchesList) {
-        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
+    public double getScore(Peptide peptide, Spectrum spectrum, IonMatch[] ionMatchesList) {
+        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.length);
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);

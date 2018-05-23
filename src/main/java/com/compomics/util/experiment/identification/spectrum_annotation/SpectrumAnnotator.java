@@ -22,11 +22,11 @@ import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * The spectrum annotator annotates peaks in a spectrum.
@@ -151,9 +151,10 @@ public abstract class SpectrumAnnotator {
      *
      * @return vector of default spectrum annotations
      */
-    public static Vector<SpectrumAnnotation> getSpectrumAnnotation(Stream<IonMatch> ionMatches) {
+    public static Vector<SpectrumAnnotation> getSpectrumAnnotation(IonMatch[] ionMatches) {
 
-        return ionMatches.map(ionMatch -> new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
+        return Arrays.stream(ionMatches)
+                .map(ionMatch -> new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
                 SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()))
                 .collect(Collectors.toCollection(Vector::new));
 
@@ -411,7 +412,7 @@ public abstract class SpectrumAnnotator {
      *
      * @return the currently matched ions with the given settings
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
+    public IonMatch[] getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
         return getCurrentAnnotation(spectrum, annotationSettings, specificAnnotationSettings, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, true);
     }
@@ -432,7 +433,7 @@ public abstract class SpectrumAnnotator {
      *
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
+    public abstract IonMatch[] getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter);
 

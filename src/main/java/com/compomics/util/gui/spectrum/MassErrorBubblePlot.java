@@ -61,9 +61,9 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
     /**
-     * The list of currently used ions.
+     * The array of currently used ions.
      */
-    private ArrayList<IonMatch> currentlyUsedIonMatches;
+    private IonMatch[] currentlyUsedIonMatches;
     /**
      * The chart panel.
      */
@@ -87,7 +87,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<Stream<IonMatch>> annotations,
+            ArrayList<IonMatch[]> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
@@ -111,7 +111,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<Stream<IonMatch>> annotations,
+            ArrayList<IonMatch[]> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
@@ -137,7 +137,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<Stream<IonMatch>> annotations,
+            ArrayList<IonMatch[]> annotations,
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             double bubbleScale,
@@ -149,7 +149,7 @@ public class MassErrorBubblePlot extends JPanel {
         setOpaque(false);
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        currentlyUsedIonMatches = new ArrayList<>();
+        currentlyUsedIonMatches = new IonMatch[0];
 
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
         HashMap<IonMatch, ArrayList<XYZDataPoint>> fragmentIonDataset = new HashMap<>();
@@ -157,20 +157,20 @@ public class MassErrorBubblePlot extends JPanel {
 
         for (int j = 0; j < annotations.size(); j++) {
 
-            Stream<IonMatch> currentAnnotations = annotations.get(j);
+            IonMatch[] currentAnnotations = annotations.get(j);
             Spectrum currentSpectrum = currentSpectra.get(j);
 
             // the annotated ion matches
-            currentlyUsedIonMatches = currentAnnotations.collect(Collectors.toCollection(ArrayList::new));
+            currentlyUsedIonMatches = currentAnnotations;
 
-            if (currentlyUsedIonMatches.size() > 0) {
+            if (currentlyUsedIonMatches.length > 0) {
 
                 // find the most intense annotated peak
                 double maxAnnotatedIntensity = 0.0;
 
-                for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
+                for (int i = 0; i < currentlyUsedIonMatches.length; i++) {
 
-                    IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
+                    IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches[i];
 
                     if (ionMatch.peak.intensity > maxAnnotatedIntensity) {
                         maxAnnotatedIntensity = ionMatch.peak.intensity;
@@ -181,9 +181,9 @@ public class MassErrorBubblePlot extends JPanel {
 
                 if (fragmentIonLabels) {
 
-                    for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
+                    for (int i = 0; i < currentlyUsedIonMatches.length; i++) {
 
-                        IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
+                        IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches[i];
 
                         double error;
 
@@ -222,11 +222,11 @@ public class MassErrorBubblePlot extends JPanel {
 
                 } else {
 
-                    double[][] dataXYZ = new double[3][currentlyUsedIonMatches.size()];
+                    double[][] dataXYZ = new double[3][currentlyUsedIonMatches.length];
 
-                    for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
+                    for (int i = 0; i < currentlyUsedIonMatches.length; i++) {
 
-                        IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
+                        IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches[i];
 
                         double error;
 
@@ -418,7 +418,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @return the current number of data points
      */
     public int getNumberOfDataPointsInPlot() {
-        return currentlyUsedIonMatches.size();
+        return currentlyUsedIonMatches.length;
     }
 
     /**

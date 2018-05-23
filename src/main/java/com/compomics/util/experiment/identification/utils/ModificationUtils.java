@@ -540,7 +540,7 @@ public class ModificationUtils {
 
         } else {
 
-            Character.toString(residue);
+            stringBuilder.append(residue);
 
         }
     }

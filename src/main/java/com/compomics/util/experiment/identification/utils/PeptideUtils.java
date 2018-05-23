@@ -236,25 +236,25 @@ public class PeptideUtils {
         
         if (confidentModificationSites == null) {
 
-            confidentModificationSites = new String[peptideSequence.length()];
+            confidentModificationSites = new String[peptideSequence.length() + 2];
 
         }
 
         if (representativeAmbiguousModificationSites == null) {
 
-            representativeAmbiguousModificationSites = new String[peptideSequence.length()];
+            representativeAmbiguousModificationSites = new String[peptideSequence.length() + 2];
 
         }
 
         if (secondaryAmbiguousModificationSites == null) {
 
-            secondaryAmbiguousModificationSites = new String[peptideSequence.length()];
+            secondaryAmbiguousModificationSites = new String[peptideSequence.length() + 2];
 
         }
 
         if (fixedModificationSites == null) {
 
-            fixedModificationSites = new String[peptideSequence.length()];
+            fixedModificationSites = new String[peptideSequence.length() + 2];
 
         }
 

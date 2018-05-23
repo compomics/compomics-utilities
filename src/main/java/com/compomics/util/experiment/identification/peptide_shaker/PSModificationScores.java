@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.peptide_shaker;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.experiment.identification.peptide_shaker.ModificationScoring;
+import com.compomics.util.gui.utils.EmptyCollections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * A map containing all scores indexed by the modification of interest for a
      * peptide or a PSM.
      */
-    private final HashMap<String, ModificationScoring> modificationMap = new HashMap<>();
+    private final HashMap<String, ModificationScoring> modificationMap = new HashMap<>(0);
     /**
      * A list of all modification sites confidently localized on a sequence in a
      * map: site &gt; modification names.
@@ -287,7 +287,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
 
             if (modSites == null) {
 
-                modSites = new HashMap<>();
+                modSites = new HashMap<>(1);
                 ambiguousModificationsByModName.put(modification, modSites);
 
             }
@@ -433,7 +433,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return mainModificationSites == null || !mainModificationSites.containsKey(site) ? new HashSet<>(0)
+        return mainModificationSites == null || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
 
     }
@@ -454,8 +454,10 @@ public class PSModificationScores extends DbObject implements UrParameter {
         ObjectsDB.decreaseRWCounter();
 
         HashMap<Integer, HashSet<String>> modificationsAtSite = getAmbiguousModificationsAtRepresentativeSite(site);
+        
+        HashSet<String> modifications = modificationsAtSite.get(site);
 
-        return modificationsAtSite == null ? new HashSet<>(0)
+        return modifications == null ? EmptyCollections.emptyStringSet
                 : modificationsAtSite.get(site);
 
     }
@@ -474,7 +476,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? new HashSet<>(0)
+        return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
 
     }
@@ -544,7 +546,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
-        return ambiguousModificationsByRepresentativeSite == null ? new TreeSet<>()
+        return ambiguousModificationsByRepresentativeSite == null ? EmptyCollections.emptyIntTreeSet
                 : new TreeSet<>(ambiguousModificationsByRepresentativeSite.keySet());
         
     }
@@ -560,7 +562,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
-        return confidentModificationsByModName == null ? new TreeSet<>()
+        return confidentModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(confidentModificationsByModName.keySet());
         
     }
@@ -576,7 +578,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
         
-        return ambiguousModificationsByModName == null ? new TreeSet<>()
+        return ambiguousModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(ambiguousModificationsByModName.keySet());
         
     }

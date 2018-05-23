@@ -42,7 +42,7 @@ public class IntensityHistogram extends JPanel {
      * @param intensityThreshold the intensity threshold
      */
     public IntensityHistogram(
-            Stream<IonMatch> annotations,
+            IonMatch[] annotations,
             Spectrum currentSpectrum,
             AnnotationParameters.IntensityThresholdType intensityThresholdType,
             double intensityThreshold) {
@@ -52,7 +52,8 @@ public class IntensityHistogram extends JPanel {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         // the annotated intensities
-        double[] annotatedPeakIntensities = annotations.mapToDouble(ionMatch -> ionMatch.peak.intensity)
+        double[] annotatedPeakIntensities = Arrays.stream(annotations)
+                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
                 .toArray();
         HashSet<Double> annotatedPeakIntensitiesSet = Arrays.stream(annotatedPeakIntensities)
                 .boxed().collect(Collectors.toCollection(HashSet::new));

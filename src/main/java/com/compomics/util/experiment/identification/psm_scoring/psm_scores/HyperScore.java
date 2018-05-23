@@ -89,8 +89,7 @@ public class HyperScore {
      */
     public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        ArrayList<IonMatch> ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters)
-                .collect(Collectors.toCollection(ArrayList::new));
+        IonMatch[] ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
         return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
     }
 
@@ -104,7 +103,7 @@ public class HyperScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, int charge, Spectrum spectrum, ArrayList<IonMatch> ionMatches) {
+    public double getScore(Peptide peptide, int charge, Spectrum spectrum, IonMatch[] ionMatches) {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
@@ -133,7 +132,7 @@ public class HyperScore {
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<>(1);
         HashSet<Integer> ionsRewind = new HashSet<>(1);
-        HashSet<Double> accountedFor = new HashSet<>(ionMatches.size());
+        HashSet<Double> accountedFor = new HashSet<>(ionMatches.length);
         for (IonMatch ionMatch : ionMatches) {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;

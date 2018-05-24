@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.utils;
 
-import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -159,11 +158,11 @@ public class PeptideUtils {
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
      */
-    public static String getFixedModificationsAsString(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
+    public static String getFixedModificationsAsString(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationSequenceMatchingParameters) {
 
         String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
-        
+
         TreeMap<String, HashSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
                 .mapToObj(i -> fixedModifications[i])
                 .filter(modName -> modName != null)
@@ -213,7 +212,7 @@ public class PeptideUtils {
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites indexed by site. 
+     * modification sites indexed by site.
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
      * &gt; list of modifications (1 is the first AA) (can be null)
@@ -228,12 +227,12 @@ public class PeptideUtils {
      *
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationParameters, 
-            String[] confidentModificationSites, String[] representativeAmbiguousModificationSites, String[] secondaryAmbiguousModificationSites, String[] fixedModificationSites, 
+    public static String getTaggedModifiedSequence(Peptide peptide, ModificationParameters modificationParameters,
+            String[] confidentModificationSites, String[] representativeAmbiguousModificationSites, String[] secondaryAmbiguousModificationSites, String[] fixedModificationSites,
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
         String peptideSequence = peptide.getSequence();
-        
+
         if (confidentModificationSites == null) {
 
             confidentModificationSites = new String[peptideSequence.length() + 2];
@@ -265,12 +264,14 @@ public class PeptideUtils {
             modifiedSequence.append("<html>");
 
         }
-        
+
         String nTermAsString = getNtermAsString(confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
         String cTermAsString = getCtermAsString(peptideSequence.length(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
 
         modifiedSequence.append(nTermAsString).append('-');
-        modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, peptideSequence, confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName));
+        modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, peptideSequence, 
+                confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, 
+                fixedModificationSites, useHtmlColorCoding, useShortName));
         modifiedSequence.append('-').append(cTermAsString);
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
@@ -282,56 +283,58 @@ public class PeptideUtils {
         return modifiedSequence.toString();
 
     }
-    
-    /** 
+
+    /**
      * Returns the N-terminal annotation as string.
-     * 
-     * @param modificationArrays modifications to annotate in arrays corresponding to the peptide sequence with N-terminus at index 0
-     * 
+     *
+     * @param modificationArrays modifications to annotate in arrays
+     * corresponding to the peptide sequence with N-terminus at index 0
+     *
      * @return the N-terminal annotation as string
      */
     public static String getNtermAsString(String[]... modificationArrays) {
-        
+
         for (String[] modificationArray : modificationArrays) {
-            
+
             String modName = modificationArray[0];
-            
+
             if (modName != null) {
-                
+
                 return modName.replaceAll(" ", ".");
-                
+
             }
-            
+
         }
-        
+
         return "NH2";
-        
+
     }
-    
-    /** 
-     * Returns the  C-terminal annotation as string.
-     * 
+
+    /**
+     * Returns the C-terminal annotation as string.
+     *
      * @param length the length of the peptide
-     * @param modificationArrays modifications to annotate in arrays corresponding to the peptide sequence with C-terminus at index length + 2
-     * 
+     * @param modificationArrays modifications to annotate in arrays
+     * corresponding to the peptide sequence with C-terminus at index length + 2
+     *
      * @return the C-terminal annotation as string
      */
     public static String getCtermAsString(int length, String[]... modificationArrays) {
-        
+
         for (String[] modificationArray : modificationArrays) {
-            
+
             String modName = modificationArray[length + 1];
-            
+
             if (modName != null) {
-                
+
                 return modName.replaceAll(" ", ".");
-                
+
             }
-            
+
         }
-        
+
         return "COOH";
-        
+
     }
 
     /**

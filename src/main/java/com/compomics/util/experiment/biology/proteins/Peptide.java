@@ -1265,12 +1265,14 @@ public class Peptide extends ExperimentObject {
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, HashSet<String> displayedModifications) {
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useHtmlColorCoding, 
+            boolean includeHtmlStartEndTags, boolean useShortName, HashSet<String> displayedModifications) {
 
-        String[] confidentModificationSites = new String[sequence.length()];
-        String[] representativeModificationSites = new String[sequence.length()];
-        String[] secondaryModificationSites = new String[sequence.length()];
-        String[] fixedModificationSites = new String[sequence.length()];
+        String[] confidentModificationSites = new String[sequence.length() + 2];
+        String[] representativeModificationSites = new String[sequence.length() + 2];
+        String[] secondaryModificationSites = new String[sequence.length() + 2];
+        String[] fixedModificationSites = new String[sequence.length() + 2];
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 

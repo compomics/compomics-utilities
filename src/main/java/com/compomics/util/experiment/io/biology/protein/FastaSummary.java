@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
- * This class parses a fasta file and gathers summary statistics.
+ * This class parses a FASTA file and gathers summary statistics.
  *
  * @author Marc Vaudel
  */
@@ -25,11 +25,11 @@ public class FastaSummary {
      */
     public final File fastaFile;
     /**
-     * The species occurrence in the fasta file.
+     * The species occurrence in the FASTA file.
      */
     public final TreeMap<String, Integer> speciesOccurrence;
     /**
-     * The database type occurrence in the fasta file.
+     * The database type occurrence in the FASTA file.
      */
     public final HashMap<ProteinDatabase, Integer> databaseType;
     /**
@@ -48,7 +48,7 @@ public class FastaSummary {
     /**
      * Constructor.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      * @param speciesOccurrence the occurrence of every species
      * @param databaseType the occurrence of every database type
      * @param nSequences the number of sequences
@@ -67,14 +67,14 @@ public class FastaSummary {
     }
 
     /**
-     * Gathers summary data on the fasta file content.
+     * Gathers summary data on the FASTA file content.
      *
-     * @param fastaFile a fasta file
+     * @param fastaFile a FASTA file
      * @param fastaParameters the parameters to use to parse the file
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
      *
-     * @return returns fasta parameters inferred from the file
+     * @return returns FASTA parameters inferred from the file
      *
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
@@ -118,7 +118,7 @@ public class FastaSummary {
     /**
      * Returns the summary as saved in the user folder, null if not found.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      *
      * @return the summary as saved in the user folder
      *
@@ -144,7 +144,7 @@ public class FastaSummary {
     /**
      * Saves the summary in the user folder.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      * @param fastaSummary the summary
      *
      * @throws IOException exception thrown if an error occurred while writing
@@ -173,7 +173,7 @@ public class FastaSummary {
     /**
      * Returns the file used to store the summary file in the user folder.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      *
      * @return the file used to store the summary file in the user folder
      */
@@ -190,14 +190,14 @@ public class FastaSummary {
     }
 
     /**
-     * Gathers summary data on the fasta file content.
+     * Gathers summary data on the FASTA file content.
      *
-     * @param fastaFile a fasta file
+     * @param fastaFile a FASTA file
      * @param fastaParameters the parameters to use to parse the file
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
      *
-     * @return returns fasta parameters inferred from the file
+     * @return returns FASTA parameters inferred from the file
      *
      * @throws IOException exception thrown if an error occurred while iterating
      * the file

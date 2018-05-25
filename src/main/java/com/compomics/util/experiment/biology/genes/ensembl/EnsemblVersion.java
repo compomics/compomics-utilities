@@ -22,9 +22,9 @@ public class EnsemblVersion {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
         if (ensemblGenomeDivision != null) {
-            return 38;
+            return 39;
         } else {
-            return 91;
+            return 92;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released

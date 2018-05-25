@@ -75,6 +75,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         initComponents();
         
         this.geneMaps = geneMaps;
+        this.proteinDetailsProvider = proteinDetailsProvider;
         proteinAccessions = proteinMatch.getAccessions();
         goTable.setModel(new GOTableModel());
         if (geneMaps != null) {

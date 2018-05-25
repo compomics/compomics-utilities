@@ -410,18 +410,18 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Returns the parameters to use to parse the fasta file.
+     * Returns the parameters to use to parse the FASTA file.
      *
-     * @return the parameters to use to parse the fasta file
+     * @return the parameters to use to parse the FASTA file
      */
     public FastaParameters getFastaParameters() {
         return fastaParameters;
     }
 
     /**
-     * Sets the parameters to use to parse the fasta file.
+     * Sets the parameters to use to parse the FASTA file.
      *
-     * @param fastaParameters the parameters to use to parse the fasta file
+     * @param fastaParameters the parameters to use to parse the FASTA file
      */
     public void setFastaParameters(FastaParameters fastaParameters) {
         this.fastaParameters = fastaParameters;

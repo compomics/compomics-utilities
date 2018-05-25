@@ -5,24 +5,28 @@ import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * The parameters used to parse a fasta file.
+ * The parameters used to parse a FASTA file.
  *
  * @author Marc Vaudel
  */
-public class FastaParameters {
+public class FastaParameters implements Serializable {
 
     /**
-     * The decoy flags used to infer the fasta parameters.
+     * The version UID for serialization/deserialization compatibility.
+     */
+    static final long serialVersionUID = -7453836034514062470L;
+    /**
+     * The decoy flags used to infer the FASTA parameters.
      */
     public static final String[] decoyFlags = {"decoy", "random", "reversed", "rev"};
     /**
-     * The decoy separators used to infer the fasta parameters.
+     * The decoy separators used to infer the FASTA parameters.
      */
     public static final char[] separators = {'-', '.', '_'};
-    
     /**
      * The name of the database.
      */
@@ -86,7 +90,6 @@ public class FastaParameters {
         this.decoySuffix = decoySuffix;
     }
 
-
     /**
      * Returns the name of the database.
      *
@@ -125,7 +128,7 @@ public class FastaParameters {
 
     /**
      * Returns the description for this database.
-     * 
+     *
      * @return the description for this database
      */
     public String getDescription() {
@@ -134,7 +137,7 @@ public class FastaParameters {
 
     /**
      * Sets the description for this database.
-     * 
+     *
      * @param description the description for this database
      */
     public void setDescription(String description) {
@@ -142,9 +145,11 @@ public class FastaParameters {
     }
 
     /**
-     * Returns a boolean indicating whether the database is concatenated target decoy.
-     * 
-     * @return a boolean indicating whether the database is concatenated target decoy
+     * Returns a boolean indicating whether the database is concatenated target
+     * decoy.
+     *
+     * @return a boolean indicating whether the database is concatenated target
+     * decoy
      */
     public boolean isTargetDecoy() {
         return targetDecoy;
@@ -152,67 +157,70 @@ public class FastaParameters {
 
     /**
      * Sets whether the database is concatenated target decoy.
-     * 
-     * @param targetDecoy a boolean indicating whether the database is concatenated target decoy
+     *
+     * @param targetDecoy a boolean indicating whether the database is
+     * concatenated target decoy
      */
     public void setTargetDecoy(boolean targetDecoy) {
         this.targetDecoy = targetDecoy;
     }
-    
+
     /**
-     * Returns a boolean indicating whether the parsing parameters are the same as the given parameters.
-     * 
+     * Returns a boolean indicating whether the parsing parameters are the same
+     * as the given parameters.
+     *
      * @param fastaParameters the other parameters
-     * 
-     * @return a boolean indicating whether the parsing parameters are the same as the given parameters
+     *
+     * @return a boolean indicating whether the parsing parameters are the same
+     * as the given parameters
      */
     public boolean isSameAs(FastaParameters fastaParameters) {
-        
+
         if (name != null && fastaParameters.getName() == null
                 || name == null && fastaParameters.getName() != null
                 || name != null && fastaParameters.getName() != null && !name.equals(fastaParameters.getName())) {
-            
+
             return false;
-            
+
         }
-        if (description != null && fastaParameters.getDescription()== null
+        if (description != null && fastaParameters.getDescription() == null
                 || description == null && fastaParameters.getDescription() != null
                 || description != null && fastaParameters.getDescription() != null && !description.equals(fastaParameters.getDescription())) {
-            
+
             return false;
-            
+
         }
-        if (version != null && fastaParameters.getVersion()== null
+        if (version != null && fastaParameters.getVersion() == null
                 || version == null && fastaParameters.getVersion() != null
                 || version != null && fastaParameters.getVersion() != null && !version.equals(fastaParameters.getVersion())) {
-            
+
             return false;
-            
+
         }
         if (targetDecoy != fastaParameters.isTargetDecoy()) {
-            
+
             return false;
-            
+
         }
-        if (decoyFlag != null && fastaParameters.getDecoyFlag()== null
+        if (decoyFlag != null && fastaParameters.getDecoyFlag() == null
                 || decoyFlag == null && fastaParameters.getDecoyFlag() != null
                 || decoyFlag != null && fastaParameters.getDecoyFlag() != null && !decoyFlag.equals(fastaParameters.getDecoyFlag())) {
-            
+
             return false;
-            
+
         }
         if (decoySuffix != fastaParameters.isDecoySuffix()) {
-            
+
             return false;
-            
+
         }
-        
+
         return true;
     }
-    
+
     /**
      * Sets default name and version from the given fasta file.
-     * 
+     *
      * @param fastaFile the fasta file
      */
     public void setDefaultAttributes(File fastaFile) {
@@ -220,38 +228,40 @@ public class FastaParameters {
         setName(Util.removeExtension(fastaFile.getName()));
         setDescription(fastaFile.getAbsolutePath());
         setVersion((new Date(fastaFile.lastModified())).toString());
-        
+
     }
 
     /**
      * Infers the parameters used to parse the file.
-     * 
+     *
      * @param fastaFile a fasta file
-     * 
+     *
      * @return returns fasta parameters inferred from the file
-     * 
-     * @throws IOException exception thrown if an error occurred while iterating the file
+     *
+     * @throws IOException exception thrown if an error occurred while iterating
+     * the file
      */
     public static FastaParameters inferParameters(File fastaFile) throws IOException {
-        
+
         return inferParameters(fastaFile, null);
-        
+
     }
 
     /**
      * Infers the parameters used to parse the file.
-     * 
+     *
      * @param fastaFile a fasta file
      * @param waitingHandler a handler to allow canceling the import
-     * 
+     *
      * @return returns fasta parameters inferred from the file
-     * 
-     * @throws IOException exception thrown if an error occurred while iterating the file
+     *
+     * @throws IOException exception thrown if an error occurred while iterating
+     * the file
      */
     public static FastaParameters inferParameters(File fastaFile, WaitingHandler waitingHandler) throws IOException {
 
         FastaParameters fastaParameters = new FastaParameters();
-        
+
         fastaParameters.setDefaultAttributes(fastaFile);
 
         HeaderIterator headerIterator = new HeaderIterator(fastaFile);
@@ -354,46 +364,46 @@ public class FastaParameters {
             }
 
             i++;
-            
+
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                
+
                 return null;
-                
+
             }
         }
-        
+
         fastaParameters.setTargetDecoy(false);
-        
+
         return fastaParameters;
     }
-    
+
     public boolean equals(FastaParameters fastaParameters) {
-        
+
         if (!name.equals(fastaParameters.getName())) {
             return false;
         }
-        
+
         if (!description.equals(fastaParameters.getDescription())) {
             return false;
         }
-        
+
         if (!version.equals(fastaParameters.getVersion())) {
             return false;
         }
-        
+
         if (targetDecoy != fastaParameters.isTargetDecoy()) {
             return false;
         }
-        
+
         if (!decoyFlag.equals(fastaParameters.getDecoyFlag())) {
             return false;
         }
-        
+
         if (decoySuffix != fastaParameters.isDecoySuffix()) {
             return false;
         }
-        
+
         return true;
-        
+
     }
 }

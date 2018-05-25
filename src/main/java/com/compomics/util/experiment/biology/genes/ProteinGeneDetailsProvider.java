@@ -110,10 +110,10 @@ public class ProteinGeneDetailsProvider {
     /**
      * Returns the gene maps for the given proteins. For every protein, the
      * species must be given as well as the gene name, in the format used in a
-     * Uniprot fasta file.
+     * UniProt Importing gene mappings file.
      *
      * @param genePreferences the gene preferences
-     * @param fastaSummary summary information on the fasta file containing the
+     * @param fastaSummary summary information on the Importing gene mappings file containing the
      * proteins
      * @param sequenceProvider the protein sequence provider
      * @param proteinDetailsProvider the protein details provider

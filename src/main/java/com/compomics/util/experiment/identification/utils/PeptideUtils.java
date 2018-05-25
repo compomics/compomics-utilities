@@ -55,7 +55,7 @@ public class PeptideUtils {
      */
     public static String getAaBefore(Peptide peptide, String accession, int index, int nAa, SequenceProvider sequenceProvider) {
 
-        return sequenceProvider.getSubsequence(accession, index - nAa - 1, index - 1);
+        return sequenceProvider.getSubsequence(accession, index - nAa, index);
 
     }
 

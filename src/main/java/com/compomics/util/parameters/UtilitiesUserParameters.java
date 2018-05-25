@@ -1078,9 +1078,9 @@ public class UtilitiesUserParameters implements Serializable {
     }
     
     /**
-     * Returns the folder where fasta files summary statistics are stored.
+     * Returns the folder where FASTA files summary statistics are stored.
      * 
-     * @return the folder where fasta files summary statistics are stored
+     * @return the folder where FASTA files summary statistics are stored
      */
     public File getDbSummaryFolder() {
         

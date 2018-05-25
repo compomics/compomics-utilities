@@ -272,7 +272,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     ArrayList<Long[]> modificationPatterns = new ArrayList<>(2);
     /**
-     * Mapping dictionary mod name -> (modificationPattern index, relative
+     * Mapping dictionary mod name -&gt; (modificationPattern index, relative
      * starting position, pattern length).
      */
     HashMap<String, int[]> modificationPatternNames = new HashMap<>(2);

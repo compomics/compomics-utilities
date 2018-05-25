@@ -13,14 +13,17 @@ import org.zoodb.api.impl.ZooPC;
 public class DbObject extends ZooPC implements Serializable {
     
     /**
-     * unique identifier
+     * Unique identifier.
      */
     private long id;
     /** 
-     * flag if object is a first level object or not
+     * Flag if object is a first level object or not.
      */
     private boolean firstLevel = false;
     
+    /**
+     * Constructor.
+     */
     public DbObject(){}
     
     /**

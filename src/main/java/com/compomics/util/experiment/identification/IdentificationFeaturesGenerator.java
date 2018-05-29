@@ -900,11 +900,11 @@ public class IdentificationFeaturesGenerator {
                 if (psParameter.getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()) {
 
                     Peptide peptide = peptideMatch.getPeptide();
-                    
+
                     int peptideOccurrence = identification.getProteinMatches(peptide).stream()
                             .map(groupKey -> identification.getProteinMatch(groupKey))
                             .filter(sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
-                                    .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
                             .filter(sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession()))
                             .mapToInt(sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length)
                             .sum();
@@ -912,7 +912,7 @@ public class IdentificationFeaturesGenerator {
                     double spectrumCount = Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
                             .mapToObj(key -> identification.getSpectrumMatch(key))
                             .filter(spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
-                                .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
                             .count();
 
                     double ratio = spectrumCount / peptideOccurrence;
@@ -1882,7 +1882,7 @@ public class IdentificationFeaturesGenerator {
                                 .flatMap(modName -> modificationScores.getAmbiguousModificationsSites(modName).keySet().stream())
                                 .distinct()
                                 .count());
-        
+
     }
 
     /**
@@ -1898,33 +1898,33 @@ public class IdentificationFeaturesGenerator {
         PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
         if (modificationScores == null) {
-            
+
             return "";
-            
+
         } else {
-            
+
             StringBuilder result = new StringBuilder(sequence.length());
 
             for (int aa = 0; aa < sequence.length(); aa++) {
 
                 result.append(sequence.charAt(aa));
-                
+
                 int aaNumber = aa + 1;
                 HashSet<String> modificationsAtSite = modificationScores.getConfidentModificationsAt(aaNumber);
 
                 if (!modificationsAtSite.isEmpty()) {
-                    
+
                     result.append(
-                        modificationsAtSite.stream()
-                            .sorted()
-                                .map(modName -> modificationFactory.getModification(modName).getShortName())
-                            .collect(Collectors.joining(",", "<", ">")));
-                    
+                            modificationsAtSite.stream()
+                                    .sorted()
+                                    .map(modName -> modificationFactory.getModification(modName).getShortName())
+                                    .collect(Collectors.joining(",", "<", ">")));
+
                 }
             }
 
             return result.toString();
-            
+
         }
     }
 
@@ -2250,73 +2250,29 @@ public class IdentificationFeaturesGenerator {
 
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
 
-            HashMap<Double, HashMap<Integer, ArrayList<Long>>> peptideMap = new HashMap<>(1);
-
-            int maxSpectrumCount = 0;
-
-            // iterate the peptides and store the coverage for each peptide validation level
-            PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(proteinMatch.getPeptideMatchesKeys(), null);
-            PeptideMatch peptideMatch;
-
-            while ((peptideMatch = peptideMatchesIterator.next()) != null) {
-
-                long peptideKey = peptideMatch.getKey();
-                PSParameter psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
-
-                if (!psParameter.getHidden()) {
-
-                    double peptideProbabilityScore = psParameter.getScore();
-
-                    if (!peptideMap.containsKey(peptideProbabilityScore)) {
-
-                        peptideMap.put(peptideProbabilityScore, new HashMap<>(1));
-
-                    }
-
-                    int spectrumCount = -peptideMatch.getSpectrumCount();
-
-                    if (peptideMatch.getSpectrumCount() > maxSpectrumCount) {
-
-                        maxSpectrumCount = peptideMatch.getSpectrumCount();
-
-                    }
-
-                    if (!peptideMap.get(peptideProbabilityScore).containsKey(spectrumCount)) {
-
-                        peptideMap.get(peptideProbabilityScore).put(spectrumCount, new ArrayList<>(1));
-
-                    }
-
-                    peptideMap.get(peptideProbabilityScore).get(spectrumCount).add(peptideKey);
-
-                }
-            }
+            TreeMap<Double, TreeMap<Integer, TreeSet<Long>>> peptideMap = Arrays.stream(proteinMatch.getPeptideMatchesKeys())
+                    .filter(peptideKey -> !((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getHidden())
+                    .boxed()
+                    .collect(Collectors.groupingBy(peptideKey -> ((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getScore(),
+                            TreeMap::new,
+                            Collectors.groupingBy(peptideKey -> identification.getPeptideMatch(peptideKey).getSpectrumCount(), 
+                                    TreeMap::new, 
+                                    Collectors.toCollection(TreeSet::new))));
+            
+            int maxSpectrumCount = peptideMap.values().stream()
+                    .mapToInt(map -> map.lastKey())
+                    .max()
+                    .orElse(0);
 
             identificationFeaturesCache.setMaxSpectrumCount(maxSpectrumCount);
 
-            ArrayList<Double> scores = new ArrayList<>(peptideMap.keySet());
-            Collections.sort(scores);
-            ArrayList<Long> peptideList = new ArrayList<>();
-
-            for (double currentScore : scores) {
-
-                ArrayList<Integer> nSpectra = new ArrayList<>(peptideMap.get(currentScore).keySet());
-                Collections.sort(nSpectra);
-
-                for (int currentNPsm : nSpectra) {
-
-                    ArrayList<Long> keys = peptideMap.get(currentScore).get(currentNPsm);
-                    Collections.sort(keys);
-                    peptideList.addAll(keys);
-
-                }
-            }
-
-            long[] peptideArray = peptideList.stream()
-                    .mapToLong(Long::longValue)
+            long[] sortedKeys = peptideMap.values().stream()
+                    .flatMap(map -> map.descendingMap().values().stream())
+                    .flatMap(subKeys -> subKeys.stream())
+                    .mapToLong(a -> a)
                     .toArray();
 
-            identificationFeaturesCache.setPeptideList(peptideArray);
+            identificationFeaturesCache.setPeptideList(sortedKeys);
             identificationFeaturesCache.setCurrentProteinKey(proteinKey);
         }
         return identificationFeaturesCache.getPeptideList();

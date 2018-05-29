@@ -7,6 +7,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
 
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * This class models a protein match.
@@ -214,10 +215,11 @@ public class ProteinMatch extends IdentificationMatch {
         ObjectsDB.increaseRWCounter();
         zooActivateWrite();
         ObjectsDB.decreaseRWCounter();
-
-        int originalLength = peptideMatchesKeys.length;
-        peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, originalLength + newKeys.length);
-        System.arraycopy(newKeys, 0, peptideMatchesKeys, originalLength, newKeys.length);
+        
+        peptideMatchesKeys = LongStream.concat(Arrays.stream(peptideMatchesKeys), 
+                Arrays.stream(newKeys))
+                .distinct()
+                .toArray();
 
     }
 

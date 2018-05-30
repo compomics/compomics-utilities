@@ -158,7 +158,7 @@ public class ProteinUtils {
      *
      * @param sequence the protein sequence
      *
-     * @return the protein's molecular weight in Da
+     * @return the protein's molecular weight in kDa
      */
     public static double computeMolecularWeight(String sequence) {
         
@@ -168,6 +168,8 @@ public class ProteinUtils {
                 .mapToDouble(aa -> AminoAcid.getAminoAcid((char) aa).getMonoisotopicMass())
                 .sum();
 
+        mass /= 1000;
+        
         return mass;
     }
     

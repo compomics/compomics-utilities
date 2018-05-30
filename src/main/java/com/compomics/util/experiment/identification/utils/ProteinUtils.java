@@ -113,7 +113,7 @@ public class ProteinUtils {
     /**
      * Returns the number of observable amino acids in the sequence.
      *
-     * @param sequence  the protein sequence
+     * @param sequence the protein sequence
      * @param enzymes the enzymes to use
      * @param pepMaxLength the max peptide length
      *
@@ -129,7 +129,7 @@ public class ProteinUtils {
     /**
      * Returns the number of cleavage sites.
      *
-     * @param sequence  the protein sequence
+     * @param sequence the protein sequence
      * @param enzymes the enzymes to use
      *
      * @return the number of possible peptides
@@ -156,7 +156,7 @@ public class ProteinUtils {
     /**
      * Returns the protein's molecular weight.
      *
-     * @param sequence  the protein sequence
+     * @param sequence the protein sequence
      *
      * @return the protein's molecular weight in Da
      */

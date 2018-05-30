@@ -463,7 +463,7 @@ public class ObjectsDB {
 
             for (Long longKey : hashedKeys) {
 
-                if (waitingHandler.isRunCanceled()) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
 
                     return;
 

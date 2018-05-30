@@ -76,7 +76,7 @@ public class ModificationUtils {
      * @param modification the modification
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
-     * paramters to use for modifications
+     * parameters to use for modifications
      *
      * @return an array of the possible modification sites
      */

@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Spectrum
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;

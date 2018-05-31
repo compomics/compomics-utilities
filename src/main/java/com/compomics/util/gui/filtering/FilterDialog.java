@@ -614,10 +614,13 @@ public class FilterDialog extends javax.swing.JDialog {
      */
     private HashSet<Long> parseAccessions(String text) {
         
-        return Arrays.stream(text.split(";"))
-                .map(key -> new Long(key))
-                .collect(Collectors.toCollection(HashSet::new));
-        
+        if (text.trim().isEmpty()) {
+            return new HashSet<>(0);
+        } else {
+            return Arrays.stream(text.split(";"))
+                    .map(key -> new Long(key))
+                    .collect(Collectors.toCollection(HashSet::new));
+        }
     }
 
     /**

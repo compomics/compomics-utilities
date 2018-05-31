@@ -114,7 +114,6 @@
             <Property name="dividerLocation" type="int" value="200"/>
             <Property name="dividerSize" type="int" value="0"/>
             <Property name="orientation" type="int" value="0"/>
-            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -240,7 +239,6 @@
                     </Property>
                     <Property name="dividerLocation" type="int" value="425"/>
                     <Property name="dividerSize" type="int" value="0"/>
-                    <Property name="opaque" type="boolean" value="false"/>
                   </Properties>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -282,9 +280,6 @@
                       </Layout>
                       <SubComponents>
                         <Container class="javax.swing.JScrollPane" name="manualValidationScrollPane">
-                          <Properties>
-                            <Property name="opaque" type="boolean" value="false"/>
-                          </Properties>
                           <AuxValues>
                             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                           </AuxValues>
@@ -338,9 +333,6 @@
                       </Layout>
                       <SubComponents>
                         <Container class="javax.swing.JScrollPane" name="exceptionsScrollPane">
-                          <Properties>
-                            <Property name="opaque" type="boolean" value="false"/>
-                          </Properties>
                           <AuxValues>
                             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                           </AuxValues>

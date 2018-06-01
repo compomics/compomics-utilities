@@ -42,7 +42,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The peptide key.
      */
-    private long key;
+    private long key = NO_KEY;
     /**
      * Boolean indicating whether the matching key is set.
      */
@@ -432,7 +432,7 @@ public class Peptide extends ExperimentObject {
         this.variableModifications = variableModifications;
 
         setMass(-1.0);
-        setKey(getKey(sequence, variableModifications));
+        setKey(NO_KEY);
     }
 
     /**
@@ -447,7 +447,7 @@ public class Peptide extends ExperimentObject {
         variableModifications = null;
 
         setMass(-1.0);
-        setKey(getKey(sequence, variableModifications));
+        setKey(NO_KEY);
     }
 
     /**
@@ -465,10 +465,10 @@ public class Peptide extends ExperimentObject {
                 ? new ModificationMatch[1]
                 : Arrays.copyOf(variableModifications, variableModifications.length + 1);
 
-        variableModifications[variableModifications.length] = modificationMatch;
+        variableModifications[variableModifications.length-1] = modificationMatch;
 
         setMass(-1.0);
-        setKey(getKey(sequence, variableModifications));
+        setKey(NO_KEY);
 
     }
 
@@ -682,6 +682,8 @@ public class Peptide extends ExperimentObject {
         }
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        
+        try {
 
         String modificationsKey = Arrays.stream(variableModifications)
                 .map(modificationMatch -> modificationMatch.getConfident() || modificationMatch.getInferred()
@@ -694,10 +696,28 @@ public class Peptide extends ExperimentObject {
                 .sorted()
                 .collect(Collectors.joining(MODIFICATION_SEPARATOR));
 
-        String keyAsString = Arrays.stream(new String[]{sequence, MODIFICATION_SEPARATOR, modificationsKey})
-                .collect(Collectors.joining());
+        String keyAsString = String.join(MODIFICATION_SEPARATOR, sequence, modificationsKey);
 
         return ExperimentObject.asLong(keyAsString);
+        
+        }catch (Exception e) {
+
+        String modificationsKey = Arrays.stream(variableModifications)
+                .map(modificationMatch -> modificationMatch.getConfident() || modificationMatch.getInferred()
+                ? Arrays.stream(new String[]{
+            modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey(),
+            MODIFICATION_LOCALIZATION_SEPARATOR,
+            Integer.toString(modificationMatch.getSite())})
+                        .collect(Collectors.joining())
+                : modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey())
+                .sorted()
+                .collect(Collectors.joining(MODIFICATION_SEPARATOR));
+
+        String keyAsString = String.join(MODIFICATION_SEPARATOR, sequence, modificationsKey);
+
+        return ExperimentObject.asLong(keyAsString);
+            
+        }
 
     }
 
@@ -1137,113 +1157,6 @@ public class Peptide extends ExperimentObject {
         }
         return sameModificationsAs(anotherPeptide, modifications);
     }
-//
-//    /**
-//     * Returns the N-terminal of the peptide as a String. Returns "NH2" if the
-//     * terminal is not modified, otherwise returns the name of the modification.
-//     * /!\ this method will work only if the Modification found in the peptide
-//     * are in the ModificationFactory.
-//     *
-//     * @param modificationParameters the modification parameters the
-//     * modification parameters
-//     * @param sequenceProvider a protein sequence provider
-//     * @param modificationsSequenceMatchingParameters the sequence matching
-//     * paramters to use for modifications
-//     *
-//     * @return the N-terminal of the peptide as a String, e.g., "NH2"
-//     */
-//    public String getNTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-//
-//        ObjectsDB.increaseRWCounter();
-//        zooActivateRead();
-//        ObjectsDB.decreaseRWCounter();
-//
-//        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-//
-//        for (String modName : modificationParameters.getFixedModifications()) {
-//
-//            Modification modification = modificationFactory.getModification(modName);
-//
-//            if (modification.getModificationType().isNTerm()) {
-//
-//                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
-//
-//                if (possibleSites.length > 0) {
-//
-//                    return modName.replaceAll("-", " ");
-//
-//                }
-//            }
-//        }
-//
-//        for (ModificationMatch modificationMatch : getVariableModifications()) {
-//
-//            String modName = modificationMatch.getModification();
-//            Modification modification = modificationFactory.getModification(modName);
-//
-//            if (modification.getModificationType().isNTerm()) {
-//
-//                return modName.replaceAll("-", " ");
-//
-//            }
-//        }
-//
-//        return "NH2";
-//
-//    }
-//
-//    /**
-//     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
-//     * terminal is not modified, otherwise returns the name of the modification.
-//     * /!\ This method will work only if the Modification found in the peptide
-//     * are in the ModificationFactory.
-//     *
-//     * @param modificationParameters the modification parameters the
-//     * modification parameters
-//     * @param sequenceProvider a protein sequence provider
-//     * @param modificationsSequenceMatchingParameters the sequence matching
-//     * parameters to use for modifications
-//     *
-//     * @return the C-terminal of the peptide as a String, e.g., "COOH"
-//     */
-//    public String getCTerminalAsString(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-//
-//        ObjectsDB.increaseRWCounter();
-//        zooActivateRead();
-//        ObjectsDB.decreaseRWCounter();
-//
-//        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-//
-//        for (String modName : modificationParameters.getFixedModifications()) {
-//
-//            Modification modification = modificationFactory.getModification(modName);
-//
-//            if (modification.getModificationType().isCTerm()) {
-//
-//                int[] possibleSites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
-//
-//                if (possibleSites.length > 0) {
-//
-//                    return modName.replaceAll("-", " ");
-//
-//                }
-//            }
-//        }
-//
-//        for (ModificationMatch modificationMatch : getVariableModifications()) {
-//
-//            String modName = modificationMatch.getModification();
-//            Modification modification = modificationFactory.getModification(modName);
-//
-//            if (modification.getModificationType().isCTerm()) {
-//
-//                return modName.replaceAll("-", " ");
-//
-//            }
-//        }
-//
-//        return "COOH";
-//    }
 
     /**
      * Returns the modified sequence as an tagged string with potential

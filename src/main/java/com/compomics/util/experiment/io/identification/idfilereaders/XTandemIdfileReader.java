@@ -8,6 +8,8 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -100,6 +103,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        HashSet<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
+                .map(modName -> modificationFactory.getModification(modName))
+                .filter(modification -> modification.getModificationType() == ModificationType.modaa)
+                .flatMap(mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
+                        .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
+                .collect(Collectors.toCollection(HashSet::new));
+
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inputFileName));
 
@@ -128,7 +139,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 allMatches.put(id, spectrumMatch);
                                 double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
-                                readGroupOrProtein(parser, id, expect);
+                                readGroupOrProtein(parser, id, expect, fixedModifications);
                                 break;
 
                             case "parameters":
@@ -201,7 +212,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return false;
     }
 
-    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException, UnsupportedEncodingException {
+    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -228,7 +239,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             break;
 
                         case "protein":
-                            readProtein(parser, id, expect);
+                            readProtein(parser, id, expect, fixedModifications);
                             break;
 
                         default:
@@ -344,7 +355,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
+    private void readProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -364,7 +375,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                 case XMLStreamConstants.START_ELEMENT:
                     if ("peptide".equalsIgnoreCase(parser.getLocalName().toLowerCase())) {
-                        readPeptide(parser, id, expect);
+                        readPeptide(parser, id, expect, fixedModifications);
                     }
                     break;
 
@@ -374,7 +385,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readPeptide(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
+    private void readPeptide(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
         Peptide peptide = null;
         int pepStart = -1;
         boolean addAA = false;
@@ -428,11 +439,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (addAA) {
 
-                                String modName = String.join("", parser.getAttributeValue("", "modified"), "@", parser.getAttributeValue("", "type"));
+                                String modName = String.join("@", parser.getAttributeValue("", "modified"), parser.getAttributeValue("", "type"));
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
+                                String reformattedName = trimModificationName(modName);
 
-                                peptide.addVariableModification(new ModificationMatch(modName, modPosition));
-
+                                if (!fixedModifications.contains(reformattedName)) {
+                                    peptide.addVariableModification(new ModificationMatch(modName, modPosition));
+                                }
                             }
                             break;
 
@@ -498,7 +511,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private String changeModificationName(String modification) {
+    private String trimModificationName(String modification) {
         int indexPoint = modification.indexOf(".");
         int size = modification.length();
         if (indexPoint >= 0) {

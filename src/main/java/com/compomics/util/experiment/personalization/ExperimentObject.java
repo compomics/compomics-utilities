@@ -53,6 +53,10 @@ public abstract class ExperimentObject extends DbObject {
         -4319460978758043648L, 1896969526688425984L, -2860223852340688896L, -2273634011107659776L,
         -6830438329227218944L, -1024496407927033856L, -1561168395559655424L, -1430574524350681088L};
     /**
+     * Value for a key not set.
+     */
+    public static final long NO_KEY = asLong("#!#_NO_KEY_#!#");
+    /**
      * Map containing user refinement parameters.
      */
     private HashMap<Long, UrParameter> urParams = null;

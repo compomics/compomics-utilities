@@ -305,7 +305,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getHeader-java.lang.String-">getHeader</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>
-<div class="block">Returns the fasta header of the protein as found in the fasta file.</div>
+<div class="block">Returns the FASTA header of the protein as found in the FASTA file.</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
@@ -875,7 +875,9 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
                              int&nbsp;start,
                              int&nbsp;end)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getSubsequence-java.lang.String-int-int-">SequenceProvider</a></code></span></div>
-<div class="block">Returns the subsequence of the sequence of a given protein. Indexes are 0-based like for strings and no exception is thrown if indexes are out of bounds, the substring is trimmed.</div>
+<div class="block">Returns the subsequence of the sequence of a given protein. Indexes are
+ 0-based like for strings and no exception is thrown if indexes are out of
+ bounds, the substring is trimmed.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getSubsequence-java.lang.String-int-int-">getSubsequence</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></code></dd>
@@ -930,14 +932,14 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <h4>getHeader</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getHeader(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getHeader-java.lang.String-">SequenceProvider</a></code></span></div>
-<div class="block">Returns the fasta header of the protein as found in the fasta file.</div>
+<div class="block">Returns the FASTA header of the protein as found in the FASTA file.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html#getHeader-java.lang.String-">getHeader</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>proteinAccession</code> - the accession of the protein</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the fasta header of the protein as found in the fasta file</dd>
+<dd>the FASTA header of the protein as found in the FASTA file</dd>
 </dl>
 </li>
 </ul>

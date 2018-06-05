@@ -7,6 +7,9 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -29,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -41,9 +45,14 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
+    /**
+     * The name of the input file.
+     */
     private File inputFileName = null;
+    /**
+     * Map of all matches indexed by X!Tandem spectrum id.
+     */
     private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
-    private HashSet<String> variableModifications = new HashSet<>();
     private int specNumber = 0;
     private String PSMFileName;
     private String softwareVersion;
@@ -74,62 +83,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * @throws IOException if an IOException occurs
      */
     public XTandemIdfileReader(File inputFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+
         inputFileName = inputFile;
-        try {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inputFileName));
-
-            while (parser.hasNext()) {
-                parser.next();
-                switch (parser.getEventType()) {
-                    case XMLStreamConstants.START_DOCUMENT:
-                        break;
-                    case XMLStreamConstants.END_DOCUMENT:
-                        parser.close();
-                        break;
-                    case XMLStreamConstants.NAMESPACE:
-                        break;
-                    case XMLStreamConstants.CHARACTERS:
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        break;
-
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = parser.getLocalName();
-                        if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null) {
-                            switch (parser.getAttributeValue("", "type").toLowerCase()) {
-                                case "model":
-                                    int id = Integer.parseInt(parser.getAttributeValue("", "id"));
-                                    SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName);
-                                    spectrumMatch.setSpectrumNumber(++specNumber);
-                                    allMatches.put(id, spectrumMatch);
-                                    double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
-
-                                    readGroupOrProtein(parser, id, expect);
-                                    break;
-
-                                case "parameters":
-                                    readParameters(parser);
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                        } else if (element.equalsIgnoreCase("bioml")) {
-                            PSMFileName = parser.getAttributeValue("", "label");
-                            PSMFileName = PSMFileName.split("'")[1];
-                            PSMFileName = (new File(PSMFileName.replaceAll("\\\\", "/"))).getName();
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -139,21 +94,79 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
+
+        ModificationFactory modificationFactory = ModificationFactory.getInstance();
+        HashSet<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
+                .map(modName -> modificationFactory.getModification(modName))
+                .filter(modification -> modification.getModificationType() == ModificationType.modaa)
+                .flatMap(mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
+                        .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inputFileName));
+
+        while (parser.hasNext()) {
+            parser.next();
+            switch (parser.getEventType()) {
+                case XMLStreamConstants.START_DOCUMENT:
+                    break;
+                case XMLStreamConstants.END_DOCUMENT:
+                    parser.close();
+                    break;
+                case XMLStreamConstants.NAMESPACE:
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    break;
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = parser.getLocalName();
+                    if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null) {
+                        switch (parser.getAttributeValue("", "type").toLowerCase()) {
+                            case "model":
+                                int id = Integer.parseInt(parser.getAttributeValue("", "id"));
+                                SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName);
+                                spectrumMatch.setSpectrumNumber(++specNumber);
+                                allMatches.put(id, spectrumMatch);
+                                double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
+
+                                readGroupOrProtein(parser, id, expect, fixedModifications);
+                                break;
+
+                            case "parameters":
+                                readParameters(parser);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    } else if (element.equalsIgnoreCase("bioml")) {
+                        PSMFileName = parser.getAttributeValue("", "label");
+                        PSMFileName = PSMFileName.split("'")[1];
+                        PSMFileName = (new File(PSMFileName.replaceAll("\\\\", "/"))).getName();
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         if (expandAaCombinations) {
 
             for (SpectrumMatch spectrumMatch : allMatches.values()) {
 
                 spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
-                    
+
                     Peptide peptide = currentAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
                     ModificationMatch[] foundModifications = peptide.getVariableModifications();
@@ -199,7 +212,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return false;
     }
 
-    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException, UnsupportedEncodingException {
+    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -226,7 +239,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             break;
 
                         case "protein":
-                            readProtein(parser, id, expect);
+                            readProtein(parser, id, expect, fixedModifications);
                             break;
 
                         default:
@@ -342,7 +355,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readProtein(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
+    private void readProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -362,7 +375,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                 case XMLStreamConstants.START_ELEMENT:
                     if ("peptide".equalsIgnoreCase(parser.getLocalName().toLowerCase())) {
-                        readPeptide(parser, id, expect);
+                        readPeptide(parser, id, expect, fixedModifications);
                     }
                     break;
 
@@ -372,10 +385,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readPeptide(XMLStreamReader parser, int id, double expect) throws XMLStreamException {
+    private void readPeptide(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
         Peptide peptide = null;
         int pepStart = -1;
-        String pepSeq = "";
         boolean addAA = false;
         while (parser.hasNext()) {
             parser.next();
@@ -399,7 +411,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 case XMLStreamConstants.START_ELEMENT:
                     switch (parser.getLocalName().toLowerCase()) {
                         case "domain":
-                            pepSeq = parser.getAttributeValue("", "seq");
+                            String pepSeq = parser.getAttributeValue("", "seq");
 
                             boolean adding = true;
                             if (allMatches.get(id).getAllPeptideAssumptions(Advocate.xtandem.getIndex()) != null) {
@@ -427,14 +439,12 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (addAA) {
 
-                                String modName = parser.getAttributeValue("", "modified") + "@" + parser.getAttributeValue("", "type");
+                                String modName = String.join("@", parser.getAttributeValue("", "modified"), parser.getAttributeValue("", "type"));
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
-                                String modNameCheck = changeModificationName(modName);
+                                String reformattedName = trimModificationName(modName);
 
-                                if (variableModifications.contains(modNameCheck)) {
-
+                                if (!fixedModifications.contains(reformattedName)) {
                                     peptide.addVariableModification(new ModificationMatch(modName, modPosition));
-
                                 }
                             }
                             break;
@@ -467,7 +477,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             // Ignore
                             break;
                         case 2:
-                            variableModifications.add(changeModificationName(parser.getText()));
+                            // aaModifications.add(changeModificationName(parser.getText()));
                             break;
                         case 3:
                             softwareVersion = parser.getText().trim();
@@ -501,7 +511,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private String changeModificationName(String modification) {
+    private String trimModificationName(String modification) {
         int indexPoint = modification.indexOf(".");
         int size = modification.length();
         if (indexPoint >= 0) {

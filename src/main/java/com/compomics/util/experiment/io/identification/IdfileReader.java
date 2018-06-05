@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
@@ -63,9 +64,10 @@ public interface IdfileReader {
      * @throws InterruptedException if an InterruptedException occurs
      * @throws JAXBException if a JAXBException occurs
      * @throws XmlPullParserException if an XmlPullParserException occurs
+     * @throws XMLStreamException if an XMLStreamException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
 
     /**
      * Retrieves all the identifications from an identification file as a list
@@ -91,9 +93,10 @@ public interface IdfileReader {
      * @throws InterruptedException if an InterruptedException occurs
      * @throws JAXBException if a JAXBException occurs
      * @throws XmlPullParserException if an XmlPullParserException occurs
+     * @throws XMLStreamException if an XMLStreamException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException, XMLStreamException;
 
     /**
      * Returns a boolean indicating whether the file contains de novo results as tags.

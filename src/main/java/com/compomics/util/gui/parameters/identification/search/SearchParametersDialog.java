@@ -501,7 +501,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        precursorIonLbl.setText("Precursor m/z Tolerance");
+        precursorIonLbl.setText("Precursor Tolerance");
 
         precursorIonAccuracyTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         precursorIonAccuracyTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -512,7 +512,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         precursorIonUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ppm", "Da" }));
 
-        fragmentIonLbl.setText("Fragment m/z Tolerance");
+        fragmentIonLbl.setText("Fragment Tolerance");
 
         fragmentIonAccuracyTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         fragmentIonAccuracyTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -598,44 +598,36 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                     .addComponent(digestionLabel))
                 .addGap(26, 26, 26)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(digestionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(enzymesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(digestionCmb, 0, 209, Short.MAX_VALUE)
+                    .addComponent(enzymesCmb, 0, 209, Short.MAX_VALUE)
+                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addComponent(fragmentIon1Cmb, 0, 106, Short.MAX_VALUE)
+                        .addComponent(fragmentIon1Cmb, 0, 95, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(fragmentIon2Cmb, 0, 106, Short.MAX_VALUE))
-                    .addComponent(specificityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(75, 75, 75)
+                        .addComponent(fragmentIon2Cmb, 0, 96, Short.MAX_VALUE))
+                    .addComponent(specificityComboBox, 0, 209, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(precursorChargeLbl)
-                            .addComponent(isotopesLbl))
-                        .addGap(54, 54, 54)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(isotopeMinTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                            .addComponent(minPrecursorChargeTxt))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(precursorChargeRangeLabel)
-                            .addComponent(isotopeRangeLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                            .addComponent(isotopeMaxTxt)))
-                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addComponent(precursorIonLbl)
-                        .addGap(18, 18, 18)
-                        .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(precursorIonUnit, 0, 104, Short.MAX_VALUE))
-                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addComponent(fragmentIonLbl)
-                        .addGap(18, 18, 18)
-                        .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(fragmentIonUnit, 0, 104, Short.MAX_VALUE)))
+                    .addComponent(precursorChargeLbl)
+                    .addComponent(isotopesLbl)
+                    .addComponent(precursorIonLbl)
+                    .addComponent(fragmentIonLbl))
+                .addGap(18, 18, 18)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(isotopeMinTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                .addGap(5, 5, 5)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(precursorChargeRangeLabel)
+                    .addComponent(isotopeRangeLabel))
+                .addGap(5, 5, 5)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(precursorIonUnit, javax.swing.GroupLayout.Alignment.TRAILING, 0, 122, Short.MAX_VALUE)
+                    .addComponent(fragmentIonUnit, javax.swing.GroupLayout.Alignment.TRAILING, 0, 122, Short.MAX_VALUE)
+                    .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(isotopeMaxTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                 .addContainerGap())
         );
         proteaseAndFragmentationPanelLayout.setVerticalGroup(
@@ -788,17 +780,18 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        fixedModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                fixedModsTableMouseReleased(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                fixedModsTableMouseExited(evt);
-            }
-        });
+        fixedModsTable.setMinimumSize(new java.awt.Dimension(0, 0));
         fixedModsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 fixedModsTableMouseMoved(evt);
+            }
+        });
+        fixedModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fixedModsTableMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                fixedModsTableMouseReleased(evt);
             }
         });
         fixedModsJScrollPane.setViewportView(fixedModsTable);
@@ -810,8 +803,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             .addGroup(fixedModsPanelLayout.createSequentialGroup()
                 .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fixedModsPanelLayout.createSequentialGroup()
-                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                        .addGap(242, 242, 242))
+                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE))
                     .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(7, 7, 7)))
@@ -882,6 +875,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        variableModsTable.setMinimumSize(new java.awt.Dimension(0, 0));
+        variableModsTable.setName(""); // NOI18N
         variableModsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 variableModsTableMouseMoved(evt);
@@ -904,7 +899,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             .addComponent(variableModificationsLabel)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, variableModsPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1005,9 +1000,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         availableModsPanel.setLayout(availableModsPanelLayout);
         availableModsPanelLayout.setHorizontalGroup(
             availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
             .addGroup(availableModsPanelLayout.createSequentialGroup()
-                .addComponent(modificationsListCombo, 0, 337, Short.MAX_VALUE)
+                .addComponent(modificationsListCombo, 0, 318, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openModificationSettingsJButton)
                 .addGap(2, 2, 2))
@@ -1043,7 +1038,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 820, 316);
+        modificationsPanel.setBounds(0, 0, 820, 344);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1082,22 +1077,20 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(modificationsLayeredPane)
+                    .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(openDialogHelpJButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(okButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton)))
-                        .addContainerGap())))
+                        .addGap(10, 10, 10)
+                        .addComponent(openDialogHelpJButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(okButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)))
+                .addContainerGap())
         );
 
         backgroundPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});

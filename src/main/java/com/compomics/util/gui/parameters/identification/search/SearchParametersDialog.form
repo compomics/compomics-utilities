@@ -51,26 +51,22 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="modificationsLayeredPane" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dataBasePanelSettings" alignment="0" max="32767" attributes="2"/>
-                              <Component id="proteaseAndFragmentationPanel" alignment="1" max="32767" attributes="2"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                  <Component id="openDialogHelpJButton1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="okButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cancelButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                      <Component id="dataBasePanelSettings" alignment="0" max="32767" attributes="2"/>
+                      <Component id="proteaseAndFragmentationPanel" alignment="1" max="32767" attributes="2"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Component id="openDialogHelpJButton1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="okButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cancelButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -109,7 +105,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="enzymeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="fragmentIonType1Lbl" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -119,53 +115,41 @@
                       </Group>
                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="digestionCmb" max="32767" attributes="2"/>
-                          <Component id="enzymesCmb" max="32767" attributes="2"/>
-                          <Component id="maxMissedCleavagesTxt" alignment="1" max="32767" attributes="2"/>
+                          <Component id="digestionCmb" pref="209" max="32767" attributes="2"/>
+                          <Component id="enzymesCmb" pref="209" max="32767" attributes="2"/>
+                          <Component id="maxMissedCleavagesTxt" alignment="1" pref="209" max="32767" attributes="2"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="fragmentIon1Cmb" pref="106" max="32767" attributes="2"/>
+                              <Component id="fragmentIon1Cmb" pref="95" max="32767" attributes="2"/>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                              <Component id="fragmentIon2Cmb" pref="106" max="32767" attributes="2"/>
+                              <Component id="fragmentIon2Cmb" pref="96" max="32767" attributes="2"/>
                           </Group>
-                          <Component id="specificityComboBox" alignment="0" max="32767" attributes="0"/>
+                          <Component id="specificityComboBox" alignment="0" pref="209" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                      <EmptySpace pref="75" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="precursorChargeLbl" min="-2" max="-2" attributes="0"/>
-                                  <Component id="isotopesLbl" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="isotopeMinTxt" pref="104" max="32767" attributes="2"/>
-                                  <Component id="minPrecursorChargeTxt" max="32767" attributes="2"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="precursorChargeRangeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="isotopeRangeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="maxPrecursorChargeTxt" pref="105" max="32767" attributes="2"/>
-                                  <Component id="isotopeMaxTxt" max="32767" attributes="2"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="precursorIonLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Component id="precursorIonAccuracyTxt" pref="103" max="32767" attributes="0"/>
-                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                              <Component id="precursorIonUnit" pref="104" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="fragmentIonLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="fragmentIonAccuracyTxt" pref="104" max="32767" attributes="2"/>
-                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                              <Component id="fragmentIonUnit" pref="104" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="precursorChargeLbl" min="-2" max="-2" attributes="0"/>
+                          <Component id="isotopesLbl" min="-2" max="-2" attributes="0"/>
+                          <Component id="precursorIonLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="fragmentIonLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="precursorIonAccuracyTxt" alignment="2" pref="122" max="32767" attributes="0"/>
+                          <Component id="fragmentIonAccuracyTxt" alignment="2" pref="122" max="32767" attributes="2"/>
+                          <Component id="minPrecursorChargeTxt" alignment="2" pref="122" max="32767" attributes="2"/>
+                          <Component id="isotopeMinTxt" alignment="2" pref="122" max="32767" attributes="2"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="precursorChargeRangeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="isotopeRangeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="precursorIonUnit" alignment="1" pref="122" max="32767" attributes="0"/>
+                          <Component id="fragmentIonUnit" alignment="1" pref="122" max="32767" attributes="0"/>
+                          <Component id="maxPrecursorChargeTxt" alignment="1" pref="122" max="32767" attributes="2"/>
+                          <Component id="isotopeMaxTxt" alignment="1" pref="122" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -272,7 +256,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="precursorIonLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Precursor m/z Tolerance"/>
+                <Property name="text" type="java.lang.String" value="Precursor Tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="precursorIonAccuracyTxt">
@@ -295,7 +279,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="fragmentIonLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Fragment m/z Tolerance"/>
+                <Property name="text" type="java.lang.String" value="Fragment Tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fragmentIonAccuracyTxt">
@@ -557,8 +541,8 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="fixedModificationsLabel" pref="115" max="32767" attributes="1"/>
-                                          <EmptySpace min="-2" pref="242" max="-2" attributes="0"/>
+                                          <Component id="fixedModificationsLabel" max="32767" attributes="1"/>
+                                          <EmptySpace pref="242" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
                                           <Component id="fixedModsJScrollPane" max="32767" attributes="0"/>
@@ -575,7 +559,7 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="fixedModificationsLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -641,11 +625,14 @@
                                     <Column editable="false" title="Mass" type="java.lang.Double"/>
                                   </Table>
                                 </Property>
+                                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                  <Dimension value="[0, 0]"/>
+                                </Property>
                               </Properties>
                               <Events>
-                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseReleased"/>
-                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseMoved"/>
+                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseExited"/>
+                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseReleased"/>
                               </Events>
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {&#xa;        //Always toggle on single selection&#xa;        super.changeSelection(rowIndex, columnIndex, !extend, extend);&#xa;    }&#xa;};"/>
@@ -671,7 +658,7 @@
                               <Component id="variableModificationsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="variableModsJScrollPane" pref="350" max="32767" attributes="0"/>
+                                  <Component id="variableModsJScrollPane" pref="339" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="addVariableModification" alignment="1" min="-2" pref="54" max="-2" attributes="0"/>
@@ -749,6 +736,10 @@
                                     <Column editable="false" title="Mass" type="java.lang.Double"/>
                                   </Table>
                                 </Property>
+                                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                  <Dimension value="[0, 0]"/>
+                                </Property>
+                                <Property name="name" type="java.lang.String" value="" noResource="true"/>
                               </Properties>
                               <Events>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseMoved"/>
@@ -773,9 +764,9 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="modificationsJScrollPane" pref="363" max="32767" attributes="0"/>
+                          <Component id="modificationsJScrollPane" pref="372" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="modificationsListCombo" pref="337" max="32767" attributes="1"/>
+                              <Component id="modificationsListCombo" pref="318" max="32767" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="openModificationSettingsJButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>

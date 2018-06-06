@@ -496,7 +496,8 @@ public class PSModificationScores extends DbObject implements UrParameter {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        return ambiguousModificationsByRepresentativeSite == null || ambiguousModificationsByRepresentativeSite.containsKey(representativeSite) ? new HashMap<>(0)
+        return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite) 
+                ? new HashMap<>(0)
                 : ambiguousModificationsByRepresentativeSite.get(representativeSite);
 
     }

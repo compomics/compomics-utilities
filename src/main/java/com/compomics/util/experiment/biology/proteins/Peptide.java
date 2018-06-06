@@ -111,8 +111,6 @@ public class Peptide extends ExperimentObject {
 
         }
 
-        setKey(getKey(sequence, variableModifications));
-
     }
 
     /**
@@ -682,8 +680,6 @@ public class Peptide extends ExperimentObject {
         }
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        
-        try {
 
         String modificationsKey = Arrays.stream(variableModifications)
                 .map(modificationMatch -> modificationMatch.getConfident() || modificationMatch.getInferred()
@@ -699,25 +695,6 @@ public class Peptide extends ExperimentObject {
         String keyAsString = String.join(MODIFICATION_SEPARATOR, sequence, modificationsKey);
 
         return ExperimentObject.asLong(keyAsString);
-        
-        }catch (Exception e) {
-
-        String modificationsKey = Arrays.stream(variableModifications)
-                .map(modificationMatch -> modificationMatch.getConfident() || modificationMatch.getInferred()
-                ? Arrays.stream(new String[]{
-            modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey(),
-            MODIFICATION_LOCALIZATION_SEPARATOR,
-            Integer.toString(modificationMatch.getSite())})
-                        .collect(Collectors.joining())
-                : modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey())
-                .sorted()
-                .collect(Collectors.joining(MODIFICATION_SEPARATOR));
-
-        String keyAsString = String.join(MODIFICATION_SEPARATOR, sequence, modificationsKey);
-
-        return ExperimentObject.asLong(keyAsString);
-            
-        }
 
     }
 

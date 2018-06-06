@@ -615,7 +615,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
      */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://ms.imp.ac.at/?goto=msamanda");
+        BareBonesBrowserLaunch.openURL("https://ms.imp.ac.at/?goto=msamanda");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
@@ -666,7 +666,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     JOptionPane.showMessageDialog(MsAmandaParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "Note that the MS Amanda mzIdentML format is not yet compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            "Note that the MS Amanda mzIdentML format is not yet compatible with <a href=\"https://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

@@ -210,8 +210,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="reporterDownloadLinkLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt;http://compomics.github.io/projects/reporter.html&lt;/a&gt;&lt;/html&gt;"/>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://compomics.github.io/projects/reporter.html"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt;https://compomics.github.io/projects/reporter.html&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to https://compomics.github.io/projects/reporter.html"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="reporterDownloadLinkLabelMouseClicked"/>

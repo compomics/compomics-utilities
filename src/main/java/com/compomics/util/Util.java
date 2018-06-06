@@ -74,7 +74,7 @@ public class Util {
     public static boolean sendGAUpdate(String UA, String action, String label) {
         // the plain java way
         boolean returnVal = true;
-        String COLLECT_URL = "http://www.google-analytics.com/collect";
+        String COLLECT_URL = "https://www.google-analytics.com/collect";
         String POST = "v=1&tid=" + UA + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(COLLECT_URL).openConnection();

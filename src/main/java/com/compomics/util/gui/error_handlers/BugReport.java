@@ -136,7 +136,7 @@ public class BugReport extends javax.swing.JDialog {
                 + "If you encounter any bugs while processing your data, please do one of the following:<br>"
                 + "<ul>"
                 + "<li>Create an issue on the <a href=\"https://github.com/compomics/" + gitHubProjectName + "/issues/\">" + toolName + " web page</a>.</li>"
-                + "<li>Send an e-mail to the <a href=\"http://groups.google.com/group/" + googleGroup + "\">" + googleGroupName + " Google Group</a>.</li>"
+                + "<li>Send an e-mail to the <a href=\"https://groups.google.com/group/" + googleGroup + "\">" + googleGroupName + " Google Group</a>.</li>"
                 + "</ul>"
                 + "Please include any relevant information as well as the log message displayed below."
                 + "</body>"
@@ -286,7 +286,7 @@ public class BugReport extends javax.swing.JDialog {
         infoJEditorPane.setEditable(false);
         infoJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         infoJEditorPane.setContentType("text/html"); // NOI18N
-        infoJEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\nIf you encounter any bugs while processing your data, please do one of the following:\n<br>\n<ul>\n  <li>Create an issue on the <a href=\"https://github.com/compomics/peptide-shaker/issues\">PeptideShaker web page</a>.</li>\n  <li>or Send an e-mail to the <a href=\"http://groups.google.com/group/peptide-shaker\">PeptideShaker mailing list</a>.</li>\n</ul>\nPlease include any relevant information as well as the log message displayed below.\n  </body>\r\n</html>\r\n");
+        infoJEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\nIf you encounter any bugs while processing your data, please do one of the following:\n<br>\n<ul>\n  <li>Create an issue on the <a href=\"https://github.com/compomics/peptide-shaker/issues\">PeptideShaker web page</a>.</li>\n  <li>or Send an e-mail to the <a href=\"https://groups.google.com/group/peptide-shaker\">PeptideShaker mailing list</a>.</li>\n</ul>\nPlease include any relevant information as well as the log message displayed below.\n  </body>\r\n</html>\r\n");
         infoJEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 infoJEditorPaneHyperlinkUpdate(evt);

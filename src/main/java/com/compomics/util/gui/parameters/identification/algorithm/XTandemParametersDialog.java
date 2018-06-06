@@ -1658,7 +1658,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void dynamicRangeLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dynamicRangeLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/sdr.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/sdr.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_dynamicRangeLblMouseReleased
 
@@ -1687,7 +1687,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void minFragMzLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minFragMzLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smfmz.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/smfmz.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_minFragMzLblMouseReleased
 
@@ -1707,7 +1707,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void nPeaksLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nPeaksLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/stp.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/stp.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_nPeaksLblMouseReleased
 
@@ -1745,7 +1745,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void minPeaksLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPeaksLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smp.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/smp.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_minPeaksLblMouseReleased
 
@@ -1774,7 +1774,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void noiseSuppressionLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noiseSuppressionLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/suns.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/suns.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_noiseSuppressionLabelMouseReleased
 
@@ -1803,7 +1803,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void minPrecMassLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPrecMassLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smpmh.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/smpmh.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_minPrecMassLblMouseReleased
 
@@ -1832,7 +1832,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void quickAcetylLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickAcetylLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pqa.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/pqa.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_quickAcetylLabelMouseReleased
 
@@ -1861,7 +1861,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void quickPyroLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickPyroLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pqp.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/pqp.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_quickPyroLabelMouseReleased
 
@@ -1890,7 +1890,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void stpBiasLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stpBiasLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pstpb.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/pstpb.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_stpBiasLabelMouseReleased
 
@@ -1919,7 +1919,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void eValueLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eValueLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/omvev.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/omvev.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_eValueLblMouseReleased
 
@@ -1948,7 +1948,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void outputProteinsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputProteinsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/oprot.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/oprot.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_outputProteinsLabelMouseReleased
 
@@ -1977,7 +1977,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void outputSequencesLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSequencesLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/osequ.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/osequ.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_outputSequencesLabelMouseReleased
 
@@ -2006,7 +2006,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void outputSpectraLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSpectraLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ospec.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/ospec.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_outputSpectraLabelMouseReleased
 
@@ -2035,7 +2035,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void outputHistogramsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputHistogramsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ohist.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/ohist.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_outputHistogramsLabelMouseReleased
 
@@ -2064,7 +2064,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void skylinePathValueLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_skylinePathValueLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ssp.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/ssp.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_skylinePathValueLblMouseReleased
 
@@ -2093,7 +2093,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void refinementLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refine.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/refine.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_refinementLabelMouseReleased
 
@@ -2122,7 +2122,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void maxEValueRefinmentLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxEValueRefinmentLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refmvev.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/refmvev.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_maxEValueRefinmentLblMouseReleased
 
@@ -2151,7 +2151,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void unanticipatedCleavageLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unanticipatedCleavageLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ruc.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/ruc.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_unanticipatedCleavageLabelMouseReleased
 
@@ -2180,7 +2180,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void semiEnzymaticLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_semiEnzymaticLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rcsemi.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/rcsemi.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_semiEnzymaticLabelMouseReleased
 
@@ -2209,7 +2209,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void usePotentialModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usePotentialModsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rupmffr.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/rupmffr.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_usePotentialModsLabelMouseReleased
 
@@ -2238,7 +2238,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void pointMutationLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointMutationLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rpm.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/rpm.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_pointMutationLabelMouseReleased
 
@@ -2267,7 +2267,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void snapsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_snapsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rsaps.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/rsaps.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_snapsLabelMouseReleased
 
@@ -2296,7 +2296,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void spectrumSynthesisLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumSynthesisLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rss.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/rss.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_spectrumSynthesisLabelMouseReleased
 
@@ -2452,7 +2452,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void refinementModificationsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementModificationsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refpmm.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/refpmm.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_refinementModificationsLabelMouseReleased
 
@@ -2513,7 +2513,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void outputResultsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputResultsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/oresu.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/api/oresu.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_outputResultsLabelMouseReleased
 
@@ -2551,7 +2551,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void modificationComplexityLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationComplexityLblMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/release.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/TANDEM/release.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_modificationComplexityLblMouseReleased
 
@@ -2589,7 +2589,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
      */
     private void parentMonoisotopicMassIsotopeErrorLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentMonoisotopicMassIsotopeErrorLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/tandem/api/spmmie.html");
+        BareBonesBrowserLaunch.openURL("https://www.thegpm.org/tandem/api/spmmie.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_parentMonoisotopicMassIsotopeErrorLabelMouseReleased
 

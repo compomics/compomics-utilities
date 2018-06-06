@@ -140,8 +140,8 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
         reporterInfoLabel.setFont(reporterInfoLabel.getFont().deriveFont(reporterInfoLabel.getFont().getStyle() | java.awt.Font.BOLD));
         reporterInfoLabel.setText("Reporter - protein quantification based on reporter ions (iTRAQ and TMT)");
 
-        reporterDownloadLinkLabel.setText("<html>Download here: <a href>http://compomics.github.io/projects/reporter.html</a></html>");
-        reporterDownloadLinkLabel.setToolTipText("Go to http://compomics.github.io/projects/reporter.html");
+        reporterDownloadLinkLabel.setText("<html>Download here: <a href>https://compomics.github.io/projects/reporter.html</a></html>");
+        reporterDownloadLinkLabel.setToolTipText("Go to https://compomics.github.io/projects/reporter.html");
         reporterDownloadLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 reporterDownloadLinkLabelMouseClicked(evt);
@@ -398,7 +398,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
      */
     private void openReporterWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://compomics.github.io/projects/reporter.html");
+        BareBonesBrowserLaunch.openURL("https://compomics.github.io/projects/reporter.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
 

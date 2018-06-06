@@ -1337,13 +1337,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
      * Returns a web link to the given PSI-MOD CV term at
-     * http://www.ebi.ac.uk/ontology-lookup.
+     * https://www.ebi.ac.uk/ontology-lookup.
      *
      * @param modAccession the PSI-MOD accession number
      * @return the OLS web link
      */
     public String getOlsAccessionLink(String modAccession) {
-        String accessionNumberWithLink = "<html><a href=\"http://www.ebi.ac.uk/ontology-lookup/?termId=" + modAccession + "\""
+        String accessionNumberWithLink = "<html><a href=\"https://www.ebi.ac.uk/ontology-lookup/?termId=" + modAccession + "\""
                 + "\"><font color=\"" + selectedRowHtmlTagFontColor + "\">"
                 + modAccession + "</font></a></html>";
         return accessionNumberWithLink;
@@ -1351,7 +1351,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
      * Returns a web link to the given Unimod CV term at
-     * http://www.ebi.ac.uk/ontology-lookup.
+     * http://www.unimod.org.
      *
      * @param unimodAccession the Unimod accession number
      * @return the Unimod web link

@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 /**
  * This class estimates the MD score as described in
- * http://www.ncbi.nlm.nih.gov/pubmed/21057138 Note: this implementation of the
+ * https://www.ncbi.nlm.nih.gov/pubmed/21057138 Note: this implementation of the
  * MD score is not restricted to phosphorylation.
  *
  * @author Marc Vaudel

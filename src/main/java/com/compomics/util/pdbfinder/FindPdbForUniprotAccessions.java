@@ -73,7 +73,7 @@ public class FindPdbForUniprotAccessions {
             public void run() {
                 try {
                     // find features
-                    String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
+                    String urlMake = "https://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
                     readUrl(urlMake);
                 } catch (IndexOutOfBoundsException e) {
                     // ignore
@@ -210,7 +210,7 @@ public class FindPdbForUniprotAccessions {
 
             PdbParameter lParam = lF.getPdbs().get(i);
             System.out.println((i + 1) + ". " + lParam.getPdbaccession() + " : " + lParam.getTitle() + " (" + lParam.getExperiment_type() + ") " + lParam.getResolution());
-            System.out.println("\t\tDownload from : " + "http://www.rcsb.org/pdb/files/" + lParam.getPdbaccession() + ".pdb");
+            System.out.println("\t\tDownload from : " + "https://www.rcsb.org/pdb/files/" + lParam.getPdbaccession() + ".pdb");
             System.out.println(lParam.getBlocks().length + " block(s) found in this pdf file");
             PdbBlock[] lBlocks = lParam.getBlocks();
 

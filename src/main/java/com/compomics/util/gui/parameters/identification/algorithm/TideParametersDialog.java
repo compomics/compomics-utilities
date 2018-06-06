@@ -1245,7 +1245,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                 public void run() {
                     JOptionPane.showMessageDialog(TideParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
                             "Note that the Tide " + (String) outputFormatCombo.getSelectedItem()
-                            + " format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            + " format is not compatible with <a href=\"https://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

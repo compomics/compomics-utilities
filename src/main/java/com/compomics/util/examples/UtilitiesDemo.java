@@ -248,7 +248,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         String htmlText = "<html><head></head><body>"
                 + "<h1>Compomics-Utilities</h1>"
                 + "<p style=\"margin-top: 0\">"
-                + "The <a href=\"http://www.compomics.com\">Computational Omics Group</a> at the <a href=\"http://www.ugent.be/en\">University of Ghent</a> "
+                + "The <a href=\"https://www.compomics.com\">Computational Omics Group</a> at the <a href=\"https://www.ugent.be/en\">University of Ghent</a> "
                 + "develops various bioinformatics tools for analyzing omics data."
                 + "<br><br>"
                 + "Compomics-utilities is a library containing code shared by many of our research projects, amongst others containing panels <br>"
@@ -259,12 +259,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 + "<i>com.compomics.util.examples</i> package. Click the tabs at the top to select one of the demos."
                 + "<br><br>"
                 + "Additional info can be found at the project's home page: "
-                + "<a href=\"http://compomics.github.io/projects/compomics-utilities.html\">http://compomics.github.io/projects/compomics-utilities.html</a>."
+                + "<a href=\"https://compomics.github.io/projects/compomics-utilities.html\">https://compomics.github.io/projects/compomics-utilities.html</a>."
                 + "</p>"
                 + "<br><br><br><br>"
                 + "<b>The Computational Omics Group is grateful to be supported by:<b>"
                 + "<br><br>"
-                + "<a href=\"http://www.compomics.com\"><img src=\"" + getClass().getResource("/icons/compomics.png") + "\" border=\"0\" width=\"222\" height=\"111\"></a>"
+                + "<a href=\"https://www.compomics.com\"><img src=\"" + getClass().getResource("/icons/compomics.png") + "\" border=\"0\" width=\"222\" height=\"111\"></a>"
                 + "<a href=\"http://www.ugent.be/en\"><img src=\"" + getClass().getResource("/icons/ugent.png") + "\" border=\"0\"></a>"
                 + "<a href=\"http://www.vib.be\"><img src=\"" + getClass().getResource("/icons/vib.png") + "\" border=\"0\"></a>"
                 + "<a href=\"http://java.com/en\"><img src=\"" + getClass().getResource("/icons/java.png") + "\" border=\"0\"></a>"
@@ -3022,7 +3022,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         } else if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 
             String proteinAccession = keyValuePairs.get("Accession");
-            String proteinUniProtUrl = "http://www.uniprot.org/uniprot/" + proteinAccession.trim() + "#section_features";
+            String proteinUniProtUrl = "https://www.uniprot.org/uniprot/" + proteinAccession.trim() + "#section_features";
 
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             BareBonesBrowserLaunch.openURL(proteinUniProtUrl);

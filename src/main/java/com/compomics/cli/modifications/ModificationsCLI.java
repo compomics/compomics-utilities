@@ -37,7 +37,7 @@ public class ModificationsCLI {
         return System.getProperty("line.separator")
                 + "The ModificationsCLI command line allows the command line management of modifications. It can be used to create and edit json files containing modifications compatible with CompOmics tools." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
-                //                + "For further help see http://compomics.github.io/projects/peptide-shaker.html and http://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
+                //                + "For further help see https://compomics.github.io/projects/peptide-shaker.html and https://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
                 //                + System.getProperty("line.separator")
                 //                + "Or contact the developers at https://groups.google.com/group/peptide-shaker." + System.getProperty("line.separator")
                 //                + System.getProperty("line.separator")

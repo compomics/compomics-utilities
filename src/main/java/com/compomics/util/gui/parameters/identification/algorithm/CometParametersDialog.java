@@ -1046,7 +1046,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 public void run() {
                     JOptionPane.showMessageDialog(CometParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
                             "Note that the Comet " + outputFormatCmb.getSelectedItem()
-                            + " format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            + " format is not compatible with <a href=\"https://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

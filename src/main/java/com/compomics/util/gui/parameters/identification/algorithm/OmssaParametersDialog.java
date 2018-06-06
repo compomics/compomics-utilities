@@ -1387,7 +1387,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog implements Algori
                 public void run() {
                     JOptionPane.showMessageDialog(OmssaParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
                             "Note that the OMSSA " + (String) omssaOutputFormatComboBox.getSelectedItem()
-                            + " format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            + " format is not compatible with <a href=\"https://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

@@ -201,7 +201,7 @@ public class PdbBlock {
      * @return the blocked sequence
      */
     public String getBlockSequence(String aPdbAccession) {
-        String lUrl = "http://www.rcsb.org/pdb/rest/describePDB?structureId=" + aPdbAccession;
+        String lUrl = "https://www.rcsb.org/pdb/rest/describePDB?structureId=" + aPdbAccession;
         return readUrl(lUrl, aPdbAccession);
     }
 

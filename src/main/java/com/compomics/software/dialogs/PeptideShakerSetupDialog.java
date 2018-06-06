@@ -199,8 +199,8 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         peptideShakerInfoLabel.setFont(peptideShakerInfoLabel.getFont().deriveFont(peptideShakerInfoLabel.getFont().getStyle() | java.awt.Font.BOLD));
         peptideShakerInfoLabel.setText("PeptideShaker - interpretation of proteomics identifications from multiple search engines");
 
-        peptideShakerDownloadLinkLabel.setText("<html>Download here: <a href>http://compomics.github.io/projects/peptide-shaker.html</a></html>");
-        peptideShakerDownloadLinkLabel.setToolTipText("Go to http://compomics.github.io/projects/peptide-shaker.html");
+        peptideShakerDownloadLinkLabel.setText("<html>Download here: <a href>https://compomics.github.io/projects/peptide-shaker.html</a></html>");
+        peptideShakerDownloadLinkLabel.setToolTipText("Go to https://compomics.github.io/projects/peptide-shaker.html");
         peptideShakerDownloadLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 peptideShakerDownloadLinkLabelMouseClicked(evt);
@@ -457,7 +457,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      */
     private void openPeptideShakerWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://compomics.github.io/projects/peptide-shaker.html");
+        BareBonesBrowserLaunch.openURL("https://compomics.github.io/projects/peptide-shaker.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
 

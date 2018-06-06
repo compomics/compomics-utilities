@@ -359,7 +359,7 @@ public class JavaParametersDialog extends javax.swing.JDialog {
      */
     private void javaHelpJLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHelpJLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://compomics.github.io/projects/compomics-utilities/wiki/javatroubleshooting.html");
+        BareBonesBrowserLaunch.openURL("https://compomics.github.io/projects/compomics-utilities/wiki/javatroubleshooting.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_javaHelpJLabelMouseReleased
 

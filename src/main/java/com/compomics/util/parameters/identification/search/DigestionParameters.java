@@ -525,7 +525,7 @@ public class DigestionParameters implements Serializable {
     public String getMyriMatchFormat() {
 
         // example: trypsin corresponds to "[|R|K . . ]"
-        // details: http://www.mc.vanderbilt.edu/root/vumc.php?site=msrc/bioinformatics&doc=27121
+        // details: http://htmlpreview.github.io/?https://github.com/ProteoWizard/pwiz/blob/master/pwiz_tools/Bumbershoot/myrimatch/doc/index.html
         String result = "[";
 
         for (Enzyme enzyme : enzymes) {

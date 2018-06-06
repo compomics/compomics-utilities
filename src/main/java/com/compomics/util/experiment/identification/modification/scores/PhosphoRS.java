@@ -21,15 +21,12 @@ import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +34,7 @@ import org.apache.commons.math.util.FastMath;
 
 /**
  * This class estimates the PhosphoRS score as described in
- * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: the calculation in its
+ * https://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: the calculation in its
  * present form is very slow for multiply modified peptides, peptides with many
  * modification sites, and noisy spectra. Typically, avoid scoring deamidation
  * sites.

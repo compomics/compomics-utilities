@@ -199,8 +199,8 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
         searchGuiInfoLabel.setFont(searchGuiInfoLabel.getFont().deriveFont(searchGuiInfoLabel.getFont().getStyle() | java.awt.Font.BOLD));
         searchGuiInfoLabel.setText("SearchGUI -  a graphical user interface for proteomics identification search engines");
 
-        searchGuiDownloadLinkLabel.setText("<html>Download here: <a href>http://compomics.github.io/projects/searchgui.html</a></html>");
-        searchGuiDownloadLinkLabel.setToolTipText("Go to http://compomics.github.io/projects/searchgui.html");
+        searchGuiDownloadLinkLabel.setText("<html>Download here: <a href>https://compomics.github.io/projects/searchgui.html</a></html>");
+        searchGuiDownloadLinkLabel.setToolTipText("Go to https://compomics.github.io/projects/searchgui.html");
         searchGuiDownloadLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 searchGuiDownloadLinkLabelMouseClicked(evt);
@@ -455,7 +455,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void openSearchGuiWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://compomics.github.io/projects/searchgui.html");
+        BareBonesBrowserLaunch.openURL("https://compomics.github.io/projects/searchgui.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
 

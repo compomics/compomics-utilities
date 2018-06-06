@@ -5,7 +5,6 @@
  */
 
 package com.compomics.util.sun;
-import org.apache.log4j.Logger;
 
 import javax.swing.SwingUtilities;
 

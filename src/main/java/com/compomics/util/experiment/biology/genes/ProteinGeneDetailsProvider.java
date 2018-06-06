@@ -871,23 +871,23 @@ public class ProteinGeneDetailsProvider {
 
         if (ensemblType.equalsIgnoreCase("fungi")) {
 
-            return new URL("http://fungi.ensembl.org/biomart/martservice/result");
+            return new URL("https://fungi.ensembl.org/biomart/martservice/result");
 
         } else if (ensemblType.equalsIgnoreCase("plants")) {
 
-            return new URL("http://plants.ensembl.org/biomart/martservice/result");
+            return new URL("https://plants.ensembl.org/biomart/martservice/result");
 
         } else if (ensemblType.equalsIgnoreCase("protists")) {
 
-            return new URL("http://protists.ensembl.org/biomart/martservice/result");
+            return new URL("https://protists.ensembl.org/biomart/martservice/result");
 
         } else if (ensemblType.equalsIgnoreCase("metazoa")) {
 
-            return new URL("http://metazoa.ensembl.org/biomart/martservice/result");
+            return new URL("https://metazoa.ensembl.org/biomart/martservice/result");
 
         } else {
 
-            return new URL("http://www.ensembl.org/biomart/martservice/result");
+            return new URL("https://www.ensembl.org/biomart/martservice/result");
 
         }
     }

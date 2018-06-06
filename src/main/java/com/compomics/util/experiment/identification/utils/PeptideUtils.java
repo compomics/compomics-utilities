@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.identification.utils;
 
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
+import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
@@ -265,8 +267,8 @@ public class PeptideUtils {
 
         }
 
-        String nTermAsString = getNtermAsString(confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
-        String cTermAsString = getCtermAsString(peptideSequence.length(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
+        String nTermAsString = getNtermAsString(useShortName, confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
+        String cTermAsString = getCtermAsString(useShortName, peptideSequence.length(), confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites);
 
         modifiedSequence.append(nTermAsString).append('-');
         modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, peptideSequence, 
@@ -287,23 +289,27 @@ public class PeptideUtils {
     /**
      * Returns the N-terminal annotation as string.
      *
+     * @param useShortName if true the short names are used in the tags
      * @param modificationArrays modifications to annotate in arrays
      * corresponding to the peptide sequence with N-terminus at index 0
      *
      * @return the N-terminal annotation as string
      */
-    public static String getNtermAsString(String[]... modificationArrays) {
+    public static String getNtermAsString(boolean useShortName, String[]... modificationArrays) {
 
         for (String[] modificationArray : modificationArrays) {
 
             String modName = modificationArray[0];
-
+            
             if (modName != null) {
-
-                return modName.replaceAll(" ", ".");
-
+                if (useShortName) {
+                    ModificationFactory modificationFactory = ModificationFactory.getInstance();
+                    Modification modification = modificationFactory.getModification(modName);
+                    return modification.getShortName();
+                } else {
+                    return modName.replaceAll(" ", ".");
+                }
             }
-
         }
 
         return "NH2";
@@ -313,22 +319,27 @@ public class PeptideUtils {
     /**
      * Returns the C-terminal annotation as string.
      *
+     * @param useShortName if true the short names are used in the tags
      * @param length the length of the peptide
      * @param modificationArrays modifications to annotate in arrays
      * corresponding to the peptide sequence with C-terminus at index length + 2
      *
      * @return the C-terminal annotation as string
      */
-    public static String getCtermAsString(int length, String[]... modificationArrays) {
+    public static String getCtermAsString(boolean useShortName, int length, String[]... modificationArrays) {
 
         for (String[] modificationArray : modificationArrays) {
 
             String modName = modificationArray[length + 1];
 
             if (modName != null) {
-
-                return modName.replaceAll(" ", ".");
-
+                if (useShortName) {
+                    ModificationFactory modificationFactory = ModificationFactory.getInstance();
+                    Modification modification = modificationFactory.getModification(modName);
+                    return modification.getShortName();
+                } else {
+                    return modName.replaceAll(" ", ".");
+                }
             }
 
         }

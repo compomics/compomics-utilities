@@ -1,13 +1,6 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
-import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
@@ -40,8 +33,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- *
- * @author dominik.kopczynski
+ * Parser for X! Tandem xml files.
+ * 
+ * @author Dominik Kopczynski
  */
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
@@ -108,7 +102,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 .map(modName -> modificationFactory.getModification(modName))
                 .filter(modification -> modification.getModificationType() == ModificationType.modaa)
                 .flatMap(mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
-                        .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
+                .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
                 .collect(Collectors.toCollection(HashSet::new));
 
         XMLInputFactory factory = XMLInputFactory.newInstance();

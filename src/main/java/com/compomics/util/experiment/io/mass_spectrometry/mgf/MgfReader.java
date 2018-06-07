@@ -20,7 +20,6 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-
 public class MgfReader {
 
     /**
@@ -1208,15 +1207,15 @@ public class MgfReader {
     /**
      * Returns the next precursor starting from the given index.
      *
-     * @param bufferedRandomAccessFile The random access file of the inspected
+     * @param bufferedRandomAccessFile the random access file of the inspected
      * mgf file
-     * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the mgf file
-     * @return The next spectrum encountered
-     * @throws IOException Exception thrown whenever an error is encountered
-     * while reading the spectrum
-     * @throws IllegalArgumentException Exception thrown whenever the file is
-     * not of a compatible format
+     * @param index the index where to start looking for the spectrum
+     * @param fileName the name of the mgf file
+     * @return the next spectrum encountered
+     * @throws IOException thrown whenever an error is encountered while reading
+     * the spectrum
+     * @throws IllegalArgumentException thrown whenever the file is not of a
+     * compatible format
      */
     public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 

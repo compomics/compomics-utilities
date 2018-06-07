@@ -8,15 +8,11 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.SpectrumMatchesIterator;
-import com.compomics.util.experiment.identification.utils.ProteinUtils;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -441,90 +437,61 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Creates the peptides and protein instances based on the given spectrum
-     * match. Note that only the best peptide assumption is used, the method has
-     * no effect if it is null. This operation will be very slow if the cache is
-     * already full. Note: if proteins are not set for a peptide they will be
-     * assigned using the default protein tree and the given matching
-     * parameters.
+     * Adds a peptide match. If an exception occurs when saving to the db it is
+     * thrown as runtime exception.
      *
-     * @param spectrumMatch the spectrum match to add
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param sequenceProvider a provider of protein sequences
-     * @param protein boolean indicating whether proteins should be built
+     * @param key the peptide match key
+     * @param peptideMatch the peptide match
      */
-    public void buildPeptidesAndProteins(SpectrumMatch spectrumMatch, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider, boolean protein) {
+    public void addPeptideMatch(long key, PeptideMatch peptideMatch) {
 
-        long spectrumMatchKey = spectrumMatch.getKey();
+        peptideIdentification.add(key);
 
-        Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
-        long peptideMatchKey = peptide.getMatchingKey(sequenceMatchingPreferences);
-        PeptideMatch peptideMatch = getPeptideMatch(peptideMatchKey);
+        try {
 
-        if (peptideMatch == null) {
+            objectsDB.insertObject(key, peptideMatch);
 
-            peptideMatch = new PeptideMatch(peptide, peptideMatchKey, spectrumMatchKey);
-            peptideIdentification.add(peptideMatchKey);
+        } catch (InterruptedException interruptedException) {
 
-            try {
+            throw new RuntimeException(interruptedException);
 
-                objectsDB.insertObject(peptideMatchKey, peptideMatch);
+        }
+    }
 
-            } catch (InterruptedException interruptedException) {
+    /**
+     * Adds a protein match. If an exception occurs when saving to the db it is
+     * thrown as runtime exception.
+     *
+     * @param key the peptide match key
+     * @param proteinMatch the protein match
+     */
+    public void addProteinMatch(long key, ProteinMatch proteinMatch) {
 
-                throw new RuntimeException(interruptedException);
+        for (String proteinAccession : proteinMatch.getAccessions()) {
+
+            HashSet<Long> proteinMatchKeys = proteinMap.get(proteinAccession);
+
+            if (proteinMatchKeys == null) {
+
+                proteinMatchKeys = new HashSet<>(1);
+                proteinMap.put(proteinAccession, proteinMatchKeys);
 
             }
 
-        } else {
-
-            peptideMatch.addSpectrumMatchKey(spectrumMatchKey);
+            proteinMatchKeys.add(key);
 
         }
 
-        if (protein) {
+        proteinIdentification.add(key);
 
-            long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
-            ProteinMatch proteinMatch = getProteinMatch(proteinMatchKey);
+        try {
 
-            if (proteinMatch == null) {
+            objectsDB.insertObject(key, proteinMatch);
 
-                proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
-                proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
-                        .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
+        } catch (InterruptedException interruptedException) {
 
-                for (String proteinAccession : proteinMatch.getAccessions()) {
+            throw new RuntimeException(interruptedException);
 
-                    HashSet<Long> proteinMatchKeys = proteinMap.get(proteinAccession);
-
-                    if (proteinMatchKeys == null) {
-
-                        proteinMatchKeys = new HashSet<>(1);
-                        proteinMap.put(proteinAccession, proteinMatchKeys);
-
-                    }
-
-                    proteinMatchKeys.add(proteinMatchKey);
-
-                }
-
-                proteinIdentification.add(proteinMatchKey);
-
-                try {
-
-                    objectsDB.insertObject(proteinMatchKey, proteinMatch);
-
-                } catch (InterruptedException interruptedException) {
-
-                    throw new RuntimeException(interruptedException);
-
-                }
-
-            } else {
-
-                proteinMatch.addPeptideMatchKey(peptideMatchKey);
-
-            }
         }
     }
 

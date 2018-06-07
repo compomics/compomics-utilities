@@ -1,4 +1,4 @@
-package com.compomics.util.maps;
+package com.compomics.util.threading;
 
 import java.util.HashMap;
 import java.util.HashSet;

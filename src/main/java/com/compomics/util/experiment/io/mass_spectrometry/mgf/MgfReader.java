@@ -140,8 +140,8 @@ public class MgfReader {
             } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
-                    Double mz = new Double(values[0]);
-                    Double intensity = new Double(values[1]);
+                    double mz = Double.valueOf(values[0]);
+                    double intensity = Double.valueOf(values[1]);
                     spectrum.put(mz, new Peak(mz, intensity));
                 } catch (Exception e1) {
                     // ignore comments and all other lines

@@ -172,7 +172,9 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the precursor mass error (in ppm or Da)
      */
     public double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 

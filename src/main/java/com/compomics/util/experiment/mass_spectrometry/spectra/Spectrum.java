@@ -8,6 +8,7 @@ import com.compomics.util.math.BasicMathFunctions;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -283,40 +284,6 @@ public class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Format the peaks so that they can be plotted in JFreeChart.
-     *
-     * @return a table containing the peaks
-     */
-    public double[][] getJFreePeakList() {
-
-        if (jFreePeakList == null) {
-
-            double[] mz = new double[peakMap.size()];
-            double[] intensity = new double[peakMap.size()];
-            int cpt = 0;
-
-            for (Peak currentPeak : peakMap.values()) {
-
-                mz[cpt] = currentPeak.mz;
-                intensity[cpt] = currentPeak.intensity;
-                cpt++;
-
-            }
-
-            jFreePeakList = new double[6][mz.length];
-            jFreePeakList[0] = mz;
-            jFreePeakList[1] = mz;
-            jFreePeakList[2] = mz;
-            jFreePeakList[3] = intensity;
-            jFreePeakList[4] = intensity;
-            jFreePeakList[5] = intensity;
-
-        }
-
-        return jFreePeakList;
-    }
-
-    /**
      * Returns a peak map where peaks are indexed by their m/z.
      *
      * @return a peak map
@@ -450,8 +417,8 @@ public class Spectrum extends ExperimentObject {
 
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakMap.size())) {
 
-            intensityValuesAsArray = peakMap.values().stream()
-                    .mapToDouble(peak -> peak.intensity)
+            intensityValuesAsArray = Arrays.stream(getOrderedMzValues())
+                    .map(mz -> peakMap.get(mz).intensity)
                     .toArray();
 
         }
@@ -469,31 +436,20 @@ public class Spectrum extends ExperimentObject {
 
         if (intensityValuesNormalizedAsArray == null) {
 
-            double[] array = new double[peakMap.size()];
+            double[] intensityArray = getIntensityValuesAsArray();
+            intensityArray = Arrays.copyOf(intensityArray, intensityArray.length);
+            double highestIntensity = Arrays.stream(intensityArray).max().orElse(0.0);
+            
+            if (highestIntensity > 0.0) {
+                
+                for (int i = 0; i < intensityArray.length; i++) {
 
-            double highestIntensity = 0.0;
-            int counter = 0;
-
-            for (Peak currentPeak : peakMap.values()) {
-
-                array[counter++] = currentPeak.intensity;
-
-                if (currentPeak.intensity > highestIntensity) {
-
-                    highestIntensity = currentPeak.intensity;
+                    intensityArray[i] = intensityArray[i] / highestIntensity * 100;
 
                 }
             }
 
-            if (highestIntensity > 0) {
-                for (int i = 0; i < array.length; i++) {
-
-                    array[i] = array[i] / highestIntensity * 100;
-
-                }
-            }
-
-            intensityValuesNormalizedAsArray = array;
+            intensityValuesNormalizedAsArray = intensityArray;
         }
 
         return intensityValuesNormalizedAsArray;

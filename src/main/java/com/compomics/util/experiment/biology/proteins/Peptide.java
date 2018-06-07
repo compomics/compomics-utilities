@@ -500,7 +500,7 @@ public class Peptide extends ExperimentObject {
         zooActivateRead();
         ObjectsDB.decreaseRWCounter();
 
-        int peptideEnd = peptideStart + sequence.length();
+        int peptideEnd = peptideStart + sequence.length() - 1;
 
         if (variantMatches != null) {
 

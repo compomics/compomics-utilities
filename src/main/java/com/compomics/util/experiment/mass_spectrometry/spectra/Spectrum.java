@@ -451,6 +451,7 @@ public class Spectrum extends ExperimentObject {
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakMap.size())) {
 
             intensityValuesAsArray = peakMap.values().stream()
+                    .sorted(Peak.AscendingMzComparator)
                     .mapToDouble(peak -> peak.intensity)
                     .toArray();
 

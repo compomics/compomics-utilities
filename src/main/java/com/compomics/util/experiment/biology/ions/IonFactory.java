@@ -2,7 +2,6 @@ package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
-import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.proteins.Peptide;
@@ -14,7 +13,6 @@ import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.biology.ions.impl.RelatedIon;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -497,7 +494,7 @@ public class IonFactory {
 
             if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.C_ION)) {
 
-// add the c-ion
+                // add the c-ion
                 int subType = PeptideFragmentIon.C_ION;
                 ArrayList<Ion> ions = ionsMap.get(subType);
 

@@ -3,7 +3,6 @@ com.compomics.cli.fasta
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
 com.compomics.cli.peptide_mapper
-com.compomics.scripts_marc
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli
@@ -135,7 +134,6 @@ com.compomics.util.io.json
 com.compomics.util.io.json.adapter
 com.compomics.util.io.json.marshallers
 com.compomics.util.junit
-com.compomics.util.maps
 com.compomics.util.math
 com.compomics.util.math.clustering
 com.compomics.util.math.clustering.settings
@@ -169,4 +167,5 @@ com.compomics.util.pride.prideobjects.webservice.query
 com.compomics.util.pride.validation
 com.compomics.util.protein
 com.compomics.util.sun
+com.compomics.util.threading
 com.compomics.util.waiting

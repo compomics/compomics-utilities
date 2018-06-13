@@ -347,9 +347,13 @@
 <dd>
 <div class="block">Standard reporter ion for lysine acetylation (PMID: 18338905).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#acquire-K-">acquire(K)</a></span> - Method in class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#acquire-K-">acquire(K)</a></span> - Method in class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">Acquires a permit for the given key.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ObjectMutex.html#acquire-long-">acquire(long)</a></span> - Method in class com.compomics.util.threading.<a href="com/compomics/util/threading/ObjectMutex.html" title="class in com.compomics.util.threading">ObjectMutex</a></dt>
+<dd>
+<div class="block">Acquire function for the given key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/variants/AaSubstitutionMatrix.html#add-com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix-">add(AaSubstitutionMatrix)</a></span> - Method in class com.compomics.util.experiment.biology.variants.<a href="com/compomics/util/experiment/biology/variants/AaSubstitutionMatrix.html" title="class in com.compomics.util.experiment.biology.variants">AaSubstitutionMatrix</a></dt>
 <dd>
@@ -689,6 +693,10 @@
 <dd>
 <div class="block">Add a hit.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addPeptideMatch-long-com.compomics.util.experiment.identification.matches.PeptideMatch-">addPeptideMatch(long, PeptideMatch)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>
+<div class="block">Adds a peptide match.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html#addPeptideMatchKey-long-">addPeptideMatchKey(long)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ProteinMatch.html" title="class in com.compomics.util.experiment.identification.matches">ProteinMatch</a></dt>
 <dd>
 <div class="block">Add a subordinated peptide key.</div>
@@ -700,6 +708,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#addPeptideNormalisationFactor-java.lang.String-double-">addPeptideNormalisationFactor(String, double)</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
 <div class="block">Adds a peptide normalization factor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#addProteinMatch-long-com.compomics.util.experiment.identification.matches.ProteinMatch-">addProteinMatch(long, ProteinMatch)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dd>
+<div class="block">Adds a protein match.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/normalization/NormalizationFactors.html#addProteinNormalisationFactor-java.lang.String-double-">addProteinNormalisationFactor(String, double)</a></span> - Method in class com.compomics.util.experiment.normalization.<a href="com/compomics/util/experiment/normalization/NormalizationFactors.html" title="class in com.compomics.util.experiment.normalization">NormalizationFactors</a></dt>
 <dd>
@@ -1669,7 +1681,7 @@
 <div class="block">GsonBuilder that can be used to append interfaces so the parser knows how
  to handle them.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-boolean-">buildPeptidesAndProteins(SpectrumMatch, SequenceMatchingParameters, SequenceProvider, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-boolean-">buildPeptidesAndProteins(SpectrumMatch, SequenceMatchingParameters, SequenceProvider, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideAndProteinBuilder</a></dt>
 <dd>
 <div class="block">Creates the peptides and protein instances based on the given spectrum
  match.</div>
@@ -2142,9 +2154,7 @@
 <div class="block">Command line for the handling of enzymes.</div>
 </dd>
 <dt><a href="com/compomics/cli/fasta/package-summary.html">com.compomics.cli.fasta</a> - package com.compomics.cli.fasta</dt>
-<dd>
-<div class="block">Command line for the handling of fasta files.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/cli/identification_parameters/package-summary.html">com.compomics.cli.identification_parameters</a> - package com.compomics.cli.identification_parameters</dt>
 <dd>
 <div class="block">Command line for the handling of identification parameters.</div>
@@ -2157,8 +2167,6 @@
 <dd>
 <div class="block">Command line for PeptideMapper.</div>
 </dd>
-<dt><a href="com/compomics/scripts_marc/package-summary.html">com.compomics.scripts_marc</a> - package com.compomics.scripts_marc</dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/compomics/software/package-summary.html">com.compomics.software</a> - package com.compomics.software</dt>
 <dd>
 <div class="block">Convenience classes for command line usage of compomics-utilities tools.</div>
@@ -2311,9 +2319,7 @@
 <div class="block">Classes for the filtering of identification objects.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/filtering/items/package-summary.html">com.compomics.util.experiment.identification.filtering.items</a> - package com.compomics.util.experiment.identification.filtering.items</dt>
-<dd>
-<div class="block">Items used by the filters to filter on.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/identification_parameters/package-summary.html">com.compomics.util.experiment.identification.identification_parameters</a> - package com.compomics.util.experiment.identification.identification_parameters</dt>
 <dd>
 <div class="block">Parameters settings for the spectrum identification algorithms.</div>
@@ -2359,9 +2365,7 @@
 <div class="block">This package contains the classes needed to generate ms2pip features.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/peptide_shaker/package-summary.html">com.compomics.util.experiment.identification.peptide_shaker</a> - package com.compomics.util.experiment.identification.peptide_shaker</dt>
-<dd>
-<div class="block">Experiment classes used in PeptideShaker calculations.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a> - package com.compomics.util.experiment.identification.protein_inference</dt>
 <dd>
 <div class="block">Classes related to protein inference.</div>
@@ -2407,13 +2411,9 @@
 <div class="block">Implementations of the SpectrumIdentificationAssumption.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/utils/package-summary.html">com.compomics.util.experiment.identification.utils</a> - package com.compomics.util.experiment.identification.utils</dt>
-<dd>
-<div class="block">This package contains utilities classes to handle identification objects.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/validation/package-summary.html">com.compomics.util.experiment.identification.validation</a> - package com.compomics.util.experiment.identification.validation</dt>
-<dd>
-<div class="block">Experiment classes related to identification matches validation.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/io/biology/protein/package-summary.html">com.compomics.util.experiment.io.biology.protein</a> - package com.compomics.util.experiment.io.biology.protein</dt>
 <dd>
 <div class="block">Experiment IO classes for biological resources.</div>
@@ -2545,13 +2545,9 @@
 <div class="block">Report editor GUI.</div>
 </dd>
 <dt><a href="com/compomics/util/gui/file_handling/package-summary.html">com.compomics.util.gui.file_handling</a> - package com.compomics.util.gui.file_handling</dt>
-<dd>
-<div class="block">File handling.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/gui/filtering/package-summary.html">com.compomics.util.gui.filtering</a> - package com.compomics.util.gui.filtering</dt>
-<dd>
-<div class="block">GUI filters.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/gui/genes/package-summary.html">com.compomics.util.gui.genes</a> - package com.compomics.util.gui.genes</dt>
 <dd>
 <div class="block">Dialogs for the handling of genes.</div>
@@ -2684,10 +2680,6 @@
 <dd>
 <div class="block">Custom classpath related test class.</div>
 </dd>
-<dt><a href="com/compomics/util/maps/package-summary.html">com.compomics.util.maps</a> - package com.compomics.util.maps</dt>
-<dd>
-<div class="block">Classes related to maps.</div>
-</dd>
 <dt><a href="com/compomics/util/math/package-summary.html">com.compomics.util.math</a> - package com.compomics.util.math</dt>
 <dd>
 <div class="block">Basic match functions.</div>
@@ -2761,17 +2753,11 @@
 <div class="block">Parameters settings for the search algorithms.</div>
 </dd>
 <dt><a href="com/compomics/util/parameters/peptide_shaker/package-summary.html">com.compomics.util.parameters.peptide_shaker</a> - package com.compomics.util.parameters.peptide_shaker</dt>
-<dd>
-<div class="block">PeptideShaker parameters.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/parameters/quantification/spectrum_counting/package-summary.html">com.compomics.util.parameters.quantification.spectrum_counting</a> - package com.compomics.util.parameters.quantification.spectrum_counting</dt>
-<dd>
-<div class="block">Spectrum counting parameters.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/parameters/searchgui/package-summary.html">com.compomics.util.parameters.searchgui</a> - package com.compomics.util.parameters.searchgui</dt>
-<dd>
-<div class="block">SearchGUI parameters.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/parameters/tools/package-summary.html">com.compomics.util.parameters.tools</a> - package com.compomics.util.parameters.tools</dt>
 <dd>
 <div class="block">Tool parameters.</div>
@@ -2820,6 +2806,8 @@
 <dd>
 <div class="block">Classes related to Java's Swing library.</div>
 </dd>
+<dt><a href="com/compomics/util/threading/package-summary.html">com.compomics.util.threading</a> - package com.compomics.util.threading</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/waiting/package-summary.html">com.compomics.util.waiting</a> - package com.compomics.util.waiting</dt>
 <dd>
 <div class="block">Waiting handler interfaces.</div>
@@ -4547,12 +4535,6 @@
 <dd>
 <div class="block">Extracts files from a tar.</div>
 </dd>
-<dt><a href="com/compomics/scripts_marc/ExtractFirstLines.html" title="class in com.compomics.scripts_marc"><span class="typeNameLink">ExtractFirstLines</span></a> - Class in <a href="com/compomics/scripts_marc/package-summary.html">com.compomics.scripts_marc</a></dt>
-<dd>
-<div class="block">Extracts the first lines of a file.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/scripts_marc/ExtractFirstLines.html#ExtractFirstLines--">ExtractFirstLines()</a></span> - Constructor for class com.compomics.scripts_marc.<a href="com/compomics/scripts_marc/ExtractFirstLines.html" title="class in com.compomics.scripts_marc">ExtractFirstLines</a></dt>
-<dd>&nbsp;</dd>
 </dl>
 <a name="I:F">
 <!--   -->
@@ -6661,7 +6643,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/ProjectParameters.html#getCreationTime--">getCreationTime()</a></span> - Method in class com.compomics.util.experiment.<a href="com/compomics/util/experiment/ProjectParameters.html" title="class in com.compomics.util.experiment">ProjectParameters</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getCtermAsString-int-java.lang.String:A...-">getCtermAsString(int, String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getCtermAsString-boolean-int-java.lang.String:A...-">getCtermAsString(boolean, int, String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
 <div class="block">Returns the C-terminal annotation as string.</div>
 </dd>
@@ -9013,10 +8995,6 @@
 <div class="block">Returns an array list containing the Java home plus any parameters to the
  JVM.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html#getJFreePeakList--">getJFreePeakList()</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a></dt>
-<dd>
-<div class="block">Format the peaks so that they can be plotted in JFreeChart.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/JOptionEditorPane.html#getJOptionEditorPane-java.lang.String-">getJOptionEditorPane(String)</a></span> - Static method in class com.compomics.util.gui.<a href="com/compomics/util/gui/JOptionEditorPane.html" title="class in com.compomics.util.gui">JOptionEditorPane</a></dt>
 <dd>
 <div class="block">Returns a JEditorPane with HTML support to be used in a JOptionsPane.</div>
@@ -10910,7 +10888,7 @@
 <dd>
 <div class="block">Returns the number of targeted amino acids at the given index.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getNtermAsString-java.lang.String:A...-">getNtermAsString(String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getNtermAsString-boolean-java.lang.String:A...-">getNtermAsString(boolean, String[]...)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
 <div class="block">Returns the N-terminal annotation as string.</div>
 </dd>
@@ -11153,7 +11131,7 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/modification/ModificationsDialog.html#getOlsAccessionLink-java.lang.String-">getOlsAccessionLink(String)</a></span> - Method in class com.compomics.util.gui.modification.<a href="com/compomics/util/gui/modification/ModificationsDialog.html" title="class in com.compomics.util.gui.modification">ModificationsDialog</a></dt>
 <dd>
 <div class="block">Returns a web link to the given PSI-MOD CV term at
- http://www.ebi.ac.uk/ontology-lookup.</div>
+ https://www.ebi.ac.uk/ontology-lookup.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html#getOMSSAIndexes-java.io.File-">getOMSSAIndexes(File)</a></span> - Static method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/OmssaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">OmssaParameters</a></dt>
 <dd>
@@ -14455,7 +14433,7 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/modification/ModificationsDialog.html#getUniModAccessionLink-java.lang.String-">getUniModAccessionLink(String)</a></span> - Method in class com.compomics.util.gui.modification.<a href="com/compomics/util/gui/modification/ModificationsDialog.html" title="class in com.compomics.util.gui.modification">ModificationsDialog</a></dt>
 <dd>
 <div class="block">Returns a web link to the given Unimod CV term at
- http://www.ebi.ac.uk/ontology-lookup.</div>
+ http://www.unimod.org.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/taxonomy/SpeciesFactory.html#getUniprotTaxonomy--">getUniprotTaxonomy()</a></span> - Method in class com.compomics.util.experiment.biology.taxonomy.<a href="com/compomics/util/experiment/biology/taxonomy/SpeciesFactory.html" title="class in com.compomics.util.experiment.biology.taxonomy">SpeciesFactory</a></dt>
 <dd>
@@ -18197,8 +18175,6 @@
 <dd>
 <div class="block">Main class.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/scripts_marc/ExtractFirstLines.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.compomics.scripts_marc.<a href="com/compomics/scripts_marc/ExtractFirstLines.html" title="class in com.compomics.scripts_marc">ExtractFirstLines</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/software/SplashScreen.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.compomics.software.<a href="com/compomics/software/SplashScreen.html" title="class in com.compomics.software">SplashScreen</a></dt>
 <dd>
 <div class="block">The main method.</div>
@@ -18299,19 +18275,19 @@
 <dd>
 <div class="block">The key of the manually validated matches.</div>
 </dd>
-<dt><a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps"><span class="typeNameLink">MapMutex</span></a>&lt;<a href="com/compomics/util/maps/MapMutex.html" title="type parameter in MapMutex">K</a>&gt; - Class in <a href="com/compomics/util/maps/package-summary.html">com.compomics.util.maps</a></dt>
+<dt><a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading"><span class="typeNameLink">MapMutex</span></a>&lt;<a href="com/compomics/util/threading/MapMutex.html" title="type parameter in MapMutex">K</a>&gt; - Class in <a href="com/compomics/util/threading/package-summary.html">com.compomics.util.threading</a></dt>
 <dd>
 <div class="block">Map of semaphores acting like a map mutex to block some parts of the maps.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#MapMutex-java.lang.Integer-java.lang.Integer-java.lang.Integer-">MapMutex(Integer, Integer, Integer)</a></span> - Constructor for class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#MapMutex-java.lang.Integer-java.lang.Integer-java.lang.Integer-">MapMutex(Integer, Integer, Integer)</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#MapMutex--">MapMutex()</a></span> - Constructor for class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#MapMutex--">MapMutex()</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">Constructor with one permit per key and no cache limit size.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#MapMutex-int-">MapMutex(int)</a></span> - Constructor for class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#MapMutex-int-">MapMutex(int)</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">Constructor with no cache limit size.</div>
 </dd>
@@ -18645,7 +18621,7 @@
 <dt><a href="com/compomics/util/experiment/identification/modification/scores/MDScore.html" title="class in com.compomics.util.experiment.identification.modification.scores"><span class="typeNameLink">MDScore</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/scores/package-summary.html">com.compomics.util.experiment.identification.modification.scores</a></dt>
 <dd>
 <div class="block">This class estimates the MD score as described in
- http://www.ncbi.nlm.nih.gov/pubmed/21057138 Note: this implementation of the
+ https://www.ncbi.nlm.nih.gov/pubmed/21057138 Note: this implementation of the
  MD score is not restricted to phosphorylation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/scores/MDScore.html#MDScore--">MDScore()</a></span> - Constructor for class com.compomics.util.experiment.identification.modification.scores.<a href="com/compomics/util/experiment/identification/modification/scores/MDScore.html" title="class in com.compomics.util.experiment.identification.modification.scores">MDScore</a></dt>
@@ -19954,6 +19930,15 @@
 <dd>
 <div class="block">The oxygen atom.</div>
 </dd>
+<dt><a href="com/compomics/util/threading/ObjectMutex.html" title="class in com.compomics.util.threading"><span class="typeNameLink">ObjectMutex</span></a> - Class in <a href="com/compomics/util/threading/package-summary.html">com.compomics.util.threading</a></dt>
+<dd>
+<div class="block">This mutex can be used to manage threads editing experiment objects using
+ their key.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ObjectMutex.html#ObjectMutex--">ObjectMutex()</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/ObjectMutex.html" title="class in com.compomics.util.threading">ObjectMutex</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><a href="com/compomics/util/db/object/ObjectsCache.html" title="class in com.compomics.util.db.object"><span class="typeNameLink">ObjectsCache</span></a> - Class in <a href="com/compomics/util/db/object/package-summary.html">com.compomics.util.db.object</a></dt>
 <dd>
 <div class="block">An object cache can be combined to an ObjectDB to improve its performance.</div>
@@ -20392,6 +20377,14 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html" title="class in com.compomics.util.experiment.identification.protein_inference"><span class="typeNameLink">PeptideAndProteinBuilder</span></a> - Class in <a href="com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a></dt>
+<dd>
+<div class="block">This class builds peptides and proteins based on PSMs.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html#PeptideAndProteinBuilder-com.compomics.util.experiment.identification.Identification-">PeptideAndProteinBuilder(Identification)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.<a href="com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideAndProteinBuilder</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><a href="com/compomics/util/experiment/identification/spectrum_assumptions/PeptideAssumption.html" title="class in com.compomics.util.experiment.identification.spectrum_assumptions"><span class="typeNameLink">PeptideAssumption</span></a> - Class in <a href="com/compomics/util/experiment/identification/spectrum_assumptions/package-summary.html">com.compomics.util.experiment.identification.spectrum_assumptions</a></dt>
 <dd>
 <div class="block">This object will models the assumption made by an advocate.</div>
@@ -20695,7 +20688,7 @@
 <dd>
 <div class="block">Final index for permethylated masses.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#permits">permits</a></span> - Variable in class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#permits">permits</a></span> - Variable in class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">The number of permits per key.</div>
 </dd>
@@ -20741,7 +20734,7 @@
 <dt><a href="com/compomics/util/experiment/identification/modification/scores/PhosphoRS.html" title="class in com.compomics.util.experiment.identification.modification.scores"><span class="typeNameLink">PhosphoRS</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/scores/package-summary.html">com.compomics.util.experiment.identification.modification.scores</a></dt>
 <dd>
 <div class="block">This class estimates the PhosphoRS score as described in
- http://www.ncbi.nlm.nih.gov/pubmed/22073976.</div>
+ https://www.ncbi.nlm.nih.gov/pubmed/22073976.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/scores/PhosphoRS.html#PhosphoRS--">PhosphoRS()</a></span> - Constructor for class com.compomics.util.experiment.identification.modification.scores.<a href="com/compomics/util/experiment/identification/modification/scores/PhosphoRS.html" title="class in com.compomics.util.experiment.identification.modification.scores">PhosphoRS</a></dt>
 <dd>&nbsp;</dd>
@@ -21859,9 +21852,13 @@
 <dd>
 <div class="block">Constructor for a related ion.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/maps/MapMutex.html#release-K-">release(K)</a></span> - Method in class com.compomics.util.maps.<a href="com/compomics/util/maps/MapMutex.html" title="class in com.compomics.util.maps">MapMutex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/MapMutex.html#release-K-">release(K)</a></span> - Method in class com.compomics.util.threading.<a href="com/compomics/util/threading/MapMutex.html" title="class in com.compomics.util.threading">MapMutex</a></dt>
 <dd>
 <div class="block">Releases the permit for the given key.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ObjectMutex.html#release-long-">release(long)</a></span> - Method in class com.compomics.util.threading.<a href="com/compomics/util/threading/ObjectMutex.html" title="class in com.compomics.util.threading">ObjectMutex</a></dt>
+<dd>
+<div class="block">Release function for the given key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/ModificationFactory.html#reLoadAllData--">reLoadAllData()</a></span> - Static method in class com.compomics.util.protein.<a href="com/compomics/util/protein/ModificationFactory.html" title="class in com.compomics.util.protein">ModificationFactory</a></dt>
 <dd>
@@ -29229,7 +29226,9 @@ the order they are declared.</div>
 <div class="block">The X! Tandem search engine.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders"><span class="typeNameLink">XTandemIdfileReader</span></a> - Class in <a href="com/compomics/util/experiment/io/identification/idfilereaders/package-summary.html">com.compomics.util.experiment.io.identification.idfilereaders</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parser for X! Tandem xml files.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html#XTandemIdfileReader--">XTandemIdfileReader()</a></span> - Constructor for class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">XTandemIdfileReader</a></dt>
 <dd>
 <div class="block">Default constructor for the purpose of instantiation.</div>

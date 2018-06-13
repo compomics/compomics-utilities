@@ -701,7 +701,7 @@ public class ModificationUtils {
     }
     
     /**
-     * Returns the expected modifications for a given protein mass indexed by site.
+     * Returns the expected modifications for a given modification mass indexed by site.
      * 
      * @param modMass the modification mass
      * @param modificationParameters the modification parameters

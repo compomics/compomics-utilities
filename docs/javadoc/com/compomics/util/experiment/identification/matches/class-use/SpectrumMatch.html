@@ -95,12 +95,18 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="#com.compomics.util.experiment.identification.protein_inference">com.compomics.util.experiment.identification.protein_inference</a></td>
+<td class="colLast">
+<div class="block">Classes related to protein inference.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.io.identification">com.compomics.util.experiment.io.identification</a></td>
 <td class="colLast">
 <div class="block">Experiment identification classes.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.compomics.util.experiment.io.identification.idfilereaders">com.compomics.util.experiment.io.identification.idfilereaders</a></td>
 <td class="colLast">
 <div class="block">Experiment classes related to reading search engine files.</div>
@@ -130,25 +136,6 @@
 </tr>
 </tbody>
 </table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/package-summary.html">com.compomics.util.experiment.identification</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Identification.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/Identification.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-boolean-">buildPeptidesAndProteins</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
-                        <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
-                        <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
-                        boolean&nbsp;protein)</code>
-<div class="block">Creates the peptides and protein instances based on the given spectrum
- match.</div>
-</td>
-</tr>
-</tbody>
-</table>
 </li>
 <li class="blockList"><a name="com.compomics.util.experiment.identification.matches_iterators">
 <!--   -->
@@ -165,6 +152,30 @@
 <td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SpectrumMatchesIterator.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/matches_iterators/SpectrumMatchesIterator.html#next--">next</a></span>()</code>
 <div class="block">Returns the next match and updates the buffer.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a> in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/package-summary.html">com.compomics.util.experiment.identification.protein_inference</a> with parameters of type <a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">PeptideAndProteinBuilder.</span><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideAndProteinBuilder.html#buildPeptidesAndProteins-com.compomics.util.experiment.identification.matches.SpectrumMatch-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-boolean-">buildPeptidesAndProteins</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a>&nbsp;spectrumMatch,
+                        <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;sequenceMatchingPreferences,
+                        <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
+                        boolean&nbsp;protein)</code>
+<div class="block">Creates the peptides and protein instances based on the given spectrum
+ match.</div>
 </td>
 </tr>
 </tbody>

@@ -26,8 +26,9 @@ import java.util.TreeMap;
 import javax.xml.bind.JAXBException;
 
 /**
- *
- * @author dominik.kopczynski
+ * This IdfileReader reads identifications from a Mascot results file.
+ * 
+ * @author Dominik Kopczynski
  */
 public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
 

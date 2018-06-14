@@ -220,6 +220,10 @@ public class FastaSummary {
 
             String species = header.getTaxonomy();
 
+            if (species == null) {
+                species = "Unknown";
+            }
+            
             Integer occurrence = speciesOccurrence.get(species);
 
             if (occurrence == null) {
@@ -234,6 +238,10 @@ public class FastaSummary {
 
             ProteinDatabase proteinDatabase = header.getDatabaseType();
 
+            if (proteinDatabase == null) {
+                proteinDatabase = ProteinDatabase.Unknown;
+            }
+            
             occurrence = databaseType.get(proteinDatabase);
 
             if (occurrence == null) {

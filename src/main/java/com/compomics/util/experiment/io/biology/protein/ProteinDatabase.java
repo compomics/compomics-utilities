@@ -26,12 +26,12 @@ public enum ProteinDatabase {
     Listeria("Listeria", null), 
     GAFFA("GAFFA", null),
     UPS("Universal Proteomic Standard (UPS)", null), 
-    Generic_Header(null, null), 
+    Generic_Header("Generic Header", null), 
     IPI("International Protein Index (IPI)", "15221759"), 
-    Generic_Split_Header(null, null),
+    Generic_Split_Header("Generic Split Header", null),
     NextProt("neXtProt", "22139911"), 
     UniRef("UniRef", null), 
-    Unknown(null, null);
+    Unknown("Unknown", null);
 
     /**
      * The full name of the database.

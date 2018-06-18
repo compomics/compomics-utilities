@@ -158,6 +158,10 @@ public class Advocate {
      */
     public static final Advocate metaMorpheus = new Advocate(33, "MetaMorpheus", AdvocateType.search_engine, new Color(218, 165, 32));
     /**
+     * The IdentiPy search engine.
+     */
+    public static final Advocate identiPy  = new Advocate(34, "IdentiPy", AdvocateType.search_engine, new Color(128, 128, 0));
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
@@ -281,7 +285,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[36 + userAdvocates.size()];
+        Advocate[] result = new Advocate[37 + userAdvocates.size()];
         int i = 0;
         result[i] = peptideShaker;
         result[++i] = onyaseEngine;
@@ -319,6 +323,7 @@ public class Advocate {
         result[++i] = proteinPilot;
         result[++i] = onyaseEngine;
         result[++i] = metaMorpheus;
+        result[++i] = identiPy;
 
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
@@ -448,6 +453,8 @@ public class Advocate {
             return "21761931";
         } else if (this == morpheus) {
             return "23323968";
+        } else if (this == identiPy) {
+            return "29682971";
         } else {
             return null;
         }

@@ -444,7 +444,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     }
 
                     if (name != null && value != null) {
-                        if (name.equals("expect") || name.equals("Morpheus Score")) {
+                        if (name.equals("expect") || name.equals("Morpheus Score")) { // @TODO: what about the IdentiPy hyperscore?
                             try {
                                 score = new Double(value);
                             } catch (Exception e) {

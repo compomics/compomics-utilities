@@ -88,7 +88,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         fileName = Util.getFileName(identificationFile);
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
 

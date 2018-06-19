@@ -107,7 +107,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         fileName = Util.getFileName(identificationFile);
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
 

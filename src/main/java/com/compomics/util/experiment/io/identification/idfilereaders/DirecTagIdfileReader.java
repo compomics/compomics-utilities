@@ -464,8 +464,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
         String spectrumFileName = Util.getFileName(getInputFile());
         if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
-            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         LinkedList<SpectrumMatch> result = new LinkedList<>();

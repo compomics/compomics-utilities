@@ -115,7 +115,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(msAmandaCsvFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
 

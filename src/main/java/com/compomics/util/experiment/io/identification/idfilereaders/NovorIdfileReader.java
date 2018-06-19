@@ -139,7 +139,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(novorCsvFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
 

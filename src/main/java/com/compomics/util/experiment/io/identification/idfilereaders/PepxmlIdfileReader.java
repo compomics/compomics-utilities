@@ -58,7 +58,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * The name of the spectrum file.
      */
-    private String inputFileName;
+    private String spectrumFileName;
     /**
      * The spectrum factory used to retrieve spectrum titles.
      */
@@ -143,9 +143,9 @@ public class PepxmlIdfileReader implements IdfileReader {
                 String tagName = parser.getName();
                 if (type == XmlPullParser.START_TAG && tagName.equals("msms_run_summary")) {
                     parseRunSummary(parser, overwriteExtension);
-                    if (waitingHandler != null && spectrumFactory.fileLoaded(inputFileName)) {
-                        waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(inputFileName));
-                        waitingHandler.setSecondaryProgressCounter(0);
+                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
+                        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                        waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
                     }
                 }
                 if (type == XmlPullParser.START_TAG && tagName.equals("search_summary")) {
@@ -252,9 +252,14 @@ public class PepxmlIdfileReader implements IdfileReader {
 
                     }
 
-                    if (waitingHandler != null && spectrumFactory.fileLoaded(inputFileName)) {
+                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
                         waitingHandler.increaseSecondaryProgressCounter();
                     }
+                }
+                
+                if (waitingHandler != null) {
+                    waitingHandler.isRunCanceled();
+                    
                 }
             }
 
@@ -506,11 +511,11 @@ public class PepxmlIdfileReader implements IdfileReader {
             spectrumTitle = spectrumNativeID;
         } else {
             spectrumTitle = index + "";
-            if (spectrumFactory.fileLoaded(inputFileName)) {
-                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, index);
+            if (spectrumFactory.fileLoaded(spectrumFileName)) {
+                spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, index);
             }
         }
-        String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
+        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
         spectrumMatch.setSpectrumNumber(index);
 
@@ -545,7 +550,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         }
 
         File spectrumFile = new File(path);
-        inputFileName = Util.getFileName(spectrumFile);
+        spectrumFileName = Util.getFileName(spectrumFile);
     }
 
     /**

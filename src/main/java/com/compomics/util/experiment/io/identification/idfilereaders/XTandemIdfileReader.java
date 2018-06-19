@@ -33,7 +33,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Parser for X! Tandem xml files.
+ * This IdfileReader reads identifications from an X! Tandem xml result file.
  * 
  * @author Dominik Kopczynski
  */
@@ -97,6 +97,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
+        // @TODO: use the waiting handler
+        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         HashSet<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
                 .map(modName -> modificationFactory.getModification(modName))
@@ -185,6 +187,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 });
             }
         }
+
         return new LinkedList<>(allMatches.values());
     }
 

@@ -254,7 +254,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
         if (displayProgress) {
-            secondaryJProgressBar.setValue(0); //@TODO: can we remove this?
+            secondaryJProgressBar.setValue(0);
             secondaryJProgressBar.setMaximum(maxProgressValue);
         }
     }

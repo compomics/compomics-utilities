@@ -118,7 +118,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(tideTsvFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
 

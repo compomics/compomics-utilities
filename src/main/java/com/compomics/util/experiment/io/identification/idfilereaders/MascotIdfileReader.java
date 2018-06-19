@@ -27,7 +27,7 @@ import javax.xml.bind.JAXBException;
 
 /**
  * This IdfileReader reads identifications from a Mascot results file.
- * 
+ *
  * @author Dominik Kopczynski
  */
 public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
@@ -67,6 +67,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * @throws IOException if an IOException occurs
      */
     public MascotIdfileReader(File inputFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+
         varMods.add("dummy");
         charges.add(-100000);
         matches.add(-1);
@@ -134,6 +135,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                             throw new Exception("File format not parsable name '" + state + "'.");
                     }
                 }
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
             }
             in.close();
         } catch (Exception e) {
@@ -157,12 +162,17 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(allMatches.size());
+        }
+        
         if (expandAaCombinations) {
 
             for (SpectrumMatch currentMatch : allMatches.values()) {
 
                 currentMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
-                    
+
                     Peptide peptide = currentAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
                     ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
@@ -185,6 +195,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                             PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
                             currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
 
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) { 
+                                    break;
+                                }
+                                waitingHandler.increaseSecondaryProgressCounter();
+                            }
                         }
                     }
                 });
@@ -216,6 +232,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     }
 
+    /**
+     * Parse the masses.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     */
     private void parseMasses(BufferedReader in, String boundary) {
         String mass = "";
         String line;
@@ -259,6 +281,13 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Parse a query.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     * @param state the state
+     */
     private void parseQuery(BufferedReader in, String boundary, String state) {
         String line;
         try {
@@ -275,16 +304,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     continue;
                 }
                 if ("title".equals(parts[0])) {
-                    
+
                     int specNum = Integer.parseInt(state.substring(5, state.length()));
                     String specTitle = URLDecoder.decode(parts[1], "utf8");
                     SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
                     if (spectrumMatch != null) {
-                        
+
                         String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), specTitle);
                         spectrumMatch.setSpectrumKey(spectrumKey);
-                        
+
                     }
                 }
             }
@@ -293,6 +322,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Parse a header.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     */
     private void parseHeader(BufferedReader in, String boundary) {
         String line;
         try {
@@ -317,6 +352,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Parse parameters.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     */
     private void parseParameters(BufferedReader in, String boundary) {
         String line;
         try {
@@ -343,6 +384,14 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Parse peptides.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     * @param sourceFile the source file
+     * @throws Exception thrown if an exception occurs
+     */
     private void parsePeptides(BufferedReader in, String boundary, String sourceFile) throws Exception {
         String line;
 
@@ -398,18 +447,18 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     allMatches.put(spectrumNumber, currentMatch);
                     rank = 1;
                 } else {
-                    
+
                     currentMatch = allMatches.get(spectrumNumber);
                     TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
-                    
+
                     if (assump.containsKey(expectancy)) {
-                    
+
                         rank = assump.get(expectancy).get(0).getRank();
-                    
+
                     } else {
-                    
+
                         rank = (int) allMatches.get(spectrumNumber).getAllPeptideAssumptions().count() + 1;
-                    
+
                     }
                 }
 
@@ -424,6 +473,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Prase the summary.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary 
+     */
     private void parseSummary(BufferedReader in, String boundary) {
         String line;
         try {
@@ -450,6 +505,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
     }
 
+    /**
+     * Parse.
+     * 
+     * @param in the buffered reader
+     * @param boundary the boundary
+     */
     private void parse(BufferedReader in, String boundary) {
         String line;
         try {

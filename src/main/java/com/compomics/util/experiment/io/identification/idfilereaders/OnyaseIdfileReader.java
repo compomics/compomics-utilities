@@ -162,6 +162,8 @@ public class OnyaseIdfileReader implements IdfileReader {
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
+        // @TODO: use the waitingHandler
+        
         HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
 
         String spectrumFileName = Util.getFileName(mgfFile);
@@ -242,7 +244,7 @@ public class OnyaseIdfileReader implements IdfileReader {
      *
      * @param modificationsString the modification string
      *
-     * @return a list of modificaiton matches
+     * @return a list of modification matches
      *
      * @throws UnsupportedEncodingException exception thrown whenever an error
      * occurred while decoding the string

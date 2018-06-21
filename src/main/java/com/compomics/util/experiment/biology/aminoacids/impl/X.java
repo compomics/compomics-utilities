@@ -27,6 +27,11 @@ public class X extends AminoAcid {
         aminoAcidCombinations = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
         standardGeneticCode = getStandardGeneticCodeForCombination();
     }
+    
+    @Override
+    public double getMonoisotopicMass() {
+        return 110.0;
+    }
 
     @Override
     public String[] getStandardGeneticCode() {

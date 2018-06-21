@@ -28,6 +28,11 @@ public class B extends AminoAcid {
         aminoAcidCombinations = new char[]{'X'};
         standardGeneticCode = getStandardGeneticCodeForCombination();
     }
+    
+    @Override
+    public double getMonoisotopicMass() {
+        return (AminoAcid.D.getMonoisotopicMass() + AminoAcid.N.getMonoisotopicMass()) / 2;
+    }
 
     @Override
     public boolean iscombination() {

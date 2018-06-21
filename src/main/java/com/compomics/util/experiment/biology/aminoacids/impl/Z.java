@@ -26,6 +26,11 @@ public class Z extends AminoAcid {
         aminoAcidCombinations = new char[]{'X'};
         standardGeneticCode = getStandardGeneticCodeForCombination();
     }
+    
+    @Override
+    public double getMonoisotopicMass() {
+        return (AminoAcid.Q.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass()) / 2;
+    }
 
     @Override
     public boolean iscombination() {

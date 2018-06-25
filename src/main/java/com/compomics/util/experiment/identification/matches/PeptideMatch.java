@@ -29,41 +29,6 @@ public class PeptideMatch extends IdentificationMatch {
      * The keys of the spectrum matches linking to this peptide match.
      */
     private long[] spectrumMatchesKeys;
-    /**
-     * Is the peptide match a decoy hit?
-     */
-    private boolean isDecoy = false;
-
-    /**
-     * Indicates whether the peptide maps to a decoy sequence.
-     *
-     * @return a boolean indicating whether the peptide maps to a decoy sequence
-     */
-    public boolean getIsDecoy() {
-        
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        
-        return isDecoy;
-        
-    }
-
-    /**
-     * Sets a boolean indicating whether the peptide maps to a decoy sequence.
-     *
-     * @param isDecoy a boolean indicating whether the peptide maps to a decoy
-     * sequence
-     */
-    public void setIsDecoy(boolean isDecoy) {
-        
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
-        
-        this.isDecoy = isDecoy;
-        
-    }
 
     @Override
     public long getKey() {

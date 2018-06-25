@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -218,60 +218,48 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getIsDecoy--">getIsDecoy</a></span>()</code>
-<div class="block">Indicates whether the peptide maps to a decoy sequence.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getKey--">getKey</a></span>()</code>
 <div class="block">Returns the key of a match.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getPeptide--">getPeptide</a></span>()</code>
 <div class="block">Getter for the peptide.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getSpectrumCount--">getSpectrumCount</a></span>()</code>
 <div class="block">Returns the number of spectra matched.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>long[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getSpectrumMatchesKeys--">getSpectrumMatchesKeys</a></span>()</code>
 <div class="block">Returns the keys of all spectra matched.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../com/compomics/util/experiment/identification/IdentificationMatch.MatchType.html" title="enum in com.compomics.util.experiment.identification">IdentificationMatch.MatchType</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#getType--">getType</a></span>()</code>
 <div class="block">Returns the type of match.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setIsDecoy-boolean-">setIsDecoy</a></span>(boolean&nbsp;isDecoy)</code>
-<div class="block">Sets a boolean indicating whether the peptide maps to a decoy sequence.</div>
-</td>
-</tr>
-<tr id="i8" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setKey-long-">setKey</a></span>(long&nbsp;newKey)</code>
 <div class="block">Sets a new key for the match.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setPeptide-com.compomics.util.experiment.biology.proteins.Peptide-">setPeptide</a></span>(<a href="../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide)</code>
 <div class="block">Setter for the peptide.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/compomics/util/experiment/identification/matches/PeptideMatch.html#setSpectrumMatchesKeys-long:A-">setSpectrumMatchesKeys</a></span>(long[]&nbsp;spectrumMatchesKeys)</code>
 <div class="block">Sets the spectrum matches keys.</div>
@@ -346,35 +334,6 @@ extends <a href="../../../../../../com/compomics/util/experiment/identification/
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getIsDecoy--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIsDecoy</h4>
-<pre>public&nbsp;boolean&nbsp;getIsDecoy()</pre>
-<div class="block">Indicates whether the peptide maps to a decoy sequence.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a boolean indicating whether the peptide maps to a decoy sequence</dd>
-</dl>
-</li>
-</ul>
-<a name="setIsDecoy-boolean-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setIsDecoy</h4>
-<pre>public&nbsp;void&nbsp;setIsDecoy(boolean&nbsp;isDecoy)</pre>
-<div class="block">Sets a boolean indicating whether the peptide maps to a decoy sequence.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>isDecoy</code> - a boolean indicating whether the peptide maps to a decoy
- sequence</dd>
-</dl>
-</li>
-</ul>
 <a name="getKey--">
 <!--   -->
 </a>

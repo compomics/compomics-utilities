@@ -1,11 +1,13 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import java.io.Serializable;
+
 /**
  * Rank as used in the FM index.
  *
  * @author Dominik Kopczynski
  */
-public class Rank {
+public class Rank implements Serializable {
 
     /**
      * The length.

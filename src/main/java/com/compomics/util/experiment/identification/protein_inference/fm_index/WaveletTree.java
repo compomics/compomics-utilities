@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +10,7 @@ import java.util.Collections;
  *
  * @author Dominik Kopczynski
  */
-public class WaveletTree {
+public class WaveletTree implements Serializable {
 
     /**
      * Instance of a rank.
